@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="955" minHeight="600" creationComplete="init()">
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import org.bytearray.micrecorder.MicRecorder;
+			import org.bytearray.micrecorder.encoder.WaveEncoder;
+			import org.bytearray.micrecorder.events.RecordingEvent;
+			
+			
+			private var recorder:MicRecorder;
+			private var _file:FileReference;
+			private function init():void
+			{
+				recorder = new MicRecorder(new WaveEncoder());
+				recorder.silenceLevel=0;
+				recorder.gain=10;
+				_file = new FileReference();
+				recorder.addEventListener(Event.COMPLETE,onRecordComplete);
+				recorder.addEventListener(RecordingEvent.RECORDING,onRecording)
+				btn1.addEventListener(MouseEvent.CLICK,btn1clickhandle);
+				btn2.addEventListener(MouseEvent.CLICK,btn2clickhandle);
+				btn3.addEventListener(MouseEvent.CLICK,btn3clickhandle);
+			}
+			
+			protected function onRecordComplete(event:Event):void
+			{
+				trace("录制完成");
+			}
+			protected function onRecording(event:RecordingEvent):void
+			{
+				trace("已经录制了"+event.time+"ms");
+			}
+			
+			protected function btn1clickhandle(event:MouseEvent):void
+			{
+				trace("开始录音");
+				recorder.record();
+			}
+			
+			protected function btn2clickhandle(event:MouseEvent):void
+			{
+				recorder.stop();
+			}
+			
+			protected function btn3clickhandle(event:MouseEvent):void
+			{
+				//trace(recorder.output);
+				//_file.save(recorder.output,"record1.wav");
+				var str:String="http://www.google.com/speech-api/v1/recognize?xjerr=1&client=chromium&lang=zh-CN&maxresults=1";
+				var request:URLRequest = new URLRequest(str);
+				var arr:Array = new Array(new URLRequestHeader("Content-Type", "audio/x-flac;rate=16000"));
+				request.requestHeaders=arr;
+			}
+			
+		]]>
+	</fx:Script>
+	<s:HGroup gap="5">
+		<s:Button id="btn1" label="开始录音">
+		</s:Button>
+		<s:Button id="btn2" label="停止录音">
+		</s:Button>
+		<s:Button id="btn3" label="发送到google数据">
+		</s:Button>
+	</s:HGroup>
+	
+</s:Application>

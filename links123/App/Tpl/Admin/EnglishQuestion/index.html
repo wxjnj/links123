@@ -1,0 +1,220 @@
+<tagLib name="html" />
+<include file="Public:header" />
+
+<load href="__PUBLIC__/skin/easyui/themes/metro/easyui.css" />
+<load href="__PUBLIC__/Js/Jquery/jquery.js" />
+<load href="__PUBLIC__/Js/Jquery/jqueryform.js" />
+<load href="__PUBLIC__/Js/My97DatePicker/WdatePicker.js" />
+<load href="__PUBLIC__/skin/easyui/locale/easyui-lang-zh_CN.js" /> 
+<load href="__PUBLIC__/skin/easyui/jquery.easyui.min.js" />
+
+<div id="main" class="main" >
+    <div class="content" >
+        <div class="title">英语角试题列表</div>
+        <div class="operate" >
+            <html:imageBtn name="add" click="add()" style="hMargin fLeft" />
+            <html:imageBtn name="edit" click="edit()" style="hMargin fLeft" />
+            <html:imageBtn name="delete" click="del()" style="hMargin fLeft" />
+            <html:imageBtn name="forbid" click="forbid()" style="hMargin fLeft" />
+            <html:imageBtn name="resume" click="resume()" style="hMargin fLeft" />
+            <html:imageBtn name="myimport" click="import_excel()" style="hMargin fLeft" />
+            <html:imageBtn name="myexport" click="export_to_excel()" style="hMargin fLeft" />
+            <div class="hMargin fLeft">
+                <label>英语角点击次数：</label><label>{$english_click_num|default=0}</label>
+            </div>
+        </div>
+        <form method='post' action="__URL__">
+            <div class="rSearch">
+                <div class="fLeft">试题查询：<span id="key"><input type="text" name="name" value="{$name}" class="medium" /></span></div>
+                <html:imageBtn type="submit" name="search" style="hMargin fLeft" />
+            </div>
+            <div class="search cBoth">
+                筛选：&nbsp;&nbsp;
+                <label>
+                    <input class="checkbox" type="checkbox" value="1" name="voice" <eq name="param['voice']" value="1">checked="checked"</eq>>
+                    美音
+                </label>
+                <label>
+                    <input class="checkbox" type="checkbox" value="2" name="voice" <eq name="param['voice']" value="2">checked="checked"</eq>>
+                    英音
+                </label>&nbsp;&nbsp;
+                <label>
+                    <input class="checkbox" type="checkbox" value="1" name="target" <eq name="param['target']" value="1">checked="checked"</eq>>
+                    听力
+                </label>
+                <label>
+                    <input class="checkbox" type="checkbox" value="2" name="target" <eq name="param['target']" value="2">checked="checked"</eq>>
+                    说力
+                </label>&nbsp;&nbsp;
+                <label>
+                    <input class="checkbox" type="checkbox" value="1" name="pattern" <eq name="param['pattern']" value="1">checked="checked"</eq>>
+                    视频
+                </label>
+                <label>
+                    <input class="checkbox" type="checkbox" value="2" name="pattern" <eq name="param['pattern']" value="2">checked="checked"</eq>>
+                    音频
+                </label>&nbsp;&nbsp;
+                <select name="object">
+                    <volist name="object_list" id="object">
+                        <option value="{$object.id}"  <eq name="param['object']" value="$object['id']">selected="true"</eq>>{$object.name}</option>
+                    </volist>
+                </select>&nbsp;&nbsp;
+                <select name="level">
+                    <option value="0">全部</option>
+                    <volist name="level_list" id="level">
+                        <option value="{$level.id}" <eq name="param['level']" value="$level['id']">selected="true"</eq>>{$level.name}</option>
+                    </volist>
+                </select>
+                &nbsp;&nbsp;
+                添加时间：
+                <input type="text" id="J_createTime" name="created" value="{$param['created']}" />
+                &nbsp;&nbsp;
+                状态：
+                <label>
+                    <input class="checkbox" type="checkbox" value="-2" name="status" <if condition="($param['status'] eq -2)OR(!isset($param['status']))">checked="checked"</if>>
+                    全部
+                </label>&nbsp;
+                <label>
+                    <input class="checkbox" type="checkbox" value="1" name="status" <if condition="$param['status'] eq 1">checked="checked"</if>>
+                    正常
+                </label>&nbsp;
+                <label>
+                    <input class="checkbox" type="checkbox" value="0" name="status" <eq name="param['status']" value="0">checked="checked"</eq>>
+                    禁用
+                </label>&nbsp;
+                <label>
+                    <input class="checkbox" type="checkbox" value="-1" name="status" <eq name="param['status']" value="-1">checked="checked"</eq>>
+                    已删除
+                </label>
+            </div>
+        </form>
+
+
+        <div class="list" >
+            <html:list id="checkList" name="category" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,name:名称:edit,created|toDateShort:发布时间,voice|getVoiceName:语音,target|getTargetName:训练,pattern|getPatternName:形式,object_name:科目,level_name:等级,status|getStatus:状态" actionlist="edit:编辑" />
+        </div>
+
+        <div class="page">{$page}</div>
+
+    </div>
+
+</div>
+<div id="import_dialog" class="easyui-dialog" style="width:250px;height:auto;" data-options="title:'请选择导入文件',shadow:false,modal:true,closed:true,closable:true">
+    <form method='post' id="frm_att" action="__URL__/excel_insert" enctype="multipart/form-data">
+        <input name="file" id="file_att" type="file" />
+        <input type="hidden" id="folder" name="folder" value="Excels" />
+        <input type="hidden" name="id" value="att" />
+    </form>
+</div>
+<div id="dialog" class="easyui-dialog" style="width:225px;height:auto;" data-options="title:'导入试题中',shadow:false,modal:true,closed:true,closable:false">
+    <img style="" src="__PUBLIC__/Images/loading.gif" />
+</div>
+<div id="export_dialog" class="easyui-dialog" style="width:250px;height:auto;" data-options="title:'请选择导出项',shadow:false,modal:true,closed:true,closable:true">
+    <h2>请选择需要导出的方式：</h2>
+    <div style='margin:10px 0 0 10px;'>
+        <label style="display: block;margin-bottom: 10px;"><input  type='radio' name='export_type' value='select' checked="true" />导出选中项</label>
+        <label style="display: block;"><input  type='radio' name='export_type' value='condition' />导出当前查询下所有项</label>
+    </div>
+    <div style="margin: 20px 0 10px 0;">
+        <input type="button" id='J_exportBtn' style='margin: 0 30px' value="确 认" class="small submit" />&nbsp;
+        <input type="button" id='J_exportCancelBtn' value="取消" class="small submit" />&nbsp;
+    </div>
+    <form id="J_fileDownloadForm" action='__URL__/download_excel'>
+        <input id="J_fileName" name='filename' type="hidden" value='' />
+    </form>
+</div>
+<script type="text/javascript">
+    $(function(){
+        $("#J_createTime").focus(function() {
+            WdatePicker({dateFmt: 'yyyy-MM-dd', maxDate: "%y-%M-%d",onpicked:function(){
+                    $("[name='search']").click();
+                },oncleared:function(){ $("[name='search']").click();}
+            });
+            $(this).blur();
+        })
+        var options = {beforeSubmit: showRequest,success: showResponse};
+        $("#frm_att").submit(function() {
+            $(this).ajaxSubmit(options); 
+            return false;
+        });
+        $("#file_att").change(function(){
+            if ( $(this).val() != '' ) {
+                $("#import_dialog").window("close");
+                $("#frm_att").submit();
+            }
+        });
+        $(".search .checkbox").click(function(){
+            $("[name='"+$(this).attr("name")+"']").not("[value='"+$(this).val()+"']").removeAttr("checked");
+            $("[name='search']").click();
+        })
+        $("[name='object'],[name='level']").change(function(){
+            $("[name='search']").click();
+        })
+        $("#J_exportCancelBtn").click(function(){
+            $("#export_dialog").window("close");
+        })
+        $("#J_exportBtn").click(function(){
+            export_action();
+        })
+    })
+    function showRequest(formData, jqForm, options) {
+        $("#dialog").window({title: "导入视频中"});
+        $("#dialog").window("open");
+        return true;
+    }
+    //
+    function showResponse(responseText, statusText)  {
+        $("#file_att").val('');
+        $("#dialog").window("close");
+        responseText = jQuery.parseJSON(responseText);
+        alert(responseText.info);
+        if(responseText.status){
+            window.location.reload();
+        }
+        //alert('status: ' + statusText + '\n\nresponseText: \n' + responseText);
+    }
+    function import_excel(){
+        $("#import_dialog").window("open");
+    }
+    function export_to_excel(){
+        $("#export_dialog").window("open");
+    }
+    function export_action(){
+        var type = $("input[name='export_type']:checked").val();
+        //导出选择项的id
+        if(type=="select"){
+            var id = getSelectCheckboxValues();
+            if (!id) {
+                alert('请选择编辑项！');
+                $("#export_dialog").window("close");
+                return false;
+            }
+        }else{
+            var param = "{$param_str}";
+        }
+        var url = "__URL__/export_excel?"+param;
+        $("#dialog").window({title: "导出视频中"});
+        $("#dialog").window("open");
+        $("#export_dialog").window("close");
+        $.post(url,{id:id},function(msg){
+            if(msg){
+                if(msg.status){
+                    $("#J_fileName").val(msg.data);
+                    $("#J_fileDownloadForm").submit();
+//                    window.open("__URL__/download_excel?filename="+msg.data);
+                    $("#export_dialog").window("close");
+                }else{
+                    $("#export_dialog").window("open");
+                    alert(msg.info);
+                }
+            }
+            $("#dialog").window("close");
+        },"json")
+    }
+    function sortBy(field, sort, param) {
+        param = "{$param_str}";
+        location.href = "?" + param + "&_order=" + field + "&_sort=" + sort;
+    }
+</script>
+</body>
+</html>

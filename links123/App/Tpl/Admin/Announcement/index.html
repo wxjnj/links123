@@ -1,0 +1,56 @@
+<tagLib name="html" />
+<include file="Public:header" />
+
+<div id="main" class="main" >
+	<div class="content" >
+		<div class="title">公告列表</div>
+
+		<div class="operate" >
+			<html:imageBtn name="add" click="add()" style="hMargin fLeft" />
+			<html:imageBtn name="delete" click="del()" style="hMargin fLeft" />
+			<html:imageBtn name="sort" click="sort()" style="hMargin fLeft" />
+		</div>
+		
+		<form method='post' action="__URL__">
+			<div class="rSearch">
+				<div class="fLeft">公告标题查询：<span id="key"><input type="text" name="title" value="{$title}" class="medium" ></span></div>
+				<html:imageBtn type="submit" name="search" style="hMargin fLeft" />
+				<html:imageBtn name="hide" id="hide" click="showHideSearch()" style="hMargin fLeft" />
+				<html:imageBtn name="adv" id="show" click="showHideSearch()" style="fLeft" />
+			</div>
+
+			<div id="searchM" class="search cBoth" >
+				<table cellpadding="1" cellspacing="3">
+					<tr>
+						<td class="tRight">状态：</td>
+						<td>
+							<select name="status">
+								<option value="1" <eq name="status" value="1">selected</eq> >有效</option>
+								<option value="-1" <eq name="status" value="-1">selected</eq> >已删</option>
+							</volist>
+							</select>						
+						</td>
+					</tr>
+				</table>
+			</div>
+		</form>
+
+		<div class="list" >
+			
+			<eq name="status" value="-1">
+				<html:list id="checkList" name="announcement" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,title:标题:edit,create_time|toDate:发布日期,sort:序号,click_num:点击量,status|getCatStt:状态,nickname:录入员" actionlist="edit:编辑,resume:恢复" />
+			<else />
+				<html:list id="checkList" name="announcement" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,title:标题:edit,create_time|toDate:发布日期,sort:序号,click_num:点击量,status|getCatStt:状态,nickname:录入员" actionlist="edit:编辑,del:删除" />
+			</eq>
+		</div>
+
+		<div class="page">{$page}</div>
+
+	</div>
+
+</div>
+
+</body>
+</html>
+
+

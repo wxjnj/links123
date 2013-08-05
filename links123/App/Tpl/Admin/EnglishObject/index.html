@@ -1,0 +1,41 @@
+<tagLib name="html" />
+<include file="Public:header" />
+
+<load href="__PUBLIC__/Js/jquery.js" />
+
+<div id="main" class="main" >
+    <div class="content" >
+        <div class="title">英语角科目列表</div>
+
+        <div class="operate" >
+            <html:imageBtn name="add" click="add()" style="hMargin fLeft" />
+        </div>
+
+        <form method='post' action="__URL__">
+            <div class="rSearch">
+                <div class="fLeft">科目查询：<span id="key"><input type="text" name="name" value="{$name}" class="medium" /></span></div>
+                <html:imageBtn type="submit" name="search" style="hMargin fLeft" />
+            </div>
+        </form>
+
+        <div class="list" >
+            <html:list id="checkList" name="category" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,name:名称:edit,sort:排序,status|getStatus:状态,default|getDefault:默认:setDefault" actionlist="edit:编辑" />
+        </div>
+
+        <div class="page">{$page}</div>
+
+    </div>
+
+</div>
+<script type="text/javascript">
+    function setDefault(id){
+        $.post("{:U('EnglishObject/setDefault')}",{id:id},function(msg){
+            alert(msg.info);
+            if(msg.status){
+                window.location.reload();
+            }
+        },"json")
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+/* CSS file */
+@namespace s "library://ns.adobe.com/flex/spark";
+@namespace mx "library://ns.adobe.com/flex/mx";
+@namespace p "com.links123.player.components.*";
+global
+{
+	chrome-color: #333333;
+	color: #CCCCCC;
+	content-background-color: #777777;
+	symbol-color: #000000;
+	roll-over-color: #555555;
+	selection-color: #333333;
+	focus-color: #999999;
+	accent-color: #8C8C8C;
+	fontFamily:"宋体";
+}
+
+mx|ToolTip
+{
+	color: #000000;
+}
+
+p|Player
+{
+	skin-class:ClassReference("com.links123.player.skins.VideoPlayerSkin");
+}
+
+p|WordBar
+{
+	skin-class:ClassReference("com.links123.player.skins.WordBarSkin");
+}
+
+p|LabelButton
+{
+	skin-class:ClassReference("com.links123.player.skins.LabelButtonSkin");
+}

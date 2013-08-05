@@ -1,0 +1,178 @@
+package com.links123.player.components
+{
+	import flash.display.Sprite;
+	import flash.events.Event;
+	import flash.events.IOErrorEvent;
+	import flash.filters.BitmapFilterQuality;
+	import flash.filters.GlowFilter;
+	import flash.media.Sound;
+	import flash.media.SoundChannel;
+	import flash.media.SoundMixer;
+	import flash.net.URLRequest;
+	import flash.system.Security;
+	import flash.utils.ByteArray;
+
+	/**
+	 * 声音播放器单例 
+	 * @author Administrator
+	 * 
+	 */	
+	public class MusicPlayer extends Sprite
+	{
+		include "../../../../log/Logging/Logger.as";
+		/**
+		 * 声音实例 
+		 */		
+		private var _sound:Sound = new Sound();
+		
+		private var _etime:Number = 0;
+		private var _stime:Number = 0;
+		private var sounchannel:SoundChannel = null;
+		private var byte:ByteArray = new ByteArray(); //音频谱
+		private var n:Number=10;
+		private var _isShowMovie:Boolean = false;//默认不显示音谱
+		public function MusicPlayer()
+		{
+			Security.allowDomain("*");
+			Security.allowInsecureDomain("*");
+		}
+		
+		/**
+		 * 用于到了指定位置停止播放音频 
+		 * @param event
+		 * 
+		 */		
+		protected function enterframehandle(event:Event):void
+		{
+			if(sounchannel!=null && sound!=null)
+			{
+				if( _etime != 0)
+				{
+					Logger.debug("总长度:{0},当前位置{1}",sound.length,sounchannel.position);
+					if(sounchannel.position>=_etime*1000)
+					{
+						sounchannel.stop();
+						Logger.debug("声音已停止");
+						_etime = 0;
+						this.removeEventListener(Event.ENTER_FRAME,enterframehandle);
+					}
+				}else
+				{
+					this.removeEventListener(Event.ENTER_FRAME,enterframehandle);
+				}
+			}
+		}
+		
+		/**
+		 * 播放音频方法 
+		 * @param url
+		 * 
+		 */		
+		public function playmusic(url:String,starttime:Number=0,endtime:Number=0):void
+		{
+			_etime = endtime;
+			if(sound!=null)
+			{
+				var urlrequest:URLRequest = new URLRequest(url);
+				sound.load(urlrequest);
+				sound.addEventListener(Event.COMPLETE,loadComplete);
+				sound.addEventListener(IOErrorEvent.IO_ERROR,ErrorHandle);
+			}
+		}
+		
+		/**
+		 * 加载声音出错 
+		 * @param event
+		 * 
+		 */		
+		protected function ErrorHandle(event:IOErrorEvent):void
+		{
+			Logger.debug("加载音频出错:{0}",event.errorID);
+		}
+		
+		/**
+		 * 加载音频完成 
+		 * @param event
+		 * 
+		 */		
+		protected function loadComplete(event:Event):void
+		{
+			Logger.debug("开始播放音频");
+			sounchannel = sound.play(_stime*1000);
+			this.addEventListener(Event.ENTER_FRAME,enterframehandle);
+		}
+		
+		/**
+		 * 播放音谱 
+		 * 
+		 */		
+		private function playMovie():void
+		{
+			this.graphics.clear();
+			SoundMixer.computeSpectrum(byte,true,1);//将当前声音输出为ByteArray  
+			for (var i:int=0; i <1000; i=i+5) {  
+				n = byte.readFloat()*60;//把数据流读取成浮点数并扩大其值  
+				this.graphics.lineStyle(3,0xFFFFFF,1,true,"noSacle","none");  
+				this.graphics.moveTo(27+i,50);  
+				this.graphics.lineTo(27+i,50-n)  
+				this.graphics.lineStyle(3,0xFFFFFF,0.2,true,"noSacle","none");  
+				this.graphics.lineTo(27+i,50+n);  
+			}
+			var glow:GlowFilter = new GlowFilter(); 
+			glow.color = 0x009922;
+			glow.alpha = 1; 
+			glow.blurX = 25; 
+			glow.blurY = 25; 
+			glow.quality = BitmapFilterQuality.MEDIUM;
+			this.filters = [glow];
+		}
+		
+		/**
+		 * 释放 
+		 * 
+		 */		
+		public function dispose():void
+		{
+			sounchannel = null;
+			sound.close();
+			_sound = null;
+			_etime = 0;
+		}
+		
+		public function get isShowMovie():Boolean
+		{
+			return _isShowMovie;
+		}
+		
+		public function set isShowMovie(value:Boolean):void
+		{
+			_isShowMovie = value;
+		}
+		
+		public function get sound():Sound
+		{
+			return _sound;
+		}
+
+		public function set sound(value:Sound):void
+		{
+			_sound = value;
+		}
+
+		
+		private static var instance:MusicPlayer = null;
+		/**
+		 * 取得单例 
+		 * @return 
+		 * 
+		 */		
+		public static function getInstance():MusicPlayer
+		{
+			if(instance==null)
+			{
+				instance = new MusicPlayer(); 
+			}
+			return instance
+		}
+	}
+}

@@ -1,0 +1,100 @@
+<tagLib name="html" />
+<include file="Public:header" />
+
+<!-- 
+<load href="__PUBLIC__/Js/Jquery/jquery.js" />
+<load href="__PUBLIC__/Js/Jquery/jqueryform.js" />
+ -->
+<script type="text/javascript">
+<!--
+/*
+	$(function(){
+		var options = { 
+			beforeSubmit: showRequest,
+			success: showResponse
+		};
+		//
+		$(".file_frm").submit(function() {
+			$(this).ajaxSubmit(options); 
+			return false;
+		});
+		//
+		$(":file").change(function(){
+	    	if ( $(this).val() != '' ) {
+	    		$(this).parent(".file_frm").submit();
+	    	}
+	    });
+		//
+		setPointer();
+	});
+	//
+	function showRequest(formData, jqForm, options) { 
+		//var queryString = $.param(formData);
+		//alert('About to submit: \n\n' + queryString);
+		return true;
+	}
+	//
+	function showResponse(responseText, statusText)  {
+		//alert('status: ' + statusText + '\n\nresponseText: \n' + responseText'); 
+		var tempary = responseText.split("|");
+		$("#img_"+tempary[0]).attr("src", PUBLIC+"/Uploads/OutsideLinks/"+tempary[1]).css("display", "inline-block");
+		$("#"+tempary[0]).val(tempary[1]);
+		$("#file_"+tempary[0]).blur();
+		setTimeout("setPointer()",500);
+	}
+	//
+	function setPointer() {
+		$(":file").each(function(index,domEle){
+			var tempstr = $(domEle).attr("id");
+			tempstr = tempstr.replace('file_','');
+			$(domEle).css({top:$("#"+tempstr).offset().top,left:$("#"+tempstr).offset().left});
+		});
+	}
+	*/
+//-->
+</script>
+
+<div id="main" class="main" >
+	<div class="content">
+		<div class="title">编辑友情链接[ <a href="__URL__">返回列表</a> ]</div>
+		<form method='post' id="form1" action="__URL__/update/" onsubmit="return CheckForm(this)">
+			<table cellpadding=3 cellspacing=3>
+				<tr>
+					<td class="tRight">标题：</td>
+					<td class="tLeft" colspan="2" ><input type="text" class="medium bLeftRequire" name="title" value="{$vo.title}" check="^\S" warning="标题不能为空" /></td>
+				</tr>
+				<!-- 
+				<tr>
+					<td class="tRight">缩略图：</td>
+					<td>
+						<img id="img_pic" src="__PUBLIC__/Uploads/OutsideLinks/{$vo.pic}" style="border:1px dotted #DDD;vertical-align:middle;width:120px;">
+						<input type="text" class="medium" id="pic" name='pic' value="{$vo.pic}" style="vertical-align:middle" readonly />&nbsp;
+						<a>上传图片</a>　<span style='color:#C00;'>（尺寸：120×30）</span>
+					</td>
+				</tr>
+				 -->
+				<tr>
+					<td class="tRight">链接：</td>
+					<td class="tLeft" colspan="2" ><input type="text" class="large" name="url" value="{$vo.url}" check="^\S" warning="链接不能为空" /></td>
+				</tr>
+				<tr>
+					<td><input type="hidden" name="id" value="{$vo.id}" ></td>
+					<td class="center">
+					<input type="submit" value="保 存" class="small submit" />&nbsp;
+					<input type="reset" class="submit small" value="清 空" />
+					</td>
+				</tr>
+			</table>
+		</form>
+		<!-- 
+		<form method='post' id="frm_pic" class="file_frm" action="__GROUP__/Public/uploadPic/" enctype="multipart/form-data">
+			<input name="image" id="file_pic" type="file" style="position:absolute; width:230px; top:0px; left:0px; height:28px; filter:alpha(opacity:0);opacity:0;" />
+			<input type="hidden" id="folder" name="folder" value="OutsideLinks" />
+			<input type="hidden" name="width" value="120" />
+		</form>
+		 -->
+	</div>
+</div>
+
+</body>
+</html>

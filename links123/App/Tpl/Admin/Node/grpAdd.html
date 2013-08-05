@@ -1,0 +1,74 @@
+<include file="Public:header" />
+
+<div id="main" class="main" >
+	<div class="content">
+		<div class="title"> 批量新增
+			<eq name="level" value="1">应用</eq>
+			<eq name="level" value="2">模块</eq>
+			<eq name="level" value="3">操作</eq>
+			[ <a href="__URL__/index/group_id/{$group_id}/pid/{$_SESSION.currentNodeId}">返回
+			<eq name="level" value="1">应用</eq>
+			<eq name="level" value="2">模块</eq>
+			<eq name="level" value="3">操作</eq>
+			列表</a> ]
+		</div>
+		<form method='post' id="form1" action="__URL__/grpInsert/" >
+			<table cellpadding=3 cellspacing=3 >
+				<tr>
+					<td class="tRight" ><eq name="level" value="1">应用</eq><eq name="level" value="2">模块</eq><eq name="level" value="3">操作</eq>名：</td>
+					<td class="tLeft" >
+						<!-- <input type="text" class="medium bLeftRequire" check='Require' warning="<eq name='level' value='1'>应用</eq><eq name='level' value='2'>模块</eq><eq name='level' value='3'>操作</eq>名称不能为空,且不能含有空格" name="name" /> -->
+					<volist name="names" id="vo" key="k">
+						<label><input type="checkbox" name="names[]" value="{$k}" />&nbsp;{$vo}　&nbsp;</label>
+					</volist>
+					</td>
+				</tr>
+				<!-- 
+				<tr>
+					<td class="tRight" >显示名：</td>
+					<td class="tLeft" >
+						<input type="text" class="medium bLeftRequire" check='Require' warning="显示名称必须"  name="title" />
+					<volist name="titles" id="vo" key="k">
+						<label><input type="checkbox" name="title[]" value="{$k}" />&nbsp;{$vo}　&nbsp;</label>
+					</volist>
+					</td>
+				</tr>
+				 -->
+				<tr>
+					<td class="tRight" >分　组：</td>
+					<td class="tLeft" >
+					<SELECT class="medium bLeft" name="group_id">
+						<option value="">未分组</option>
+					<volist name="list" id="vo">
+						<option value="{$vo.id}">{$vo.title}</option>
+					</volist>
+					</SELECT>
+					</td>
+				</tr>
+				<tr>
+					<td class="tRight">状　态：</td>
+					<td class="tLeft">
+						<SELECT class="small bLeft"  name="status">
+							<option value="1">启用</option>
+							<option value="0">禁用</option>
+						</SELECT>
+					</td>
+				</tr>
+				<tr>
+					<td class="tRight tTop">描　述：</td>
+					<td class="tLeft"><TEXTAREA class="large bLeft" name="remark"  rows="5" cols="57"></textarea></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td class="center">
+						<input type="hidden" name="level" value="{$level}" />
+						<input type="hidden" name="pid" value="{$pid}" />
+						<input type="hidden" name="ajax" value="0" />
+						<input type="submit" value="保 存" class="small submit" />&nbsp;
+						<input type="reset" value="取 消" class="submit small" onclick="history.back(-1)" />
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>

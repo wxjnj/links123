@@ -1,0 +1,197 @@
+<tagLib name="html" />
+<include file="Public:header" />
+
+<load href="__PUBLIC__/Js/Jquery/jquery.js" />
+<load href="__PUBLIC__/Js/Jquery/jqueryform.js" />
+<script type="text/javascript">
+<!--
+	//
+	function grpCheck() {
+		keyValue = getSelectCheckboxValues();
+		//
+		if (!keyValue) {
+		    alert('请选择审核项！');
+		    return false;
+		}
+		$("#ids").val(keyValue);
+		$("#div_check").css("display","block");
+	}
+	//
+	function setChecked(link, checked) {
+		if ( checked==0 ) {
+			$.post(URL+"/setChecked/", {
+				link: link
+			}, 
+			function(data){
+				if (data.status) {
+					window.location.reload();
+				}
+				else {
+					alert(data.info);
+				}
+			}); 
+		}
+	}
+	//
+	$(function(){
+		var options = { 
+			beforeSubmit: showRequest,
+			success: showResponse
+		};
+		//
+		$(".file_frm").submit(function() {
+			$(this).ajaxSubmit(options); 
+			return false;
+		});
+		//
+		$(":file").change(function(){
+	    	if ( $(this).val() != '' ) {
+	    		$(this).parent(".file_frm").submit();
+	    	}
+	    });
+
+		
+		// 审核
+		$("#btn_qd").click(function(){
+			if ( !$("#div_check input[name='flag']:checked")[0] ) {
+				alert("请选择操作！");
+				return false;
+			}
+			//
+			$.post(URL+"/grpCheck/", {
+				ids: $("#ids").val(),
+				flag: $("#div_check input[name='flag']:checked").val()
+			}, 
+			function(data){
+				if ( data.indexOf("checkOK") >= 0 ) {
+					var temp = data.split("|");
+					alert(temp[1]);
+					window.location.reload();
+				}
+				else {
+					alert(data);
+				}
+			}); 
+			//
+			$("#ids").val('');
+			$("#div_check input").attr("checked",false);
+			$("#div_check").css("display","none");
+		});
+		//
+		$("#btn_ccl").click(function(){
+			$("#ids").val('');
+			$("#div_check input").attr("checked",false);
+			$("#div_check").css("display","none");
+		});
+		
+		/* 直达 */
+		$(".page input").keydown(function(event){
+			if (event.keyCode == 13) {	// 回车
+				if ( $(this).val()!='' && !isNaN($(this).val()) ) {
+					window.location.href = $(this).attr("url") + "&p=" + $(this).val();
+				}
+			}
+		});
+	});
+	//
+	function showRequest(formData, jqForm, options) { 
+		//var queryString = $.param(formData);
+		//alert('About to submit: \n\n' + queryString);
+		return true;
+	}
+	//
+	function showResponse(responseText, statusText)  {
+		//alert('status: ' + statusText + '\n\nresponseText: \n' + responseText); 
+		$("#file_att").val('');
+		var tempary = responseText.split('|');
+		window.open(GROUP+"/Public/read_excel/file/"+tempary[1]);
+	}
+	
+
+//-->
+</script>
+
+<div id="main" class="main" >
+	<div class="content" >
+		<div class="title">直达网址列表</div>
+
+		<div class="operate" >
+			<html:imageBtn name="add" click="add()" style="hMargin fLeft" />
+			<html:imageBtn name="delete" click="foreverdel()" style="hMargin fLeft" />
+			<html:imageBtn name="check" click="grpCheck()" style="hMargin fLeft" />
+			<html:imageBtn name="myimport" click="" style="hMargin fLeft" />
+		</div>
+		
+		<form method='post' action="__URL__">
+			<div class="rSearch">
+				<div class="fLeft">标签查询：<span id="key"><input type="text" name="tag" value="{$tag}" class="medium" ></span></div>
+				<html:imageBtn type="submit" name="search" style="hMargin fLeft" />
+				<html:imageBtn name="hide" id="hide" click="showHideSearch()" style="hMargin fLeft" />
+				<html:imageBtn name="adv" id="show" click="showHideSearch()" style="fLeft" />
+			</div>
+
+			<div id="searchM" class="search cBoth" >
+				<table cellpadding="1" cellspacing="3">
+					<tr>
+						<td class="tRight">链接地址：</td>
+						<td>
+							<input type="text" name="url" value="{$url}" class="medium" >					
+						</td>
+						<td>&nbsp;　　&nbsp;</td>
+						<td class="tRight">中文标签：</td>
+						<td>
+							<select name="cn_tag">
+								<option value="" <eq name="cn_tag" value="">selected</eq> >不论</option>
+								<option value="1" <eq name="cn_tag" value="1">selected</eq> >是</option>
+								<option value="0" <eq name="cn_tag" value="0">selected</eq> >否</option>
+							</select>						
+						</td>
+						<td>&nbsp;　　&nbsp;</td>
+						<td class="tRight">已查看：</td>
+						<td>
+							<select name="checked">
+								<option value="" <eq name="checked" value="">selected</eq> >不论</option>
+								<option value="1" <eq name="checked" value="1">selected</eq> >是</option>
+								<option value="0" <eq name="checked" value="0">selected</eq> >否</option>
+							</select>						
+						</td>
+						<td>&nbsp;　　&nbsp;</td>
+						<td class="tRight">状态：</td>
+						<td>
+							<select name="status">
+								<option value="" <eq name="status" value="">selected</eq> >所有</option>
+								<option value="0" <eq name="status" value="0">selected</eq> >未审</option>
+								<option value="1" <eq name="status" value="1">selected</eq> >已审</option>
+							</select>						
+						</td>
+					</tr>
+				</table>
+			</div>
+		</form>
+
+		<div class="list" >
+			<html:list id="checkList" name="directLinks" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,tag:标签:edit,url|getLinkToHref2=$directLinks['checked']:链接地址,click_num:点击量,update_time|toDate:更新日期,cn_tag|getYorN:中文标签,status|getLinkStt:状态,checked|getYorN:已查看" actionlist="edit:编辑,foreverdel:删除" />
+		</div>
+
+		<div class="page">{$page}</div>
+
+	</div>
+
+</div>
+
+<div id="div_check" style="width:200px;background-color:#FFF;border:1px solid #333;position:absolute;left:270px;top:82px;display:none;">
+	<p style="margin:10px;padding-top:10px;border-top:1px dotted #999999;text-align:center;"><label><input type="radio" name="flag" value="1" />&nbsp;通过审核</label>　<label><input type="radio" name="flag" value="０" />&nbsp;取消审核</label></p>
+	<p style="margin:10px;padding-top:10px;border-top:1px dotted #999999;text-align:right;"><input type="button" id="btn_qd" value=" 确定 " style="cursor:pointer;" />&nbsp;<input type="button" id="btn_ccl" value=" 取消 " style="cursor:pointer;" /></p>
+	<input type="hidden" id="ids" />
+</div>
+
+	<form method='post' id="frm_att" class="file_frm" action="__GROUP__/Public/uploadAtt/" enctype="multipart/form-data">
+		<input name="image" id="file_att" type="file" style="position:absolute; width:74px; top:56px; left:248px; height:26px; cursor:pointer; filter:alpha(opacity:0);opacity:0;" />
+		<input type="hidden" id="folder" name="folder" value="Excels" />
+		<input type="hidden" name="id" value="att" />
+	</form>
+
+</body>
+</html>
+
+

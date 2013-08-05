@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:mx="library://ns.adobe.com/flex/mx">
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("com.links123.player.components.IntroWordPanel")]
+	</fx:Metadata>
+	
+	<!-- SkinParts
+	name=goon, type=spark.components.Button, required=false
+	name=word, type=spark.components.Label, required=false
+	name=example, type=spark.components.Label, required=false
+	name=type, type=spark.components.Label, required=false
+	name=intro, type=spark.components.Label, required=false
+	-->
+	<s:Group right="0" bottom="0" left="0" top="0">
+		<s:Label id="word">
+			
+		</s:Label>
+	</s:Group>
+</s:Skin>

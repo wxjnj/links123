@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		xmlns:s="library://ns.adobe.com/flex/spark" 
+		xmlns:mx="library://ns.adobe.com/flex/mx">
+	<!-- host component -->
+	<fx:Metadata>
+		[HostComponent("com.links123.player.components.IntroWordPanel")]
+	</fx:Metadata>
+	
+	<!-- SkinParts
+	name=goon, type=spark.components.Button, required=false
+	name=word, type=spark.components.Label, required=false 
+	name=example, type=spark.components.Label, required=false
+	name=type, type=spark.components.Label, required=false 
+	name=intro, type=spark.components.Label, required=false
+	-->
+	<s:Group right="0" bottom="0" left="0" top="0">
+		<s:Rect bottom="1" left="1" right="1" top="1">
+			<s:fill>
+				<s:SolidColor color="0x000000" />
+			</s:fill>
+		</s:Rect>
+		<s:VGroup gap="10" left="30">
+			<s:Label id="word" fontSize="24" fontWeight="bold" text="talent" fontFamily="Arial,Helvetica,sans-serif">
+			</s:Label>
+			<s:Label id="type" fontStyle="italic" text="名词">
+			</s:Label>
+			<s:Label id="intro" text="a person who has a strong natural ability in something" fontSize="18" fontWeight="bold" fontFamily="Arial,Helvetica,sans-serif">
+			</s:Label>
+			<s:Label id="example" fontStyle="italic" text="I found a talent for a role in this movie.">
+			</s:Label>
+			<s:Button id="goon" label="继续">
+			</s:Button>
+		</s:VGroup>
+		
+	</s:Group>
+</s:Skin>

@@ -1,0 +1,34 @@
+<tagLib name="html" />
+<include file="Public:header" />
+
+<div id="main" class="main" >
+
+	<div class="content" >
+		<div class="title">后台用户列表</div>
+
+		<div class="operate" >
+			<html:imageBtn name="add" click="add()" style="hMargin fLeft" />
+			<html:imageBtn name="edit" click="edit()" style="hMargin fLeft" />
+			<html:imageBtn name="delete" click="del()" style="hMargin fLeft" />
+		</div>
+		
+		<form method='post' action="__URL__">
+			<div class="rSearch">
+				<div class="fLeft">昵称查询：<span id="key"><input type="text" name="nickname" value="{$nickname}" class="medium" ></span></div>
+				<html:imageBtn type="submit" name="search" style="hMargin fLeft" />
+			</div>
+		
+			<div  id="searchM" class=" none search cBoth" >
+			</div>
+		</form>
+		
+		
+		<div class="list" >
+			<html:list id="checkList" name="user" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|8%,account:用户名:edit,nickname:昵称,create_time|toDate='Y-m-d H#i#s':添加时间,last_login_time|toDate='Y-m-d H#i#s':上次登录,login_count:登录次数,status|getStatus:状态" actionlist="status|showStatus=$user['id']" />
+		</div>
+		
+		<div class="page">{$page}</div>
+
+	</div>
+
+</div>

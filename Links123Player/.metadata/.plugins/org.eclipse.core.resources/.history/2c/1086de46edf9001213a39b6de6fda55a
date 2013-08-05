@@ -1,0 +1,36 @@
+package com.links123.player.components
+{
+	
+	import spark.components.Label;
+	import spark.components.supportClasses.SkinnableComponent;
+	
+	
+	
+	public class IntroWordPanel extends SkinnableComponent
+	{
+		
+		//声音容器
+		[SkinPart(required="false")]
+		public var word:Label;
+		public function IntroWordPanel()
+		{
+			super();
+		}
+		
+		override protected function getCurrentSkinState():String
+		{
+			return super.getCurrentSkinState();
+		} 
+		
+		override protected function partAdded(partName:String, instance:Object) : void
+		{
+			super.partAdded(partName, instance);
+		}
+		
+		override protected function partRemoved(partName:String, instance:Object) : void
+		{
+			super.partRemoved(partName, instance);
+		}
+		
+	}
+}

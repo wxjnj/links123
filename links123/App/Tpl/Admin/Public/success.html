@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Transitional//EN' 'http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd'>
+<html>
+<head>
+<title>页面提示</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv='Refresh' content='{$waitSecond};URL={$jumpUrl}'>
+<load href ="__PUBLIC__/Css/style.css" />
+</head>
+<body>
+	<div class="message">
+		<table class="message" cellpadding=0 cellspacing=0 >
+			<tr>
+				<td height='3' class="topTd" ></td>
+			</tr>
+			<tr class="row" >
+				<th class="tCenter space" style="color:#FFFFFF;"">{$msgTitle}</th>
+			</tr>
+		<present name="message" >
+			<tr class="row">
+				<td style="color:#098806;"><img src="__PUBLIC__/Images/laugh.jpg" style="vertical-align:middle;" />&nbsp;{$message}</td>
+			</tr>
+			<tr class="row">
+				<td>系统将在 <span id="wait" style="color:#C00;font-weight:bold">{$waitSecond}</span> 秒后自动关闭，如果不想等待,直接点击 <a id="href" href="{$jumpUrl}">这里</a> 关闭</td>
+				<!-- <td><input type="button" value=" 确定 " onclick="window.location.href='{$jumpUrl}'" style="cursor:pointer;" /></td> -->
+			</tr>
+		</present>
+		<present name="error" >
+			<tr class="row">
+				<td style="color:#C00;">{$error}</td>
+			</tr>
+			<tr class="row">
+				<!-- <td>系统将在 <span id="wait" style="color:#C00;font-weight:bold">{$waitSecond}</span> 秒后自动跳转,如果不想等待,直接点击 <a id="href" href="{$jumpUrl}">这里</a> 跳转</td> -->
+				<td><input type="button" value=" 确 定 " onclick="{$jumpUrl}" style="cursor:pointer;" /></td>
+			</tr>
+		</present>
+
+			<tr>
+				<td height='3' class="bottomTd"></td>
+			</tr>
+		</table>
+	</div>
+	
+	<script type="text/javascript">
+	/*
+		(function(){
+		var wait = document.getElementById('wait'),href = document.getElementById('href').href;
+		var interval = setInterval(function(){
+			var time = --wait.innerHTML;
+			(time == 0) && (location.href = href);
+		}, 1000);	
+		})();
+	*/
+	</script>
+	
+</body>
+</html>

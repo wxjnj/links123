@@ -1,0 +1,40 @@
+<tagLib name="html" />
+<include file="Public:header" />
+
+<load href="__PUBLIC__/Js/jquery.js" />
+<script language="javascript">
+	$(function(){
+		/* 直达 */
+		$(".page input").keydown(function(event){
+			if (event.keyCode == 13) {	// 回车
+				if ( $(this).val()!='' && !isNaN($(this).val()) ) {
+					window.location.href = $(this).attr("url") + "&p=" + $(this).val();
+				}
+			}
+		});
+	});
+</script>
+
+<div id="main" class="main" >
+	<div class="content" >
+		<div class="title">网站基本设置列表</div>
+
+		
+		<form method='post' action="__URL__">
+			<div class="rSearch">
+				<div class="fLeft">名称查询：<span id="key"><input type="text" name="setting_name" value="{$setting_name}" class="medium" ></span></div>
+				<html:imageBtn type="submit" name="search" style="hMargin fLeft" />
+			</div>
+		</form>
+
+		<div class="list" >
+			<html:list id="checkList" name="suggestion" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,setting_name|lengthLimit:名称:edit,setting_mark|lengthLimit:标识,setting_value|lengthLimit:设置值,setting_remark|lengthLimit:描述,create_time|toDate:提交日期" actionlist="edit:修改" />
+		</div>
+
+		<div class="page">{$page}</div>
+
+	</div>
+
+</div>
+
+

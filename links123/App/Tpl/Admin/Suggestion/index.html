@@ -1,0 +1,78 @@
+<tagLib name="html" />
+<include file="Public:header" />
+
+<load href="__PUBLIC__/Js/jquery.js" />
+<script language="javascript">
+	$(function(){
+		/* 直达 */
+		$(".page input").keydown(function(event){
+			if (event.keyCode == 13) {	// 回车
+				if ( $(this).val()!='' && !isNaN($(this).val()) ) {
+					window.location.href = $(this).attr("url") + "&p=" + $(this).val();
+				}
+			}
+		});
+	});
+</script>
+
+<div id="main" class="main" >
+	<div class="content" >
+		<div class="title">留言板列表</div>
+
+		<div class="operate" >
+			<html:imageBtn name="delete" click="del()" style="hMargin fLeft" />
+		</div>
+		
+		<form method='post' action="__URL__">
+			<div class="rSearch">
+				<div class="fLeft">留言查询：<span id="key"><input type="text" name="suggest" value="{$suggest}" class="medium" ></span></div>
+				<html:imageBtn type="submit" name="search" style="hMargin fLeft" />
+				<html:imageBtn name="hide" id="hide" click="showHideSearch()" style="hMargin fLeft" />
+				<html:imageBtn name="adv" id="show" click="showHideSearch()" style="fLeft" />
+			</div>
+
+			<div id="searchM" class="search cBoth" >
+				<table cellpadding="1" cellspacing="3">
+					<tr>
+					<!-- 
+						<td class="tRight">类别：</td>
+						<td>
+							<SELECT class="bLeft" name="type">
+								<option value=''>所有类别</option>
+								<option value="1" <eq name="status" value="1">selected</eq> >建议投诉</option>
+								<option value="2" <eq name="status" value="2">selected</eq> >申请取消链接</option>
+								<option value="3" <eq name="status" value="3">selected</eq> >其他</option>
+							</select>
+						</td>
+						<td>&nbsp;　&nbsp;</td>
+					 -->
+						<td class="tRight">状态：</td>
+						<td>
+							<SELECT class="bLeft" name="status">
+								<option value=''>有效</option>
+								<option value="0" <eq name="status" value="0">selected</eq> >未回复</option>
+								<option value="1" <eq name="status" value="1">selected</eq> >已回复</option>
+								<option value="-1" <eq name="status" value="-1">selected</eq> >已删除</option>
+							</select>
+						</td>	
+					</tr>
+				</table>
+			</div>
+		</form>
+
+		<div class="list" >
+		<eq name="status" value="-1">
+			<html:list id="checkList" name="suggestion" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,suggest|lengthLimit:留言:edit,nickname:提交人,create_time|toDate:提交日期,status|getSugStt:状态" actionlist="edit:回复,resume:恢复" />
+		<else />
+			<html:list id="checkList" name="suggestion" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,suggest|lengthLimit:留言:edit,nickname:提交人,create_time|toDate:提交日期,status|getSugStt:状态" actionlist="edit:回复,del:删除" />
+		</eq>
+			
+		</div>
+
+		<div class="page">{$page}</div>
+
+	</div>
+
+</div>
+
+
