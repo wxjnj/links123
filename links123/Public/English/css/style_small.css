@@ -456,7 +456,8 @@ a.disabled {
 .ranklist{
     width: 289px;
     position: absolute;
-    left: -273px;
+    left: 0;
+    /*left: -273px;*/
     top: 200px;
     z-index: 999;
 }
