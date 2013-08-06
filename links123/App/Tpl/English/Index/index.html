@@ -247,72 +247,70 @@
                     </div>
                 </div>
             </div>
-            <div class="order">
-                <div class="orderpai">大<br />
-                    米<br />
-                    排<br />
-                    行<br />
-                    榜<br />
+            <div class="ranklist">
+                <div class="ranklist-hd">
+                    <a href="javascript:void(0);">
+                        更多排行
+                        <ul>
+                            <li><a href="javascript:void(0)" class="current" type="object_综合">综合</a> </li>
+                            <li><a href="javascript:void(0)" type="total_rice">大米</a> </li>
+                            <li><a href="javascript:void(0)" type="object_语文">语文</a> </li>
+                            <li><a href="javascript:void(0)" type="object_数学">数学</a> </li>
+                            <li><a href="javascript:void(0)" id="J_moreObjectLink" type="more_object">更多科目</a></li>
+                            <li><a href="javascript:void(0)" class="more_object"  type="object_科学">科学</a> </li>
+                            <li><a href="javascript:void(0)" class="more_object"  type="object_艺术">艺术</a> </li>
+                            <li><a href="javascript:void(0)" class="more_object"  type="object_历史">历史</a> </li>
+                            <li><a href="javascript:void(0)" class="more_object"  type="object_地理">地理</a> </li>
+                            <li><a href="javascript:void(0)" class="more_object"  type="object_化学">化学</a> </li>
+                            <li><a href="javascript:void(0)" class="more_object"  type="object_健康">健康</a> </li>
+                            <li><a href="javascript:void(0)" class="more_object"  type="object_社会">社会</a> </li>
+                        </ul>
+                    </a>
                 </div>
-                <table width="320" border="0" cellpadding="0" cellspacing="0">
-                    <tr class="J_orderTitleTr">
-                        <td colspan="4">
-                            <div class="selectBox">
-                                <a href="javascript:void(0);" id="J_orderTitle" value="object_综合">综合</a>
-                                <p> <a href="javascript:void(0)" class="current" type="object_综合">综合</a> 
-                                    <a href="javascript:void(0)" type="total_rice">大米</a> 
-                                    <a href="javascript:void(0)" type="object_语文">语文</a> 
-                                    <a href="javascript:void(0)" type="object_数学">数学</a> 
-                                    <a href="javascript:void(0)" id="J_moreObjectLink" type="more_object">更多科目</a>
-                                    <a href="javascript:void(0)" class="more_object"  type="object_科学">科学</a> 
-                                    <a href="javascript:void(0)" class="more_object"  type="object_艺术">艺术</a> 
-                                    <a href="javascript:void(0)" class="more_object"  type="object_历史">历史</a> 
-                                    <a href="javascript:void(0)" class="more_object"  type="object_地理">地理</a> 
-                                    <a href="javascript:void(0)" class="more_object"  type="object_化学">化学</a> 
-                                    <a href="javascript:void(0)" class="more_object"  type="object_健康">健康</a> 
-                                    <a href="javascript:void(0)" class="more_object"  type="object_社会">社会</a> 
+                <div class="ranklist-bd">
+                    <div class="rl-listen">
+                        <h3>听力</h3>
+                        <ul>
+                            <volist name="top_1" id="user" >
+                            <li>
+                                <p class="idx">
+                                     <switch name="i" >
+                                        <case value="1"><img src="__PUBLIC__/English/images/gold.png" width="26" height="25" /></case>
+                                        <case value="2"><img src="__PUBLIC__/English/images/yingpai.png" width="26" height="25" /></case>
+                                        <case value="3"><img src="__PUBLIC__/English/images/yingpai.png" width="26" height="25" /></case>
+                                        <default /><img src="__PUBLIC__/Uploads/Faces/{$user.face}" width="26" height="25" />
+                                    </switch>
                                 </p>
-                                <input type="hidden" name="category" id="category" value="no" />
-                            </div>
-                        </td>
-                    </tr>
-                    <tr class="J_orderVoiceTr">
-                        <td height="24" colspan="4" align="center" bgcolor="#844f30"><span class="ordertitle">听力</span></td>
-                    </tr>
-                    <volist name="top_1" id="user" >
-                        <tr class="J_orderListTr">
-                            <td class="oreder_name" height="60" valign="middle" bgcolor="#ddd1c3">
-                                <switch name="i" >
-                                    <case value="1"><img src="__PUBLIC__/English/images/gold.png" width="26" height="25" /></case>
-                                    <case value="2"><img src="__PUBLIC__/English/images/yingpai.png" width="26" height="25" /></case>
-                                    <default /><img src="__PUBLIC__/English/images/tongpai.png" width="26" height="25" />
-                                </switch>
-                                 {$user.nickname}
-                            </td>
-                            <td height="60" valign="middle" bgcolor="#ddd1c3"><span class="ricenumber">{$user.rice_sum}</span> <img src="__PUBLIC__/English/images/rice.png" width="25" height="26" /></td>
-                            <td height="60" colspan="2" valign="middle" bgcolor="#ddd1c3">{$user.best_level_name}</td>
-                        </tr>
-                    </volist>
-                    <tr class="J_orderVoiceTr">
-                        <td height="24" colspan="4" align="center" valign="middle" bgcolor="#844F30"><span class="ordertitle">说力</span></td>
-                    </tr>
-                    
-                    <volist name="top_2" id="user" >
-                        <tr class="J_orderListTr">
-                            <td  class="oreder_name" height="60" valign="middle" bgcolor="#ddd1c3">
-                                <switch name="i" >
-                                    <case value="1"><img src="__PUBLIC__/English/images/gold.png" width="26" height="25" /></case>
-                                    <case value="2"><img src="__PUBLIC__/English/images/yingpai.png" width="26" height="25" /></case>
-                                    <default /><img src="__PUBLIC__/English/images/tongpai.png" width="26" height="25" />
-                                </switch>
-                                 {$user.nickname}
-                            </td>
-                            <td height="60" valign="middle" bgcolor="#ddd1c3"><span class="ricenumber">{$user.rice_sum}</span> <img src="__PUBLIC__/English/images/rice.png" width="25" height="26" /></td>
-                            <td height="60" colspan="2" valign="middle" bgcolor="#ddd1c3">{$user.best_level_name}</td>
-                        </tr>
-                    </volist>
-                </table>
+                                <p class="nm">{$user.nickname}</p>
+                                <p class="sum">{$user.rice_sum}</p>
+                                <p class="ln">{$user.best_level_name}</p>
+                            </li>
+                            </volist>
+                        </ul>
+                    </div>
+                    <div class="rl-speak">
+                        <h3>说力</h3>
+                        <ul>
+                            <volist name="top_2" id="user" >
+                            <li>
+                                <p class="idx">
+                                     <switch name="i" >
+                                        <case value="1"><img src="__PUBLIC__/English/images/gold.png" width="26" height="25" /></case>
+                                        <case value="2"><img src="__PUBLIC__/English/images/yingpai.png" width="26" height="25" /></case>
+                                        <case value="3"><img src="__PUBLIC__/English/images/yingpai.png" width="26" height="25" /></case>
+                                        <default /><img src="__PUBLIC__/Uploads/Faces/{$user.face}" width="26" height="25" />
+                                    </switch>
+                                </p>
+                                <p class="nm">{$user.nickname}</p>
+                                <p class="sum">{$user.rice_sum}</p>
+                                <p class="ln">{$user.best_level_name}</p>
+                            </li>
+                            </volist>
+                        </ul>
+                    </div>
+                </div>
             </div>
+         
             <div style="margin:0 auto; width: 1000px; height:140px; position:relative;clear:both;">
              
 
