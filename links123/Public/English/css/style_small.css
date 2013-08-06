@@ -471,7 +471,7 @@ a.disabled {
     height: 21px;
     width: 273px;
 }
-.ranklist .ranklist-hd a ul{ display: none; }
+.ranklist .ranklist-hd ul{ display: none; }
 .ranklist .sum{
     background: url(../images/rice.png) right 0 no-repeat;
 }
