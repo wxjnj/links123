@@ -451,3 +451,26 @@ a.disabled {
 .video_div {
     /**background: url("../images/loading.gif") no-repeat scroll center center transparent;**/
 }
+
+/* ranklist added by jeanun 2013.08.06 */
+.ranklist{
+    width: 289px;
+    position: absolute;
+    left: -273px;
+    top: 200px;
+    z-index: 999;
+}
+.ranklist .ranklist-hd{}
+.ranklist .ranklist-hd a{
+    background: url(../images/ranklist-bg.png) 1000px 1000px no-repeat;
+}
+.ranklist .ranklist-hd a{
+    background-position: 0 -59px;
+    display: block;
+    height: 21px;
+    width: 273px;
+}
+.ranklist .ranklist-hd a ul{ display: none; }
+.ranklist .sum{
+    background: url(../images/rice.png) right 0 no-repeat;
+}
