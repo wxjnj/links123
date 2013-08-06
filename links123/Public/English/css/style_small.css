@@ -490,6 +490,13 @@ a.disabled {
     margin: 0;
     padding: 0;
 }
+.ranklist .ranklist-bd .rl-listen{
+    border-bottom: 1px solid #bf9668;
+}
+.ranklist .ranklist-bd .rl-listen,
+.ranklist .ranklist-bd .rl-speak{
+    padding: 10px 0;
+}
 .ranklist .ranklist-bd .rl-listen h3{
     background-position: 0 0;
 }
