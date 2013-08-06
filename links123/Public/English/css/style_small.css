@@ -497,7 +497,7 @@ a.disabled {
 }
 .ranklist .ranklist-bd .rl-listen,
 .ranklist .ranklist-bd .rl-speak{
-    padding: 10px 10px 10px 20px;
+    padding: 10px 9px 10px 20px;
 }
 .ranklist .ranklist-bd .rl-listen h3{
     background-position: 0 0;
@@ -514,6 +514,16 @@ a.disabled {
     height: 0;
     clear: both;
 }
+.ranklist .rl-listen p,
+.ranklist .rl-speak p{
+    padding: 0;
+    margin: 0;
+    float: left;
+}
+.ranklist .idx{ width: 40px; }
+.ranklist .nm{ width: 70px; }
+.ranklist .sum{ width: 70px; }
+.ranklist .ln{ width: 60px; }
 .ranklist .sum{
     background: url(../images/rice.png) right 0 no-repeat;
 }
