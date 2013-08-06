@@ -478,8 +478,10 @@ a.disabled {
     background: #f7f6f5;
     border: 2px solid #bf9668;
     border-width: 0 2px 2px;
-    width: 269px;
+    width: 249px;
+    padding: 0 20px;
 }
+.ranklist .ranklist-bd h3{ margin: 0; }
 .ranklist .sum{
     background: url(../images/rice.png) right 0 no-repeat;
 }
