@@ -472,6 +472,11 @@ a.disabled {
     width: 273px;
 }
 .ranklist .ranklist-hd ul{ display: none; }
+.ranklist .ranklist-bd{
+    border: 2px solid #bf9668;
+    border-width: 0 2px 2px;
+    width: 269px;
+}
 .ranklist .sum{
     background: url(../images/rice.png) right 0 no-repeat;
 }
