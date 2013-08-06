@@ -462,7 +462,8 @@ a.disabled {
     z-index: 999;
 }
 .ranklist .ranklist-hd{}
-.ranklist .ranklist-hd a{
+.ranklist .ranklist-hd a,
+.ranklist .ranklist-bd h3{
     background: url(../images/ranklist-bg.png) 1000px 1000px no-repeat;
 }
 .ranklist .ranklist-hd a{
@@ -473,6 +474,9 @@ a.disabled {
     text-indent: -999px;
     overflow: hidden;
 }
+.ranklist .ranklist-hd a.on{
+    background-position: 0 -85px;
+}
 .ranklist .ranklist-hd ul{ display: none; }
 .ranklist .ranklist-bd{
     background: #f7f6f5;
@@ -481,7 +485,27 @@ a.disabled {
     width: 229px;
     padding: 0 20px;
 }
-.ranklist .ranklist-bd h3{ margin: 0; }
+.ranklist .ranklist-bd h3{
+    height: 24px;
+    width: 42px;
+    margin: 0;
+    padding: 0;
+}
+.ranklist .ranklist-bd .rl-listen h3{
+    background-position: 0 0;
+}
+.ranklist .ranklist-bd .rl-speak h3{
+    background-position: -47px 0;
+}
+.ranklist .ranklist-bd ul li{
+    *zoom: 1;
+}
+.ranklist .ranklist-bd ul li:after{
+    content: '\0020';
+    display: block;
+    height: 0;
+    clear: both;
+}
 .ranklist .sum{
     background: url(../images/rice.png) right 0 no-repeat;
 }
