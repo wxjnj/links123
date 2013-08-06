@@ -470,9 +470,12 @@ a.disabled {
     display: block;
     height: 21px;
     width: 273px;
+    text-indent: -999px;
+    overflow: hidden;
 }
 .ranklist .ranklist-hd ul{ display: none; }
 .ranklist .ranklist-bd{
+    background: #f7f6f5;
     border: 2px solid #bf9668;
     border-width: 0 2px 2px;
     width: 269px;
