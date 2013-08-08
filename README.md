@@ -4,4 +4,4 @@
 
 网站测试地址：112.124.15.96:8080
 
-test auto build        
+test auto build         
