@@ -62,5 +62,14 @@
 <load href="__PUBLIC__/skin/js/DD_belatedPNG.js" />
 <load href="__PUBLIC__/skin/js/DD_belatedPNG_do.js" />
 <![endif]-->
+<script type="text/javascript">
+    var tag = "{$directTip}";
+    $("#direct_text").blur(function() {
+        if($(this).val()=="")
+        {
+            $(this).val(tag);
+        }
+    });
+</script>
 </body>
 </html>
