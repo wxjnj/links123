@@ -41,7 +41,7 @@
                 }
             } 
             function setActiveStyleSheet(title){
-                $("link").attr("href","__PUBLIC__/English/css/"+title);
+                $("link").attr("href","__PUBLIC__/English/css/"+title + '?2013080702');
 //                document.getElementsByTagName("link")[0].href="__PUBLIC__/English/css/"+title;
             }
         </script>
@@ -49,9 +49,9 @@
         <script type="text/javascript" src="__PUBLIC__/English/js/jquery.tools.min.js"></script>
         <load href='__PUBLIC__/skin/easyui/themes/metro/easyui.css' />
         <load href="__PUBLIC__/skin/easyui/jquery.easyui.min.js" />
-        <SCRIPT src="__PUBLIC__/English/js/select.js"></SCRIPT>
+        <SCRIPT src="__PUBLIC__/English/js/select.js?2013080701"></SCRIPT>
         <script type="text/javascript" src="__PUBLIC__/Js/Links123PlayerV1.1.1.1/swfobject.js"></script>
-        <load href="__PUBLIC__/English/js/index.js" />
+        <SCRIPT src="__PUBLIC__/English/js/index.js?2013080901"></SCRIPT>
     </head>
 
     <body>
@@ -155,9 +155,7 @@
                                     <if condition="$question['media_type'] eq '1'">
                                         {$question['media']}
                                     <elseif condition="$question['media_type'] eq '2'"/>
-                                    <div style="width: 518px; height: 329px; overflow: hidden;position: relative;">
-                                        <iframe  class="media_iframe" style="position: absolute;"src="{$question['media']}" scrolling="no" frameborder="0"></iframe>
-                                    </div>
+                                        <iframe class="media_iframe" src="{$question['media']}" scrolling="no" frameborder="0"></iframe>
                                     <elseif condition="$question['media_type'] eq '3'"/>
                                         <script type="text/javascript">
                                             var swfUrl = 'http://www.kizphonics.com/wp-content/uploads/jw-player-plugin-for-wordpress/player/player.swf';
@@ -192,26 +190,30 @@
                                 <p class="answertitle">{$question.content}</p>
                                 <notempty name="question['option'][0]">
                                     <p class="J_option" value="{$question['option'][0]['id']}">
+                                    <span class="gc"></span>
                                         <span class="ricenumber">A</span>
-                                        <span class="J_optionContent"><span class="gc"></span>{$question['option'][0]['content']}</span>
+                                        <span class="J_optionContent">{$question['option'][0]['content']}</span>
                                     </p>
                                 </notempty>
                                 <notempty name="question['option'][1]" value="{$question['option'][1]['id']}">
                                     <p class="J_option" value="{$question['option'][1]['id']}">
+                                    <span class="gc"></span>
                                         <span class="ricenumber">B</span>
-                                        <span class="J_optionContent"><span class="gc"></span>{$question['option'][1]['content']}</span>
+                                        <span class="J_optionContent">{$question['option'][1]['content']}</span>
                                     </p>
                                 </notempty>
                                 <notempty name="question['option'][2]" value="{$question['option'][2]['id']}">
                                     <p class="J_option" value="{$question['option'][2]['id']}">
+                                    <span class="gc"></span>
                                         <span class="ricenumber">C</span>
-                                        <span class="J_optionContent"><span class="gc"></span>{$question['option'][2]['content']}</span>
+                                        <span class="J_optionContent">{$question['option'][2]['content']}</span>
                                     </p>
                                 </notempty>
                                 <notempty name="question['option'][3]" value="{$question['option'][3]['id']}">
                                     <p class="J_option" value="{$question['option'][3]['id']}">
+                                    <span class="gc"></span>
                                         <span class="ricenumber">D</span>
-                                        <span class="J_optionContent"><span class="gc"></span>{$question['option'][3]['content']}</span>
+                                        <span class="J_optionContent">{$question['option'][3]['content']}</span>
                                     </p>
                                 </notempty>
                             </div>
@@ -249,69 +251,54 @@
             </div>
             <div class="ranklist">
                 <div class="ranklist-hd">
-                    <a class="all" href="javascript:void(0);">更多排行</a>
+                    <a class="all J_now_Object" href="javascript:void(0);"><em>综合</em><span>更多排行</span></a>
                     <ul>
-                        <li><a href="javascript:void(0)" class="current" type="object_综合">综合</a> </li>
+                        <li><a href="javascript:void(0)" class="cur" type="object_综合">综合</a> </li>
                         <li><a href="javascript:void(0)" type="total_rice">大米</a> </li>
                         <li><a href="javascript:void(0)" type="object_语文">语文</a> </li>
                         <li><a href="javascript:void(0)" type="object_数学">数学</a> </li>
-                        <li><a href="javascript:void(0)" id="J_moreObjectLink" type="more_object">更多科目</a></li>
-                        <li><a href="javascript:void(0)" class="more_object"  type="object_科学">科学</a> </li>
-                        <li><a href="javascript:void(0)" class="more_object"  type="object_艺术">艺术</a> </li>
-                        <li><a href="javascript:void(0)" class="more_object"  type="object_历史">历史</a> </li>
-                        <li><a href="javascript:void(0)" class="more_object"  type="object_地理">地理</a> </li>
-                        <li><a href="javascript:void(0)" class="more_object"  type="object_化学">化学</a> </li>
-                        <li><a href="javascript:void(0)" class="more_object"  type="object_健康">健康</a> </li>
-                        <li><a href="javascript:void(0)" class="more_object"  type="object_社会">社会</a> </li>
+                        <li><a href="javascript:void(0)"  type="object_科学">科学</a> </li>
+                        <li><a href="javascript:void(0)"  type="object_艺术">艺术</a> </li>
+                        <li><a href="javascript:void(0)"  type="object_历史">历史</a> </li>
+                        <li><a href="javascript:void(0)"  type="object_地理">地理</a> </li>
+                        <li><a href="javascript:void(0)"  type="object_化学">化学</a> </li>
+                        <li><a href="javascript:void(0)"  type="object_健康">健康</a> </li>
+                        <li><a href="javascript:void(0)"  type="object_社会">社会</a> </li>
                     </ul>
                 </div>
                 <div class="ranklist-bd">
-                    <a href="javascript:void(0);" class="close">关闭/打开</a>
+                    <a id="J_RankListExpose" href="javascript:void(0);" class="rl-open">关闭/打开</a>
                     <div class="rl-listen">
                         <h3>听力</h3>
-                        <ul>
-                            <volist name="top_1" id="user" >
-                            <li>
-                                <p class="idx">
-                                     <switch name="i" >
-                                        <case value="1"><img src="__PUBLIC__/English/images/gold.png" width="18" /></case>
-                                        <case value="2"><img src="__PUBLIC__/English/images/yingpai.png" width="18" /></case>
-                                        <case value="3"><img src="__PUBLIC__/English/images/tongpai.png" width="18" /></case>
-                                        <default /><img src="__PUBLIC__/Uploads/Faces/{$user.face}" width="23" />
-                                    </switch>
-                                </p>
-                                <p class="nm">{$user.nickname}</p>
-                                <p class="sum">{$user.rice_sum}</p>
-                                <p class="ln">{$user.best_level_name}</p>
-                            </li>
-                            </volist>
+                        <ul class="J_orderList J_top_1">
+		 					<volist name="top_1" id="user" >
+	                        <li>
+		                        <p class="idx">
+		                        <switch name="i" >
+		                            <case value="1"><img src="__PUBLIC__/English/images/gold.png" width="26" height="25" /></case>
+		                            <case value="2"><img src="__PUBLIC__/English/images/yingpai.png" width="26" height="25" /></case>
+		                            <default /><img src="__PUBLIC__/English/images/tongpai.png" width="26" height="25" />
+		                        </switch>
+		                        </p>
+		                        <p class="nm">{$user.nickname}</p>
+		                        <p class="sum">{$user.rice_sum}</p>
+		                        <p class="ln">{$user.best_level_name}</p>
+	                        </li>
+		                    </volist>
                         </ul>
                     </div>
                     <div class="rl-speak">
                         <h3>说力</h3>
-                        <ul>
-                            <volist name="top_2" id="user" >
-                            <li>
-                                <p class="idx">
-                                     <switch name="i" >
-                                        <case value="1"><img src="__PUBLIC__/English/images/gold.png" width="18" /></case>
-                                        <case value="2"><img src="__PUBLIC__/English/images/yingpai.png" width="18" /></case>
-                                        <case value="3"><img src="__PUBLIC__/English/images/tongpai.png" width="18" /></case>
-                                        <default /><img src="__PUBLIC__/Uploads/Faces/{$user.face}" width="23" />
-                                    </switch>
-                                </p>
-                                <p class="nm">{$user.nickname}</p>
-                                <p class="sum">{$user.rice_sum}</p>
-                                <p class="ln">{$user.best_level_name}</p>
-                            </li>
-                            </volist>
+                        <ul class="J_orderList J_top_2">
+                        	<li><p class="coming-tip">Coming soon...</p></li>
                         </ul>
                     </div>
                 </div>
             </div>
-         
+			
             <div style="margin:0 auto; width: 1000px; height:140px; position:relative;clear:both;">
-             
+                <!-- "previous page" action -->
+                <a class="prev browse left"></a>
 
                 <!-- root element for scrollable -->
                 <div class="scrollable" id="scrollable">
@@ -352,8 +339,7 @@
                   </div>
 
                 </div>
-                <!-- "previous page" action -->
-                <a class="prev browse left"></a>
+
                 <!-- "next page" action -->
                 <a class="next browse right"></a>
 

@@ -81,6 +81,8 @@ class IndexAction extends EnglishAction {
         $user_conut_info = $englishUserCountModel->getEnglishUserCountInfo($user_last_select['voice'], $user_last_select['target'], $user_last_select['object'], $user_last_select['level']);
         $this->assign("user_conut_info", $user_conut_info);
 
+//      $question['media_url'] = $question['media'] = '';
+//      $question['media_text_url'] = 'http://channel.nationalgeographic.com/channel/brain-games/videos/brain-games-illusion-confusion-preview/';
         //media_url为空，则进行视频解析
         if (!$question['media_url'] && !$question['media']) {
 
@@ -435,113 +437,34 @@ class IndexAction extends EnglishAction {
     }
 
     /**
-     * 新首页
+     * 视频反馈报错
      * 
-     * @author slate $date:2013-06-22$
+     * @param type: 反馈类型 0=>错误 1=>建议
+     * @param question_id: 试题ID
+     * @param media_html: 视频播放区域html($('.video_div').html())
+     * 
+     * @author slate date:2013-08-07
      */
-    public function index_new() {
-
-        //视频解析库
-        import("@.ORG.VideoHooks");
-
-        //保证输出不受静态缓存影响
-        C('HTML_CACHE_ON', false);
-        $objectModel = D("EnglishObject");
-        $levelModel = D("EnglishLevel");
-        $questionModel = D("EnglishQuestion");
-        $object_list = $objectModel->getObjectListToIndex(); //默认的科目列表
-        //用户上次选择的科目
-        $user_last_object = intval($_COOKIE['english_user_last_object']);
-        if ($user_last_object == 0) {
-            $user_last_object_info = $objectModel->getDefaultObjectInfo();
-        } else {
-            $user_last_object_info = $objectModel->getInfoById($user_last_object);
-        }
-        $this->assign("user_last_object_info", $user_last_object_info);
-
-        //用户上次选择的等级
-        $user_last_level = intval($_COOKIE['english_user_last_level']);
-        if ($user_last_level == 0) {
-            $user_last_level_info = $levelModel->getDefaultLevelInfo($user_last_object_info['id']);
-        } else {
-            $user_last_level_info = $levelModel->getInfoById($user_last_level);
-        }
-        $level_list = $levelModel->getLevelListToIndex($user_last_object_info['id']); //默认的等级列表
-        //确保上次选择的等级下拥有题目
-        if ($level_list[$user_last_level_info['id']]['question_num'] == 0) {
-            foreach ($level_list as $value) {
-                if ($value['question_num'] > 0) {
-                    $user_last_level_info = $levelModel->getInfoById($value['id']);
-                    break;
-                }
-            }
-        }
-        $this->assign("user_last_level_info", $user_last_level_info);
-
-
-        //获取题目
-        $question = $questionModel->getQuestionToIndex($user_last_object_info['id'], $user_last_level_info['id']);
-        //获取用户英语角信息
-        $english_user_info = D("EnglishUserInfo")->getEnglishUserInfo($question['voice'], $question['target'], $question['object'], $question['level']);
-        $this->assign("english_user_info", $english_user_info);
-
-        //media_url为空，则进行视频解析
-        if (!$question['media_url']) {
-
-            $videoHooks = new VideoHooks();
-
-            $videoInfo = $videoHooks->analyzer(str_replace(' ', '', $question['media_text_url']));
-
-            $media_url = $videoInfo['swf'];
-
-            $media_img_url = $videoInfo['img'];
-
-            //解析成功，保存视频解析地址
-            if (!$videoHooks->getError() && $media_url) {
-                $questionModel->where('id=' . $question['id'])->save(array('media_url' => $media_url, 'media_img_url' => $media_img_url));
-            }
-
-            $question['media_url'] = $media_url;
-
-            $question['media_img_url'] = $media_img_url;
-        } elseif (!$question['media_img_url']) {
-
-            $videoHooks = new VideoHooks();
-
-            $videoInfo = $videoHooks->analyzer(str_replace(' ', '', $question['media_text_url']));
-
-            $media_img_url = $videoInfo['img'];
-
-            //解析成功，保存缩略图解析地址
-            if (!$videoHooks->getError() && $media_img_url) {
-                $questionModel->where('id=' . $question['id'])->save(array('media_img_url' => $media_img_url));
-            }
-
-            $question['media_img_url'] = $media_img_url;
-        }
-
-        //判断是否为about.com视频
-        $isAboutVideo = 0;
-        if (strpos($question['media_url'], 'http://c.brightcove.com') !== FALSE) {
-            $isAboutVideo = 1;
-
-            //about.com视频修改自动播放为false
-            //$question['media_url'] = str_replace('&autoStart=true', '&autoStart=false', $question['media_url']);
-        }
-
-        //排行榜数据
-        $englishUserInfoModel = D("EnglishUserInfo");
-        $ret = $englishUserInfoModel->getTopUserListByTypeName("object_综合");
-
-        $this->assign("top_1", $ret[0]);
-        $this->assign("top_2", $ret[1]);
-
-        $this->assign("question", $question);
-        $this->assign("level_list", $level_list);
-        $this->assign("object_list", $object_list);
-
-        $this->assign('isAboutVideo', $isAboutVideo);
-        $this->display();
+    public function feedback() {
+    	
+    	if ($this->isAjax()) {
+    		
+    		$type = intval($_POST['type']);
+    		$question_id = intval($_POST['question_id']);
+    		$media_html = trim($_POST['media_html']);
+    		
+    		$data = array(
+    				'member_id' => intval($_SESSION[C('MEMBER_AUTH_KEY')]),
+    				'type' => $type,
+    				'question_id' => $question_id,
+    				'media_html' => $media_html,
+    				'create_time' => time()
+    		);
+    		
+    		D("EnglishFeedback")->add($data);
+    		
+    		$this->ajaxReturn('', true);
+    	}
     }
 
 }

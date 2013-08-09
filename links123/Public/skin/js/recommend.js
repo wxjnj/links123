@@ -55,8 +55,10 @@ $(function() {
 	
 	//
 	$(".just_name").click(function(){
-		$(this).fadeOut("fast");
-		$(this).next(".tjlj_li").show("fast");
+        $(".tjlj_ul > .just_name").show("fast");
+        $(".tjlj_ul > .tjlj_li").fadeOut("fast");
+        $(this).fadeOut("fast");
+        $(this).next(".tjlj_li").show("fast");
 	});
 	
 	//
@@ -68,26 +70,61 @@ $(function() {
     
 	/* 提交 */
 	$("#btn_sub_rec").click(function(){
+                //easyui错误提示
+                var top = $(".tjlj_tit01").offset().top + 250;
+                var left = $(".tjlj_tit01").offset().left + 385;
+
 		//
 		var data = {"id":"","language":"","category":"","grade":"","title":"","link":"","intro":""};
 		//
 		if ( !$("#frm_rec input[name='language']:checked")[0] ) {
-			alert("请选择语言.");
+                        $.messager.show({
+                            msg: "<span  class='messager_span'>请选择语言.</span>",
+                            showType: 'fade',
+                            width: 150,
+                            height: 45,
+                            timeout: 4000,
+                            style: {
+                                left: left,
+                                top: top
+                            }
+                        });
 			return false;
 		}
 		data.language = $("#frm_rec input[name='language']:checked").val();
 		//
-		if ( !$("#frm_rec input[name='category']:checked")[0] ) {
-			alert("请选择分类目录.");
+		if ( !$("#frm_rec input[name='category']:checked")[0]) {
+                        $.messager.show({
+                            msg: "<span  class='messager_span'>请选择分类目录.</span>",
+                            showType: 'fade',
+                            width: 150,
+                            height: 45,
+                            timeout: 4000,
+                            style: {
+                                left: left,
+                                top: top
+                            }
+                        });                     
 			return false;
 		}
 		data.category = $("#frm_rec input[name='category']:checked").val();
+
 		//
 		data.grade = $("#frm_rec input[name='grade']:checked").val();
 		//
 		var obj = $("#frm_rec input[name='title']");
 		if (obj.val() == "" || obj.val() == "请输入标题") {
-			alert("请输入标题.");
+                        $.messager.show({
+                            msg: "<span  class='messager_span'>请输入标题.</span>",
+                            showType: 'fade',
+                            width: 150,
+                            height: 45,
+                            timeout: 4000,
+                            style: {
+                                left: left,
+                                top: top
+                            }
+                        });                         
 			obj.focus();
 			return false;
 		}
@@ -95,7 +132,17 @@ $(function() {
 		//
 		var obj = $("#frm_rec input[name='link']");
 		if (obj.val() == "" || obj.val() == "请输入链接") {
-			alert("请输入链接.");
+                        $.messager.show({
+                            msg: "<span  class='messager_span'>请输入链接.</span>",
+                            showType: 'fade',
+                            width: 150,
+                            height: 45,
+                            timeout: 4000,
+                            style: {
+                                left: left,
+                                top: top
+                            }
+                        });
 			obj.focus();
 			return false;
 		}
@@ -103,7 +150,17 @@ $(function() {
 		//
 		obj = $("#tjlj_txte");
 		if (obj.val() == "" || obj.val() == "请输入简介") {
-			alert("请输入简介.");
+                        $.messager.show({
+                            msg: "<span  class='messager_span'>请输入简介.</span>",
+                            showType: 'fade',
+                            width: 150,
+                            height: 45,
+                            timeout: 4000,
+                            style: {
+                                left: left,
+                                top: top
+                            }
+                        });
 			obj.focus();
 			return false;
 		}
@@ -114,12 +171,32 @@ $(function() {
 		$.post(URL+"/saveRecommend", data, 
 		function(data){
 			if ( data.indexOf("addOK") >= 0 ) {
-				alert("链接提交成功！");
+                                $.messager.show({
+                                    msg: "<span  class='messager_span'>链接提交成功！</span>",
+                                    showType: 'fade',
+                                    width: 150,
+                                    height: 45,
+                                    timeout: 4000,
+                                    style: {
+                                        left: left,
+                                        top: top
+                                    }
+                                });
 				$("#btn_reset").trigger("click");
 				window.location.reload();
 			}
 			else if ( data.indexOf("editOK") >= 0 ) {
-				alert("链接编辑成功！");
+                                $.messager.show({
+                                    msg: "<span  class='messager_span'>链接编辑成功！</span>",
+                                    showType: 'fade',
+                                    width: 150,
+                                    height: 45,
+                                    timeout: 4000,
+                                    style: {
+                                        left: left,
+                                        top: top
+                                    }
+                                });                                  
 			}
 			else {
 				alert(data);
@@ -129,7 +206,17 @@ $(function() {
 
 	//
 	if ( $("#alt").val()=="1" ) {
-		alert("对不起，该网站尚未被另客收录，您可以在本页推荐该网站!");
+                $.messager.show({
+                    msg: "<span  class='messager_span'>对不起，该网站尚未被另客收录，您可以在本页推荐该网站!</span>",
+                    showType: 'fade',
+                    width: 150,
+                    height: 45,
+                    timeout: 4000,
+                    style: {
+                        left: left,
+                        top: top
+                    }
+                });
 	}
 
 });
