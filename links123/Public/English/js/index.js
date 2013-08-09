@@ -640,10 +640,16 @@ function bindOptionClickEvent() {
 //                            }
                 answer = data.question_info.answer;
                 if (select_option == answer) {
-                    target.children("span:first-child").removeClass("gc").addClass("right");
+                    //target.children(".J_optionContent").children("span").removeClass("gc").addClass("right");
+                	target.children(".gc").removeClass("gc").addClass("right");
                 } else {
-                    target.children("span:first-child").removeClass("gc").addClass("wrong");
-                    setTimeout("$(\".J_option[value='\"+answer+\"']\").children(\".J_optionContent\").children(\"span\").removeClass(\"gc\").addClass(\"right\");", 1000);
+                	target.children(".gc").removeClass("gc").addClass("wrong");
+                	
+                	setTimeout(function(){
+                		$('#J_option_'+answer).children(".gc").removeClass("gc").addClass("right");
+                	}, 1000);
+                    //target.children(".J_optionContent").children("span").removeClass("gc").addClass("wrong");
+                    //setTimeout("$(\".J_option[value='\"+answer+\"']\").children(\".J_optionContent\").children(\"span\").removeClass(\"gc\").addClass(\"right\");", 1000);
                 }
                 $(".J_option").unbind("click");
                 //更新排行榜
@@ -711,7 +717,7 @@ function updateOption(option) {
     var str = "";
     if (option != null) {
 	    for (var i = 0; i < option.length; i++) {
-	        str += '<p class="J_option" value="' + option[i]['id'] + '">' + '<span class="ricenumber">';
+	        str += '<p class="J_option" id="J_option_'+ option[i]['id'] +'" value="' + option[i]['id'] + '"><span class="gc"></span>' + '<span class="ricenumber">';
 	        if (i == 0) {
 	            str += "A";
 	        } else if (i == 1) {
@@ -721,7 +727,7 @@ function updateOption(option) {
 	        } else if (i == 3) {
 	            str += "D";
 	        }
-	        str += "</span><span class='J_optionContent'><span class='gc'></span>" + option[i]['content'] + '</span></p>';
+	        str += "</span><span class='J_optionContent'>" + option[i]['content'] + '</span></p>';
 	    }
     }
     $(".J_option").remove();
