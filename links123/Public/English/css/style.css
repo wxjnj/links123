@@ -429,3 +429,154 @@ a.down:active { background-position:-60px -30px; }
 a.disabled {
    
 }
+
+.video_div {
+    /**background: url("../images/loading.gif") no-repeat scroll center center transparent;**/
+}
+
+/* ranklist added by jeanun 2013.08.06 */
+.ranklist{
+    width: 289px;
+    position: absolute;
+    left: -273px;
+    top: 200px;
+    z-index: 999;
+}
+.ranklist .ranklist-hd{}
+.ranklist .ranklist-hd .all,
+.ranklist .ranklist-bd h3,
+.ranklist .sum,
+.ranklist .rl-close,
+.ranklist .rl-open{
+    background: url(../images/ranklist-bg.png) 1000px 1000px no-repeat;
+}
+.ranklist .ranklist-hd{
+    position: relative;
+    height: 21px;
+    width: 273px;
+}
+.ranklist .ranklist-hd a.all{
+    background-position: 0 -59px;
+    background-repeat: no-repeat;
+    display: block;
+    color: #fff;
+    height: 21px;
+    width: 253px;
+    letter-spacing: 0.5em;
+    line-height: 21px;
+    text-decoration: none;
+    padding-left: 24px;
+    font-family: \5FAE\8F6F\96C5\9ED1;
+    font-weight: bold;
+}
+.ranklist .ranklist-hd a.all em{ font-style: normal; margin-right: 50px; }
+.ranklist .ranklist-hd a.on{
+    background-position: 0 -85px;
+}
+.ranklist .ranklist-hd ul{
+    border: 2px solid #bf9668;
+    border-width: 0 2px 2px;
+    background: #fff;
+    position: absolute;
+    top: 21px;
+    left: 0;
+    width: 269px;
+    z-index: 2;
+    display: none;
+}
+.ranklist .ranklist-hd ul li a{
+    background: none;
+    color: #333;
+    display: block;
+    text-align: center;
+    padding: 3px 0;
+    text-decoration: none;
+}
+.ranklist .ranklist-hd ul li a.hv{
+    color: #fff;
+    background: #d8c8b8;
+}
+.ranklist .ranklist-hd ul li a.cur{
+    color: #fff;
+    background: #b08860;
+}
+.ranklist .ranklist-bd{
+    background: #f7f6f5;
+    border: 2px solid #bf9668;
+    border-width: 0 2px 2px;
+    width: 269px;
+    position: relative;
+}
+.ranklist .ranklist-bd h3{
+    height: 24px;
+    width: 42px;
+    margin: 0;
+    margin-bottom: 5px;
+    padding: 0;
+    text-indent: -999px;
+    overflow: hidden;
+}
+.ranklist .ranklist-bd .rl-listen{
+    border-bottom: 1px solid #bf9668;
+}
+.ranklist .ranklist-bd .rl-listen,
+.ranklist .ranklist-bd .rl-speak{
+    color: #242424;
+    padding: 15px 9px 15px 15px;
+    height: 150px;
+    overflow: hidden;
+}
+.ranklist .ranklist-bd .rl-listen h3{
+    background-position: 0 0;
+}
+.ranklist .ranklist-bd .rl-speak h3{
+    background-position: -47px 0;
+}
+.ranklist .ranklist-bd ul li{
+    padding: 6px 0;
+    *zoom: 1;
+}
+.ranklist .ranklist-bd ul li:after{
+    content: '\0020';
+    display: block;
+    height: 0;
+    clear: both;
+}
+.ranklist p{
+    font-family: \5FAE\8F6F\96C5\9ED1;
+    font-weight: bold;
+    padding: 0;
+    margin: 0;
+    float: left;
+}
+.ranklist .idx{ width: 40px; text-align: center; }
+.ranklist .idx img{ vertical-align: middle; }
+.ranklist .nm{
+    width: 70px;
+}
+.ranklist .sum{
+    background-position: 52px -34px;
+    text-align: right;
+    padding-right: 25px;
+    width: 45px;
+}
+.ranklist .ln{
+    width: 60px;
+    text-align: center;
+}
+.ranklist .rl-close,
+.ranklist .rl-open{
+    position: absolute;
+    width: 16px;
+    height: 54px;
+    text-indent: -999px;
+    overflow: hidden;
+    right: -16px;
+    top: 153px;
+}
+.ranklist .rl-close{ background-position: -241px 0; }
+.ranklist .rl-open{ background-position: right top; }
+
+.rl-speak .coming-tip{
+font-size: 13px;margin-left: 45px;margin-top: 10px;
+}
