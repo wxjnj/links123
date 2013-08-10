@@ -276,17 +276,18 @@ class IndexAction extends CommonAction {
 
 	// 更新我的地盘
 	public function updateArealist() {
-		foreach ($_SESSION['arealist'] as $value) {
+		
+		$updated = false;
+		
+		foreach ($_SESSION['arealist'] as $key => $value) {
+			
 			if ($value['url'] == $_POST['url']) {
 				if ($value['id'] != $_POST['id']) {
 					echo "该链接已存在！";
 					return;
 				}
 			}
-		}
-		//
-		$updated = false;
-		foreach ($_SESSION['arealist'] as $key => $value) {
+			
 			if ($value['id'] == $_POST['id']) {
 				$_SESSION['arealist'][$key]['web_name'] = $_POST['web_name'];
 				$_SESSION['arealist'][$key]['url'] = $_POST['url'];
@@ -294,6 +295,7 @@ class IndexAction extends CommonAction {
 				break;
 			}
 		}
+		//
 //     	// 让session修改生效
 //     	$i = 0;
 //     	foreach ($_SESSION['arealist'] as &$value) { $i++; }
@@ -326,11 +328,15 @@ class IndexAction extends CommonAction {
 					Log::write('session：' . $_SESSION['arealist'][$key]['web_name'], Log::SQL);
 					$value['web_name'] = $_SESSION['arealist'][$key]['web_name'];
 					$value['url'] = $_SESSION['arealist'][$key]['url'];
+					
+					//web_name || url为空则不进行更改（session中arealist曾经会丢失）
+					if (!$value['web_name'] || !$value['url']) continue;
+					
 					$value['create_time'] = $now;
 					if (false === $myarea->save($value)) {
 						$result = false;
 						Log::write('更新我的地盘失败：' . $myarea->getLastSql(), Log::SQL);
-						$reason = '更新我的地盘失败！';
+						$reason = '保存我的地盘失败！';
 					}
 				}
 			}
@@ -344,9 +350,16 @@ class IndexAction extends CommonAction {
 		}
 		//
 		if ($updated) {
+			
 			echo "updateOK";
 		} else {
-			echo "更新我的地盘失败！";
+			if (!$_SESSION['arealist']) {
+				
+				echo "updateOK";
+			} else {
+				
+				echo "无更新内容！";
+			}
 		}
 	}
 
