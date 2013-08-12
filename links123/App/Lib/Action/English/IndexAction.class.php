@@ -81,8 +81,6 @@ class IndexAction extends EnglishAction {
         $user_conut_info = $englishUserCountModel->getEnglishUserCountInfo($user_last_select['voice'], $user_last_select['target'], $user_last_select['object'], $user_last_select['level']);
         $this->assign("user_conut_info", $user_conut_info);
 
-//      $question['media_url'] = $question['media'] = '';
-//      $question['media_text_url'] = 'http://channel.nationalgeographic.com/channel/brain-games/videos/brain-games-illusion-confusion-preview/';
         //media_url为空，则进行视频解析
         if (!$question['media_url'] && !$question['media']) {
 
@@ -90,7 +88,7 @@ class IndexAction extends EnglishAction {
 
             $question['media_text_url'] = trim(str_replace(' ', '', $question['media_text_url']));
             $videoInfo = $videoHooks->analyzer($question['media_text_url']);
-
+			
             $media_url = $videoInfo['swf'];
 
             $media_img_url = $videoInfo['img'];
@@ -120,21 +118,6 @@ class IndexAction extends EnglishAction {
             $question['media_img_url'] = $media_img_url;
 
             $question['media_type'] = $media_type;
-        } elseif (!$question['media_img_url'] && !$question['media']) {
-
-            $videoHooks = new VideoHooks();
-
-            $question['media_text_url'] = trim(str_replace(' ', '', $question['media_text_url']));
-            $videoInfo = $videoHooks->analyzer($question['media_text_url']);
-
-            $media_img_url = $videoInfo['img'];
-
-            //解析成功，保存缩略图解析地址
-            if (!$videoHooks->getError() && $media_img_url) {
-                $questionModel->where('id=' . $question['id'])->save(array('media_img_url' => $media_img_url));
-            }
-
-            $question['media_img_url'] = $media_img_url;
         }
 
         //判断是否为about.com视频
@@ -151,6 +134,10 @@ class IndexAction extends EnglishAction {
                 $question['media'] = str_replace('width=585&amp;height=575', 'width=100%&amp;height=100%', $question['media']);
             }
             $question['media'] = preg_replace(array('/width="(.*?)"/is', '/height="(.*?)"/is', '/width=300 height=280/is', '/width=600 height=400/is'), array('width="100%"', 'height="100%"', 'width="100%" height="100%"', 'width="100%" height="100%"'), $question['media']);
+        }
+        
+        if ($question['media_type'] && !$question['media']) {
+        	$question['media_url'] ? $question['media'] = $question['media_url'] : '';
         }
 
         //排行榜数据
@@ -272,28 +259,12 @@ class IndexAction extends EnglishAction {
                     }
                     $questionModel->where('id=' . $ret['question']['id'])->save($saveData);
 
-                    //$questionModel->where('id=' . $ret['question']['id'])->save(array('media_img_url' => $media_img_url));
                 }
 
                 $ret['question']['media_img_url'] = $media_img_url;
 
                 $ret['question']['media_url'] = $media_url;
                 $ret['question']['media_type'] = $media_type;
-            } elseif (!$ret['question']['media_img_url']) {
-
-                $videoHooks = new VideoHooks();
-
-                $ret['question']['media_text_url'] = trim(str_replace(' ', '', $ret['question']['media_text_url']));
-                $videoInfo = $videoHooks->analyzer($ret['question']['media_text_url']);
-
-                $media_img_url = $videoInfo['img'];
-
-                //解析成功，保存缩略图解析地址
-                if (!$videoHooks->getError() && $media_img_url) {
-                    $questionModel->where('id=' . $ret['question']['id'])->save(array('media_img_url' => $media_img_url));
-                }
-
-                $ret['question']['media_img_url'] = $media_img_url;
             }
 
             //判断是否为about.com视频
@@ -312,6 +283,11 @@ class IndexAction extends EnglishAction {
                 }
                 $ret['question']['media'] = preg_replace(array('/width="(.*?)"/is', '/height="(.*?)"/is', '/width=300 height=280/is', '/width=600 height=400/is'), array('width="100%"', 'height="100%"', 'width="100%" height="100%"', 'width="100%" height="100%"'), $ret['question']['media']);
             }
+            
+            if ($ret['question']['media_type'] && !$ret['question']['media']) {
+            	$ret['question']['media_url'] ? $ret['question']['media'] = $ret['question']['media_url'] : '';
+            }
+            
             $ret['question']['isAboutVideo'] = $isAboutVideo;
 
             $this->ajaxReturn($ret, "请求成功", true);
@@ -467,6 +443,61 @@ class IndexAction extends EnglishAction {
     	}
     }
 
+    public function match_media() {
+    
+    	set_time_limit(0);
+    
+    	import("@.ORG.VideoHooks");
+    
+    	$englishQuestionModel = new EnglishQuestionModel();
+    	$questionList = $englishQuestionModel->where(" id > 5491")->getField('`id`, `media_text_url`');
+    
+    	$videoHooks = new VideoHooks();
+    
+    	$startTime = time();
+    
+    	foreach ($questionList as $id => $url) {
+    
+    		$videoInfo = array();
+    		
+    		$url = trim(str_replace(' ', '', $url));
+    		$videoInfo = $videoHooks->analyzer($url);
+    
+    		$media_url = $videoInfo['swf'];
+    
+    		$media_img_url = $videoInfo['img'];
+    
+    		$media_type = $videoInfo['media_type'];
+    		
+    		//解析成功，保存视频解析地址
+    		if ($media_url) {
+    
+    			$saveData = array(
+    					'media_img_url' => $media_img_url,
+    					'media_type' => $media_type
+    			);
+    
+    			if ($media_type) {
+    
+    				$saveData['media'] = $media_url;
+    			} else {
+    
+    				$saveData['media_url'] = $media_url;
+    			}
+    
+    			$englishQuestionModel->where("id=$id")->save($saveData);
+    		} else {
+     			var_dump($id);
+    		}
+    		sleep(1);
+    	}
+    
+    	$endTime = time();
+    
+    	echo 'start:' . date('Y-m-d H:i:s', $startTime) . '</br>';
+    	echo 'end:' . date('Y-m-d H:i:s', $endTime);
+    	exit();
+    }
 }
 
 ?>

@@ -513,7 +513,14 @@ function requestQuestion(type, clickObject) {
 	
 	                    swfobject.embedSWF(swfUrl, "J_media_div_1", "100%", "100%", version, "/swf/playerProductInstall.swf", question.media, params);
 	
-	                } else {
+	                }  else if (question.media_type == 4) {
+	                
+	                	 videoStr +='<object id="flash_fallback_1" class="vjs-flash-fallback" width="100%" height="100%" type="application/x-shockwave-flash" data="http://releases.flowplayer.org/swf/flowplayer-3.2.1.swf">';  
+	                	 videoStr +='<param name="movie" value="http://releases.flowplayer.org/swf/flowplayer-3.2.1.swf" />'; 
+	                	 videoStr +='<param name="allowfullscreen" value="true" />';
+	                	 videoStr +="<param name='flashvars' value='" + question.media + "' />";  
+	                	 videoStr +='</object>';
+	                }else {
 	
 	                    videoStr += '<object id="J_media_object" height="100%" width="100%" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">';
 	                    videoStr += '<param name="wmode" value="transparent">';
@@ -803,18 +810,6 @@ function layer_div(type) {
         //var left = window.screen.availWidth * 0.5 - 95;
         var left = '48%';	//用于在播放器居中显示
         layer_div.css("position", "absolute").css("top", top).css("left", left).css("z-index", "9999");
-        
-        $.messager.show({
-            msg: "<span  class='messager_span'>加载中</span>",
-            showType: 'fade',
-            width: 100,
-            height: 40,
-            timeout: 3000,
-            style: {
-                left: '50%',
-                top: '21%'
-            }
-        });
         
     } else {
         layer_div.hide();

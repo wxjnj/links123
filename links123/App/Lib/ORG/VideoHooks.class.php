@@ -182,46 +182,56 @@ class VideoHooks {
 				$swfParams[$k] = $match;
 		}
 		
-		$flashVars = array(
-				'adenabled'   => 'true',
-				'adprogramid' => $swfParams['adprogramid'],
-				'caption'     => urlencode($swfParams['caption']),
-				'img'         => $swfParams['poster'],
-				'permalink'   => $swfParams['permalink'],
-				'share'       => 'false',
-				'restricted'  => 'false',
-				'autoplay'    => 'false',
-				'siteid'      => $swfParams['siteid'],
-				'slug'        => 'http://video.nationalgeographic.com'.$swfParams['slug'],
-				'vtitle'      => urlencode($swfParams['title']),
-				'cuepoints'   => '',
-				'vwidth'      => '610',
-				'vheight'     => '383'
-		);
+		if ($swfParams['adprogramid']) {
+			$flashVars = array(
+					'adenabled'   => 'true',
+					'adprogramid' => $swfParams['adprogramid'],
+					'caption'     => urlencode($swfParams['caption']),
+					'img'         => $swfParams['poster'],
+					'permalink'   => $swfParams['permalink'],
+					'share'       => 'false',
+					'restricted'  => 'false',
+					'autoplay'    => 'false',
+					'siteid'      => $swfParams['siteid'],
+					'slug'        => 'http://video.nationalgeographic.com'.$swfParams['slug'],
+					'vtitle'      => urlencode($swfParams['title']),
+					'cuepoints'   => '',
+					'vwidth'      => '610',
+					'vheight'     => '383'
+			);
+			
+			$flashVars_img = $flashVars['img'];
+			$flashVars = $this->parsmEncode($flashVars);
+			$flashVars = preg_replace('/img=(.*?)permalink/is', 'img='.$flashVars_img.'&permalink', $flashVars);
+			
+			$swf = '<object width="100%" height="100%" type="application/x-shockwave-flash" id="ngplayer" data="http://images.nationalgeographic.com/wpf/sites/video/swf/ngplayer_v2.5.swf">';
+			$swf .= '<param name="allowfullscreen" value="true">
+					<param name="allowscriptaccess" value="always">
+					<param name="autoplay" value="false">
+					<param name="bgcolor" value="#ffffff">
+					<param name="menu" value="true">
+					<param name="name" value="ngplayer">
+					<param name="quality" value="best">
+					<param name="wmode" value="opaque">';
+			$swf .= '<param name="flashvars" value="'.$flashVars.'">';
+			$swf .= '</object>';
+			
+			$data['swf'] = $swf;
 		
-		$flashVars_img = $flashVars['img'];
-		$flashVars = $this->parsmEncode($flashVars);
-		$flashVars = preg_replace('/img=(.*?)permalink/is', 'img='.$flashVars_img.'&permalink', $flashVars);
+			if ($this->_hasImg) {
+				$data['img'] = $this->match('/\?url=(.*)/is', $flashVars['img']);
+			}
 		
-		$swf = '<object width="100%" height="100%" type="application/x-shockwave-flash" id="ngplayer" data="http://images.nationalgeographic.com/wpf/sites/video/swf/ngplayer_v2.5.swf">';
-		$swf .= '<param name="allowfullscreen" value="true">
-				<param name="allowscriptaccess" value="always">
-				<param name="autoplay" value="false">
-				<param name="bgcolor" value="#ffffff">
-				<param name="menu" value="true">
-				<param name="name" value="ngplayer">
-				<param name="quality" value="best">
-				<param name="wmode" value="opaque">';
-		$swf .= '<param name="flashvars" value="'.$flashVars.'">';
-		$swf .= '</object>';
-		
-		$data['swf'] = $swf;
-	
-		if ($this->_hasImg) {
-			$data['img'] = $this->match('/\?url=(.*)/is', $flashVars['img']);
+			$data['media_type'] = 1;
+		} else {
+			
+			$data['swf'] = $this->match('/<meta property="og:video" content="(.*?)" \/>/is', $html);
+			$data['img'] = $this->match('/<meta property="og:image" content="(.*?)" \/>/is', $html);
+			
+			$data['swf'] ? $data['swf'] = 'config={"playlist":["'.$data['img'].'", {"url": "'.$data['swf'].'","autoPlay":false,"autoBuffering":true}]}' : '';
+			
+			$data['media_type'] = 4;
 		}
-	
-		$data['media_type'] = 1;
 	
 		return $data;
 	}
@@ -430,6 +440,10 @@ class VideoHooks {
 		// 获取视频
 		$swf = $this->match('/<ins class="podcastOUVideo">(.*?)<br \/>/is', $html);
 	
+		if (!$swf) {
+			
+			$swf = $this->match('/<div class="field-item even">(.*?)<ul><li>/is', $html);
+		}
 		$data['swf'] = $swf;
 	
 		// 获取标题
@@ -521,20 +535,38 @@ class VideoHooks {
 		}
 	
 		$data['url'] = $this->_url;
-	
+		
+		$media_type = 1;
+		
 		// 获取视频
 		$swf = $this->match('/<div class="swftools">(.*?)<\/div>/is', $html);
 	
+		if (!$swf) {
+		
+			$swf = $this->match('/<\!--\[if IE\]><object(.*?)<\/object> <\!--<\!\[endif\]-->/is', $html, 0);
+		}
+		
+		if (!$swf) {
+			
+			$swf = $this->match('/<div id="" align="center">(.*?)<\/div><\/div>/is', $html);
+			if ($swf) {
+				
+				$swf = urldecode($this->match('/file=(.*?)\&/is', $swf));
+				$img = urldecode($this->match('/image=(.*?)\&/is', $swf));
+				$img = $img ? $img : 'http://www.links123.cn/Public/English/images/deafult_media_img.jpg';
+				
+				$swf ? $swf = 'config={"playlist":["'.$img.'", {"url": "'.$swf.'","autoPlay":false,"autoBuffering":true}]}' : '';
+					
+				$media_type = 4;
+			}
+		}
+		
 		$data['swf'] = $swf;
 	
 		// 获取标题
 		$data['title'] = $this->match('/<title>(.+?)<\/title>/is', $html);
-		// 获取图片
-		if ($this->_hasImg) {
-			//$data['img'] = $this->match('/"image":"(.+?)"/is', $swf);
-		}
-	
-		$data['media_type'] = 1;	//object
+		
+		$data['media_type'] = $media_type;	//object
 		return $data;
 	
 	}
@@ -887,6 +919,21 @@ class VideoHooks {
 
 	private function _qq() {
 		$oldUrl = $this->_url;
+		
+		if (strstr($this->_url, 'kid.qq.com')) {
+		
+			$html = $this->getWebContent($this->_url);
+			if (!$html) {
+				return $data;
+			}
+			
+			$data['url'] = $this->_url;
+			$data['swf'] = $this->match('/flashUrl=\'(.*?)\'/is', $html);
+			$data['media_type'] = 2;
+			
+			return $data;
+		}
+		
 		$this->_url = preg_replace('/\_\w+$/', '', $this->_url);
 		//消除类似http://v.qq.com/cover/n/ngdlegvgf8v80g6.html?vid=9H9ozv5eAIs_0后面的“_0”造成获取的swf为http://imgcache.qq.com/tencentvideo_v1/player/TencentPlayer.swf?_v=20110829&vid=9H9ozv5eAIs_0不能播放
 		$data = array();
@@ -1154,6 +1201,9 @@ class VideoHooks {
             // <embed src="http://k11.kekenet.com/Sound/child/shulaibao/S5_10[1].swf">
             preg_match_all('/<div class=\"e_title\">\s+<h1>(.*)<\/h1>/i', $html, $matches); 
             $data['title'] = $matches[1][0];
+            
+            $data['media_type'] = 2;	//ifrmae
+            
             return $data;
         }
         /**
@@ -1175,23 +1225,43 @@ class VideoHooks {
             $data['title'] = $matches[1][0];
             return $data;
         }
+        
         /**
          * 解析hujiang.com的视频
          * @return array
          * @author  Adam $date2013-07-15$
          */
         private function _hujiang(){
+        	
+        	if (strstr($this->_url, 'yuer.hujiang.com')) {
+        		
+        		$this->_url = rtrim($this->_url, '/').'/';
+        	}
+        	
             $html = $this->getWebContent($this->_url);
             $data = array();
             if (!$html) {
                 return $data;
             }
             $data['url'] = $this->_url;
-            // 获取视频
-            $data['swf'] = $this->match('/<embed.*src=(\'|\")(http\:\/\/.*\.swf)(\'|\")/i', $html , 2);
-            // <embed src="http://f1.hjfile.cn/file/201108/777770000198185dc.SWF">
-            preg_match_all('/<h1 id\=\"detail_article_title\">\s*(.*)<\/h1>/i', $html, $matches); 
-            $data['title'] = $matches[1][0];
+            
+            if (strstr($this->_url, 'bb.hujiang.com')) {
+            	
+            	$data['swf'] = $this->match('/data-media-url="(.*?)"/is', $html);
+            	if ($data['swf']) {
+            		$data['swf'] = strstr($data['swf'], 'http://') ?  $data['swf'] : 'http://bb.hujiang.com' . $data['swf'];
+            	}
+            } else {
+            	
+           		$data['swf'] = $this->match('/<embed.*src=(\'|\")(http\:\/\/.*\.swf)(\'|\")/i', $html , 2);
+           		if (!$data['swf']) {
+           		
+           			$data['swf'] = $this->match('/<param name="movie" value="(.*?)" \/>/is', $html);
+           		}
+            }
+            
+            $data['media_type'] = 2;	//ifrmae
+            
             return $data;
         }
         /**
