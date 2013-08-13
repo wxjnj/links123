@@ -602,7 +602,7 @@ function formRequest($url, $paramArr=array(),$method="post") {
 }
 
 /**
- * 获取静态资源的md5值，在引用css,js的时候跟上，以便静态资源文件能够立更新的时候能够立即呈现
+ * 获取静态资源的md5值，在引用css,js的时候跟上，以便静态资源文件更新的时候能够立即呈现
  * @param string $resourcePath css,js等静态资源文件的路径
  * @return string 返回静态资源文件内容的md5值
  */
