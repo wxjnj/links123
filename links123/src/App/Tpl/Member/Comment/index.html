@@ -7,34 +7,38 @@
 
 <body>
 
-	<include file="Home:Public:newHeader" />
+	<include file="Home:Public:header" />
 
 	<!--个人中心-->
 	<div class="container">
 	
 		<include file="Index:lefter" />
-    
+  
+  
 		<div class="grzx_right">
-		    <div class="grzx_link">您的位置：我的收藏</div>
+			<div class="grzx_link">您的位置：我的说说</div>
 		    <div class="grzx_sx">
 		    	<a rid="" <empty name="rid">class="on"</empty> >全部</a>&nbsp;
 		    <volist name="cats" id="vo">
 		    	<a rid="{$vo.id}" <eq name="rid" value="$vo['id']">class="on"</eq> >{$vo.cat_name}</a>&nbsp;
 		    </volist>
 		    </div>
-			<ul class="grzx_sc_ul">
-		    <volist name="collList" id="vo">
-		      	<li>
-		      		<span><a href="__APP__/Index/detail/id/{$vo.lnk_id}" target="_blank" class="button01">查看简介</a><a lnk_id="{$vo.lnk_id}" class="button01 del_coll">取消收藏</a></span>
-		      		<a href="http://{$vo.link}" target="_blank" class="grzx_sc_tit">{$vo.title}</a>
-		        	<div class="clr"></div>
+		    
+    		<ul class="grzx_wdss">
+    		<volist name="mycmts" id="vo">
+      			<li>
+        			<div class="grzx_wdss_tit"><span>发表日期：{$vo.create_time}</span><font>{$vo.title}</font></div>
+		        	<div class="grzx_wdss_font">
+			           	<div class="grzx_wdss_cont"><span>说说内容：</span>&nbsp;{$vo.comment}</div>
+			           	<div class="grzx_wdss_button"><a class="button01 btn_edit" myid="{$vo.id}">编辑</a><a href="__APP__/Index/detail/id/{$vo.lnk_id}" target="_blank" class="button01">查看简介</a></div>
+			           	<div class="clr"></div>
+		        	</div>
 		      	</li>
 			</volist>
-		    </ul>
-		    {$page}
-		</div>
-		
-  		<div class="clr"></div>
+			</ul>
+	    	{$page}
+	  	</div>
+	  	<div class="clr"></div>
 	</div>
 	<!--个人中心 结束-->
 
@@ -45,8 +49,9 @@
 		<input type="hidden" name="p" />
 	</form>
 	
+	<textarea id="editarea"></textarea>
+	
 	<load href="__PUBLIC__/skin/js/member.js" />
 
 </body>
 </html>
-

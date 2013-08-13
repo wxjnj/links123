@@ -1,14 +1,14 @@
-<?php
+<?php 
 /**
- * @name RecommendAction.class.php
+ * @name CommentAction.class.php
  * @package Member
- * @desc 我的推荐
+ * @desc 我的说说
  * @author frank qian 2013-08-13
  * @version 0.0.1
  */
 
 import("@.Common.CommonAction");
-class RecommendAction extends CommonAction
+class CommentAction extends CommonAction
 {
 	public function index()
 	{
@@ -30,12 +30,15 @@ class RecommendAction extends CommonAction
 		$pg = !empty($_REQUEST[C('VAR_PAGE')]) ? $_REQUEST[C('VAR_PAGE')] : 1;
 		$rst = ($pg - 1) * $listRows;
 		//
-		$links = M("Links");
-		$list = $links->where($condition)->order('create_time desc')->limit($rst . ',' . $listRows)->select();
-		//echo $links->getLastSql();
-		$this->assign('recList', $list);
+		$commentView = new CommentViewModel();
+		$mycmts = $commentView->where($condition)->order('create_time desc')->limit($rst . ',' . $listRows)->select();
+		foreach ($mycmts as &$value) {
+			$value["comment"] = checkLinkUrl($value["comment"]);
+			$value['create_time'] = date('Y-m-d h:i', $value['create_time']);
+		}
+		$this->assign('mycmts', $mycmts);
 		// 分页
-		$count = $links->where($condition)->count('id');
+		$count = $commentView->where($condition)->count('id');
 		if ($count > 0) {
 			import("@.ORG.Page");
 			$p = new Page($count, $listRows);
@@ -45,7 +48,7 @@ class RecommendAction extends CommonAction
 		//
 		$this->getRootCats();
 		//
-		$this->assign("funcNow", "myRecommend");
+		$this->assign("funcNow", "myComment");
 		//
 		$this->display();
 	}

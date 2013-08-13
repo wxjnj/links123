@@ -2,7 +2,7 @@
 /**
  * @name IndexAction.class.php
  * @package Member
- * @desc 用户登录
+ * @desc 会员中心
  * @author frank qian 2013-08-13
  * @version 0.0.1
  */

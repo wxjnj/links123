@@ -5,15 +5,15 @@ return array(
     'DB_TYPE'                   =>  'mysqli',
 	'DB_HOST'                   =>  '127.0.0.1',
 	'DB_NAME'                   =>  'linkstest',
-	'DB_USER'                   =>  'linkstest',
-	'DB_PWD'                    =>  'linkstest7066',	
+	'DB_USER'                   =>  'root',
+	'DB_PWD'                    =>  '',	
     'DB_PORT'                   =>  '3306',
     'DB_PREFIX'                 =>  'lnk_',
 
 	'MEMBER_AUTH_KEY'			=> 'lnkMemberId',
     'SESSION_AUTO_START'        =>	false,
 		
-	'APP_GROUP_LIST' 			=>	'Home,Admin,English,Homepage',					//项目分组设定
+	'APP_GROUP_LIST' 			=>	'Home,Admin,English,Homepage,Member',					//项目分组设定
 	'DEFAULT_GROUP'  			=>	'Home',									//默认分组
 	
 	'VAR_PAGE'					=>	'p',

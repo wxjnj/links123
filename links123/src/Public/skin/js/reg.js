@@ -182,7 +182,7 @@ $(function() {
                 data.auto_login = 1;
             }
 			//
-			$.post(APP+"Member/checklogin", data, 
+			$.post(APP+"Member/Login/checkLogin", data, 
 			function(data){
 				if ( data.indexOf("loginOK") >= 0 ) {
                     if(window.opener){

@@ -12,7 +12,7 @@ class CommonAction extends Action {
 	 */
 	private function _init() {
 		session_start();
-
+		
 		//网站升级
 		$this->updating();
 		//自动登录
@@ -38,6 +38,19 @@ class CommonAction extends Action {
 		$this->assign('tidNow', 1);
 	}
 
+	protected function checkLog($ajax = 0) {
+		if (!isset($_SESSION[C('MEMBER_AUTH_KEY')]) || empty($_SESSION[C('MEMBER_AUTH_KEY')])) {
+			if ($ajax == 1) {
+				echo "请先登录！";
+				return false;
+			} else {
+				header("Location: " . __APP__ . "/");
+			}
+		} else {
+			return true;
+		}
+	}
+	
 	/**
 	 * 获取头部设置信息
 	 * @return array
