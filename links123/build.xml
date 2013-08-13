@@ -3,7 +3,7 @@
     <!-- 定义网站根目录 -->
     <property name="www"  value="/mnt/www/links123" />
     <!-- 定义项目源代码目录 -->
-    <property name="source"  value="${project.basedir}/links123" />
+    <property name="source"  value="${project.basedir}/src" />
     <target name="build" depends="prepare,lint" description="Prepare for deploy"/>
     <!-- 清除前一次自动构建生成的文件 -->
     <target name="clean" description="Cleanup build artifacts">
@@ -32,9 +32,9 @@
         </apply>
     </target>
     <!-- 把网站源码部署到测试站点，可视化查看新提交的代码是否正确 -->
-    <target name="deploy" depends="lint">
+    <target name="deploy">
         <copy todir="${www}">
-            <fileset dir="${project.basedir}/links123" />
+            <fileset dir="${source}" />
         </copy>
         <!-- 创建Runtime目录，使ThinkPHP能够把缓存文件写入 -->
         <mkdir dir="${www}/App/Runtime" mode="777" />
