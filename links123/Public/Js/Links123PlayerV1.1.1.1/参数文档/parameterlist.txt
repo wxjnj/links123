@@ -1,4 +1,0 @@
-parameter name				type			default value							comment
-
-url					    string				""							播放地址
-logging					boolean				false						是否开启日志(仅用于测试,发布后请移除该参数)	

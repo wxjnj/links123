@@ -1,2 +1,6 @@
-./links123/App/Runtime
-./links123/App/config.php
+./links123/src/App/Runtime
+./links123/src/App/config.php
+/.settings/
+/*.project
+/*.buildpath
+/links123/src/nbproject/private/

@@ -1,0 +1,15 @@
+<IfModule mod_rewrite.c>
+
+php_flag magic_quotes_gpc Off
+
+RewriteEngine on
+
+RewriteCond %{REQUEST_FILENAME} !-d
+
+RewriteCond %{REQUEST_FILENAME} !-f
+
+RewriteRule ^(.*)$ index.php/$1 [QSA,PT,L]
+
+
+</IfModule>
+

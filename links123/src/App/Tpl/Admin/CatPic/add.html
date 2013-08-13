@@ -1,0 +1,114 @@
+<tagLib name="html" />
+<include file="Public:header" />
+
+<load href="__PUBLIC__/Js/Jquery/jquery.js" />
+<load href="__PUBLIC__/Js/Jquery/jqueryform.js" />
+<script type="text/javascript">
+<!--
+	$(function(){
+		var options = { 
+			beforeSubmit: showRequest,
+			success: showResponse
+		};
+		//
+		$(".file_frm").submit(function() {
+			$(this).ajaxSubmit(options); 
+			return false;
+		});
+		//
+		$(":file").change(function(){
+	    	if ( $(this).val() != '' ) {
+	    		$(this).parent(".file_frm").submit();
+	    	}
+	    });
+		//
+		setPointer();
+	});
+	//
+	function showRequest(formData, jqForm, options) { 
+		//var queryString = $.param(formData);
+		//alert('About to submit: \n\n' + queryString);
+		return true;
+	}
+	//
+	function showResponse(responseText, statusText)  {
+		//alert('status: ' + statusText + '\n\nresponseText: \n' + responseText'); 
+		var tempary = responseText.split("|");
+		$("#img_"+tempary[0]).attr("src", PUBLIC+"/Uploads/CatPics/"+tempary[1]).css("display", "inline-block");
+		$("#"+tempary[0]).val(tempary[1]);
+		$("#file_"+tempary[0]).blur();
+		setTimeout("setPointer()",500);
+	}
+	//
+	function setPointer() {
+		$(":file").each(function(index,domEle){
+			var tempstr = $(domEle).attr("id");
+			tempstr = tempstr.replace('file_','');
+			$(domEle).css({top:$("#"+tempstr).offset().top,left:$("#"+tempstr).offset().left});
+		});
+	}
+//-->
+</script>
+
+<div id="main" class="main" >
+	<div class="content">
+		<div class="title">新增目录图片[ <a href="__URL__">返回列表</a> ]</div>
+		<form method='post' id="form1" action="__URL__/insert/" >
+			<table cellpadding=3 cellspacing=3>
+				<tr>
+					<td class="tRight">名称：</td>
+					<td class="tLeft" ><input type="text" class="large bLeftRequire" name="name" /></td>
+				</tr>
+				<tr>
+					<td class="tRight">缩略图：</td>
+					<td class="tLeft">
+						<img id="img_pic" src="#" style="border:1px dotted #DDD;vertical-align:middle;width:116px;display:none;">
+						<input type="text" class="medium" id="pic" name='pic' style="vertical-align:middle" readonly />&nbsp;
+						<a>上传图片</a>　<span style='color:#C00;'>（尺寸：116×116）</span>
+					</td>
+				</tr>
+				<tr>
+					<td class="tRight">大图：</td>
+					<td class="tLeft">
+						<img id="img_pic_big" src="#" style="border:1px dotted #DDD;vertical-align:middle;width:210px;display:none;">
+						<input type="text" class="medium" id="pic_big" name='pic_big' style="vertical-align:middle" readonly />&nbsp;
+						<a>上传图片</a>　<span style='color:#C00;'>（尺寸：800×600）</span>
+					</td>
+				</tr>
+				<tr>
+					<td class="tRight">所属目录：</td>
+					<td class="tLeft">
+						<select name="rid">
+						<volist name="cats" id="cat">
+							<option value="{$cat.id}" <eq name="vo.rid" value="$cat.id">selected</eq> >{$cat.cat_name}</option>
+						</volist>
+						</select>	
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td class="center">
+					<input type="submit" value="保 存" class="small submit" />&nbsp;
+					<input type="reset" class="submit small" value="清 空" />
+					</td>
+				</tr>
+			</table>
+		</form>
+								
+		<form method='post' id="frm_pic" class="file_frm" action="__GROUP__/Public/uploadPic/" enctype="multipart/form-data">
+			<input name="image" id="file_pic" type="file" style="position:absolute; width:230px; top:0px; left:0px; height:28px; filter:alpha(opacity:0);opacity:0;" />
+			<input type="hidden" id="folder" name="folder" value="CatPics" />
+			<input type="hidden" name="width" value="116" />
+		</form>
+		
+		<form method='post' id="frm_pic_big" class="file_frm" action="__GROUP__/Public/uploadPic/" enctype="multipart/form-data">
+			<input name="image" id="file_pic_big" type="file" style="position:absolute; width:230px; top:0px; left:0px; height:28px; filter:alpha(opacity:0);opacity:0;" />
+			<input type="hidden" id="folder" name="folder" value="CatPics" />
+			<input type="hidden" name="id" value="pic_big" />
+			<input type="hidden" name="width" value="800" />
+		</form>
+	</div>
+</div>
+
+</body>
+</html>

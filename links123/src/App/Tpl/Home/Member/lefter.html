@@ -1,0 +1,29 @@
+<div class="grzx_left">
+
+	<div class="grzx_pic">
+
+    	<img src="__PUBLIC__/Uploads/Faces/{$Think.session.face}" />
+
+    </div>
+
+    <div class="clr"></div>
+
+    <div class="grzx_leftname">{$Think.session.nickname}</div>
+
+    <ul class="grzx_nav" id="grzx_nav">
+
+   		<li <eq name="funcNow" value="index">class="on"</eq> ><span class="grzx_nav01"></span><a href="__URL__/index">个人中心首页</a></li>
+
+      	<li <eq name="funcNow" value="myCollection">class="on"</eq> ><span class="grzx_nav02"></span><a href="__URL__/myCollection">我的收藏</a></li>
+
+      	<li <eq name="funcNow" value="myRecommend">class="on"</eq> ><span class="grzx_nav03"></span><a href="__URL__/myRecommend">我的推荐</a></li>
+
+      	<li <eq name="funcNow" value="myComment">class="on"</eq> ><span class="grzx_nav04"></span><a href="__URL__/myComment">我的说说</a></li>
+
+      	<li <eq name="funcNow" value="mySuggestion">class="on"</eq> ><span class="grzx_nav05"></span><a href="__URL__/mySuggestion">留言板</a></li>
+
+      	<li><span class="grzx_nav06"></span><a>关闭本页</a></li>
+
+	</ul>
+
+</div>

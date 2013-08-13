@@ -1,0 +1,47 @@
+<tagLib name="html" />
+<include file="Public:header" />
+
+<div id="main" class="main" >
+	<div class="content">
+		<div class="title">新增目录[ <a href="__URL__">返回列表</a> ]</div>
+		<form method='post' id="form1" action="__URL__/insert/" >
+			<table cellpadding=3 cellspacing=3>
+				<tr>
+					<td class="tRight" >目录：</td>
+					<td class="tLeft" ><input type="text" class="large bLeftRequire" name="cat_name" /></td>
+				</tr>
+				<tr>
+					<td class="tRight" >父目录：</td>
+					<td class="tLeft" >
+						<select name="prt_id">
+							<option value="0" <eq name="vo.prt_id" value="0">selected</eq> >另客</option>
+						<volist name="cats" id="cat">
+							<option value="{$cat.id}" <eq name="vo.prt_id" value="$cat.id">selected</eq> >{$cat.cat_name}</option>
+						</volist>
+						</select>		
+					</td>
+				</tr>
+				<tr>
+					<td class="tRight" >目录说明：</td>
+					<td class="tLeft" ><input type="text" class="large" name="intro" />　<span style='color:#666;'>（限120字）</span></td>
+				</tr>
+				<tr>
+					<td class="tRight" >语言：</td>
+					<td class="tLeft" >
+						<select name="flag">
+							<option value="1" <eq name="vo.flag" value="1">selected</eq> >中文</option>
+							<option value="2" <eq name="vo.flag" value="2">selected</eq> >英文</option>
+						</select>	
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td class="center">
+					<input type="submit" value="保 存" class="small submit">&nbsp;
+					<input type="reset" class="submit small" value="清 空" >
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>

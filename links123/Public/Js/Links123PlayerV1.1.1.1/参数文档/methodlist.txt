@@ -1,7 +1,0 @@
-/**
-*
-* 开始播放一段新视频
-* param url 新的视频地址
-* param streamType 新的视频类型,与初始化参数相同时,可空
-*/
-function PlayNew(url:string):void;	
