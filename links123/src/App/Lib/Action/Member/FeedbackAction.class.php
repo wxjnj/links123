@@ -58,4 +58,34 @@ class FeedbackAction extends CommonAction
 		//
 		$this->display();
 	}
+	
+	//
+	public function saveSuggestion() {
+		//
+		if (!$this->checkLog(1)) {
+			return false;
+		}
+		//
+		$suggestion = M("Suggestion");
+		//
+		if (empty($_POST['id'])) {
+			$_POST['mid'] = $_SESSION[C('MEMBER_AUTH_KEY')];
+			$_POST['type'] = 1;
+			$_POST['create_time'] = time();
+			//
+			if (false === $suggestion->add($_POST)) {
+				Log::write('新增留言失败：' . $suggestion->getLastSql(), Log::SQL);
+				echo "新增留言失败！";
+			} else {
+				echo "saveOK";
+			}
+		} else {
+			if (false === $suggestion->save($_POST)) {
+				Log::write('编辑留言失败：' . $suggestion->getLastSql(), Log::SQL);
+				echo "编辑留言失败！";
+			} else {
+				echo "saveOK";
+			}
+		}
+	}
 }
