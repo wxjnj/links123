@@ -378,7 +378,7 @@ function cleanParam($param) {
         'xp_' => '',
     );
     $param = strtr($param, $ary_change);
-    //	
+    //
     $param = htmlspecialchars($param);
     $param1 = strtolower($param);
     if (strpos($param1, 'script') > 0 || strpos($param1, 'iframe') > 0) {
@@ -544,7 +544,7 @@ function filterIllegal($str) {
 			}
 			$str =str_replace($keywordName,$repStr, $str);
 		}
-    	
+
     }
     $str = iconv("gbk", "utf-8", $str);
     return $str;
@@ -552,7 +552,7 @@ function filterIllegal($str) {
 
 /**
  * 获取用户ip
- * @param  
+ * @param
  * @return string
  * @throws
  * @author Lee $date2013.8.1$
@@ -582,11 +582,11 @@ function getIP() {
  * param  array  $paramArr
  * param  string $method
  * @return html->goto url page
- * 
+ *
  * @throws
  * @author yjj $date2013.7.13$
  */
-function formRequest($url, $paramArr=array(),$method="post") {  
+function formRequest($url, $paramArr=array(),$method="post") {
 	if (empty($url)){
 		return false;
 	}
@@ -599,5 +599,16 @@ function formRequest($url, $paramArr=array(),$method="post") {
   	$form.='</form>';
   	$form.='<script>document.getElementById("formRequest").submit();</script>';
   	echo $form ;
-}  
+}
+
+/**
+ * 获取静态资源的md5值，在引用css,js的时候跟上，以便静态资源文件更新的时候能够立即呈现
+ * @param string $resourcePath css,js等静态资源文件的路径
+ * @return string 返回静态资源文件内容的md5值
+ */
+function md5Resource($resourcePath) {
+    if(file_exists($resourcePath)){
+        return md5(file_get_contents($resourcePath));
+    }
+}
 ?>
