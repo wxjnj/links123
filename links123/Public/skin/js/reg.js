@@ -108,7 +108,7 @@ $(function() {
 					alert("注册成功！");
 					$("#btn_reset").trigger("click");
 					window.opener.location.reload();
-					window.location.href = APP+"Member/index/";
+					window.location.href = APP+"Member/Index/";
 				}
 				else {
 					$(".warning").html("<br />"+data);
