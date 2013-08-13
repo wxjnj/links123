@@ -1,0 +1,66 @@
+<header>
+	<div class="header_top">
+	    <div class="header_toplink">
+	        <ul>
+	        <empty name="_SESSION[C('MEMBER_AUTH_KEY')]">
+	            <li>
+	                <a href="__APP__/Index/login">登陆</a>
+	            </li>
+	            <li>
+	                <a href="__APP__/Index/reg">注册</a>
+	            </li>
+	        <else />
+	            <li>
+	                <a href="__APP__/Member/index">{$Think.session.nickname}</a>
+	            </li>
+	            <li>
+	                <a href="__APP__/Member/index">个人中心</a>
+	            </li>
+	            <li>
+	                <a href="__APP__/Member/logout">退出</a>
+	            </li>
+	        </empty>
+	        	<li>
+	            	<a href="__APP__/Index/suggestion">留言板</a>
+	            </li>
+	            <li>
+	                <a href="__APP__/Index/recommend">推荐链接</a>
+	            </li>
+	            <li>
+	                <a class="a_setHome">设为首页</a>
+	            </li>
+	            <li id="li_today">
+		            {$today}
+		        </li>
+		        <li>
+		        	<iframe name="sinaWeatherTool" src="http://weather.news.sina.com.cn/chajian/iframe/weatherStyle0.html?city=%E4%B8%8A%E6%B5%B7" width="136" height="20" marginwidth="0" marginheight="0" hspace="0" vspace="0" frameborder="0" scrolling="no"></iframe>
+		        </li>
+	        </ul>
+	    </div>
+	</div>
+	<div class="logonav">
+	    <div class="logo">
+	        <a href="__APP__/">
+	            <img src="__PUBLIC__/skin/images/logo.gif" />
+	        </a>
+	    </div>
+	    <nav>
+	        <ul class="nav_ul">
+	        <volist name="rootCats" id="vo">
+	            <li>
+	            <empty name="rid">
+	                <a href="__APP__/Index/index/cid/{$vo.id}" title="{$vo.intro}" class="tip">{$vo.cat_name}</a>
+	            <else />
+	            	<a href="__APP__/Index/index/cid/{$vo.id}" title="{$vo.intro}" class="tip <eq name="rid" value="$vo['id']">on</eq>">{$vo.cat_name}</a>
+	            </empty>
+	            </li>
+	        </volist>
+	        </ul>
+	        <div class="clr"></div>
+	    </nav>
+	    <div class="clr"></div>
+	</div>
+	<input type="hidden" id="js_APP" value="__APP__/">
+	<input type="hidden" id="js_URL" value="__URL__">
+	<input type="hidden" id="js_PUBLIC" value="__PUBLIC__">
+</header>

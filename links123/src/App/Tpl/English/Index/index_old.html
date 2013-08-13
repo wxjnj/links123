@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE7" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>另客网 | 领先的全面导航 | 高效的组合搜索 | 独特的英语角</title>
+        <load href='__PUBLIC__/skin/easyui/themes/metro/easyui.css' />
+        <load href='__PUBLIC__/English_old/css/bootstrap/css/bootstrap.css' />
+        <load href='__PUBLIC__/English_old/css/bootstrap/css/bootstrap-responsive.min.css' />
+        <script type="text/javascript" src="__PUBLIC__/skin/js/jquery-1.9.1.min.js"></script>
+        <load href="__PUBLIC__/skin/js/json2.js" />
+        <load href='__PUBLIC__/English_old/css/bootstrap/js/bootstrap.js' />
+        <load href="__PUBLIC__/English_old/js/png.js" />
+        <load href="__PUBLIC__/English_old/js/swfobject.js" />
+        <load href="__PUBLIC__/skin/easyui/jquery.easyui.min.js" />
+        <load href="__PUBLIC__/skin/js/jquery.cookies.2.2.0.min.js" />
+        <script type="text/javascript" src="__PUBLIC__/Js/video-js/swfobject.js"></script>
+        <script type="text/javascript">
+            var URL = "__URL__";
+            var PUBLIC = "__PUBLIC__";
+            var question ={$question|json_encode};
+            var user_count_info ={$user_count_info|json_encode};
+        </script>
+    </head>
+    <body>
+        <include file="Public:top_old" />
+        <div class="container main margin">
+            <!--导航栏开始-->
+            <div class="nav margin border">
+                <div class="logo fleft tleft font15">
+                    <a href="{:U('Home/Index/index')}" target="_blank"><img src="__PUBLIC__/English_old/images/logo.png" />
+                        <div class="logo_right fleft">
+                            <div class="logo_right_top">links123.cn</div>
+                            <div class="logo_right_down"><span>新人类</span>新工具</div>
+                        </div>
+                    </a>
+                </div>
+                <div class="nav_right fright overflow_hidden">
+                    <!--学科展示开始-->
+                    <div class="object font14 bold tleft">
+                        <ul>
+                            <volist name="object_list" id="object">
+                                <li class="object_li">
+                                    <a href="javascript:void(0)" value="{$object.id}"
+                                       <if condition="$user_last_select['object'] eq $object['id']">class="red"
+                                            <elseif condition="$object['question_num'] eq 0 AND $object['name'] neq '综合'" />class="grey not_allowed"</if> 
+                                        >{$object.name}</a>
+                                </li>
+                            </volist>
+                        </ul>
+                    </div>
+                    <!--学科展示结束-->
+                    <!--年级导航开始-->
+                    <div class="level bold font14 tleft">
+                        <ul>
+                            <volist name="level_list" id="level">
+                                <li>
+                                    <a href="javascript:void(0)" value="{$level.id}"
+                                       <if condition="($user_last_select['level'] eq $level['id'])AND($level['question_num'] gt 0)">class="red"
+                                            <elseif condition="$level['question_num'] eq 0" />class="grey not_allowed"</if> 
+                                        >{$level.name}</a>
+                                </li>
+                            </volist>
+                        </ul>
+                    </div>
+                    <!--年级导航结束-->
+                </div>
+                <div class="categorys fright overflow_hidden tleft">
+                    <div class="category font14 bold voice">
+                        <a href="javascript:void(0)" <eq name="user_last_select['voice']" value="1"> class="red fleft"</eq> value="1">美音</a>
+                        <a href="javascript:void(0)" <eq name="user_last_select['voice']" value="2"> class="red fright margin_right5"<else/>class="fright margin_right5"</eq> value="2">英音</a>
+                    </div>
+                    <div class="category font14 bold target">
+                        <a href="javascript:void(0)" <eq name="user_last_select['target']" value="1"> class="red fleft"</eq> value="1">听力</a>
+                        <a href="javascript:void(0)" <eq name="user_last_select['target']" value="2"> class="fright margin_right5 red"<else/>class="grey fright margin_right5"</eq> value="2">说力</a>
+                    </div>
+                    <div class="category font14 bold pattern">
+                        <a href="javascript:void(0)" <eq name="user_last_select['pattern']" value="1"> class="red fleft"</eq> value="1">视频</a>
+                        <a href="javascript:void(0)" <eq name="user_last_select['pattern']" value="2"> class="fright margin_right5 red"<else/>class="grey fright margin_right5"</eq> value="2">音频</a>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+            <!--导航栏结束-->
+            <!--内容区开始-->
+            <div class="span12 content margin margin_top8">
+                <div class="content_left fleft top_6px_radius">
+                    <!--动态展示盘子中的大米开始-->
+                    <div class="plate_rice">
+                        <img <if condition="empty($user_conut_info['right_num']) OR $user_conut_info['right_num'] eq 0"> src="__PUBLIC__/English_old/images/000.jpg" <else/>src="__PUBLIC__/English_old/images/{$user_conut_info['right_num']*100}.jpg" </if> id="J_plateImg" /></div>
+                    <!--动态展示盘子中的大米结束-->
+                    <div class="font15 green bold margin_top10 current_rice tleft" id="J_currentRice">{$user_conut_info['right_num']*100}</div>
+                    <div class="font15 margin_top10 total_rice tleft">累计 <span class="green bold" id="J_totalRice">{$english_user_info['total_rice']|default=0}</span> Total Rice</div>
+                   <empty name="_SESSION[C('MEMBER_AUTH_KEY')]">
+                        <div class="content_left_bottom font14 bold">
+                            登陆可以保留记录和复习
+                            <span>
+                                <a target="_blank" href="{:U('Home/Index/login')}" style="margin-right: 7px;">登陆</a>
+                                <a target="_blank" href="{:U('Home/Index/reg')}" style="margin-left: 7px;">注册</a>
+                            </span>
+                        </div>
+                    </empty>
+                </div>
+                <!--内容区右边部分开始-->
+                <div class="content_right top_6px_radius">
+                    <!--视频播放开始-->
+                    <div class="video margin">
+                        <div id="video">
+                            <!-- $Flash视频播放 -->
+                            <div class="focus_player J_player" <if condition="$isAboutVideo neq '1'">style="display:none;"</if>>
+								<div class="focus_player_link">
+									<a href="#"></a>
+								</div>
+								<div class="focus_player_play"></div>
+								<div class="focus_player_picture">
+									<img src="{$question['media_img_url']}" id="J_media_img">
+								</div>
+							</div>
+                            <div id="J_media_div" <if condition="$question['media_url'] neq ''">class="media_div"</if> <if condition="$isAboutVideo eq '1'">style="visibility: hidden;" data_media_url="{$question['media_url']}"<else />style="height:220px;"</if> data_isAboutVideo="{$isAboutVideo}">
+								<if condition="$isAboutVideo neq '1'">
+									<if condition="$question['media_type'] eq '1'">
+										{$question['media']}
+									<elseif condition="$question['media_type'] eq '2'"/>
+										<iframe src="{$question['media']}" width="100%" height="100%" scrolling="no" frameborder="0">
+									</iframe>
+									<elseif condition="$question['media_type'] eq '3'"/>
+									<script type="text/javascript">
+										var swfUrl = 'http://www.kizphonics.com/wp-content/uploads/jw-player-plugin-for-wordpress/player/player.swf';
+										var version = '10.2.0';
+										var params  = {
+									        quality: "high",
+									        wmode: "opaque",
+									        scale: "noscale",
+									        align: "left",
+									        allowFullScreen: "true",
+									        allowScriptAccess: "always",
+									        bgColor: "#000000"
+									    };
+									    
+									    swfobject.embedSWF(swfUrl, "J_media_div", "100%", "100%", version, "/swf/playerProductInstall.swf", {$question['media']}, params );
+								   	    
+									</script>
+									<else />
+										<object id="J_media_object" height="100%" width="100%" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">
+											<param name="wmode" value="transparent">
+											<param name="movie" value="{$question['media_url']}">
+											<embed name="swf" swliveconnect="true" height="100%" width="100%" type="application/x-shockwave-flash"
+											 allowfullscreen="true" wmode="transparent" src="{$question['media_url']}" play="false">
+										</object>
+									</if>
+								</if>
+							</div>
+							
+						    <!-- Flash视频播放$ -->
+                        </div>
+                    </div>
+                    <!-- $工具栏 -->
+                    <!-- <div class="video_jug_play" <if condition="$isAboutVideo eq '1'">style="display: none;"</if>></div>
+                    -->
+                    <div style="" id="sideTool" class="sideTool">
+							<div class="handle"><a id="lightclose" title="关灯" href="#">关灯</a></div>
+							<div class="handle"><a id="lightMax" title="放大" href="#">放大</a></div>
+							<div class="handle"><a id="lightMin" title="放大" href="#">缩小</a></div>
+					</div>
+					<div id="playshow_mask" style="opacity: 0; display: none;">
+						<div id="lightopen" class="sideTool sideTool_dark">
+							<div id="lighton" class="handle"><a title="开灯" href="#">开灯</a></div>
+						</div>	
+					</div>
+					<!-- 工具栏$ -->
+                    <!--视频播放结束-->
+                    <!--视频选项开始-->
+                    <div class="video_select margin">
+                        <ul>
+                            <li class="left_symbol fleft">
+                                <a href="javascript:void(0);" class="quick_select" id="J_QuickSelectPrev" value="prev">
+                                    <img src="__PUBLIC__/English_old/images/left_symbol.png" />上一题</a>
+                            </li>
+                            <li class="middle_text fleft" id="media_text" media_text_url="{$question['media_text_url']}">查看文本</li>
+                            <li class="right_symbol fright">
+                                <a href="javascript:void(0);" class="quick_select" value="next">
+                                    <img src="__PUBLIC__/English_old/images/right_symbol.png" />下一题</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--视频选项结束-->
+                    <!--展示问题开始-->
+                    <label id="J_question_id" class="none">{$question['id']}</label>
+                    <div class="question_content margin tleft font16 margin_top10">
+                        <p id="question_content">{$question['content']}</p>
+                    </div>
+                    <!--展示问题结束-->
+                    <!--试题展示开始-->
+                    <div class="answer margin tleft font16">
+                        <ul>
+                            <notempty name="question['option'][0]">
+                                <li>
+                                    <label class="answer_status"></label>
+                                    <b class="cursor J_option">
+                                        <input type="radio" name="answer" value="{$question['option'][0]['id']}" class="none" />
+                                        <label class="sign">A.</label><span>{$question['option'][0]['content']}</span>
+                                    </b>
+                                </li>
+                            </notempty>
+                            <notempty name="question['option'][1]">
+                                <li>
+                                    <label class="answer_status"></label>
+                                    <b class="cursor J_option">
+                                        <input type="radio" name="answer" value="{$question['option'][1]['id']}" class="none" />
+                                        <label class="sign">B.</label><span>{$question['option'][1]['content']}</span>
+                                    </b>
+                                </li>
+                            </notempty>
+                            <notempty name="question['option'][2]">
+                                <li>
+                                    <label class="answer_status"></label>
+                                    <b class="cursor J_option">
+                                        <input type="radio" name="answer" value="{$question['option'][2]['id']}" class="none" />
+                                        <label class="sign">C.</label><span>{$question['option'][2]['content']}</span>
+                                    </b>
+                                </li>
+                            </notempty>
+                            <notempty name="question['option'][3]">
+                                <li>
+                                    <label class="answer_status"></label>
+                                    <b class="cursor J_option">
+                                        <input type="radio" name="answer" value="{$question['option'][3]['id']}" class="none" />
+                                        <label class="sign">D.</label><span>{$question['option'][3]['content']}</span>
+                                    </b>
+                                </li>
+                            </notempty>
+                        </ul>
+                    </div>
+                    <!--试题展示结束-->
+                </div>
+                <!--内容区右边部分结束-->
+            </div>
+            <!--内容区结束-->
+            <div class="span12 pop margin margin_top10 tleft">
+                <div class="pop_left fleft border_bottom orange_bg font16">
+                    <span class="pop_left_base tleft bold">
+                        <span>大米排行榜</span>
+                        <img src="__PUBLIC__/English_old/images/top_symbol.png" />
+                    </span>
+                    <!--排行榜开始-->
+                    <div class="pop_list border top_6px_radius bold">
+                        <div class="top_tabs">
+                            <div id="J_topPrev" class="top_prev fleft"><</div>
+                            <div class="btn-group fleft">
+                                <button id="J_topCatBtn" type_name="综合" class="btn dropdown-toggle" data-toggle="dropdown">综合<span class="caret"></span>
+                                </button>
+                                <ul id="J_topCatul" class="dropdown-menu J_topCatul">
+                                    <li class="top_used_li"><a href="javascript:;" type="object_综合">综合</a></li>
+                                    <li class="top_used_li"><a href="javascript:;" type="total_rice">大米</a></li>
+<!--                                    <li class="top_used_li"><a href="javascript:;" type="continue_right_num">连对</a></li>-->
+                                    <li class="top_used_li"><a href="javascript:;" type="object_语文">语文</a></li>
+                                    <li class="top_used_li"><a href="javascript:;" type="object_数学">数学</a></li>
+                                    <li id="J_moreObjectLink"><a href="javascript:;" type="more_object">更多科目</a></li>
+                                    <li class="more_object top_used_li"><a href="javascript:;" type="object_科学">科学</a></li>
+                                    <li class="more_object top_used_li"><a href="javascript:;" type="object_艺术">艺术</a></li>
+                                    <li class="more_object top_used_li"><a href="javascript:;" type="object_历史">历史</a></li>
+                                    <li class="more_object top_used_li"><a href="javascript:;" type="object_地理">地理</a></li>
+                                    <li class="more_object top_used_li"><a href="javascript:;" type="object_物理">物理</a></li>
+                                    <li class="more_object top_used_li"><a href="javascript:;" type="object_化学">化学</a></li>
+                                    <li class="more_object top_used_li"><a href="javascript:;" type="object_健康">健康</a></li>
+                                    <li class="more_object top_used_li"><a href="javascript:;" type="object_社会">社会</a></li>
+                                </ul>
+                            </div>
+                            <div id="J_topNext" class="top_next fleft">></div>
+                        </div>
+                        <div class="pop_listen">听 力</div>
+                        <div id="J_topDiv_1">
+                            <volist name="top_1" id="user" >
+                                <div class="pop_listen_list{$i} border_top tleft">
+                                    <label>{$user.nickname}</label>
+                                    <strong>{$user.best_level_name}</strong>
+                                    <span>{$user.rice_sum}</span>
+                                </div>
+                            </volist>
+                        </div>
+                        <div class="pop_listen">说 力</div>
+                        <div id="J_topDiv_2">
+                            <volist name="top_2" id="user" >
+                                <div class="pop_listen_list{$i} border_top tleft">
+                                    <label>{$user.nickname}</label>
+                                    <strong>{$user.best_level_name}</strong>
+                                    <span>{$user.rice_sum}</span>
+                                </div>
+                            </volist>
+                        </div>
+                    </div>
+                    <!--排行榜结束-->
+                </div>
+                <div class="pop_right border_bottom orange_bg font14">
+                    <ul class="pop_right_ul margin">
+                        <li class="pop_current_object_level">
+                            <strong>当前级别：</strong>
+                            <label class="current_object_level fleft">{$user_last_select['object_info']['name']}/{$user_last_select['level_info']['name']}</label>
+                        </li>
+                        <li class="curren_level font16">
+                            <label id="J_rightNum">{$user_conut_info['right_num']}</label>/<label>10</label>
+                        </li>
+                        <li class="ajax cursor start" value="start_1" id="J_restart">
+                            本级别重新开始
+                        </li>
+                        <li class="pop_updown">
+                            <span id="J_levelUp" class="ajax cursor" value="updown_1">升级</span>
+                            <span> | </span>
+                            <span id="J_levelDown" class="ajax  cursor" value="updown_2">降级</span>
+                        </li>
+                        <li class="pop_subject_grade">
+                            <strong>最佳级别:</strong>&nbsp;
+                            <span id="J_best_level">
+                                {$english_user_info.best_object_name}/{$english_user_info.best_level_name}
+                            </span>
+                        </li>
+                        <div class="clear"></div>
+                    </ul>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <include file="Public:footer" />
+        <div class="shade"></div>
+        <load href="__PUBLIC__/English_old/js/index.js" />
+    </body>
+</html>

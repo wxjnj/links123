@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE7" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>另客网 | 领先的全面导航 | 高效的组合搜索 | 独特的英语角</title>
+        <load href='__PUBLIC__/skin/easyui/themes/metro/easyui.css' />
+        <load href='__PUBLIC__/English/css/bootstrap/css/bootstrap.css' />
+        <load href='__PUBLIC__/English/css/bootstrap/css/bootstrap-responsive.min.css' />
+        <script language="javascript" type="text/javascript" src="__PUBLIC__/skin/js/jquery-1.8.0.min.js" /></script>
+        <load href="__PUBLIC__/skin/js/json2.js" />
+        <load href='__PUBLIC__/English/css/bootstrap/js/bootstrap.js' />
+        <load href="__PUBLIC__/English/js/png.js" />
+        <load href="__PUBLIC__/English/js/swfobject.js" />
+        <load href="__PUBLIC__/skin/easyui/jquery.easyui.min.js" />
+        <load href="__PUBLIC__/skin/js/jquery.cookies.2.2.0.min.js" />
+    </head>
+    <body>
+        <include file="Public:top_new" />
+        <div class="container main margin">
+            <!--导航栏开始-->
+            <div class="nav margin border">
+                <div class="logo fleft tleft font15">
+                    <a href="{:U('Home/Index/index')}" target="_blank"><img src="__PUBLIC__/English/images/logo.png" />
+                        <div class="logo_right fleft">
+                            <div class="logo_right_top">links123.cn</div>
+                            <div class="logo_right_down"><span>新人类</span>新工具</div>
+                        </div>
+                    </a>
+                </div>
+                <div class="nav_right fright overflow_hidden">
+                    <!--学科展示开始-->
+                    <div class="object font14 bold tleft">
+                        <ul>
+                            <volist name="object_list" id="object">
+                                <li class="object_li">
+                                    <a href="javascript:void(0)" value="{$object.id}"
+                                       <if condition="$user_last_object_info['id'] eq $object['id']">class="red"
+                                            <elseif condition="$object['question_num'] eq 0 AND $object['name'] neq '综合'" />class="grey not_allowed"</if> 
+                                        >{$object.name}</a>
+                                </li>
+                            </volist>
+                        </ul>
+                    </div>
+                    <!--学科展示结束-->
+                    <!--年级导航开始-->
+                    <div class="level bold font14 tleft">
+                        <ul>
+                            <volist name="level_list" id="level">
+                                <li>
+                                    <a href="javascript:void(0)" value="{$level.id}"
+                                       <if condition="($user_last_level_info['id'] eq $level['id'])AND($level['question_num'] gt 0)">class="red"
+                                            <elseif condition="$level['question_num'] eq 0" />class="grey not_allowed"</if> 
+                                        >{$level.name}</a>
+                                </li>
+                            </volist>
+                        </ul>
+                    </div>
+                    <!--年级导航结束-->
+                </div>
+                <div class="categorys fright overflow_hidden tleft">
+                    <div class="category font14 bold voice">
+                        <a href="javascript:void(0)" class="red" value="1">美音</a>
+                        <a href="javascript:void(0)" class="grey fright margin_right5" value="2">英音</a>
+                    </div>
+                    <div class="category font14 bold target">
+                        <a href="javascript:void(0)" class="red" value="1">听力</a>
+                        <a href="javascript:void(0)" class="grey fright margin_right5" value="2">说力</a>
+                    </div>
+                    <div class="category font14 bold pattern">
+                        <a href="javascript:void(0)" class="red ajax" value="1">视频</a>
+                        <a href="javascript:void(0)" class="grey fright margin_right5" value="2">音频</a>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+            <!--导航栏结束-->
+            <!--内容区开始-->
+            <div class="span12 content margin margin_top8">
+                <div class="content_left fleft top_6px_radius">
+                    <!--动态展示盘子中的大米开始-->
+                    <div class="plate_rice">
+                        <img <if condition="empty($english_user_info['right_num']) OR $english_user_info['right_num'] eq 0"> src="__PUBLIC__/English/images/000.jpg" <else/>src="__PUBLIC__/English/images/{$english_user_info['right_num']*100}.jpg" </if> id="J_plateImg" /></div>
+                    <!--动态展示盘子中的大米结束-->
+                    <div class="font15 green bold margin_top10 current_rice tleft" id="J_currentRice">{$english_user_info['right_num']*100}</div>
+                    <div class="font15 margin_top10 total_rice tleft">累计 <span class="green bold" id="J_totalRice">{$english_user_info['total_rice']|default=0}</span> Total Rice</div>
+                   <empty name="_SESSION[C('MEMBER_AUTH_KEY')]">
+                        <div class="content_left_bottom font14 bold">
+                            登陆可以保留记录和复习
+                            <span>
+                                <a target="_blank" href="{:U('Home/Index/login')}" style="margin-right: 7px;">登陆</a>
+                                <a target="_blank" href="{:U('Home/Index/reg')}" style="margin-left: 7px;">注册</a>
+                            </span>
+                        </div>
+                    </empty>
+                </div>
+                <!--内容区右边部分开始-->
+                <div class="content_right top_6px_radius">
+                    <!--视频播放开始-->
+                    <div class="video margin">
+                        <div id="video">
+                            <!-- {:htmlspecialchars_decode($question['media_url'])} -->
+                            <!-- $Flash视频播放 -->
+                            <div class="focus_player J_player" <if condition="$isAboutVideo neq '1'">style="display:none;"</if>>
+								<div class="focus_player_link">
+									<a href="#"></a>
+								</div>
+								<div class="focus_player_play"></div>
+								<div class="focus_player_picture">
+									<img src="{$question['media_img_url']}" id="J_media_img">
+								</div>
+							</div>
+                            <div id="J_media_div" <if condition="$isAboutVideo eq '1'">style="visibility: hidden;"</if> data_media_url="{$question['media_url']}" data_isAboutVideo="{$isAboutVideo}">
+								<if condition="$isAboutVideo neq '1'">
+								<object id="J_media_object" height="100%" width="100%" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">
+									<param name="wmode" value="transparent">
+									<param name="movie" value="{$question['media_url']}">
+									<embed name="swf" swliveconnect="true" height="100%" width="100%" type="application/x-shockwave-flash"
+									 allowfullscreen="true" wmode="transparent" src="{$question['media_url']}" play="false">
+								</object>
+								</if>
+							</div>
+						    <!-- Flash视频播放$ -->
+                        </div>
+                    </div>
+                    <!-- $工具栏 -->
+                    <!-- <div class="video_jug_play" <if condition="$isAboutVideo eq '1'">style="display: none;"</if>></div>
+                    -->
+                    <div style="" id="sideTool" class="sideTool">
+							<div class="handle"><a id="lightclose" title="关灯" href="#">关灯</a></div>
+							<!-- <div class="handle"><a id="openVideoSmallWindow" title="弹窗" href="#" data_media_url="{$question['media_url']}">弹窗</a></div>
+							-->
+							<div class="handle"><a id="lightMax" title="放大" href="#">放大</a></div>
+							<div class="handle"><a id="lightMin" title="放大" href="#">缩小</a></div>
+					</div>
+					<div id="playshow_mask" style="opacity: 0; display: none;">
+						<div id="lightopen" class="sideTool sideTool_dark">
+							<div id="lighton" class="handle"><a title="开灯" href="#">开灯</a></div>
+						</div>	
+					</div>
+					<!-- 工具栏$ -->
+                    <!--视频播放结束-->
+                    <!--视频选项开始-->
+                    <div class="video_select margin">
+                        <ul>
+                            <li class="left_symbol fleft">
+                                <a href="javascript:void(0);" class="quick_select" id="J_QuickSelectPrev" value="prev">
+                                    <img src="__PUBLIC__/English/images/left_symbol.png" />上一题</a>
+                            </li>
+                            <li class="middle_text fleft" id="media_text" media_text_url="{$question['media_text_url']}">查看文本</li>
+                            <li class="right_symbol fright">
+                                <a href="javascript:void(0);" class="quick_select" value="next">
+                                    <img src="__PUBLIC__/English/images/right_symbol.png" />下一题</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--视频选项结束-->
+                    <!--展示问题开始-->
+                    <label id="J_question_id" class="none">{$question['id']}</label>
+                    <div class="question_content margin tleft font16 margin_top10">
+                        <p id="question_content">{$question['content']}</p>
+                    </div>
+                    <!--展示问题结束-->
+                    <!--试题展示开始-->
+                    <div class="answer margin tleft font16">
+                        <ul>
+                            <li>
+                                <label class="answer_status"></label>
+                                <b class="cursor J_option">
+                                    <input type="radio" name="answer" value="{$question['option'][0]['id']}" class="none" />
+                                    <label class="sign">A.</label><span>{$question['option'][0]['content']}</span>
+                                </b>
+                            </li>
+                            <li>
+                                <label class="answer_status"></label>
+                                <b class="cursor J_option">
+                                    <input type="radio" name="answer" value="{$question['option'][1]['id']}" class="none" />
+                                    <label class="sign">B.</label><span>{$question['option'][1]['content']}</span>
+                                </b>
+                            </li>
+                            <li>
+                                <label class="answer_status"></label>
+                                <b class="cursor J_option">
+                                    <input type="radio" name="answer" value="{$question['option'][2]['id']}" class="none" />
+                                    <label class="sign">C.</label><span>{$question['option'][2]['content']}</span>
+                                </b>
+                            </li>
+                            <li>
+                                <label class="answer_status"></label>
+                                <b class="cursor J_option">
+                                    <input type="radio" name="answer" value="{$question['option'][3]['id']}" class="none" />
+                                    <label class="sign">D.</label><span>{$question['option'][3]['content']}</span>
+                                </b>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--试题展示结束-->
+                </div>
+                <!--内容区右边部分结束-->
+            </div>
+            <!--内容区结束-->
+            <div class="span12 pop margin margin_top10 tleft">
+                <div class="pop_left fleft border_bottom orange_bg font16">
+                    <span class="pop_left_base tleft bold">
+                        <span>大米排行榜</span>
+                        <img src="__PUBLIC__/English/images/top_symbol.png" />
+                    </span>
+                    <!--排行榜开始-->
+                    <div class="pop_list border top_6px_radius bold">
+                        <div class="top_tabs">
+                            <div id="J_topPrev" class="top_prev fleft"><</div>
+                            <div class="btn-group fleft">
+                                <button id="J_topCatBtn" type_name="综合" class="btn dropdown-toggle" data-toggle="dropdown">综合<span class="caret"></span>
+                                </button>
+                                <ul id="J_topCatul" class="dropdown-menu J_topCatul">
+                                    <li class="top_used_li"><a href="javascript:;" type="object_综合">综合</a></li>
+                                    <li class="top_used_li"><a href="javascript:;" type="total_rice">大米</a></li>
+<!--                                    <li class="top_used_li"><a href="javascript:;" type="continue_right_num">连对</a></li>-->
+                                    <li class="top_used_li"><a href="javascript:;" type="object_语文">语文</a></li>
+                                    <li class="top_used_li"><a href="javascript:;" type="object_数学">数学</a></li>
+                                    <li id="J_moreObjectLink"><a href="javascript:;" type="more_object">更多科目</a></li>
+                                    <li class="more_object"><a href="javascript:;" type="object_科学">科学</a></li>
+                                    <li class="more_object"><a href="javascript:;" type="object_艺术">艺术</a></li>
+                                    <li class="more_object"><a href="javascript:;" type="object_历史">历史</a></li>
+                                    <li class="more_object"><a href="javascript:;" type="object_地理">地理</a></li>
+                                    <li class="more_object"><a href="javascript:;" type="object_物理">物理</a></li>
+                                    <li class="more_object"><a href="javascript:;" type="object_化学">化学</a></li>
+                                    <li class="more_object"><a href="javascript:;" type="object_健康">健康</a></li>
+                                    <li class="more_object"><a href="javascript:;" type="object_社会">社会</a></li>
+                                </ul>
+                            </div>
+                            <div id="J_topNext" class="top_next fleft">></div>
+                        </div>
+                        <div class="pop_listen">听 力</div>
+                        <div id="J_topDiv_1">
+                            <volist name="top_1" id="user" >
+                                <div class="pop_listen_list{$i} border_top tleft">
+                                    <label>{$user.nickname}</label>
+                                    <strong>{$user.best_level_name}</strong>
+                                    <span>{$user.rice_sum}</span>
+                                </div>
+                            </volist>
+                        </div>
+                        <div class="pop_listen">说 力</div>
+                        <div id="J_topDiv_2">
+                            <volist name="top_2" id="user" >
+                                <div class="pop_listen_list{$i} border_top tleft">
+                                    <label>{$user.nickname}</label>
+                                    <strong>{$user.best_level_name}</strong>
+                                    <span>{$user.rice_sum}</span>
+                                </div>
+                            </volist>
+                        </div>
+                    </div>
+                    <!--排行榜结束-->
+                </div>
+                <div class="pop_right border_bottom orange_bg font14">
+                    <ul class="pop_right_ul margin">
+                        <li class="pop_current_object_level">
+                            <strong>当前级别：</strong>
+                            <label class="current_object_level fleft">{$user_last_object_info['name']}/{$user_last_level_info['name']}</label>
+                        </li>
+                        <li class="curren_level font16">
+                            <label id="J_rightNum">{$english_user_info['right_num']}</label>/<label>10</label>
+                        </li>
+                        <li class="ajax cursor start" value="start_1" id="J_restart">
+                            本级别重新开始
+                        </li>
+                        <li class="pop_updown">
+                            <span id="J_levelUp" class="ajax cursor" value="updown_1">升级</span>
+                            <span> | </span>
+                            <span id="J_levelDown" class="ajax  cursor" value="updown_2">降级</span>
+                        </li>
+                        <li class="pop_subject_grade">
+                            <strong>最佳级别:</strong>
+                            <span id="J_best_level">
+                                {$english_user_info.best_object_name}/{$english_user_info.best_level_name}
+                            </span>
+                        </li>
+                        <div class="clear"></div>
+                    </ul>
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <include file="Public:footer_new" />
+        <div class="shade"></div>
+        <script type="text/javascript">
+            var answer=0;
+            var now_question_index = -1;
+            var getQuestionRequest;
+            $(function(){
+                $(".object_li:last").removeClass().addClass("object_li_last");//最后一个科目的位置
+                $(".level li:first,.level li:eq(10)").css("margin-right","12px");//第一个和第十个科目的边距
+                
+                bindMediaTextClickEvent("disable");
+                /*存入题目历史   开始*/
+                var history_ids = new Array();
+                history_ids = $.cookies.get("history_ids");
+                if(history_ids==null){
+                    history_ids = new Array();
+                }
+                
+                var has_index = jQuery.inArray($("#J_question_id").text(),history_ids);
+                if(has_index>-1){
+                   delete history_ids[has_index];
+                }
+                history_ids.push($("#J_question_id").text());
+                
+                now_question_index = history_ids.length-1;
+                $.cookies.set("history_ids", history_ids,{path:"/"});
+                /*存入题目历史  结束*/
+                
+                //弹出排行榜事件
+                $("#J_topPrev,#J_topNext").hover(function(){ $(this).addClass("red");}, function(){ $(this).removeClass("red");})
+                //上一个类别排行榜
+                $("#J_topPrev").click(function(){
+                    var now_cat = $("#J_topCatBtn").attr("type_name");
+                    var now_li = $(".J_topCatul a:contains('"+now_cat+"')").parent("li");
+                    if(now_li.index(".top_used_li")==0){
+                        $(".J_topCatul .top_used_li:last").children("a").click();
+                    }else{
+                        now_li.prev(".top_used_li").children("a").click();
+                    }
+                })
+                //下一个类别排行榜
+                $("#J_topNext").click(function(){
+                    var now_cat = $("#J_topCatBtn").attr("type_name");
+                    var now_li = $(".J_topCatul a:contains('"+now_cat+"')").parent("li");
+                    var last_li_index = $(".J_topCatul .top_used_li").size()-1;
+                    if(now_li.index(".top_used_li")==last_li_index){
+                        $(".J_topCatul .top_used_li:first").children("a").click();
+                    }else{
+                        now_li.next(".top_used_li").children("a").click();
+                    }
+                })
+//                $(".pop_list").show();
+                $(".pop_left").hover(function(){
+                    $(".pop_list").show();
+                }, function(){
+                    $(".pop_list").hide();
+                })
+                $("#J_moreObjectLink").mouseover(function(){
+                    $(".more_object").show().addClass("top_used_li");
+                    $(this).hide();
+                })
+                $(".J_topCatul a").click(function(){
+                    getTopUserList($(this).attr("type"),$(this));
+                });
+                //分类点击事件
+                $(".voice a,.target a,.pattern a").click(function(){
+                    if($(this).hasClass("grey")){
+                        alert("抱歉，该类不存在试题！");
+                        return false;
+                    }else if($(this).hasClass("red")){
+                        var top = $(".categorys").offset().top - 50;
+                        var left = $(".categorys").offset().left - 10;
+                        $.messager.show({msg: "您已在"+$(this).text()+"状态", showType: 'fade', width: 120, height: 45, timeout: 2000, style: {left: left, top: top}});
+                        return false;
+                    }
+                    $(this).addClass("red").siblings("a").removeClass("red");
+                    get_question_list("category");
+                })
+                //上一题，下一题按钮
+                $(".quick_select").click(function(){
+                    if($(this).attr("value")=="prev"){
+                        get_question_list("quick_select_prev");
+                    }else{
+                        get_question_list("quick_select_next");
+                    }
+                })
+                //重置当前等级
+                $("#J_restart").click(function(){
+                    restartLevel();
+                })
+                //升级
+                $("#J_levelUp").click(function(){
+                    var next_level_li;
+                    //已是最高级
+                    if(($(".level .red").parent("li").index()+1)==$(".level li").size()){
+                        if($(".object_li .red").index()+1==$(".object_li").size()){
+                            $(".object_li .red").parent("li").prevAll("li").each(function(){
+                                if(!$(this).children("a").hasClass("not_allowed")&&typeof next_level_li=="undefined"){
+                                    next_level_li=$(this);
+                                }
+                            })
+                        }else{
+                            $(".object_li .red").parent("li").nextAll("li").each(function(){
+                                if(!$(this).children("a").hasClass("not_allowed")&&typeof next_level_li=="undefined"){
+                                    next_level_li=$(this);
+                                }
+                            })
+                        }
+                    }else{
+                        $(".level .red").parent("li").nextAll("li").each(function(){
+                            if(!$(this).children("a").hasClass("not_allowed")&&typeof next_level_li=="undefined"){
+                                next_level_li=$(this);
+                            }
+                        })
+                    }
+                    if(typeof next_level_li!="undefined"){
+                        next_level_li.children("a").click();
+                    }else{
+                        var top = $("#J_levelDown").offset().top - 50;
+                        var left = $("#J_levelDown").offset().left - 65;
+                        $.messager.show({msg: "最高级别，无法升级！", showType: 'fade', width: 155, height: 45, timeout: 1000, style: {left: left, top: top}});
+                    }
+                })
+                //降级
+                $("#J_levelDown").click(function(){
+                    var prev_level_li;
+                    if($(".level .red").parent("li").index()>0){
+                        $(".level .red").parent("li").prevAll("li").each(function(){
+                            if(!$(this).children("a").hasClass("not_allowed")&&typeof prev_level_li=="undefined"){
+                                prev_level_li=$(this);
+                            }
+                        })
+                        if(typeof prev_level_li!="undefined"){
+                            prev_level_li.children("a").click();
+                        }else{
+                            var top = $(this).offset().top - 50;
+                            var left = $(this).offset().left - 65;
+                            $.messager.show({msg: "最小级别，无法降级！", showType: 'fade', width: 155, height: 45, timeout: 1000, style: {left: left, top: top}});
+                        }
+                    }
+                })
+                bindLevelClickEvent();//绑定等级点击事件
+                bindObjectClickEvent();//绑定科目点击事件
+//                bindOptionSelectEvent();//绑定选项点击事件
+                resetQuestionContent();//重置问题内容的位置
+                bindOptionHoverEvent();//绑定选项鼠标移动到事件
+                bindOptionSelectEvent("disable");//点击播放前选项不可点击
+                trimWhiteSpace();
+                
+                $("#video,.J_player,.video").click(function(){
+                    bindOptionSelectEvent("enable");
+                })
+                
+                /** $视频播放 **/
+                $('.J_player').click(function(){
+                	var isAboutVideo = $('#J_media_div').attr('data_isAboutVideo');
+                	if (isAboutVideo == 1) {
+	                    $(this).hide();
+	                    
+	                    var media_url = $('#J_media_div').attr('data_media_url');
+	                    var videoStr = '';
+	                    if (media_url) {
+	                    	videoStr += '<object id="J_media_object" height="100%" width="100%" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">';
+	                    	videoStr += '<param name="wmode" value="transparent">';
+	                    	videoStr += '<param name="movie" value="' + media_url +'">';
+	                    	videoStr += '<embed name="swf" height="' + '100%' + '" width="100%" play="true" type="application/x-shockwave-flash" allowfullscreen="true" wmode="transparent" src="' + media_url +'">';
+	                    	videoStr += '</object>';
+	                    } else {
+	                    	videoStr += '<span>视频无法加载，刷新重试！</span>'
+	                    }
+	                    $('#J_media_div').html(videoStr);
+	                    
+	                    $('#J_media_div').css('visibility', '');
+                	}
+                    return false;
+                });
+                /** 视频播放$ **/
+                
+                /** $关灯 **/
+                $('#lightclose').click(function(){
+               		$('#playshow_mask').css({'display': 'block', 'opacity': 1});
+               		$('.video').css('z-index', '1400');
+               		return false;
+                });
+                /** 关灯$ **/
+                
+                /** $开灯 **/
+                $('#lightopen').click(function(){
+                	$('#playshow_mask').css({'display': 'none', 'opacity': 0});
+               		$('.video').css('z-index', '');
+               		return false;
+                });
+                /** 开灯$ **/
+                
+                /** $弹出播放 **/
+                $('#openVideoSmallWindow').click(function(){
+                	//$('.J_player').show();
+                	// $('#J_media_div').html(videoStr);
+                	
+               		var media_url = $(this).attr('data_media_url');
+               		window.open(media_url, 'newwindow','height=400,width=600,top=0,left=0,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no');
+               		return false;
+                });
+                /** 弹出播放$ **/
+                
+                /** $视频全屏退出 **/
+                $(document).keydown(function(event){
+			    	  if(event.keyCode==27 && $('#J_media_div').width() > 550) {
+			    		  videoZoom(true);
+			    		  return false;
+			    	  }
+			    });
+                /** 视频全屏退出$ **/
+                
+                
+                /** $视频放大 **/
+                $('#lightMax').click(function(){
+                	if ($.trim($('#J_media_div').html()).length == 0) {
+                		$(".J_player").trigger("click");
+                	}
+                	videoZoom();
+               		return false;
+                });
+                /** 视频放大$ **/
+                
+                /** $视频缩小 **/
+                $('#lightMin').click(function(){
+                	videoZoom(true);
+               		return false;
+                });
+                /** 视频缩小$ **/
+                
+            })
+            //重新开始某个等级
+            function restartLevel(){
+                var voice = $(".voice .red").attr("value");
+                var target = $(".target .red").attr("value");
+                var object = $(".object .red").attr("value");
+                var level = $(".level .red").attr("value");
+                $.post("__URL__/restart_level",{voice:voice,target:target,object:object,level:level},function(msg){
+                    if(msg){
+                        if(msg.status){
+                            $("#J_rightNum").text(0);
+                            $("#J_currentRice").text(0);
+                            $("#J_plateImg").attr("src","__PUBLIC__/English/images/000.jpg");
+                            get_question_list("quick_select");//重新获取题目
+                        }
+                    }
+                },"json");
+            }
+            function bindLevelClickEvent(){
+                $(".level a").click(function(){
+                    if($(this).hasClass("grey")){
+                        alert("抱歉，该等级不存在试题！");
+                        return false;
+                    }else if($(this).hasClass("red")){
+                        var top = $(this).offset().top - 50;
+                        var left = $(this).offset().left - 10;
+                        $.messager.show({msg: "您已在等级:"+$(this).text(), showType: 'fade', width: 125, height: 45, timeout: 2000, style: {left: left, top: top}});
+                        return false;
+                    }
+                    $(this).addClass("red").parent("li").siblings("li").children("a").removeClass("red");
+                    get_question_list("level");
+                })
+            }
+            function bindObjectClickEvent(){
+                $(".object a").click(function(){
+                    if($(this).hasClass("grey")){
+                        alert("抱歉，该科目不存在试题！");
+                        return false;
+                    }else if($(this).hasClass("red")){
+                        var top = $(this).offset().top - 50;
+                        var left = $(this).offset().left - 10;
+                        $.messager.show({msg: "您已在科目:"+$(this).text(), showType: 'fade', width: 125, height: 45, timeout: 2000, style: {left: left, top: top}});
+                        return false;
+                    }
+                    $(this).addClass("red").parent("li").siblings("li").children("a").removeClass("red");
+                    get_question_list("object");
+                })
+            }
+            function bindOptionSelectEvent(type){
+                $(".J_option").unbind("click");
+                $(".J_option").click(function(){
+                    var target = $(this);
+                    if(type=="disable"){
+                        var top = $("#question_content").offset().top+10;
+                        var left = $("#question_content").offset().left;
+                        $.messager.show({msg: "请先播放视频！", showType: 'fade', width: 125, height: 45, timeout: 1000, style: {left: left, top: top}});
+                    }else{
+                        var select_option = $(this).children("input[name='answer']").val();
+                        var object = $(".object .red").attr("value");
+                        $.post("__URL__/answer_question",{question_id:$("#J_question_id").text(),object:object,select_option:select_option},function(msg){
+                            if(msg.status){
+                                var data = msg.data;
+                                var english_user_info = data.english_user_info
+                                if(english_user_info.right_num==null){
+                                    english_user_info.right_num=0;
+                                }
+                                $("#J_rightNum").text(english_user_info.right_num);
+                                $("#J_currentRice").text(english_user_info.right_num*100);
+                                if(english_user_info==null){
+                                    english_user_info.rice=0;
+                                }
+                                $("#J_totalRice").text(english_user_info.total_rice);
+                                if(english_user_info.right_num==0){
+                                    $("#J_plateImg").attr("src","__PUBLIC__/English/images/000.jpg");
+                                }else{
+                                    $("#J_plateImg").attr("src","__PUBLIC__/English/images/"+english_user_info.right_num*100+".jpg");
+                                }
+                                if(english_user_info.next_level){
+                                    if(($(".level .red").parent("li").index()+1)==$(".level li").size()){
+                                        if($(".object_li .red").index()+1==$(".object_li").size()){
+                                            $(".object_li .red").parent("li").prev("li").children("a").click();
+                                        }else{
+                                            $(".object_li .red").parent("li").next("li").children("a").click();
+                                        }
+                                    }else{
+                                        $(".level .red").parent("li").next("li").children("a").click();
+                                    }
+                                }
+                                if(english_user_info!=null){
+                                    if(english_user_info.best_object!=0&&english_user_info.best_level!=0&&english_user_info.best_object!=null&&english_user_info.best_level!=null){
+                                        $("#J_best_level").text(english_user_info.best_object_name+"/"+english_user_info.best_level_name);
+                                    }
+                                }
+                                answer = data.question_info.answer;
+                                if(select_option==answer){
+                                    target.prev(".answer_status").html("√").css("color", "green").css("font-size","20px");
+                                }else{
+                                    target.prev(".answer_status").html("X").css("color", "red");
+                                    setTimeout("$(\"[name='answer']\").filter(\"[value='\"+answer+\"']\").parent('b').prev('.answer_status').html(\"√\").css(\"color\", \"green\").css('font-size','20px');",1000);
+                                }
+                                $(".J_option").unbind("click");
+                                var now_cat = $("#J_topCatBtn").attr("type_name");
+                                $(".J_topCatul a:contains('"+now_cat+"')").click();
+                            }
+                        },"json");
+                        bindMediaTextClickEvent();
+                    }
+                })
+            }
+            
+            /**
+             * 视频缩放
+             *
+             * @param isOut: true(缩小);false(放大)
+             * @param isClear: true(清除宽度高度)
+             *
+             * @return void
+             **/
+            function videoZoom(isOut, isClear) {
+            	var mediaHeight = $('#J_media_div').height();	//视频实际高度
+            	var mediaWidth = $('#J_media_div').width();		//视频实际宽度
+            	var rightWidth = 550;							//第一次放大视频宽度
+            	var rightHeight = 320;							//第一次放大视频高度
+            	var minWidth = 350;								//视频最小宽度
+            	var minHeight = 220;							//视频最小高度
+            	
+            	if (!isOut) {	//放大
+            		
+            		if (mediaWidth < rightWidth) {	//第一次放大
+            			mediaWidth = rightWidth;
+            			mediaHeight = rightHeight;
+            			
+                		$('.video').css('margin-left', '100px');
+                		
+                		$('#lightMax').text('再放大').attr('title', '再放大');
+                	} else if (mediaWidth >= rightWidth) {	//全屏
+                		mediaWidth = $(window).width();
+                		mediaHeight = $(window).height() - 10;
+                		
+                		$('#playshow_mask').css({'display': 'block', 'opacity': 1});
+                		$('.video').css({'margin-left':'', 'position':'fixed', 'top':'0', 'left':'0', 'z-index':'1400'});
+                		$('#lightclose').css('visibility', 'hidden');
+                		$('#lightMax').css('visibility', 'hidden');
+                		$('.sideTool').css('z-index', '1500');
+                	}
+            	
+            	} else {	//缩小
+            		
+            		if (mediaWidth <= rightWidth) {	//第一次放大后缩小
+            			mediaWidth = minWidth;
+            			mediaHeight = minHeight;
+                		
+                		$('.video').css('margin-left', '');
+                		
+                		$('#lightMax').text('放大').attr('title', '放大');
+                		$('#lightMin').text('缩小').attr('title', '缩小');
+                	} else if (mediaWidth > rightWidth) {	//全屏后缩小
+                		mediaWidth = rightWidth;
+            			mediaHeight = rightHeight;
+            			
+                		$('#playshow_mask').css({'display': 'none', 'opacity': 0});
+                		$('.video').css({'margin-left':'', 'position':'', 'top':'', 'left':'', 'z-index':''});
+                		$('#lightclose').css('visibility', '');
+                		$('#lightMax').css('visibility', '');
+                		$('.sideTool').css('z-index', '');
+                		
+                		$('#lightMin').text('再缩小').attr('title', '再缩小');
+                	}
+            	
+            	}
+            	if (isClear) {
+            		mediaHeight = '';
+            		mediaWidth = '';
+            	}
+            	$('#J_media_div').css({'height': mediaHeight, 'width': mediaWidth});
+            }
+            
+            /*
+             * 获取问题列表
+             * 通过大类点击、科目点击以及等级点击获取问题列表
+             * type 点击类型，大类为category，科目为object，等级为lelve
+             */
+            function get_question_list(type){
+                var voice = $(".voice .red").attr("value");
+                var target = $(".target .red").attr("value");
+                var pattern = $(".pattern .red").attr("value");
+                var object = $(".object .red").attr("value");
+                var level = $(".level .red").attr("value");
+                var last_id = 0;
+                if(type=="quick_select_prev"){
+                    var history_ids = $.cookies.get("history_ids");
+                    if(now_question_index-1>=0){
+                        last_id = history_ids[now_question_index-1];
+                    }
+                }
+                if(getQuestionRequest){
+                    return true;
+                }
+                getQuestionRequest = $.post("__URL__/ajax_get_question",{voice:voice,target:target,pattern:pattern,object:object,level:level,type:type,last_id:last_id},function(msg){
+                    if(msg){
+                        var data = msg.data;
+                        //点击为类型，更新科目列表
+                        if(type=="category"){
+                            var object_list = data.object_list;
+                            if(object_list!=null){
+                                var str= '';
+                                var has_default = 0;
+                                for(var i =0;i<object_list.length;i++){
+                                    str+='<li class="object_li"><a ';
+                                    if(has_default==0&&object_list[i]['question_num']>0){
+                                        str+=' class="red" ';
+                                        has_default=1;
+                                    }else{
+                                        if(object_list[i]['question_num']==0){
+                                            str+=' class="grey not_allowed" ';
+                                        }
+                                    }
+                                    str+=' value="'+object_list[i]['id']+'" href="javascript:void(0)">'+object_list[i]['name']+'</a></li>';
+                                }
+                                $(".object ul").html(str);
+                                bindObjectClickEvent();
+                                $(".object_li:last").removeClass().addClass("object_li_last");
+                            }
+                        }
+                        //等级为空
+                        if(data['level_info']==null){
+                            data['level_info'] = new Array();
+                            data['level_info']['id']=0;
+                        }
+                        //点击为类型或科目，更新等级列表
+                        if(type=="category"||type=="object"){
+                            var level_list = data.level_list;
+                            if(level_list!=null){
+                                var str= '';
+                                for(var i =0;i<level_list.length;i++){
+                                    str+='<li class="level_li"><a ';
+                                    if(data['level_info']['id']==level_list[i]['id']){
+                                        str+=' class="red" ';
+                                    }else{
+                                        if(level_list[i]['question_num']==0){
+                                            str+=' class="grey not_allowed" ';
+                                        }
+                                    }
+                                    str+=' value="'+level_list[i]['id']+'" href="javascript:void(0)">'+level_list[i]['name']+'</a></li>';
+                                }
+                                $(".level ul").html(str);
+                                if($(".level .red").size()<1){
+                                    $(".level a").not(".grey").first().addClass("red");
+                                }
+                                bindLevelClickEvent();
+                                $(".level li:first,.level li:eq(10)").css("margin-right","12px");
+                            }
+                        }
+                        //更新当前的科目和等级,正确题目数量
+                        if(type!="quick_select_prev"&&type!="quick_select_next"){
+                            $(".current_object_level").text(data['object_info']['name']+"/"+data['level_info']['name']);
+                            $("#J_rightNum").text(data['english_user_info']['right_num']);
+                            $("#J_currentRice").text(data['english_user_info']['right_num']*100);
+                            if(data['english_user_info']['right_num']==0){
+                                $("#J_plateImg").attr("src","__PUBLIC__/English/images/000.jpg");
+                            }else{
+                                $("#J_plateImg").attr("src","__PUBLIC__/English/images/"+data['english_user_info']['right_num']*100+".jpg");
+                            }
+                            $.cookies.del("history_ids");
+                        }
+                        //更新题目
+                        var question = data.question;
+                        if(question.content==null){
+                            $("#question_content").text("");
+                        }else{
+                            $("#question_content").text(question.content);
+                        }
+                        $("#media_text").attr("media_text_url",question.media_text_url);
+                        $("#media_text").unbind("click");
+                        resetQuestionContent();
+                        updateOption(question.option);
+//                        var history_ids = $("#J_question_id").data("history_ids");
+                        var history_ids = new Array();
+                        history_ids = $.cookies.get("history_ids");
+                        if(history_ids==null){
+                            history_ids = new Array();
+                        }
+                        
+                        if(type=="quick_select_prev"){
+                            now_question_index = jQuery.inArray(question.id, history_ids.reverse());
+                            if(now_question_index>-1){
+                                now_question_index = history_ids.length - now_question_index - 1;
+                            }
+                        }else{
+                            var has_index = jQuery.inArray(question.id,history_ids);
+                            if(has_index>-1){
+                                delete history_ids[has_index];
+                            }
+                            history_ids.push(question.id);
+//                            $("#J_question_id").data("history_ids",history_ids);
+                            $.cookies.set("history_ids", history_ids,{path:"/"});
+                            now_question_index = history_ids.length-1;
+                        }
+                        
+                        $("#J_question_id").text(question.id);
+                        
+                        /** $视频播放 **/
+                        var videoStr = '';
+                        if (question.media_url && question.isAboutVideo!=1) {
+                        	videoStr += '<object id="J_media_object" height="100%" width="100%" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">';
+                        	videoStr += '<param name="wmode" value="transparent">';
+                        	videoStr += '<param name="movie" value="' + question.media_url +'">';
+                        	videoStr += '<embed name="swf" menu="true" height="100%" width="100%" play="false" type="application/x-shockwave-flash" allowfullscreen="true" wmode="transparent" src="' + question.media_url +'">';
+                        	videoStr += '</object>';
+                        }
+                        if (question.isAboutVideo) {
+                        	
+	                        $('#J_media_img').attr('src', question.media_img_url);
+	                        $('#J_media_div').css('visibility', 'hidden');
+	                       // $('.video_jug_play').css('display', 'none');
+	                        $('.J_player').css('display', 'block');
+                        } else {
+                        	$('.J_player').css('display', 'none');
+                        	//$('.video_jug_play').css('display', 'block');
+                        	$('#J_media_div').css('visibility', '');
+                        }
+                        
+                        videoZoom(true, true);
+                        
+                    	$('#J_media_div').attr('data_media_url', question.media_url);
+                    	$('#openVideoSmallWindow').attr('data_media_url', question.media_url);
+                        $('#J_media_div').attr('data_isAboutVideo', question.isAboutVideo); 
+                        $('#J_media_div').html(videoStr);
+                        /** 视频播放$ **/
+                        
+                        trimWhiteSpace();
+                        bindMediaTextClickEvent("disable");
+                    }
+                    getQuestionRequest = undefined;
+                },"json")
+            }
+            function updateOption(option){
+                var str="";
+                for(var i=0;i<option.length;i++){
+                    str+='<li><label class="answer_status"></label><b class="cursor J_option">'+
+                        '<input type="radio" name="answer" value="'+option[i]['id']+'" class="none" />';
+                    if(i==0){
+                        str+="A";
+                    }else if(i==1){
+                        str+="B";
+                    }else if(i==2){
+                        str+="C";
+                    }else if(i==3){
+                        str+="D";
+                    }
+                    str+='.<span>'+option[i]['content']+'</span></b></li>';
+                }
+                $(".answer ul").html(str);
+                bindOptionHoverEvent();
+                bindOptionSelectEvent("disable");//点击播放前选项不可点击
+            }
+            function resetQuestionContent(){
+                var height = $("#question_content").height();
+                var line_height = $("#question_content").css("line-height");
+                line_height = line_height.substr(0, line_height.length-line_height.indexOf("px"));
+                if(height==line_height){
+                    $("#question_content").html("<br>"+$("#question_content").html());
+                }
+            }
+            function bindMediaTextClickEvent(type){
+                if(type!="disable"){
+                    $("#media_text").unbind("click");
+                    $("#media_text").click(function(){
+                        var url = $(this).attr("media_text_url");
+                        window.open(url, "_blank");
+                    })
+                }else{
+                    $("#media_text").click(function(){
+                        var top = $(this).offset().top - 50;
+                        var left = $(this).offset().left - 50;
+                        $.messager.show({msg: "答题后才能查看文本！", showType: 'fade', width: 155, height: 45, timeout: 2000, style: {left: left, top: top}});
+                        return false;
+                    })
+                }
+            }
+            /**
+             * 绑定选项鼠标Hover事件
+             * @param
+             * @return
+             * @author Adam $date:2013.6.18$
+             */
+            function bindOptionHoverEvent(){
+                $(".answer .J_option").hover(function(){ $(this).addClass("red");},function(){ $(this).removeClass("red");});
+            }
+            function trimWhiteSpace(){
+                var space_reg_A = /^(&nbsp;+)|(&nbsp;+)$/g;
+                var space_reg_B = /(^\s+)|(\s+$)/g;
+                var question_content = $("#question_content").html();
+                question_content = question_content.replace(space_reg_A, "");
+                question_content = question_content.replace(space_reg_B, "");
+                $("#question_content").html(question_content);
+                $(".J_option").each(function(){
+                    var option = $(this).children("span").html();
+                    option = option.replace(space_reg_A, "");
+                    option = option.replace(space_reg_B, "");
+                    $(this).children("span").html(option);
+                })
+            }
+            /**
+             *获取排行榜用户列表
+             * @param string type [排行类型]
+             * @param object target [点击的对象]
+             * @return void
+             * @author Adam $date2013.6.20$
+             */
+            function getTopUserList(type,target){
+                if(type=="more_object"){
+                    return false;
+                }
+                $.post("{:U('Index/get_top_user')}",{type:type},function(msg){
+                    if(msg){
+                        //第一个排行榜
+                        var top_1 = msg.data[0];
+                        var top_str_1 = "";
+                        if(top_1!=null){
+                            for(var i=0;i<top_1.length;i++){
+                                top_str_1+='<div class="pop_listen_list'+(i+1)+
+                                    ' border_top tleft"><label>'+top_1[i]['nickname']+
+                                    '</label><strong>'+top_1[i]['best_level_name']+
+                                    '</strong><span>'+top_1[i]['rice_sum']+'</span></div>';
+                            }
+                        }
+                        $("#J_topDiv_1").html(top_str_1);
+
+                        var top_2 = msg.data[1];
+                        var top_str_2 = "";
+                        if(top_2!=null){
+                            for(var i=0;i<top_2.length;i++){
+                                top_str_2+='<div class="pop_listen_list'+(i+1)+
+                                    ' border_top tleft"><label>'+top_2[i]['nickname']+
+                                    '</label><strong>'+top_2[i]['best_level_name']+
+                                    '</strong><span>'+top_2[i]['rice_sum']+'</span></div>';
+                            }
+                        }
+                        if(type=="total_rice"||type=="continue_right_num"){
+                            $(".pop_listen").hide();
+                        }else{
+                            $(".pop_listen").show();
+                        }
+                        $("#J_topDiv_2").html(top_str_2);
+                        $("#J_topCatBtn").html(target.text()+'<span class="caret"></span>');
+                        $("#J_topCatBtn").attr("type_name",target.text());
+                    }
+                },"json")
+            }
+        </script>
+    </body>
+</html>

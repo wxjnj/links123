@@ -1,0 +1,241 @@
+<tagLib name="html" />
+<include file="Public:header" />
+
+<style>
+	#pop_cats { position:absolute; width:710px; height:310px; left:350px; top:141px; padding-left:30px; background-color:#FFF; display:none; }
+	#tab ul { width:672px; height:36px; border-bottom:1px solid #b5e2f3; margin:0px; padding:0px; } 
+    #tab li { border:1px solid #b5e2f3; border-bottom:0px; float:left; width:100px; height:25px; margin:0 7px;
+		background:#F1FEF3; padding:9px 0 0 0; text-align:center; color:#33a3dc; cursor:pointer; list-style:none; } 
+	#selected { color:#CC0000!important; background:#FFF!important; border-bottom:2px solid #FFF!important; }
+	.tab_con { clear:both; background:#FFFFFF; width:640px;
+		padding:15px; border:1px solid #b5e2f3; border-top:0px; display:none; }
+	.tab_con ul { width:640px; overflow:hidden; margin:0px; padding:0px; }
+	.tab_con ul li { float:left; margin:3px 8px; list-style:none; cursor:pointer; }
+	.div_grade { width:626px; text-align:left; padding:15px 0 0 8px; margin-top:15px; border-top:1px solid #b5e2f3; }
+	#div_btn { width:670px; text-align:right; border:1px solid #b5e2f3; border-top:0px; background-color:#FFF; }
+	#div_btn input { width:55px; border:0px; cursor:pointer; }
+	.red { color:#CC0000; }
+</style>
+
+<load href="__PUBLIC__/Js/Jquery/jquery.js" />
+<script type="text/javascript">
+<!--
+	//
+	function grpCheck() {
+		keyValue = getSelectCheckboxValues();
+		//
+		if (!keyValue) {
+		    alert('请选择审核项！');
+		    return false;
+		}
+		$("#ids").val(keyValue);
+		$("#div_check").css("display","block");
+	}
+	//
+	$(function(){
+		// 审核
+		$("#btn_qd").click(function(){
+			if ( !$("#div_check input[name='flag']:checked")[0] ) {
+				alert("请选择操作！");
+				return false;
+			}
+			//
+			$.post(URL+"/grpCheck/", {
+				ids: $("#ids").val(),
+				flag: $("#div_check input[name='flag']:checked").val()
+			}, 
+			function(data){
+				if ( data.indexOf("checkOK") >= 0 ) {
+					var temp = data.split("|");
+					alert(temp[1]);
+					window.location.reload();
+				}
+				else {
+					alert(data);
+				}
+			}); 
+			//
+			$("#ids").val('');
+			$("#div_check input").attr("checked",false);
+			$("#div_check").css("display","none");
+		});
+		//
+		$("#btn_ccl").click(function(){
+			$("#ids").val('');
+			$("#div_check input").attr("checked",false);
+			$("#div_check").css("display","none");
+		});
+		
+		/* 目录相关 */
+		$("#tab li:first").attr("id", "selected");
+		$(".tab_con:first").css("display","block");
+		//
+		var tab = function(tabId, activeId) {
+			$("#" + tabId).delegate("li:not(#" + activeId + ")", "click",
+			function() {
+				$("#" + $("#" + activeId).attr("tar")).css("display", "none");
+				$("#" + activeId).removeAttr("id");
+
+				$(this).attr("id", activeId);
+				$("#" + $(this).attr("tar")).css("display", "block");
+			});
+		};
+		//
+		tab("tab", "selected");
+		//
+		$("#cat_name").click(function(){
+			$("#pop_cats").css("display","block");
+		});
+		//
+		$("#pop_cats li").click(function(){
+			$("#pop_cats li").css("color", "#000000");
+			$(this).css("color", "#CC0000");
+		});
+		//
+		$("#btn_queding").click(function(){
+			$("#pop_cats li").each(function(index,domEle){
+				if ( $(domEle).find("input[type='radio']").attr("checked") ) {
+					$("#cat_name").val($(domEle).text());
+				}
+			});
+			//
+			$("#pop_cats").css("display","none");
+		});
+		//
+		$("#btn_qingkong").click(function(){
+			$("#pop_cats input[type='radio']").attr("checked", false);
+			$("#pop_cats li").css("color", "#000000");
+			$("#cat_name").val('');
+			$("#pop_cats").css("display","none");
+		});
+		
+		/* 初始值 */
+		//$("#tab li input:first").trigger("click");
+		//
+		$("#pop_cats li").each(function(index,domEle){
+			if ( $(domEle).find("input[type='radio']").attr("checked") ) {
+				$(domEle).trigger("click");
+				var catNow = $(domEle).parents('.tab_con').attr("id");
+				catNow = catNow.replace('cate','');
+				$("#tab li").eq(parseInt(catNow)-1).trigger("click");
+			}
+		});
+	});
+	//
+	function groupEdit() {
+		var keyValue = getSelectCheckboxValues();
+		if (!keyValue) {
+	        alert('请选择编辑项！');
+	        return false;
+	    }
+		location.href = URL + "/groupEdit/id/" + keyValue;
+	}
+	//
+	setCookie("bg_login", 1);
+//-->
+</script>
+
+<div id="main" class="main" >
+	<div class="content" >
+		<div class="title">链接列表</div>
+
+		<div class="operate" >
+			<html:imageBtn name="add" click="add()" style="hMargin fLeft" />
+			<html:imageBtn name="edit" click="groupEdit()" style="hMargin fLeft" />
+			<html:imageBtn name="delete" click="del()" style="hMargin fLeft" />
+			<html:imageBtn name="check" click="grpCheck()" style="hMargin fLeft" />
+			<html:imageBtn name="sort" click="sort()" style="hMargin fLeft" />
+		</div>
+		
+		<form method='post' id="frm_sch" action="__URL__">
+			<div class="rSearch">
+				<div class="fLeft">标题\链接查询：<span id="key"><input type="text" name="title" value="{$title}" class="medium" /></span></div>
+				<html:imageBtn type="submit" name="search" style="hMargin fLeft" />
+				<html:imageBtn name="hide" id="hide" click="showHideSearch()" style="hMargin fLeft" />
+				<html:imageBtn name="adv" id="show" click="showHideSearch()" style="fLeft" />
+			</div>
+
+			<div id="searchM" class="search cBoth" >
+				<table cellpadding="1" cellspacing="3">
+					<tr>
+						<td class="tRight">语言：</td>
+						<td>
+							<select name="language" onchange="frm_sch.submit();">
+								<option value="" <eq name="language" value="">selected</eq> >所有语言</option>
+								<option value="1" <eq name="language" value="1">selected</eq> >中文</option>
+								<option value="2" <eq name="language" value="2">selected</eq> >英文</option>
+							</select>						
+						</td>
+						<td>&nbsp;　　&nbsp;</td>
+						<td class="tRight">目录/类别：</td>
+						<td>
+							<input type="text" id="cat_name" value="{$cat_name}" class="medium" />
+							<div id="pop_cats">
+						        <div id="tab">
+						            <ul>
+						            <volist name="cats" id="cat">
+										<li tar="cate{$cat.id}"><label><input type="radio" name="category" value="{$cat.id}" <eq name="category" value="$cat['id']">checked="true"</eq> />&nbsp;{$cat.cat_name}</label></li>
+									</volist>
+						            </ul>
+						        </div>
+						        <div>
+					        	<volist name="cats" id="cat">
+						            <div id="cate{$cat.id}" class="tab_con">
+						            	<ul>
+						            	<volist name="cat.subCats" id="sbc">
+						            		<li value="{$sbc.id}"><label><input type="radio" name="category" value="{$sbc.id}" <eq name="category" value="$sbc['id']">checked="true"</eq> />&nbsp;{$sbc.cat_name}</label></li>
+						            	</volist>
+						            	</ul>
+						            	<notempty name="cat.grades">
+						            	<div class="div_grade">
+						            	类别：
+										<volist name="cat.grades" id="grd">
+											<label><input type="radio" name="grade" value="{$grd.value}" <if condition="($rid eq $cat['id']) and ($grade eq $grd['value'])">checked="true"</if> />&nbsp;{$grd.name}</label>　&nbsp;
+										</volist>
+										</div>
+										</notempty>
+						            </div>
+					            </volist>
+						        </div>
+						        <div id="div_btn"><input type="button" id="btn_queding" value="【确 定】" /><input type="button" id="btn_qingkong" value="【清 空】" />　&nbsp;</div>
+					        </div>					
+						</td>
+						<td>&nbsp;　　&nbsp;</td>
+						<td class="tRight">状态：</td>
+						<td>
+							<select name="status">
+								<option value="" <eq name="status" value="">selected</eq> >常规状态</option>
+								<option value="0" <eq name="status" value="0">selected</eq> >未审</option>
+								<option value="1" <eq name="status" value="1">selected</eq> >已审</option>
+								<option value="-1" <eq name="status" value="-1">selected</eq> >已删</option>
+							</select>						
+						</td>
+					</tr>
+				</table>
+			</div>
+		</form>
+
+		<div class="list" >
+		<eq name="status" value="-1">
+			<html:list id="checkList" name="links" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,title:标题|22%:edit,link|getLinkToHref:链接|31%,cat_name:目录|4%,language|getLang:语言|4%,create_time|toDateShort:发布日期|8%,status|getLinkStt:状态|4%,sort:序号|4%,recommended:推荐人|4%,usr_name:录入员|4%,click_num:点击量|4%" actionlist="edit:编辑,recycle:恢复,check:审核" />
+		<else />
+			<html:list id="checkList" name="links" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,title:标题|22%:edit,link|getLinkToHref:链接|31%,cat_name:目录|4%,language|getLang:语言|4%,create_time|toDateShort:发布日期|8%,status|getLinkStt:状态|4%,sort:序号|4%,recommended:推荐人|4%,usr_name:录入员|4%,click_num:点击量|4%" actionlist="edit:编辑,del:删除,check:审核" />
+		</eq>
+		</div>
+
+		<div class="page">{$page}</div>
+
+	</div>
+
+</div>
+
+<div id="div_check" style="width:200px;background-color:#FFF;border:1px solid #333;position:absolute;left:270px;top:82px;display:none;">
+	<p style="margin:10px;padding-top:10px;border-top:1px dotted #999999;text-align:center;"><label><input type="radio" name="flag" value="1" />&nbsp;通过审核</label>　<label><input type="radio" name="flag" value="０" />&nbsp;取消审核</label></p>
+	<p style="margin:10px;padding-top:10px;border-top:1px dotted #999999;text-align:right;"><input type="button" id="btn_qd" value=" 确定 " style="cursor:pointer;" />&nbsp;<input type="button" id="btn_ccl" value=" 取消 " style="cursor:pointer;" /></p>
+	<input type="hidden" id="ids" />
+</div>
+
+</body>
+</html>
+
+

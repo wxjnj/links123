@@ -1,0 +1,37 @@
+<tagLib name="html" />
+<include file="Public:header" />
+
+<div id="main" class="main" >
+	<div class="content">
+		<div class="title">新增直达网址[ <a href="__URL__">返回列表</a> ]</div>
+		<form method='post' id="form1" action="__URL__/insert/" onsubmit="return CheckForm(this)">
+			<table cellpadding=3 cellspacing=3>
+				<tr>
+					<td class="tRight" >标签：</td>
+					<td class="tLeft"><input type="text" class="medium bLeftRequire" name="tag" check="^\S" warning="标签不能为空" /></td>
+				</tr>
+				<tr>
+					<td class="tRight">链接地址：</td>
+					<td class="tLeft"><input type="text" class="large" name="url" check="^\S" warning="链接地址不能为空" /></td>
+				</tr>
+				<tr>
+					<td class="tRight">状态：</td>
+					<td class="tLeft">
+						<label><input type="radio" name="status" value="0" checked="checked" /> 未审</label>　
+						<label><input type="radio" name="status" value="1" /> 已审</label>
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td class="center">
+					<input type="submit" value="保 存" class="small submit" />&nbsp;
+					<input type="reset" class="submit small" value="清 空" />
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+</div>
+
+</body>
+</html>

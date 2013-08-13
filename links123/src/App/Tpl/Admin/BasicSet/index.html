@@ -1,0 +1,282 @@
+<tagLib name="html" />
+<include file="Public:header" />
+<load href ="__PUBLIC__/Js/common.js" />
+
+<script type="text/javascript" language="JavaScript">
+<!--
+	function fn_sbmt(frm, field){
+		var obj1 = document.getElementById(frm);
+		//var obj2 = document.getElementById(field);
+
+		//var temp = 'ajax=1&' + field + '=' + obj2.value;
+		//ThinkAjax.send(obj1.action, temp);
+		obj1.submit();
+	}
+//-->
+</script>
+
+<div id="main" class="main" >
+<div class="content">
+	<div class="title">网站基本信息设置</div>
+	
+<!-- 	
+	<hr />
+	
+	<form method='post' id="frm4" action="__URL__/setAnnName" >
+		<table cellpadding=3 cellspacing=3>
+			<tr>
+				<td class="tRight" width="150">公告标题：</td>
+				<td class="tLeft" ><input class="bLeft" id="ann_name" style="width:700px;" value="{$ann_name['value_varchar']}" /></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td class="center">
+				<input type="button" value="保 存" class="small submit" onclick="fn_sbmt('frm4', 'ann_name');" />&nbsp;
+				<input type="reset" class="submit small" value="清 空" />
+				</td>
+				<td></td>
+			</tr>
+		</table>
+	</form>
+ -->	
+	<form method='post' id="frm11" action="__URL__/setDirectTip" >
+		<table cellpadding=3 cellspacing=3>
+			<tr>
+				<td class="tRight" width="150">直达网址提示：</td>
+				<td class="tLeft" ><input class="bLeft" name="directTip" style="width:700px;" value="{$directTip['value_varchar']}" /></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td class="center">
+				<input type="button" value="保 存" class="small submit" onclick="fn_sbmt('frm11', 'directTip');" />&nbsp;
+				<input type="reset" class="submit small" value="清 空" />
+				</td>
+				<td></td>
+			</tr>
+		</table>
+	</form>
+	
+	<hr />
+	
+	<form method='post' id="frm6" action="__URL__/setCnTip" >
+		<table cellpadding=3 cellspacing=3>
+			<tr>
+				<td class="tRight" width="150">中文岛提示：</td>
+				<td class="tLeft" ><input class="bLeft" name="cn_tip" style="width:700px;" value="{$cn_tip['value_varchar']}" /></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td class="center">
+				<input type="button" value="保 存" class="small submit" onclick="fn_sbmt('frm6', 'cn_tip');" />&nbsp;
+				<input type="reset" class="submit small" value="清 空" />
+				</td>
+				<td></td>
+			</tr>
+		</table>
+	</form>
+	
+	<hr />
+	
+	<form method='post' id="frm7" action="__URL__/setEnTip" >
+		<table cellpadding=3 cellspacing=3>
+			<tr>
+				<td class="tRight" width="150">英文岛提示：</td>
+				<td class="tLeft" ><input class="bLeft" name="en_tip" style="width:700px;" value="{$en_tip['value_varchar']}" /></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td class="center">
+				<input type="button" value="保 存" class="small submit" onclick="fn_sbmt('frm7', 'en_tip');" />&nbsp;
+				<input type="reset" class="submit small" value="清 空" />
+				</td>
+				<td></td>
+			</tr>
+		</table>
+	</form>
+	
+	<hr />
+	
+	<form method='post' id="frm8" action="__URL__/setThl" >
+		<table cellpadding=3 cellspacing=3>
+			<tr>
+				<td class="tRight" width="150">糖葫芦：</td>
+				<td class="tLeft" ><input class="bLeft" name="thl" style="width:700px;" value="{$thl['value_varchar']}" /></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td class="center">
+				<input type="button" value="保 存" class="small submit" onclick="fn_sbmt('frm8', 'thl');" />&nbsp;
+				<input type="reset" class="submit small" value="清 空" />
+				</td>
+				<td></td>
+			</tr>
+		</table>
+	</form>
+	
+	<hr />
+	
+	<form method='post' id="frm9" action="__URL__/setPauseTime" >
+		<table cellpadding=3 cellspacing=3>
+			<tr>
+				<td class="tRight" width="150">目录图切换时间间隔：</td>
+				<td class="tLeft" ><input class="bLeft" name="pauseTime" style="width:70px;" value="{$pauseTime['value_int']}" /> 秒</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td class="center">
+				<input type="button" value="保 存" class="small submit" onclick="fn_sbmt('frm9', 'pauseTime');" />&nbsp;
+				<input type="reset" class="submit small" value="清 空" />
+				</td>
+				<td></td>
+			</tr>
+		</table>
+	</form>
+	
+	<hr />
+	
+	<form method='post' id="frm10" action="__URL__/setPailie" >
+		<table cellpadding=3 cellspacing=3>
+			<tr>
+				<td class="tRight" width="150">默认排列形式：</td>
+				<td class="tLeft" ><input class="bLeft" name="pailie" style="width:70px;" value="{$pailie['value_int']}" /> （1:简洁，2:详细）</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td class="center">
+				<input type="button" value="保 存" class="small submit" onclick="fn_sbmt('frm10', 'pailie');" />&nbsp;
+				<input type="reset" class="submit small" value="清 空" />
+				</td>
+				<td></td>
+			</tr>
+		</table>
+	</form>
+	
+	<hr />
+	
+	<form method='post' id="frm1" action="__URL__/setTitle" >
+		<table cellpadding=3 cellspacing=3>
+			<tr>
+				<td class="tRight" width="150">标题：</td>
+				<td class="tLeft" ><input class="bLeft" name="title" style="width:700px;" value="{$title['value_varchar']}" /></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td class="center">
+				<input type="button" value="保 存" class="small submit" onclick="fn_sbmt('frm1', 'title');" />&nbsp;
+				<input type="reset" class="submit small" value="清 空" />
+				</td>
+				<td></td>
+			</tr>
+		</table>
+	</form>
+	
+	<hr />
+	
+	<form method='post' id="frm2" action="__URL__/setKeywords" >
+		<table cellpadding=3 cellspacing=3>
+			<tr>
+				<td class="tRight" width="150">关键词：</td>
+				<td class="tLeft" ><textarea class="bLeft" name="Keywords" style="width:700px;height:60px;">{$Keywords['value_varchar']}</textarea></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td class="center">
+				<input type="button" value="保 存" class="small submit" onclick="fn_sbmt('frm2', 'Keywords');" />&nbsp;
+				<input type="reset" class="submit small" value="清 空" />
+				</td>
+				<td></td>
+			</tr>
+		</table>
+	</form>
+	
+	<hr />
+	
+	<form method='post' id="frm3" action="__URL__/setDescription" >
+		<table cellpadding=3 cellspacing=3>
+			<tr>
+				<td class="tRight" width="150">描述：</td>
+				<td class="tLeft" ><textarea class="bLeft" name="Description" style="width:700px;height:60px;">{$Description['value_varchar']}</textarea></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td class="center">
+				<input type="button" value="保 存" class="small submit" onclick="fn_sbmt('frm3', 'Description');" />&nbsp;
+				<input type="reset" class="submit small" value="清 空" />
+				</td>
+				<td></td>
+			</tr>
+		</table>
+	</form>
+	
+	<hr />
+	
+	<form method='post' id="frm5" action="__URL__/setSendFrom" >
+		<table cellpadding=3 cellspacing=3>
+			<tr>
+				<td class="tRight" width="150">发件箱：</td>
+				<td class="tLeft" ><input class="bLeft" name="send_from" style="width:700px;" value="{$send_from['value_varchar']}" /></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td class="center">
+				<input type="button" value="保 存" class="small submit" onclick="fn_sbmt('frm5', 'send_from');" />&nbsp;
+				<input type="reset" class="submit small" value="清 空" />
+				</td>
+				<td></td>
+			</tr>
+		</table>
+	</form>
+    <hr />
+	
+	<form method='post' id="frm_setAutoLoginTime" action="__URL__/setAutoLoginTime" >
+		<table cellpadding=3 cellspacing=3>
+			<tr>
+				<td class="tRight" width="150">自动登录保持时间：</td>
+				<td class="tLeft" ><input class="bLeft" name="auto_login_time" style="width:75px;" value="{$auto_login_time}" />天</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td class="center">
+				<input type="button" value="保 存" class="small submit" onclick="fn_sbmt('frm_setAutoLoginTime', 'auto_login_time');" />&nbsp;
+				</td>
+				<td></td>
+			</tr>
+		</table>
+	</form>
+    <hr />
+	
+	<form method='post' id="frm_setHomeSessionTime" action="__URL__/setHomeSessionTime" >
+		<table cellpadding=3 cellspacing=3>
+			<tr>
+				<td class="tRight" width="150">前台用户登录过期时间：</td>
+				<td class="tLeft" ><input class="bLeft" name="home_session_expire" style="width:75px;" value="{$home_session_expire}" />分钟</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td class="center">
+				<input type="button" value="保 存" class="small submit" onclick="fn_sbmt('frm_setHomeSessionTime', 'home_session_expire');" />&nbsp;
+				</td>
+				<td></td>
+			</tr>
+		</table>
+	</form>
+    <hr />
+	
+	<form method='post' id="frm_setAdminSessionTime" action="__URL__/setAdminSessionTime" >
+		<table cellpadding=3 cellspacing=3>
+			<tr>
+				<td class="tRight" width="150">后台用户登录过期时间：</td>
+				<td class="tLeft" ><input class="bLeft" name="admin_session_expire" style="width:75px;" value="{$admin_session_expire}" />分钟</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td class="center">
+				<input type="button" value="保 存" class="small submit" onclick="fn_sbmt('frm_setAdminSessionTime', 'admin_session_expire');" />&nbsp;
+				</td>
+				<td></td>
+			</tr>
+		</table>
+	</form>
+
+	</div>
+</div>

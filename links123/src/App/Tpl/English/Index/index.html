@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="edge" />
+        <title>另客网 | 领先的全面导航 | 高效的组合搜索 | 独特的英语角</title>
+        <link href="" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="__PUBLIC__/English/js/jquery-1.7.2.min.js"></script>
+        <script type="text/javascript">
+            var URL = "__URL__";
+            var PUBLIC = "__PUBLIC__";
+            var media_height = 325;
+            var media_width = 518;
+            var media_marin = '18px 0 0 20px';
+            var level_margin_index = -5;
+            if (window.navigator.userAgent.indexOf("MSIE")>=1){
+                var IE1024="style_small.css";
+                var IEother="style.css";
+                ScreenWidth(IE1024,IEother);
+            }else{ 
+                if (window.navigator.userAgent.indexOf("Firefox")>=1){
+                    //如果浏览器为Firefox 
+                    var Firefox1024="style_small.css"; 
+                    var Firefoxother="style.css";
+                    ScreenWidth(Firefox1024,Firefoxother);
+                }else{
+                    //如果浏览器为其他 
+                    var Other1024="style_small.css";
+                    var Otherother="style.css";
+                    ScreenWidth(Other1024,Otherother);
+                }
+            }
+            function ScreenWidth(CSS1,CSS2){
+                if (screen.height <= 1050){
+                    setActiveStyleSheet(CSS1);
+                }else{ 
+                    media_height=448;
+                    media_width=710;
+                    media_marin = '24px 0 0 28px';
+                    level_margin_index = -7;
+                    setActiveStyleSheet(CSS2);
+                }
+            } 
+            function setActiveStyleSheet(title){
+                $("link").attr("href","__PUBLIC__/English/css/"+title + '?2013080702');
+//                document.getElementsByTagName("link")[0].href="__PUBLIC__/English/css/"+title;
+            }
+        </script>
+        <link href="__PUBLIC__/English/css/tabs.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" src="__PUBLIC__/English/js/jquery.tools.min.js"></script>
+        <load href='__PUBLIC__/skin/easyui/themes/metro/easyui.css' />
+        <load href="__PUBLIC__/skin/easyui/jquery.easyui.min.js" />
+        <SCRIPT src="__PUBLIC__/English/js/select.js?2013080701"></SCRIPT>
+        <script type="text/javascript" src="__PUBLIC__/Js/Links123PlayerV1.1.1.1/swfobject.js"></script>
+        <SCRIPT src="__PUBLIC__/English/js/index.js?2013081301"></SCRIPT>
+    </head>
+
+    <body>
+        <div class="container">
+            <include file="Public:top" />
+            <div class="content">
+                <div class="menuleft">
+                    <ul>
+                        <li <eq name="user_last_select['voice']" value="1">class="voice current class1"<else/>class="voice class1"</eq> value="1">
+                            <img src="__PUBLIC__/English/images/icon6.png" width="20" height="15" /> <span>美 音</span>
+                        </li>
+                        <li <eq name="user_last_select['voice']" value="2">class="voice current class1"<else/>class="voice class1"</eq> value="2">
+                            <img src="__PUBLIC__/English/images/icon7.png" width="20" height="15" /> <span>英 音</span>
+                        </li>
+                        <li <eq name="user_last_select['target']" value="1">class="target current class2"<else/>class="target class2"</eq> value="1">
+                            <img src="__PUBLIC__/English/images/icon8.png" width="21" height="22" /> <span>听 力</span>
+                        </li>
+                        <li <eq name="user_last_select['target']" value="2">class="target current class2"<else/>class="grey target class2"</eq> value="2">
+                            <img src="__PUBLIC__/English/images/icon10.png" width="14" height="21" /><span class="grey speak_span">&nbsp;说 力</span>
+                        </li>
+                        <li <eq name="user_last_select['pattern']" value="1">class="pattern current class3"<else/>class="pattern class3"</eq> value="1">
+                            <img src="__PUBLIC__/English/images/icon11.png" width="21" height="21" /> <span>视 频</span>
+                        </li>
+                        <li <eq name="user_last_select['pattern']" value="2">class="pattern current class3 voice_div"<else/>class="grey pattern class3 voice_div"</eq> value="2">
+                            <img src="__PUBLIC__/English/images/icon9.png" width="21" height="21" /> <span>音 频</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="menuright">
+                    <ul class="tabs">
+                        <li><a class="current" href="#">选择课程和年级</a></li>
+                        <!--<li><a href="#">选择推荐视频和年级</a></li>-->
+                    </ul>
+                    <div class="panes">
+                        <div class="box1">
+                            <div class="kechenggrade">
+                                <ul class="kecheng">
+                                    <volist name="object_list" id="object">
+                                        <li value="{$object.id}" <if condition="$user_last_select['object'] eq $object['id']">class="current"
+                                            <elseif condition="$object['question_num'] eq 0 AND $object['name'] neq '综合'" />class="grey not_allowed"</if>>
+                                            <span>{$object.name}</span>
+                                        </li>
+                                    </volist>
+                                </ul>
+                                <ul class="grade">
+                                    <volist name="level_list" id="level">
+                                        <li value="{$level.id}" 
+                                            <if condition="($user_last_select['level'] eq $level['id'])AND($level['question_num'] gt 0)">class="current"
+                                            <elseif condition="$level['question_num'] eq 0" />class="grey not_allowed"</if>>
+                                            <span>{$level.name}</span>
+                                        </li>
+                                    </volist>
+                                </ul>
+                            </div>
+                        </div>
+<!--                        <div class="box1" style="display: none">
+                            <div class="kechenggrade">
+                                <ul class="kecheng">
+                                    <li><span>综合</span></li>
+                                    <li><span>语文</span></li>
+                                    <li class="current"><span>数学</span></li>
+                                    <li><span>英语</span></li>
+                                    <li><span>地理</span></li>
+                                </ul>
+                                <br />
+                                <ul class="grade">
+                                    <li><span>高三</span></li>
+                                    <li><span>大一</span></li>
+                                    <li><span>大二</span></li>
+                                    <li><span>大三</span></li>
+                                    <li class="current"><span>大四</span></li>
+                                </ul>
+                            </div>
+                        </div>-->
+                    </div>
+                </div>
+                <div class="contentcenter">
+                    <div class="ricewan"><div id="J_riceDiv" class="rice_{$user_conut_info['right_num']*100}"></div></div>
+                    <label id="J_questionId" style="display: none">{$question['id']}</label>
+                    <div class="videoplay">
+                        <!-- $Flash视频播放 视频非本地化方法 -->
+                        <div class="video_div">
+                            <div class="focus_player J_player" <if condition="$isAboutVideo neq '1'">style="display:none;"</if>>
+                                <div class="focus_player_link">
+                                    <a href="#"></a>
+                                </div>
+                                <div class="focus_player_play"></div>
+                                <div class="focus_player_picture">
+                                    <!--<img src="{$question['media_img_url']}" id="J_media_img">-->
+                                    <img src="__PUBLIC__/English/images/deafult_media_img.jpg" id="J_media_img">
+                                </div>
+                            </div>
+                            <div id="J_media_div" media_type="{$question['media_type']}" 
+                                <if condition="$isAboutVideo neq '1'">
+                                    class="normal_media_div media_div"
+                                <else />
+                                    class="media_div"  style="visibility: hidden;" data_media_url="{$question['media_url']}" 
+                                </if> 
+                                     data_isAboutVideo="{$isAboutVideo}">
+                                <if condition="$isAboutVideo neq '1'">
+                                    <if condition="$question['media_type'] eq '1'">
+                                        {$question['media']}
+                                    <elseif condition="$question['media_type'] eq '2'"/>
+                                        <iframe class="media_iframe" src="{$question['media']}" scrolling="no" frameborder="0"></iframe>
+                                    <elseif condition="$question['media_type'] eq '3'"/>
+                                        <script type="text/javascript">
+                                            var swfUrl = 'http://www.kizphonics.com/wp-content/uploads/jw-player-plugin-for-wordpress/player/player.swf';
+                                            var version = '10.2.0';
+                                            var params  = {
+                                                quality: "high",
+                                                wmode: "opaque",
+                                                scale: "noscale",
+                                                align: "left",
+                                                allowFullScreen: "true",
+                                                allowScriptAccess: "always",
+                                                bgColor: "#000000"
+                                            };
+
+                                            swfobject.embedSWF(swfUrl, "J_media_div", "100%", "100%", version, "/swf/playerProductInstall.swf", {$question['media']}, params );
+
+                                        </script>
+                                    <elseif condition="$question['media_type'] eq '4'"/>
+                                     <object id="flash_fallback_1" class="vjs-flash-fallback" width="100%" height="100%" type="application/x-shockwave-flash"  
+									        data="http://releases.flowplayer.org/swf/flowplayer-3.2.1.swf">  
+									        <param name="movie" value="http://releases.flowplayer.org/swf/flowplayer-3.2.1.swf" />  
+									        <param name="allowfullscreen" value="true" />  
+									        <param name="flashvars" value='{$question["media"]}' />  
+									
+									</object> 
+                                    <else />
+                                        <object id="J_media_object" height="100%" width="100%" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">
+                                            <param name="wmode" value="transparent">
+                                            <param name="movie" value="{$question['media_url']}">
+                                            <embed name="swf" swliveconnect="true" height="100%" width="100%" type="application/x-shockwave-flash"
+                                                allowfullscreen="true" wmode="transparent" src="{$question['media_url']}" play="false">
+                                        </object>
+                                    </if>
+                                </if>
+                            </div>
+                            <!-- Flash视频播放$ -->
+                        </div>
+                        <div class="answer">
+                            <div class="answercontent">
+                                <p class="answertitle">{$question.content}</p>
+                                <notempty name="question['option'][0]">
+                                    <p class="J_option" id="J_option_{$question['option'][0]['id']}" value="{$question['option'][0]['id']}">
+                                    	<span class="gc"></span>
+                                        <span class="ricenumber">A</span>
+                                        <span class="J_optionContent">{$question['option'][0]['content']}</span>
+                                    </p>
+                                </notempty>
+                                <notempty name="question['option'][1]" value="{$question['option'][1]['id']}">
+                                    <p class="J_option" id="J_option_{$question['option'][1]['id']}" value="{$question['option'][1]['id']}">
+                                    	<span class="gc"></span>
+                                        <span class="ricenumber">B</span>
+                                        <span class="J_optionContent">{$question['option'][1]['content']}</span>
+                                    </p>
+                                </notempty>
+                                <notempty name="question['option'][2]" value="{$question['option'][2]['id']}">
+                                    <p class="J_option" id="J_option_{$question['option'][2]['id']}" value="{$question['option'][2]['id']}">
+                                    	<span class="gc"></span>
+                                        <span class="ricenumber">C</span>
+                                        <span class="J_optionContent">{$question['option'][2]['content']}</span>
+                                    </p>
+                                </notempty>
+                                <notempty name="question['option'][3]" value="{$question['option'][3]['id']}">
+                                    <p class="J_option" id="J_option_{$question['option'][3]['id']}" value="{$question['option'][3]['id']}">
+                                    	<span class="gc"></span>
+                                        <span class="ricenumber">D</span>
+                                        <span class="J_optionContent">{$question['option'][3]['content']}</span>
+                                    </p>
+                                </notempty>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rightbutton">
+                        <ul>
+<!--                            <li class="current"><img src="__PUBLIC__/English/images/lookicon.png" width="25" height="15" /> 看</li>
+                            <li><img src="__PUBLIC__/English/images/sayicon.png" width="23" height="16" /> 说</li>-->
+                            <li id="J_answerButton"> 　答  题</li>
+                            <li id="J_textButton" media_text_url="{$question['media_text_url']}"> 　文  本</li>
+                            <li id="J_levelUpButton"><img src="__PUBLIC__/English/images/up.png" width="14" height="21" /> 升  级</li>
+                            <li id="J_levelDownButton"><img src="__PUBLIC__/English/images/down.png" width="14" height="21" /> 降  级</li>
+                            <li id="J_prevQuestion"><img src="__PUBLIC__/English/images/up.png" width="14" height="21" /> 上一题</li>
+                            <li id="J_nextQuestion"><img src="__PUBLIC__/English/images/down.png" width="14" height="21" /> 下一题</li>
+                        </ul>
+                    </div>
+                    <div class="leveltext">本级：<span id="J_currentRice" class="red">{$user_conut_info['right_num']*100}</span>粒<br />
+                        累计：<span id="J_totalRice" class="red">{$english_user_info['total_rice']|default=0}</span>粒<br />
+                        <span class="kafei">登陆可以保留记录和复习</span></div>
+                    <div class="videobutton">
+                        <!--<div class="pre"> <img src="__PUBLIC__/English/images/pre.png" width="94" height="38" /></div>-->
+<!--                        <div class="playbutton">
+                            <ul>
+                                <li> <img src="__PUBLIC__/English/images/video1.png" width="40" height="40" /></li>
+                                <li> <img src="__PUBLIC__/English/images/video2.png" width="40" height="40" /></li>
+                                <li> <img src="__PUBLIC__/English/images/video3.png" width="40" height="40" /></li>
+                                <li> <img src="__PUBLIC__/English/images/video5.png" width="40" height="40" /></li>
+                                <li> <img src="__PUBLIC__/English/images/video4.png" width="40" height="40" /></li>
+                            </ul>
+                        </div>-->
+                        <!--<div class="next"> <img src="__PUBLIC__/English/images/next.png" width="94" height="38" /></div>-->
+                    </div>
+                </div>
+            </div>
+            <div class="ranklist">
+                <div class="ranklist-hd">
+                    <a class="all J_now_Object" href="javascript:void(0);"><em>综合</em><span>更多排行</span></a>
+                    <ul>
+                        <li><a href="javascript:void(0)" class="cur" type="object_综合">综合</a> </li>
+                        <li><a href="javascript:void(0)" type="total_rice">大米</a> </li>
+                        <li><a href="javascript:void(0)" type="object_语文">语文</a> </li>
+                        <li><a href="javascript:void(0)" type="object_数学">数学</a> </li>
+                        <li><a href="javascript:void(0)"  type="object_科学">科学</a> </li>
+                        <li><a href="javascript:void(0)"  type="object_艺术">艺术</a> </li>
+                        <li><a href="javascript:void(0)"  type="object_历史">历史</a> </li>
+                        <li><a href="javascript:void(0)"  type="object_地理">地理</a> </li>
+                        <li><a href="javascript:void(0)"  type="object_化学">化学</a> </li>
+                        <li><a href="javascript:void(0)"  type="object_健康">健康</a> </li>
+                        <li><a href="javascript:void(0)"  type="object_社会">社会</a> </li>
+                    </ul>
+                </div>
+                <div class="ranklist-bd">
+                    <a id="J_RankListExpose" href="javascript:void(0);" class="rl-open">关闭/打开</a>
+                    <div class="rl-listen">
+                        <h3>听力</h3>
+                        <ul class="J_orderList J_top_1">
+		 					<volist name="top_1" id="user" >
+	                        <li>
+		                        <p class="idx">
+		                        <switch name="i" >
+		                            <case value="1"><img src="__PUBLIC__/English/images/gold.png" width="26" height="25" /></case>
+		                            <case value="2"><img src="__PUBLIC__/English/images/yingpai.png" width="26" height="25" /></case>
+		                            <default /><img src="__PUBLIC__/English/images/tongpai.png" width="26" height="25" />
+		                        </switch>
+		                        </p>
+		                        <p class="nm">{$user.nickname}</p>
+		                        <p class="sum">{$user.rice_sum}</p>
+		                        <p class="ln">{$user.best_level_name}</p>
+	                        </li>
+		                    </volist>
+                        </ul>
+                    </div>
+                    <div class="rl-speak">
+                        <h3>说力</h3>
+                        <ul class="J_orderList J_top_2">
+                        	<li><p class="coming-tip">Coming soon...</p></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+			
+            <div style="margin:0 auto; width: 1000px; height:140px; position:relative;clear:both;">
+                <!-- "previous page" action -->
+                <a class="prev browse left"></a>
+
+                <!-- root element for scrollable -->
+                <div class="scrollable" id="scrollable">
+
+                  <!-- root element for the items -->
+                  <div class="items">
+
+                    <!-- 1-5 -->
+                    <div>
+                    <ul>
+                      <li><img title='推荐视频，敬请期待！' src="http://pkstatic.b0.upaiyun.com/upload/20130614/695e590d7bd36c205086520c81fbdd95.PNG" /></li>
+                        <li><img title='推荐视频，敬请期待！' src="http://pkstatic.b0.upaiyun.com/upload/20130711/5afe6c90a0f065f6c43eae3a37613966.PNG" /></li>
+                        <li><img title='推荐视频，敬请期待！' src="http://pkstatic.b0.upaiyun.com/upload/20130711/7b11de37c5c7c1f0cb578cda623de628.PNG" /></li>
+                       <li><img title='推荐视频，敬请期待！' src="http://pkstatic.b0.upaiyun.com/upload/20130711/ede6952299a7998daa7be20493077482.PNG" /></li>
+                      </ul>
+                    </div>
+
+                    <!-- 5-10 -->
+                    <div>
+                        <ul>
+                      <li><img title='推荐视频，敬请期待！' src="http://pkstatic.b0.upaiyun.com/upload/20130711/ec4112ffbacb599e8d97b4a357ff3246.PNG" /></li>
+                        <li><img title='推荐视频，敬请期待！' src="http://pkstatic.b0.upaiyun.com/upload/20130716/4b136b6b50897a693369cf2479503322.JPG" /></li>
+                        <li><img title='推荐视频，敬请期待！' src="http://pkstatic.b0.upaiyun.com/upload/20130711/5ace3b29da0f5c0806a7e07d979b158c.PNG" /></li>
+                       <li><img title='推荐视频，敬请期待！' src="http://pkstatic.b0.upaiyun.com/upload/20130711/b15f4de1c814257114c1fc3fec333e96.PNG" /></li>
+                      </ul>
+                    </div>
+
+                    <!-- 10-15 -->
+                    <div>
+                         <ul>
+                      <li> <img title='推荐视频，敬请期待！' src="http://farm4.static.flickr.com/3629/3323896446_3b87a8bf75_t.jpg" /></li>
+                        <li> <img title='推荐视频，敬请期待！' src="http://pkstatic.b0.upaiyun.com/upload/20130711/26830387c1cfa5b7c620560593d5f373.PNG" /></li>
+                        <li> <img title='推荐视频，敬请期待！' src="http://pkstatic.b0.upaiyun.com/upload/20130711/5afe6c90a0f065f6c43eae3a37613966.PNG" /></li>
+                       <li> <img title='推荐视频，敬请期待！' src="http://pkstatic.b0.upaiyun.com/upload/20130711/ec4112ffbacb599e8d97b4a357ff3246.PNG" /></li>
+                      </ul>
+                    </div>
+
+                  </div>
+
+                </div>
+
+                <!-- "next page" action -->
+                <a class="next browse right"></a>
+
+                </div>
+                    </div>
+        <include file='Public:footer' />
+    </body>
+</html>

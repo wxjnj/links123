@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<include file="Public:meta" />
+</head>
+
+<body>
+
+	<include file="Public:header" />
+
+	<div class="container">
+  
+		<div class="cont_right">
+		
+		<!-- 
+			<div class="search sch_top">请选择分类&nbsp;
+	      		<span id="search_select" class="select_b">
+	        		<font>不限</font>
+		        	<div class="search_select" id="search_select_lie">
+			          	<ul>
+				            <li>不限</li>
+				        <volist name="rootCats" id="vo">
+	            			<li value="{$vo.id}">{$vo.cat_name}</li>
+	        			</volist>
+						</ul>
+					</div>
+				</span>&nbsp;
+				<input type="text" value="{$keyword}" id="search_text" class="sch_txt" />&nbsp;
+				<input type="hidden" id="search_rid" />
+				<a id="btn_search" class="search_buttom">另客一下</a>
+			</div>
+		 -->	
+			<form id="frm_search" method="get" action="__URL__/search/thl/搜/tid/10/">
+				<!-- <input type="hidden" name="srid" value="{$srid}" /> -->
+				<input type="hidden" name="q" value="{$keyword}" />
+				<input type="hidden" name="cid" value="{$cid}" />
+				<input type="hidden" name="lan" value="{$lan}" />
+				<input type="hidden" name="p" />
+			</form>
+		
+			
+		<eq name="_SESSION.pailie" value="2">	
+			<ul class="cont_lie">
+			<volist name="links" id="vo">
+				<li>
+				<notempty name="vo.logo">
+					<div class="cont_lie_logoleft">
+						<div class="cont_lie_logo"><a href="http://{$vo.link}" target="_blank"><img src="__PUBLIC__/Uploads/Links/{$vo.logo}"/></a></div>
+					</div>
+				</notempty>
+					<div class="cont_font <notempty name="vo.logo">cont_font_logo</notempty>">
+						<dl class="cont_tit">
+							<div class="tlt_left"><a href="http://{$vo.link}" target="_blank">{$vo.title}</a> <notempty name="vo.nickname">{$vo.nickname} 推荐</notempty></div>
+						<empty name="vo.notlink">
+							<div class="sc"><a class="cont_fontright btn_collect" lnk_id="{$vo.id}" link="{$vo.link}">收藏</a>&nbsp;<notempty name="vo.collect_num">{$vo.collect_num}</notempty></div>
+							<div class="cai" lnk_id="{$vo.id}">{$vo.cai}</div>
+							<div class="ding" lnk_id="{$vo.id}">{$vo.ding}</div>
+							<div class="lst_dt">{$vo.grade_name}</div>
+						</empty>
+						</dl>
+						<dl class="cont_botfont">{$vo.sintro}<eq name="vo.more" value="1"><a url="__URL__/detail/id/{$vo.id}" class="newWin">&gt; 更多</a></eq></dl>
+					</div>
+					
+					<div class="clr"></div>
+				</li>
+			</volist>
+			</ul>
+		</eq>
+			
+		<eq name="_SESSION.pailie" value="1">	
+			<ul class="cont_lie_jj">
+			<volist name="links" id="vo">
+				<li>
+				<notempty name="vo.logo">
+					<div class="cont_lie_logoleft">
+						<div class="cont_lie_logo"><a href="http://{$vo.link}" target="_blank"><img src="__PUBLIC__/Uploads/Links/{$vo.logo}"/></a></div>
+					</div>
+				</notempty>
+					<div class="cont_font <notempty name="vo.logo">cont_font_logo</notempty>">
+						<dl class="cont_tit" title="{$vo.linkTitle}">
+							<dd>
+							<!-- $当prt_id=5即当前结果为TED，连接修改为本地播放 -->
+							<if condition="($vo.prt_id eq 5)">
+								<a url="__URL__/detail/id/{$vo.id}" class="newWin">
+							<else />
+								<a href="http://{$vo.link}" target="_blank">
+							</if>
+							{$vo.title}</a>
+							<!-- 当prt_id=5即当前结果为TED，连接修改为本地播放 $-->
+							<notempty name="vo.nickname">{$vo.nickname} 推荐</notempty></dd>
+						</dl>
+						<dl class="cont_botfont">{$vo.sintro}</dl>
+					<empty name="vo.notlink">
+						<dl class="dl_more"><a url="__URL__/detail/id/{$vo.id}" class="newWin">&gt; 更多</a></dl>
+						<div class="clr"></div>
+						<dl class="cont_btns">
+							<div class="cai" lnk_id="{$vo.id}">{$vo.cai}</div>
+							<div class="ding" lnk_id="{$vo.id}">{$vo.ding}</div>
+							<div class="sc"><a class="cont_fontright btn_collect" lnk_id="{$vo.id}" link="{$vo.link}">收藏</a>&nbsp;<notempty name="vo.collect_num">{$vo.collect_num}</notempty></div>
+							<div class="lst_dt">{$vo.grade_name}</div>
+						</dl>
+					</empty>
+						
+					</div>
+					
+					<div class="clr"></div>
+				</li>
+			</volist>
+			</ul>
+		</eq>
+    
+			<div class="page_b">
+		      	{$page}   
+		      	<div class="clr"></div>
+			</div>
+
+		</div>
+  
+		<aside>
+		    <div class="left_sider" id="left_sider">
+		        <img src="__PUBLIC__/Uploads/Others/{$banner.0.pic}" />
+		    </div>
+		</aside>
+		<div class="clr"></div>
+	</div>
+
+	<include file="Public:footer" />
+	<load href="__PUBLIC__/skin/js/index.js" />
+
+</body>
+</html>

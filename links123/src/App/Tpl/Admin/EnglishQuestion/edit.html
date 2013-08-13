@@ -1,0 +1,232 @@
+<tagLib name="html" />
+<include file="Public:header" />
+<load href="__PUBLIC__/skin/js/jquery-1.8.0.min.js" />
+<load href="__PUBLIC__/skin/uploadify/jquery.uploadify.min.js" />
+<load href="__PUBLIC__/skin/uploadify/uploadify.css" />
+
+<div id="main" class="main" >
+    <div class="content add_question">
+        <div class="title">编辑英语角试题[ <a href="__URL__">返回列表</a> ]</div>
+        <form method='post' id="form1" action="__URL__/update/" >
+            <table cellpadding=3 cellspacing=3>
+                <tr>
+                    <td class="tRight" style="width:70px ;" >名称：</td>
+                    <td class="tLeft" ><input type="text" class="bLeftRequire xhuge" name="name" value="{$vo.name}" /></td>
+                </tr>
+                <tr>
+                    <td class="tRight" ></td>
+                    <td class="tLeft">
+                        <span style="margin-right: 100px;">
+                            <label class="radio_label"><input type="radio" name="voice" value="1" <eq name="vo['voice']" value='1'>checked="checked"</eq> />美音</label>
+                            <label><input type="radio" name="voice" value="2" <eq name="vo['voice']" value='2'>checked="checked"</eq> />英音</label>
+                        </span>
+                        <span style="margin-right: 100px;">
+                            <label class="radio_label"><input type="radio" name="target" value="1" <eq name="vo['target']" value='1'>checked="checked"</eq>  />听力</label>
+                            <label class="radio_label"><input type="radio" name="target" value="2" <eq name="vo['target']" value='2'>checked="checked"</eq>  />说力</label>
+                        </span>
+                        <span style="margin-right: 100px;">
+                            <label class="radio_label"><input type="radio" name="pattern" value="1" <eq name="vo['pattern']" value='1'>checked="checked"</eq> />视频</label>
+                            <label class="radio_label"><input type="radio" name="pattern" value="2" <eq name="vo['pattern']" value='2'>checked="checked"</eq>  />音频</label>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tRight" >学科：</td>
+                    <td class="tLeft object_td" >
+                        <input type="hidden" value="{$vo.object}" name="object" />
+                        <volist name="object_list" id="object">
+                            <neq name="object['name']" value="综合">
+                                <label id="object_{$object.id}" class="radio_label object_lable">
+                                    {$object.name}
+                                </label>
+                            </neq>
+                        </volist>
+                        </td>
+                </tr>
+                <tr>
+                    <td class="tRight" >等级：</td>
+                    <td class="tLeft level_td" >
+                        <input type="hidden" value="{$vo.level}" name="level" />
+                <volist name="level_list" id="level">
+                    <label id="level_{$level.id}" class="radio_label level_label">
+                        {$level.name}
+                    </label>
+                </volist>
+                </td>
+                </tr>
+                <tr>
+                    <td class="tRight" >试题：</td>
+                    <td class="tLeft" ><input type="text" class="bLeftRequire large" name="content" value="{$vo.content}" /></td>
+                </tr>
+                <tr>
+                    <td class="tRight" style="vertical-align: top" >选项：</td>
+                    <td class="tLeft" >
+                        <span class="option">
+                            <span class="mark">A</span><input type="text" value="{$option_list[0]['content']}" class="xhuge" name="option[]" /><label>
+                                <input type="radio" name="answer" id="answer_{$option_list[0]['id']}" value="1">正确答案</label>
+                        </span>
+                        <span class="option">
+                            <span class="mark">B</span><input type="text" value="{$option_list[1]['content']}" class="xhuge" name="option[]" /><label>
+                                <input type="radio" name="answer" id="answer_{$option_list[1]['id']}" value="2">正确答案</label>
+                        </span>
+                        <span class="option">
+                            <span class="mark">C</span><input type="text" value="{$option_list[2]['content']}" class="xhuge" name="option[]" /><label>
+                                <input type="radio" name="answer" id="answer_{$option_list[2]['id']}" value="3">正确答案</label>
+                        </span>
+                        <span class="option">
+                            <span class="mark">D</span><input type="text" value="{$option_list[3]['content']}" class="xhuge" name="option[]" /><label>
+                                <input type="radio" name="answer" id="answer_{$option_list[3]['id']}" value="4">正确答案</label>
+                        </span>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tRight" >媒体地址：</td>
+                    <td class="tLeft" >
+                        <textarea style="float: left;width: 550px;" name="media_url">{$vo.media_url}</textarea>
+                        <!--                        <input type="text" style="float: left;" value="{$vo.media_url}" class="bLeftRequire xhuge" name="media_url" />-->
+                        <div style="float: left;">
+                            <div style="float: left;">
+                                <input type="file" id="upload" value="upload" />
+                            </div>
+                            <input type="hidden" name="media_local_url" id="upload_file" />
+                            <input type="hidden" name="media_local_url_old" value="{$vo.media_local_url}" />
+                            <div id="upload-list" style="float: left;width: 200px;">{$vo.media_local_url}</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tRight" >媒体文本地址：</td>
+                    <td class="tLeft" >
+                        <textarea style="width: 550px;" name="media_text_url">{$vo.media_text_url}</textarea>
+                        <!--                        <input type="text" value="{$vo.media_text_url}" class="bLeftRequire xhuge" name="media_text_url" />-->
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tRight media_text" style="vertical-align: top" >媒体文本：</td>
+                    <td class="tLeft" >
+                        <textarea name="media_text">{$vo.media_text}</textarea>
+                    </td>
+                </tr>
+                <div id="J_statusDiv" style="position: absolute;top:490px;left:15px;">
+                    <span>状态：</span>
+                    <div>
+                        <label class="radio_label" style="display: block;margin-top:10px;">
+                            <input type="radio" name="status" value="1" <eq name="vo['status']" value="1">checked="checked"</eq> />启用</label>
+                        <label class="radio_label"  style="display: block;margin-top:10px;">
+                            <input type="radio" name="status" value="0"  <eq name="vo['status']" value="0">checked="checked"</eq> />禁用</label>
+                        <label class="radio_label"  style="display: block;margin-top: 10px;">
+                            <input type="radio" name="status" value="-1"  <eq name="vo['status']" value="-1">checked="checked"</eq> />删除</label>
+                    </div>
+                    <div>
+                        <input type="hidden" value="{$vo.id}" name="id" />
+                        <input type="submit" value="保 存" class="small submit" style="display: block;margin: 10px 0;">
+                        <input type="reset" class="submit small" value="清 空" >
+                    </div>
+                </div>
+            </table>
+        </form>
+    </div>
+</div>
+<load href="__PUBLIC__/Js/editor/kindeditor-min.js" />
+<script type="text/javascript">
+    var editor;
+    $(function() {
+        var status_offset = $(".media_text").offset();
+        $("#J_statusDiv").offset({top:status_offset.top+20});
+        
+        var object = $("input[name='object']").val();
+        $("#object_"+object).css("color", "#FF0000").siblings("label").css("color", "#000000");
+        var level = $("input[name='level']").val();
+        $("#level_"+level).css("color", "#FF0000").siblings("label").css("color", "#000000");
+        $("#answer_{$vo.answer|default=0}").attr("checked","checked");
+        KindEditor.ready(function(K) {
+            $("input[type='submit']").click(function(){
+                if($("[name='name']").val()==""){
+                    alert("请填写名称！");
+                    $("[name='name']").focus();
+                    return false;
+                }
+                if($("[name='object']").val()==""){
+                    alert("请选择科目！");
+                    $("[name='object']").focus();
+                    return false;
+                }
+                if($("[name='level']").val()==""){
+                    alert("请选择等级！");
+                    $("[name='level']").focus();
+                    return false;
+                }
+                if($("[name='content']").val()==""){
+                    alert("请填写试题！");
+                    $("[name='content']").focus();
+                    return false;
+                }
+            })
+            editor = K.create("textarea[name='media_text']", {
+                cssPath: '__PUBLIC__/Js/editor/themes/default/ke-content.css',
+                resizeType: 1,
+                allowPreviewEmoticons: true,
+                allowImageUpload: true,
+                width: 900,
+                height: 280,
+                themeType: 'simple',
+                afterCreate: function() {
+                    var self = this;
+                    //KindEditor 键盘事件
+                    K(self.edit.doc).keyup(function(event) {
+                        var keyCode = event.keyCode;
+                        //监控事件：13(enter);17(crtl+v);32(space);进行URL处理
+                        if (keyCode == 13 || keyCode == 17 || keyCode == 32) {
+
+                            var editHtml = self.edit.html();
+                            editHtml = editHtml.replace(/([^>=\]"'\/@]|^)((((https?|ftp|gopher|news|telnet|rtsp|mms|callto|bctp|ed2k|thunder|qqdl|synacast):\/\/))([\w\-]+\.)*[:\.@\-\w\u4e00-\u9fa5]+\.([\.a-zA-Z0-9]+|\u4E2D\u56FD|\u7F51\u7EDC|\u516C\u53F8)((\?|\/|:)+[\w\.\/=\?%\-&;~`@':+!#]*)*)/ig, '$1<a href="$2" target="_blank">$2</a>');
+                            editHtml = editHtml.replace(/([^\w>=\]"'\/@]|^)((www\.)([\w\-]+\.)*[:\.@\-\w\u4e00-\u9fa5]+\.([\.a-zA-Z0-9]+|\u4E2D\u56FD|\u7F51\u7EDC|\u516C\u53F8)((\?|\/|:)+[\w\.\/=\?%\-&;~`@':+!#]*)*)/ig, '$1<a href="$2" target="_blank">$2</a>');
+                            editHtml = editHtml.replace(/([^\w->=\]:"'\.\/]|^)(([\-\.\w]+@[\.\-\w]+(\.\w+)+))/ig, '$1<a href="mailto:$2">$2</a>');
+                            self.edit.html('');
+                            self.appendHtml(editHtml);
+                            self.sync();
+                        }
+                    });
+                }
+            });
+        })
+        $(".object_td").children("label").click(function() {
+            $(this).css("color", "#FF0000").siblings("label").css("color", "#000000");
+            var value = $(this).attr("id").substr($(this).attr("id").indexOf("_")+1);
+            $("input[name='object']").val(value);
+        })
+        $(".level_td").children("label").click(function() {
+            $(this).css("color", "#FF0000").siblings("label").css("color", "#000000");
+            var value=$(this).attr("id").substr($(this).attr("id").indexOf("_")+1);
+            $("input[name='level']").val(value);
+        })
+        var session_id = "{:session_id()}";
+        $('#upload').uploadify({
+            'formData': {
+                'session_id': session_id
+            },
+            'fileSizeLimit' : '1GB',
+            'queueID': 'upload-list',
+            'buttonText': '选择文件', //设置按钮文本
+            'swf': '__PUBLIC__/skin/uploadify/uploadify.swf',
+            'uploader': '__URL__/upload',
+            'multi'    : false,
+            'removeCompleted' : false,
+            'onUploadSuccess': function(file, msg, response) {
+                if (response) {
+                    msg = jQuery.parseJSON(msg);
+                    alert(msg.info);
+                    if(msg.status){
+                        $("#upload_file").val(msg.data[0]['savename']);
+                        $(".cancel a").click(function(){
+                            if(confirm("确认删除上传文件？")){
+                                $("#upload_file").val("");
+                            }
+                        });
+                    }
+                }
+            }
+        });
+    })
+</script>

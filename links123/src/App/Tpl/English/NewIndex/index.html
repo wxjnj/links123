@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+    <body>
+        <div>英语角说力测试页面</div>
+        <!--<a href="javascript:clickplaynew();">MP4源播放</a>-->
+        <div id="flashContent"></div>
+        <script type="text/javascript" src="__PUBLIC__/Js/Links123PlayerV1.1.1.1/swfobject.js"></script>
+        <script type="text/javascript" src="__PUBLIC__/skin/js/jquery-1.9.1.min.js"></script>
+        <script type="text/javascript">
+            var swfVersionStr = "10.2.0";
+            var xiSwfUrlStr = "playerProductInstall.swf";
+            var flashvars = {};
+            flashvars.logging = true;
+            flashvars.url = "__PUBLIC__/Uploads/Video/test.flv";
+            var params = {};
+            params.quality = "high";
+            params.bgcolor = "#ffffff";
+            params.allowscriptaccess = "sameDomain";
+            params.allowfullscreen = "true";
+            params.play = "false";
+            var attributes = {};
+            attributes.id = "Links123Player";
+            attributes.name = "Links123Player";
+            attributes.align = "middle";
+            swfobject.embedSWF(
+                    "__PUBLIC__/Js/Links123PlayerV1.1.1.1/Links123Player.swf", "flashContent",
+                    "600", "500",
+                    swfVersionStr, xiSwfUrlStr,
+                    flashvars, params, attributes);
+            swfobject.createCSS("#flashContent", "display:block;text-align:left;");
+            //重新播放一个视频地址测试
+            function clickplaynew()
+            {
+                $("#Links123Player")[0].PlayNew("http://127.0.0.1/links123/test.mp4");
+            }
+        </script>
+    </body>
+</html>
