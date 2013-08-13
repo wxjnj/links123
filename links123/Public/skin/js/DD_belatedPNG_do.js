@@ -1,1 +1,0 @@
-DD_belatedPNG.fix("div, ul, img, li, input");
