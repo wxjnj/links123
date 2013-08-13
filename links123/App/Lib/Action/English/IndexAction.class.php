@@ -204,12 +204,12 @@ class IndexAction extends EnglishAction {
             /* 存储用户点击历史  结束 */
 
             $ret = array();
-            if ($type == "category") {
-                $ret['object_list'] = $objectModel->getObjectListToIndex($voice, $target, $pattern);
-                $ret['level_list'] = $levelModel->getLevelListToIndex($object, $voice, $target, $pattern);
-            } else if ($type == "object" || $type == "quick_select_prev" || $type == "quick_select_next") {
-                $ret['level_list'] = $levelModel->getLevelListToIndex($object, $voice, $target, $pattern);
-            }
+//            if ($type == "category") {
+            $ret['object_list'] = $objectModel->getObjectListToIndex($voice, $target, $pattern);
+            $ret['level_list'] = $levelModel->getLevelListToIndex($object, $voice, $target, $pattern);
+//            } else if ($type == "object" || $type == "quick_select_prev" || $type == "quick_select_next") {
+//                $ret['level_list'] = $levelModel->getLevelListToIndex($object, $voice, $target, $pattern);
+//            }
             $ret['object_info'] = $objectModel->getInfoById($object);
             $ret['level_info'] = $levelModel->getInfoById($level);
             //记录上次选择等级，如等级下题目数为空则获取默认等级

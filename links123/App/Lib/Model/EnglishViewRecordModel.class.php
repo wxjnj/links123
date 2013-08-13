@@ -21,12 +21,7 @@ class EnglishViewRecordModel extends CommonModel {
             $map['user_id'] = intval(cookie('english_tourist_id')); //从cookie获取游客id
             //如果不存在游客id，获取最大游客id加1为新游客id
             if ($map['user_id'] == 0) {
-                $englishTouristRecordModel = D("EnglishTouristRecord");
-                $ret = $englishTouristRecordModel->field("MAX(user_id) as max_user_id")->find();
-                if (false === $ret || empty($ret) || $ret['max_user_id'] == null) {
-                    $ret['max_user_id'] = 0;
-                }
-                $map['user_id'] = intval($ret['max_user_id']) + 1;
+                $map['user_id'] = $this->getNewTouristId();
             }
             cookie('english_tourist_id', $map['user_id']); //更新游客id到cookie
             $map['user_id'] = -$map['user_id']; //游客id在数据库表中记录为负数
@@ -89,6 +84,27 @@ class EnglishViewRecordModel extends CommonModel {
         if (false === $ret) {
             $ret = array();
         }
+        return $ret;
+    }
+
+    /**
+     * 获取新游客id
+     * @return int
+     * @author Adam #date2013-08-13$
+     */
+    public function getNewTouristId() {
+        $ret = 0;
+        $viewRecordUser = $this->field("MIN(user_id) as max_user_id")->find();
+        if (false === $viewRecordUser || empty($viewRecordUser) || $viewRecordUser['max_user_id'] == null || $tourist['max_user_id'] > 0) {
+            $viewRecordUser['max_user_id'] = 0;
+        } else {
+            $viewRecordUser['max_user_id'] = -$viewRecordUser['max_user_id'];
+        }
+        $touristRecordUser = D("EnglishTouristRecord")->field("MAX(user_id) as max_user_id")->find();
+        if (false === $touristRecordUser || empty($touristRecordUser) || $touristRecordUser['max_user_id'] == null) {
+            $touristRecordUser['max_user_id'] = 0;
+        }
+        $ret = intval($viewRecordUser['max_user_id'] > $touristRecordUser['max_user_id'] ? $viewRecordUser['max_user_id'] : $touristRecordUser['max_user_id']) + 1;
         return $ret;
     }
 

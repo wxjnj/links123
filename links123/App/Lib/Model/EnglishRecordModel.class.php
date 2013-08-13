@@ -49,11 +49,7 @@ class EnglishRecordModel extends CommonModel {
                 //游客有过游客id
                 if ($map['user_id'] == 0) {
                     //获取当前游客最大的id数,当前游客id为最大数加一
-                    $ret = $englishTouristRecordModel->field("MAX(user_id) as max_user_id")->find();
-                    if (false === $ret || empty($ret) || $ret['max_user_id'] == null) {
-                        $ret['max_user_id'] = 0;
-                    }
-                    $map['user_id'] = intval($ret['max_user_id']) + 1;
+                    $map['user_id'] = D("EnglishViewRecord")->getNewTouristId();
                 }
                 $data['user_id'] = $map['user_id'];
                 $englishTouristRecordModel->add($data); //新增游客记录

@@ -22,36 +22,36 @@ $(function() {
 //            }
 //            $(".answer").slideDown("slow");
 //        }
-    	
-    	$(this).toggleClass("current");
+
+        $(this).toggleClass("current");
         if ($(".answer").is(":visible")) {
-            $(".answer").slideUp("slow", function(){ //这里收起后显示
+            $(".answer").slideUp("slow", function() { //这里收起后显示
                 if ($("#J_media_div").attr("media_type") == 1 || $("#J_media_div").attr("media_type") == 2) {
-                    $("#J_media_div").css({'display': '','position': '','left': ''}).show();
+                    $("#J_media_div").css({'display': '', 'position': '', 'left': ''}).show();
                 } else if ($("#J_media_div").attr("data_isaboutvideo") == 1) {
-                	$(".J_player").show();
+                    $(".J_player").show();
                 }
             });
         } else { //这里先隐藏后展开
             if ($("#J_media_div").attr("media_type") == 1 || $("#J_media_div").attr("media_type") == 2) {
-                $("#J_media_div").css({'display': 'block','position': 'absolute','left': '-9999px'}).hide();
+                $("#J_media_div").css({'display': 'block', 'position': 'absolute', 'left': '-9999px'}).hide();
             } else if ($("#J_media_div").attr("data_isaboutvideo") == 1) {
-            	$(".J_player").hide();
-              }
+                $(".J_player").hide();
+            }
             $(".answer").slideDown("slow");
         }
     });
-    
+
     //科目点击事件
-   // bindObjectClickEvent();
+    // bindObjectClickEvent();
     $('.kecheng li').live('click', function() {
 
         if ($(this).hasClass("grey")) {
-        	
+
             alert("抱歉，该科目不存在试题！");
             return false;
         } else if ($(this).hasClass("current")) {
-        	
+
             var top = $(this).offset().top - 50;
             var left = $(this).offset().left - 10;
             $.messager.show({
@@ -69,18 +69,18 @@ $(function() {
         }
         //$(this).addClass("current").siblings("li").removeClass("current");
         requestQuestion("object", $(this));
-    
+
     });
     //等级点击事件
     //bindLevelClickEvent();
     $(".grade li").live('click', function() {
-    	
+
         if ($(this).hasClass("grey")) {
-        	
+
             alert("抱歉，该等级不存在试题！");
             return false;
         } else if ($(this).hasClass("current")) {
-        	
+
             var top = $(this).offset().top - 50;
             var left = $(this).offset().left - 10;
             $.messager.show({
@@ -96,12 +96,12 @@ $(function() {
             });
             return false;
         }
-        
+
         requestQuestion("level", $(this));
-        	
+
         //$(this).addClass("current").siblings("li").removeClass("current");
     });
-    
+
     //升级事件
     //bindLevelUpEvent();
     $("#J_levelUpButton").live('click', function() {
@@ -281,15 +281,15 @@ $(function() {
         return false;
     });
     /** 视频播放$ **/
-    
+
     /** $用户反馈 **/
     $('.J_feedback').click(function() {
-        
-    	var question_id = $("#J_questionId").text();
-    	var type = 0;	//0=>视频错误  1=>建议
-    	var media_html = $('.video_div').html();
-    	
-    	$.messager.show({
+
+        var question_id = $("#J_questionId").text();
+        var type = 0;	//0=>视频错误  1=>建议
+        var media_html = $('.video_div').html();
+
+        $.messager.show({
             msg: "<span class='messager_span'>感谢您的反馈,我们会尽快处理！</span>",
             showType: 'fade',
             width: 215,
@@ -300,24 +300,24 @@ $(function() {
                 top: '0'
             }
         });
-    	
-    	$.ajax({ 
-	    	url : URL + '/feedback',
-	    	type : 'POST',    
-	        dataType : 'json',
-	    	data : {
-	            'type' : type,
-	            'question_id': question_id,
-	            'media_html' : media_html
-	        },
-	        success : function(msg) {    
-	           
-		    }
-    	});
+
+        $.ajax({
+            url: URL + '/feedback',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                'type': type,
+                'question_id': question_id,
+                'media_html': media_html
+            },
+            success: function(msg) {
+
+            }
+        });
         return false;
     });
     /** 用户反馈$ **/
-    
+
     bindMediaTextClickEvent("disable");
     bindOptionClickEvent();
     trimWhiteSpace();
@@ -349,29 +349,29 @@ function requestQuestion(type, clickObject) {
         //return false;
         ajaxRequest.abort();
     }
-    
+
     var voice = $(".voice.current").attr("value");
     var target = $(".target.current").attr("value");
     var pattern = $(".pattern.current").attr("value");
     var object = $(".kecheng .current").attr("value");
     var level = $(".grade .current").attr("value");
-    
+
     if (type == 'level') {
-    	level = clickObject.attr("value");
+        level = clickObject.attr("value");
     } else if (type == 'category') {
-    	voice = clickObject.attr("value");
-    } else if ( type == 'object') {
-    	object = clickObject.attr("value");
+        voice = clickObject.attr("value");
+    } else if (type == 'object') {
+        object = clickObject.attr("value");
     }
-    
+
     var now_question_id = $("#J_questionId").text();
     if ($(".answer").is(":visible")) {
         $("#J_answerButton").click();
     }
     layer_div("show");
-    ajaxRequest = $.ajax({ 
-    	url : URL + '/ajax_get_question',
-    	data:{
+    ajaxRequest = $.ajax({
+        url: URL + '/ajax_get_question',
+        data: {
             'voice': voice,
             'target': target,
             'pattern': pattern,
@@ -380,203 +380,206 @@ function requestQuestion(type, clickObject) {
             'type': type,
             'now_question_id': now_question_id
         },
-        type:'POST',    
-        dataType:'json',
+        type: 'POST',
+        dataType: 'json',
         cache: false,
-        success:function(msg) {    
-           
-	        if (msg) {
-	            var data = msg.data;
-	            if (data == null) {
-	            	
-	            	$.messager.show({
-	                    msg: "<span  class='messager_span'>该题目不存在，请重试...</span>",
-	                    showType: 'fade',
-	                    width: 180,
-	                    height: 45,
-	                    timeout: 3000,
-	                    style: {
-	                        left: '50%',
-	                        top: '4%'
-	                    }
-	                });
-	            	
-	            	ajaxRequest = undefined;
-	                return false;
-	            }
-	            
-	            if (data.question && data.question.tested) {
-	                var top = $(".videobutton .next").offset().top - 50;
-	                var left = $(".videobutton .next").offset().left - 32;
-	                $.messager.show({
-	                    msg: "<span class='messager_span'>暂无新题，升级吧!</span>",
-	                    showType: 'fade',
-	                    width: 150,
-	                    height: 45,
-	                    timeout: 4000,
-	                    style: {
-	                        left: left,
-	                        top: top
-	                    }
-	                });
-	            }
-	            //
-	            //点击为类型，更新科目列表
-	            if (type == "category") {
-	                var object_list = data.object_list;
-	                if (object_list != null) {
-	                    var str = '';
-	                    var has_default = 0;
-	                    for (var i = 0; i < object_list.length; i++) {
-	                        str += '<li value="' + object_list[i]['id'] + '"';
-	                        if (has_default == 0 && object_list[i]['question_num'] > 0) {
-	                            str += ' class="current" ';
-	                            has_default = 1;
-	                        } else {
-	                            if (object_list[i]['question_num'] == 0) {
-	                                str += ' class="grey not_allowed" ';
-	                            }
-	                        }
-	                        str += '><span>' + object_list[i]['name'] + '</span></li>';
-	                    }
-	                    $(".kecheng").html(str);
-	                    //bindObjectClickEvent();
-	                }
-	            }
-	            //
-	            //等级为空
-	            if (data['level_info'] == null) {
-	                data['level_info'] = new Array();
-	                data['level_info']['id'] = 0;
-	            }
-	            //更新等级列表
-	            var level_list = data.level_list;
-	            if (level_list != null) {
-	                var str = '';
-	                for (var i = 0; i < level_list.length; i++) {
-	                    str += '<li value="' + level_list[i]['id'] + '"';
-	                    if (data['level_info']['id'] == level_list[i]['id']) {
-	                        str += ' class="current" ';
-	                    } else {
-	                        if (level_list[i]['question_num'] == 0) {
-	                            str += ' class="grey not_allowed" ';
-	                        }
-	                    }
-	                    str += '><span>' + level_list[i]['name'] + '</span></li>';
-	                }
-	                $(".grade").html(str);
-	                if ($(".grade .current").size() < 1) {
-	                    $(".grade li").not(".grey").first().addClass("current");
-	                }
-	                $(".grade li:eq(13)").css("margin-left", level_margin_index + "px");
-	                //bindLevelClickEvent();
-	            }
-	            //
-	            //更新题目
-	            var question = data.question;
-	            if (question.content == null) {
-	                $(".answertitle").text("");
-	            } else {
-	                $(".answertitle").text(question.content);
-	            }
-	            $("#J_questionId").text(question.id);
-	            $("#J_textButton").attr("media_text_url", question.media_text_url);
-	            bindMediaTextClickEvent("disable");//点击选项后才能查看文本
-	            updateOption(question.option);
-	            //
-	            if (data['user_count_info'] == null || data['user_count_info']['right_num'] == null) {
-	                data['user_count_info']['right_num'] = 0;
-	            }
-	            $("#J_currentRice").text(data['user_count_info']['right_num'] * 100);
-	            $("#J_riceDiv").removeClass().addClass("rice_" + data['user_count_info']['right_num'] * 100);
-	            //
-	            /** $视频播放 **/
-	            var videoStr = '';
-	            $('#J_media_div').html(videoStr);
-	            if (question.isAboutVideo != 1) {
-	                if (question.media_type == 1) {
-	                    videoStr = question.media;
-	                } else if (question.media_type == 2) {
-	                    videoStr = '<iframe class="media_iframe" src="' + question.media + '" width="100%" height="100%" scrolling="no" frameborder="0">';
-	                } else if (question.media_type == 3) {
-	                    var swfUrl = 'http://www.kizphonics.com/wp-content/uploads/jw-player-plugin-for-wordpress/player/player.swf';
-	                    var version = '10.2.0';
-	                    var params = {
-	                        quality: "high",
-	                        wmode: "opaque",
-	                        scale: "noscale",
-	                        align: "left",
-	                        allowFullScreen: "true",
-	                        allowScriptAccess: "always",
-	                        bgColor: "#000000"
-	                    };
-	
-	                    swfobject.embedSWF(swfUrl, "J_media_div_1", "100%", "100%", version, "/swf/playerProductInstall.swf", question.media, params);
-	
-	                }  else if (question.media_type == 4) {
-	                
-	                	 videoStr +='<object id="flash_fallback_1" class="vjs-flash-fallback" width="100%" height="100%" type="application/x-shockwave-flash" data="http://releases.flowplayer.org/swf/flowplayer-3.2.1.swf">';  
-	                	 videoStr +='<param name="movie" value="http://releases.flowplayer.org/swf/flowplayer-3.2.1.swf" />'; 
-	                	 videoStr +='<param name="allowfullscreen" value="true" />';
-	                	 videoStr +="<param name='flashvars' value='" + question.media + "' />";  
-	                	 videoStr +='</object>';
-	                }else {
-	
-	                    videoStr += '<object id="J_media_object" height="100%" width="100%" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">';
-	                    videoStr += '<param name="wmode" value="transparent">';
-	                    videoStr += '<param name="movie" value="' + question.media_url + '">';
-	                    videoStr += '<embed name="swf" menu="true" height="100%" width="100%" play="false" type="application/x-shockwave-flash" allowfullscreen="true" wmode="transparent" src="' + question.media_url + '">';
-	                    videoStr += '</object>';
-	                }
-	            }
-	            if (question.isAboutVideo) {
-	                $('#J_media_img').attr('src', question.media_img_url);
-	                $('#J_media_div').css('visibility', 'hidden');
-	
-	                $('.J_player').css('display', 'block');
-	
-	            } else {
-	                $('.J_player').css('display', 'none');
-	
-	                $('#J_media_div').css({
-	                    'height': media_height,
-	                    'width': media_width,
-	                    'margin': media_marin,
-	                    'visibility': ''
-	                });
-	
-	            }
-	
-	            if (question.isAboutVideo == 1) {
-	            	$('#J_media_div').attr('data_media_url', question.media_url);
-	            }
-	            $('#J_media_div').attr('media_type', question.media_type);
-	
-	            $('#J_media_div').attr('data_isAboutVideo', question.isAboutVideo);
-	            $('#J_media_div').html(videoStr);
-	
-	            /** 视频播放$ **/
-	            trimWhiteSpace();
-	            layer_div("hide");
-	            
-	            if (type == 'level' || type == 'object') {
-	            	clickObject.addClass("current").siblings("li").removeClass("current");
-	            } else if (type == 'category') {
-	            	clickObject.addClass("current").siblings("li.class1").removeClass("current");
-	            }
-	            
-	            ajaxRequest = undefined;
-	            return true;
-	        } else {
-	        	
-	        	ajaxRequest = undefined;
-	        	return false;
-	        }
-        },    
-        error : function() {    
-           
-        	ajaxRequest = undefined;
-        	return false;
+        success: function(msg) {
+
+            if (msg) {
+                var data = msg.data;
+                if (data == null) {
+
+                    $.messager.show({
+                        msg: "<span  class='messager_span'>该题目不存在，请重试...</span>",
+                        showType: 'fade',
+                        width: 180,
+                        height: 45,
+                        timeout: 3000,
+                        style: {
+                            left: '50%',
+                            top: '4%'
+                        }
+                    });
+
+                    ajaxRequest = undefined;
+                    return false;
+                }
+
+                if (data.question && data.question.tested) {
+                    var top = $(".videobutton .next").offset().top - 50;
+                    var left = $(".videobutton .next").offset().left - 32;
+                    $.messager.show({
+                        msg: "<span class='messager_span'>暂无新题，升级吧!</span>",
+                        showType: 'fade',
+                        width: 150,
+                        height: 45,
+                        timeout: 4000,
+                        style: {
+                            left: left,
+                            top: top
+                        }
+                    });
+                }
+                //
+                //点击为类型，更新科目列表
+//                if (type != "level" || type != "object") {
+                //科目为空
+                if (data['object_info'] == null) {
+                    data['object_info'] = new Array();
+                    data['object_info']['id'] = 0;
+                }
+                var object_list = data.object_list;
+                if (object_list != null) {
+                    var str = '';
+                    for (var i = 0; i < object_list.length; i++) {
+                        str += '<li value="' + object_list[i]['id'] + '"';
+                        if (data['object_info']['id'] == object_list[i]['id']) {
+                            str += ' class="current" ';
+                        } else {
+                            if (object_list[i]['question_num'] == 0) {
+                                str += ' class="grey not_allowed" ';
+                            }
+                        }
+                        str += '><span>' + object_list[i]['name'] + '</span></li>';
+                    }
+                    $(".kecheng").html(str);
+                    //bindObjectClickEvent();
+                }
+//                }
+                //
+                //等级为空
+                if (data['level_info'] == null) {
+                    data['level_info'] = new Array();
+                    data['level_info']['id'] = 0;
+                }
+                //更新等级列表
+                var level_list = data.level_list;
+                if (level_list != null) {
+                    var str = '';
+                    for (var i = 0; i < level_list.length; i++) {
+                        str += '<li value="' + level_list[i]['id'] + '"';
+                        if (data['level_info']['id'] == level_list[i]['id']) {
+                            str += ' class="current" ';
+                        } else {
+                            if (level_list[i]['question_num'] == 0) {
+                                str += ' class="grey not_allowed" ';
+                            }
+                        }
+                        str += '><span>' + level_list[i]['name'] + '</span></li>';
+                    }
+                    $(".grade").html(str);
+                    if ($(".grade .current").size() < 1) {
+                        $(".grade li").not(".grey").first().addClass("current");
+                    }
+                    $(".grade li:eq(13)").css("margin-left", level_margin_index + "px");
+                    //bindLevelClickEvent();
+                }
+                //
+                //更新题目
+                var question = data.question;
+                if (question.content == null) {
+                    $(".answertitle").text("");
+                } else {
+                    $(".answertitle").text(question.content);
+                }
+                $("#J_questionId").text(question.id);
+                $("#J_textButton").attr("media_text_url", question.media_text_url);
+                bindMediaTextClickEvent("disable");//点击选项后才能查看文本
+                updateOption(question.option);
+                //
+                if (data['user_count_info'] == null || data['user_count_info']['right_num'] == null) {
+                    data['user_count_info']['right_num'] = 0;
+                }
+                $("#J_currentRice").text(data['user_count_info']['right_num'] * 100);
+                $("#J_riceDiv").removeClass().addClass("rice_" + data['user_count_info']['right_num'] * 100);
+                //
+                /** $视频播放 **/
+                var videoStr = '';
+                $('#J_media_div').html(videoStr);
+                if (question.isAboutVideo != 1) {
+                    if (question.media_type == 1) {
+                        videoStr = question.media;
+                    } else if (question.media_type == 2) {
+                        videoStr = '<iframe class="media_iframe" src="' + question.media + '" width="100%" height="100%" scrolling="no" frameborder="0">';
+                    } else if (question.media_type == 3) {
+                        var swfUrl = 'http://www.kizphonics.com/wp-content/uploads/jw-player-plugin-for-wordpress/player/player.swf';
+                        var version = '10.2.0';
+                        var params = {
+                            quality: "high",
+                            wmode: "opaque",
+                            scale: "noscale",
+                            align: "left",
+                            allowFullScreen: "true",
+                            allowScriptAccess: "always",
+                            bgColor: "#000000"
+                        };
+
+                        swfobject.embedSWF(swfUrl, "J_media_div_1", "100%", "100%", version, "/swf/playerProductInstall.swf", question.media, params);
+
+                    } else if (question.media_type == 4) {
+
+                        videoStr += '<object id="flash_fallback_1" class="vjs-flash-fallback" width="100%" height="100%" type="application/x-shockwave-flash" data="http://releases.flowplayer.org/swf/flowplayer-3.2.1.swf">';
+                        videoStr += '<param name="movie" value="http://releases.flowplayer.org/swf/flowplayer-3.2.1.swf" />';
+                        videoStr += '<param name="allowfullscreen" value="true" />';
+                        videoStr += "<param name='flashvars' value='" + question.media + "' />";
+                        videoStr += '</object>';
+                    } else {
+
+                        videoStr += '<object id="J_media_object" height="100%" width="100%" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">';
+                        videoStr += '<param name="wmode" value="transparent">';
+                        videoStr += '<param name="movie" value="' + question.media_url + '">';
+                        videoStr += '<embed name="swf" menu="true" height="100%" width="100%" play="false" type="application/x-shockwave-flash" allowfullscreen="true" wmode="transparent" src="' + question.media_url + '">';
+                        videoStr += '</object>';
+                    }
+                }
+                if (question.isAboutVideo) {
+                    $('#J_media_img').attr('src', question.media_img_url);
+                    $('#J_media_div').css('visibility', 'hidden');
+
+                    $('.J_player').css('display', 'block');
+
+                } else {
+                    $('.J_player').css('display', 'none');
+
+                    $('#J_media_div').css({
+                        'height': media_height,
+                        'width': media_width,
+                        'margin': media_marin,
+                        'visibility': ''
+                    });
+
+                }
+
+                if (question.isAboutVideo == 1) {
+                    $('#J_media_div').attr('data_media_url', question.media_url);
+                }
+                $('#J_media_div').attr('media_type', question.media_type);
+
+                $('#J_media_div').attr('data_isAboutVideo', question.isAboutVideo);
+                $('#J_media_div').html(videoStr);
+
+                /** 视频播放$ **/
+                trimWhiteSpace();
+                layer_div("hide");
+
+                if (type == 'level' || type == 'object') {
+                    clickObject.addClass("current").siblings("li").removeClass("current");
+                } else if (type == 'category') {
+                    clickObject.addClass("current").siblings("li.class1").removeClass("current");
+                }
+
+                ajaxRequest = undefined;
+                return true;
+            } else {
+
+                ajaxRequest = undefined;
+                return false;
+            }
+        },
+        error: function() {
+
+            ajaxRequest = undefined;
+            return false;
         }
     });
 }
@@ -587,8 +590,8 @@ function requestQuestion(type, clickObject) {
  * @returns {Boolean} true：ajax发送中 false：暂无ajax请求
  */
 function isAjaxRequest() {
-	
-	return (typeof ajaxRequest != 'undefined') && (typeof ajaxRequest == 'object');
+
+    return (typeof ajaxRequest != 'undefined') && (typeof ajaxRequest == 'object');
 }
 
 //
@@ -648,13 +651,13 @@ function bindOptionClickEvent() {
                 answer = data.question_info.answer;
                 if (select_option == answer) {
                     //target.children(".J_optionContent").children("span").removeClass("gc").addClass("right");
-                	target.children(".gc").removeClass("gc").addClass("right");
+                    target.children(".gc").removeClass("gc").addClass("right");
                 } else {
-                	target.children(".gc").removeClass("gc").addClass("wrong");
-                	
-                	setTimeout(function(){
-                		$('#J_option_'+answer).children(".gc").removeClass("gc").addClass("right");
-                	}, 1000);
+                    target.children(".gc").removeClass("gc").addClass("wrong");
+
+                    setTimeout(function() {
+                        $('#J_option_' + answer).children(".gc").removeClass("gc").addClass("right");
+                    }, 1000);
                     //target.children(".J_optionContent").children("span").removeClass("gc").addClass("wrong");
                     //setTimeout("$(\".J_option[value='\"+answer+\"']\").children(\".J_optionContent\").children(\"span\").removeClass(\"gc\").addClass(\"right\");", 1000);
                 }
@@ -723,19 +726,19 @@ function bindOptionClickEvent() {
 function updateOption(option) {
     var str = "";
     if (option != null) {
-	    for (var i = 0; i < option.length; i++) {
-	        str += '<p class="J_option" id="J_option_'+ option[i]['id'] +'" value="' + option[i]['id'] + '"><span class="gc"></span>' + '<span class="ricenumber">';
-	        if (i == 0) {
-	            str += "A";
-	        } else if (i == 1) {
-	            str += "B";
-	        } else if (i == 2) {
-	            str += "C";
-	        } else if (i == 3) {
-	            str += "D";
-	        }
-	        str += "</span><span class='J_optionContent'>" + option[i]['content'] + '</span></p>';
-	    }
+        for (var i = 0; i < option.length; i++) {
+            str += '<p class="J_option" id="J_option_' + option[i]['id'] + '" value="' + option[i]['id'] + '"><span class="gc"></span>' + '<span class="ricenumber">';
+            if (i == 0) {
+                str += "A";
+            } else if (i == 1) {
+                str += "B";
+            } else if (i == 2) {
+                str += "C";
+            } else if (i == 3) {
+                str += "D";
+            }
+            str += "</span><span class='J_optionContent'>" + option[i]['content'] + '</span></p>';
+        }
     }
     $(".J_option").remove();
     $(".answertitle").after(str);
@@ -810,7 +813,7 @@ function layer_div(type) {
         //var left = window.screen.availWidth * 0.5 - 95;
         var left = '48%';	//用于在播放器居中显示
         layer_div.css("position", "absolute").css("top", top).css("left", left).css("z-index", "9999");
-        
+
     } else {
         layer_div.hide();
     }
@@ -899,7 +902,7 @@ function checkObjectLoaded() {
             'margin': media_marin
         });
         layer_div("hide");
-    }else{
-        setTimeout('checkObjectLoaded()',100);
+    } else {
+        setTimeout('checkObjectLoaded()', 100);
     }
 }
