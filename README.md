@@ -6,4 +6,10 @@
 
 <h3>默认分支是develop，大家clone的时候一定要clone develop</h3>
 
-phing 使用方法：test autobuild 
+## 对于php自动构建工具Phing的使用 ##
+
+**Phing**是一个基于Apache ANT 的项目构建系统，Phing可以做传统构建系统比如 GNU make 能做的任何事情，同时没有陡峭的学习曲线。利用Phing结合其他php工具何以轻松实现代码规范检查，代码覆盖率检查，代码自动发布等任务。
+
+### 使用方法 ###
+
+代码提交后会自动执行我们`build.xml`里面定义的`deploy`任务，如果要执行额外的任务可以在提交日志里面添加`{任务名}`如`{lint}`
