@@ -5,7 +5,7 @@
     <property name="frontEnd"  value="/mnt/www/assets" />
     <!-- 定义项目源代码目录 -->
     <property name="backEndSource"  value="${project.basedir}/src" />
-    <property name="frontEndSource"  value="${project.basedir}/../linksFrontEnd/src" />
+    <property name="frontEndSource"  value="${project.basedir}/../linksFrontEnd/dest" />
     <target name="build" depends="prepare,lint" description="Prepare for deploy"/>
     <!-- 清除前一次自动构建生成的文件 -->
     <target name="clean" description="Cleanup build artifacts">
