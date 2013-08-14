@@ -13,7 +13,7 @@ return array(
 	'MEMBER_AUTH_KEY'			=> 'lnkMemberId',
     'SESSION_AUTO_START'        =>	false,
 		
-	'APP_GROUP_LIST' 			=>	'Home,Admin,English,Homepage,Member',					//项目分组设定
+	'APP_GROUP_LIST' 			=>	'Home,Admin,English,Homepage,Members',					//项目分组设定
 	'DEFAULT_GROUP'  			=>	'Home',									//默认分组
 	
 	'VAR_PAGE'					=>	'p',

@@ -36,12 +36,12 @@
 							<a href="__APP__/">首页</a>
 						</li>
 						<empty name="_SESSION[C('MEMBER_AUTH_KEY')]">
-							<li><a url="__APP__/Member/Login" class="newWin">登陆</a></li>
-							<li><a url="__APP__/Member/Register" class="newWin">注册</a></li>
+							<li><a url="__APP__/Members/Login" class="newWin">登陆</a></li>
+							<li><a url="__APP__/Members/Register" class="newWin">注册</a></li>
 						<else />
-							<li><a url="__APP__/Member" class="newWin">{$Think.session.nickname}</a></li>
-							<li><a url="__APP__/Member" class="newWin">个人中心</a></li>
-							<li><a href="__APP__/Member/Logout">退出</a></li>
+							<li><a url="__APP__/Members" class="newWin">{$Think.session.nickname}</a></li>
+							<li><a url="__APP__/Members" class="newWin">个人中心</a></li>
+							<li><a href="__APP__/Members/Logout">退出</a></li>
 						</empty>
 						<li>
 							<a url="__APP__/Index/suggestion" <eq name="newSuggestion" value="1">style='color:#FF0000'</eq> class="newWin">留言板</a>

@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="links123" default="deploy">
     <!-- 定义网站根目录 -->
-    <property name="www"  value="/mnt/www/links123" />
+    <property name="backEnd"  value="/mnt/www/links123" />
+    <property name="frontEnd"  value="/mnt/www/assets" />
     <!-- 定义项目源代码目录 -->
-    <property name="source"  value="${project.basedir}/src" />
+    <property name="backEndSource"  value="${project.basedir}/src" />
+    <property name="frontEndSource"  value="${project.basedir}/../linksFrontEnd/src" />
     <target name="build" depends="prepare,lint" description="Prepare for deploy"/>
     <!-- 清除前一次自动构建生成的文件 -->
     <target name="clean" description="Cleanup build artifacts">
@@ -26,17 +28,21 @@
     <target name="lint" description="Perform syntax check of sourcecode files">
         <apply executable="php" failonerror="true">
             <arg value="-l" />
-            <fileset dir="${source}/App">
+            <fileset dir="${backEndSource}/App">
                 <include name="**/*.php" />
             </fileset>
         </apply>
     </target>
     <!-- 把网站源码部署到测试站点，可视化查看新提交的代码是否正确 -->
     <target name="deploy">
-        <copy todir="${www}">
-            <fileset dir="${source}" />
+        <copy todir="${backEnd}">
+            <fileset dir="${backEndSource}" />
         </copy>
         <!-- 创建Runtime目录，使ThinkPHP能够把缓存文件写入 -->
-        <mkdir dir="${www}/App/Runtime" mode="777" />
+        <mkdir dir="${backEnd}/App/Runtime" mode="777" />
+        <!-- 拷贝前端文件到指定的静态资源服务器目录 -->
+        <copy todir="${frontEnd}">
+            <fileset dir="${frontEndSource}" />
+        </copy>
     </target>
 </project>

@@ -105,10 +105,10 @@ $(function() {
 			$.post(URL+"/saveReg", data, 
 			function(data){
 				if ( data.indexOf("regOK") >= 0 ) {
-					alert("注册成功！");
-					$("#btn_reset").trigger("click");
-					window.opener.location.reload();
-					window.location.href = APP+"Member/Index/";
+					//alert("注册成功！");
+					//$("#btn_reset").trigger("click");
+					//window.opener.location.reload();
+					window.location.href = APP+"Members/Index/";
 				}
 				else {
 					$(".warning").html("<br />"+data);
@@ -182,7 +182,7 @@ $(function() {
                 data.auto_login = 1;
             }
 			//
-			$.post(APP+"Member/Login/checkLogin", data, 
+			$.post(APP+"Members/Login/checkLogin", data, 
 			function(data){
 				if ( data.indexOf("loginOK") >= 0 ) {
                     if(window.opener){
