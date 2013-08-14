@@ -32,4 +32,4 @@ E:\links123\linksFrontEnd> grunt build
 
 - 出现`Done，without errors`表示构建成功
 
-- `linksFrontEnd`目录下的`dest`文件的内容应该会被重新生成，如果你还不确定，请清空'dest'目录，再次运行`grunt build`，构建结束后`dest`目录会生成文件夹以及文件
+- `linksFrontEnd`目录下的`dest`文件夹的内容应该会被重新生成，如果你还不确定，请清空'dest'目录，再次运行`grunt build`，构建结束后`dest`文件夹下会生成文件夹以及文件
