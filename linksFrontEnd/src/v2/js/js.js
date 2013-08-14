@@ -21,7 +21,7 @@ function setHome(url) {
 }
 
 $(document).ready(function(){
-	//天气
+	//weather jack 2013.08.14
 	var city = '%E4%B8%8A%E6%B5%B7';
 	var url = 'http://weather.news.sina.com.cn/chajian/iframe/weatherStyle0.html?city=';
 	$.getScript("http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=js").done(function(script){
