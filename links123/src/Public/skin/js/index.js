@@ -87,13 +87,13 @@ $(function() {
             $(this).select();
         });
         //
-        $(document).on("keydown", "input.web_name", function() {
+        $(document).on("keydown", "input.web_name", function(event) {
             if (event.keyCode == 13) {
                 $(this).siblings(".url").select();
             }
         });
         //
-        $(document).on("keydown", "input.url", function() {
+        $(document).on("keydown", "input.url", function(event) {
             if (event.keyCode == 13) {
                 $(this).siblings(".web_name").select();
                 $(this).siblings(".btn_sub_myarea").trigger("click");
