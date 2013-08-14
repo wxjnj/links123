@@ -40,6 +40,7 @@
         </copy>
         <!-- 创建Runtime目录，使ThinkPHP能够把缓存文件写入 -->
         <mkdir dir="${backEnd}/App/Runtime" mode="777" />
+        <!-- 拷贝前端文件到指定的静态资源服务器目录 -->
         <copy todir="${frontEnd}">
             <fileset dir="${frontEndSource}" />
         </copy>
