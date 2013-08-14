@@ -611,4 +611,23 @@ function md5Resource($resourcePath) {
         return md5(file_get_contents($resourcePath));
     }
 }
+
+/**
+ * 2-20位 数字 字母 下划线
+ * @param unknown $name
+ * @return number
+ * @author frank qian
+ */
+function checkName($name){
+	return preg_match("/^[\x{4e00}-\x{9fa5}a-zA-Z0-9_]{2,20}$/u",$name);
+}
+/**
+ * 6-20位 数字 字母
+ * @param unknown $name
+ * @return number
+ * @author frank qian
+ */
+function checkStr($str){
+	return preg_match("/^[0-9a-zA-Z]{6,20}$/",$str);
+}
 ?>

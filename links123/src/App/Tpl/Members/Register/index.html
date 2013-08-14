@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<include file="Home:Public:meta" />
+</head>
+
+<body>
+
+	<include file="Home:Public:header" />
+
+<!--登陆注册-->
+<div class="login_reg login_reg01">
+	<div class="login_reg_img">
+    	<div class="login_reg_img_b"><img src="__PUBLIC__/Uploads/Others/{$banner.0.pic}" width="420" height="290" /></div>
+	</div>
+	<form id="frm_reg">
+	<div class="loginreg_b">
+	    <table>
+		    <tr>
+		        <td width="37%" align="right"></td>
+		        <td width="42%" align="center"><font>岛民注册</font></td>
+		        <td width="18%"></td>
+		    </tr>
+			<tr>
+		        <td align="right">昵称：</td>
+		        <td><input type="text" name="nickname" /></td>
+		        <td nowrap><span>*</span><span class="must">　这里必填</span></td>
+		    </tr>
+		    <tr>
+		        <td align="right">密码：</td>
+		        <td><input type="password" name="password" /></td>
+		        <td nowrap><span>*</span><span class="must">　这里必填</span></td>
+		    </tr>
+		    <tr>
+		        <td align="right" nowrap>确认密码：</td>
+		        <td><input type="password" name="repassword" /></td>
+		        <td nowrap><span>*</span><span class="must">　这里必填</span></td>
+		    </tr>
+		    <tr>
+		        <td align="right"> 验证码：</td>
+		        <td><input type="text" class="yzm" name="verify" />　<img id="verifyImg" src="__APP__/Verify" title="换一张" /></td>
+		        <td><span>*</span><span class="must">　这里必填</span></td>
+		    </tr>
+		    <tr>
+		        <td align="right" class="warning"></td>
+		        <td align="center"><a id="btn_reg_sub" class="search_buttom reg_button">上岛吧</a></td>
+		        <td><input type="reset" id="btn_reset" class="none" /></td>
+		    </tr>
+	    </table>
+	</div>
+	</form>
+	<div class="clr"></div>
+	<a id="btn_close_me" class="login_reg_close">关闭此页</a>
+</div>
+<!--结束 登陆注册-->
+
+
+	<include file="Home:Public:footer" />
+	
+	<load href="__PUBLIC__/skin/js/reg.js" />
+
+</body>
+</html>
