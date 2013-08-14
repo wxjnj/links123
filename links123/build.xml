@@ -28,7 +28,7 @@
     <target name="lint" description="Perform syntax check of sourcecode files">
         <apply executable="php" failonerror="true">
             <arg value="-l" />
-            <fileset dir="${source}/App">
+            <fileset dir="${backEndSource}/App">
                 <include name="**/*.php" />
             </fileset>
         </apply>
@@ -39,7 +39,7 @@
             <fileset dir="${backEndSource}" />
         </copy>
         <!-- 创建Runtime目录，使ThinkPHP能够把缓存文件写入 -->
-        <mkdir dir="${www}/App/Runtime" mode="777" />
+        <mkdir dir="${backEnd}/App/Runtime" mode="777" />
         <copy todir="${frontEnd}">
             <fileset dir="${frontEndSource}" />
         </copy>
