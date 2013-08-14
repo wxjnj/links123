@@ -97,5 +97,4 @@ module.exports = function(grunt) {
 	// 注册任务
 	grunt.registerTask('default', ['clean']);
 	grunt.registerTask('build', ['concat', 'copy', 'cssmin', 'uglify', 'clean:build']);
-	// grunt.registerTask('build', ['copy']);
 };
