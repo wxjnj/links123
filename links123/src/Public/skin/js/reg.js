@@ -105,9 +105,9 @@ $(function() {
 			$.post(URL+"/saveReg", data, 
 			function(data){
 				if ( data.indexOf("regOK") >= 0 ) {
-					alert("注册成功！");
-					$("#btn_reset").trigger("click");
-					window.opener.location.reload();
+					//alert("注册成功！");
+					//$("#btn_reset").trigger("click");
+					//window.opener.location.reload();
 					window.location.href = APP+"Members/Index/";
 				}
 				else {

@@ -52,6 +52,8 @@ class RegisterAction extends CommonAction
 			
 			if (false !== $member->add($data)) {
 				$_SESSION[C('MEMBER_AUTH_KEY')] = $member->getLastInsID();
+				$_SESSION['nickname'] = $nickname;
+				$_SESSION['face'] = 'face.jpg';
 				//给新增用户添加默认自留地
 				$myareaModel = D("Myarea");
 				$default_myarea = $myareaModel->field("web_name,url,sort")->where("mid = 0")->Group("url")->order("`sort` asc")->limit(20)->select();
@@ -61,8 +63,7 @@ class RegisterAction extends CommonAction
 					$value['mid'] = &$_SESSION[C('MEMBER_AUTH_KEY')];
 					$myareaModel->add($value);
 				}
-				$_SESSION['nickname'] = $data['nickname'];
-				session_unset('verify');
+				
 				echo "regOK";
 			} else {
 				Log::write('会员注册失败：' . $member->getLastSql(), Log::SQL);
