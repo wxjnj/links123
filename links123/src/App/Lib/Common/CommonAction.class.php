@@ -16,7 +16,7 @@ class CommonAction extends Action {
 		//网站升级
 		$this->updating();
 		//自动登录
-		$this->autoLogin();
+		//$this->autoLogin();
 
 		$variable = $this->_getVariable();
 		$this->assign('cn_tip', $variable['cnTip']);
