@@ -6,4 +6,4 @@
 
 <h3>默认分支是develop，大家clone的时候一定要clone develop</h3>
 
-phing target
+phing 使用方法：
