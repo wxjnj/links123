@@ -15,9 +15,10 @@
 
 - cd 到`linksFrontEnd`目录
 
-- **首次使用**需要通过NPM安装grunt的插件
+- **首次使用**需要通过NPM安装grunt和grunt的插件
 
 ```
+E:\links123\linksFrontEnd> npm install -g grunt-cli
 E:\links123\linksFrontEnd> npm install
 ```
 - 安装完成后`linksFrontEnd`目录会多出`node_modules`文件夹，该文件夹无需提交到git
