@@ -504,9 +504,23 @@ class TagLibCx extends TagLib {
                 }
                 switch($type) {
                 case 'js':
+                	
+                	/** $添加md5校验 **/
+                	$val = str_replace(array('__STATIC__'), C('TMPL_PARSE_STRING'),$val);
+                	$fileContent = file_get_contents($val);
+                	$val = $val.($fileContent ? '?'.md5($fileContent) : '');
+                	/** 添加md5校验 $**/
+                	
                     $parseStr .= '<script type="text/javascript" src="'.$val.'"></script>';
                     break;
                 case 'css':
+                	
+                	/** $添加md5校验 **/
+                	$val = str_replace(array('__STATIC__'), C('TMPL_PARSE_STRING'),$val);
+                	$fileContent = file_get_contents($val);
+                	$val = $val.($fileContent ? '?'.md5($fileContent) : '');
+                	/** 添加md5校验 $**/
+                	
                     $parseStr .= '<link rel="stylesheet" type="text/css" href="'.$val.'" />';
                     break;
                 case 'php':
