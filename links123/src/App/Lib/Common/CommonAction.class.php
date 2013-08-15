@@ -1,18 +1,16 @@
 <?php
-
+/**
+ * 整站公共部件初始化
+ * @author heyanlong 2013-07-30
+ */
 class CommonAction extends Action {
 
 	protected function _initialize() {
 		$this->_init();
 	}
-
-	/**
-	 * 整站公共部件初始化
-	 * @author heyanlong 2013-07-30
-	 */
+	
 	private function _init() {
 		session_start();
-		
 		//网站升级
 		$this->updating();
 		//自动登录

@@ -24,51 +24,50 @@ class RegisterAction extends CommonAction
 		extract($_POST);
 		$member = M("Member");
 		$error = array();
-		if ($_SESSION['verify'] != md5($verify)) {
-			$error['verfy'] = '验证码错误';
-		}
 		
 		if (!checkName($nickname)){
-			$error['nickname'] = '用户名只能包含字符、数字、下划线和汉字';
+			echo '用户名只能包含字符、数字、下划线和汉字';
+			return false;
 		}else if ($member->where("nickname = '" . $nickname . "'")->find()){
-			$error['nickname'] = '该昵称已注册过了，请换一个！';
+			echo '该昵称已注册过了，请换一个！';
+			return false;
 		}
 		
 		if (!checkStr($password)){
-			$error['password'] = '密码应为6到20位数字或字母';
+			echo '密码应为6到20位数字或字母';
+			return false;
 		}
 		
-		if (count($error)>0) {
-			//打印出验证错误失败信息
-			//print_r($error);
-			echo "请检查昵称、密码、验证码或昵称已经存在";
-		} else {
-			import("@.ORG.String");
-			$data['nickname'] = $nickname;
-			$data['salt'] = String::randString();
-			$data['password'] = md5(md5($password) . $data['salt']);
-			$data['status'] = 1;
-			$data['create_time'] = time();
-			
-			if (false !== $member->add($data)) {
-				$_SESSION[C('MEMBER_AUTH_KEY')] = $member->getLastInsID();
-				$_SESSION['nickname'] = $nickname;
-				$_SESSION['face'] = 'face.jpg';
-				//给新增用户添加默认自留地
-				$myareaModel = D("Myarea");
-				$default_myarea = $myareaModel->field("web_name,url,sort")->where("mid = 0")->Group("url")->order("`sort` asc")->limit(20)->select();
+		if ($_SESSION['verify'] != md5($verify)) {
+			echo "验证码错误";
+			return false;
+		}
+		
+		import("@.ORG.String");
+		$data['nickname'] = $nickname;
+		$data['salt'] = String::randString();
+		$data['password'] = md5(md5($password) . $data['salt']);
+		$data['status'] = 1;
+		$data['create_time'] = time();
+		
+		if (false !== $member->add($data)) {
+			$_SESSION[C('MEMBER_AUTH_KEY')] = $member->getLastInsID();
+			$_SESSION['nickname'] = $nickname;
+			$_SESSION['face'] = 'face.jpg';
+			//给新增用户添加默认自留地
+			$myareaModel = D("Myarea");
+			$default_myarea = $myareaModel->field("web_name,url,sort")->where("mid = 0")->Group("url")->order("`sort` asc")->limit(20)->select();
 
-				foreach ($default_myarea as $value) {
-					$value['create_time'] = &$data['create_time'];
-					$value['mid'] = &$_SESSION[C('MEMBER_AUTH_KEY')];
-					$myareaModel->add($value);
-				}
-				
-				echo "regOK";
-			} else {
-				Log::write('会员注册失败：' . $member->getLastSql(), Log::SQL);
-				echo "会员注册失败！";
+			foreach ($default_myarea as $value) {
+				$value['create_time'] = &$data['create_time'];
+				$value['mid'] = &$_SESSION[C('MEMBER_AUTH_KEY')];
+				$myareaModel->add($value);
 			}
+			
+			echo "regOK";
+		} else {
+			Log::write('会员注册失败：' . $member->getLastSql(), Log::SQL);
+			echo "会员注册失败！";
 		}
 	}
 }
