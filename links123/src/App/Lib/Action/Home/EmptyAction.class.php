@@ -1,4 +1,5 @@
 <?php 
+import("@.Common.CommonAction");
 class EmptyAction extends CommonAction{ 
 	//404页面
 	public function _empty(){ 

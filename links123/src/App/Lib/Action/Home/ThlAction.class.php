@@ -1,5 +1,5 @@
 <?php
-
+import("@.Common.CommonAction");
 class ThlAction extends CommonAction {
 
 	public function index() {

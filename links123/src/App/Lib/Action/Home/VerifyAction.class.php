@@ -1,4 +1,5 @@
 <?php
+import("@.Common.CommonAction");
 ob_start();
 class VerifyAction extends CommonAction {
 	public function index() {

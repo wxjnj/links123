@@ -611,4 +611,32 @@ function md5Resource($resourcePath) {
         return md5(file_get_contents($resourcePath));
     }
 }
+
+/**
+ * 2-20位 数字 字母 下划线
+ * @param string $name
+ * @return boolean
+ * @author frank qian
+ */
+function checkName($name){
+	return preg_match('/^[\x{4e00}-\x{9fa5}a-zA-Z0-9_]{2,20}$/u', $name);
+}
+/**
+ * 6-20位 数字 字母
+ * @param string $name
+ * @return boolean
+ * @author frank qian
+ */
+function checkStr($str){
+	return preg_match('/^[0-9a-zA-Z]{6,20}$/', $str);
+}
+/**
+ * 验证是否为Email
+ * @param string $value
+ * @return boolean
+ * @author frank qian
+ */
+function checkEmail($value) {
+	return strlen($value) > 6 && preg_match("/^[\w\-\.]+@[\w\-\.]+(\.\w+)+$/", $value);
+}
 ?>

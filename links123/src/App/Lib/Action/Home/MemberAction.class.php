@@ -1,5 +1,5 @@
 <?php
-
+import("@.Common.CommonAction");
 class MemberAction extends CommonAction {
 
     /**
