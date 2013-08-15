@@ -3,7 +3,7 @@
  * @name LoginAction.class.php
  * @package Members
  * @desc 用户登录
- * @author frank qian 2013-08-12
+ * @author frank 2013-08-12
  * @version 0.0.1
  */
 
@@ -18,6 +18,13 @@ class LoginAction extends CommonAction
 		$this->display();
 	}
 	
+	/**
+	 * @desc 用户登录
+	 * @author frank UPDATE 2013-08-15
+	 * @param string $username 用户昵称或Email
+	 * @param string $password 密码
+	 * @return string
+	 */
 	public function checkLogin() 
 	{
 		extract($_POST);
@@ -49,21 +56,16 @@ class LoginAction extends CommonAction
 		
 		$_SESSION[C('MEMBER_AUTH_KEY')] = $mbrNow['id'];
 		$_SESSION['nickname'] = $mbrNow['nickname'];
-		$_SESSION['face'] = $mbrNow['face'];
-		if (empty($_SESSION['face'])) {
-			$_SESSION['face'] = 'face.jpg';
-		}
+		$_SESSION['face'] = empty($mbrNow['face'])? 'face.jpg' :$mbrNow['face'];
 		
 		//使用cookie过期时间来控制前台登陆的过期时间
-		$home_session_expire = D("Variable")->getVariable("home_session_expire");
-		cookie(md5('home_session_expire') , time() , array('expire'=>$home_session_expire));
+		cookie(md5('home_session_expire') , time() ,intval(D("Variable")->getVariable("home_session_expire")));
 		
 		//如果选中下次自动登录，记录用户信息
 		if (intval($auto_login) == 1) {
 			$str = $mbrNow['id'] . "|" . md5($mbrNow['password'] . $mbrNow['nickname']);
-			$auto_login_time = D("Variable")->getVariable("auto_login_time");
-			$auto_login_time = intval($auto_login_time) > 0 ? : 60 * 60 * 24 * 7;
-			cookie("USER_ID", $str, $auto_login_time);
+			$auto_login_time = intval(D("Variable")->getVariable("auto_login_time"));
+			cookie("USER_ID", $str, $auto_login_time ? : 60 * 60 * 24 * 7);
 		}
 		
 		echo "loginOK";

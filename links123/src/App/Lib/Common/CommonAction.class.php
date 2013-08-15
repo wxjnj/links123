@@ -1,28 +1,30 @@
 <?php
-
+/**
+ * 整站公共部件初始化
+ * @author heyanlong 2013-07-30
+ */
 class CommonAction extends Action {
 
 	protected function _initialize() {
 		$this->_init();
 	}
-
+	
 	/**
-	 * 整站公共部件初始化
-	 * @author heyanlong 2013-07-30
+	 * @desc 初始化方法
+	 * @author frank UPDATE 2013-08-15
 	 */
 	private function _init() {
 		session_start();
-		
 		//网站升级
 		$this->updating();
 		//自动登录
-		//$this->autoLogin();
-
+		$this->autoLogin();
+		
 		$variable = $this->_getVariable();
 		$this->assign('cn_tip', $variable['cnTip']);
 		$this->assign('en_tip', $variable['enTip']);
 		$this->assign('directTip', $variable['directTip']);
-		//留言
+		//获取用户留言
 		if (D("SuggestionView")->isTodayHasNewSuggestion()) {
 			$this->assign("newSuggestion", 1);
 		}
@@ -30,8 +32,8 @@ class CommonAction extends Action {
 
 		//顶部日期
 		$weekdays = array("周日", "周一", "周二", "周三", "周四", "周五", "周六");
-		$this->assign('today', str_replace("*", $weekdays[date('w')], date('n月j日 * H:i:s')));
-
+		$this->assign('today', str_replace("*", $weekdays[date('w')], date('m月d日 * H:i:s')));
+		
 		//糖葫芦
 		$this->assign("thl_list", D("Thl")->getThlListWithThlz());
 		$this->assign('thlNow', '搜');
@@ -57,25 +59,25 @@ class CommonAction extends Action {
 	 * @author heyanlong 2013-07-30
 	 */
 	private function _getVariable() {
-		$variable = M("Variable");
-		$title = $variable->getByVname('title');
-		$keywords = $variable->getByVname('Keywords');
+		$variable    = M("Variable");
+		$title       = $variable->getByVname('title');
+		$keywords    = $variable->getByVname('Keywords');
 		$description = $variable->getByVname('Description');
-		$cnTip = $variable->getByVname('cn_tip');
-		$enTip = $variable->getByVname('en_tip');
-		$directTip = $variable->getByVname('directTip');
-		$thl = $variable->getByVname('thl');
-		$pauseTime = $variable->getByVname('pauseTime');
+		$cnTip       = $variable->getByVname('cn_tip');
+		$enTip       = $variable->getByVname('en_tip');
+		$directTip   = $variable->getByVname('directTip');
+		$thl         = $variable->getByVname('thl');
+		$pauseTime   = $variable->getByVname('pauseTime');
 
 		return array(
-			'title' => $title['value_varchar'],
-			'keywords' => $keywords['value_varchar'],
+			'title'       => $title['value_varchar'],
+			'keywords'    => $keywords['value_varchar'],
 			'description' => $description['value_varchar'],
-			'cnTip' => $cnTip['value_varchar'],
-			'enTip' => $enTip['value_varchar'],
-			'directTip' => $directTip['value_varchar'],
-			'thl' => $thl['value_varchar'],
-			'pauseTime' => $pauseTime['value_int'],
+			'cnTip'       => $cnTip['value_varchar'],
+			'enTip'       => $enTip['value_varchar'],
+			'directTip'   => $directTip['value_varchar'],
+			'thl'         => $thl['value_varchar'],
+			'pauseTime'   => $pauseTime['value_int'],
 		);
 	}
 
@@ -167,14 +169,12 @@ class CommonAction extends Action {
 		$this->display("Public:newFooter");
 	}
 
-    // 获取所有根目录
+    /**
+     * @desc 获取所有根目录
+     * @author frank UPDATE 2013-08-15
+     */
     protected function getRootCats() {
-        $cats = M("Category")->field('id, cat_name, intro, level')->where('status=1 and level=1')->order('sort asc')->select();
-        foreach ($cats as &$value) {
-            for ($i = 0; $i != $value['level']; ++$i) {
-                $value['cat_name'] = '　' . $value['cat_name'];
-            }
-        }
+        $cats = M("Category")->field('id, cat_name, intro, level')->where('status=1 and level=1')->order('sort ASC')->select();
         $this->assign("rootCats", $cats);
     }
 
@@ -222,11 +222,10 @@ class CommonAction extends Action {
     }
 
 	/**
-	 * 网站升级，后台设置
+	 * @desc 网站升级,后台设置.如果设置了网站升级中，则只展示网站升级页面，用户无法访问其它页面.
 	 * @author heyanlong 2013-07-30
 	 */
 	private function updating() {
-        //如果设置了网站升级中，则只展示网站升级页面，用户无法访问其它页面
         if (D("WebSettings")->getwebSettings("WEB_UPDATE_STATUS")) {
             $this->display(C('UPDATE_PAGE'));
             exit();
@@ -235,36 +234,29 @@ class CommonAction extends Action {
 
     /**
      * 自动登录
+     * @author frank qian 2013-08-15
      */
     public function autoLogin() {
-        $user_str = cookie("USER_ID");
-        if (!isset($_SESSION[C('MEMBER_AUTH_KEY')]) || empty($_SESSION[C('MEMBER_AUTH_KEY')])) {
-            if (!empty($user_str)) {
-                $ret = explode("|", $user_str);
-                $user_id = intval($ret[0]);
-                $user_info = D("Member")->find($user_id);
-                if (!empty($user_info) && md5($user_info['password'] . $user_info['nickname']) == $ret[1]) {
-                    $_SESSION[C('MEMBER_AUTH_KEY')] = $user_info['id'];
-                    $_SESSION['nickname'] = $user_info['nickname'];
-                    $_SESSION['face'] = $user_info['face'];
-                    if (empty($_SESSION['face'])) {
-                        $_SESSION['face'] = "face.jpg";
-                    }
-                    //使用cookie过期时间来控制前台登陆的过期时间
-                    $home_session_expire = D("Variable")->getVariable("home_session_expire");
-                    cookie(md5("home_session_expire"), time(), $home_session_expire);
-                }
+        $user_str = $_COOKIE["USER_ID"];
+        //没有用户session且自动登录标示Cookie USER_ID 存在执行自动登录过程
+        if ((!isset($_SESSION[C('MEMBER_AUTH_KEY')]) || empty($_SESSION[C('MEMBER_AUTH_KEY')])) && !empty($user_str)) {
+            $ret = explode("|", $user_str);
+            $user_id = intval($ret[0]);
+            $user_info = D("Member")->find($user_id);
+            
+            if (!empty($user_info) && md5($user_info['password'] . $user_info['nickname']) == $ret[1]) {
+            	$_SESSION[C('MEMBER_AUTH_KEY')] = $user_info['id'];
+                $_SESSION['nickname'] = $user_info['nickname'];
+                $_SESSION['face'] = empty($user_info['face'])?'face.jpg':$user_info['face'];
+                    
+                //使用cookie过期时间来控制前台登陆的过期时间
+                $home_session_expire = intval(D("Variable")->getVariable("home_session_expire"));
+                cookie(md5("home_session_expire"), time(), $home_session_expire);
             }
-        } else {
-            if (empty($user_str)) {
-                //根据cookie检查session是否过期
-                $time = cookie(md5("home_session_expire"));
-                if (empty($time)) {
-                    unset($_SESSION[C('MEMBER_AUTH_KEY')]);
-                    unset($_SESSION['nickname']);
-                    unset($_SESSION['face']);
-                }
-            }
+        } else if(empty($user_str) && empty($_COOKIE[md5("home_session_expire")])) {//自动登录标示Cookie USER_ID 时间过期
+        	unset($_SESSION[C('MEMBER_AUTH_KEY')]);
+            unset($_SESSION['nickname']);
+            unset($_SESSION['face']);    
         }
     }
 
