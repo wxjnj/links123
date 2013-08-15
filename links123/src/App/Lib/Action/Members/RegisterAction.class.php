@@ -10,10 +10,10 @@
 import("@.Common.CommonAction");
 class RegisterAction extends CommonAction
 {
-        /**
-         * @desc 用户注册显示页
-         * @author frank qian 2013-08-12
-         */
+	/**
+	 * @desc 用户注册显示页
+	 * @author frank UPDATE 2013-08-12
+	 */
 	public function index()
 	{
 		$this->assign('banner', $this->getAdvs(5, "banner"));
@@ -23,14 +23,14 @@ class RegisterAction extends CommonAction
 		$this->display();
 	}
 
-        /**
-         * @desc 用户注册提交
-         * @author lee UPDATE 2013-08-15
-         * @param string $nickname 用户昵称
-         * @param string $password 密码
-         * @param int $verify 验证码
-         * @return string
-         */
+	/**
+	 * @desc 用户注册提交
+	 * @author lee UPDATE 2013-08-15
+	 * @param string $nickname 用户昵称
+	 * @param string $password 密码
+	 * @param int $verify 验证码
+	 * @return string
+	 */
 	public function saveReg() 
 	{
 		extract($_POST);
@@ -51,7 +51,7 @@ class RegisterAction extends CommonAction
 			return false;
 		}
 
-                if ($member->where("nickname='%s'",$nickname)->select()){
+        if ($member->where("nickname='%s'",$nickname)->select()){
 			echo '该昵称已注册过';
 			return false;
 		}

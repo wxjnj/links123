@@ -1,6 +1,9 @@
 <?php
-
-// 糖葫芦模型
+/**
+ * @desc 糖葫芦模型
+ * @author frank UPDATE 2013-8-15
+ *
+ */
 class ThlModel extends CommonModel {
 
     public $_validate = array(
@@ -10,11 +13,12 @@ class ThlModel extends CommonModel {
     public $_auto = array(
         array('create_time', 'time', self::MODEL_INSERT, 'function'),
     );
-
-    /*
-     * 获取包含糖葫芦籽的糖葫芦列表
+    
+    /**
+     * @desc 获取包含糖葫芦籽的糖葫芦列表
+     * @author frank UPDATE 2013-08-15
+     * @return array
      */
-
     public function getThlListWithThlz() {
         $thl_list = S("thl_list");
         if (empty($thl_list)) {
@@ -22,8 +26,8 @@ class ThlModel extends CommonModel {
             $ret = $variable->getByVname('thl');
             $thl = explode(",", $ret['value_varchar']);
             foreach ($thl as $key => $value) {
-                $thl_list[$key]['thl'] = $value;
-                $thl_list[$key]['thlz'] = $this->where("thl='" . $value . "'")->order('sort')->select();
+                $thl_list[$key]['thl']      = $value;
+                $thl_list[$key]['thlz']     = $this->where("thl='" . $value . "'")->order('sort')->select();
                 $thl_list[$key]['thlz_len'] = count($thl_list[$key]['thlz']);
             }
             S("thl_list", $thl_list);

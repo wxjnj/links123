@@ -3,7 +3,7 @@
  * @name LoginAction.class.php
  * @package Members
  * @desc 用户登录
- * @author frank qian 2013-08-12
+ * @author frank 2013-08-12
  * @version 0.0.1
  */
 
@@ -18,6 +18,13 @@ class LoginAction extends CommonAction
 		$this->display();
 	}
 	
+	/**
+	 * @desc 用户登录
+	 * @author frank UPDATE 2013-08-15
+	 * @param string $username 用户昵称或Email
+	 * @param string $password 密码
+	 * @return string
+	 */
 	public function checkLogin() 
 	{
 		extract($_POST);

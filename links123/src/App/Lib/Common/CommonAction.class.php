@@ -9,18 +9,22 @@ class CommonAction extends Action {
 		$this->_init();
 	}
 	
+	/**
+	 * @desc 初始化方法
+	 * @author frank UPDATE 2013-08-15
+	 */
 	private function _init() {
 		session_start();
 		//网站升级
 		$this->updating();
 		//自动登录
 		$this->autoLogin();
-
+		
 		$variable = $this->_getVariable();
 		$this->assign('cn_tip', $variable['cnTip']);
 		$this->assign('en_tip', $variable['enTip']);
 		$this->assign('directTip', $variable['directTip']);
-		//留言
+		//获取用户留言
 		if (D("SuggestionView")->isTodayHasNewSuggestion()) {
 			$this->assign("newSuggestion", 1);
 		}
@@ -28,8 +32,8 @@ class CommonAction extends Action {
 
 		//顶部日期
 		$weekdays = array("周日", "周一", "周二", "周三", "周四", "周五", "周六");
-		$this->assign('today', str_replace("*", $weekdays[date('w')], date('n月j日 * H:i:s')));
-
+		$this->assign('today', str_replace("*", $weekdays[date('w')], date('m月d日 * H:i:s')));
+		
 		//糖葫芦
 		$this->assign("thl_list", D("Thl")->getThlListWithThlz());
 		$this->assign('thlNow', '搜');
@@ -55,25 +59,25 @@ class CommonAction extends Action {
 	 * @author heyanlong 2013-07-30
 	 */
 	private function _getVariable() {
-		$variable = M("Variable");
-		$title = $variable->getByVname('title');
-		$keywords = $variable->getByVname('Keywords');
+		$variable    = M("Variable");
+		$title       = $variable->getByVname('title');
+		$keywords    = $variable->getByVname('Keywords');
 		$description = $variable->getByVname('Description');
-		$cnTip = $variable->getByVname('cn_tip');
-		$enTip = $variable->getByVname('en_tip');
-		$directTip = $variable->getByVname('directTip');
-		$thl = $variable->getByVname('thl');
-		$pauseTime = $variable->getByVname('pauseTime');
+		$cnTip       = $variable->getByVname('cn_tip');
+		$enTip       = $variable->getByVname('en_tip');
+		$directTip   = $variable->getByVname('directTip');
+		$thl         = $variable->getByVname('thl');
+		$pauseTime   = $variable->getByVname('pauseTime');
 
 		return array(
-			'title' => $title['value_varchar'],
-			'keywords' => $keywords['value_varchar'],
+			'title'       => $title['value_varchar'],
+			'keywords'    => $keywords['value_varchar'],
 			'description' => $description['value_varchar'],
-			'cnTip' => $cnTip['value_varchar'],
-			'enTip' => $enTip['value_varchar'],
-			'directTip' => $directTip['value_varchar'],
-			'thl' => $thl['value_varchar'],
-			'pauseTime' => $pauseTime['value_int'],
+			'cnTip'       => $cnTip['value_varchar'],
+			'enTip'       => $enTip['value_varchar'],
+			'directTip'   => $directTip['value_varchar'],
+			'thl'         => $thl['value_varchar'],
+			'pauseTime'   => $pauseTime['value_int'],
 		);
 	}
 
@@ -165,14 +169,12 @@ class CommonAction extends Action {
 		$this->display("Public:newFooter");
 	}
 
-    // 获取所有根目录
+    /**
+     * @desc 获取所有根目录
+     * @author frank UPDATE 2013-08-15
+     */
     protected function getRootCats() {
-        $cats = M("Category")->field('id, cat_name, intro, level')->where('status=1 and level=1')->order('sort asc')->select();
-        foreach ($cats as &$value) {
-            for ($i = 0; $i != $value['level']; ++$i) {
-                $value['cat_name'] = '　' . $value['cat_name'];
-            }
-        }
+        $cats = M("Category")->field('id, cat_name, intro, level')->where('status=1 and level=1')->order('sort ASC')->select();
         $this->assign("rootCats", $cats);
     }
 
@@ -220,11 +222,10 @@ class CommonAction extends Action {
     }
 
 	/**
-	 * 网站升级，后台设置
+	 * @desc 网站升级,后台设置.如果设置了网站升级中，则只展示网站升级页面，用户无法访问其它页面.
 	 * @author heyanlong 2013-07-30
 	 */
 	private function updating() {
-        //如果设置了网站升级中，则只展示网站升级页面，用户无法访问其它页面
         if (D("WebSettings")->getwebSettings("WEB_UPDATE_STATUS")) {
             $this->display(C('UPDATE_PAGE'));
             exit();
