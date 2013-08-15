@@ -34,6 +34,6 @@ return array(
 		'/^homepage\/search\/(.*)$/' 					=>	'Homepage/Search/index?search_type=:1',
 	),
 	'TMPL_PARSE_STRING'         =>array(
-		'__PUBLIC__'            => 'http://a.links123.net', // 更改默认的/Public 替换规则
+		'__STATIC__'            => 'http://a.links123.net', // 更改默认的/Public 替换规则
 	)
 );
