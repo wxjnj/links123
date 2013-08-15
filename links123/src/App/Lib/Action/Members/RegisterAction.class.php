@@ -37,7 +37,6 @@ class RegisterAction extends CommonAction
 		$member = M("Member");
 		$error = array();
 
-                //------建议在前端js判断（需要优化）  开始------
 		if (!checkName($nickname)){
 			echo '用户名只能包含字符、数字、下划线和汉字';
 			return false;
@@ -46,7 +45,6 @@ class RegisterAction extends CommonAction
 			echo '密码应为6到20位数字或字母';
 			return false;
 		}
-                //------建议在前端js判断（需要优化）  结束------
 
 		if ($_SESSION['verify'] != md5($verify)) {
 			echo "验证码错误";
