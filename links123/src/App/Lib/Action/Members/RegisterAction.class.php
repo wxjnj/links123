@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * @name RegisterAction.class.php
  * @package Member
@@ -10,6 +10,10 @@
 import("@.Common.CommonAction");
 class RegisterAction extends CommonAction
 {
+        /**
+         * @desc 用户注册显示页
+         * @author frank qian 2013-08-12
+         */
 	public function index()
 	{
 		$this->assign('banner', $this->getAdvs(5, "banner"));
@@ -18,28 +22,39 @@ class RegisterAction extends CommonAction
 		
 		$this->display();
 	}
-	
+
+        /**
+         * @desc 用户注册提交
+         * @author lee UPDATE 2013-08-15
+         * @param string $nickname 用户昵称
+         * @param string $password 密码
+         * @param int $verify 验证码
+         * @return string
+         */
 	public function saveReg() 
 	{
 		extract($_POST);
 		$member = M("Member");
 		$error = array();
-		
+
+                //------建议在前端js判断（需要优化）  开始------
 		if (!checkName($nickname)){
 			echo '用户名只能包含字符、数字、下划线和汉字';
 			return false;
-		}else if ($member->where("nickname = '" . $nickname . "'")->find()){
-			echo '该昵称已注册过了，请换一个！';
-			return false;
 		}
-		
 		if (!checkStr($password)){
 			echo '密码应为6到20位数字或字母';
 			return false;
 		}
-		
+                //------建议在前端js判断（需要优化）  结束------
+
 		if ($_SESSION['verify'] != md5($verify)) {
 			echo "验证码错误";
+			return false;
+		}
+
+                if ($member->where("nickname='%s'",$nickname)->select()){
+			echo '该昵称已注册过';
 			return false;
 		}
 		
@@ -56,7 +71,7 @@ class RegisterAction extends CommonAction
 			$_SESSION['face'] = 'face.jpg';
 			//给新增用户添加默认自留地
 			$myareaModel = D("Myarea");
-			$default_myarea = $myareaModel->field("web_name,url,sort")->where("mid = 0")->Group("url")->order("`sort` asc")->limit(20)->select();
+			$default_myarea = $myareaModel->field("web_name,url,sort")->where("mid = 0")->Group("url")->order("`sort` ASC")->limit(20)->select();
 
 			foreach ($default_myarea as $value) {
 				$value['create_time'] = &$data['create_time'];
