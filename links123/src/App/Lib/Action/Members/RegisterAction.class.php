@@ -48,7 +48,7 @@ class RegisterAction extends CommonAction
 			return false;
 		}
                 
-		if ($_SESSION['verify'] != md5($verify)) {
+		if ($_SESSION['verify'] != md5(strtoupper($verify))) {
 			echo "验证码错误";
 			return false;
 		}
