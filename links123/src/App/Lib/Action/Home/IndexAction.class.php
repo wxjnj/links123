@@ -26,7 +26,6 @@ class IndexAction extends CommonAction {
 			session('lanNow', $lan);
 		}
 		
-		
 		$rid = $this->getRoot($cid);
 		$catName = $cat->where('id = %d', $cid)->getField('cat_name'); 
 		$ridTip = $cat->where('id = %d', $rid)->getField('intro');
@@ -74,128 +73,41 @@ class IndexAction extends CommonAction {
 			session('pailie', $paiLie);
 		}
 		$listRows = $paiLie == 1 ? 20 : 11;
-
 		$pg = intval($this->_param(C('VAR_PAGE'))) ? : 1;
 		$rst = ($pg - 1) * $listRows;
-		//重构已到到步
+		
 		$links = new LinksFntViewModel();
-		$list = $links->where($condition)->order($sort)->limit($rst . ',' . $listRows)->select();
-
-		foreach ($list as &$value) {
-			$value["more"] = 0;
-			if (empty($value["logo"])) {
-				$paiLie = $this->_session('pailie');
-				if ($paiLie == 1) {
-					$value["sintro"] = String::msubstr($value["intro"], 0, 19);
-				} else {
-					$value["sintro"] = String::msubstr($value["intro"], 0, 208);
-					if ($value["sintro"] != $value["intro"]) {
-						$value["sintro"] = String::msubstr($value["intro"], 0, 150);
-						$value["more"] = 1;
-					}
-				}
-			} else {
-				if ($paiLie == 1) {
-					if ($rid == 5) {
-						$value["sintro"] = String::msubstr($value["intro"], 0, 20);
-					} else {
-						$value["sintro"] = String::msubstr($value["intro"], 0, 13);
-					}
-				} else {
-					$value["sintro"] = String::msubstr($value["intro"], 0, 184);
-					if ($value["sintro"] != $value["intro"]) {
-						$value["sintro"] = String::msubstr($value["intro"], 0, 132);
-						$value["more"] = 1;
-					}
-				}
-			}
-			if ($paiLie == 2) {
-				$value["sintro"] = nl2br($value["sintro"]);
-				$value["sintro"] = preg_replace('/(<br\s*\/>)/i', '', $value["sintro"]);
-				$tempary = explode("<br />", $value["sintro"]);
-				if (count($tempary) > 4) {
-					$lastline = String::msubstr($tempary[2], 0, 40);
-					if ($lastline == $tempary[2]) {
-						$lastline .= "…";
-					}
-					$value["sintro"] = $tempary[0] . "<br />" . $tempary[1] . "<br />" . $lastline;
-					$value["more"] = 1;
-				}
-				if (count($tempary) == 3 || (count($tempary) == 4 && $value["more"] == 1)) {
-					$lastline = String::msubstr($tempary[2], 0, 40);
-					$value["sintro"] = $tempary[0] . "<br />" . $tempary[1] . "<br />" . $lastline;
-					if (count($tempary) == 4) {
-						$value["sintro"] .= "…";
-					}
-				}
-				if (count($tempary) == 2) {
-					if ($value["more"] == 1) {
-						if (strlen($tempary[1]) < strlen($tempary[0])) {
-							$lastline = String::msubstr($tempary[1], 0, 40);
-							$value["sintro"] = $tempary[0] . "<br />" . $lastline;
-						}
-					} else {
-						$value["sintro"] = $tempary[0] . "<br />" . $tempary[1];
-					}
-				}
-				$value["sintro"] = checkLinkUrl($value["sintro"]);
-			}
-			// 防采集
-			$array_bq = array("dl", "div", "dl", "div");
-			$array_bq2 = array("span", "font", "b", "strong");
-			$array_class = array("cprt", "lnkcpt", "cpit", "lnkcpit", "fjc", "lnkfcj");
-			$idx1 = String::randNumber(0, 3);
-			$this->assign("bq", $array_bq[$idx1]);
-			$idx2 = String::randNumber(0, 5);
-			$rdm = String::uuid();
-			$tempstr = "<" . $array_bq2[$idx1] . " class='" . $array_class[$idx2] . "'>欢迎来到另客网，" . $rdm . "近一点，更近一点" . $rdm . "</" . $array_bq2[$idx1] . ">";
-			$value["linkTitle"] = $value["title"];
-			$value["title"] = $value["title"] . $tempstr;
-			$value["sintro"] = $value["sintro"] . $tempstr;
-			//
-			if (!empty($value['mid'])) {
-				$value['nickname'] = M("Member")->where('id=' . $value['mid'])->getField('nickname');
-			}
-			$value['grade_name'] = $aryGrade[$value['grade']];
-		}
+		$list = $links->getLists($condition, $sort, $rst, $listRows, $rid, $aryGrade);
 		$this->assign('links', $list);
-		// 分页
+		$array_bq = array("dl", "div");
+		
 		$count = $links->where($condition)->count('links.id');
 		if ($count > 0) {
 			import("@.ORG.Page");
 			$p = new Page($count, $listRows);
-//             $page = $p->show_js();
-			
 			$page = $p->show_ajax_js();
 			$this->assign("page", $page);
 		}
 		// 公告
 		$variable = M("Variable");
-		//
 		$ann_name = $variable->getByVname('ann_name');
-		$this->assign('ann_name', $ann_name['value_varchar']);
-		//
+		
 		$announce = M("Announcement");
-		$announces = $announce->where('status=1')->order('sort asc, create_time desc')->select();
-		//echo $announce->getLastSql();
-		$this->assign("announces", $announces);
+		$announces = $announce->where('status=1')->order('sort ASC, create_time DESC')->select();
+		
 		// 我的地盘
 		$myarea = M("Myarea");
-		session('arealist_default', $myarea->where('mid=0')->order('sort')->select());
+		session('arealist_default', $myarea->where('mid=0')->order('sort ASC')->select());
 		//存在用户登录，获取用户的我的地盘
 		$memberAuthKey = $this->_session(C('MEMBER_AUTH_KEY'));
+		
 		if (!empty($memberAuthKey)) {
-			session('arealist', $myarea->where('mid=' . $memberAuthKey)->order('`sort`')->select());
-			$areaList = $this->_session('arealist');
-			if (empty($areaList)) {
-				session('arealist', session('arealist_default'));
-			}
+			$areaList = $myarea->where('mid=' . $memberAuthKey)->order('sort ASC')->select();
+			!empty($areaList) || $areaList = session('arealist_default');
+			session('arealist', $areaList);
 		} else {
-			//第一次进入，获取默认我的地盘
 			$areaList = $this->_session('arealist');
-			if (empty($areaList)) {
-				session('arealist', session('arealist_default'));
-			}
+			!empty($areaList) || session('arealist', session('arealist_default'));
 		}
 		// 目录图片
 		$catPics = $this->getCatPics($rid);
@@ -203,6 +115,9 @@ class IndexAction extends CommonAction {
 		$this->assign("lan", $lan);
 		$this->assign("sort", $sort);
 		$this->assign('p', $pg);
+		$this->assign("bq", $array_bq[rand(0,1)]);
+		$this->assign('ann_name', $ann_name['value_varchar']);
+		$this->assign("announces", $announces);
 		$this->assign('catPics', $catPics['catPics']);
 		$this->assign('pauseTime', $catPics['pauseTime']);
 		$this->assign("cid", $cid);
