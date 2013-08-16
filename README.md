@@ -16,3 +16,13 @@
 ### 使用方法 ###
 
 代码提交后会自动执行我们`build.xml`里面定义的`deploy`任务，如果要执行额外的任务可以在提交日志里面添加`{任务名}`如`{lint}`
+
+### 忽略项目中的config.php ###
+
+大家在clone完项目以后运行如下命令本地git库即可忽略对config.php的版本记录:
+
+`git update-index --assume-unchanged filename`
+
+使本地git库重新跟踪config.php运行下面的命令:
+
+`git update-index --no-assume-unchanged filename`
