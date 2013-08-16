@@ -152,12 +152,14 @@
                                     class="media_div"  style="visibility: hidden;" data_media_url="{$question['media_url']}" 
                                 </if> 
                                      data_isAboutVideo="{$isAboutVideo}">
+                                
                                 <if condition="$isAboutVideo neq '1'">
                                     <if condition="$question['media_type'] eq '1'">
                                         {$question['media']}
                                     <elseif condition="$question['media_type'] eq '2'"/>
                                         <iframe class="media_iframe" src="{$question['media']}" scrolling="no" frameborder="0"></iframe>
                                     <elseif condition="$question['media_type'] eq '3'"/>
+                                    	<div id="J_media_swfobject_div"></div>
                                         <script type="text/javascript">
                                             var swfUrl = 'http://www.kizphonics.com/wp-content/uploads/jw-player-plugin-for-wordpress/player/player.swf';
                                             var version = '10.2.0';
@@ -171,7 +173,7 @@
                                                 bgColor: "#000000"
                                             };
 
-                                            swfobject.embedSWF(swfUrl, "J_media_div", "100%", "100%", version, "/swf/playerProductInstall.swf", {$question['media']}, params );
+                                            swfobject.embedSWF(swfUrl, "J_media_swfobject_div", "100%", "100%", version, "/swf/playerProductInstall.swf", {$question['media']}, params );
 
                                         </script>
                                     <elseif condition="$question['media_type'] eq '4'"/>
