@@ -79,9 +79,10 @@ class LinksFntViewModel extends ViewModel {
     		// 防采集
     		$array_bq2 = array("span", "font", "b", "strong");
     		$array_class = array("cprt", "lnkcpt", "cpit", "lnkcpit", "fjc", "lnkfcj");
-    		
+    		$idx1 = rand(0, 3);
+    		$idx2 = rand(0, 5);
     		$rdm = String::uuid();
-    		$tempstr = "<" . $array_bq2[rand(0,3)] . " class='" . $array_class[rand(0,5)] . "'>欢迎来到另客网，" . $rdm . "近一点，更近一点" . $rdm . "</" . $array_bq2[rand(0,3)] . ">";
+    		$tempstr = "<" . $array_bq2[$idx1] . " class='" . $array_class[rand(0, 5)] . "'>欢迎来到另客网，" . $rdm . "近一点，更近一点" . $rdm . "</" . $array_bq2[$idx1] . ">";
     		$value["linkTitle"] = $value["title"];
     		$value["title"] = $value["title"] . $tempstr;
     		$value["sintro"] = $value["sintro"] . $tempstr;
