@@ -48,6 +48,7 @@ class LoginAction extends CommonAction
 		
 		$member = M("Member");
 		$mbrNow = $member->where("$param='%s'",$username)->select();
+        $mbrNow = $mbrNow[0];
 		
 		if(empty($mbrNow)){
 			echo "用户不存在";
