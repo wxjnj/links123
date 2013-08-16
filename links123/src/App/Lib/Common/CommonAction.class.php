@@ -21,21 +21,22 @@ class CommonAction extends Action {
 		$this->autoLogin();
 		
 		$variable = $this->_getVariable();
-		$this->assign('cn_tip', $variable['cnTip']);
-		$this->assign('en_tip', $variable['enTip']);
-		$this->assign('directTip', $variable['directTip']);
+		
 		//获取用户留言
 		if (D("SuggestionView")->isTodayHasNewSuggestion()) {
 			$this->assign("newSuggestion", 1);
 		}
 		$this->getRootCats();
-
-		//顶部日期
-		$weekdays = array("周日", "周一", "周二", "周三", "周四", "周五", "周六");
-		$this->assign('today', str_replace("*", $weekdays[date('w')], date('m月d日 * H:i:s')));
-		
+		//获取日期
+		$today = $this->getDate();
 		//糖葫芦
-		$this->assign("thl_list", D("Thl")->getThlListWithThlz());
+		$thlList =  D("Thl")->getThlListWithThlz();
+		
+		$this->assign('cn_tip', $variable['cnTip']);
+		$this->assign('en_tip', $variable['enTip']);
+		$this->assign('directTip', $variable['directTip']);
+		$this->assign('today', $today);
+		$this->assign("thl_list", $thlList);
 		$this->assign('thlNow', '搜');
 		$this->assign('tidNow', 1);
 	}
@@ -196,21 +197,37 @@ class CommonAction extends Action {
         return $pids;
     }
 
-    // 获取左栏目录
+    /**
+     * @desc 获取左栏目录
+     * @author frank UPDATE 2013-08-16
+     * @param int $rid
+     * @return void
+     */
     protected function getLeftMenu($rid) {
         $cat = M("Category");
-        $leftMenuCn = $cat->where('status=1 and flag=1 and prt_id=' . $rid)->order('sort')->select();
-        $leftMenuEn = $cat->where('status=1 and flag=2 and prt_id=' . $rid)->order('sort')->select();
+        $Menu = $cat->where('status=1 and flag<3 and prt_id= %d', $rid)
+        ->order('sort ASC')->select();
+        foreach($Menu as $m) {
+        	if ($m['flag'] == 1) {
+        		$leftMenuCn[] = $m;
+        	} else {
+        		$leftMenuEn[] = $m;
+        	}
+        }
         $this->assign("leftMenuCn", $leftMenuCn);
         $this->assign("leftMenuEn", $leftMenuEn);
     }
 
-    // 当前日期（ajax）
+    /**
+     * @desc 获取日期
+     * @author frank UPDATE 2013-08-16
+     * @return string 
+     */
     public function getDate() {
         $weekdays = array("周日", "周一", "周二", "周三", "周四", "周五", "周六");
-        $today = date('n月j日 *');
+        $today = date('m月d日 *');
         $today = str_replace("*", $weekdays[date('w')], $today);
-        echo $today;
+        return $today;
     }
 
     //404页面
