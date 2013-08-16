@@ -1,7 +1,7 @@
 <?php
 /**
  * @name RegisterAction.class.php
- * @package Member
+ * @package Members
  * @desc 用户注册
  * @author frank qian 2013-08-12
  * @version 0.0.1
@@ -33,9 +33,11 @@ class RegisterAction extends CommonAction
 	 */
 	public function saveReg() 
 	{
-		extract($_POST);
+                $nickname = trim($_POST['nickname']);
+                $password = $_POST['password'];
+                $verify = $_POST['verify'];
+                
 		$member = M("Member");
-		$error = array();
 
 		if (!checkName($nickname)){
 			echo '用户名只能包含字符、数字、下划线和汉字';
@@ -45,13 +47,13 @@ class RegisterAction extends CommonAction
 			echo '密码应为6到20位数字或字母';
 			return false;
 		}
-
+                
 		if ($_SESSION['verify'] != md5($verify)) {
 			echo "验证码错误";
 			return false;
 		}
 
-        if ($member->where("nickname='%s'",$nickname)->select()){
+                if ($member->where("nickname='%s'",$nickname)->select()){
 			echo '该昵称已注册过';
 			return false;
 		}
