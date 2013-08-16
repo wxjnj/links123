@@ -25,15 +25,17 @@ class LoginAction extends CommonAction
 	
 	/**
 	 * @desc 用户登录验证
-	 * @author frank UPDATE 2013-08-15
+	 * @author frank UPDATE 2013-08-16
 	 * @param string $username 用户昵称或Email
 	 * @param string $password 密码
+     * @param int $auto_login 自动登录
 	 * @return string
 	 */
 	public function checkLogin() 
 	{
         $username = trim($_POST['username']);
         $password = $_POST['password'];
+        $auto_login = $_POST['auto_login'];
 
 		if(checkEmail($username)){
 			$param = 'email';
