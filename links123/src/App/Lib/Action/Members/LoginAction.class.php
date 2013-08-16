@@ -32,8 +32,8 @@ class LoginAction extends CommonAction
 	 */
 	public function checkLogin() 
 	{
-                $username = trim($_POST['username']);
-                $password = $_POST['password'];
+        $username = trim($_POST['username']);
+        $password = $_POST['password'];
 
 		if(checkEmail($username)){
 			$param = 'email';
@@ -51,13 +51,13 @@ class LoginAction extends CommonAction
 			echo "用户不存在";
 			return false;
 		}
-                if($mbrNow['status'] == -1){
+        if($mbrNow['status'] == -1){
 			echo "已禁用！";
 			return false;
 		}
 		
 		$password = md5(md5($password).$mbrNow['salt']);
-		if ($password != $mbrNow['password']) {
+		if($password != $mbrNow['password']){
 			echo "密码错误！";
 			return false;
 		}
@@ -70,7 +70,7 @@ class LoginAction extends CommonAction
 		cookie(md5('home_session_expire'), time(), intval(D("Variable")->getVariable("home_session_expire")));
 		
 		//如果选中下次自动登录，记录用户信息
-		if (intval($auto_login) == 1) {
+		if(intval($auto_login) == 1){
 			$str = $mbrNow['id'] . "|" . md5($mbrNow['password'] . $mbrNow['nickname']);
 			$auto_login_time = intval(D("Variable")->getVariable("auto_login_time"));
 			cookie("USER_ID", $str, $auto_login_time ? : 60*60*24*7);
