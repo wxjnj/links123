@@ -33,9 +33,9 @@ class RegisterAction extends CommonAction
 	 */
 	public function saveReg() 
 	{
-                $nickname = trim($_POST['nickname']);
-                $password = $_POST['password'];
-                $verify = $_POST['verify'];
+        $nickname = trim($_POST['nickname']);
+        $password = $_POST['password'];
+        $verify = $_POST['verify'];
                 
 		$member = M("Member");
 
@@ -53,7 +53,7 @@ class RegisterAction extends CommonAction
 			return false;
 		}
 
-                if ($member->where("nickname='%s'",$nickname)->select()){
+        if ($member->where("nickname='%s'",$nickname)->select()){
 			echo '该昵称已注册过';
 			return false;
 		}
