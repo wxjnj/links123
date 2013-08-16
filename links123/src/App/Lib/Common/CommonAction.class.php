@@ -221,17 +221,13 @@ class CommonAction extends Action {
     /**
      * @desc 获取日期
      * @author frank UPDATE 2013-08-16
-     * @return NOT AJAX string 
+     * @return string 
      */
     public function getDate() {
         $weekdays = array("周日", "周一", "周二", "周三", "周四", "周五", "周六");
         $today = date('m月d日 *');
         $today = str_replace("*", $weekdays[date('w')], $today);
-        if($this->isAjax()) {
-        	echo $today;
-        } else {
-        	return $today;
-        }
+        return $today;
     }
 
     //404页面
