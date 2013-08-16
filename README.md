@@ -26,3 +26,5 @@
 使本地git库重新跟踪config.php运行下面的命令:
 
 `git update-index --no-assume-unchanged filename`
+
+注：filename包含config.php文件的路径
