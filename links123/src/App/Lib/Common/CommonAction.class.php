@@ -178,22 +178,23 @@ class CommonAction extends Action {
         $cats = M("Category")->field('id, cat_name, intro, level')->where('status=1 and level=1')->order('sort ASC')->select();
         $this->assign("rootCats", $cats);
     }
-
-
-
-    // 获取所有下级目录
+    
+    /**
+     * @desc 获取所有子目录
+     * @author frank UPDATE 2013-08-16
+     * @param int $pid
+     * @return array:
+     */
     protected function _getSubCats($pid) {
         $pids = array();
         array_push($pids, $pid);
-        //
         $cat = M("Category");
-        $list = $cat->field('id')->where('status=1 and prt_id=' . $pid)->select();
-        if (count($list) > 0) {
+        $list = $cat->field('id')->where('status=1 and prt_id = %d', $pid)->select();
+        if (count($list)) {
             foreach ($list as &$value) {
                 $pids = array_merge($pids, $this->_getSubCats($value['id']));
             }
         }
-        //
         return $pids;
     }
 

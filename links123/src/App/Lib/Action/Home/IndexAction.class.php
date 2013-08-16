@@ -14,104 +14,70 @@ class IndexAction extends CommonAction {
 	 * @see CommonAction::index()
 	 */
 	public function index() {
-		
-		import("@.ORG.String");
-		$cid = $this->_param('cid');
-		
 		$cat = M("Category");
-		if (empty($cid)) {
-			$cid = $cat->where('status=1 and level=1')->min('id');
-		} else if(!is_numeric($cid)) {
-			$this->error("非法参数cid！");
+		import("@.ORG.String");
+		
+		$cid = intval($this->_param('cid')) ? : $cat->where('status=1 and level=1')->min('id');
+		$lan = intval($this->_param('lan')) ? : session('lanNow') ? : 1;
+		$grade = intval($this->_param('grade'));
+		$sort = $this->_param('sort');
+		
+		if ($lan != session('lanNow')) {
+			session('lanNow', $lan);
 		}
-		$catName = $cat->where('id = %d', $cid)->getField('cat_name'); 
+		
 		
 		$rid = $this->getRoot($cid);
+		$catName = $cat->where('id = %d', $cid)->getField('cat_name'); 
 		$ridTip = $cat->where('id = %d', $rid)->getField('intro');
 		
-		$aryGrade = array();
 		$separate = "&nbsp;<span>|</span>&nbsp;";
 		switch ($rid) {
 			case 1:
 				$aryGrade = array('1' => '初级', '1,2' => '初级' . $separate . '中级',
 				 '1,2,3' => '初级' . $separate . '中级' . $separate . '高级',
 				 '2' => '中级', '2,3' => '中级' . $separate . '高级', '3' => '高级');
-				$grade = array('初级', '中级', '高级');
+				$grades = array('初级', '中级', '高级');
 				break;
 			case 4:
 				$aryGrade = array('1' => '苹果', '2' => '安卓+', 
 				'1,2' => '苹果' . $separate . '安卓+');
-				$grade = array('苹果', '安卓+');
+				$grades = array('苹果', '安卓+');
 				break;
+			default:
+				$aryGrade = array();
+				$grades = array();
 		}
 		
 		$this->getLeftMenu($rid);
 		
-		$condition = array();
 		$condition['status'] = 1;
 		$condition['category'] = $cid == $rid ? array('in', $this->_getSubCats($cid)) : $cid;
-		
-		$lan = $this->_param('lan');
-		if (empty($lan)) {
-			$lan = session('lanNow');
-			if (empty($lan)) {
-				$lan = 1;
-			}
-		} else if (!is_numeric($lan)) {
-			$this->error("非法参数lan！");
-		}
-		//
-		session('lanNow', $lan);
 		$condition['language'] = $lan;
-		$this->assign("lan", $lan);
-		//
-		$grade = $this->_param('grade');
-		if (!empty($grade)) {
-			if (!is_numeric($grade)) {
-				$this->error("非法参数grade！");
-			}
-			//
+		if ($grade) {
 			$condition['grade'] = array('like', '%' . $grade . '%');
 			$this->assign("grade", $grade);
 		}
-		//
-		$sort = $this->_param('sort');
+		
 		if (empty($sort)) {
 			$sort = "csort asc,sort asc";
 		}
-		$this->assign("sort", $sort);
-		//
+		
 		$paiLie = $this->_session('pailie');
 		if (empty($paiLie)) {
-			session('pailie', M("Variable")->where("vname='pailie'")->getField("value_int"));
-			//
 			$memberAuthKey = $this->_session(C('MEMBER_AUTH_KEY'));
 			if (!empty($memberAuthKey)) {
-				session('pailie', M("Member")->where('id=' . $memberAuthKey)->getField('pailie'));
+				$paiLie = M("Member")->where('id = %s', $memberAuthKey)->getField('pailie');
+			} else {
+				$paiLie = M("Variable")->where("vname='pailie'")->getField("value_int");
 			}
+			session('pailie', $paiLie);
 		}
-		
-		//修复paiLie为空，初始值未取出，造成分页默认为11条
-		$paiLie = $this->_session('pailie');
-		
-		if ($paiLie == 1) {
-			$listRows = 20;
-		} else {
-			$listRows = 11;
-		}
+		$listRows = $paiLie == 1 ? 20 : 11;
 
-		$pg = $this->_param(C('VAR_PAGE'));
-		if (empty($pg)) {
-			$pg = 1;
-		} else {
-			if (!is_numeric($pg)) {
-				$this->error("非法参数p！");
-			}
-		}
-		$this->assign('p', $pg);
-		//
+		$pg = intval($this->_param(C('VAR_PAGE'))) ? : 1;
 		$rst = ($pg - 1) * $listRows;
-		//
+		//重构已到到步
 		$links = new LinksFntViewModel();
 		$list = $links->where($condition)->order($sort)->limit($rst . ',' . $listRows)->select();
 
@@ -233,14 +199,17 @@ class IndexAction extends CommonAction {
 		}
 		// 目录图片
 		$catPics = $this->getCatPics($rid);
+		
+		$this->assign("lan", $lan);
+		$this->assign("sort", $sort);
+		$this->assign('p', $pg);
 		$this->assign('catPics', $catPics['catPics']);
 		$this->assign('pauseTime', $catPics['pauseTime']);
-
 		$this->assign("cid", $cid);
 		$this->assign("cat_name", $catName);
 		$this->assign("rid", $rid);
 		$this->assign('rid_tip', $ridTip);
-		$this->assign('grades',$grade);
+		$this->assign('grades',$grades);
 		
 		$this->getHeader();
 		$this->display();
