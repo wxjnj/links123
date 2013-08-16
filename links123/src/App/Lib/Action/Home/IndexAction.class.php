@@ -1,69 +1,64 @@
 <?php
+/**
+ * @name IndexAction.class.php
+ * @package Home
+ * @desc 首页
+ * @author frank UPDATE 2013-08-16
+ * @version 0.0.1
+ */
 import("@.Common.CommonAction");
 class IndexAction extends CommonAction {
-
 	/**
-	  +----------------------------------------------------------
-	 * 页面
-	  +----------------------------------------------------------
+	 * @desc 首页
+	 * @author Frank UPDATE 2013-08-16
+	 * @see CommonAction::index()
 	 */
-	// 首页
 	public function index() {
-		//
+		
 		import("@.ORG.String");
-		//
 		$cid = $this->_param('cid');
-		//
+		
 		$cat = M("Category");
 		if (empty($cid)) {
 			$cid = $cat->where('status=1 and level=1')->min('id');
-		} else {
-			if (!is_numeric($cid)) {
-				$this->error("非法参数cid！");
-			}
+		} else if(!is_numeric($cid)) {
+			$this->error("非法参数cid！");
 		}
-
-		$this->assign("cid", $cid);
-		$this->assign("cat_name", $cat->where('id=' . $cid)->getField('cat_name'));
-		//
+		$catName = $cat->where('id = %d', $cid)->getField('cat_name'); 
+		
 		$rid = $this->getRoot($cid);
-		$this->assign("rid", $rid);
-		$this->assign('rid_tip', $cat->where('id=' . $rid)->getField('intro'));
-		//
+		$ridTip = $cat->where('id = %d', $rid)->getField('intro');
+		
 		$aryGrade = array();
+		$separate = "&nbsp;<span>|</span>&nbsp;";
 		switch ($rid) {
 			case 1:
-				$aryGrade = array('1' => '初级', '1,2' => '初级&nbsp;<span>|</span>&nbsp;中级', '1,2,3' => '初级&nbsp;<span>|</span>&nbsp;中级&nbsp;<span>|</span>&nbsp;高级', '2' => '中级', '2,3' => '中级&nbsp;<span>|</span>&nbsp;高级', '3' => '高级');
-				$this->assign('grades', array('初级', '中级', '高级'));
+				$aryGrade = array('1' => '初级', '1,2' => '初级' . $separate . '中级',
+				 '1,2,3' => '初级' . $separate . '中级' . $separate . '高级',
+				 '2' => '中级', '2,3' => '中级' . $separate . '高级', '3' => '高级');
+				$grade = array('初级', '中级', '高级');
 				break;
 			case 4:
-				$aryGrade = array('1' => '苹果', '2' => '安卓+', '1,2' => '苹果&nbsp;<span>|</span>&nbsp;安卓+');
-				$this->assign('grades', array('苹果', '安卓+'));
+				$aryGrade = array('1' => '苹果', '2' => '安卓+', 
+				'1,2' => '苹果' . $separate . '安卓+');
+				$grade = array('苹果', '安卓+');
 				break;
 		}
-		//
+		
 		$this->getLeftMenu($rid);
-		//
+		
 		$condition = array();
 		$condition['status'] = 1;
-		//
-		if ($cid == $rid) {
-			$condition['category'] = array('in', $this->_getSubCats($cid));
-		} else {
-			$condition['category'] = $cid;
-		}
-		//
-
+		$condition['category'] = $cid == $rid ? array('in', $this->_getSubCats($cid)) : $cid;
+		
 		$lan = $this->_param('lan');
 		if (empty($lan)) {
 			$lan = session('lanNow');
 			if (empty($lan)) {
 				$lan = 1;
 			}
-		} else {
-			if (!is_numeric($lan)) {
-				$this->error("非法参数lan！");
-			}
+		} else if (!is_numeric($lan)) {
+			$this->error("非法参数lan！");
 		}
 		//
 		session('lanNow', $lan);
@@ -241,6 +236,12 @@ class IndexAction extends CommonAction {
 		$this->assign('catPics', $catPics['catPics']);
 		$this->assign('pauseTime', $catPics['pauseTime']);
 
+		$this->assign("cid", $cid);
+		$this->assign("cat_name", $catName);
+		$this->assign("rid", $rid);
+		$this->assign('rid_tip', $ridTip);
+		$this->assign('grades',$grade);
+		
 		$this->getHeader();
 		$this->display();
 		$this->getFooter();
