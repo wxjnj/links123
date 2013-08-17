@@ -1,0 +1,53 @@
+<footer>
+	<div class="footer_b">
+		<div class="footer_c">
+			<div class="footer_link">
+			</div>
+			<a url="__APP__/AboutUs" class="newWin">关于我们</a>
+			|
+			<a url="__APP__/Suggestion" class="newWin">留言板</a>
+			|
+			<a url="__APP__/Index/blogroll" class="newWin">友情链接</a>
+			|
+			<a url="__APP__/Recommend" class="newWin">推荐链接</a>
+			|
+			<a  class="a_setHome">设为首页</a>&nbsp;
+			<span>沪ICP备12036721号</span>&nbsp;
+			<script src="http://s96.cnzz.com/stat.php?id=4907803&web_id=4907803&show=pic1" language="JavaScript"></script>&nbsp;
+			<script type="text/javascript">
+				var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+				document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3F81703ebf15590db9bd5ba93b0d140884' type='text/javascript'%3E%3C/script%3E"));
+			</script>
+		</div>
+	</div>
+</footer>
+
+<div id="you_are_master"></div>
+
+<div id="pop_box">
+	<div class="div_myarea">
+		<dl class="top_btn"><a class="btn_default">恢复默认</a><!-- 　<a class="btn_save">保存到账号</a> --></dl>
+		<ul id="ul_myarea">
+			<volist name="_SESSION['arealist']" id="vo">
+				<li title="拖动排序" url="{$vo.url}" id="area_{$vo.id}" myid="{$vo.id}">{$vo.web_name}</li>
+			</volist>
+		</ul>
+		<dl class="botn_ipt">网站名称：<input type="text" class="web_name" />　网址：<input type="text" class="url" />　<input type="button" class="btn_sub_myarea" value=" 保 存 " /><input type="hidden" class="myid" /></dl>
+	</div>
+</div>
+<load href="__STATIC__/v2/js/jquery-1.7.1.min.js" />
+<load href="__STATIC__/v2/js/jquery.plugins.js" />
+<load href="__STATIC__/v2/js/global.min.js" />
+<load href="__STATIC__/v2/js/index.min.js" />
+<!--[if IE 6]><load href="__STATIC__/v2/js/DD_belatedPNG.js"><script>DD_belatedPNG.fix("div, ul, img, li, input");</script><![endif]-->
+<script>
+    var tag = "{$directTip}";
+    $("#direct_text").blur(function() {
+        if($(this).val()=="")
+        {
+            $(this).val(tag);
+        }
+    });
+</script>
+</body>
+</html>

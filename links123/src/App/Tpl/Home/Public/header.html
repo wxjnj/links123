@@ -1,0 +1,65 @@
+	<header>
+		<div class="header_top">
+		    <div class="header_toplink">
+		    	<div class="top_left">
+                            <form id="frm_drct" method="post" action="__APP__/Index/directUrl/" target="_blank">
+                                <input type="text" id="direct_text" name="tag" value="{$directTip}" />
+                            </form>
+                        </div>
+		    	<div class="top_right">
+			        <ul>
+                                    <li>
+			                <a href="__APP__/">首页</a>
+			            </li>
+			        <empty name="_SESSION[C('MEMBER_AUTH_KEY')]">
+			            <li>
+			                <a href="__APP__/Members/Login">登陆</a>
+			            </li>
+			            <li>
+			                <a href="__APP__/Members/Register">注册</a>
+			            </li>
+			        <else />
+			            <li>
+			                <a href="__APP__/Members/Index">{$Think.session.nickname}</a>
+			            </li>
+			            <li>
+			                <a href="__APP__/Members/Index">个人中心</a>
+			            </li>
+			            <li>
+			                <a href="__APP__/Members/Logout">退出</a>
+			            </li>
+			        </empty>
+			        	<li>
+			            	<a <eq name="newSuggestion" value="1">style='color:#FF0000'</eq>  href="__APP__/Suggestion">留言板</a>
+			            </li>
+			            <li>
+			                <a href="__APP__/Recommend">推荐链接</a>
+			            </li>
+			            <li id="li_today">
+			                {$today}
+			            </li>
+			            <li>
+			            	<iframe id="sinaWeatherToolIframe"  name="sinaWeatherTool" src="about:blank" width="160" height="20" marginwidth="0" marginheight="0" hspace="0" vspace="0" frameborder="0" scrolling="no"></iframe>
+			            </li>
+			        </ul>
+			    </div>
+		    </div>
+		</div>
+		<div id="head_tools"></div>
+		<div id="J_logonav">
+			<div class="logonav">
+			    <div class="logo">
+			        <a href="__APP__/">
+			            <img src="__PUBLIC__/skin/images/logo.gif" />
+			        </a>
+			    </div>
+			    <include file="Home:Public:rich_search" />
+			    <div class="clr"></div>
+			</div>
+		</div>
+		<div id="div_blank">
+			<input type="hidden" id="js_APP" value="__APP__/" />
+			<input type="hidden" id="js_URL" value="__URL__" />
+			<input type="hidden" id="js_PUBLIC" value="__PUBLIC__" />
+		</div>
+	</header>
