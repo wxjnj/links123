@@ -29,7 +29,6 @@ module.exports = function(grunt) {
 						'src/v2/js/json2.js',
 						'src/v2/js/easyui-lang-zh_CN.js',
 						'src/v2/js/jquery.easyui.min.js',
-						// 'src/v2/js/jquery-ui.min.js',
 						'src/v2/js/kxbdSuperMarquee.js',
 						'src/v2/js/jquery.mousewheel-3.0.6.pack.js',
 						'src/v2/js/jquery.fancybox.js',
@@ -94,7 +93,6 @@ module.exports = function(grunt) {
 		,uglify: {
 			v2: {
 				files: {
-					// 'dest/v2/js/index.min.js' : ['~temp/index.js'],
 					'dest/v2/js/jquery.plugins.js' : ['~temp/jquery.plugins.js'],
 					'dest/v2/js/global.min.js' : ['~temp/global.js'],
 					'dest/v2/js/DD_belatedPNG.js' : ['~temp/DD_belatedPNG.js']
