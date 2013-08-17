@@ -104,9 +104,8 @@ class IndexAction extends CommonAction {
 		$this->assign('rid_tip', $ridTip);
 		$this->assign('grades', $gradeArr['grades']);
 		
-		//$this->getHeader();
+		$this->getHeaderInfo();
 		$this->display();
-		//$this->getFooter();
 	}
 
 	/**
@@ -127,11 +126,9 @@ class IndexAction extends CommonAction {
 		if ($linkNow) {
 			$model->where("id={$linkNow['id']}")->setInc("click_num");
 			echo '<style type="text/css">a{display:none}</style>
-					<script src="http://s96.cnzz.com/stat.php?id=4907803&web_id=4907803" language="JavaScript"></script>
-					<script type="text/javascript">
-						 window.location.href="http://' . $linkNow['url'] . '";
-					  </script>';
-//    		header("location: http://".$linkNow['url']);
+				  <script src="http://s96.cnzz.com/stat.php?id=4907803&web_id=4907803" language="JavaScript"></script>
+				  <script type="text/javascript">window.location.href="http://' . $linkNow['url'] . '";
+				  </script>';
 		} else {
 			$data['tag'] = $condition['tag'];
 			$data['update_time'] = time();
