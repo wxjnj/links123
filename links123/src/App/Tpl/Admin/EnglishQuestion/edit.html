@@ -11,7 +11,9 @@
             <table cellpadding=3 cellspacing=3>
                 <tr>
                     <td class="tRight" style="width:70px ;" >名称：</td>
-                    <td class="tLeft" ><input type="text" class="bLeftRequire xhuge" name="name" value="{$vo.name}" /></td>
+                    <td class="tLeft" ><input type="text" class="bLeftRequire xhuge" name="name" 
+                        <if condition="strstr($vo['name'], $doubleQuotes) neq ''">value='{$vo.name}'<else />value="{$vo.name}"</if> />
+                    </td>
                 </tr>
                 <tr>
                     <td class="tRight" ></td>
@@ -56,25 +58,25 @@
                 </tr>
                 <tr>
                     <td class="tRight" >试题：</td>
-                    <td class="tLeft" ><input type="text" class="bLeftRequire large" name="content" value="{$vo.content}" /></td>
+                    <td class="tLeft" ><input type="text" class="bLeftRequire large" name="content" <if condition="strstr($vo['content'], $doubleQuotes) neq ''">value='{$vo.content}'<else />value="{$vo.content}"</if> /></td>
                 </tr>
                 <tr>
                     <td class="tRight" style="vertical-align: top" >选项：</td>
                     <td class="tLeft" >
                         <span class="option">
-                            <span class="mark">A</span><input type="text" value="{$option_list[0]['content']}" class="xhuge" name="option[]" /><label>
+                            <span class="mark">A</span><input type="text" class="xhuge" name="option[]"  <if condition="strstr($option_list[0]['content'], $doubleQuotes) neq ''">value='{$option_list[0]['content']}'<else />value="{$option_list[0]['content']}"</if> /><label>
                                 <input type="radio" name="answer" id="answer_{$option_list[0]['id']}" value="1">正确答案</label>
                         </span>
                         <span class="option">
-                            <span class="mark">B</span><input type="text" value="{$option_list[1]['content']}" class="xhuge" name="option[]" /><label>
+                            <span class="mark">B</span><input type="text" class="xhuge" name="option[]" <if condition="strstr($option_list[1]['content'], $doubleQuotes) neq ''">value='{$option_list[1]['content']}'<else />value="{$option_list[1]['content']}"</if> /><label>
                                 <input type="radio" name="answer" id="answer_{$option_list[1]['id']}" value="2">正确答案</label>
                         </span>
                         <span class="option">
-                            <span class="mark">C</span><input type="text" value="{$option_list[2]['content']}" class="xhuge" name="option[]" /><label>
+                            <span class="mark">C</span><input type="text" class="xhuge" name="option[]" <if condition="strstr($option_list[2]['content'], $doubleQuotes) neq ''">value='{$option_list[2]['content']}'<else />value="{$option_list[2]['content']}"</if> />/><label>
                                 <input type="radio" name="answer" id="answer_{$option_list[2]['id']}" value="3">正确答案</label>
                         </span>
                         <span class="option">
-                            <span class="mark">D</span><input type="text" value="{$option_list[3]['content']}" class="xhuge" name="option[]" /><label>
+                            <span class="mark">D</span><input type="text" class="xhuge" name="option[]" <if condition="strstr($option_list[3]['content'], $doubleQuotes) neq ''">value='{$option_list[3]['content']}'<else />value="{$option_list[3]['content']}"</if> /><label>
                                 <input type="radio" name="answer" id="answer_{$option_list[3]['id']}" value="4">正确答案</label>
                         </span>
 

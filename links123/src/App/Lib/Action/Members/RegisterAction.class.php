@@ -39,11 +39,11 @@ class RegisterAction extends CommonAction
                 
 		$member = M("Member");
 
-		if (!checkName($nickname)){
+		if (!checkName($nickname)) {
 			echo '用户名只能包含字符、数字、下划线和汉字';
 			return false;
 		}
-		if (!checkStr($password)){
+		if (!checkStr($password)) {
 			echo '密码应为6到20位数字或字母';
 			return false;
 		}
@@ -53,7 +53,7 @@ class RegisterAction extends CommonAction
 			return false;
 		}
 
-        if ($member->where("nickname='%s'",$nickname)->select()){
+        if ($member->where("nickname='%s'",$nickname)->select()) {
 			echo '该昵称已注册过';
 			return false;
 		}

@@ -215,6 +215,7 @@ class EnglishQuestionAction extends CommonAction {
         $option_list = D("EnglishOptions")->getQuestionOptionList($id);
         $this->assign('option_list', $option_list);
         $this->assign('vo', $vo);
+        $this->assign('doubleQuotes', '"');
 
         $object_list = D("EnglishObject")->where("`status`=1")->order("sort")->select();
         $this->assign("object_list", $object_list);
