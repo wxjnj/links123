@@ -51,19 +51,19 @@ class CategoryModel extends CommonModel {
         intval($grade) > 0 && $condition['links.grade'] = array('like', '%' . $grade . '%');
         empty($sort) && $sort = "category.sort asc,links.sort asc";
         
-        if (!isset($_SESSION['pailie'])) {
-            $dftPailie = M("Variable")->where("vname='pailie'")->getField("value_int");
-            $_SESSION['pailie'] = $dftPailie;
-            
+        $dftPailie = $_SESSION['pailie'];
+        
+        if (empty($dftPailie)) {
             if (isset($_SESSION[C('MEMBER_AUTH_KEY')])) {
-                $_SESSION['pailie'] = M("Member")->where('id=' . $_SESSION[C('MEMBER_AUTH_KEY')])->getField('pailie');
+            	$dftPailie = M("Member")->where('id=' . $_SESSION[C('MEMBER_AUTH_KEY')])->getField('pailie');
+            } else {
+            	$dftPailie = M("Variable")->where("vname='pailie'")->getField("value_int");
             }
-            
-            if (empty($_SESSION['pailie'])) {
-                $_SESSION['pailie'] = $dftPailie;
-            }
+            $_SESSION['pailie'] = $dftPailie;
         }
-        $listRows = $_SESSION['pailie'] == 1 ?　20 : 11;
+        
+        $listRows = $dftPailie == 1 ? 20 : 11;
+        
         $pg = $page !== false ? $page : isset($_REQUEST[C('VAR_PAGE')]) ? $_REQUEST[C('VAR_PAGE')] : 1;
         intval($pg) <= 0 && $pg = 1;
         $rst = ($pg - 1) * $listRows;
@@ -77,7 +77,7 @@ class CategoryModel extends CommonModel {
             $list['page'] = $p->show_ajax_js();
         }
         
-        $list['links'] = $linksViewModel->getLists($condition, $sort, $rst, $listRows, $list['root_cat_info']['id'], $ary_grade);
+        $list['links'] = $linksViewModel->getLists($condition, $sort, $rst, $listRows, $rootCatInfoId, $ary_grade);
         return $list;
     }
 
