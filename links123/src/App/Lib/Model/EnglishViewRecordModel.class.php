@@ -87,6 +87,46 @@ class EnglishViewRecordModel extends CommonModel {
         return $ret;
     }
 
+    public function getUserViewQuestionIdList($object, $level, $voice, $target, $pattern, $extend_condition = "") {
+        //试题id数组初始化
+        $question_ids = array();
+        if (intval($object)) {
+            if (D("EnglishObject")->where("id=" . intval($object))->getField("name") == "综合") {
+                $object = 0;
+            }
+        }
+        if (intval($object) > 0) {
+            $map['question.object'] = intval($object);
+        }
+        if (intval($level) > 0) {
+            $map['question.level'] = intval($level);
+        }
+        if (intval($voice) > 0) {
+            $map['question.voice'] = intval($voice);
+        }
+        if (intval($target) > 0) {
+            $map['question.target'] = intval($target);
+        }
+        if (intval($pattern) > 0) {
+            $map['question.pattern'] = intval($pattern);
+        }
+        if (!empty($extend_condition)) {
+            $map['_string'] = $extend_condition;
+        }
+        if (isset($_SESSION[C('MEMBER_AUTH_KEY')]) && intval($_SESSION[C('MEMBER_AUTH_KEY')]) > 0) {
+            $map['record.user_id'] = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+        } else {
+            $map['record.user_id'] = intval(cookie("english_tourist_id")) > 0 ? -intval(cookie("english_tourist_id")) : 0;
+        }
+        $ret = $this->alias("record")->field("record.question_id")->join(C("DB_PREFIX") . "english_question question on record.question_id=question.id")->where($map)->select();
+        if (false !== $ret && !empty($ret)) {
+            foreach ($ret as $key => $value) {
+                $question_ids[] = intval($value['question_id']);
+            }
+        }
+        return $question_ids;
+    }
+
     /**
      * 获取新游客id
      * @return int

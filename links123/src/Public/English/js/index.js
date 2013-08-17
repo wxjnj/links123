@@ -436,13 +436,12 @@ function requestQuestion(type, clickObject) {
                     });
                 }
                 //
-                //点击为类型，更新科目列表
-//                if (type != "level" || type != "object") {
                 //科目为空
                 if (data['object_info'] == null) {
                     data['object_info'] = new Array();
                     data['object_info']['id'] = 0;
                 }
+                //更新科目列表
                 var object_list = data.object_list;
                 if (object_list != null) {
                     var str = '';
@@ -458,9 +457,10 @@ function requestQuestion(type, clickObject) {
                         str += '><span>' + object_list[i]['name'] + '</span></li>';
                     }
                     $(".kecheng").html(str);
-                    //bindObjectClickEvent();
+                    if ($(".kecheng .current").size() < 1) {
+                        $(".kecheng li").not(".grey").first().addClass("current");
+                    }
                 }
-//                }
                 //
                 //等级为空
                 if (data['level_info'] == null) {
@@ -487,7 +487,6 @@ function requestQuestion(type, clickObject) {
                         $(".grade li").not(".grey").first().addClass("current");
                     }
                     $(".grade li:eq(13)").css("margin-left", level_margin_index + "px");
-                    //bindLevelClickEvent();
                 }
                 //
                 //更新题目
