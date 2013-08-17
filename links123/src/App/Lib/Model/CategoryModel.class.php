@@ -8,14 +8,14 @@ class CategoryModel extends CommonModel {
     );
 
     public function getIndexCategoryLinksList($lan, $cid, $grade, $sort,$page = false) {
-        import("@.ORG.String");
-        if (intval($lan) == 0) {
-            $lan = 1;
-        }
+        
+    	import("@.ORG.String");
+        intval($lan) == 0 || $lan = 1;
         $list = array();
         if ($cid == 0) {
             $cid = $this->where('status=1 and level=1')->min('id');
         }
+        
         //当前分类信息
         $list['cat_info'] = $this->where("id={$cid} and status=1")->find();
         //获取根分类信息
@@ -94,88 +94,9 @@ class CategoryModel extends CommonModel {
             $p = new Page($count, $listRows);
             $list['page'] = $p->show_ajax_js();
         }
-        $list['links'] = $linksViewModel->where($condition)->order($sort)->limit($rst . ',' . $listRows)->select();
-        // 防采集
-        $array_bq = array("dl", "div", "dl", "div");
-        $array_bq2 = array("span", "font", "b", "strong");
-        $array_class = array("cprt", "lnkcpt", "cpit", "lnkcpit", "fjc", "lnkfcj");
-        foreach ($list['links'] as $key => $value) {
-            //////////get all list tiles for SOED description/////////////////
-            //////////get all list tiles for SOED description/////////////////
-            $list['links'][$key]["more"] = 0;
-            if (empty($value["logo"])) {
-                if ($_SESSION['pailie'] == 1) {
-                    $list['links'][$key]["sintro"] = String::msubstr($value["intro"], 0, 19);
-                } else {
-                    $list['links'][$key]["sintro"] = String::msubstr($value["intro"], 0, 208);
-                    if ($list['links'][$key]["sintro"] != $value["intro"]) {
-                        $list['links'][$key]["sintro"] = String::msubstr($value["intro"], 0, 150);
-                        $list['links'][$key]["more"] = 1;
-                    }
-                }
-            } else {
-                if ($_SESSION['pailie'] == 1) {
-                    if ($list['root_cat_info']['id'] == 5) {
-                        $list['links'][$key]["sintro"] = String::msubstr($value["intro"], 0, 20);
-                    } else {
-                        $list['links'][$key]["sintro"] = String::msubstr($value["intro"], 0, 13);
-                    }
-                } else {
-                    $list['links'][$key]["sintro"] = String::msubstr($value["intro"], 0, 184);
-                    if ($list['links'][$key]["sintro"] != $value["intro"]) {
-                        $list['links'][$key]["sintro"] = String::msubstr($value["intro"], 0, 132);
-                        $list['links'][$key]["more"] = 1;
-                    }
-                }
-            }
-            if ($_SESSION['pailie'] == 2) {
-                $list['links'][$key]["sintro"] = nl2br($list['links'][$key]["sintro"]);
-                $list['links'][$key]["sintro"] = str_replace("<br />
-                    <br />", "", $list['links'][$key]["sintro"]); // 特意写成这样的
-                $list['links'][$key]["sintro"] = str_replace("<br />
-                    <br />", "", $list['links'][$key]["sintro"]); // 特意写成这样的
-                $tempary = explode("<br />", $list['links'][$key]["sintro"]);
-                if (count($tempary) > 4) {
-                    $lastline = String::msubstr($tempary[2], 0, 40);
-                    if ($lastline == $tempary[2]) {
-                        $lastline .= "…";
-                    }
-                    $list['links'][$key]["sintro"] = $tempary[0] . "<br />" . $tempary[1] . "<br />" . $lastline;
-                    $list['links'][$key]["more"] = 1;
-                }
-                if (count($tempary) == 3 || (count($tempary) == 4 && $value["more"] == 1)) {
-                    $lastline = String::msubstr($tempary[2], 0, 40);
-                    $list['links'][$key]["sintro"] = $tempary[0] . "<br />" . $tempary[1] . "<br />" . $lastline;
-                    if (count($tempary) == 4) {
-                        $list['links'][$key]["sintro"] .= "…";
-                    }
-                }
-                if (count($tempary) == 2) {
-                    if ($list['links'][$key]["more"] == 1) {
-                        if (strlen($tempary[1]) < strlen($tempary[0])) {
-                            $lastline = String::msubstr($tempary[1], 0, 40);
-                            $list['links'][$key]["sintro"] = $tempary[0] . "<br />" . $lastline;
-                        }
-                    } else {
-                        $list['links'][$key]["sintro"] = $tempary[0] . "<br />" . $tempary[1];
-                    }
-                }
-                $list['links'][$key]["sintro"] = checkLinkUrl($list['links'][$key]["sintro"]);
-            }
-            $idx1 = String::randNumber(0, 3);
-//            $this->assign("bq", $array_bq[$idx1]);
-            $idx2 = String::randNumber(0, 5);
-            $rdm = String::uuid();
-            $tempstr = "<" . $array_bq2[$idx1] . " class='" . $array_class[$idx2] . "'>欢迎来到另客网，" . $rdm . "新人类，新工具" . $rdm . "</" . $array_bq2[$idx1] . ">";
-            $list['links'][$key]["linkTitle"] = $value["title"];
-            $list['links'][$key]["title"] = $list['links'][$key]["title"] . $tempstr;
-            $list['links'][$key]["sintro"] = $list['links'][$key]["sintro"] . $tempstr;
-            //
-//            if (!empty($value['mid'])) {
-//                $list['links'][$key]['nickname'] = M("Member")->where('id=' . $value['mid'])->getField('nickname');
-//            }
-            $list['links'][$key]['grade_name'] = $ary_grade[$value['grade']];
-        }
+        
+        $list['links'] = $linksViewModel->getLists($condition, $sort, $rst, $listRows, $y, $aryGrade);
+        
         return $list;
     }
 

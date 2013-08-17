@@ -131,7 +131,10 @@ class IndexAction extends CommonAction {
 		$this->getFooter();
 	}
 
-	// 直达网址
+	/**
+	 * @desc 直达网址
+	 * @author Frank UPDATE 2013-08-17
+	 */
 	public function directUrl() {
 		$model = M("DirectLinks");
 		$condition['status'] = 1;
@@ -527,17 +530,21 @@ class IndexAction extends CommonAction {
 		$this->display();
 	}
 
-	// 设置排列
+	/**
+	 * @desc 设置排列
+	 * @return boolean
+	 */
 	public function setPailie() {
-		if (empty($_REQUEST['val'])) {
+		$val = intval($_REQUEST['val']);
+		if (empty($val)) {
 			echo "排列值丢失！";
 			return false;
 		}
-		//
-		$_SESSION['pailie'] = $_REQUEST['val'];
+		
+		$_SESSION['pailie'] = $val;
 		if (isset($_SESSION[C('MEMBER_AUTH_KEY')])) {
 			$member = M("Member");
-			if (false === $member->where('id=' . $_SESSION[C('MEMBER_AUTH_KEY')])->setField('pailie', $_REQUEST['val'])) {
+			if (false === $member->where("id='%s'", $_SESSION[C('MEMBER_AUTH_KEY')])->setField('pailie', $val)) {
 				Log::write('设置排列失败：' . $member->getLastSql(), Log::SQL);
 				echo "设置排列失败";
 				return false;
@@ -578,7 +585,9 @@ class IndexAction extends CommonAction {
 		}
 	}
 
-	// 关于我们
+	/**
+	 * @desc 关于我们
+	 */
 	public function about() {
 		$variable = M("Variable");
 		$Description = $variable->getByVname('Description');
@@ -1327,98 +1336,105 @@ class IndexAction extends CommonAction {
 		}
 	}
 
-	//////////////////////////////////////////// End of Class /////////////////////////////////////////////////
-	//
+	/**
+	 * @desc 连接导向
+	 * @author Frank UPDATE 2013-08-17
+	 */
 	public function link_out() {
-		if (empty($_REQUEST['url'])) {
+		$url = $_REQUEST['url'];
+		if (empty($url)) {
 			$this->error("对不起，链接不存在！");
 		}
-		$url = $_REQUEST['url'];
 		if ($_REQUEST['mod'] == "myarea") {
 			$mid = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
-			$condition = "mid={$mid} and (url='{$url}' or url='{$url}/')";
 			$mod = D("Myarea");
-			$mod->where($condition)->setInc("click_num");
+			$mod->where("mid='%d' and url='%s'", $mid, $url)->setInc("click_num");
 		} else {
 			$linkModel = D("Links");
-			$linkModel->where("link = '{$url}/'")->setInc("click_num");
+			$linkModel->where("link='%s'", $url)->setInc("click_num");
 		}
-//		redirect("http://{$url}");
+		
 		echo '<style type="text/css">a{display:none}</style>
-				  <script src="http://s96.cnzz.com/stat.php?id=4907803&web_id=4907803" language="JavaScript"></script>
-				  <script type="text/javascript">
-					 window.location.href="http://' . $url . '";
-				  </script>';
+			  <script src="http://s96.cnzz.com/stat.php?id=4907803&web_id=4907803" language="JavaScript"></script>
+			  <script type="text/javascript">
+			  window.location.href="http://' . $url . '";
+			  </script>';
 	}
-
-	//统计用户自留地按钮点击统计
+	
+	/**
+	 * @desc 统计用户自留地按钮点击统计
+	 * @author Frank UPDATE 2013-08-17
+	 */
 	public function count_myarea_open() {
 		if ($this->isAjax()) {
 			$mid = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
 			$myareaModel = D("Myarea");
-			$myareaModel->where("mid={$mid}")->setInc("myarea_button_click_num");
+			$myareaModel->where("mid='%d'", $mid)->setInc("myarea_button_click_num");
+			exit(0);
 		}
 	}
 
-	//统计英语角按钮点击统计
+	/**
+	 * @desc 统计英语角按钮点击统计
+	 * @author Frank UPDATE 2013-08-17
+	 */
 	public function count_english_open() {
 		if ($this->isAjax()) {
 			$variableModel = D("Variable");
 			$num = intval($variableModel->getVariable("english_click_num")) + 1;
 			$variableModel->setVariable("english_click_num", $num, "英语角按钮点击次数");
-			exit();
+			exit(0);
 		}
 	}
-
-	//ajax获取首页目录以及连接列表
+	/**
+	 * @desc ajax获取首页目录以及连接列表
+	 * @author Frank UPDATE 2013-08-17
+	 */
 	public function ajax_get_links() {
 		if ($this->isAjax()) {
-			//获取语言
 			$lan = intval($this->_param('lan'));
+			$p = (int)$this->_param('p');
+			$cid = intval($this->_param('cid'));
+			$grade = $this->_param('grade');
+			$sort = $this->_param('sort');
+			$page = $p > 0 ? $p : 1;
+			
 			if ($lan <= 0) {
 				$lan = $this->_session('lanNow');
-				if (empty($lan)) {
-					$lan = 1;
-				}
+				empty($lan) && $lan = 1;
 			}
-			$page = (int)$this->_param('p') > 0 ? (int)$this->_param('p') : 1;
-//             C('VAR_PAGE') = $page;
+			
 			$_SESSION['lanNow'] = $lan;
 			$catModel = D("Category");
-			//获取分类
-			$ret = $catModel->getIndexCategoryLinksList($lan, intval($this->_param('cid')), $this->_param('grade'), $this->_param('sort'), $page);
+			$ret = $catModel->getIndexCategoryLinksList($lan, $cid, $grade, $sort, $page);
 			$this->ajaxReturn($ret, "请求成功", true);
 		}
 	}
 
 	/**
-	 * google translate
+	 * @desc google translate
+	 * @author Frank UPDATE 2013-08-17
 	 */
 	public function google_translate() {
-
 		$srcLang = $_POST['sl'];
 		$tatLang = $_POST['tl'];
 		$q = urlencode(trim($_POST['q']));
-
+		
 		$url = 'http://translate.google.cn/translate_a/t?client=t&hl=zh-CN&sl=' . $srcLang . '&tl=' . $tatLang . '&ie=UTF-8&oe=UTF-8&multires=1&oc=1&prev=conf&psl=en&ptl=vi&otf=1&it=sel.166768%2Ctgtd.2118&ssel=4&tsel=4&sc=1&q=' . $q;
-
 		$result = file_get_contents($url);
-
 		$this->ajaxReturn($result, '', true);
 	}
-
+	
 	public function test0619() {
 		set_time_limit(1000);
 		import("@.ORG.VideoDownload");
 		$videoDownload = new VideoDownload();
-
-	  //  $question['media_text_url'] = trim(str_replace(' ', '', $question['media_text_url']));
+		//$question['media_text_url'] = trim(str_replace(' ', '', $question['media_text_url']));
 		$videoInfo = $videoDownload->download("http://www.peepandthebigwideworld.com/activities/anywhere-activities/whathappens/");
 		if (!$videoInfo) {
 			var_dump($videoDownload->getError());
 		}
 		var_dump($videoInfo);
-		
 	}
 	
 }

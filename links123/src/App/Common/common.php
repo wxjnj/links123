@@ -401,8 +401,11 @@ function cleanHtml($str) {
     return implode('', $arrStr);
 }
 
-/* 自动给所有的链接地址加标签 */
-
+/**
+ * @desc 自动给所有的链接添加地址标签
+ * @param unknown_type $cnt
+ * @return mixed
+ */
 function checkLinkUrl($cnt) {
     $cnt = str_replace('<img src="http://', "|image|", $cnt);
     $cnt = clearLink($cnt);
@@ -440,7 +443,11 @@ function checkLinkUrl($cnt) {
     return $rsl;
 }
 
-// 去链接
+/**
+ * @desc 去连接
+ * @param unknown_type $cnt
+ * @return string|unknown
+ */
 function clearLink($cnt) {
     $temp = explode('<a ', $cnt);
     if (count($temp) > 1) {
