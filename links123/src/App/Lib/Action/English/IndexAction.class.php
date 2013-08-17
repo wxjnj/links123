@@ -10,7 +10,7 @@ class IndexAction extends EnglishAction {
     public function index() {
         //视频解析库
         import("@.ORG.VideoHooks");
-
+        //
         //保证输出不受静态缓存影响
         C('HTML_CACHE_ON', false);
         $objectModel = D("EnglishObject");
@@ -22,6 +22,7 @@ class IndexAction extends EnglishAction {
         if (!is_array($user_last_select)) {
             $user_last_select = array();
         }
+        //
         //默认情况
         $user_last_select['voice'] = intval($user_last_select['voice']) > 0 ? intval($user_last_select['voice']) : 1;
         $user_last_select['target'] = intval($user_last_select['target']) > 0 ? intval($user_last_select['target']) : 1;

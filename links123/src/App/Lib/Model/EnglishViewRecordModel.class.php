@@ -60,7 +60,7 @@ class EnglishViewRecordModel extends CommonModel {
             $map['user_id'] = intval(cookie('english_tourist_id')); //从cookie获取游客id
             //如果不存在游客id，返回的试题id为零
             if ($map['user_id'] == 0) {
-                return 0;
+                return array();
             }
             $map['user_id'] = -$map['user_id'];
         } else {
@@ -95,7 +95,7 @@ class EnglishViewRecordModel extends CommonModel {
     public function getNewTouristId() {
         $ret = 0;
         $viewRecordUser = $this->field("MIN(user_id) as max_user_id")->find();
-        if (false === $viewRecordUser || empty($viewRecordUser) || $viewRecordUser['max_user_id'] == null || $tourist['max_user_id'] > 0) {
+        if (false === $viewRecordUser || empty($viewRecordUser) || $viewRecordUser['max_user_id'] == null || $viewRecordUser['max_user_id'] > 0) {
             $viewRecordUser['max_user_id'] = 0;
         } else {
             $viewRecordUser['max_user_id'] = -$viewRecordUser['max_user_id'];
