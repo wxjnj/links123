@@ -12,7 +12,6 @@ function setHome(url) {
 				alert("该操作被浏览器拒绝, 如果想启用该功能, 请在地址栏内输入 about:config, 然后将项 signed.applets.codebase_principal_support 值改为 true.");
 			}
 		}
-		//
 		if (window.confirm("你确定要设置" + url + "为首页吗？") == 1) {
 			var prefs = Components.classes['@mozilla.org/preferences-service;1'].getService(Components.interfaces.nsIPrefBranch);
 			prefs.setCharPref('browser.startup.homepage', url);
@@ -29,6 +28,10 @@ $(document).ready(function(){
 		$('#sinaWeatherToolIframe').attr('src',url+city);
 	}).fail(function(){
 		$('#sinaWeatherToolIframe').attr('src',url+city);
+	});
+	//sethome
+	$('.a_setHome').on('click', function(){
+		setHome(location.href);
 	});
 });
 //---------------------------------------------------  
@@ -94,18 +97,16 @@ $(function() {
 	// 个人中心左边导航
 	$("#grzx_nav li").hover(function() {
 		$(this).addClass("hov");
-	},
-			function() {
-				$(this).removeClass("hov");
-			});
+	},function() {
+		$(this).removeClass("hov");
+	});
 
 	// 留言板文本框
 	$(".wdjyts_ts a").toggle(function() {
 		$(this).parent().next("div").show();
-	},
-			function() {
-				$(this).parent().next("div").hide();
-			});
+	},function() {
+		$(this).parent().next("div").hide();
+	});
 
 	// 会员左栏菜单关闭本页
 	if ($("#grzx_nav")[0]) {
@@ -136,6 +137,10 @@ $(function() {
 
 	$("#direct_text").click(function() {
 		$(this).val('');
+	}).blur(function(){
+		if($(this).val()==""){
+			$(this).val($(this).attr('txt'));
+		}
 	});
 
 	// 直达回车键响应 
