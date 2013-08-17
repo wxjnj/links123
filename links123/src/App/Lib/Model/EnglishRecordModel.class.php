@@ -106,7 +106,6 @@ class EnglishRecordModel extends CommonModel {
      */
     public function getUserTestQuestionIdList($object, $level, $voice, $target, $pattern, $extend_condition = "") {
         $question_ids = array();
-        $question_ids[0] = 0;
         if (intval($object)) {
             if (D("EnglishObject")->where("id=" . intval($object))->getField("name") == "综合") {
                 $object = 0;
@@ -133,7 +132,7 @@ class EnglishRecordModel extends CommonModel {
         if (isset($_SESSION[C('MEMBER_AUTH_KEY')]) && intval($_SESSION[C('MEMBER_AUTH_KEY')]) > 0) {
             $map['user_id'] = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
             $ret = $this->where($map)->select();
-            if (!empty($ret)) {
+            if (!empty($ret) && false !== $ret) {
                 foreach ($ret as $value) {
                     $question_ids[] = intval($value['question_id']);
                 }
@@ -142,8 +141,10 @@ class EnglishRecordModel extends CommonModel {
             $map['user_id'] = intval(cookie("english_tourist_id"));
             $englishTourishRecordModel = D("EnglishTouristRecord");
             $ret = $englishTourishRecordModel->where($map)->select();
-            foreach ($ret as $value) {
-                $question_ids[] = intval($value['question_id']);
+            if (!empty($ret) && false !== $ret) {
+                foreach ($ret as $value) {
+                    $question_ids[] = intval($value['question_id']);
+                }
             }
         }
         return $question_ids;
