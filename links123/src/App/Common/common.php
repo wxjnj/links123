@@ -609,7 +609,7 @@ function formRequest($url, $paramArr=array(),$method="post") {
 }
 
 /**
- * 获取静态资源的md5值，在引用css,js的时候跟上，以便静态资源文件更新的时候能够立即呈现
+ * @desc 获取静态资源的md5值，在引用css,js的时候跟上，以便静态资源文件更新的时候能够立即呈现
  * @param string $resourcePath css,js等静态资源文件的路径
  * @return string 返回静态资源文件内容的md5值
  */
@@ -620,7 +620,7 @@ function md5Resource($resourcePath) {
 }
 
 /**
- * 2-20位 数字 字母 下划线
+ * @desc 2-20位 数字 字母 下划线
  * @param string $name
  * @return boolean
  * @author frank qian
@@ -629,7 +629,7 @@ function checkName($name){
 	return preg_match('/^[\x{4e00}-\x{9fa5}a-zA-Z0-9_]{2,20}$/u', $name);
 }
 /**
- * 6-20位 数字 字母
+ * @desc 6-20位 数字 字母
  * @param string $name
  * @return boolean
  * @author frank qian
@@ -638,7 +638,7 @@ function checkStr($str){
 	return preg_match('/^[0-9a-zA-Z]{6,20}$/', $str);
 }
 /**
- * 验证是否为Email
+ * @desc 验证是否为Email
  * @param string $value
  * @return boolean
  * @author frank qian
@@ -646,4 +646,34 @@ function checkStr($str){
 function checkEmail($value) {
 	return strlen($value) > 6 && preg_match("/^[\w\-\.]+@[\w\-\.]+(\.\w+)+$/", $value);
 }
+
+/**
+ * @desc 获取分组数组
+ * @param int $rid
+ * @return array
+ * @author Frank 2013-08-17
+ */
+function getGradeArr($rid) {
+	$separate = "&nbsp;<span>|</span>&nbsp;";
+	switch ($rid) {
+		case 1:
+			$aryGrade = array('1' => '初级', '1,2' => '初级' . $separate . '中级',
+			'1,2,3' => '初级' . $separate . '中级' . $separate . '高级',
+			'2' => '中级', '2,3' => '中级' . $separate . '高级', '3' => '高级');
+			$grades = array('初级', '中级', '高级');
+			break;
+		case 4:
+			$aryGrade = array('1' => '苹果', '2' => '安卓+',
+			'1,2' => '苹果' . $separate . '安卓+');
+			$grades = array('苹果', '安卓+');
+			break;
+		default:
+			$aryGrade = array();
+			$grades = array();
+	}
+	$gradeArr['aryGrade'] = $aryGrade;
+	$gradeArr['grades'] = $grades;
+	return $gradeArr;
+}
+		
 ?>

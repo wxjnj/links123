@@ -30,24 +30,7 @@ class IndexAction extends CommonAction {
 		$catName = $cat->where('id = %d', $cid)->getField('cat_name'); 
 		$ridTip = $cat->where('id = %d', $rid)->getField('intro');
 		
-		$separate = "&nbsp;<span>|</span>&nbsp;";
-		switch ($rid) {
-			case 1:
-				$aryGrade = array('1' => '初级', '1,2' => '初级' . $separate . '中级',
-				 '1,2,3' => '初级' . $separate . '中级' . $separate . '高级',
-				 '2' => '中级', '2,3' => '中级' . $separate . '高级', '3' => '高级');
-				$grades = array('初级', '中级', '高级');
-				break;
-			case 4:
-				$aryGrade = array('1' => '苹果', '2' => '安卓+', 
-				'1,2' => '苹果' . $separate . '安卓+');
-				$grades = array('苹果', '安卓+');
-				break;
-			default:
-				$aryGrade = array();
-				$grades = array();
-		}
-		
+		$gradeArr = getGradeArr($rid);
 		$this->getLeftMenu($rid);
 		
 		$condition['status'] = 1;
@@ -57,19 +40,13 @@ class IndexAction extends CommonAction {
 			$condition['grade'] = array('like', '%' . $grade . '%');
 			$this->assign("grade", $grade);
 		}
-		
 		if (empty($sort)) {
 			$sort = "csort asc,sort asc";
 		}
-		
 		$paiLie = $this->_session('pailie');
 		if (empty($paiLie)) {
 			$memberAuthKey = $this->_session(C('MEMBER_AUTH_KEY'));
-			if (!empty($memberAuthKey)) {
-				$paiLie = M("Member")->where('id = %s', $memberAuthKey)->getField('pailie');
-			} else {
-				$paiLie = M("Variable")->where("vname='pailie'")->getField("value_int");
-			}
+			$paiLie = empty($memberAuthKey) ? M("Variable")->where("vname='pailie'")->getField("value_int") : M("Member")->where("id = '%s'", $memberAuthKey)->getField('pailie');
 			session('pailie', $paiLie);
 		}
 		$listRows = $paiLie == 1 ? 20 : 11;
@@ -77,7 +54,8 @@ class IndexAction extends CommonAction {
 		$rst = ($pg - 1) * $listRows;
 		
 		$links = new LinksFntViewModel();
-		$list = $links->getLists($condition, $sort, $rst, $listRows, $rid, $aryGrade);
+		$list = $links->getLists($condition, $sort, $rst, $listRows, $rid, $gradeArr['aryGrade']);
+		
 		$this->assign('links', $list);
 		$array_bq = array("dl", "div");
 		
@@ -124,7 +102,7 @@ class IndexAction extends CommonAction {
 		$this->assign("cat_name", $catName);
 		$this->assign("rid", $rid);
 		$this->assign('rid_tip', $ridTip);
-		$this->assign('grades',$grades);
+		$this->assign('grades', $gradeArr['grades']);
 		
 		$this->getHeader();
 		$this->display();
@@ -1393,17 +1371,16 @@ class IndexAction extends CommonAction {
 	public function ajax_get_links() {
 		if ($this->isAjax()) {
 			$lan = intval($this->_param('lan'));
-			$p = (int)$this->_param('p');
+			$page = (int)$this->_param('p');
 			$cid = intval($this->_param('cid'));
 			$grade = $this->_param('grade');
 			$sort = $this->_param('sort');
-			$page = $p > 0 ? $p : 1;
+			$page = $page > 0 ? $page : 1;
 			
-			if ($lan <= 0) {
-				$lan = $this->_session('lanNow');
+			if ($lan == 0) {
+				$lan = session('lanNow');
 				empty($lan) && $lan = 1;
 			}
-			
 			$_SESSION['lanNow'] = $lan;
 			$catModel = D("Category");
 			$ret = $catModel->getIndexCategoryLinksList($lan, $cid, $grade, $sort, $page);
