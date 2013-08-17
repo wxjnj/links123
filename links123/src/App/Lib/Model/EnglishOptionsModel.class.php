@@ -7,7 +7,9 @@ class EnglishOptionsModel extends CommonModel {
     );
 
     public function getQuestionOptionList($question_id) {
-        $ret = $this->where("question_id=" . intval($question_id) . " and status=1")->order("sort")->select();
+        $map['question_id'] = $question_id;
+        $map['status'] = 1;
+        $ret = $this->where($map)->order("`sort`")->select();
         if (false === $ret) {
             return array();
         }
@@ -35,12 +37,8 @@ class EnglishOptionsModel extends CommonModel {
             }
         }
         if ($is_rand) {
-//            shuffle($ret);
+            shuffle($ret);
         }
-//        $start_code = ord("A");
-//        foreach ($ret as $key => $value) {
-//            $ret[$key]['code'] = chr($start_code + $key);
-//        }
         return $ret;
     }
 
