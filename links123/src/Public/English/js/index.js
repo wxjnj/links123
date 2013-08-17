@@ -32,6 +32,8 @@ $(function() {
             $(".answer").slideUp("slow", function() { //这里收起后显示
                 if ($("#J_media_div").attr("media_type") == 1 || $("#J_media_div").attr("media_type") == 2) {
                     $("#J_media_div").css({'display': '', 'position': '', 'left': ''}).show();
+                } else if ($("#J_media_div").attr("media_type") == 4) {
+                	$("#J_media_swfobject_div").show();
                 } else if ($("#J_media_div").attr("data_isaboutvideo") == 1) {
                     $(".J_player").show();
                 }
@@ -39,8 +41,11 @@ $(function() {
         } else { //这里先隐藏后展开
             if ($("#J_media_div").attr("media_type") == 1 || $("#J_media_div").attr("media_type") == 2) {
                 $("#J_media_div").css({'display': 'block', 'position': 'absolute', 'left': '-9999px'}).hide();
-            } else if ($("#J_media_div").attr("data_isaboutvideo") == 1) {
+            } else if ($("#J_media_div").attr("media_type") == 4) {
+            	$("#J_media_swfobject_div").hide();
+            }  else if ($("#J_media_div").attr("data_isaboutvideo") == 1) {
                 $(".J_player").hide();
+                $('#J_media_div').html('');
             }
             $(".answer").slideDown("slow");
         }
@@ -416,14 +421,14 @@ function requestQuestion(type, clickObject) {
                 }
 
                 if (data.question && data.question.tested) {
-                    var top = $(".videobutton .next").offset().top - 50;
-                    var left = $(".videobutton .next").offset().left - 32;
+                    var top = $("#J_nextQuestion").offset().top - 50;
+                    var left = $("#J_nextQuestion").offset().left - 32;
                     $.messager.show({
                         msg: "<span class='messager_span'>暂无新题，升级吧!</span>",
                         showType: 'fade',
                         width: 150,
                         height: 45,
-                        timeout: 4000,
+                        timeout: 3000,
                         style: {
                             left: left,
                             top: top
@@ -558,12 +563,10 @@ function requestQuestion(type, clickObject) {
 	                        swfobject.embedSWF(swfUrl, "J_media_swfobject_div", "100%", "100%", version, "/swf/playerProductInstall.swf", question.media, params);
 	
 	                    } else if (question.media_type == 4) {
-	
-	                        videoStr += '<object id="flash_fallback_1" class="vjs-flash-fallback" width="100%" height="100%" type="application/x-shockwave-flash" data="http://releases.flowplayer.org/swf/flowplayer-3.2.1.swf">';
-	                        videoStr += '<param name="movie" value="http://releases.flowplayer.org/swf/flowplayer-3.2.1.swf" />';
-	                        videoStr += '<param name="allowfullscreen" value="true" />';
-	                        videoStr += "<param name='flashvars' value='" + question.media + "' />";
-	                        videoStr += '</object>';
+	                    	$('#J_media_div').html('<div id="J_media_swfobject_div" style="height:'+media_height+'px;width:'+media_width+'px;"></div>');
+	                    	
+	                    	flowplayer("J_media_swfobject_div", "http://releases.flowplayer.org/swf/flowplayer-3.2.16.swf", {playlist:[question.media_img_url,{url: question.media,autoPlay: false}]});
+
 	                    } else {
 	
 	                        videoStr += '<object id="J_media_object" height="100%" width="100%" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">';
