@@ -42,7 +42,6 @@ module.exports = function(grunt) {
 					],
 					'~temp/index.js' : [
 						'src/v2/js/index.js',
-						'src/v2/js/righter.js',
 						'src/v2/js/mail.js',
 						'src/v2/js/gadgets.js'
 					],
