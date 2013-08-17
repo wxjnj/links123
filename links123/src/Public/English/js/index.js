@@ -491,6 +491,12 @@ function requestQuestion(type, clickObject) {
                 //
                 //更新题目
                 var question = data.question;
+                //
+                //更改美音英音等状态
+                $(".menuleft .voice[value='"+question.voice+"']").addClass("current").siblings(".voice").removeClass("current");
+                $(".menuleft .target[value='"+question.target+"']").addClass("current").siblings(".target").removeClass("current");
+                $(".menuleft .pattern[value='"+question.pattern+"']").addClass("current").siblings(".pattern").removeClass("current");
+                //
                 if (question.content == null) {
                     $(".answertitle").text("");
                 } else {
