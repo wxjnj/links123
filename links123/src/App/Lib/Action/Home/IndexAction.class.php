@@ -104,9 +104,9 @@ class IndexAction extends CommonAction {
 		$this->assign('rid_tip', $ridTip);
 		$this->assign('grades', $gradeArr['grades']);
 		
-		$this->getHeader();
+		//$this->getHeader();
 		$this->display();
-		$this->getFooter();
+		//$this->getFooter();
 	}
 
 	/**
