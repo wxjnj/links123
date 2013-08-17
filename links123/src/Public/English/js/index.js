@@ -685,14 +685,14 @@ function bindOptionClickEvent() {
                 $("#J_totalRice").text(english_user_info.total_rice);
 
                 if (data.level_up) {
-                    var top = $("#question_content").offset().top + 10;
-                    var left = $("#question_content").offset().left;
+                    var top = $(".answertitle").offset().top + 10;
+                    var left = $(".answertitle").offset().left;
                     $.messager.show({
                         msg: "<span  class='messager_span'>恭喜，你可以升级了</span>",
                         showType: 'fade',
                         width: 175,
                         height: 45,
-                        timeout: 4000,
+                        timeout: 3000,
                         style: {
                             left: left,
                             top: top

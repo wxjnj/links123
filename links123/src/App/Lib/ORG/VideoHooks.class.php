@@ -418,7 +418,7 @@ class VideoHooks {
 			//$data['img'] = $this->match('/"image":"(.+?)"/is', $swf);
 		}
 	
-		//$data['isObject'] = true;
+		$data['media_type'] = 2;
 	
 		return $data;
 	
