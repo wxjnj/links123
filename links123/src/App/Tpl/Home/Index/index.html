@@ -1,3 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<include file="Contorls:headlinks" />
+	<link rel="canonical" href="http://links123.cn" />
+</head>
+<body>
+	<include file="Contorls:headerindex" />
+
 	<div class="annt">
 		<h2>{$ann_name}</h2>
 		<div class="annt_lie" id="annt">
@@ -149,6 +158,26 @@
 			
 		</div>
   
-		<include file="homerighter" />
+		<include file="Contorls:righter" />
 		<div class="clr"></div>
 	</div>
+
+	<include file="Contorls:footer" />
+
+	<div id="you_are_master"></div>
+	<div id="pop_box">
+		<div class="div_myarea">
+			<dl class="top_btn"><a class="btn_default">恢复默认</a><!-- 　<a class="btn_save">保存到账号</a> --></dl>
+			<ul id="ul_myarea">
+				<volist name="_SESSION['arealist']" id="vo">
+					<li title="拖动排序" url="{$vo.url}" id="area_{$vo.id}" myid="{$vo.id}">{$vo.web_name}</li>
+				</volist>
+			</ul>
+			<dl class="botn_ipt">网站名称：<input type="text" class="web_name" />　网址：<input type="text" class="url" />　<input type="button" class="btn_sub_myarea" value=" 保 存 " /><input type="hidden" class="myid" /></dl>
+		</div>
+	</div>
+
+	<include file="Contorls:footlinks" />
+	<load href="__STATIC__/v2/js/jquery-ui.min.js" />
+	<load href="__STATIC__/v2/js/index.js" />
+</html>

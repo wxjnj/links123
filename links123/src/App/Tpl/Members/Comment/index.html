@@ -1,13 +1,12 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-
+<!DOCTYPE html>
+<html>
 <head>
-	<include file="Home:Public:meta" />
+	<include file="Home:Contorls:headlinks" />
 </head>
 
 <body>
 
-	<include file="Home:Public:header" />
+	<include file="Home:Contorls:header" />
 
 	<!--个人中心-->
 	<div class="container">
@@ -17,32 +16,32 @@
   
 		<div class="grzx_right">
 			<div class="grzx_link">您的位置：我的说说</div>
-		    <div class="grzx_sx">
-		    	<a rid="" <empty name="rid">class="on"</empty> >全部</a>&nbsp;
-		    <volist name="cats" id="vo">
-		    	<a rid="{$vo.id}" <eq name="rid" value="$vo['id']">class="on"</eq> >{$vo.cat_name}</a>&nbsp;
-		    </volist>
-		    </div>
-		    
-    		<ul class="grzx_wdss">
-    		<volist name="mycmts" id="vo">
-      			<li>
-        			<div class="grzx_wdss_tit"><span>发表日期：{$vo.create_time}</span><font>{$vo.title}</font></div>
-		        	<div class="grzx_wdss_font">
-			           	<div class="grzx_wdss_cont"><span>说说内容：</span>&nbsp;{$vo.comment}</div>
-			           	<div class="grzx_wdss_button"><a class="button01 btn_edit" myid="{$vo.id}">编辑</a><a href="__APP__/Index/detail/id/{$vo.lnk_id}" target="_blank" class="button01">查看简介</a></div>
-			           	<div class="clr"></div>
-		        	</div>
-		      	</li>
+			<div class="grzx_sx">
+				<a rid="" <empty name="rid">class="on"</empty> >全部</a>&nbsp;
+			<volist name="cats" id="vo">
+				<a rid="{$vo.id}" <eq name="rid" value="$vo['id']">class="on"</eq> >{$vo.cat_name}</a>&nbsp;
+			</volist>
+			</div>
+			
+			<ul class="grzx_wdss">
+			<volist name="mycmts" id="vo">
+				<li>
+					<div class="grzx_wdss_tit"><span>发表日期：{$vo.create_time}</span><font>{$vo.title}</font></div>
+					<div class="grzx_wdss_font">
+						<div class="grzx_wdss_cont"><span>说说内容：</span>&nbsp;{$vo.comment}</div>
+						<div class="grzx_wdss_button"><a class="button01 btn_edit" myid="{$vo.id}">编辑</a><a href="__APP__/Index/detail/id/{$vo.lnk_id}" target="_blank" class="button01">查看简介</a></div>
+						<div class="clr"></div>
+					</div>
+				</li>
 			</volist>
 			</ul>
-	    	{$page}
-	  	</div>
-	  	<div class="clr"></div>
+			{$page}
+		</div>
+		<div class="clr"></div>
 	</div>
 	<!--个人中心 结束-->
 
-	<include file="Home:Public:newFooter" />
+	<include file="Home:Contorls:footer" />
 	
 	<form id="frm_js">
 		<input type="hidden" name="rid" value="{$rid}" />
@@ -51,7 +50,8 @@
 	
 	<textarea id="editarea"></textarea>
 	
-	<load href="__PUBLIC__/skin/js/member.js" />
+	<include file="Home:Contorls:footlinks" />
+	<load href="__STATIC__/v2/js/member.js" />
 
 </body>
 </html>

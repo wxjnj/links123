@@ -1,0 +1,817 @@
+<div class="search">
+	<form action="" id="searchForm" method="GET">
+	<input name="thl" id="J_thl" type="hidden" value="">
+	<input name="tid" id="J_tid" type="hidden" value="">
+	<input name="q" id="J_q" type="hidden" value="">
+	<input type="text" value="" style="display:none;" />
+	<volist name="thl_list" id="vo" key="i">
+		<div class="thlz" <neq name="vo['thl']" value="$thlNow">style="display:none;"</neq> >
+			<volist name="vo['thlz']" id="thlz" key="j">
+				<dl>
+					<a <if condition='$thlz["id"] eq $tidNow'>class="tip light"<else />class="tip"</if> 
+						title="{$thlz['tip']}" ndk="{$thlz['needkey']}" url="{$thlz['url']}" tid="{$thlz['id']}" 
+						tag_name="{$thlz['url_tag_name']}">
+						{$thlz['name']}
+					</a>
+				</dl>
+				<neq name="vo['thlz_len']" value="$j">
+					<dl class='dot'>&nbsp;</dl>
+				</neq>
+			</volist>
+		</div>
+	</volist>
+	<div id="rch_sch">
+		<input type="text" id="search_text" class="rich_sch_txt" x-webkit-speech lang="zh-CN" value="{$_COOKIE['keyword']}" autocomplete="off" /><input type="hidden" id="search_text_o" />
+		<dl id="btn_search" class="rich_search_button"></dl>
+		<ul id="tips"></ul>
+	</div>
+	<div id="J_thl_div" >
+	<volist name="thl_list" id="vo" key="m">
+		<dl><a <eq name="thlNow" value="$vo['thl']">class="light"</eq> >{$vo['thl']}</a></dl>
+	</volist>
+	</div>
+	<!-- <div id="wang">&nbsp;　请输入网名，如新浪，直达另客收录网站　&nbsp;</div> -->
+	<input type="hidden" id="tidNow" value="{$tidNow}" />
+	</form>
+</div>
+<!-- $网页邮箱 -->
+<div class="box-mail" id="J_box_mail">
+	<form action="https://ssl.mail.163.com/entry/coremail/fcg/ntesdoor2?df=mail163_letter&from=web&funcid=loginone&iframe=1&language=-1&net=t&passtype=1&product=mail163&race=382_92_196_gz&style=-1" method="post" id="J_mailForm" target="_blank">
+		<ul>
+			<li>
+				<span class="box-mail_input">
+					<input autocomplete="off" id="mailUserName" placeholder="邮箱帐号"> 
+				</span>
+				<span class="box-mail_select" style="-moz-user-select: none;">
+					<span data-n="0" id="mailSelect">@163.com</span>
+				</span>
+			</li>
+			<li>
+				<span class="box-mail_input box-mail_input_passwd">
+					<input type="password" id="mailPassWord" placeholder="邮箱密码"> 
+				</span> 
+				<span class="box-mail_btn">
+					<button type="button" id="J_mail_submit">登&nbsp;录</button>
+				</span>
+			</li>
+			<li>
+				<div>
+					<ul selectindex="0" class="mail-list" id="mail_list">
+						<li dn="0">@163.com</li>
+						<li dn="1">@126.com</li>
+						<li dn="2">@sina.com</li>
+						<li dn="3">@yahoo.com.cn</li>
+						<li dn="4">@yahoo.cn</li>
+						<li dn="5">@sohu.com</li>
+						<li dn="6">@yeah.net</li>
+						<li dn="7">@139.com</li>
+						<li dn="8">@21cn.com</li>
+						<li dn="9">@qq.com</li>
+						<li dn="10">@gmail.com</li>
+						<li dn="11">@hotmail.com</li>
+						<li dn="12">@aliyun.com</li>
+						<li dn="13">@yahoo.com</li>
+					</ul>
+				</div>
+			</li>
+		</ul>
+	</form>
+</div>
+<!-- 网页邮箱$-->
+
+<!-- $计算search text width-->
+<!-- <span id="J_str_len" style="font-weight: bold; font-size: 12;visibility: hidden;z-index:-99;"></span>  -->
+<!-- 计算search text width$-->
+
+<!-- $日历-->
+<div style="display:none;" id="J_box_calendar">
+	<div class="box_calendar_list">
+		<ul id="J_box_calendar_list">
+			<li>
+				<a href="#" data-url="http://baidu365.duapp.com/wnl.html" title="365日历"><img src="http://apps.bdimg.com/store/static/kvt/340238f487321ab424dd471680e314a3.jpg"></a>
+			</li>
+			<li>
+				<a href="#" data-url="http://apps.bdimg.com/store/static/kvt/ea06f11ba6647c89f2357e34cc7799cc.swf" title="万年历查询"><img src="http://apps3.bdimg.com/store/static/kvt/f7141bfa8f0e5d1fd702fb1585443e61.jpg"></a>
+			</li>
+			<li>
+				<a href="#" data-url="http://xcalendar.duapp.com/" title="万日历"><img src="http://apps2.bdimg.com/store/static/kvt/cb9b3ccff4fcff429a35ed4e753586a8.png"></a>
+			</li>
+			<li>
+				<a href="#" data-url="http://baidu.open.zhwnl.cn/baidu/html/index.html" title="中国万年历"><img src="http://apps3.bdimg.com/store/static/kvt/3096a9364b5b6afd3887cb7e1d5e98ef.jpg"></a>
+			</li>
+			<li>
+				<a href="#" data-url="http://saturdaycalendar.duapp.com" title="礼拜六万年历"><img src="http://apps.bdimg.com/store/static/kvt/5a86bbd61be39be1fe46a3bbe4def6fd.jpg"></a>
+			</li>
+			<li>
+				<a href="#" data-url="http://app.yesky.com/cms/wnl?bd_user=2519257532&bd_sig=60decbc778008689c8229834ec7de3c4&canvas_pos=platform" title="天极万年历"><img src="http://apps1.bdimg.com/store/static/kvt/ac1e59f87ce2848c746c7d8268b61b14.png"></a>
+			</li>
+		</ul>
+	</div>
+	<iframe id="J_calendar_iframe" width="540px" height="450px" scrolling="no" frameborder="0" style="" allowtransparency="true" src=""></iframe>
+</div>
+<!-- 日历$-->
+
+<!-- $翻译 -->
+<div style="display:none;" id="J_box_translate">
+	<div id="gt-src-wrap" class="">
+		<label style="display: none" for="source">翻译文字或网页</label>
+		<div style="width: 100%;">
+			<div class="gt-hl-layer"
+				style="-moz-box-sizing: content-box; width: 599px; height: 65px; left: 0px; top: 0px; padding-left: 8px; padding-right: 20px;"
+				dir="ltr"></div>
+			<textarea autocorrect="off" autocomplete="off" autocapitalize="off"
+				spellcheck="false" dir="ltr" tabindex="0" wrap="SOFT" name="text"
+				id="source"
+				style="-moz-box-sizing: border-box; overflow-y: hidden; overflow-x: auto; padding-right: 20px;"
+				class="goog-textarea J_translate_source"></textarea>
+			<div id="clear"
+				class="clear-button goog-toolbar-button"
+				title="清除文&#8203;&#8203;字">
+				<span class="jfk-button-img J_translate_clear"></span>
+			</div>
+		</div>
+	</div>
+
+	<div id="gt-langs">
+		<div id="gt-lang-src">
+			<input type="hidden" id="gt-sl" name="sl" value="auto">
+			<div class="goog-inline-block goog-flat-menu-button je"
+				id="gt-sl-gms" role="button" style="-moz-user-select: none;"
+				tabindex="0" aria-haspopup="true">
+				<div class="goog-inline-block goog-flat-menu-button-caption">源语言：
+					<span id="J_lang_src">自动检测语言</span></div>
+				<div class="goog-inline-block goog-flat-menu-button-dropdown"></div>
+			</div>
+		</div>
+		<div id="gt-lang-swap">
+			<div
+				class="jfk-button-standard jfk-button-narrow jfk-button jfk-button-disabled trans-swap-button je"
+				id="gt-swap" aria-disabled="true" role="button"
+				style="-moz-user-select: none;" data-tooltip="调转两种语言"
+				aria-label="调转两种语言">
+				<span class="jfk-button-img"></span>
+			</div>
+		</div>
+		<div id="gt-lang-tgt">
+			<input type="hidden" id="gt-tl" name="tl" value="zh-CN">
+			<div class="goog-inline-block goog-flat-menu-button je"
+				id="gt-tl-gms" role="button" style="-moz-user-select: none;"
+				tabindex="0" aria-haspopup="true">
+				<div class="goog-inline-block goog-flat-menu-button-caption">目标语言：
+					<span id="J_lang_tgt">中文(简体)</span></div>
+				<div class="goog-inline-block goog-flat-menu-button-dropdown"></div>
+			</div>
+		</div>
+		<div id="gt-lang-submit">
+			<input type="submit" class="jfk-button jfk-button-action"
+				tabindex="0" value="翻译" id="gt-submit">
+		</div>
+		<div style="clear: float;"></div>
+	</div>
+
+	<div class="goog-menu goog-menu-vertical" id="gt-sl-gms-menu"
+		style="-moz-user-select: none; visibility: visible; left: 2px; margin-top: 29px; -moz-box-sizing: border-box; display: none;"
+		role="menu" aria-haspopup="true" aria-activedescendant=":2">
+		<table>
+			<tbody>
+				<tr>
+					<td><div id="goog-menuitem-group-1"
+							class="goog-menuitem-group" style="width: 100%;">
+							<div
+								class="goog-menuitem goog-option goog-option-selected goog-menuitem-highlight J_lang_auto"
+								aria-selected="true" 
+								style="-moz-user-select: none;" data-id="auto" id=":2">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									检测语言
+								</div>
+							</div>
+							<div class="goog-menuseparator" role="separator"
+								style="-moz-user-select: none;" id=":3"></div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="sq" id=":4">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									阿尔巴尼亚语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="ar" id=":5">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									阿拉伯语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="az" id=":6">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									阿塞拜疆语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="ga" id=":7">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									爱尔兰语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="et" id=":8">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									爱沙尼亚语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="eu" id=":9">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									巴斯克语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="be" id=":a">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									白俄罗斯语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="bg" id=":b">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									保加利亚语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="is" id=":c">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									冰岛语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="pl" id=":d">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									波兰语
+								</div>
+							</div>
+						</div></td>
+					<td><div id="goog-menuitem-group-2"
+							class="goog-menuitem-group" style="width: 100%;">
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="bs" id=":e">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									波斯尼亚语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="fa" id=":f">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									波斯语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="af" id=":g">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									布尔语(南非荷兰语)
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="da" id=":h">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									丹麦语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="de" id=":i">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									德语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="ru" id=":j">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									俄语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="fr" id=":k">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									法语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="tl" id=":l">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									菲律宾语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="fi" id=":m">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									芬兰语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="km" id=":n">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									高棉语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="ka" id=":o">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									格鲁吉亚语
+								</div>
+							</div>
+						</div></td>
+					<td><div id="goog-menuitem-group-3"
+							class="goog-menuitem-group" style="width: 100%;">
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="gu" id=":p">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									古吉拉特语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="ht" id=":q">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									海地克里奥尔语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="ko" id=":r">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									韩语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="nl" id=":s">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									荷兰语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="gl" id=":t">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									加利西亚语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="ca" id=":u">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									加泰罗尼亚语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="cs" id=":v">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									捷克语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="kn" id=":w">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									卡纳达语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="hr" id=":x">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									克罗地亚语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="la" id=":y">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									拉丁语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="lv" id=":z">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									拉脱维亚语
+								</div>
+							</div>
+						</div></td>
+					<td><div id="goog-menuitem-group-4"
+							class="goog-menuitem-group" style="width: 100%;">
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="lo" id=":10">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									老挝语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="lt" id=":11">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									立陶宛语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="ro" id=":12">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									罗马尼亚语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="mt" id=":13">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									马耳他语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="mr" id=":14">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									马拉地语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="ms" id=":15">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									马来语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="mk" id=":16">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									马其顿语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="bn" id=":17">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									孟加拉语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="hmn" id=":18">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									苗语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="no" id=":19">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									挪威语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="pt" id=":1a">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									葡萄牙语
+								</div>
+							</div>
+						</div></td>
+					<td><div id="goog-menuitem-group-5"
+							class="goog-menuitem-group" style="width: 100%;">
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="ja" id=":1b">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									日语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="sv" id=":1c">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									瑞典语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="sr" id=":1d">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									塞尔维亚语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="eo" id=":1e">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									世界语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="sk" id=":1f">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									斯洛伐克语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="sl" id=":1g">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									斯洛文尼亚语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="sw" id=":1h">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									斯瓦希里语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="ceb" id=":1i">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									宿务语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="te" id=":1j">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									泰卢固语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="ta" id=":1k">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									泰米尔语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="th" id=":1l">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									泰语
+								</div>
+							</div>
+						</div></td>
+					<td><div id="goog-menuitem-group-6"
+							class="goog-menuitem-group" style="width: 100%;">
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="tr" id=":1m">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									土耳其语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="cy" id=":1n">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									威尔士语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="ur" id=":1o">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									乌尔都语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="uk" id=":1p">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									乌克兰语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="iw" id=":1q">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									希伯来语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="el" id=":1r">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									希腊语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="es" id=":1s">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									西班牙语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="hu" id=":1t">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									匈牙利语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="hy" id=":1u">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									亚美尼亚语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="it" id=":1v">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									意大利语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="yi" id=":1w">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									意第绪语
+								</div>
+							</div>
+						</div></td>
+					<td><div id="goog-menuitem-group-7"
+							class="goog-menuitem-group" style="width: 100%;">
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="hi" id=":1x">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									印地语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="id" id=":1y">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									印尼语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="jw" id=":1z">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									印尼爪哇语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="vi" id=":21">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									越南语
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="zh-TW" id=":23">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox"></div>
+									中文(繁体)
+								</div>
+							</div>
+							<div class="goog-menuitem goog-option" 
+								 style="-moz-user-select: none;" data-id="zh-CN" id=":22">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox gt-lang-ext"></div>
+									<b>中文(简体)</b>
+								</div>
+							</div>
+							<div
+								class="goog-menuitem goog-option goog-menuitem-emphasize-highlight"
+								 
+								style="-moz-user-select: none;" data-id="en" id=":20">
+								<div class="goog-menuitem-content">
+									<div class="goog-menuitem-checkbox gt-lang-ext"></div>
+									<b>英语</b>
+								</div>
+							</div>
+						</div></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<div id="gt-res-wrap">
+		<div class="almost_half_cell" id="gt-res-content">
+			<div style="zoom: 1" dir="ltr">
+				<div class="" style="" id="tts_button">
+					
+				</div>
+				<span lang="" class="short_text" id="result_box"></span>
+			</div>
+		</div>
+	</div>
+	
+	<div style="" id="gt-res-dict">
+	
+	</div>
+
+</div>
+<!-- 翻译$ -->
+
+<!-- $计算器-->
+<div style="display:none;" id="J_box_calc">
+	<div class="box_calendar_list">
+		<ul id="J_box_calc_list">
+			<li>
+				<a href="#" data-url="http://app.yesky.com/cms/jsq/" title="科学计算器"><img src="http://apps.bdimg.com/store/static/kvt/47aeab3335b9d10cb154469dedebb91d.png"></a>
+			</li>
+			<li>
+				<a href="#" data-url="http://qiqiapp3.duapp.com/yuyinjisuanqi/" title="语音计算器"><img src="http://apps.bdimg.com/store/static/kvt/7806700bd0d4e1fa3225eb468a1ac6b6.png"></a>
+			</li>
+			<li>
+				<a href="#" data-url="http://apps2.bdimg.com/store/static/kvt/ac05740f5ab0c828596575e2b4aa6bde.swf" title="计算器美女语音版"><img src="http://apps2.bdimg.com/store/static/kvt/7424f71bc4833877ecf44025d97d4b23.png"></a>
+			</li>
+			<li>
+				<a href="#" data-url="http://apps.bdimg.com/store/static/kvt/62ba443535a86ee0d8bee5706444b40a.swf" title="科学计算器"><img src="http://apps2.bdimg.com/store/static/kvt/065558d9d552d0a1f99fcc856e177ea7.png"></a>
+			</li>
+			<li>
+				<a href="#" data-url="http://app.rong360.com/fangdaical.html" title="按揭房贷计算器"><img src="http://apps.bdimg.com/store/static/kvt/3f45bc4639505e83958abc4aa7ab69bf.png"></a>
+			</li>
+			<li>
+				<a href="#" data-url="http://www.52popsoft.com/CurrencyConvert/Baidu/MainFormV5.htm" title="汇率换算"><img src="http://apps.bdimg.com/store/static/kvt/9016e3a584e5a1d9421e07d7b0a79a33.jpg"></a>
+			</li>
+		</ul>
+	</div>
+	<iframe id="J_calc_iframe" width="540px" height="530px" scrolling="no" frameborder="0" style="" allowtransparency="true" src=""></iframe>
+</div>
+<!-- 计算器$-->
+
+<!-- $便签-->
+<div style="display:none;" id="J_box_stikynot_1" class="box_stikynot J_box_stikynot" data-id="1">
+	<div class="box_stikynot_head" id="J_box_stikynot_head">
+		<div class="box_stikynot_bar box_stikynot_add J_stikynot_add">
+			<a href="#" title="新建便签" class="">add</a>
+		</div>
+		<div class="box_stikynot_color">
+			<div class="box_stikynot_color_bar color_b" data-class="bg_b"></div>
+			<div class="box_stikynot_color_bar color_g" data-class="bg_g"></div>
+			<div class="box_stikynot_color_bar color_pink" data-class="bg_pink"></div>
+			<div class="box_stikynot_color_bar color_p" data-class="bg_p"></div>
+			<div class="box_stikynot_color_bar color_w" data-class="bg_w"></div>
+			<div class="box_stikynot_color_bar color_y" data-class="bg_y"></div>
+		</div>
+		<div class="box_stikynot_bar box_stikynot_del J_stikynot_del">
+			<a href="#" title="删除便签" class="">del</a>
+		</div>
+		<div style="clear: float;"></div>
+	</div>
+	<div class="box_stikynot_text">
+		<textarea name="text" class="J_stikynot_text bg_y"></textarea>
+	</div>
+</div>
+<!-- 便签$-->
+<!-- $闹钟-->
+<div style="display:none;" id="J_box_clock">
+	<div class="box_calendar_list">
+		<ul id="J_box_clock_list">
+			<li>
+				<a href="#" data-url="http://qishi8.duapp.com/nz/" title="在线闹钟"><img src="http://apps2.bdimg.com/store/static/kvt/ba6ea3eee91467d324132f2c5a4e1cb3.jpg"></a>
+			</li>
+			<li>
+				<a href="#" data-url="http://www.naobiao.com/web_system/naobiao_com_www/api/iframe/" title="在线闹钟"><img src="http://apps2.bdimg.com/store/static/kvt/52f69ff5c03885b9522b58eba3af353f.jpg"></a>
+			</li>
+			<li>
+				<a href="#" data-url="http://zaixiannaozhong.duapp.com/index2.jsp" title="在线闹钟"><img src="http://apps2.bdimg.com/store/static/kvt/2a79384d6ee1f6a0310c1aae2654ada7.jpg"></a>
+			</li>
+			<li>
+				<a href="#" data-url="http://apps3.bdimg.com/store/static/kvt/23810b5eaf614bf542d48b85a6eac59a.swf" title="在线闹钟"><img src="http://apps3.bdimg.com/store/static/kvt/8c50776d74439e6111d1fd50a25e2102.gif"></a>
+			</li>
+			<li>
+				<a href="#" data-url="http://apptool.duapp.com/naozhong/" title="在线闹钟"><img src="http://apps3.bdimg.com/store/static/kvt/3b96d1d7fb4538cb635444e27157cdde.jpg"></a>
+			</li>
+			<li>
+				<a href="#" data-url="http://apps3.bdimg.com/store/static/kvt/313600e013f1357cee5f8f5ab0447e78.swf" title="在线闹钟"><img src="http://apps3.bdimg.com/store/static/kvt/8db6435735e3a25a75ceee115e571e8d.jpg"></a>
+			</li>
+		</ul>
+	</div>
+	<iframe id="J_clock_iframe" width="540px" height="530px" scrolling="no" frameborder="0" style="" allowtransparency="true" src=""></iframe>
+</div>
+<!-- 闹钟$-->
