@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+	<include file="Public:meta" />
+</head>
+
+<body>
+
+	<include file="Public:header" />
+
+	<!--推荐链接-->
+	<div class="tjlj_b">
+		<div class="tjlj_tit"><!-- <a id="btn_close_me" class="button01">关闭此页</a> -->推荐链接</div>
+	<form id="frm_rec">
+		<div class="tjlj_tit01">1.&nbsp;选择语言</div>
+		<p>
+			<label><input type="radio" name="language" value="1" <eq name="linkNow.language" value="1">checked="true"</eq> />&nbsp;中文岛</label>&nbsp;　
+			<label><input type="radio" name="language" value="2" <eq name="linkNow.language" value="2">checked="true"</eq> />&nbsp;英文岛</label>
+		</p>
+	  	<div class="tjlj_tit01">2.&nbsp;选择推荐链接分类</div>
+	  	<ul class="tjlj_ul">
+	  	<volist name="cats" id="cat">
+	  		<li class="just_name" title="展开">{$cat.cat_name}</li>
+		    <li class="tjlj_li">
+		      	<div class="tjlj_pic" title="收起">{$cat.cat_name}</div>
+		      	<div class="tjlj_lie">
+			       	<div class="tjlj_lie_ch">
+			       	<ul>
+			       	<volist name="cat.subCats" id="sbc">
+			        	<li><label value="{$sbc.id}"><input type="radio" name="category" value="{$sbc.id}" <eq name="linkNow.category" value="$sbc['id']">checked="true"</eq> />&nbsp;{$sbc.cat_name}</label>&nbsp;　</li>
+			        </volist>
+			        </ul>
+			        <notempty name="cat.grades">
+				        <div class="leibie">细分：
+				        <volist name="cat.grades" id="grd">
+				        	<label><input type="radio" name="grade" value="{$grd.value}" <if condition="($linkNow.rid eq $cat['id']) and ($linkNow.grade eq $grd['value'])">checked="true"</if> />&nbsp;{$grd.name}</label>&nbsp;　
+				        </volist>   
+				        </div>
+				    </notempty>
+			       	</div>
+		       	</div>
+		      	<div class="clr"></div>
+		    </li>
+		</volist>
+		</ul>
+		
+	  	<div class="tjlj_tit01">3.&nbsp;标题</div>
+	  	<input type="text" class="tjlj_text" name="title" value="{$linkNow.title}" /><br />
+	  	<div class="tjlj_tit01">4.&nbsp;链接</div>
+	  	<input type="text" class="tjlj_text" name="link" value="{$linkNow.link}" />
+	  	<div class="tjlj_tit01">5.&nbsp;简介</div>
+	  	<textarea class="tjlj_txt" name="intro" id="tjlj_txte">{$linkNow.intro}</textarea>
+	  	<div class="cont_xx_submit">
+			还能输入<span>1000</span>个字 <a id="btn_sub_rec" class="button01">提交</a>
+	  	</div>
+	  	<input type="hidden" name="id" value="{$linkNow.id}" />
+	  	<input type="reset" id="btn_reset" class="none" />
+	</form>
+	  	<div class="cont_xx_windowclose"><a id="btn_close_me" class="button01">关闭此页</a></div>
+	</div>
+	<!--推荐链接 结束-->
+
+	<include file="Public:footer" />
+	
+	<input type="hidden" id="alt" value="{$alt}" />
+        
+        <load href='__PUBLIC__/skin/easyui/themes/metro/easyui.css' />
+        <load href="__PUBLIC__/skin/easyui/jquery.easyui.min.js" />
+	<load href="__PUBLIC__/skin/js/recommend.js" />
+
+</body>
+</html>
