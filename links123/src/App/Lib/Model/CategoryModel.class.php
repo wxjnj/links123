@@ -10,7 +10,6 @@ class CategoryModel extends CommonModel {
     public function getIndexCategoryLinksList($lan, $cid, $grade, $sort,$page = false) {
         
     	import("@.ORG.String");
-        intval($lan) == 0 || $lan = 1;
         $list = array();
         if ($cid == 0) {
             $cid = $this->where('status=1 and level=1')->min('id');
@@ -95,7 +94,7 @@ class CategoryModel extends CommonModel {
             $list['page'] = $p->show_ajax_js();
         }
         
-        $list['links'] = $linksViewModel->getLists($condition, $sort, $rst, $listRows, $y, $aryGrade);
+        $list['links'] = $linksViewModel->getLists($condition, $sort, $rst, $listRows, $list['root_cat_info']['id'], $ary_grade);
         
         return $list;
     }

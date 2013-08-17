@@ -12,15 +12,23 @@ class LinksFntViewModel extends ViewModel {
         'links' => array('id', 'title', 'logo', 'category', 'language', 'link', 'intro', 'grade', 'create_time', 'status', 'say_num', 'collect_num', 'sort', 'uid', 'ding', 'cai', 'mid', 'recommended', '_type' => 'LEFT'),
         'category' => array('cat_name', 'prt_id', 'sort' => 'csort', '_on' => 'links.category=category.id')
     );
-    
+    /**
+     * @desc 获取链接列表
+     * @param unknown_type $condition
+     * @param unknown_type $sort
+     * @param unknown_type $rst
+     * @param unknown_type $listRows
+     * @param unknown_type $rid
+     * @param unknown_type $aryGrade
+     * @return unknown
+     */
     public function getLists($condition, $sort, $rst, $listRows, $rid, $aryGrade)
     {
     	$list = $this->where($condition)->order($sort)->limit($rst . ',' . $listRows)->select();
-    	
+    	$paiLie = session('pailie');
     	foreach ($list as &$value) {
     		$value["more"] = 0;
     		if (empty($value["logo"])) {
-    			$paiLie = $this->_session('pailie');
     			if ($paiLie == 1) {
     				$value["sintro"] = String::msubstr($value["intro"], 0, 19);
     			} else {
