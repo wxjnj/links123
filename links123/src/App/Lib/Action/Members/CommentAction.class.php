@@ -52,4 +52,20 @@ class CommentAction extends CommonAction
 		//
 		$this->display();
 	}
+	
+	public function editComment() {
+		$id = $_POST['id'];
+		if (empty($id)) {
+			echo '说说id丢失';
+			return false;
+		}
+		//
+		$comment = M("Comment");
+		if (false === $comment->where('id=' . $id)->setField('comment', htmlspecialchars(trim($_POST['comment'])))) {
+			Log::write('编辑说说失败：' . $comment->getLastSql(), Log::SQL);
+			echo '编辑说说失败';
+		} else {
+			echo 'editOK';
+		}
+	}
 }
