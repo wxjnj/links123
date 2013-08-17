@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<include file="Contorls:headlinks" />
+	<link rel="canonical" href="http://links123.cn{$_SERVER['REQUEST_URI']}" />
+</head>
+
+<body>
+
+	<include file="Contorls:header" />
+
+	<!--登陆注册-->
+	<div class="login_reg">
+		<div class="login_reg_img login_reg_about">
+			<div class="login_reg_img_b"><img src="__PUBLIC__/Uploads/Others/{$banner.0.pic}" width="420" height="290" /></div>
+		</div>
+		<div class="loginreg_b">
+			<p class="about_tit">关于我们</p>
+			<p>{$aboutCtnt}</p>
+		</div>
+		<div class="clr"></div>
+		<a id="btn_close_me" class="login_reg_close">关闭此页</a>
+	</div>
+	<!--结束 登陆注册-->
+
+	<include file="Contorls:footer" />
+	<include file="Contorls:footlinks" />
+	
+</body>
+</html>
