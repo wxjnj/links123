@@ -8,7 +8,7 @@
  */
 import("@.Common.CommonAction");
 class EmptyAction extends CommonAction { 
-	/*
+	/**
 	 * @desc 404错误页面
 	 * @author Frank UPDATE 2013-08-17
 	 */

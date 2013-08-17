@@ -9,6 +9,10 @@ import("@.Common.CommonAction");
  */
 class AboutUsAction extends CommonAction {
 	
+	/**
+	 * @desc 关于我们页面
+	 * @see AboutUsAction::index()
+	 */
 	public function index()
 	{
 		$variable = M("Variable");

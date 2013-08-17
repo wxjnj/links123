@@ -147,20 +147,16 @@ class CommonAction extends Action {
 	 * 获取页头
 	 * @param array $data
 	 */
-	protected function getHeader($data=array()) {
+	protected function getHeaderInfo($data=array()) {
 
 		$variable = $this->_getVariable();
 		$title = empty($data['title'])?'另客网 | 领先的全面导航 | 高效的组合搜索 | 独特的英语角（在建） - 学习':empty($data['title']);
 		$keywords = empty($data['keywords'])?$variable['keywords']:empty($data['keywords']);
 		$description = empty($data['description'])?$variable['description']:empty($data['description']);
-
-		//注入
+		
 		$this->assign('title', $title);
 		$this->assign('keywords', $keywords);
 		$this->assign('description', $description);
-
-		//显示模板文件
-		$this->display("Public:newHeader");
 	}
 
 	/**
