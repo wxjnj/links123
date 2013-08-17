@@ -106,6 +106,7 @@ class EnglishRecordModel extends CommonModel {
      */
     public function getUserTestQuestionIdList($object, $level, $voice, $target, $pattern, $extend_condition = "") {
         $question_ids = array();
+        $question_ids[0] = 0;
         if (intval($object)) {
             if (D("EnglishObject")->where("id=" . intval($object))->getField("name") == "综合") {
                 $object = 0;
