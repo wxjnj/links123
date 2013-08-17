@@ -50,7 +50,7 @@ $(function() {
 	
 	//
 	$("#frm_rec input[name='language']").click(function(){
-		window.location.href = URL+"/recommend/lan/"+$(this).val();
+		window.location.href = URL+"?lan="+$(this).val();
 	});
 	
 	//

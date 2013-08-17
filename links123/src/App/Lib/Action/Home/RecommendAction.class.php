@@ -8,7 +8,11 @@
  */
 import("@.Common.CommonAction");
 class RecommendAction extends CommonAction {
-	
+	/**
+	 * @desc 推荐链接页面
+	 * @author Frank UPDATE 2013-08-17
+	 * @see RecommendAction::index()
+	 */
 	public function index() {
 		//
 		$links = M("Links");
