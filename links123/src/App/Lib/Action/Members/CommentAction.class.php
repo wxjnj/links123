@@ -71,15 +71,17 @@ class CommentAction extends CommonAction
 	 * @author Frank UPDATE 2013-08-18
 	 */
 	public function editComment() {
+		$this->checkLog();
+		$mid = $_SESSION[C('MEMBER_AUTH_KEY')];
 		$id = intval($_POST['id']);
 		$comment = htmlspecialchars(trim($_POST['comment']));
 		if (empty($id)) {
 			echo '说说id丢失';
 			return false;
 		}
-		
+		$date['comment'] = $comment;
 		$comment = M("Comment");
-		if (false === $comment->where("id = '%d'", $id)->setField('comment', $comment)) {
+		if (false === $comment->where("id = '%d'", $id)->save($date)) {
 			Log::write('编辑说说失败：' . $comment->getLastSql(), Log::SQL);
 			echo '编辑说说失败';
 		} else {
