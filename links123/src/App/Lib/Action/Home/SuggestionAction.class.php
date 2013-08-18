@@ -10,46 +10,37 @@ import("@.Common.CommonAction");
 class SuggestionAction extends CommonAction {
 	/**
 	 * @desc 留言建议页面
+	 * @author Frank UPDATE 2013-08-18
 	 * @see SuggestionActionAction::index()
 	 */
 	public function index() {
-
-		//
 		import("@.ORG.String");
-		//
+		$pg = intval($_REQUEST[C('VAR_PAGE')]) ? : 1;
 		$listRows = 20;
-		$pg = !empty($_REQUEST[C('VAR_PAGE')]) ? $_REQUEST[C('VAR_PAGE')] : 1;
 		$rst = ($pg - 1) * $listRows;
-		//
-		//        $condition['_string'] = 'pid is null';
+		
 		$condition['pid'] = 0;
 		$condition['status'] = array('egt', 0);
-		//
+		
 		$sugView = new SuggestionViewModel();
 		$list = $sugView->where($condition)->order('create_time desc')->limit($rst . ',' . $listRows)->select();
 		$total = count($list);
 		foreach ($list as $key => &$value) {
-			
 			$list[$key]['number'] = $total - $key;
-			$list[$key]['reply'] = $sugView->getSuggestionReplyList($value['id']);
-			if (false === $list[$key]['reply']) {
-				unset($list[$key]['reply']);
-			}
+			$reply = $sugView->getSuggestionReplyList($value['id']);
+			!empty($reply) && $list[$key]['reply'] = $reply;
 			$value['create_time'] = date('Y-m-d H:i', $value['create_time']);
+			
 			if ($value['mid'] == -1) {
 				$list[$key]['nickname'] = "另客";
 			} else if ($value['mid'] == 0 || empty($value['nickname'])) {
 				$list[$key]['nickname'] = "游客";
-			} else {
-				if ($value['mid'] == $_SESSION[C('MEMBER_AUTH_KEY')]) {
-					$value['editable'] = "1";
-				}
+			} else if ($value['mid'] == $_SESSION[C('MEMBER_AUTH_KEY')]) {
+				 $value['editable'] = "1";
 			}
-			if (empty($value['face'])) {
-				$value['face'] = "face.jpg";
-			}
-			
+			empty($value['face']) && $value['face'] = "face.jpg";
 		}
+		
 		$this->assign('suglist', $list);
 		$count = $sugView->where($condition)->count('suggestion.id');
 		if ($count > 0) {
@@ -59,12 +50,77 @@ class SuggestionAction extends CommonAction {
 			$this->assign("page", $page);
 			$this->assign("count", $count);
 		}
-		//
-		$this->assign('banner', $this->getAdvs(2, "banner"));
-		//
+		
+		$this->assign('banner', $this->getAdvs(3, "banner"));
 		$this->assign('title', '您的意见对另客非常重要！让我们一起努力，让另客变得更好！');
 		$this->assign('Description', '另客的成功离不开您的意见和建议。我们欢迎您给我们提意见，我们将据此不断改进，为您提供更好的服务。');
-		//
+		
 		$this->display();
+	}
+
+	/**
+	 * @desc 保存建议投诉
+	 * @name saveSuggestion
+	 * @param reply_id [回复留言的id]
+	 * @param suggest [留言内容]
+	 * @author Frank UPDATE 2013-08-18
+	 */
+	public function saveSuggestion() {
+		
+		$suggestion = M("Suggestion");
+		$replyId = intval($_POST['reply_id']);
+		$suggest = stripslashes($_POST['suggest']);
+		
+		$operate = "留言";
+		if ($replyId > 0) {
+			$data['pid'] = $replyId;
+			$data['is_reply'] = 1;
+			$operate = "点评";
+		}
+		$data['mid'] = $_SESSION[C('MEMBER_AUTH_KEY')];
+		$data['suggest'] = $suggest;
+		$data['create_time'] = time();
+		
+		if (false === $suggestion->add($data)) {
+			Log::write($operate . '提交失败：' . $suggestion->getLastSql(), Log::SQL);
+			$this->ajaxReturn("", $operate . "提交失败", false);
+		} else if ($data['pid'] > 0) {
+			$suggestion->where("id='%d'", $data['pid'])->setField("create_time", time());
+			$this->ajaxReturn("", $operate . "成功", true);
+		}
+	}
+	
+	/**
+	 * @desc 更新留言
+	 * @name updateSuggestion
+	 * @param int id [留言id]
+	 * @param content [留言内容]
+	 * @author Frank UPDATE 2013-08-18
+	 */
+	public function updateSuggestion() {
+		if ($this->isPost()) {
+			$id = intval($_POST['id']);
+			$content = stripslashes($_POST['content']);
+			
+			$data['id'] = $id;
+			$data['create_time'] = time();
+			$data['suggest'] = $content;
+			
+			$mod = M("Suggestion");
+			$suggestion_info = $mod->find($data['id']);
+			if (false === $suggestion_info || empty($suggestion_info)) {
+				$this->ajaxReturn("", "留言不存在", false);
+			}
+			if ($_SESSION[C('MEMBER_AUTH_KEY')] != $suggestion_info['mid']) {
+				$this->ajaxReturn("", "对不起，你不能编辑他人的留言", false);
+			}
+			if (empty($data['suggest'])) {
+				$this->ajaxReturn("", "留言不能为空", false);
+			}
+			if (false === $mod->save($data)) {
+				$this->ajaxReturn("", "编辑失败", false);
+			}
+			$this->ajaxReturn("", "编辑成功", true);
+		}
 	}
 }
