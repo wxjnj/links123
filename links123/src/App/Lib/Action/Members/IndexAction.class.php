@@ -10,8 +10,6 @@
 import("@.Common.CommonAction");
 class IndexAction extends CommonAction
 {
-	public function __construct() {
-	}
 	/**
 	 * @desc 会员中心默认页面
 	 * @package Members
