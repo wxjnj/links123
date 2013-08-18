@@ -232,7 +232,7 @@ $(function() {
             return false;
         }
         $(this).addClass("current").siblings("li.class2").removeClass("current");
-        requestQuestion("category");
+        requestQuestion("category", $(this));
     });
     //
     //视频音频点击事件
@@ -257,7 +257,7 @@ $(function() {
             return false;
         }
         $(this).addClass("current").siblings("li.class3").removeClass("current");
-        requestQuestion("category");
+        requestQuestion("category", $(this));
     });
 
     $("#J_nextQuestion").click(function() {
@@ -371,10 +371,17 @@ function requestQuestion(type, clickObject) {
     var object = $(".kecheng .current").attr("value");
     var level = $(".grade .current").attr("value");
 
+
     if (type == 'level') {
         level = clickObject.attr("value");
     } else if (type == 'category') {
-        voice = clickObject.attr("value");
+        if (clickObject.hasClass("target")) {
+            target = clickObject.attr("value");
+        } else if (clickObject.hasClass("pattern")) {
+            pattern = clickObject.attr("value");
+        } else {
+            voice = clickObject.attr("value");
+        }
     } else if (type == 'object') {
         object = clickObject.attr("value");
     }
@@ -627,7 +634,13 @@ function requestQuestion(type, clickObject) {
                 if (type == 'level' || type == 'object') {
                     clickObject.addClass("current").siblings("li").removeClass("current");
                 } else if (type == 'category') {
-                    clickObject.addClass("current").siblings("li.class1").removeClass("current");
+                    if (clickObject.hasClass("target")) {
+                        clickObject.addClass("current").siblings("li.target").removeClass("current");
+                    } else if (clickObject.hasClass("pattern")) {
+                        clickObject.addClass("current").siblings("li.pattern").removeClass("current");
+                    } else {
+                        clickObject.addClass("current").siblings("li.voice").removeClass("current");
+                    }
                 }
 
                 ajaxRequest = undefined;

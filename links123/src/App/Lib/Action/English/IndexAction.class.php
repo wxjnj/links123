@@ -89,7 +89,7 @@ class IndexAction extends EnglishAction {
 
             $question['media_text_url'] = trim(str_replace(' ', '', $question['media_text_url']));
             $videoInfo = $videoHooks->analyzer($question['media_text_url']);
-			
+
             $media_url = $videoInfo['swf'];
 
             $media_img_url = $videoInfo['img'];
@@ -136,9 +136,9 @@ class IndexAction extends EnglishAction {
             }
             $question['media'] = preg_replace(array('/width="(.*?)"/is', '/height="(.*?)"/is', '/width=300 height=280/is', '/width=600 height=400/is'), array('width="100%"', 'height="100%"', 'width="100%" height="100%"', 'width="100%" height="100%"'), $question['media']);
         }
-        
+
         if ($question['media_type'] && !$question['media']) {
-        	$question['media_url'] ? $question['media'] = $question['media_url'] : '';
+            $question['media_url'] ? $question['media'] = $question['media_url'] : '';
         }
 
         //排行榜数据
@@ -191,8 +191,13 @@ class IndexAction extends EnglishAction {
                 $voice = intval($_REQUEST['voice']) == 0 ? 1 : intval($_REQUEST['voice']); //口语
                 $target = intval($_REQUEST['target']) == 0 ? 1 : intval($_REQUEST['target']); //训练对象
                 $pattern = intval($_REQUEST['pattern']) == 0 ? 1 : intval($_REQUEST['pattern']); //类型
-                $object = intval($_REQUEST['object']) == 0 ? $objectModel->getDefaultObjectInfo($voice, $target, $pattern) : intval($_REQUEST['object']); //科目
-                $level = intval($_REQUEST['level']) == 0 ? $levelModel->getDefaultLevelInfo($object, $voice, $target, $pattern) : intval($_REQUEST['level']); //等级
+                if ($type == "category") {
+                    $object = 1;
+                    $level = 1;
+                } else {
+                    $object = intval($_REQUEST['object']) == 0 ? $objectModel->getDefaultObjectInfo($voice, $target, $pattern) : intval($_REQUEST['object']); //科目
+                    $level = intval($_REQUEST['level']) == 0 ? $levelModel->getDefaultLevelInfo($object, $voice, $target, $pattern) : intval($_REQUEST['level']); //等级
+                }
             }
             /* 存储用户点击历史  开始 */
             $user_last_select = array();
@@ -259,7 +264,6 @@ class IndexAction extends EnglishAction {
                         $saveData['media_url'] = $media_url;
                     }
                     $questionModel->where('id=' . $ret['question']['id'])->save($saveData);
-
                 }
 
                 $ret['question']['media_img_url'] = $media_img_url;
@@ -284,11 +288,11 @@ class IndexAction extends EnglishAction {
                 }
                 $ret['question']['media'] = preg_replace(array('/width="(.*?)"/is', '/height="(.*?)"/is', '/width=300 height=280/is', '/width=600 height=400/is'), array('width="100%"', 'height="100%"', 'width="100%" height="100%"', 'width="100%" height="100%"'), $ret['question']['media']);
             }
-            
+
             if ($ret['question']['media_type'] && !$ret['question']['media']) {
-            	$ret['question']['media_url'] ? $ret['question']['media'] = $ret['question']['media_url'] : '';
+                $ret['question']['media_url'] ? $ret['question']['media'] = $ret['question']['media_url'] : '';
             }
-            
+
             $ret['question']['isAboutVideo'] = $isAboutVideo;
 
             $this->ajaxReturn($ret, "请求成功", true);
@@ -423,82 +427,83 @@ class IndexAction extends EnglishAction {
      * @author slate date:2013-08-07
      */
     public function feedback() {
-    	
-    	if ($this->isAjax()) {
-    		
-    		$type = intval($_POST['type']);
-    		$question_id = intval($_POST['question_id']);
-    		$media_html = trim($_POST['media_html']);
-    		
-    		$data = array(
-    				'member_id' => intval($_SESSION[C('MEMBER_AUTH_KEY')]),
-    				'type' => $type,
-    				'question_id' => $question_id,
-    				'media_html' => $media_html,
-    				'create_time' => time()
-    		);
-    		
-    		D("EnglishFeedback")->add($data);
-    		
-    		$this->ajaxReturn('', true);
-    	}
+
+        if ($this->isAjax()) {
+
+            $type = intval($_POST['type']);
+            $question_id = intval($_POST['question_id']);
+            $media_html = trim($_POST['media_html']);
+
+            $data = array(
+                'member_id' => intval($_SESSION[C('MEMBER_AUTH_KEY')]),
+                'type' => $type,
+                'question_id' => $question_id,
+                'media_html' => $media_html,
+                'create_time' => time()
+            );
+
+            D("EnglishFeedback")->add($data);
+
+            $this->ajaxReturn('', true);
+        }
     }
 
     public function match_media() {
-    
-    	set_time_limit(0);
-    
-    	import("@.ORG.VideoHooks");
-    
-    	$englishQuestionModel = new EnglishQuestionModel();
-    	$questionList = $englishQuestionModel->where(" id > 5491")->getField('`id`, `media_text_url`');
-    
-    	$videoHooks = new VideoHooks();
-    
-    	$startTime = time();
-    
-    	foreach ($questionList as $id => $url) {
-    
-    		$videoInfo = array();
-    		
-    		$url = trim(str_replace(' ', '', $url));
-    		$videoInfo = $videoHooks->analyzer($url);
-    
-    		$media_url = $videoInfo['swf'];
-    
-    		$media_img_url = $videoInfo['img'];
-    
-    		$media_type = $videoInfo['media_type'];
-    		
-    		//解析成功，保存视频解析地址
-    		if ($media_url) {
-    
-    			$saveData = array(
-    					'media_img_url' => $media_img_url,
-    					'media_type' => $media_type
-    			);
-    
-    			if ($media_type) {
-    
-    				$saveData['media'] = $media_url;
-    			} else {
-    
-    				$saveData['media_url'] = $media_url;
-    			}
-    
-    			$englishQuestionModel->where("id=$id")->save($saveData);
-    		} else {
-     			var_dump($id);
-    		}
-    		sleep(1);
-    	}
-    
-    	$endTime = time();
-    
-    	echo 'start:' . date('Y-m-d H:i:s', $startTime) . '</br>';
-    	echo 'end:' . date('Y-m-d H:i:s', $endTime);
-    	exit();
+
+        set_time_limit(0);
+
+        import("@.ORG.VideoHooks");
+
+        $englishQuestionModel = new EnglishQuestionModel();
+        $questionList = $englishQuestionModel->where(" id > 5491")->getField('`id`, `media_text_url`');
+
+        $videoHooks = new VideoHooks();
+
+        $startTime = time();
+
+        foreach ($questionList as $id => $url) {
+
+            $videoInfo = array();
+
+            $url = trim(str_replace(' ', '', $url));
+            $videoInfo = $videoHooks->analyzer($url);
+
+            $media_url = $videoInfo['swf'];
+
+            $media_img_url = $videoInfo['img'];
+
+            $media_type = $videoInfo['media_type'];
+
+            //解析成功，保存视频解析地址
+            if ($media_url) {
+
+                $saveData = array(
+                    'media_img_url' => $media_img_url,
+                    'media_type' => $media_type
+                );
+
+                if ($media_type) {
+
+                    $saveData['media'] = $media_url;
+                } else {
+
+                    $saveData['media_url'] = $media_url;
+                }
+
+                $englishQuestionModel->where("id=$id")->save($saveData);
+            } else {
+                var_dump($id);
+            }
+            sleep(1);
+        }
+
+        $endTime = time();
+
+        echo 'start:' . date('Y-m-d H:i:s', $startTime) . '</br>';
+        echo 'end:' . date('Y-m-d H:i:s', $endTime);
+        exit();
     }
+
 }
 
 ?>
