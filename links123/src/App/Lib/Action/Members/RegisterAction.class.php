@@ -79,6 +79,9 @@ class RegisterAction extends CommonAction
 				$myareaModel->add($value);
 			}
 			
+			$home_session_expire = intval(D("Variable")->getVariable("home_session_expire"));
+			cookie(md5("home_session_expire"), time(), $home_session_expire);
+			
 			echo "regOK";
 		} else {
 			Log::write('会员注册失败：' . $member->getLastSql(), Log::SQL);
