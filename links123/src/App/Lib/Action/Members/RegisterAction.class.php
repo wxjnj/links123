@@ -78,11 +78,9 @@ class RegisterAction extends CommonAction
 				$value['mid'] = &$_SESSION[C('MEMBER_AUTH_KEY')];
 				$myareaModel->add($value);
 			}
-            
-            //记录用户信息
-            $str = $member->getLastInsID() . "|" . md5($data['password'] . $data['nickname']);
-			$auto_login_time = intval(D("Variable")->getVariable("auto_login_time"));
-			cookie("USER_ID", $str, $auto_login_time ? $auto_login_time : 60*60*24*7);
+			
+			$home_session_expire = intval(D("Variable")->getVariable("home_session_expire"));
+			cookie(md5("home_session_expire"), time(), $home_session_expire);
 			
 			echo "regOK";
 		} else {

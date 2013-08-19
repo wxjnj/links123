@@ -1,12 +1,7 @@
 <?php
 import("@.Common.CommonAction");
 class MemberAction extends CommonAction {
-
-    /**
-      +----------------------------------------------------------
-     * 公用函数
-      +----------------------------------------------------------
-     */
+	
     // 检查登录
     protected function checkLog($ajax = 0) {
         if (!isset($_SESSION[C('MEMBER_AUTH_KEY')]) || empty($_SESSION[C('MEMBER_AUTH_KEY')])) {
@@ -21,11 +16,6 @@ class MemberAction extends CommonAction {
         }
     }
 
-    /**
-      +----------------------------------------------------------
-     * 页面
-      +----------------------------------------------------------
-     */
     // 会员主页
     public function index() {
         //
