@@ -111,23 +111,25 @@ class EnglishUserCountModel extends CommonModel {
      * @return array 
      */
     public function getTopRiceUserList($limit = 3, $voice, $target, $pattern, $object, $level) {
-        $condition = "1=1";
+        $condition = array();
         if (intval($voice) > 0) {
-            $condition.=" AND user_count_info.voice={$voice}";
+            $condition['user_count_info.voice'] = $voice;
         }
         if (intval($target) > 0) {
-            $condition.=" AND user_count_info.target={$target}";
+            $condition['user_count_info.target'] = $target;
         }
         if (intval($pattern) > 0) {
-            $condition.=" AND user_count_info.pattern={$pattern}";
+            $condition['user_count_info.pattern'] = $pattern;
         }
         if (intval($object) > 0) {
-            if (D("EnglishObject")->where("id={$object}")->getField("name") != "综合") {
-                $condition.=" AND user_count_info.object={$object}";
+            $object_map['id'] = $object;
+            $objecr_name = D("EnglishObject")->where($object_map)->getField("name");
+            if ($objecr_name != "综合") {
+                $condition['user_count_info.object'] = $object;
             }
         }
         if (intval($level) > 0) {
-            $condition.=" AND user_count_info.level={$level}";
+            $condition['user_count_info.level'] = $level;
         }
         $list = $this->alias("user_count_info")
                 ->field("SUM(user_count_info.rice) as rice_sum,user.nickname as nickname,level.name as best_level_name")

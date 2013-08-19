@@ -172,11 +172,11 @@ class IndexAction extends EnglishAction {
             $con = array();
             $con["status"] = 1;
             if ($type == "quick_select_prev") {
-                $last_question_info = D("EnglishViewRecord")->getViewedQuestionRecord($now_question_id, "prev");
+                $last_question_info = D("EnglishViewRecord")->getViewedQuestionRecord($now_question_id, "prev", intval($_REQUEST['object']));
                 $con["id"] = intval($last_question_info['question_id']);
                 $user_last_question = $questionModel->getQuestionWithOption($con);
             } else if ($type == 'quick_select_next') {
-                $last_question_info = D("EnglishViewRecord")->getViewedQuestionRecord($now_question_id, "next");
+                $last_question_info = D("EnglishViewRecord")->getViewedQuestionRecord($now_question_id, "next", intval($_REQUEST['object']));
                 $con["id"] = intval($last_question_info['question_id']);
                 $user_last_question = $questionModel->getQuestionWithOption($con);
             }

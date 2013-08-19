@@ -54,7 +54,7 @@ class EnglishViewRecordModel extends CommonModel {
      * @param string $type [查看用户已看题目的方式next下一题/prev上一题]
      * @return max [用户看过的题目记录]
      */
-    public function getViewedQuestionRecord($now_question_id, $type = "next") {
+    public function getViewedQuestionRecord($now_question_id, $type = "next", $now_object) {
         $map = array();
         if (!isset($_SESSION[C('MEMBER_AUTH_KEY')]) || empty($_SESSION[C('MEMBER_AUTH_KEY')])) {
             $map['user_id'] = intval(cookie('english_tourist_id')); //从cookie获取游客id
@@ -67,6 +67,7 @@ class EnglishViewRecordModel extends CommonModel {
             $map['user_id'] = intval($_SESSION[C("MEMBER_AUTH_KEY")]); //用户id为登录用户的对应用户id
         }
         $map['question_id'] = $now_question_id;
+        $map['object'] = $now_object;
         $now_question_info = $this->where($map)->find(); //本次次的题目历史信息
         if (false === $now_question_info || empty($now_question_info)) {
             return array();
