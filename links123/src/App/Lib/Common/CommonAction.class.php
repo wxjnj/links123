@@ -41,13 +41,20 @@ class CommonAction extends Action {
 		$this->assign('tidNow', 1);
 	}
 
+	/**
+	 * @desc 检查是否会员登录
+	 * @author Frank UPDATE 2013-08-18
+	 * @param int $ajax
+	 * @return boolean
+	 */
 	protected function checkLog($ajax = 0) {
 		if (!isset($_SESSION[C('MEMBER_AUTH_KEY')]) || empty($_SESSION[C('MEMBER_AUTH_KEY')])) {
-			if ($ajax == 1) {
+			if ($ajax) {
 				echo "请先登录！";
 				return false;
 			} else {
 				header("Location: " . __APP__ . "/");
+				exit(0);
 			}
 		} else {
 			return true;

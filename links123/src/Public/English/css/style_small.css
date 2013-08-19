@@ -285,11 +285,12 @@ ul.grade li.current {
 .oreder_name > img{margin:0 5px;}
 .ordertitle{font-size:18px;font-weight:bold;color:#ffe3d6;font-family: "黑体", Helvetica, Arial, Sans}
 .ricenumber{
-	margin-right: 5px;
+	margin-right: 10px;
 	font-size:18px;
 	color:#9d1300;
 	font-weight:bold;
 	font-family: Helvetica, Arial, Sans;
+	float: left;
 }
 .orderpai{
 	width:40px;
@@ -365,8 +366,18 @@ ul.grade li.current {
 }
 .answercontent p:hover{
 	background:#b5814d;
-	color:white;
-	font-weight:bold;
+	color:#fff;
+}
+.answercontent p{ *zoom: 1; }
+.answercontent p:after{
+	content: '\0020';
+	display: block;
+	height: 0;
+	clear: both;
+}
+.answercontent .J_optionContent{
+	float: left;
+	width: 380px;
 }
 .answercontent p.answertitle:hover{
 	background:none;
