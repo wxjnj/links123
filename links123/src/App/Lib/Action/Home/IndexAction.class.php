@@ -666,71 +666,64 @@ class IndexAction extends CommonAction {
 			echo "未发现您输入的邮箱！";
 		}
 	}
-
-	
-	
-
-	
-
-    // 保存说说
+	/**
+	 * @desc 保存说说
+	 * @author Frank UPDATE 2013-08-19
+	 * @param int lnk_id
+	 * @param string comment
+	 * @param string ip
+	 */
 	public function saveComment() {
 		if ($this->isAjax()) {
-                $lnk_id = $this->_param('lnk_id');
-                if (empty($lnk_id)) {
-                    $this->ajaxReturn("unllid", "", false);
-                    exit;
-                }       
-
-                $commentData = stripslashes($this->_param('comment'));
-                if (empty($commentData)){
-                    exit;
-                }
-                
-                //过滤非法关健字
-                //$commentData = filterIllegal($commentData);
-  
-                $condition['comment'] = $commentData;
-                $condition['ip'] = getIP();
-                $condition['lnk_id'] = $lnk_id;
-                
-                $Comment = M("Comment");
-                $commentnum = $Comment->where($condition)->count();
-                if($commentnum >= 1)
-                {
-                    $this->ajaxReturn("isset", "", false);
-                    exit;
-                }
-
-                //1天同一ip只能发3次
-                $daystart = strtotime(date("Y-m-d", time()).' 00:00:00');
-                $dayend = strtotime(date("Y-m-d", time()).' 23:59:59');
-
-                $commentmax = $Comment->where("lnk_id=$lnk_id AND ip='$condition[ip]' AND create_time>'$daystart' AND create_time<'$dayend'")->count();
-                if($commentmax >= 3)
-                {
-                    $this->ajaxReturn("maxflag", "", false);
-                    exit;
-                }
-
-                $data = array();
-                $data['lnk_id'] = $lnk_id;
-                $data['mid'] = $_SESSION[C('MEMBER_AUTH_KEY')];
-                $data['comment'] = $commentData;
-                $data['ip'] = getIP();
-                $data['create_time'] = time();
-                                
-                if (false === $Comment->add($data)) {
-                    Log::write('说说提交失败：' . $comment->getLastSql(), Log::SQL);
-                } else {
-                    $links = M("Links");
-                    if (false === $links->where('id=' . $data['lnk_id'])->setInc('say_num')) {
-                        Log::write('增加链接说说数量失败：' . $links->getLastSql(), Log::SQL);
-                    }
-                }
-		
-                //formRequest($_SERVER['HTTP_REFERER'],array('timestamp'=>time()));
-                
-                        
+			$lnk_id = $this->_param('lnk_id');
+			if (empty($lnk_id)) {
+				$this->ajaxReturn("unllid", "", false);
+				exit;
+			}
+			
+			$commentData = stripslashes($_REQUEST['comment']);
+			if (empty($commentData)){
+				exit;
+			}
+			
+			//过滤非法关健字
+			//$commentData = filterIllegal($commentData);
+			
+			$condition['comment'] = $commentData;
+			$condition['ip'] = getIP();
+			$condition['lnk_id'] = $lnk_id;
+			
+			$Comment = M("Comment");
+			$commentnum = $Comment->where($condition)->count();
+			if($commentnum >= 1) {
+				$this->ajaxReturn("isset", "", false);
+				exit;
+			}
+			//1天同一ip只能发3次
+			$daystart = strtotime(date("Y-m-d", time()).' 00:00:00');
+			$dayend = strtotime(date("Y-m-d", time()).' 23:59:59');
+			
+			$commentmax = $Comment->where("lnk_id = '%d' AND ip = '%s' AND create_time > '%s' AND create_time < '%s'", $lnk_id, $condition['ip'], $daystart, $dayend)->count();
+			if ($commentmax >= 3) {
+				$this->ajaxReturn("maxflag", "", false);
+				exit;
+			}
+			
+			$data['lnk_id'] = $lnk_id;
+			$data['mid'] = $_SESSION[C('MEMBER_AUTH_KEY')];
+			$data['comment'] = $commentData;
+			$data['ip'] = getIP();
+			$data['create_time'] = time();
+			
+			if ($Comment->add($data)) {
+				$links = M("Links");
+				if (false === $links->where("id = '%d'", $data['lnk_id'])->setInc('say_num')) {
+					Log::write('增加链接说说数量失败：' . $links->getLastSql(), Log::SQL);
+				}
+			} else {
+				Log::write('说说提交失败：' . $Comment->getLastSql(), Log::SQL);
+			}
+			
 			$this->ajaxReturn("success", "", true);
 		}
 	}
