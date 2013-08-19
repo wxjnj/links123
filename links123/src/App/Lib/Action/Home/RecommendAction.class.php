@@ -16,8 +16,8 @@ class RecommendAction extends CommonAction {
 	public function index() {
 		//
 		$links = M("Links");
-		$id = $_REQUEST['id'];
-		$lan = $_REQUEST['lan'];
+		$id = $this->_param('id');
+		$lan = $this->_param('lan');
 		if (!empty($id)) {
 			if (!isset($_SESSION[C('MEMBER_AUTH_KEY')]) || empty($_SESSION[C('MEMBER_AUTH_KEY')])) {
 				header("Location: " . __APP__ . "/");
@@ -46,11 +46,10 @@ class RecommendAction extends CommonAction {
 			$linkNow['language'] = $lan;
 			$this->assign('linkNow', $linkNow);
 		}
-		//
+		
 		$this->getMyCats($lan);
-		//
+		
 		$this->assign('alt', $_REQUEST['alt']);
-		//
 		$this->assign('title', '好东西就应该和大家分享。您推荐的好东西会让另客的内容更加丰富！');
 		$this->assign('Description', '分享您发现的好东西，别人也会和您分享他们的好东西，互动共享让另客教育社区更加生气蓬勃！');
 		$this->display();

@@ -1,17 +1,17 @@
 <?php
-import("@.Common.CommonAction");
 /**
- * @name AboutUsAction.class.php
+ * @name AboutAction.class.php
  * @package Home
  * @desc 关于我们
  * @author frank UPDATE 2013-08-17
  * @version 0.0.1
  */
-class AboutUsAction extends CommonAction {
+import("@.Common.CommonAction");
+class AboutAction extends CommonAction {
 	
 	/**
 	 * @desc 关于我们页面
-	 * @see AboutUsAction::index()
+	 * @see AboutAction::index()
 	 */
 	public function index()
 	{

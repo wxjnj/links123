@@ -1179,14 +1179,16 @@ class IndexAction extends CommonAction {
 	 * @author Frank UPDATE 2013-08-17
 	 */
 	public function link_out() {
-		$url = $_REQUEST['url'];
+		$url = $this->_param('url');
+		$mod = $this->_param('mod');
+		
 		if (empty($url)) {
 			$this->error("对不起，链接不存在！");
 		}
-		if ($_REQUEST['mod'] == "myarea") {
+		if ($mod == "myarea") {
 			$mid = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
-			$mod = D("Myarea");
-			$mod->where("mid='%d' and url='%s'", $mid, $url)->setInc("click_num");
+			$myarea = D("Myarea");
+			$myarea->where("mid='%d' and url='%s'", $mid, $url)->setInc("click_num");
 		} else {
 			$linkModel = D("Links");
 			$linkModel->where("link='%s'", $url)->setInc("click_num");
@@ -1253,8 +1255,8 @@ class IndexAction extends CommonAction {
 	 * @author Frank UPDATE 2013-08-17
 	 */
 	public function google_translate() {
-		$srcLang = $_POST['sl'];
-		$tatLang = $_POST['tl'];
+		$srcLang = $this->_param('sl');
+		$tatLang =$this->_param('tl');
 		$q = urlencode(trim($_POST['q']));
 		
 		$url = 'http://translate.google.cn/translate_a/t?client=t&hl=zh-CN&sl=' . $srcLang . '&tl=' . $tatLang . '&ie=UTF-8&oe=UTF-8&multires=1&oc=1&prev=conf&psl=en&ptl=vi&otf=1&it=sel.166768%2Ctgtd.2118&ssel=4&tsel=4&sc=1&q=' . $q;
@@ -1266,7 +1268,6 @@ class IndexAction extends CommonAction {
 		set_time_limit(1000);
 		import("@.ORG.VideoDownload");
 		$videoDownload = new VideoDownload();
-		//$question['media_text_url'] = trim(str_replace(' ', '', $question['media_text_url']));
 		$videoInfo = $videoDownload->download("http://www.peepandthebigwideworld.com/activities/anywhere-activities/whathappens/");
 		if (!$videoInfo) {
 			var_dump($videoDownload->getError());
