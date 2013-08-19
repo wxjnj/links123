@@ -7,7 +7,9 @@ class EnglishOptionsModel extends CommonModel {
     );
 
     public function getQuestionOptionList($question_id) {
-        $ret = $this->where("question_id=" . intval($question_id) . " and status=1")->order("sort")->select();
+        $map['question_id'] = $question_id;
+        $map['status'] = 1;
+        $ret = $this->where($map)->order("`sort`")->select();
         if (false === $ret) {
             return array();
         }
@@ -20,8 +22,8 @@ class EnglishOptionsModel extends CommonModel {
             $d_1 = preg_match("/all\sof\sthe\sabove.?/i", $value['content']);
             $d_2 = preg_match("/none\sof\sthe\sabove.?/i", $value['content']);
             $d_3 = preg_match("/either\sB\sor\sC.?/i", $value['content']);
-            $d_4 = preg_match("/both\sB\sand\sC.?/i", $value['content']);
-            $c_1 = preg_match("/both\sA\sand\sB.?/i", $value['content']);
+            $d_4 = preg_match("/(both\s)?B\sand\sC.?/i", $value['content']);
+            $c_1 = preg_match("/(both\s)?A\sand\sB.?/i", $value['content']);
             $c_2 = preg_match("/either\sA\sor\sB.?/i", $value['content']);
             if (preg_match("/True/i", $value['content'])) {
                 $is_double_true = true;
@@ -35,12 +37,8 @@ class EnglishOptionsModel extends CommonModel {
             }
         }
         if ($is_rand) {
-//            shuffle($ret);
+            shuffle($ret);
         }
-//        $start_code = ord("A");
-//        foreach ($ret as $key => $value) {
-//            $ret[$key]['code'] = chr($start_code + $key);
-//        }
         return $ret;
     }
 

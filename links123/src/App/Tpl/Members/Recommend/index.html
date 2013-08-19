@@ -1,13 +1,12 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-
+<!DOCTYPE html>
+<html>
 <head>
-	<include file="Home:Public:meta" />
+	<include file="Home:Contorls:headlinks" />
 </head>
 
 <body>
 
-	<include file="Home:Public:newHeader" />
+	<include file="Home:Contorls:header" />
 
 	<!--个人中心-->
 	<div class="container">
@@ -25,7 +24,7 @@
 			<ul class="grzx_sc_ul">
 		    <volist name="recList" id="vo">
 		      	<li>
-		      		<span><a href="__APP__/Index/detail/id/{$vo.id}" target="_blank" class="button01">查看简介</a><a href="__APP__/Index/recommend/id/{$vo.id}" target="_blank" class="button01">编辑</a></span>
+		      		<span><a href="__APP__/Index/detail/id/{$vo.id}" target="_blank" class="button01">查看简介</a><a href="__APP__/Recommend?id={$vo.id}" target="_blank" class="button01">编辑</a></span>
 		      		<a href="http://{$vo.link}" target="_blank" class="grzx_sc_tit">{$vo.title}</a>
 		        	<div class="clr"></div>
 		      	</li>
@@ -38,14 +37,15 @@
 	</div>
 	<!--个人中心 结束-->
 
-	<include file="Home:Public:newFooter" />
+	<include file="Home:Contorls:footer" />
 	
 	<form id="frm_js">
 		<input type="hidden" name="rid" value="{$rid}" />
 		<input type="hidden" name="p" />
 	</form>
 	
-	<load href="__PUBLIC__/skin/js/member.js" />
+	<include file="Home:Contorls:footlinks" />
+	<load href="__STATIC__/v2/js/member.js" />
 
 </body>
 </html>

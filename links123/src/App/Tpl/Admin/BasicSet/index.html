@@ -277,6 +277,22 @@
 			</tr>
 		</table>
 	</form>
+    <form method='post' id="frm_setEnglishTouristRecordSaveTime" action="__URL__/setEnglishTouristRecordSaveTime" >
+		<table cellpadding=3 cellspacing=3>
+			<tr>
+				<td class="tRight" width="150">英语角游客记录保存时间：</td>
+				<td class="tLeft" ><input class="bLeft" name="english_tourist_record_save_time" style="width:75px;" value="{$english_tourist_record_save_time}" />天</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td class="center">
+				<input type="button" value="保 存" class="small submit" onclick="fn_sbmt('frm_setEnglishTouristRecordSaveTime', 'english_tourist_record_save_time');" />&nbsp;
+				</td>
+				<td></td>
+			</tr>
+		</table>
+	</form>
+    
 
 	</div>
 </div>

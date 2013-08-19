@@ -1,7 +1,7 @@
 <?php
 /**
  * @name RegisterAction.class.php
- * @package Member
+ * @package Members
  * @desc 用户注册
  * @author frank qian 2013-08-12
  * @version 0.0.1
@@ -33,25 +33,27 @@ class RegisterAction extends CommonAction
 	 */
 	public function saveReg() 
 	{
-		extract($_POST);
+        $nickname = trim($_POST['nickname']);
+        $password = $_POST['password'];
+        $verify = $_POST['verify'];
+                
 		$member = M("Member");
-		$error = array();
 
-		if (!checkName($nickname)){
+		if (!checkName($nickname)) {
 			echo '用户名只能包含字符、数字、下划线和汉字';
 			return false;
 		}
-		if (!checkStr($password)){
+		if (!checkStr($password)) {
 			echo '密码应为6到20位数字或字母';
 			return false;
 		}
-
-		if ($_SESSION['verify'] != md5($verify)) {
+                
+		if ($_SESSION['verify'] != md5(strtoupper($verify))) {
 			echo "验证码错误";
 			return false;
 		}
 
-        if ($member->where("nickname='%s'",$nickname)->select()){
+        if ($member->where("nickname='%s'",$nickname)->select()) {
 			echo '该昵称已注册过';
 			return false;
 		}
@@ -76,6 +78,9 @@ class RegisterAction extends CommonAction
 				$value['mid'] = &$_SESSION[C('MEMBER_AUTH_KEY')];
 				$myareaModel->add($value);
 			}
+			
+			$home_session_expire = intval(D("Variable")->getVariable("home_session_expire"));
+			cookie(md5("home_session_expire"), time(), $home_session_expire);
 			
 			echo "regOK";
 		} else {

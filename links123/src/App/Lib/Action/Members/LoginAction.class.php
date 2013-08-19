@@ -10,40 +10,50 @@
 import("@.Common.CommonAction");
 class LoginAction extends CommonAction
 {
+	/**
+	 * @desc 用户登陆显示页
+	 * @author lee UPDATE 2013-08-16
+	 */
 	public function index()
 	{
 		$this->assign('banner', $this->getAdvs(4, "banner"));
 		$this->assign('title', '另客岛民请登录，享受您另客岛民专有的服务');
 		$this->assign('Description', '另客会员专区有众多只有会员才能享有的资源和服务');
+                
 		$this->display();
 	}
 	
 	/**
-	 * @desc 用户登录
-	 * @author frank UPDATE 2013-08-15
+	 * @desc 用户登录验证
+	 * @author frank UPDATE 2013-08-16
 	 * @param string $username 用户昵称或Email
 	 * @param string $password 密码
+     * @param int $auto_login 自动登录
 	 * @return string
 	 */
 	public function checkLogin() 
 	{
-		extract($_POST);
+        $username = trim($_POST['username']);
+        $password = $_POST['password'];
+        $auto_login = $_POST['auto_login'];
+
 		if (checkEmail($username)) {
 			$param = 'email';
 		} else if (checkName($username)) {
 			$param = 'nickname';
-		}else {
+		} else {
 			echo "用户名有不法字符";
 			return false;
 		}
 		
 		$member = M("Member");
-		$mbrNow = $member->where(" $param = '".$username."'")->find();
+		$mbrNow = $member->where("$param='%s'", $username)->find();
 		
 		if (empty($mbrNow)) {
 			echo "用户不存在";
 			return false;
-		} else if ($mbrNow['status'] == -1) {
+		}
+        if ($mbrNow['status'] == -1) {
 			echo "已禁用！";
 			return false;
 		}
@@ -56,16 +66,16 @@ class LoginAction extends CommonAction
 		
 		$_SESSION[C('MEMBER_AUTH_KEY')] = $mbrNow['id'];
 		$_SESSION['nickname'] = $mbrNow['nickname'];
-		$_SESSION['face'] = empty($mbrNow['face'])? 'face.jpg' :$mbrNow['face'];
+		$_SESSION['face'] = empty($mbrNow['face']) ? 'face.jpg' : $mbrNow['face'];
 		
 		//使用cookie过期时间来控制前台登陆的过期时间
-		cookie(md5('home_session_expire') , time() ,intval(D("Variable")->getVariable("home_session_expire")));
+		cookie(md5('home_session_expire'), time(), intval(D("Variable")->getVariable("home_session_expire")));
 		
 		//如果选中下次自动登录，记录用户信息
 		if (intval($auto_login) == 1) {
 			$str = $mbrNow['id'] . "|" . md5($mbrNow['password'] . $mbrNow['nickname']);
 			$auto_login_time = intval(D("Variable")->getVariable("auto_login_time"));
-			cookie("USER_ID", $str, $auto_login_time ? : 60 * 60 * 24 * 7);
+			cookie("USER_ID", $str, $auto_login_time ? : 60*60*24*7);
 		}
 		
 		echo "loginOK";

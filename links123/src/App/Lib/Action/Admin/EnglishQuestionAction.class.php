@@ -103,37 +103,21 @@ class EnglishQuestionAction extends CommonAction {
         cookie("admin_english_object", intval($_REQUEST['object']));
         cookie("admin_english_level", intval($_REQUEST['level']));
         $model = D("EnglishQuestion");
-//        if (empty($_POST['option']) || empty($_POST['option'][0]) || empty($_POST['option'][1]) || empty($_POST['option'][2]) || empty($_POST['option'][3])) {
-//            $this->error("四个选项都不能为空！");
-//        }
         $answer = intval($_POST['answer']);
-//        if ($answer <= 0) {
-//            $this->error("请选择正确答案！");
-//        }
         $optionModel = D("EnglishOptions");
         $model->startTrans();
 
-        //判断题目是否需要随机打乱，存在一些规则无法随机
-        $is_rand = true;
+        //判断题目是否为判断题
         $is_double_true = false; //是否为True文字选项
         $is_double_false = false; //是否为False文字选项
         foreach ($_POST['option'] as $key => $value) {
-            //不能随机打乱的判断
-            $d_1 = preg_match("/all\sof\sthe\sabove.?/i", $value);
-            $d_2 = preg_match("/none\sof\sthe\sabove.?/i", $value);
-            $d_3 = preg_match("/either\sB\sor\sC.?/i", $value);
-            $d_4 = preg_match("/both\sB\sand\sC.?/i", $value);
-            $c_1 = preg_match("/both\sA\sand\sB.?/i", $value);
-            $c_2 = preg_match("/either\sA\sor\sB.?/i", $value);
             if (preg_match("/True/i", $value)) {
                 $is_double_true = true;
+                continue;
             }
             if (preg_match("/False/i", $value)) {
                 $is_double_false = true;
-            }
-            if ($d_1 || $d_2 || $d_3 || $d_4 || $c_1 || $c_2 || ($is_double_false && $is_double_true)) {
-                $is_rand = false;
-                break;
+                continue;
             }
         }
         $option_id = array();
@@ -145,21 +129,17 @@ class EnglishQuestionAction extends CommonAction {
                 $d_1 = preg_match("/all\sof\sthe\sabove.?/i", $value);
                 $d_2 = preg_match("/none\sof\sthe\sabove.?/i", $value);
                 $d_3 = preg_match("/either\sB\sor\sC.?/i", $value);
-                $d_4 = preg_match("/both\sB\sand\sC.?/i", $value);
-                $c_1 = preg_match("/both\sA\sand\sB.?/i", $value);
+                $d_4 = preg_match("/(both\s)?B\sand\sC.?/i", $value);
+                $c_1 = preg_match("/(both\sA)?\sand\sB.?/i", $value);
                 $c_2 = preg_match("/either\sA\sor\sB.?/i", $value);
                 $option_data['content'] = $value;
-                if ($is_rand) {
-                    $option_data['sort'] = rand(1, 4); //随机打乱选项
+                if ($d_1 || $d_2 || $d_3 || $d_4) {
+                    $option_data['sort'] = 4; //D
+                } else if ($c_1 || $c_2) {
+                    $option_data['sort'] = 3; //C
                 } else {
-                    if ($d_1 || $d_2 || $d_3 || $d_4) {
-                        $option_data['sort'] = 4; //D
-                    } else if ($c_1 || $c_2) {
-                        $option_data['sort'] = 3; //C
-                    } else {
-                        $option_data['sort'] = $index; //除去特殊项目，其他自动顶上
-                        $index++;
-                    }
+                    $option_data['sort'] = $index; //除去特殊项目，其他自动顶上
+                    $index++;
                 }
                 $ret = $optionModel->add($option_data);
                 if (false === $ret) {
@@ -178,13 +158,14 @@ class EnglishQuestionAction extends CommonAction {
             $model->status = 0;
         }
 
+        $time = date("Ym");
         if (!empty($_POST['media_local_url'])) {
-            if (false === @copy("./Public/Uploads/Temp/" . $_POST['media_local_url'], "./Public/Uploads/English/" . $_POST['media_local_url'])) {
+            if (false === @copy("./Public/Uploads/Temp/" . $_POST['media_local_url'], "./Public/Uploads/Video/" . $time . "/" . $_POST['media_local_url'])) {
                 $model->rollback();
                 $this->error('新增失败1!');
             }
             @unlink("./Public/Uploads/Temp/" . $_POST['media_local_url']);
-            $model->media_local_url = $_POST['media_local_url'];
+            $model->media_local_url = $time . "/" . $_POST['media_local_url'];
         }
         $model->answer = $option_id[$answer - 1];
         if ($answer <= 0 || empty($option_id) || empty($option_id[$answer - 1])) {
@@ -215,6 +196,7 @@ class EnglishQuestionAction extends CommonAction {
         $option_list = D("EnglishOptions")->getQuestionOptionList($id);
         $this->assign('option_list', $option_list);
         $this->assign('vo', $vo);
+        $this->assign('doubleQuotes', '"');
 
         $object_list = D("EnglishObject")->where("`status`=1")->order("sort")->select();
         $this->assign("object_list", $object_list);
@@ -239,31 +221,24 @@ class EnglishQuestionAction extends CommonAction {
         $id = intval($_REQUEST['id']);
         $optionModel->startTrans();
         //删除选项
-        $optionModel->where("question_id={$id}")->delete();
+        $map['question_id'] = $id;
+        $optionModel->where($map)->delete();
 
-        //判断题目是否需要随机打乱，存在一些规则无法随机
-        $is_rand = true;
+
+        //判断题目是否为判断题
         $is_double_true = false; //是否为True文字选项
         $is_double_false = false; //是否为False文字选项
         foreach ($_POST['option'] as $key => $value) {
-            //不能随机打乱的判断
-            $d_1 = preg_match("/all\sof\sthe\sabove.?/i", $value);
-            $d_2 = preg_match("/none\sof\sthe\sabove.?/i", $value);
-            $d_3 = preg_match("/either\sB\sor\sC.?/i", $value);
-            $d_4 = preg_match("/both\sB\sand\sC.?/i", $value);
-            $c_1 = preg_match("/both\sA\sand\sB.?/i", $value);
-            $c_2 = preg_match("/either\sA\sor\sB.?/i", $value);
             if (preg_match("/True/i", $value)) {
                 $is_double_true = true;
+                continue;
             }
             if (preg_match("/False/i", $value)) {
                 $is_double_false = true;
-            }
-            if ($d_1 || $d_2 || $d_3 || $d_4 || $c_1 || $c_2 || ($is_double_false && $is_double_true)) {
-                $is_rand = false;
-                break;
+                continue;
             }
         }
+        //
         //依次存入选项，不知道问题id
         $option_data['question_id'] = $id;
         $option_data['created'] = time();
@@ -274,21 +249,17 @@ class EnglishQuestionAction extends CommonAction {
                 $d_1 = preg_match("/all\sof\sthe\sabove.?/i", $value);
                 $d_2 = preg_match("/none\sof\sthe\sabove.?/i", $value);
                 $d_3 = preg_match("/either\sB\sor\sC.?/i", $value);
-                $d_4 = preg_match("/both\sB\sand\sC.?/i", $value);
-                $c_1 = preg_match("/both\sA\sand\sB.?/i", $value);
+                $d_4 = preg_match("/(both\s)?B\sand\sC.?/i", $value);
+                $c_1 = preg_match("/(both\s)?A\sand\sB.?/i", $value);
                 $c_2 = preg_match("/either\sA\sor\sB.?/i", $value);
                 $option_data['content'] = $value;
-                if ($is_rand) {
-                    $option_data['sort'] = rand(1, 4); //随机打乱选项
+                if ($d_1 || $d_2 || $d_3 || $d_4) {
+                    $option_data['sort'] = 4; //D
+                } else if ($c_1 || $c_2) {
+                    $option_data['sort'] = 3; //C
                 } else {
-                    if ($d_1 || $d_2 || $d_3 || $d_4) {
-                        $option_data['sort'] = 4; //D
-                    } else if ($c_1 || $c_2) {
-                        $option_data['sort'] = 3; //C
-                    } else {
-                        $option_data['sort'] = $index; //除去特殊项目，其他自动顶上
-                        $index++;
-                    }
+                    $option_data['sort'] = $index; //除去特殊项目，其他自动顶上
+                    $index++;
                 }
                 $ret = $optionModel->add($option_data);
                 if (false === $ret) {
@@ -309,15 +280,16 @@ class EnglishQuestionAction extends CommonAction {
         if ($model->status == 1 && count(array_unique($_POST['option'])) < count($_POST['option']) && !($is_double_false && $is_double_true)) {
             $model->status = 0;
         }
+        $time = date("Ym");
         if (!empty($_POST['media_local_url'])) {
 //            $ext = substr($_POST['media_local_url'], strpos($_POST['media_local_url'], "."));
-            if (false === @copy("./Public/Uploads/Temp/" . $_POST['media_local_url'], "./Public/Uploads/English/" . $_POST['media_local_url'])) {
+            if (false === @copy("./Public/Uploads/Temp/" . $_POST['media_local_url'], "./Public/Uploads/Video/" . $time . "/" . $_POST['media_local_url'])) {
                 $model->rollback();
                 $this->error('编辑失败!');
             }
-            @unlink("./Public/Uploads/English/" . $_POST['media_local_url_old']);
+            @unlink("./Public/Uploads/Video/" . $_POST['media_local_url_old']);
             @unlink("./Public/Uploads/Temp/" . $_POST['media_local_url']);
-            $model->media_local_url = $_POST['media_local_url'];
+            $model->media_local_url = $time . "/" . $_POST['media_local_url'];
         } else {
             $model->media_local_url = $_POST['media_local_url_old'];
         }
@@ -448,7 +420,7 @@ class EnglishQuestionAction extends CommonAction {
                     if (empty($data['name']) || $data['name'] == "试题名称") {
                         continue;
                     }
-                    $condition['content'] =  $data['content'];
+                    $condition['content'] = $data['content'];
                     $repeat_ret = $model->where($condition)->find(); //根据问题内容查询是否有重复
                     //重复条件下删除原选项
                     if ($repeat_ret) {
@@ -456,27 +428,15 @@ class EnglishQuestionAction extends CommonAction {
                     }
                     //插入答案
                     $option_id = array();
-                    //判断题目是否需要随机打乱，存在一些规则无法随机
-                    $is_rand = true;
+                    //判断题目是否是判断题
                     $is_double_true = false; //是否为True文字选项
                     $is_double_false = false; //是否为False文字选项
                     foreach ($data['option'] as $key => $value) {
-                        //不能随机打乱的判断
-                        $d_1 = preg_match("/all\sof\sthe\sabove.?/i", $value);
-                        $d_2 = preg_match("/none\sof\sthe\sabove.?/i", $value);
-                        $d_3 = preg_match("/either\sB\sor\sC.?/i", $value);
-                        $d_4 = preg_match("/both\sB\sand\sC.?/i", $value);
-                        $c_1 = preg_match("/both\sA\sand\sB.?/i", $value);
-                        $c_2 = preg_match("/either\sA\sor\sB.?/i", $value);
                         if (preg_match("/True.?/i", $value)) {
                             $is_double_true = true;
                         }
                         if (preg_match("/False.?/i", $value)) {
                             $is_double_false = true;
-                        }
-                        if ($d_1 || $d_2 || $d_3 || $d_4 || $c_1 || $c_2 || ($is_double_false && $is_double_true)) {
-                            $is_rand = false;
-                            break;
                         }
                     }
                     //选项是否有重复，有则题目停用
@@ -491,21 +451,17 @@ class EnglishQuestionAction extends CommonAction {
                             $d_1 = preg_match("/all\sof\sthe\sabove.?/i", $value);
                             $d_2 = preg_match("/none\sof\sthe\sabove.?/i", $value);
                             $d_3 = preg_match("/either\sB\sor\sC.?/i", $value);
-                            $d_4 = preg_match("/both\sB\sand\sC.?/i", $value);
-                            $c_1 = preg_match("/both\sA\sand\sB.?/i", $value);
+                            $d_4 = preg_match("/(both\s)?B\sand\sC.?/i", $value);
+                            $c_1 = preg_match("/(both\s)?A\sand\sB.?/i", $value);
                             $c_2 = preg_match("/either\sA\sor\sB.?/i", $value);
                             $option_data['content'] = $value;
-                            if ($is_rand) {
-                                $option_data['sort'] = rand(1, 4); //随机打乱选项
+                            if ($d_1 || $d_2 || $d_3 || $d_4) {
+                                $option_data['sort'] = 4; //D
+                            } else if ($c_1 || $c_2) {
+                                $option_data['sort'] = 3; //C
                             } else {
-                                if ($d_1 || $d_2 || $d_3 || $d_4) {
-                                    $option_data['sort'] = 4; //D
-                                } else if ($c_1 || $c_2) {
-                                    $option_data['sort'] = 3; //C
-                                } else {
-                                    $option_data['sort'] = $index; //除去特殊项目，其他自动顶上
-                                    $index++;
-                                }
+                                $option_data['sort'] = $index; //除去特殊项目，其他自动顶上
+                                $index++;
                             }
 
                             $ret = $optionModel->add($option_data);
@@ -545,7 +501,7 @@ class EnglishQuestionAction extends CommonAction {
                             'about.com' => '_about',
                             'videojug.com' => '_videojug',
                             'hujiang.com' => '_hujiang',
-                           // 'kizphonics.com' => '_kizphonics', //
+                            // 'kizphonics.com' => '_kizphonics', //
                             '1kejian.com' => '_1kejian',
                             //'britishcouncil.org' => '_britishcouncil', //
                             'ebigear.com' => '_ebigear',
@@ -562,7 +518,7 @@ class EnglishQuestionAction extends CommonAction {
                             'starfall.com' => '_starfall',
                             'kids.beva.com' => '_kids_beva',
                             //'englishcentral.com' => '_englishcentral',
-                        	'nationalgeographic.com' => '_nationalgeographic'
+                            'nationalgeographic.com' => '_nationalgeographic'
                         );
                         foreach ($supportWebsite as $k => $v) {
                             if (false !== stripos($data['media_text_url'], $k)) {
@@ -652,7 +608,7 @@ class EnglishQuestionAction extends CommonAction {
                 'starfall.com' => '_starfall',
                 'kids.beva.com' => '_kids_beva',
                 //'englishcentral.com' => '_englishcentral',
-            	'nationalgeographic.com' => '_nationalgeographic'
+                'nationalgeographic.com' => '_nationalgeographic'
             );
             foreach ($supportWebsite as $k => $v) {
                 if (false !== stripos($url, $k)) {

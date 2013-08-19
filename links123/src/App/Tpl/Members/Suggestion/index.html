@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<include file="Home:Contorls:headlinks" />
+</head>
+
+<body>
+
+	<include file="Home:Contorls:header" />
+
+	<!--个人中心-->
+	<div class="container">
+	
+		<include file="Index:lefter" />
+
+		<div class="grzx_right">
+			<div class="grzx_link">您的位置：留言板</div>
+			<ul class="grzx_wdss" id="grzx_wdss">
+			<volist name="mysugs" id="vo">
+				<li>
+					<div class="grzx_wdss_tit"><a href="#md_edit" class="btn_edit" sg_id="{$vo.id}">编辑留言</a><span>发表日期：{$vo.create_time}</span><!-- <font>分类：{$vo.typeName}</font> --></div>
+					<div class="grzx_wdss_font">
+						<p><span>留言内容：</span></p>
+						<div class="suggest">{$vo.suggest}</div>
+					<notempty name="vo.reply">
+						<p class="p_rpl"><span>另客回复：</span></p>
+						{$vo.reply}
+<!-- 	          		
+					<volist name="vo.subsug" id="sub">
+						<p class="fst">
+							<span>{$sub.create_time}：</span>{$sub.suggest}
+						</p>
+					<notempty name="sub.reply">
+						<p><span>另客回复：</span>{$sub.reply}</p>
+					</notempty>
+					</volist>
+					
+						<p class="wdjyts_ts">您的问题已经答复，您可以针对此答复再次提出&nbsp;<a>建议投诉</a></p>
+						<div class="wdjyts_txt">
+							<textarea name="textarea" class="cont_xx_text">我来说说</textarea>
+							<div class="cont_xx_submit"> 还能输入<span>1000</span>个字　<a pid="{$vo.id}" class="button01 btn_sub_suggest">提交</a> </div>
+						</div>
+ -->
+					</notempty>
+					</div>
+				</li>
+			</volist>
+			</ul>
+			
+			{$page}<br />
+			
+			<a name="md_edit"></a>
+			<form id="frm_edit">
+				<textarea name="comment" class="cont_xx_text" id="xx_ss"></textarea>
+				<div class="cont_xx_submit">
+					还能输入<span id="word_remain">10000</span>个字　<a id="btn_sub_edit" class="button01">提交</a>
+				</div>
+				<input type="hidden" id="sg_id" />
+			</form>
+		</div>
+		<div class="clr"></div>
+		
+
+		
+	</div>
+	<!--个人中心 结束-->
+
+	<include file="Home:Contorls:footer" />
+	<include file="Home:Contorls:footlinks" />
+	<load href="__PUBLIC__/Js/editor/kindeditor-min.js" />
+	<load href="__STATIC__/v2/js/mySuggestion.js" />
+
+</body>
+</html>

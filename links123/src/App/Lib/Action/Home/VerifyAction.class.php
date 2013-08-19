@@ -6,7 +6,7 @@ class VerifyAction extends CommonAction {
 		ob_end_clean();
 		$type = $this->_param('type') != '' ? $this->_param('type') : 'gif';
 		import("@.ORG.Image");
-		Image::buildImageVerify(3, 1, $type, 48, 28);
+		Image::buildImageVerify(3, 5, $type, 48, 28);
 	}
 }
 ?>

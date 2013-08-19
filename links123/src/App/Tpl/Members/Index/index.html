@@ -1,64 +1,64 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-
+<!DOCTYPE html>
+<html>
 <head>
-	<include file="Home:Public:meta" />
-	<load href="__PUBLIC__/skin/Shadowbox/shadowbox.css" />
+	<include file="Home:Contorls:headlinks" />
 </head>
 
 <body>
-<form><input type="hidden" name="thetitle" value="{$Think.session.nickname}" /></form>
-<script language="javascript">
-	document.title=document.forms[0].thetitle.value+ '，欢迎你回来！';
-</script>
-	<include file="Home:Public:header" />
+
+	<form><input type="hidden" name="thetitle" value="{$Think.session.nickname}" /></form>
+	<script language="javascript">
+		document.title=document.forms[0].thetitle.value+ '，欢迎你回来！';
+	</script>
+	<include file="Home:Contorls:header" />
+
 	<!--个人中心-->
 	<div class="container">
 	
 		<include file="lefter" />
   
 		<div class="grzx_right">
-		    <div class="grzx_link">您的位置：个人中心首页</div>
-		    <div class="grzx_ncmm">
-		    	<empty name="mbrNow.email">会忘记昵称/密码?<else />想换个邮箱?</empty> 
-		    	<input type="text" name="email" <empty name="mbrNow.email">value="请输入邮箱"<else />value="请输入新邮箱"</empty> defaultvalue="" />&nbsp;
-		    	<a id="btn_email" class="button01">确认</a>&nbsp;
-		    	<span>忘记昵称和密码可以用邮箱找回</span>
-		    </div>
-		    <div class="grzx_ncmm">想换个昵称/密码? <input type="text" name="nickname" value="请输入新昵称" defaultvalue="" />&nbsp;<a id="btn_nickname" class="button01">确认</a><input type="text" name="password" value="请输入新密码" defaultvalue="" />&nbsp;<a id="btn_password" class="button01">确认</a></div>
-		    <div class="grzx_ncmm xzj">
+			<div class="grzx_link">您的位置：个人中心首页</div>
+			<div class="grzx_ncmm">
+				<empty name="mbrNow.email">会忘记昵称/密码?<else />想换个邮箱?</empty> 
+				<input type="text" name="email" <empty name="mbrNow.email">value="请输入邮箱"<else />value="请输入新邮箱"</empty> defaultvalue="" />&nbsp;
+				<a id="btn_email" class="button01">确认</a>&nbsp;
+				<span>忘记昵称和密码可以用邮箱找回</span>
+			</div>
+			<div class="grzx_ncmm">想换个昵称/密码? <input type="text" name="nickname" value="请输入新昵称" defaultvalue="" />&nbsp;<a id="btn_nickname" class="button01">确认</a><input type="text" name="password" value="请输入新密码" defaultvalue="" />&nbsp;<a id="btn_password" class="button01">确认</a></div>
+			<div class="grzx_ncmm xzj">
 				想秀一下自己？&nbsp;&nbsp;
-		      	<a id="btn_select_face" class="xuanz ">选择本岛头像</a>&nbsp;
-		      	<a id="btn_sub_face" class="xuanz">上传自己的头像</a>&nbsp;
-	        		<span>请上传 jpg / gif 格式，不超过10m</span>
-	      		
-		      	<div class="grzx_tx_img">
-			        <!-- <img id="face_s" src="__PUBLIC__/Uploads/Faces/{$mbrNow.face}" width="70" height="70" class="grzx_tx_sm" /> -->
-			        <img id="face_b" src="__PUBLIC__/Uploads/Faces/{$mbrNow.face}" class="grzx_tx_big"/>
-		      	</div>
-	    	</div>
-	    	<div class="grzx_button">
-	    		<input type="button" id="btn_hide_save" value="save" />
-	    		<a id="btn_save_face" class="search_buttom">保存设置</a>
-	    		<input type="hidden" id="face" value="{$mbrNow.face}" />
-	    	</div>
+				<a id="btn_select_face" class="xuanz ">选择本岛头像</a>&nbsp;
+				<a id="btn_sub_face" class="xuanz">上传自己的头像</a>&nbsp;
+					<span>请上传 jpg / gif 格式，不超过10m</span>
+				
+				<div class="grzx_tx_img">
+					<!-- <img id="face_s" src="__PUBLIC__/Uploads/Faces/{$mbrNow.face}" width="70" height="70" class="grzx_tx_sm" /> -->
+					<img id="face_b" src="__PUBLIC__/Uploads/Faces/{$mbrNow.face}" class="grzx_tx_big"/>
+				</div>
+			</div>
+			<div class="grzx_button">
+				<input type="button" id="btn_hide_save" value="save" />
+				<a id="btn_save_face" class="search_buttom">保存设置</a>
+				<input type="hidden" id="face" value="{$mbrNow.face}" />
+			</div>
 		</div>
-	  	<div class="clr"></div>
+		<div class="clr"></div>
 	</div>
 	<!--个人中心 结束-->
 
-	<include file="Home:Public:footer" />
+	<include file="Home:Contorls:footer" />
 	
 	<div id="pop_box">
-	    <div class="div_faces">
-	    	<ul>
-	    	<volist name="faces" id="vo">
-	        	<li title="{$vo}"><img src="__PUBLIC__/Uploads/Faces/{$vo}" /></li>
-	        </volist>
-	        </ul>
-	        <br />&nbsp;
-	        <div class="clear"></div>
-	    </div>
+		<div class="div_faces">
+			<ul>
+			<volist name="faces" id="vo">
+				<li title="{$vo}"><img src="__PUBLIC__/Uploads/Faces/{$vo}" /></li>
+			</volist>
+			</ul>
+			<br />&nbsp;
+			<div class="clear"></div>
+		</div>
 	</div>
 	
 	<form method='post' class="file_frm" action="__URL__/uploadPic/" enctype="multipart/form-data">
@@ -68,9 +68,8 @@
 		<input type="hidden" name="height" value="120" />
 	</form>
 	
-	<load href="__PUBLIC__/skin/Shadowbox/shadowbox.js" />
-	<load href="__PUBLIC__/skin/js/jquery.form.js" />
-	<load href="__PUBLIC__/skin/js/myinfo.js" />
+	<include file="Home:Contorls:footlinks" />
+	<load href="__STATIC__/v2/js/myinfo.js" />
 
 </body>
 </html>

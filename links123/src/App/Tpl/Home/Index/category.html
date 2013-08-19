@@ -1,13 +1,13 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-
+<!DOCTYPE html>
+<html>
 <head>
-	<include file="Public:meta" />
+	<include file="Contorls:headlinks" />
+	<link rel="canonical" href="http://links123.cn{$_SERVER['REQUEST_URI']}" />
 </head>
 
 <body>
 
-	<include file="Public:header" />
+	<include file="Contorls:header" />
 
 	<!--推荐链接-->
 	<div class="tjlj_b">
@@ -18,35 +18,35 @@
 			<label><input type="radio" name="language" value="2" <eq name="language" value="2">checked="true"</eq> />&nbsp;英文岛</label>
 		</p>
 		<notempty name="language">
-	  	<div class="tjlj_tit01">2.&nbsp;选择分类</div>
-	  	<p>
-	  		<volist name="cats" id="cat">
-	  			<label><input type="radio" name="rid" value="{$cat.id}" <eq name="rid" value="$cat['id']">checked="true"</eq> />&nbsp;{$cat.cat_name}</label>&nbsp;　
-	  		</volist>
-	  	</p>
-	  	<ul class="tjlj_ul">
-	  	<volist name="cats" id="cat">
-	  	<eq name="cat.id" value="$rid">
-		    <li class="tjlj_li">
-		      	<!-- <div class="tjlj_pic">{$cat.cat_name}</div> -->
-		      	<div class="tjlj_lie">
-			       	<div class="tjlj_lie_ch">
-			       	<ul>
-			       	<volist name="cat.subCats" id="sbc">
-			        	<li><label value="{$sbc.id}"><input type="radio" name="category" value="{$sbc.id}" <eq name="linkNow.category" value="$sbc['id']">checked="true"</eq> />&nbsp;{$sbc.cat_name}</label>&nbsp;　</li>
-			        </volist>
-			        </ul>
-			        <notempty name="cat.grades">
-				        <div class="leibie">细分：
-				        <volist name="cat.grades" id="grd">
-				        	<label><input type="radio" name="grade" value="{$grd.value}" <if condition="($linkNow.rid eq $cat['id']) and ($linkNow.grade eq $grd['value'])">checked="true"</if> />&nbsp;{$grd.name}</label>&nbsp;　
-				        </volist>   
-				        </div>
-				    </notempty>
-			       	</div>
-		       	</div>
-		      	<div class="clr"></div>
-		    </li>
+		<div class="tjlj_tit01">2.&nbsp;选择分类</div>
+		<p>
+			<volist name="cats" id="cat">
+				<label><input type="radio" name="rid" value="{$cat.id}" <eq name="rid" value="$cat['id']">checked="true"</eq> />&nbsp;{$cat.cat_name}</label>&nbsp;　
+			</volist>
+		</p>
+		<ul class="tjlj_ul">
+		<volist name="cats" id="cat">
+		<eq name="cat.id" value="$rid">
+			<li class="tjlj_li">
+				<!-- <div class="tjlj_pic">{$cat.cat_name}</div> -->
+				<div class="tjlj_lie">
+					<div class="tjlj_lie_ch">
+					<ul>
+					<volist name="cat.subCats" id="sbc">
+						<li><label value="{$sbc.id}"><input type="radio" name="category" value="{$sbc.id}" <eq name="linkNow.category" value="$sbc['id']">checked="true"</eq> />&nbsp;{$sbc.cat_name}</label>&nbsp;　</li>
+					</volist>
+					</ul>
+					<notempty name="cat.grades">
+						<div class="leibie">细分：
+						<volist name="cat.grades" id="grd">
+							<label><input type="radio" name="grade" value="{$grd.value}" <if condition="($linkNow.rid eq $cat['id']) and ($linkNow.grade eq $grd['value'])">checked="true"</if> />&nbsp;{$grd.name}</label>&nbsp;　
+						</volist>   
+						</div>
+					</notempty>
+					</div>
+				</div>
+				<div class="clr"></div>
+			</li>
 		</eq>
 		</volist>
 		</ul>
@@ -58,13 +58,13 @@
 		</notempty>
 		</notempty>
 		
-	  	<div class="cont_xx_windowclose"><a id="btn_close_me" class="button01">关闭此页</a></div>
+		<div class="cont_xx_windowclose"><a id="btn_close_me" class="button01">关闭此页</a></div>
 	</div>
 	<!--推荐链接 结束-->
 
-	<include file="Public:footer" />
-	
-	<load href="__PUBLIC__/skin/js/category.js" />
+	<include file="Contorls:footer" />
+	<include file="Contorls:footlinks" />
+	<load href="__STATIC__/v2/js/category.js" />
 
 </body>
 </html>

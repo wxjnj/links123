@@ -21,32 +21,40 @@ class CommonAction extends Action {
 		$this->autoLogin();
 		
 		$variable = $this->_getVariable();
-		$this->assign('cn_tip', $variable['cnTip']);
-		$this->assign('en_tip', $variable['enTip']);
-		$this->assign('directTip', $variable['directTip']);
+		
 		//获取用户留言
 		if (D("SuggestionView")->isTodayHasNewSuggestion()) {
 			$this->assign("newSuggestion", 1);
 		}
 		$this->getRootCats();
-
-		//顶部日期
-		$weekdays = array("周日", "周一", "周二", "周三", "周四", "周五", "周六");
-		$this->assign('today', str_replace("*", $weekdays[date('w')], date('m月d日 * H:i:s')));
-		
+		//获取日期
+		$today = $this->getDate();
 		//糖葫芦
-		$this->assign("thl_list", D("Thl")->getThlListWithThlz());
+		$thlList =  D("Thl")->getThlListWithThlz();
+		
+		$this->assign('cn_tip', $variable['cnTip']);
+		$this->assign('en_tip', $variable['enTip']);
+		$this->assign('directTip', $variable['directTip']);
+		$this->assign('today', $today);
+		$this->assign("thl_list", $thlList);
 		$this->assign('thlNow', '搜');
 		$this->assign('tidNow', 1);
 	}
 
+	/**
+	 * @desc 检查是否会员登录
+	 * @author Frank UPDATE 2013-08-18
+	 * @param int $ajax
+	 * @return boolean
+	 */
 	protected function checkLog($ajax = 0) {
 		if (!isset($_SESSION[C('MEMBER_AUTH_KEY')]) || empty($_SESSION[C('MEMBER_AUTH_KEY')])) {
-			if ($ajax == 1) {
+			if ($ajax) {
 				echo "请先登录！";
 				return false;
 			} else {
 				header("Location: " . __APP__ . "/");
+				exit(0);
 			}
 		} else {
 			return true;
@@ -146,20 +154,16 @@ class CommonAction extends Action {
 	 * 获取页头
 	 * @param array $data
 	 */
-	protected function getHeader($data=array()) {
+	protected function getHeaderInfo($data=array()) {
 
 		$variable = $this->_getVariable();
 		$title = empty($data['title'])?'另客网 | 领先的全面导航 | 高效的组合搜索 | 独特的英语角（在建） - 学习':empty($data['title']);
 		$keywords = empty($data['keywords'])?$variable['keywords']:empty($data['keywords']);
 		$description = empty($data['description'])?$variable['description']:empty($data['description']);
-
-		//注入
+		
 		$this->assign('title', $title);
 		$this->assign('keywords', $keywords);
 		$this->assign('description', $description);
-
-		//显示模板文件
-		$this->display("Public:newHeader");
 	}
 
 	/**
@@ -177,40 +181,57 @@ class CommonAction extends Action {
         $cats = M("Category")->field('id, cat_name, intro, level')->where('status=1 and level=1')->order('sort ASC')->select();
         $this->assign("rootCats", $cats);
     }
-
-
-
-    // 获取所有下级目录
+    
+    /**
+     * @desc 获取所有子目录
+     * @author frank UPDATE 2013-08-16
+     * @param int $pid
+     * @return array:
+     */
     protected function _getSubCats($pid) {
         $pids = array();
         array_push($pids, $pid);
-        //
         $cat = M("Category");
-        $list = $cat->field('id')->where('status=1 and prt_id=' . $pid)->select();
-        if (count($list) > 0) {
+        $list = $cat->field('id')->where('status=1 and prt_id = %d', $pid)->select();
+        if (count($list)) {
             foreach ($list as &$value) {
                 $pids = array_merge($pids, $this->_getSubCats($value['id']));
             }
         }
-        //
         return $pids;
     }
 
-    // 获取左栏目录
+    /**
+     * @desc 获取左栏目录
+     * @author frank UPDATE 2013-08-16
+     * @param int $rid
+     * @return void
+     */
     protected function getLeftMenu($rid) {
         $cat = M("Category");
-        $leftMenuCn = $cat->where('status=1 and flag=1 and prt_id=' . $rid)->order('sort')->select();
-        $leftMenuEn = $cat->where('status=1 and flag=2 and prt_id=' . $rid)->order('sort')->select();
+        $Menu = $cat->where('status=1 and flag<3 and prt_id= %d', $rid)
+        ->order('sort ASC')->select();
+        foreach($Menu as $m) {
+        	if ($m['flag'] == 1) {
+        		$leftMenuCn[] = $m;
+        	} else {
+        		$leftMenuEn[] = $m;
+        	}
+        }
         $this->assign("leftMenuCn", $leftMenuCn);
         $this->assign("leftMenuEn", $leftMenuEn);
     }
 
-    // 当前日期（ajax）
+    /**
+     * @desc 获取日期
+     * @author frank UPDATE 2013-08-16
+     * @return string 
+     */
     public function getDate() {
         $weekdays = array("周日", "周一", "周二", "周三", "周四", "周五", "周六");
-        $today = date('n月j日 *');
+        $today = date('m月d日 *');
         $today = str_replace("*", $weekdays[date('w')], $today);
-        echo $today;
+        return $today;
     }
 
     //404页面
@@ -237,29 +258,33 @@ class CommonAction extends Action {
      * @author frank qian 2013-08-15
      */
     public function autoLogin() {
-        $user_str = $_COOKIE["USER_ID"];
-        //没有用户session且自动登录标示Cookie USER_ID 存在执行自动登录过程
-        if ((!isset($_SESSION[C('MEMBER_AUTH_KEY')]) || empty($_SESSION[C('MEMBER_AUTH_KEY')])) && !empty($user_str)) {
-            $ret = explode("|", $user_str);
-            $user_id = intval($ret[0]);
-            $user_info = D("Member")->find($user_id);
-            
-            if (!empty($user_info) && md5($user_info['password'] . $user_info['nickname']) == $ret[1]) {
-            	$_SESSION[C('MEMBER_AUTH_KEY')] = $user_info['id'];
-                $_SESSION['nickname'] = $user_info['nickname'];
-                $_SESSION['face'] = empty($user_info['face'])?'face.jpg':$user_info['face'];
-                    
-                //使用cookie过期时间来控制前台登陆的过期时间
-                $home_session_expire = intval(D("Variable")->getVariable("home_session_expire"));
-                cookie(md5("home_session_expire"), time(), $home_session_expire);
-            }
-        } else if(empty($user_str) && empty($_COOKIE[md5("home_session_expire")])) {//自动登录标示Cookie USER_ID 时间过期
+    	$user_str = $_COOKIE["USER_ID"];
+        if (!isset($_SESSION[C('MEMBER_AUTH_KEY')]) || empty($_SESSION[C('MEMBER_AUTH_KEY')])) {
+        	//没有用户session且自动登录标示Cookie USER_ID 存在执行自动登录过程
+        	if (!empty($user_str)) {
+        		$ret = explode("|", $user_str);
+        		$user_id = intval($ret[0]);
+        		$user_info = D("Member")->find($user_id);
+        		
+        		if (!empty($user_info) && md5($user_info['password'] . $user_info['nickname']) == $ret[1]) {
+        			$_SESSION[C('MEMBER_AUTH_KEY')] = $user_info['id'];
+        			$_SESSION['nickname'] = $user_info['nickname'];
+        			$_SESSION['face'] = empty($user_info['face'])?'face.jpg':$user_info['face'];
+        		
+        			//使用cookie过期时间来控制前台登陆的过期时间
+        			$home_session_expire = intval(D("Variable")->getVariable("home_session_expire"));
+        			cookie(md5("home_session_expire"), time(), $home_session_expire);
+        		}
+        	}
+        }
+        
+        if(empty($_COOKIE[md5("home_session_expire")])) {
+        	//自动登录标示Cookie USER_ID 时间过期
         	unset($_SESSION[C('MEMBER_AUTH_KEY')]);
-            unset($_SESSION['nickname']);
-            unset($_SESSION['face']);    
+        	unset($_SESSION['nickname']);
+        	unset($_SESSION['face']);
         }
     }
-
 }
 
 ?>

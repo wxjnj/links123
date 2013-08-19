@@ -33,4 +33,7 @@ return array(
 		'/^homepage\/search\/(.*)\/(.*)/' 				=>	'Homepage/Search/index?search_type=:1&keyword=:2',
 		'/^homepage\/search\/(.*)$/' 					=>	'Homepage/Search/index?search_type=:1',
 	),
+	'TMPL_PARSE_STRING'         =>array(
+		'__STATIC__'            => 'http://a.links123.net', // 更改默认的/Public 替换规则
+	)
 );

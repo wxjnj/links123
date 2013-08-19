@@ -1,5 +1,9 @@
 var ajaxRequest;
+var next_question_lvlup = false;
 $(function() {
+    if ($("#J_currentRice").text() == 1000) {
+        next_question_lvlup = true;
+    }
     $(".scrollable").scrollable({circular: true});
     $(".grade li:eq(13)").css("margin-left", level_margin_index + "px");
 
@@ -28,6 +32,8 @@ $(function() {
             $(".answer").slideUp("slow", function() { //这里收起后显示
                 if ($("#J_media_div").attr("media_type") == 1 || $("#J_media_div").attr("media_type") == 2) {
                     $("#J_media_div").css({'display': '', 'position': '', 'left': ''}).show();
+                } else if ($("#J_media_div").attr("media_type") == 4) {
+                    $("#J_media_swfobject_div").show();
                 } else if ($("#J_media_div").attr("data_isaboutvideo") == 1) {
                     $(".J_player").show();
                 }
@@ -35,8 +41,11 @@ $(function() {
         } else { //这里先隐藏后展开
             if ($("#J_media_div").attr("media_type") == 1 || $("#J_media_div").attr("media_type") == 2) {
                 $("#J_media_div").css({'display': 'block', 'position': 'absolute', 'left': '-9999px'}).hide();
+            } else if ($("#J_media_div").attr("media_type") == 4) {
+                $("#J_media_swfobject_div").hide();
             } else if ($("#J_media_div").attr("data_isaboutvideo") == 1) {
                 $(".J_player").hide();
+                $('#J_media_div').html('');
             }
             $(".answer").slideDown("slow");
         }
@@ -223,7 +232,7 @@ $(function() {
             return false;
         }
         $(this).addClass("current").siblings("li.class2").removeClass("current");
-        requestQuestion("category");
+        requestQuestion("category", $(this));
     });
     //
     //视频音频点击事件
@@ -248,7 +257,7 @@ $(function() {
             return false;
         }
         $(this).addClass("current").siblings("li.class3").removeClass("current");
-        requestQuestion("category");
+        requestQuestion("category", $(this));
     });
 
     $("#J_nextQuestion").click(function() {
@@ -283,18 +292,19 @@ $(function() {
     /** 视频播放$ **/
 
     /** $用户反馈 **/
-    $('.J_feedback').click(function() {
+    $('.J_feedback').live('click', function() {
 
         var question_id = $("#J_questionId").text();
         var type = 0;	//0=>视频错误  1=>建议
         var media_html = $('.video_div').html();
+        var tip_type = $(this).attr('data-type');
 
         $.messager.show({
             msg: "<span class='messager_span'>感谢您的反馈,我们会尽快处理！</span>",
             showType: 'fade',
             width: 215,
             height: 45,
-            timeout: 1000,
+            timeout: 2000,
             style: {
                 left: '75%',
                 top: '0'
@@ -314,6 +324,11 @@ $(function() {
 
             }
         });
+
+        if (tip_type == 'video_tip') {
+            requestQuestion("quick_select_next");
+        }
+
         return false;
     });
     /** 用户反馈$ **/
@@ -356,10 +371,17 @@ function requestQuestion(type, clickObject) {
     var object = $(".kecheng .current").attr("value");
     var level = $(".grade .current").attr("value");
 
+
     if (type == 'level') {
         level = clickObject.attr("value");
     } else if (type == 'category') {
-        voice = clickObject.attr("value");
+        if (clickObject.hasClass("target")) {
+            target = clickObject.attr("value");
+        } else if (clickObject.hasClass("pattern")) {
+            pattern = clickObject.attr("value");
+        } else {
+            voice = clickObject.attr("value");
+        }
     } else if (type == 'object') {
         object = clickObject.attr("value");
     }
@@ -406,14 +428,14 @@ function requestQuestion(type, clickObject) {
                 }
 
                 if (data.question && data.question.tested) {
-                    var top = $(".videobutton .next").offset().top - 50;
-                    var left = $(".videobutton .next").offset().left - 32;
+                    var top = $("#J_nextQuestion").offset().top - 50;
+                    var left = $("#J_nextQuestion").offset().left - 32;
                     $.messager.show({
                         msg: "<span class='messager_span'>暂无新题，升级吧!</span>",
                         showType: 'fade',
                         width: 150,
                         height: 45,
-                        timeout: 4000,
+                        timeout: 3000,
                         style: {
                             left: left,
                             top: top
@@ -421,13 +443,12 @@ function requestQuestion(type, clickObject) {
                     });
                 }
                 //
-                //点击为类型，更新科目列表
-//                if (type != "level" || type != "object") {
                 //科目为空
                 if (data['object_info'] == null) {
                     data['object_info'] = new Array();
                     data['object_info']['id'] = 0;
                 }
+                //更新科目列表
                 var object_list = data.object_list;
                 if (object_list != null) {
                     var str = '';
@@ -443,9 +464,10 @@ function requestQuestion(type, clickObject) {
                         str += '><span>' + object_list[i]['name'] + '</span></li>';
                     }
                     $(".kecheng").html(str);
-                    //bindObjectClickEvent();
+                    if ($(".kecheng .current").size() < 1) {
+                        $(".kecheng li").not(".grey").first().addClass("current");
+                    }
                 }
-//                }
                 //
                 //等级为空
                 if (data['level_info'] == null) {
@@ -472,11 +494,16 @@ function requestQuestion(type, clickObject) {
                         $(".grade li").not(".grey").first().addClass("current");
                     }
                     $(".grade li:eq(13)").css("margin-left", level_margin_index + "px");
-                    //bindLevelClickEvent();
                 }
                 //
                 //更新题目
                 var question = data.question;
+                //
+                //更改美音英音等状态
+                $(".menuleft .voice[value='" + question.voice + "']").addClass("current").siblings(".voice").removeClass("current");
+                $(".menuleft .target[value='" + question.target + "']").addClass("current").siblings(".target").removeClass("current");
+                $(".menuleft .pattern[value='" + question.pattern + "']").addClass("current").siblings(".pattern").removeClass("current");
+                //
                 if (question.content == null) {
                     $(".answertitle").text("");
                 } else {
@@ -490,48 +517,82 @@ function requestQuestion(type, clickObject) {
                 if (data['user_count_info'] == null || data['user_count_info']['right_num'] == null) {
                     data['user_count_info']['right_num'] = 0;
                 }
+
+                //是否已经满10题，是则设置下一题自动升级
+                if (data['user_count_info']['right_num'] >= 10) {
+                    next_question_lvlup = true;
+                } else {
+                    next_question_lvlup = false;
+                }
+                if (next_question_lvlup) {
+                    //
+                    //提示可以升级了
+                    var top = $(".videoplay").offset().top - 20;
+                    var left = $(".videoplay").offset().left + $(".videoplay").width() / 2 - 75;
+                    $.messager.show({
+                        msg: "<span  class='messager_span'>恭喜，你可以升级了</span>",
+                        showType: 'fade',
+                        width: 175,
+                        height: 45,
+                        timeout: 4000,
+                        style: {
+                            left: left,
+                            top: top
+                        }
+                    });
+                }
+
                 $("#J_currentRice").text(data['user_count_info']['right_num'] * 100);
                 $("#J_riceDiv").removeClass().addClass("rice_" + data['user_count_info']['right_num'] * 100);
                 //
                 /** $视频播放 **/
                 var videoStr = '';
                 $('#J_media_div').html(videoStr);
-                if (question.isAboutVideo != 1) {
-                    if (question.media_type == 1) {
-                        videoStr = question.media;
-                    } else if (question.media_type == 2) {
-                        videoStr = '<iframe class="media_iframe" src="' + question.media + '" width="100%" height="100%" scrolling="no" frameborder="0">';
-                    } else if (question.media_type == 3) {
-                        var swfUrl = 'http://www.kizphonics.com/wp-content/uploads/jw-player-plugin-for-wordpress/player/player.swf';
-                        var version = '10.2.0';
-                        var params = {
-                            quality: "high",
-                            wmode: "opaque",
-                            scale: "noscale",
-                            align: "left",
-                            allowFullScreen: "true",
-                            allowScriptAccess: "always",
-                            bgColor: "#000000"
-                        };
 
-                        swfobject.embedSWF(swfUrl, "J_media_div_1", "100%", "100%", version, "/swf/playerProductInstall.swf", question.media, params);
+                if (question.media || question.media_url) {
 
-                    } else if (question.media_type == 4) {
+                    if (question.isAboutVideo != 1) {
+                        if (question.media_type == 1) {
+                            videoStr = question.media;
+                        } else if (question.media_type == 2) {
+                            videoStr = '<iframe class="media_iframe" src="' + question.media + '" width="100%" height="100%" scrolling="no" frameborder="0">';
+                        } else if (question.media_type == 3) {
 
-                        videoStr += '<object id="flash_fallback_1" class="vjs-flash-fallback" width="100%" height="100%" type="application/x-shockwave-flash" data="http://releases.flowplayer.org/swf/flowplayer-3.2.1.swf">';
-                        videoStr += '<param name="movie" value="http://releases.flowplayer.org/swf/flowplayer-3.2.1.swf" />';
-                        videoStr += '<param name="allowfullscreen" value="true" />';
-                        videoStr += "<param name='flashvars' value='" + question.media + "' />";
-                        videoStr += '</object>';
-                    } else {
+                            $('#J_media_div').html('<div id="J_media_swfobject_div"></div>');
 
-                        videoStr += '<object id="J_media_object" height="100%" width="100%" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">';
-                        videoStr += '<param name="wmode" value="transparent">';
-                        videoStr += '<param name="movie" value="' + question.media_url + '">';
-                        videoStr += '<embed name="swf" menu="true" height="100%" width="100%" play="false" type="application/x-shockwave-flash" allowfullscreen="true" wmode="transparent" src="' + question.media_url + '">';
-                        videoStr += '</object>';
+                            var swfUrl = 'http://www.kizphonics.com/wp-content/uploads/jw-player-plugin-for-wordpress/player/player.swf';
+                            var version = '10.2.0';
+                            var params = {
+                                quality: "high",
+                                wmode: "opaque",
+                                scale: "noscale",
+                                align: "left",
+                                allowFullScreen: "true",
+                                allowScriptAccess: "always",
+                                bgColor: "#000000"
+                            };
+
+                            swfobject.embedSWF(swfUrl, "J_media_swfobject_div", "100%", "100%", version, "/swf/playerProductInstall.swf", question.media, params);
+
+                        } else if (question.media_type == 4) {
+                            $('#J_media_div').html('<div id="J_media_swfobject_div" style="height:' + media_height + 'px;width:' + media_width + 'px;"></div>');
+
+                            flowplayer("J_media_swfobject_div", "http://releases.flowplayer.org/swf/flowplayer-3.2.16.swf", {playlist: [question.media_img_url, {url: question.media, autoPlay: false}]});
+
+                        } else {
+
+                            videoStr += '<object id="J_media_object" height="100%" width="100%" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">';
+                            videoStr += '<param name="wmode" value="transparent">';
+                            videoStr += '<param name="movie" value="' + question.media_url + '">';
+                            videoStr += '<embed name="swf" menu="true" height="100%" width="100%" play="false" type="application/x-shockwave-flash" allowfullscreen="true" wmode="transparent" src="' + question.media_url + '">';
+                            videoStr += '</object>';
+                        }
                     }
+                } else {
+
+                    videoStr += '<p class="video_tip_error">该视频无法正常播放了，<a href="javascript:void(0);" class="J_feedback" data-type="video_tip">请反馈给我们</a>，谢谢!</p>';
                 }
+
                 if (question.isAboutVideo) {
                     $('#J_media_img').attr('src', question.media_img_url);
                     $('#J_media_div').css('visibility', 'hidden');
@@ -547,16 +608,24 @@ function requestQuestion(type, clickObject) {
                         'margin': media_marin,
                         'visibility': ''
                     });
+                }
 
+                if ($("#J_media_div").css('display') == 'none') {
+                    $("#J_media_div").css({'display': '', 'position': '', 'left': ''}).show();
                 }
 
                 if (question.isAboutVideo == 1) {
                     $('#J_media_div').attr('data_media_url', question.media_url);
+                } else {
+                    $('#J_media_div').attr('data_media_url', '');
                 }
                 $('#J_media_div').attr('media_type', question.media_type);
 
                 $('#J_media_div').attr('data_isAboutVideo', question.isAboutVideo);
-                $('#J_media_div').html(videoStr);
+
+                if (videoStr) {
+                    $('#J_media_div').html(videoStr);
+                }
 
                 /** 视频播放$ **/
                 trimWhiteSpace();
@@ -565,7 +634,13 @@ function requestQuestion(type, clickObject) {
                 if (type == 'level' || type == 'object') {
                     clickObject.addClass("current").siblings("li").removeClass("current");
                 } else if (type == 'category') {
-                    clickObject.addClass("current").siblings("li.class1").removeClass("current");
+                    if (clickObject.hasClass("target")) {
+                        clickObject.addClass("current").siblings("li.target").removeClass("current");
+                    } else if (clickObject.hasClass("pattern")) {
+                        clickObject.addClass("current").siblings("li.pattern").removeClass("current");
+                    } else {
+                        clickObject.addClass("current").siblings("li.voice").removeClass("current");
+                    }
                 }
 
                 ajaxRequest = undefined;
@@ -628,14 +703,14 @@ function bindOptionClickEvent() {
                 $("#J_totalRice").text(english_user_info.total_rice);
 
                 if (data.level_up) {
-                    var top = $("#question_content").offset().top + 10;
-                    var left = $("#question_content").offset().left;
+                    var top = $(".videoplay").offset().top - 20;
+                    var left = $(".videoplay").offset().left + $(".videoplay").width() / 2 - 75;
                     $.messager.show({
                         msg: "<span  class='messager_span'>恭喜，你可以升级了</span>",
                         showType: 'fade',
                         width: 175,
                         height: 45,
-                        timeout: 4000,
+                        timeout: 3000,
                         style: {
                             left: left,
                             top: top
@@ -663,10 +738,8 @@ function bindOptionClickEvent() {
                 }
                 $(".J_option").unbind("click");
                 //更新排行榜
-                /*
-                 var now_cat = $("#J_topCatBtn").attr("type_name");
-                 $(".J_topCatul a:contains('"+now_cat+"')").click();
-                 */
+                var now_cat = $(".ranklist .J_now_Object").attr("value");
+                $(".ranklist .ranklist-hd ul a[type='" + now_cat + "']").click();
                 //
                 //根据用户上次答题情况进行提示操作
                 var english_user_record = data.english_user_record;
@@ -681,8 +754,8 @@ function bindOptionClickEvent() {
                         next_question_lvlup = false;
                         content = "本题已做对" + english_user_record.right_num + "次，换新题吧";
                     }
-                    var top = $("#question_content").offset().top + 10;
-                    var left = $("#question_content").offset().left;
+                    var top = $(".videoplay").offset().top - 20;
+                    var left = $(".videoplay").offset().left + $(".videoplay").width() / 2 - 100;
                     $.messager.show({
                         msg: "<span  class='messager_span'>" + content + "</span>",
                         showType: 'fade',
@@ -694,10 +767,9 @@ function bindOptionClickEvent() {
                             top: top
                         }
                     });
-                    //                        setTimeout("$(\"#J_levelUp\").click();",5000);
                 } else if (english_user_record.is_right == 0 && english_user_record.error_num >= 2) {
-                    var top = $("#question_content").offset().top + 10;
-                    var left = $("#question_content").offset().left;
+                    var top = $(".videoplay").offset().top - 20;
+                    var left = $(".videoplay").offset().left + $(".videoplay").width() / 2 - 65;
                     $.messager.show({
                         msg: "<span  class='messager_span'>唉，又错了！</span>",
                         showType: 'fade',
@@ -725,6 +797,9 @@ function bindOptionClickEvent() {
  */
 function updateOption(option) {
     var str = "";
+
+    $('.answer').hide();
+
     if (option != null) {
         for (var i = 0; i < option.length; i++) {
             str += '<p class="J_option" id="J_option_' + option[i]['id'] + '" value="' + option[i]['id'] + '"><span class="gc"></span>' + '<span class="ricenumber">';

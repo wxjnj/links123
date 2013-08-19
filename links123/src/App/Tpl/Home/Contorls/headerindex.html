@@ -1,0 +1,60 @@
+	<header>
+		<div class="header_top">
+			<div class="header_toplink">
+				<div class="top_left">
+					<form id="frm_drct" method="post" action="__APP__/Index/directUrl/" target="_blank">
+						<input type="text" id="direct_text" name="tag" value="{$directTip}" txt="{$directTip}" />
+					</form>
+				</div>
+				<div class="top_right">
+					<ul>
+						<li>
+							<a href="__APP__/">首页</a>
+						</li>
+						<empty name="_SESSION[C('MEMBER_AUTH_KEY')]">
+							<li><a url="__APP__/Members/Login" class="newWin">登陆</a></li>
+							<li><a url="__APP__/Members/Register" class="newWin">注册</a></li>
+						<else />
+							<li><a url="__APP__/Members/Index" class="newWin">{$Think.session.nickname}</a></li>
+							<li><a url="__APP__/Members/Index" class="newWin">个人中心</a></li>
+							<li><a href="__APP__/Members/Logout">退出</a></li>
+						</empty>
+						<li>
+							<a url="__APP__/Suggestion" <eq name="newSuggestion" value="1">style='color:#FF0000'</eq> class="newWin">留言板</a>
+						</li>
+						<li>
+							<a url="__APP__/Recommend" class="newWin">推荐链接</a>
+						</li>
+						<li id="li_today">
+							{$today}
+						</li>
+						<li>
+							<iframe id="sinaWeatherToolIframe" name="sinaWeatherTool" src="about:blank" width="160" height="20" marginwidth="0" marginheight="0" hspace="0" vspace="0" frameborder="0" scrolling="no"></iframe>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div id="head_tools">
+			<ul class="head_tools_bar">
+				<li><a href="javascript:;" id="J_mail" title="点击使用网页邮箱">邮箱</a></li>
+				<li><a href="javascript:;" id="J_calendar" title="点击查看日历">日历</a></li>
+				<li><a href="javascript:;" id="J_translate" title="点击使用翻译">翻译</a></li>
+				<li><a href="javascript:;" id="J_calc" title="点击使用计算器">计算器</a></li>
+				<li><a href="javascript:;" id="J_stikynot" title="点击使用便签">便签</a></li>
+				<li><a href="javascript:;" id="J_clock" title="点击使用闹钟">闹钟</a></li>
+			</ul>
+		</div>
+		<div id="J_logonav">
+			<div class="logonav">
+				<div class="logo"><a href="__APP__/"><img src="__PUBLIC__/skin/images/logo.gif" /></a></div>
+				<include file="Home:Contorls:richsearch" />
+				<div class="clr"></div>
+			</div>
+		</div>
+		<div id="div_blank">
+			<input type="hidden" id="js_APP" value="__APP__/" />
+			<input type="hidden" id="js_URL" value="__URL__" />
+			<input type="hidden" id="js_PUBLIC" value="__PUBLIC__" />
+		</div>
+	</header>

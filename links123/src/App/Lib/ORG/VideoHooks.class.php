@@ -228,7 +228,7 @@ class VideoHooks {
 			$data['swf'] = $this->match('/<meta property="og:video" content="(.*?)" \/>/is', $html);
 			$data['img'] = $this->match('/<meta property="og:image" content="(.*?)" \/>/is', $html);
 			
-			$data['swf'] ? $data['swf'] = 'config={"playlist":["'.$data['img'].'", {"url": "'.$data['swf'].'","autoPlay":false,"autoBuffering":true}]}' : '';
+			//$data['swf'] ? $data['swf'] = 'config={"playlist":["'.$data['img'].'", {"url": "'.$data['swf'].'","autoPlay":false,"autoBuffering":true}]}' : '';
 			
 			$data['media_type'] = 4;
 		}
@@ -418,7 +418,7 @@ class VideoHooks {
 			//$data['img'] = $this->match('/"image":"(.+?)"/is', $swf);
 		}
 	
-		//$data['isObject'] = true;
+		$data['media_type'] = 2;
 	
 		return $data;
 	
@@ -555,7 +555,7 @@ class VideoHooks {
 				$img = urldecode($this->match('/image=(.*?)\&/is', $swf));
 				$img = $img ? $img : 'http://www.links123.cn/Public/English/images/deafult_media_img.jpg';
 				
-				$swf ? $swf = 'config={"playlist":["'.$img.'", {"url": "'.$swf.'","autoPlay":false,"autoBuffering":true}]}' : '';
+				//$swf ? $swf = 'config={"playlist":["'.$img.'", {"url": "'.$swf.'","autoPlay":false,"autoBuffering":true}]}' : '';
 					
 				$media_type = 4;
 			}

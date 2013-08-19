@@ -35,55 +35,64 @@ class EnglishQuestionModel extends CommonModel {
         } else {
             $condition = "`status`=1 and `voice`={$voice} and `target`={$target} and `pattern`={$pattern} and `level`={$level} and `object`={$object} ";
         }
-        //用户做过的题目去除
-        $englishRecordModel = D("EnglishRecord");
-        $user_question_ids = $englishRecordModel->getUserTestQuestionIdList($object, $level, $voice, $target, $pattern);
-        $record_condition = " AND `id` not in(" . implode(",", $user_question_ids) . ")";
         if (!empty($extend_condition)) {
             $condition.=" and " . $extend_condition;
         }
-        $count = $this->where($condition . $record_condition)->count(); //用于随机
-        if ($count > 0) {
-            $limit = rand(0, $count - 1);
-            $ret = $this->where($condition . $record_condition)->limit("{$limit},1")->select(); //去除用户做过的题目
-            if (!empty($ret)) {
-                $ret = $ret[0];
+        //
+        //优先获取用户没看过的试题
+        $user_view_question_ids = D("EnglishViewRecord")->getUserViewQuestionIdList($object, $level, $voice, $target, $pattern);
+        if (!empty($user_view_question_ids)) {
+            $record_view_condition = " AND `id` not in(" . implode(",", $user_view_question_ids) . ")";
+            $count = $this->where($condition . $record_view_condition)->count(); //用于随机
+            if ($count > 0) {
+                $limit = rand(0, $count - 1);
+                $ret = $this->where($condition . $record_view_condition)->limit("{$limit},1")->select(); //去除用户看过的题目
+                if (!empty($ret)) {
+                    $ret = $ret[0];
+                }
             }
         }
+        $englishRecordModel = D("EnglishRecord");
         if (empty($ret)) {
+            //
+            //优先获取用户没做过的题目
+            $user_question_ids = $englishRecordModel->getUserTestQuestionIdList($object, $level, $voice, $target, $pattern); //用户做过的题目id数组
+            $record_condition = " AND `id` not in(" . implode(",", $user_question_ids) . ")";
+            $count = $this->where($condition . $record_condition)->count(); //用于随机
+            if ($count > 0) {
+                $limit = rand(0, $count - 1);
+                $ret = $this->where($condition . $record_condition)->limit("{$limit},1")->select(); //去除用户做过的题目
+                if (!empty($ret)) {
+                    $ret = $ret[0];
+                }
+            }
+            //
+            //用户题目都做过，视作未做过一题
+            if (empty($ret)) {
 //            //优先获取用户做错，做的最少次数的题目
 //            $englishRecordModel->alias("english_record")
 //                    ->join(C("DB_PREFIX")."english_question question on question.id=english_record.question_id")
 //                    
-            $count = $this->where($condition)->count(); //用于随机
-            if ($count > 0) {
-                $limit = rand(0, $count - 1);
-                $ret = $this->where($condition)->limit("{$limit},1")->select(); //用户题目都做过，视作未做过一题
-                if (!empty($ret)) {
-                    $ret = $ret[0];
-                    $ret['tested'] = true;
+                $count = $this->where($condition)->count(); //用于随机
+                if ($count > 0) {
+                    $limit = rand(0, $count - 1);
+                    $ret = $this->where($condition)->limit("{$limit},1")->select();
+                    if (!empty($ret)) {
+                        $ret = $ret[0];
+                        $ret['tested'] = true;
+                    }
                 }
             }
-        }
-        if (false === $ret) {
-            return array();
+            if (false === $ret) {
+                return array();
+            }
         }
         $ret['record'] = $englishRecordModel->getQuestionUserRecord($ret['id']);
         $ret['record']['untested_num'] = $englishRecordModel->getUserUntestedQuestionNum($object, $level, $voice, $target, $pattern);
         $ret['content'] = ftrim($ret['content']);
         $ret['media_url'] = htmlspecialchars_decode($ret['media_url']);
-        if (intval($ret['media_id']) > 0) {
-            $media = D("EnglishMedia")->where(array("question_id" => $ret['media_id']))->find();
-            if (false === $media) {
-                $media = array();
-            }
-            $ret['media_info'] = $media;
-        }
         $ret['option'] = D("EnglishOptions")->getQuestionOptionList($ret['id']);
 //        $ret['option'] = D("EnglishOptions")->where("question_id={$ret['id']} and status=1")->order("sort asc")->select();
-        if (false === $ret['option']) {
-            $ret['option'] = array();
-        }
         foreach ($ret['option'] as $key => $value) {
             $ret['option'][$key]['content'] = ftrim($value['content']);
         }

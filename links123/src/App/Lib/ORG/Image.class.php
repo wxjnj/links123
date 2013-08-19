@@ -328,7 +328,7 @@ class Image extends Think
     {
 		import('@.ORG.String');
         $randval = String::randString($length,$mode);
-        $_SESSION[$verifyName]= md5($randval);
+        $_SESSION[$verifyName]= md5(strtoupper($randval));
         $width = ($length*10+10)>$width?$length*10+10:$width;
         if ( $type!='gif' && function_exists('imagecreatetruecolor')) {
             $im = @imagecreatetruecolor($width,$height);

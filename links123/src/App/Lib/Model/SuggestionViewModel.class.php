@@ -1,7 +1,9 @@
 <?php
 /**
  * @desc 建立留言视图模型
- * @author frank UPDATE 2013-08-15
+ * @package Model
+ * @name SuggestionViewModel.class.php
+ * @author Frank UPDATE 2013-08-18
  */
 
 class SuggestionViewModel extends ViewModel {
@@ -13,29 +15,20 @@ class SuggestionViewModel extends ViewModel {
 
     /**
      * @desc 获取留言的回复/点评列表
-     * @author adam
+     * @author Frank
      * @param int $id [留言的id]
      * @return array 
      */
     public function getSuggestionReplyList($id) {
-    	$list = $this->where("is_reply=1 and pid=%d", $id)->order('create_time DESC')->select();
-        
-        if (true === $list && !empty($list)) {
+    	$list = $this->where("is_reply=1 and pid='%d'", $id)->order('create_time DESC')->select();
+        if (!empty($list)) {
         	foreach ($list as $key => $value) {
         		$list[$key]['suggest'] = preg_replace("/<br\s\/>$/", "", $value['suggest']);
-	            if (empty($value['face'])) {
-	                $list[$key]['face'] = "face.jpg";
-	            }
-	            if ($value['mid']==-1) {
-	                $list[$key]['nickname'] = "另客";
-	            }else if ($value['mid'] == 0 || empty($value['nickname'])) {
-	                $list[$key]['nickname'] = "游客";
-	            }
+        		empty($value['face']) && $list[$key]['face'] = 'face.jpg';
+        		$value['mid']==-1 && $list[$key]['nickname'] = '另客';
+	            ($value['mid'] == 0 || empty($value['nickname'])) && $list[$key]['nickname'] = '游客';
         	}
-        } else {
-        	$list = array(); 
         }
-        
         return $list;
     }
 
@@ -46,7 +39,7 @@ class SuggestionViewModel extends ViewModel {
     public function isTodayHasNewSuggestion() {
         $mod = D("Suggestion");
         $ret = $mod->where("TO_DAYS(FROM_UNIXTIME(create_time))-TO_DAYS(NOW())=0")->find();
-        $flag = false === $ret || empty($ret) ? false: true;
+        $flag = (false === $ret || empty($ret)) ? false: true;
         return $flag;
     }
 

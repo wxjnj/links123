@@ -1,0 +1,41 @@
+<div class="right_sider" id="right_sider">
+	<div id="sub_menu">
+		<div class="sider_tit">
+			<span <eq name="lan" value="1">class="tip on"<else />class="tip"</eq> id="sider_tit01" title="{$cn_tip}"><font>中文岛</font></span>
+			<span <eq name="lan" value="2">class="tip on"<else />class="tip"</eq> id="sider_tit02" title="{$en_tip}"><font>英文岛</font></span>
+		</div>
+
+		<div <eq name="lan" value="2">class="sider_cont none"<else/>class="sider_cont"</eq> id="sider_cont01">
+			<volist name="leftMenuCn" id="vo">
+				<a id="sider_{$vo.id}" href="__URL__/index/lan/1/cid/{$vo.id}" title="{$vo.cat_name}" class="tip <if condition="($lan eq 1) and ($cid eq $vo['id'])">on</if>" >{$vo.cat_name}</a>
+			</volist>
+		</div>
+
+		<div <eq name="lan" value="1">class="sider_cont none"<else/>class="sider_cont"</eq> id="sider_cont02">
+			<volist name="leftMenuEn" id="vo">
+				<a id="sider_{$vo.id}" href="__URL__/index/lan/2/cid/{$vo.id}" title="{$vo.cat_name}" class="tip <if condition="($lan eq 2) and ($cid eq $vo['id'])">on</if>" >{$vo.cat_name}</a>
+			</volist>
+		</div>
+
+		<div id="sub_menu_pic" id="slider-wrapper">
+			<div id="slider" class="nivoSlider">
+				<volist name="catPics" id="vo">
+					<a class="fancybox" data-fancybox-group="gallery" href="__PUBLIC__/Uploads/CatPics/{$vo.pic_big}" title="{$vo.name}"><img src="__PUBLIC__/Uploads/CatPics/{$vo.pic}" alt="{$vo.name}" /></a>
+				</volist>
+			</div>
+		</div>
+		<input type="hidden" id="pauseTime" value="{$pauseTime}" />
+	</div>
+	<div id="right_menu">
+		<volist name="rootCats" id="vo" key="k">
+			<dl class="right_menu_bg{$k}">
+				<!--<a href="javascript:changeBigCat({$vo.id});">&nbsp;</a>-->
+				<a href="__APP__/Index/index/cid/{$vo.id}">&nbsp;</a>
+			</dl>
+		</volist>
+	</div>
+	<div id="right_pot"></div>
+</div>
+<input type="hidden" id="rid" value="{$rid}" />
+<input type="hidden" id="cid" value="{$cid}" />
+<input type="hidden" id="lan" value="{$lan}" />

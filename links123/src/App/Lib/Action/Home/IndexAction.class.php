@@ -1,252 +1,117 @@
 <?php
+/**
+ * @name IndexAction.class.php
+ * @package Home
+ * @desc 首页
+ * @author frank UPDATE 2013-08-16
+ * @version 0.0.1
+ */
 import("@.Common.CommonAction");
 class IndexAction extends CommonAction {
-
 	/**
-	  +----------------------------------------------------------
-	 * 页面
-	  +----------------------------------------------------------
+	 * @desc 首页
+	 * @author Frank UPDATE 2013-08-16
+	 * @see CommonAction::index()
 	 */
-	// 首页
 	public function index() {
-		//
-		import("@.ORG.String");
-		//
-		$cid = $this->_param('cid');
-		//
 		$cat = M("Category");
-		if (empty($cid)) {
-			$cid = $cat->where('status=1 and level=1')->min('id');
-		} else {
-			if (!is_numeric($cid)) {
-				$this->error("非法参数cid！");
-			}
+		import("@.ORG.String");
+		
+		$cid = intval($this->_param('cid')) ? : $cat->where('status=1 and level=1')->min('id');
+		$lan = intval($this->_param('lan')) ? : session('lanNow') ? : 1;
+		$grade = intval($this->_param('grade'));
+		$sort = $this->_param('sort');
+		
+		if ($lan != session('lanNow')) {
+			session('lanNow', $lan);
 		}
-
-		$this->assign("cid", $cid);
-		$this->assign("cat_name", $cat->where('id=' . $cid)->getField('cat_name'));
-		//
+		
 		$rid = $this->getRoot($cid);
-		$this->assign("rid", $rid);
-		$this->assign('rid_tip', $cat->where('id=' . $rid)->getField('intro'));
-		//
-		$aryGrade = array();
-		switch ($rid) {
-			case 1:
-				$aryGrade = array('1' => '初级', '1,2' => '初级&nbsp;<span>|</span>&nbsp;中级', '1,2,3' => '初级&nbsp;<span>|</span>&nbsp;中级&nbsp;<span>|</span>&nbsp;高级', '2' => '中级', '2,3' => '中级&nbsp;<span>|</span>&nbsp;高级', '3' => '高级');
-				$this->assign('grades', array('初级', '中级', '高级'));
-				break;
-			case 4:
-				$aryGrade = array('1' => '苹果', '2' => '安卓+', '1,2' => '苹果&nbsp;<span>|</span>&nbsp;安卓+');
-				$this->assign('grades', array('苹果', '安卓+'));
-				break;
-		}
-		//
+		$catName = $cat->where('id = %d', $cid)->getField('cat_name'); 
+		$ridTip = $cat->where('id = %d', $rid)->getField('intro');
+		
+		$gradeArr = getGradeArr($rid);
 		$this->getLeftMenu($rid);
-		//
-		$condition = array();
+		
 		$condition['status'] = 1;
-		//
-		if ($cid == $rid) {
-			$condition['category'] = array('in', $this->_getSubCats($cid));
-		} else {
-			$condition['category'] = $cid;
-		}
-		//
-
-		$lan = $this->_param('lan');
-		if (empty($lan)) {
-			$lan = session('lanNow');
-			if (empty($lan)) {
-				$lan = 1;
-			}
-		} else {
-			if (!is_numeric($lan)) {
-				$this->error("非法参数lan！");
-			}
-		}
-		//
-		session('lanNow', $lan);
+		$condition['category'] = $cid == $rid ? array('in', $this->_getSubCats($cid)) : $cid;
 		$condition['language'] = $lan;
-		$this->assign("lan", $lan);
-		//
-		$grade = $this->_param('grade');
-		if (!empty($grade)) {
-			if (!is_numeric($grade)) {
-				$this->error("非法参数grade！");
-			}
-			//
+		if ($grade) {
 			$condition['grade'] = array('like', '%' . $grade . '%');
 			$this->assign("grade", $grade);
 		}
-		//
-		$sort = $this->_param('sort');
 		if (empty($sort)) {
 			$sort = "csort asc,sort asc";
 		}
-		$this->assign("sort", $sort);
-		//
 		$paiLie = $this->_session('pailie');
 		if (empty($paiLie)) {
-			session('pailie', M("Variable")->where("vname='pailie'")->getField("value_int"));
-			//
 			$memberAuthKey = $this->_session(C('MEMBER_AUTH_KEY'));
-			if (!empty($memberAuthKey)) {
-				session('pailie', M("Member")->where('id=' . $memberAuthKey)->getField('pailie'));
-			}
+			$paiLie = empty($memberAuthKey) ? M("Variable")->where("vname='pailie'")->getField("value_int") : M("Member")->where("id = '%s'", $memberAuthKey)->getField('pailie');
+			session('pailie', $paiLie);
 		}
-		
-		//修复paiLie为空，初始值未取出，造成分页默认为11条
-		$paiLie = $this->_session('pailie');
-		
-		if ($paiLie == 1) {
-			$listRows = 20;
-		} else {
-			$listRows = 11;
-		}
-
-		$pg = $this->_param(C('VAR_PAGE'));
-		if (empty($pg)) {
-			$pg = 1;
-		} else {
-			if (!is_numeric($pg)) {
-				$this->error("非法参数p！");
-			}
-		}
-		$this->assign('p', $pg);
-		//
+		$listRows = $paiLie == 1 ? 20 : 11;
+		$pg = intval($this->_param(C('VAR_PAGE'))) ? : 1;
 		$rst = ($pg - 1) * $listRows;
-		//
+		
 		$links = new LinksFntViewModel();
-		$list = $links->where($condition)->order($sort)->limit($rst . ',' . $listRows)->select();
-
-		foreach ($list as &$value) {
-			$value["more"] = 0;
-			if (empty($value["logo"])) {
-				$paiLie = $this->_session('pailie');
-				if ($paiLie == 1) {
-					$value["sintro"] = String::msubstr($value["intro"], 0, 19);
-				} else {
-					$value["sintro"] = String::msubstr($value["intro"], 0, 208);
-					if ($value["sintro"] != $value["intro"]) {
-						$value["sintro"] = String::msubstr($value["intro"], 0, 150);
-						$value["more"] = 1;
-					}
-				}
-			} else {
-				if ($paiLie == 1) {
-					if ($rid == 5) {
-						$value["sintro"] = String::msubstr($value["intro"], 0, 20);
-					} else {
-						$value["sintro"] = String::msubstr($value["intro"], 0, 13);
-					}
-				} else {
-					$value["sintro"] = String::msubstr($value["intro"], 0, 184);
-					if ($value["sintro"] != $value["intro"]) {
-						$value["sintro"] = String::msubstr($value["intro"], 0, 132);
-						$value["more"] = 1;
-					}
-				}
-			}
-			if ($paiLie == 2) {
-				$value["sintro"] = nl2br($value["sintro"]);
-				$value["sintro"] = preg_replace('/(<br\s*\/>)/i', '', $value["sintro"]);
-				$tempary = explode("<br />", $value["sintro"]);
-				if (count($tempary) > 4) {
-					$lastline = String::msubstr($tempary[2], 0, 40);
-					if ($lastline == $tempary[2]) {
-						$lastline .= "…";
-					}
-					$value["sintro"] = $tempary[0] . "<br />" . $tempary[1] . "<br />" . $lastline;
-					$value["more"] = 1;
-				}
-				if (count($tempary) == 3 || (count($tempary) == 4 && $value["more"] == 1)) {
-					$lastline = String::msubstr($tempary[2], 0, 40);
-					$value["sintro"] = $tempary[0] . "<br />" . $tempary[1] . "<br />" . $lastline;
-					if (count($tempary) == 4) {
-						$value["sintro"] .= "…";
-					}
-				}
-				if (count($tempary) == 2) {
-					if ($value["more"] == 1) {
-						if (strlen($tempary[1]) < strlen($tempary[0])) {
-							$lastline = String::msubstr($tempary[1], 0, 40);
-							$value["sintro"] = $tempary[0] . "<br />" . $lastline;
-						}
-					} else {
-						$value["sintro"] = $tempary[0] . "<br />" . $tempary[1];
-					}
-				}
-				$value["sintro"] = checkLinkUrl($value["sintro"]);
-			}
-			// 防采集
-			$array_bq = array("dl", "div", "dl", "div");
-			$array_bq2 = array("span", "font", "b", "strong");
-			$array_class = array("cprt", "lnkcpt", "cpit", "lnkcpit", "fjc", "lnkfcj");
-			$idx1 = String::randNumber(0, 3);
-			$this->assign("bq", $array_bq[$idx1]);
-			$idx2 = String::randNumber(0, 5);
-			$rdm = String::uuid();
-			$tempstr = "<" . $array_bq2[$idx1] . " class='" . $array_class[$idx2] . "'>欢迎来到另客网，" . $rdm . "近一点，更近一点" . $rdm . "</" . $array_bq2[$idx1] . ">";
-			$value["linkTitle"] = $value["title"];
-			$value["title"] = $value["title"] . $tempstr;
-			$value["sintro"] = $value["sintro"] . $tempstr;
-			//
-			if (!empty($value['mid'])) {
-				$value['nickname'] = M("Member")->where('id=' . $value['mid'])->getField('nickname');
-			}
-			$value['grade_name'] = $aryGrade[$value['grade']];
-		}
+		$list = $links->getLists($condition, $sort, $rst, $listRows, $rid, $gradeArr['aryGrade']);
+		
 		$this->assign('links', $list);
-		// 分页
+		$array_bq = array("dl", "div");
+		
 		$count = $links->where($condition)->count('links.id');
 		if ($count > 0) {
 			import("@.ORG.Page");
 			$p = new Page($count, $listRows);
-//             $page = $p->show_js();
-			
 			$page = $p->show_ajax_js();
 			$this->assign("page", $page);
 		}
 		// 公告
 		$variable = M("Variable");
-		//
 		$ann_name = $variable->getByVname('ann_name');
-		$this->assign('ann_name', $ann_name['value_varchar']);
-		//
+		
 		$announce = M("Announcement");
-		$announces = $announce->where('status=1')->order('sort asc, create_time desc')->select();
-		//echo $announce->getLastSql();
-		$this->assign("announces", $announces);
+		$announces = $announce->where('status=1')->order('sort ASC, create_time DESC')->select();
+		
 		// 我的地盘
 		$myarea = M("Myarea");
-		session('arealist_default', $myarea->where('mid=0')->order('sort')->select());
+		session('arealist_default', $myarea->where('mid=0')->order('sort ASC')->select());
 		//存在用户登录，获取用户的我的地盘
 		$memberAuthKey = $this->_session(C('MEMBER_AUTH_KEY'));
+		
 		if (!empty($memberAuthKey)) {
-			session('arealist', $myarea->where('mid=' . $memberAuthKey)->order('`sort`')->select());
-			$areaList = $this->_session('arealist');
-			if (empty($areaList)) {
-				session('arealist', session('arealist_default'));
-			}
+			$areaList = $myarea->where('mid=' . $memberAuthKey)->order('sort ASC')->select();
+			!empty($areaList) || $areaList = session('arealist_default');
+			session('arealist', $areaList);
 		} else {
-			//第一次进入，获取默认我的地盘
 			$areaList = $this->_session('arealist');
-			if (empty($areaList)) {
-				session('arealist', session('arealist_default'));
-			}
+			!empty($areaList) || session('arealist', session('arealist_default'));
 		}
 		// 目录图片
 		$catPics = $this->getCatPics($rid);
+		
+		$this->assign("lan", $lan);
+		$this->assign("sort", $sort);
+		$this->assign('p', $pg);
+		$this->assign("bq", $array_bq[rand(0,1)]);
+		$this->assign('ann_name', $ann_name['value_varchar']);
+		$this->assign("announces", $announces);
 		$this->assign('catPics', $catPics['catPics']);
 		$this->assign('pauseTime', $catPics['pauseTime']);
-
-		$this->getHeader();
+		$this->assign("cid", $cid);
+		$this->assign("cat_name", $catName);
+		$this->assign("rid", $rid);
+		$this->assign('rid_tip', $ridTip);
+		$this->assign('grades', $gradeArr['grades']);
+		
+		$this->getHeaderInfo();
 		$this->display();
-		$this->getFooter();
 	}
 
-	// 直达网址
+	/**
+	 * @desc 直达网址
+	 * @author Frank UPDATE 2013-08-17
+	 */
 	public function directUrl() {
 		$model = M("DirectLinks");
 		$condition['status'] = 1;
@@ -261,11 +126,9 @@ class IndexAction extends CommonAction {
 		if ($linkNow) {
 			$model->where("id={$linkNow['id']}")->setInc("click_num");
 			echo '<style type="text/css">a{display:none}</style>
-					<script src="http://s96.cnzz.com/stat.php?id=4907803&web_id=4907803" language="JavaScript"></script>
-					<script type="text/javascript">
-						 window.location.href="http://' . $linkNow['url'] . '";
-					  </script>';
-//    		header("location: http://".$linkNow['url']);
+				  <script src="http://s96.cnzz.com/stat.php?id=4907803&web_id=4907803" language="JavaScript"></script>
+				  <script type="text/javascript">window.location.href="http://' . $linkNow['url'] . '";
+				  </script>';
 		} else {
 			$data['tag'] = $condition['tag'];
 			$data['update_time'] = time();
@@ -642,17 +505,21 @@ class IndexAction extends CommonAction {
 		$this->display();
 	}
 
-	// 设置排列
+	/**
+	 * @desc 设置排列
+	 * @return boolean
+	 */
 	public function setPailie() {
-		if (empty($_REQUEST['val'])) {
+		$val = intval($_REQUEST['val']);
+		if (empty($val)) {
 			echo "排列值丢失！";
 			return false;
 		}
-		//
-		$_SESSION['pailie'] = $_REQUEST['val'];
+		
+		$_SESSION['pailie'] = $val;
 		if (isset($_SESSION[C('MEMBER_AUTH_KEY')])) {
 			$member = M("Member");
-			if (false === $member->where('id=' . $_SESSION[C('MEMBER_AUTH_KEY')])->setField('pailie', $_REQUEST['val'])) {
+			if (false === $member->where("id='%s'", $_SESSION[C('MEMBER_AUTH_KEY')])->setField('pailie', $val)) {
 				Log::write('设置排列失败：' . $member->getLastSql(), Log::SQL);
 				echo "设置排列失败";
 				return false;
@@ -691,20 +558,6 @@ class IndexAction extends CommonAction {
 		} else {
 			echo "caiOK";
 		}
-	}
-
-	// 关于我们
-	public function about() {
-		$variable = M("Variable");
-		$Description = $variable->getByVname('Description');
-		$this->assign('aboutCtnt', nl2br($Description['value_varchar']));
-
-		$this->assign('title', '另客网，国内领先的网上教育资源大全，众多最有影响力的搜索引擎汇集地');
-		$this->assign('Description', '另客网是国内领先的网上教育资源大全，众多最有影响力的搜索引擎汇集，让您输入一次，搜遍网络。我们的语音教育资源更是独树一帜。网友的参与和贡献将让另客网内容更加丰富。我们的最终目标是为您打造一个教育信息资源丰富、形式多样、网友积极参与、互动的网上教育社区');
-		//
-		$this->assign('banner', $this->getAdvs(1, "banner"));
-		//
-		$this->display();
 	}
 
 	// 联系我们
@@ -814,131 +667,10 @@ class IndexAction extends CommonAction {
 		}
 	}
 
-	// 获取目录
-	private function getMyCats($flag = 1) {
-		$cat = M("Category");
-		$cats = $cat->field('id, cat_name, level')->where('status=1 and level=1')->order('sort asc')->select();
-		foreach ($cats as &$value) {
-			switch ($value['id']) {
-				case 1:
-					$value['grades'] = array(
-						array('name' => '初级', 'value' => '1'),
-						array('name' => '初级中级', 'value' => '1,2'),
-						array('name' => '初级中级高级', 'value' => '1,2,3'),
-						array('name' => '中级', 'value' => '2'),
-						array('name' => '中级高级', 'value' => '2,3'),
-						array('name' => '高级', 'value' => '3')
-					);
-					break;
-				case 4:
-					$value['grades'] = array(
-						array('name' => '苹果', 'value' => '1'),
-						array('name' => '安卓+', 'value' => '2'),
-						array('name' => '苹果安卓+', 'value' => '1,2')
-					);
-					break;
-			}
-			//
-			$value['subCats'] = $cat->field('id, cat_name, level')->where('status=1 and flag=' . $flag . ' and prt_id=' . $value['id'])->order('sort asc')->select();
-		}
-		$this->assign("cats", $cats);
-	}
+	
+	
 
-	// 推荐链接
-	public function recommend() {
-		//
-		$links = M("Links");
-		$id = $_REQUEST['id'];
-		$lan = $_REQUEST['lan'];
-		if (!empty($id)) {
-			if (!isset($_SESSION[C('MEMBER_AUTH_KEY')]) || empty($_SESSION[C('MEMBER_AUTH_KEY')])) {
-				header("Location: " . __APP__ . "/");
-			} else {
-				$linkNow = $links->getById($id);
-				if ($linkNow['mid'] == $_SESSION[C('MEMBER_AUTH_KEY')]) {
-					$catNow = M("Category")->getById($linkNow['category']);
-					$linkNow['rid'] = $catNow['prt_id'];
-					$this->assign('linkNow', $linkNow);
-					$lan = $linkNow['language'];
-				}
-			}
-		} else {
-			if (isset($_SESSION[C('MEMBER_AUTH_KEY')]) && !empty($_SESSION[C('MEMBER_AUTH_KEY')])) {
-				$last = $links->where('mid=' . $_SESSION[C('MEMBER_AUTH_KEY')])->order('id desc')->limit(1)->select();
-				$linkNow['category'] = $last[0]['category'];
-				$linkNow['rid'] = M("Category")->where('id=' . $last[0]['category'])->getField('prt_id');
-				$linkNow['grade'] = $last[0]['grade'];
-			}
-			$linkNow['title'] = "请输入标题";
-			$linkNow['link'] = "请输入链接";
-			$linkNow['intro'] = "请输入简介";
-			if (empty($lan)) {
-				$lan = 1;
-			}
-			$linkNow['language'] = $lan;
-			$this->assign('linkNow', $linkNow);
-		}
-		//
-		$this->getMyCats($lan);
-		//
-		$this->assign('alt', $_REQUEST['alt']);
-		//
-		$this->assign('title', '好东西就应该和大家分享。您推荐的好东西会让另客的内容更加丰富！');
-		$this->assign('Description', '分享您发现的好东西，别人也会和您分享他们的好东西，互动共享让另客教育社区更加生气蓬勃！');
-		$this->display();
-	}
-
-	// 保存推荐链接
-	public function saveRecommend() {
-		//
-		$_POST['title'] = cleanParam($_POST['title']);
-		$_POST['link'] = str_replace('http://', '', cleanParam($_POST['link']));
-		$_POST['intro'] = cleanParam($_POST['intro']);
-		//
-		$id = $_REQUEST['id'];
-		$links = M("Links");
-		if (!empty($id)) {
-			if (!isset($_SESSION[C('MEMBER_AUTH_KEY')]) || empty($_SESSION[C('MEMBER_AUTH_KEY')])) {
-				header("Location: " . __APP__ . "/");
-			} else {
-				$linkNow = $links->getById($id);
-				if ($linkNow['mid'] == $_SESSION[C('MEMBER_AUTH_KEY')]) {
-					//
-					if (false === $links->save($_POST)) {
-						Log::write('链接编辑失败：' . $links->getLastSql(), Log::SQL);
-						echo '链接编辑失败';
-					} else {
-						echo 'editOK';
-					}
-				} else {
-					echo '这不是你上传的链接';
-				}
-			}
-		} else {
-			//
-			if ($links->where('category=' . $_POST['category'] . ' and link=\'' . $_POST['link'] . '\'')->find()) {
-				echo '该链接已存在';
-				return false;
-			}
-			//
-			$_POST['status'] = 0;
-			$_POST['create_time'] = time();
-			$_POST['mid'] = $_SESSION[C('MEMBER_AUTH_KEY')];
-			if (empty($_SESSION[C('MEMBER_AUTH_KEY')])) {
-				$_POST['mid'] = -1; //游客推荐
-				$_POST['recommended'] = "游客";
-			} else {
-				$_POST['recommended'] = getUserNickName($_SESSION[C('MEMBER_AUTH_KEY')]);
-			}
-			//
-			if (false === $links->add($_POST)) {
-				Log::write('链接提交失败：' . $links->getLastSql(), Log::SQL);
-				echo '链接提交失败';
-			} else {
-				echo 'addOK';
-			}
-		}
-	}
+	
 
     // 保存说说
 	public function saveComment() {
@@ -1442,98 +1174,104 @@ class IndexAction extends CommonAction {
 		}
 	}
 
-	//////////////////////////////////////////// End of Class /////////////////////////////////////////////////
-	//
+	/**
+	 * @desc 连接导向
+	 * @author Frank UPDATE 2013-08-17
+	 */
 	public function link_out() {
-		if (empty($_REQUEST['url'])) {
+		$url = $_REQUEST['url'];
+		if (empty($url)) {
 			$this->error("对不起，链接不存在！");
 		}
-		$url = $_REQUEST['url'];
 		if ($_REQUEST['mod'] == "myarea") {
 			$mid = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
-			$condition = "mid={$mid} and (url='{$url}' or url='{$url}/')";
 			$mod = D("Myarea");
-			$mod->where($condition)->setInc("click_num");
+			$mod->where("mid='%d' and url='%s'", $mid, $url)->setInc("click_num");
 		} else {
 			$linkModel = D("Links");
-			$linkModel->where("link = '{$url}/'")->setInc("click_num");
+			$linkModel->where("link='%s'", $url)->setInc("click_num");
 		}
-//		redirect("http://{$url}");
+		
 		echo '<style type="text/css">a{display:none}</style>
-				  <script src="http://s96.cnzz.com/stat.php?id=4907803&web_id=4907803" language="JavaScript"></script>
-				  <script type="text/javascript">
-					 window.location.href="http://' . $url . '";
-				  </script>';
+			  <script src="http://s96.cnzz.com/stat.php?id=4907803&web_id=4907803" language="JavaScript"></script>
+			  <script type="text/javascript">
+			  window.location.href="http://' . $url . '";
+			  </script>';
 	}
-
-	//统计用户自留地按钮点击统计
+	
+	/**
+	 * @desc 统计用户自留地按钮点击统计
+	 * @author Frank UPDATE 2013-08-17
+	 */
 	public function count_myarea_open() {
 		if ($this->isAjax()) {
 			$mid = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
 			$myareaModel = D("Myarea");
-			$myareaModel->where("mid={$mid}")->setInc("myarea_button_click_num");
+			$myareaModel->where("mid='%d'", $mid)->setInc("myarea_button_click_num");
+			exit(0);
 		}
 	}
 
-	//统计英语角按钮点击统计
+	/**
+	 * @desc 统计英语角按钮点击统计
+	 * @author Frank UPDATE 2013-08-17
+	 */
 	public function count_english_open() {
 		if ($this->isAjax()) {
 			$variableModel = D("Variable");
 			$num = intval($variableModel->getVariable("english_click_num")) + 1;
 			$variableModel->setVariable("english_click_num", $num, "英语角按钮点击次数");
-			exit();
+			exit(0);
 		}
 	}
-
-	//ajax获取首页目录以及连接列表
+	/**
+	 * @desc ajax获取首页目录以及连接列表
+	 * @author Frank UPDATE 2013-08-17
+	 */
 	public function ajax_get_links() {
 		if ($this->isAjax()) {
-			//获取语言
 			$lan = intval($this->_param('lan'));
-			if ($lan <= 0) {
-				$lan = $this->_session('lanNow');
-				if (empty($lan)) {
-					$lan = 1;
-				}
+			$page = (int)$this->_param('p');
+			$cid = intval($this->_param('cid'));
+			$grade = $this->_param('grade');
+			$sort = $this->_param('sort');
+			$page = $page > 0 ? $page : 1;
+			
+			if ($lan == 0) {
+				$lan = session('lanNow');
+				empty($lan) && $lan = 1;
 			}
-			$page = (int)$this->_param('p') > 0 ? (int)$this->_param('p') : 1;
-//             C('VAR_PAGE') = $page;
 			$_SESSION['lanNow'] = $lan;
 			$catModel = D("Category");
-			//获取分类
-			$ret = $catModel->getIndexCategoryLinksList($lan, intval($this->_param('cid')), $this->_param('grade'), $this->_param('sort'), $page);
+			$ret = $catModel->getIndexCategoryLinksList($lan, $cid, $grade, $sort, $page);
 			$this->ajaxReturn($ret, "请求成功", true);
 		}
 	}
 
 	/**
-	 * google translate
+	 * @desc google translate
+	 * @author Frank UPDATE 2013-08-17
 	 */
 	public function google_translate() {
-
 		$srcLang = $_POST['sl'];
 		$tatLang = $_POST['tl'];
 		$q = urlencode(trim($_POST['q']));
-
+		
 		$url = 'http://translate.google.cn/translate_a/t?client=t&hl=zh-CN&sl=' . $srcLang . '&tl=' . $tatLang . '&ie=UTF-8&oe=UTF-8&multires=1&oc=1&prev=conf&psl=en&ptl=vi&otf=1&it=sel.166768%2Ctgtd.2118&ssel=4&tsel=4&sc=1&q=' . $q;
-
 		$result = file_get_contents($url);
-
 		$this->ajaxReturn($result, '', true);
 	}
-
+	
 	public function test0619() {
 		set_time_limit(1000);
 		import("@.ORG.VideoDownload");
 		$videoDownload = new VideoDownload();
-
-	  //  $question['media_text_url'] = trim(str_replace(' ', '', $question['media_text_url']));
+		//$question['media_text_url'] = trim(str_replace(' ', '', $question['media_text_url']));
 		$videoInfo = $videoDownload->download("http://www.peepandthebigwideworld.com/activities/anywhere-activities/whathappens/");
 		if (!$videoInfo) {
 			var_dump($videoDownload->getError());
 		}
 		var_dump($videoInfo);
-		
 	}
 	
 }

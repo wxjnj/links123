@@ -42,7 +42,7 @@
                 }
             } 
             function setActiveStyleSheet(title){
-                $("link").attr("href","__PUBLIC__/English/css/"+title + '?2013080702');
+                $("link").attr("href","__PUBLIC__/English/css/"+title + '?2013081701');
 //                document.getElementsByTagName("link")[0].href="__PUBLIC__/English/css/"+title;
             }
         </script>
@@ -50,9 +50,12 @@
         <script type="text/javascript" src="__PUBLIC__/English/js/jquery.tools.min.js"></script>
         <load href='__PUBLIC__/skin/easyui/themes/metro/easyui.css' />
         <load href="__PUBLIC__/skin/easyui/jquery.easyui.min.js" />
-        <SCRIPT src="__PUBLIC__/English/js/select.js?2013080701"></SCRIPT>
+        <SCRIPT src="__PUBLIC__/English/js/select.js?2013081701"></SCRIPT>
         <script type="text/javascript" src="__PUBLIC__/Js/Links123PlayerV1.1.1.1/swfobject.js"></script>
-        <SCRIPT src="__PUBLIC__/English/js/index.js?2013081301"></SCRIPT>
+        <SCRIPT src="__PUBLIC__/English/js/index.js?2013081705"></SCRIPT>
+        
+        <script type="text/javascript" src="__PUBLIC__/Js/flowplayer/flowplayer-3.2.12.min.js"></script>
+		
     </head>
 
     <body>
@@ -152,12 +155,14 @@
                                     class="media_div"  style="visibility: hidden;" data_media_url="{$question['media_url']}" 
                                 </if> 
                                      data_isAboutVideo="{$isAboutVideo}">
+                                
                                 <if condition="$isAboutVideo neq '1'">
                                     <if condition="$question['media_type'] eq '1'">
                                         {$question['media']}
                                     <elseif condition="$question['media_type'] eq '2'"/>
                                         <iframe class="media_iframe" src="{$question['media']}" scrolling="no" frameborder="0"></iframe>
                                     <elseif condition="$question['media_type'] eq '3'"/>
+                                    	<div id="J_media_swfobject_div"></div>
                                         <script type="text/javascript">
                                             var swfUrl = 'http://www.kizphonics.com/wp-content/uploads/jw-player-plugin-for-wordpress/player/player.swf';
                                             var version = '10.2.0';
@@ -171,17 +176,20 @@
                                                 bgColor: "#000000"
                                             };
 
-                                            swfobject.embedSWF(swfUrl, "J_media_div", "100%", "100%", version, "/swf/playerProductInstall.swf", {$question['media']}, params );
+                                            swfobject.embedSWF(swfUrl, "J_media_swfobject_div", "100%", "100%", version, "/swf/playerProductInstall.swf", {$question['media']}, params );
 
                                         </script>
                                     <elseif condition="$question['media_type'] eq '4'"/>
-                                     <object id="flash_fallback_1" class="vjs-flash-fallback" width="100%" height="100%" type="application/x-shockwave-flash"  
-									        data="http://releases.flowplayer.org/swf/flowplayer-3.2.1.swf">  
-									        <param name="movie" value="http://releases.flowplayer.org/swf/flowplayer-3.2.1.swf" />  
-									        <param name="allowfullscreen" value="true" />  
-									        <param name="flashvars" value='{$question["media"]}' />  
-									
-									</object> 
+                                    	<div id="J_media_swfobject_div"></div>
+	                                    <script type="text/javascript">
+	                                    $('#J_media_swfobject_div').css({
+	                                        'height': media_height,
+	                                        'width': media_width
+	                                    });
+	                                    var media_img_url = "{$question['media_img_url']}";
+	                                    var media_url = "{$question['media']}";
+	                                    flowplayer("J_media_swfobject_div", "http://releases.flowplayer.org/swf/flowplayer-3.2.16.swf", {playlist:[media_img_url,{url: media_url,autoPlay: false}]});
+	                                    </script>
                                     <else />
                                         <object id="J_media_object" height="100%" width="100%" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">
                                             <param name="wmode" value="transparent">
