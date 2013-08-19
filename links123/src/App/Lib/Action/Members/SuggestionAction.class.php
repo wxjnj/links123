@@ -1,6 +1,6 @@
 <?php
 /**
- * @name FeedbackAction.class.php
+ * @name SuggestionAction.class.php
  * @package Member
  * @desc 留言板
  * @author frank qian 2013-08-13
@@ -9,43 +9,36 @@
 
 import("@.Common.CommonAction");
 
-class FeedbackAction extends CommonAction
+class SuggestionAction extends CommonAction
 {
+	/**
+	 * @desc 我的留言建议页面
+	 * @package Members
+	 * @name index
+	 * @param int VAR_PAGE
+	 * @return boolean
+	 * @author Frank UPDATE 2013-08-18
+	 */
 	public function index()
 	{
-		//
 		$this->checkLog();
-		//$aryType = array('','留言板','申请取消链接','其他');
-		//
-		$mbrNow = M("Member")->getById($_SESSION[C('MEMBER_AUTH_KEY')]);
-		$this->assign("mbrNow", $mbrNow);
-		//
+		$mid = $_SESSION[C('MEMBER_AUTH_KEY')];
+		$pg = $_REQUEST[C('VAR_PAGE')];
+		$mbrNow = M("Member")->getById($mid);
+		
 		$condition['pid'] = 0;
-		$condition['mid'] = $_SESSION[C('MEMBER_AUTH_KEY')];
-		//
+		$condition['mid'] = $mid;
+		
 		$listRows = 12;
-		$pg = !empty($_REQUEST[C('VAR_PAGE')]) ? $_REQUEST[C('VAR_PAGE')] : 1;
+		$pg = $pg ? : 1;
 		$rst = ($pg - 1) * $listRows;
-		//
+		
 		$sugView = new SuggestionViewModel();
 		$mysugs = $sugView->where($condition)->order('create_time desc')->limit($rst . ',' . $listRows)->select();
 		foreach ($mysugs as &$value) {
 			$value['create_time'] = date('Y-m-d h:i', $value['create_time']);
-			//$value['typeName'] = $aryType[$value['type']];
-			//$value["suggest"] = checkLinkUrl($value["suggest"]);
-			//$value["reply"] = checkLinkUrl($value["reply"]);
-			/*
-			 $value['subsug'] = $sugView->where('pid='.$value['id'])->order('create_time asc')->select();
-			foreach ($value['subsug'] as &$val) {
-			$val['create_time'] = date('Y-m-d h:i', $val['create_time']);
-			$val['typeName'] = $aryType[$val['type']];
-			$val["suggest"] = checkLinkUrl($val["suggest"]);
-			$val["reply"] = checkLinkUrl($val["reply"]);
-			}
-			*/
 		}
-		$this->assign('mysugs', $mysugs);
-		// 分页
+		
 		$count = $sugView->where($condition)->count('id');
 		if ($count > 0) {
 			import("@.ORG.Page");
@@ -53,26 +46,32 @@ class FeedbackAction extends CommonAction
 			$page = $p->show_js2();
 			$this->assign("page", $page);
 		}
-		//
+		
+		$this->assign("mbrNow", $mbrNow);
+		$this->assign('mysugs', $mysugs);
 		$this->assign("funcNow", "mySuggestion");
-		//
+		
 		$this->display();
 	}
 	
-	//
+	/**
+	 * @desc 编辑我的说说
+	 * @package Members
+	 * @name saveSuggestion
+	 * @param int type
+	 * @param string comment
+	 * @return boolean
+	 * @author Frank UPDATE 2013-08-18
+	 */
 	public function saveSuggestion() {
-		//
-		if (!$this->checkLog(1)) {
-			return false;
-		}
-		//
+		$this->checkLog(1);
 		$suggestion = M("Suggestion");
-		//
+		
 		if (empty($_POST['id'])) {
 			$_POST['mid'] = $_SESSION[C('MEMBER_AUTH_KEY')];
 			$_POST['type'] = 1;
 			$_POST['create_time'] = time();
-			//
+			
 			if (false === $suggestion->add($_POST)) {
 				Log::write('新增留言失败：' . $suggestion->getLastSql(), Log::SQL);
 				echo "新增留言失败！";

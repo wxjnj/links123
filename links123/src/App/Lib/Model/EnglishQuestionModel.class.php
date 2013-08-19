@@ -57,15 +57,13 @@ class EnglishQuestionModel extends CommonModel {
             //
             //优先获取用户没做过的题目
             $user_question_ids = $englishRecordModel->getUserTestQuestionIdList($object, $level, $voice, $target, $pattern); //用户做过的题目id数组
-            if (!empty($user_question_ids)) {
-                $record_condition = " AND `id` not in(" . implode(",", $user_question_ids) . ")";
-                $count = $this->where($condition . $record_condition)->count(); //用于随机
-                if ($count > 0) {
-                    $limit = rand(0, $count - 1);
-                    $ret = $this->where($condition . $record_condition)->limit("{$limit},1")->select(); //去除用户做过的题目
-                    if (!empty($ret)) {
-                        $ret = $ret[0];
-                    }
+            $record_condition = " AND `id` not in(" . implode(",", $user_question_ids) . ")";
+            $count = $this->where($condition . $record_condition)->count(); //用于随机
+            if ($count > 0) {
+                $limit = rand(0, $count - 1);
+                $ret = $this->where($condition . $record_condition)->limit("{$limit},1")->select(); //去除用户做过的题目
+                if (!empty($ret)) {
+                    $ret = $ret[0];
                 }
             }
             //
@@ -78,7 +76,7 @@ class EnglishQuestionModel extends CommonModel {
                 $count = $this->where($condition)->count(); //用于随机
                 if ($count > 0) {
                     $limit = rand(0, $count - 1);
-                    $ret = $this->where($condition)->limit("{$limit},1")->select(); 
+                    $ret = $this->where($condition)->limit("{$limit},1")->select();
                     if (!empty($ret)) {
                         $ret = $ret[0];
                         $ret['tested'] = true;
