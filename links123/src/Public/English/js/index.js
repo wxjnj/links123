@@ -9,26 +9,10 @@ $(function() {
 
     //答题按钮点击事件
     $("#J_answerButton").click(function() {
-//        $(this).toggleClass("current");
-//        if ($(".answer").is(":visible")) {
-//            $(".answer").slideUp("slow");
-//            if ($("#J_media_div").attr("media_type") == 1 || $("#J_media_div").attr("media_type") == 2) {
-//                $("#J_media_div").show();
-//            } else if ($("#J_media_div").attr("media_type") == 0 || $("#J_media_div").attr("media_type") == 'null') {
-//            	$(".J_player").show();
-//            }
-//           
-//        } else {
-//            if ($("#J_media_div").attr("media_type") == 1 || $("#J_media_div").attr("media_type") == 2) {
-//                $("#J_media_div").hide();
-//            } else if ($("#J_media_div").attr("media_type") == 0 || $("#J_media_div").attr("media_type") == 'null') {
-//            	$(".J_player").hide();
-//            }
-//            $(".answer").slideDown("slow");
-//        }
 
-        $(this).toggleClass("current");
+//        $(this).toggleClass("current");
         if ($(".answer").is(":visible")) {
+            $("#J_answerButton").removeClass("current");
             $(".answer").slideUp("slow", function() { //这里收起后显示
                 if ($("#J_media_div").attr("media_type") == 1 || $("#J_media_div").attr("media_type") == 2) {
                     $("#J_media_div").css({'display': '', 'position': '', 'left': ''}).show();
@@ -39,6 +23,7 @@ $(function() {
                 }
             });
         } else { //这里先隐藏后展开
+            $("#J_answerButton").addClass("current");
             if ($("#J_media_div").attr("media_type") == 1 || $("#J_media_div").attr("media_type") == 2) {
                 $("#J_media_div").css({'display': 'block', 'position': 'absolute', 'left': '-9999px'}).hide();
             } else if ($("#J_media_div").attr("media_type") == 4) {
