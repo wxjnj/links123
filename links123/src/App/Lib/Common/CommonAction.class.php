@@ -258,29 +258,33 @@ class CommonAction extends Action {
      * @author frank qian 2013-08-15
      */
     public function autoLogin() {
-        $user_str = $_COOKIE["USER_ID"];
-        //没有用户session且自动登录标示Cookie USER_ID 存在执行自动登录过程
-        if ((!isset($_SESSION[C('MEMBER_AUTH_KEY')]) || empty($_SESSION[C('MEMBER_AUTH_KEY')])) && !empty($user_str)) {
-            $ret = explode("|", $user_str);
-            $user_id = intval($ret[0]);
-            $user_info = D("Member")->find($user_id);
-            
-            if (!empty($user_info) && md5($user_info['password'] . $user_info['nickname']) == $ret[1]) {
-            	$_SESSION[C('MEMBER_AUTH_KEY')] = $user_info['id'];
-                $_SESSION['nickname'] = $user_info['nickname'];
-                $_SESSION['face'] = empty($user_info['face'])?'face.jpg':$user_info['face'];
-                    
-                //使用cookie过期时间来控制前台登陆的过期时间
-                $home_session_expire = intval(D("Variable")->getVariable("home_session_expire"));
-                cookie(md5("home_session_expire"), time(), $home_session_expire);
-            }
-        } else if(empty($user_str) && empty($_COOKIE[md5("home_session_expire")])) {//自动登录标示Cookie USER_ID 时间过期
+    	$user_str = $_COOKIE["USER_ID"];
+        if (!isset($_SESSION[C('MEMBER_AUTH_KEY')]) || empty($_SESSION[C('MEMBER_AUTH_KEY')])) {
+        	//没有用户session且自动登录标示Cookie USER_ID 存在执行自动登录过程
+        	if (!empty($user_str)) {
+        		$ret = explode("|", $user_str);
+        		$user_id = intval($ret[0]);
+        		$user_info = D("Member")->find($user_id);
+        		
+        		if (!empty($user_info) && md5($user_info['password'] . $user_info['nickname']) == $ret[1]) {
+        			$_SESSION[C('MEMBER_AUTH_KEY')] = $user_info['id'];
+        			$_SESSION['nickname'] = $user_info['nickname'];
+        			$_SESSION['face'] = empty($user_info['face'])?'face.jpg':$user_info['face'];
+        		
+        			//使用cookie过期时间来控制前台登陆的过期时间
+        			$home_session_expire = intval(D("Variable")->getVariable("home_session_expire"));
+        			cookie(md5("home_session_expire"), time(), $home_session_expire);
+        		}
+        	}
+        }
+        
+        if(empty($_COOKIE[md5("home_session_expire")])) {
+        	//自动登录标示Cookie USER_ID 时间过期
         	unset($_SESSION[C('MEMBER_AUTH_KEY')]);
-            unset($_SESSION['nickname']);
-            unset($_SESSION['face']);    
+        	unset($_SESSION['nickname']);
+        	unset($_SESSION['face']);
         }
     }
-
 }
 
 ?>
