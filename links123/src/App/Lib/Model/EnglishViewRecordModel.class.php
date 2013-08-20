@@ -67,7 +67,9 @@ class EnglishViewRecordModel extends CommonModel {
             $map['user_id'] = intval($_SESSION[C("MEMBER_AUTH_KEY")]); //用户id为登录用户的对应用户id
         }
         $map['question_id'] = $now_question_id;
-        $map['object'] = $now_object;
+        if ($type == "next") {
+            $map['object'] = $now_object;
+        }
         $now_question_info = $this->where($map)->find(); //本次次的题目历史信息
         if (false === $now_question_info || empty($now_question_info)) {
             return array();
