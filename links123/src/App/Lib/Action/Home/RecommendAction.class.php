@@ -55,10 +55,13 @@ class RecommendAction extends CommonAction {
 		$this->display();
 	}
 	
-	// 获取目录
+	/**
+	 * @desc 获取目录
+	 * @param unknown_type $flag
+	 */
 	private function getMyCats($flag = 1) {
 		$cat = M("Category");
-		$cats = $cat->field('id, cat_name, level')->where('status=1 and level=1')->order('sort asc')->select();
+		$cats = $cat->field('id, cat_name, level')->where('status=1 and level=1')->order('sort ASC')->select();
 		foreach ($cats as &$value) {
 			switch ($value['id']) {
 				case 1:
@@ -79,8 +82,7 @@ class RecommendAction extends CommonAction {
 					);
 					break;
 			}
-			//
-			$value['subCats'] = $cat->field('id, cat_name, level')->where('status=1 and flag=' . $flag . ' and prt_id=' . $value['id'])->order('sort asc')->select();
+			$value['subCats'] = $cat->field('id, cat_name, level')->where('status=1 and flag=' . $flag . ' and prt_id=' . $value['id'])->order('sort ASC')->select();
 		}
 		$this->assign("cats", $cats);
 	}
