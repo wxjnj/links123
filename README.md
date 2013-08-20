@@ -28,3 +28,10 @@
 `git update-index --no-assume-unchanged filename`
 
 注：filename包含config.php文件的路径
+
+### 远程测试数据库连接 ###
+
+需要在搭建本地测试环境的成员，数据库可以连接测试数据库
+
+`Host: 112.124.15.96 DB: links123_public USER: links123_public PASSWORD: links1230820`
+
