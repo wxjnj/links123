@@ -334,6 +334,17 @@ a,a:hover{ text-decoration: none; }
 	text-align: center;
 }
 .apps .img{ font-size: 0; }
+.apps .img a{
+	background: url(../imgs/app/appbg.png) -75px 0 no-repeat;
+	display: block;
+	height: 74px;
+	margin: 0 auto;
+	overflow: hidden;
+	width: 75px;
+}
+.apps .img a:hover{
+	background-position: 0 0;
+}
 .apps .nm{
 	margin-top: 10px;
 }
