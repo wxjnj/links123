@@ -666,71 +666,64 @@ class IndexAction extends CommonAction {
 			echo "未发现您输入的邮箱！";
 		}
 	}
-
-	
-	
-
-	
-
-    // 保存说说
+	/**
+	 * @desc 保存说说
+	 * @author Frank UPDATE 2013-08-19
+	 * @param int lnk_id
+	 * @param string comment
+	 * @param string ip
+	 */
 	public function saveComment() {
 		if ($this->isAjax()) {
-                $lnk_id = $this->_param('lnk_id');
-                if (empty($lnk_id)) {
-                    $this->ajaxReturn("unllid", "", false);
-                    exit;
-                }       
-
-                $commentData = stripslashes($this->_param('comment'));
-                if (empty($commentData)){
-                    exit;
-                }
-                
-                //过滤非法关健字
-                //$commentData = filterIllegal($commentData);
-  
-                $condition['comment'] = $commentData;
-                $condition['ip'] = getIP();
-                $condition['lnk_id'] = $lnk_id;
-                
-                $Comment = M("Comment");
-                $commentnum = $Comment->where($condition)->count();
-                if($commentnum >= 1)
-                {
-                    $this->ajaxReturn("isset", "", false);
-                    exit;
-                }
-
-                //1天同一ip只能发3次
-                $daystart = strtotime(date("Y-m-d", time()).' 00:00:00');
-                $dayend = strtotime(date("Y-m-d", time()).' 23:59:59');
-
-                $commentmax = $Comment->where("lnk_id=$lnk_id AND ip='$condition[ip]' AND create_time>'$daystart' AND create_time<'$dayend'")->count();
-                if($commentmax >= 3)
-                {
-                    $this->ajaxReturn("maxflag", "", false);
-                    exit;
-                }
-
-                $data = array();
-                $data['lnk_id'] = $lnk_id;
-                $data['mid'] = $_SESSION[C('MEMBER_AUTH_KEY')];
-                $data['comment'] = $commentData;
-                $data['ip'] = getIP();
-                $data['create_time'] = time();
-                                
-                if (false === $Comment->add($data)) {
-                    Log::write('说说提交失败：' . $comment->getLastSql(), Log::SQL);
-                } else {
-                    $links = M("Links");
-                    if (false === $links->where('id=' . $data['lnk_id'])->setInc('say_num')) {
-                        Log::write('增加链接说说数量失败：' . $links->getLastSql(), Log::SQL);
-                    }
-                }
-		
-                //formRequest($_SERVER['HTTP_REFERER'],array('timestamp'=>time()));
-                
-                        
+			$lnk_id = $this->_param('lnk_id');
+			if (empty($lnk_id)) {
+				$this->ajaxReturn("unllid", "", false);
+				exit;
+			}
+			
+			$commentData = stripslashes($_REQUEST['comment']);
+			if (empty($commentData)){
+				exit;
+			}
+			
+			//过滤非法关健字
+			//$commentData = filterIllegal($commentData);
+			
+			$condition['comment'] = $commentData;
+			$condition['ip'] = getIP();
+			$condition['lnk_id'] = $lnk_id;
+			
+			$Comment = M("Comment");
+			$commentnum = $Comment->where($condition)->count();
+			if($commentnum >= 1) {
+				$this->ajaxReturn("isset", "", false);
+				exit;
+			}
+			//1天同一ip只能发3次
+			$daystart = strtotime(date("Y-m-d", time()).' 00:00:00');
+			$dayend = strtotime(date("Y-m-d", time()).' 23:59:59');
+			
+			$commentmax = $Comment->where("lnk_id = '%d' AND ip = '%s' AND create_time > '%s' AND create_time < '%s'", $lnk_id, $condition['ip'], $daystart, $dayend)->count();
+			if ($commentmax >= 3) {
+				$this->ajaxReturn("maxflag", "", false);
+				exit;
+			}
+			
+			$data['lnk_id'] = $lnk_id;
+			$data['mid'] = $_SESSION[C('MEMBER_AUTH_KEY')];
+			$data['comment'] = $commentData;
+			$data['ip'] = getIP();
+			$data['create_time'] = time();
+			
+			if ($Comment->add($data)) {
+				$links = M("Links");
+				if (false === $links->where("id = '%d'", $data['lnk_id'])->setInc('say_num')) {
+					Log::write('增加链接说说数量失败：' . $links->getLastSql(), Log::SQL);
+				}
+			} else {
+				Log::write('说说提交失败：' . $Comment->getLastSql(), Log::SQL);
+			}
+			
 			$this->ajaxReturn("success", "", true);
 		}
 	}
@@ -1179,14 +1172,16 @@ class IndexAction extends CommonAction {
 	 * @author Frank UPDATE 2013-08-17
 	 */
 	public function link_out() {
-		$url = $_REQUEST['url'];
+		$url = $this->_param('url');
+		$mod = $this->_param('mod');
+		
 		if (empty($url)) {
 			$this->error("对不起，链接不存在！");
 		}
-		if ($_REQUEST['mod'] == "myarea") {
+		if ($mod == "myarea") {
 			$mid = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
-			$mod = D("Myarea");
-			$mod->where("mid='%d' and url='%s'", $mid, $url)->setInc("click_num");
+			$myarea = D("Myarea");
+			$myarea->where("mid='%d' and url='%s'", $mid, $url)->setInc("click_num");
 		} else {
 			$linkModel = D("Links");
 			$linkModel->where("link='%s'", $url)->setInc("click_num");
@@ -1253,8 +1248,8 @@ class IndexAction extends CommonAction {
 	 * @author Frank UPDATE 2013-08-17
 	 */
 	public function google_translate() {
-		$srcLang = $_POST['sl'];
-		$tatLang = $_POST['tl'];
+		$srcLang = $this->_param('sl');
+		$tatLang =$this->_param('tl');
 		$q = urlencode(trim($_POST['q']));
 		
 		$url = 'http://translate.google.cn/translate_a/t?client=t&hl=zh-CN&sl=' . $srcLang . '&tl=' . $tatLang . '&ie=UTF-8&oe=UTF-8&multires=1&oc=1&prev=conf&psl=en&ptl=vi&otf=1&it=sel.166768%2Ctgtd.2118&ssel=4&tsel=4&sc=1&q=' . $q;
@@ -1266,7 +1261,6 @@ class IndexAction extends CommonAction {
 		set_time_limit(1000);
 		import("@.ORG.VideoDownload");
 		$videoDownload = new VideoDownload();
-		//$question['media_text_url'] = trim(str_replace(' ', '', $question['media_text_url']));
 		$videoInfo = $videoDownload->download("http://www.peepandthebigwideworld.com/activities/anywhere-activities/whathappens/");
 		if (!$videoInfo) {
 			var_dump($videoDownload->getError());
