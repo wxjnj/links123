@@ -1,6 +1,12 @@
 <?php
 
-// 我的地盘
+/**
+ * @name MyareaAction.class.php
+ * @package Admin
+ * @desc 我的地盘
+ * @author lawrence UPDATE 2013-08-20
+ * @version 0.0.1
+ */
 class MyareaAction extends CommonAction {
 
     // 
@@ -20,47 +26,47 @@ class MyareaAction extends CommonAction {
             }
             $param['mid'] = "default";
         }
-        //
-//		$map['mid'] = 0;
     }
 
-    // 列表
+	/**
+	 * @desc 列表
+	 * @see MyareaAction::index()
+	 */
     public function index() {
-        //列表过滤器，生成查询Map对象
         $map = array();
         $param = array();
-        if (method_exists($this, '_filter')) {
+        if (method_exists($this,'_filter')) {
             $this->_filter($map, $param);
         }
         $model = M("Myarea");
         if (!empty($model)) {
-            $this->_list($model, $map, $param, 'sort', false);
-            //echo $model->getLastSql();
+            $this->_list($model, $map, $param,'sort', false);
         }
         $this->assign('param', $param);
-        //
         $this->display();
         return;
     }
 
-    //
+	/**
+	 * @desc 添加页面
+	 * @see MyareaAction::add()
+	 */
     public function add() {
-        //
         $this->display();
         return;
     }
 
-    // 插入数据
+	/**
+	 * @desc 添加操作
+	 * @see MyareaAction::insert()
+	 */
     public function insert() {
-        //
         $this->checkPost();
         // 创建数据对象
         $model = D("Myarea");
-        //
         if ($model->where("mid=0 and url='" . $_POST['url'] . "'")->find()) {
             $this->error('该链接已存在！');
         }
-        //
         if (false === $model->create()) {
             $this->error($model->getError());
         }
@@ -68,72 +74,76 @@ class MyareaAction extends CommonAction {
         if (false !== $model->add()) {
             $this->success('我的地盘添加成功！');
         } else {
-            Log::write('我的地盘添加失败：' . $model->getLastSql(), Log::SQL);
+            Log::write('我的地盘添加失败：'.$model->getLastSql(),Log::SQL);
             $this->error('我的地盘添加失败！');
         }
     }
 
-    //
+	/**
+	 * @desc 安全验证
+	 * @see MyareaAction::checkPost()
+	 */
     protected function checkPost() {
-        // 安全验证
         $_POST['web_name'] = htmlspecialchars(trim($_POST['web_name']));
         $_POST['url'] = str_replace('http://', '', htmlspecialchars(trim($_POST['url'])));
         $_POST['url'] = str_replace('https://', '', $_POST['url']);
     }
 
-    //
+	/**
+	 * @desc 编辑页面
+	 * @see MyareaAction::edit()
+	 */
     function edit() {
         $model = M("Myarea");
         $vo = $model->getById($_REQUEST['id']);
         $this->assign('vo', $vo);
-        //
         $this->display();
         return;
     }
 
-    // 更新数据
+	/**
+	 * @desc 编辑操作
+	 * @see MyareaAction::update()
+	 */
     public function update() {
-        //
         $this->checkPost();
-        //
         $model = D("Myarea");
-        //
-        if ($model->where("mid=0 and url='" . $_POST['url'] . "' and id!=" . $_POST['id'])->find()) {
+        if ($model->where("mid=0 and url='".$_POST['url']."' and id!=".$_POST['id'])->find()) {
             $this->error('该链接已存在！');
         }
-        //
         if (false === $model->create()) {
             $this->error($model->getError());
         }
-        //
         if (false !== $model->save()) {
             $this->assign('jumpUrl', cookie('_currentUrl_'));
             $this->success('我的地盘编辑成功!');
         } else {
-            Log::write('我的地盘编辑失败：' . $model->getLastSql(), Log::SQL);
+            Log::write('我的地盘编辑失败：' .$model->getLastSql(),Log::SQL);
             $this->error('我的地盘编辑失败!');
         }
     }
 
-    // 排序
+	/**
+	 * @desc 排序
+	 * @see MyareaAction::sort()
+	 */
     public function sort() {
         $model = M("Myarea");
         $map = array();
         $map['status'] = 1;
         $map['mid'] = 0;
         if (!empty($_GET['sortId'])) {
-            $map['id'] = array('in', $_GET['sortId']);
+            $map['id'] = array('in',$_GET['sortId']);
         } else {
-            $params = explode("&", $_SESSION[C('SEARCH_PARAMS_KEY')]);
+            $params =explode("&",$_SESSION[C('SEARCH_PARAMS_KEY')]);
             foreach ($params as &$value) {
-                $temp = explode("=", $value);
-                if (!empty($temp[1]) && $temp[0] != 'sort' && $temp[0] != 'order') {
+                $temp = explode("=",$value);
+                if (!empty($temp[1]) && $temp[0]!='sort' && $temp[0] != 'order') {
                     $map[$temp[0]] = $temp[1];
                 }
             }
         }
         $sortList = $model->where($map)->order('sort asc,create_time asc')->select();
-        //echo $model->getLastSql();
         foreach ($sortList as &$value) {
             $value['txt_show'] = $value['web_name'] . "　　　　";
         }
@@ -141,7 +151,6 @@ class MyareaAction extends CommonAction {
         $this->display("../Public/sort");
         return;
     }
-
 }
 
 ?>
