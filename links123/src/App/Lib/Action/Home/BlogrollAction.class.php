@@ -15,7 +15,7 @@ class BlogrollAction extends CommonAction {
 	 */
 	public function index() {
 		$outlink = M("OutsideLinks");
-		$list = $outlink->order('sort')->select();
+		$list = $outlink->order('sort ASC')->select();
 		$this->assign('outlinklist', $list);
 		$this->assign('banner', $this->getAdvs(3, "banner"));
 		
