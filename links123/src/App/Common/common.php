@@ -386,6 +386,7 @@ function cleanParam($param) {
     $param = htmlspecialchars($param);
     $param1 = strtolower($param);
     $param = strpos($param1, 'script') > 0 || strpos($param1, 'iframe') > 0 ? '' : $param;
+    return $param;
 }
 
 /* 去除html标签 */
