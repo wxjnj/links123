@@ -33,7 +33,7 @@
 			<div class="thl">
 				<form action="">
 					<div class="cate">
-						<a class="on" href="#">搜</a> - <a href="#">查</a> - <a href="#">学</a> - <a href="#">考</a> - <a href="#">听</a> - <a href="#">看</a> - <a href="#">读</a> - <a href="#">唱</a> - <a href="#">聊</a> - <a href="#">乐</a> - <a href="#">付</a> - <a href="#">问</a></li>
+						<a class="on" href="#">搜</a> - <a href="#">查</a> - <a href="#">学</a> - <a href="#">考</a> - <a href="#">听</a> - <a href="#">看</a> - <a href="#">读</a> - <a href="#">唱</a> - <a href="#">聊</a> - <a href="#">乐</a> - <a href="#">付</a> - <a href="#">问</a>
 					</div>					
 					<div class="subcate">
 						<dl>
@@ -176,6 +176,18 @@
 		<a class="coffee" href="javascript:void(0);">咖啡</a>
 		<a class="ljt" href="javascript:void(0);">垃圾桶</a>
 	</div>
-	<script>document.body.clientHeight>800?document.getElementById('J_End').style.position = 'fixed':'';</script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script>
+		function getTotalHeight(){
+			$.browser = $.browser || {};
+			$.browser.msie = /msie/.test(navigator.userAgent.toLowerCase());
+			if($.browser.msie){
+				return document.compatMode == "CSS1Compat"? document.documentElement.clientHeight : document.body.clientHeight;
+			}else{
+				return self.innerHeight;
+			}
+		}
+		if(getTotalHeight()>800){ document.getElementById('J_End').style.position = 'fixed' };
+	</script>
 </body>
 </html>

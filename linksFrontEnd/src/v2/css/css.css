@@ -21,8 +21,14 @@ body{font-size:14px; font-family:"微软雅黑"; color:#666666}
 .header_toplink .top_right ul li{float:left; margin-left:14px}
 .logonav{width:980px; height:53px; margin:0px auto 0px auto;}
 #div_blank{width:980px; height:12px; margin:0px auto; border-bottom:3px solid #FF0000;}
-.logo{width:290px; height:53px; float:left;}
-.logo img{cursor:pointer;}
+.logo a{
+	background: url(../imgs/logo.gif) 0 0 no-repeat;
+	float:left;
+	height:53px;
+	overflow: hidden;
+	text-indent: -999px;
+	width:290px;
+}
 .english_concert{float: right;margin-top: 15px}
 .nav_ul li{float:left; font-size:18px; width:60px; margin-right:30px; margin-top:27px; pdding:0px;}
 .nav_ul a.on{color:#FF0000; font-weight:bold;}
