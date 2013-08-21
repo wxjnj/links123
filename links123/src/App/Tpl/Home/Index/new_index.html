@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>{$title}</title>
+	<meta name="Keywords" content="{$keywords}" />
+	<meta name="Description" content="{$description}" />
+	
+	<link href="__PUBLIC__/Index/css/base.css" rel="stylesheet" type="text/css" />
+	<link href="__PUBLIC__/Index/css/index.css" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/skin/fancybox/jquery.fancybox.css?v=2.1.4" media="screen" />
+	<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+	<link href="__PUBLIC__/Index/css/app.css" rel="stylesheet" type="text/css" />
+	
+</head>
+
+<body class="w1000">
+	<div class="top J_header_top">
+		<div class="top-inner">
+			<div class="syt">
+				<form  id="frm_drct" method="post" action="__APP__/Index/directUrl/" target="_blank">
+					<input class="ips" x-webkit-speech type="text" name="tag" id="direct_text" placeholder="{$directTip}" />
+					<input class="btn" type="submit" value="确定" />
+				</form>
+			</div>
+			<div class="toplinks">
+				<ul class="uc">
+					<li><a href="/">首页</a></li>
+					<empty name="_SESSION[C('MEMBER_AUTH_KEY')]">
+						<li><a href="__APP__/Members/Login" target="_blank">登录</a></li>
+						<li><a href="__APP__/Members/Register" target="_blank">注册</a></li>
+					<else />
+						<li><a href="__APP__/Members/Index" target="_blank">{$Think.session.nickname}</a></li>
+						<li><a href="__APP__/Members/Index" target="_blank">个人中心</a></li>
+						<li><a href="__APP__/Members/Logout" target="_blank">退出</a></li>
+					</empty>
+					<li><a href="__APP__/Suggestion" <eq name="newSuggestion" value="1">style='color:#FF0000'</eq> >留言板</a></li>
+				</ul>
+				<div class="weather"><iframe id="sinaWeatherToolIframe" name="sinaWeatherTool" src="http://weather.news.sina.com.cn/chajian/iframe/weatherStyle0.html?city=%E6%9D%AD%E5%B7%9E" width="160" height="20" marginwidth="0" marginheight="0" hspace="0" vspace="0" frameborder="0" scrolling="no"></iframe></div>
+				<p class="timenow" id="J_today">{$today}</p>
+			</div>
+		</div>
+	</div>
+	<div class="wrap">
+		<div class="wrap-hd">
+			<h1><a class="logo" href="/" rel="home">另客网</a></h1>
+			<div class="thl">
+				<form action="" id="searchForm">
+					<input name="thl" id="J_thl" type="hidden" value="">
+					<input name="tid" id="J_tid" type="hidden" value="">
+					<input name="q" id="J_q" type="hidden" value="">
+					<input type="text" value="" style="display:none;" />
+					
+					<input type="hidden" id="tidNow" value="{$tidNow}" />
+	
+					<div class="cate" id="J_thl_div" >
+						<volist name="thl_list" id="vo" key="m">
+							<a <eq name="thlNow" value="$vo['thl']">class="on"</eq> href="#">{$vo['thl']}</a>
+							<if condition='$m neq 12'>-&nbsp;</if>
+						</volist>
+					</div>					
+					<div class="subcate">
+						<dl>
+							<volist name="thl_list" id="vo" key="i">
+								<dd class="J_thlz" <neq name="vo['thl']" value="$thlNow">style="display:none;"</neq> >
+									<volist name="vo['thlz']" id="thlz" key="j">
+										<a <if condition='$thlz["id"] eq $tidNow'>class="on"</if> href="#" title="{$thlz['tip']}" ndk="{$thlz['needkey']}" url="{$thlz['url']}" tid="{$thlz['id']}" tag_name="{$thlz['url_tag_name']}">{$thlz['name']}</a>
+										<neq name="vo['thlz_len']" value="$j">&nbsp;-&nbsp;</neq> 
+									</volist>
+								</dd>
+							</volist>
+						</dl>
+					</div>
+					<div class="ctls" id="rch_sch">
+						<input type="text" id="search_text" class="ipt" x-webkit-speech lang="zh-CN" value="{$_COOKIE['keyword']}" autocomplete="off" />
+						<input type="hidden" id="search_text_o" />
+						<input class="btn" type="submit" value="搜索" id="btn_search" />
+						<ul id="tips"></ul>
+					</div>
+				</form>
+				<input type="hidden" id="js_APP" value="__APP__/" />
+				<input type="hidden" id="js_URL" value="__URL__" />
+				<input type="hidden" id="js_PUBLIC" value="__PUBLIC__" />
+			</div>
+			<div class="zld">
+				<a href="javascript:void(0);" class="tools">自留地</a>
+				<ul>
+					<volist name="_SESSION['arealist']" id="vo">
+						<li><a href="{:U('Index/link_out')}?mod=myarea&url={$vo.url}" target="_blank" myid="{$vo.id}">{$vo.web_name}</a></li>
+					</volist>
+				</ul>
+			</div>
+			<a target="_blank" class="englishcorner" href="#">英语角</a>
+		</div>
+		<div class="wrap-bd">
+			<div class="sider">
+				<div class="video-panel">
+					<div class="video">
+						293px X 202px
+					</div>
+					<div class="videotarget">
+						<ul>
+							<li><a class="gg" href="#">看公告</a></li>
+							<li><a class="dm" href="#">看动漫</a></li>
+							<div class="annt">
+								<h2>{$ann_name}</h2>
+								<div class="annt_lie" id="annt">
+								    <ul>
+								    <volist name="announces" id="vo">
+										<li>
+										<empty name="vo.content">
+											{$vo.title}
+										<else />
+											<a href="__URL__/ann_detail/id/{$vo.id}" target="_blank">{$vo.title}</a>
+										</empty>
+										</li>
+									</volist>
+								    </ul>
+								</div>
+							</div>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="ct">
+				<div class="apps">
+					<ul>
+						<li class="newWin" url="/English">
+							<p class="img"><a href="#"><img src="__PUBLIC__/Index/imgs/app/app001.png" alt="" /></a></p>
+							<p class="nm"><a href="/English" target="_blank">英语角</a></p>
+						</li>
+						<li class="newWin" url="/Index/nav">
+							<p class="img"><a href="#"><img src="__PUBLIC__/Index/imgs/app/app002.png" alt="" /></a></p>
+							<p class="nm"><a href="/Index/nav" target="_blank">导航</a></p>
+						</li>
+						<li id="J_mail" >
+							<p class="img"><a href="#"><img src="__PUBLIC__/Index/imgs/app/app003.png" alt="" /></a></p>
+							<p class="nm"><a href="#">邮箱</a></p>
+						</li>
+						<li id="J_calendar" >
+							<p class="img"><a href="#"><img src="__PUBLIC__/Index/imgs/app/app004.png" alt="" /></a></p>
+							<p class="nm"><a href="#">日历</a></p>
+						</li>
+						<li>
+							<p class="img"><a href="#"><img src="__PUBLIC__/Index/imgs/app/app005.png" alt="" /></a></p>
+							<p class="nm"><a href="#">天气</a></p>
+						</li>
+						<li class="newWin" url="/Thl/index?thl=搜&tid=1&q=">
+							<p class="img"><a href="#"><img src="__PUBLIC__/Index/imgs/app/app006.png" alt="" /></a></p>
+							<p class="nm"><a href="/Thl/index?thl=搜&tid=1&q=" target="_blank">搜索</a></p>
+						</li>
+						<li id="J_calc" >
+							<p class="img"><a href="#"><img src="__PUBLIC__/Index/imgs/app/app007.png" alt="" /></a></p>
+							<p class="nm"><a href="#">计算器</a></p>
+						</li>
+						<li id="J_stikynot" >
+							<p class="img"><a href="#"><img src="__PUBLIC__/Index/imgs/app/app008.png" alt="" /></a></p>
+							<p class="nm"><a href="#">便签</a></p>
+						</li>
+						<li id="J_translate" >
+							<p class="img"><a href="#"><img src="__PUBLIC__/Index/imgs/app/app009.png" alt="" /></a></p>
+							<p class="nm"><a href="#">翻译</a></p>
+						</li>
+						<li>
+							<p class="img"><a href="#"><img src="__PUBLIC__/Index/imgs/app/app-add.png" alt="" /></a></p>
+							<p class="nm"><a href="#">添加应用</a></p>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="end" id="J_End">
+		<div class="end-mark"></div>
+		<div class="end-inner">
+			<div class="skins">
+				<ul>
+					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-skin001.png" alt="" /></a></li>
+					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-skin002.png" alt="" /></a></li>
+					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-skin001.png" alt="" /></a></li>
+					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-skin002.png" alt="" /></a></li>
+					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-skin001.png" alt="" /></a></li>
+					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-skin-add.png" alt="" /></a></li>
+				</ul>
+			</div>
+			<div class="copyright">
+				<ul>
+					<li><a href="__APP__/About" target="_blank">关于我们</a><span>|</span></li>
+					<li><a href="__APP__/Suggestion" target="_blank">留言板</a><span>|</span></li>
+					<li><a href="__APP__/Blogroll" target="_blank">友情链接</a><span>|</span></li>
+					<li><a href="__APP__/Recommend" target="_blank">推荐链接</a><span>|</span></li>
+					<li><a href="#" class="a_setHome">设为首页</a></li>
+					<li class="icp"><a href="#">沪ICP备12036721号</a></li>
+				</ul>
+			</div>
+		</div>
+		<a class="coffee" href="javascript:void(0);">咖啡</a>
+		<a class="ljt" href="javascript:void(0);">垃圾桶</a>
+	</div>
+	
+	<include file="Contorls:app" />
+	
+	<script type="text/javascript" src="__PUBLIC__/English/js/jquery-1.7.2.min.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/Index/js/js.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/skin/js/jquery.cookies.2.2.0.min.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/skin/fancybox/jquery.fancybox.js?v=2.1.4"></script>
+	<script type="text/javascript" src="__PUBLIC__/skin/js/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/Index/js/app.js"></script>
+	
+	
+	<script>
+		function getTotalHeight(){
+			$.browser = $.browser || {};
+			$.browser.msie = /msie/.test(navigator.userAgent.toLowerCase());
+			if($.browser.msie){
+				return document.compatMode == "CSS1Compat"? document.documentElement.clientHeight : document.body.clientHeight;
+			}else{
+				return self.innerHeight;
+			}
+		}
+		if(getTotalHeight()>800){ document.getElementById('J_End').style.position = 'fixed' };
+	</script>
+</body>
+</html>

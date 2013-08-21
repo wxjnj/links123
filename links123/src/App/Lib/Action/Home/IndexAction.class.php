@@ -8,12 +8,50 @@
  */
 import("@.Common.CommonAction");
 class IndexAction extends CommonAction {
+	
 	/**
-	 * @desc 首页
+	 * 新首页
+	 *
+	 * @author slate date: 2013-08-20
+	 */
+	public function index() {
+		import("@.ORG.String");
+	
+		// 公告
+		$variable = M("Variable");
+		$ann_name = $variable->getByVname('ann_name');
+	
+		$announce = M("Announcement");
+		$announces = $announce->where('status=1')->order('sort ASC, create_time DESC')->select();
+	
+		// 我的地盘
+		$myarea = M("Myarea");
+		session('arealist_default', $myarea->where('mid=0')->order('sort ASC')->select());
+		//存在用户登录，获取用户的我的地盘
+		$memberAuthKey = $this->_session(C('MEMBER_AUTH_KEY'));
+	
+		if (!empty($memberAuthKey)) {
+			$areaList = $myarea->where('mid=' . $memberAuthKey)->order('sort ASC')->select();
+			!empty($areaList) || $areaList = session('arealist_default');
+			session('arealist', $areaList);
+		} else {
+			$areaList = $this->_session('arealist');
+			!empty($areaList) || session('arealist', session('arealist_default'));
+		}
+		$this->assign('ann_name', $ann_name['value_varchar']);
+		$this->assign("announces", $announces);
+		$this->assign('pauseTime', $catPics['pauseTime']);
+	
+		$this->getHeaderInfo();
+		$this->display('new_index');
+	}
+	
+	/**
+	 * @desc 旧首页（导航）
 	 * @author Frank UPDATE 2013-08-16
 	 * @see CommonAction::index()
 	 */
-	public function index() {
+	public function nav() {
 		$cat = M("Category");
 		import("@.ORG.String");
 		
@@ -106,7 +144,7 @@ class IndexAction extends CommonAction {
 		$this->assign('grades', $gradeArr['grades']);
 		
 		$this->getHeaderInfo();
-		$this->display();
+		$this->display('index');
 	}
 
 	/**
