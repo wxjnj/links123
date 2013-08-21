@@ -474,17 +474,20 @@ class VideoHooks {
 	
 		$swf = $this->match('/var oeTags = \'(.*?)\';/is', $html);
 		
-		$swfUrl = str_replace(end(explode('/', $this->_url)), '', $this->_url);
-		$swf = $swfUrl.$this->match('/src="(.*?)"/is', $swf);
+		if (!$swf) {
+				
+			$swf = $this->match('/<meta property="og:video" content="(.*?)" \/>/is', $html);
+		} else {
+			
+			$swfUrl = str_replace(end(explode('/', $this->_url)), '', $this->_url);
+			$swf = $swfUrl.$this->match('/src="(.*?)"/is', $swf);
+		}
 
 		$data['swf'] = $swf;
 	
 		// 获取标题
 		$data['title'] = $this->match('/<title>(.+?)<\/title>/is', $html);
-		// 获取图片
-		if ($this->_hasImg) {
-			//$data['img'] = $this->match('/"image":"(.+?)"/is', $swf);
-		}
+		
 	
 		$data['media_type'] = 2;	//iframe
 	
