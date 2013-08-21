@@ -241,9 +241,9 @@ a,a:hover{ text-decoration: none; }
 }
 .zld ul{
 	*zoom: 1;
-	width: 960px;
-	margin: 0 auto;
-	padding-top: 5px;
+	width: 930px;
+	margin-left: 20px;
+	padding-top: 13px;
 }
 .zld ul:after{
 	content: '\0020';
@@ -253,9 +253,9 @@ a,a:hover{ text-decoration: none; }
 }
 .zld ul li{
 	float: left;
-	width: 62px;
+	width: 61px;
 	height: 20px;
-	line-height: 32px;
+	line-height: 20px;
 	overflow: hidden;
 	padding: 6px 0;
 	text-align: center;
