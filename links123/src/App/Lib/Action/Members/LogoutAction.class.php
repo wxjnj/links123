@@ -1,10 +1,10 @@
 <?php 
 /**
- * @name LogoutAction.class.php
+ * @name LogoutAction
  * @package Member
  * @desc 用户退出
+ * @version 1.0
  * @author frank qian 2013-08-13
- * @version 0.0.1
  */
 
 import("@.Common.CommonAction");
