@@ -1,6 +1,6 @@
 <?php
 /**
- * @name IndexAction.class.php
+ * @name IndexAction
  * @package Home
  * @desc 首页
  * @author frank UPDATE 2013-08-16
@@ -40,7 +40,6 @@ class IndexAction extends CommonAction {
 		}
 		$this->assign('ann_name', $ann_name['value_varchar']);
 		$this->assign("announces", $announces);
-		$this->assign('pauseTime', $catPics['pauseTime']);
 	
 		$this->getHeaderInfo();
 		$this->display('new_index');
@@ -49,7 +48,7 @@ class IndexAction extends CommonAction {
 	/**
 	 * @desc 旧首页（导航）
 	 * @author Frank UPDATE 2013-08-16
-	 * @see CommonAction::index()
+	 * @see IndexAction::index()
 	 */
 	public function nav() {
 		$cat = M("Category");
@@ -67,7 +66,7 @@ class IndexAction extends CommonAction {
 		
 		$rid = $this->getRoot($cid);
 		$catName = $cat->where("id = '%d'", $cid)->getField('cat_name'); 
-		$ridTip = $cat->where("id = %d'", $rid)->getField('intro');
+		$ridTip = $cat->where("id = '%d'", $rid)->getField('intro');
 		
 		$gradeArr = getGradeArr($rid);
 		$this->getLeftMenu($rid);
@@ -187,20 +186,22 @@ class IndexAction extends CommonAction {
 		if (empty($url)) {
 			$this->error("对不起，链接不存在！");
 		}
+		$flag = 0;
 		if ($mod == "myarea") {
 			$mid = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
 			$myarea = D("Myarea");
-			$myarea->where("mid = '%d' and url = '%s'", $mid, $url)->setInc("click_num");
+			$flag = $myarea->where("mid = '%d' and url = '%s'", $mid, $url)->setInc("click_num");
 		} else {
 			$linkModel = D("Links");
-			$linkModel->where("link = '%s'", $url)->setInc("click_num");
+			$flag = $linkModel->where("link = '%s'", $url)->setInc("click_num");
 		}
-	
-		echo '<style type="text/css">a{display:none}</style>
-			  <script src="http://s96.cnzz.com/stat.php?id=4907803&web_id=4907803" language="JavaScript"></script>
-			  <script type="text/javascript">
-			  window.location.href="http://' . $url . '";
-			  </script>';
+		
+		//避免任意网址跳转漏洞
+		if ($flag) {
+			echo '<style type="text/css">a{display:none}</style>
+				  <script src="http://s96.cnzz.com/stat.php?id=4907803&web_id=4907803" language="JavaScript"></script>
+				  <script type="text/javascript">window.location.href="http://' . $url . '";</script>';
+		}
 	}
 	
 	/**
