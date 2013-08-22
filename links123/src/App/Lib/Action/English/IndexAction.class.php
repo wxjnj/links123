@@ -173,11 +173,11 @@ class IndexAction extends EnglishAction {
             $con = array();
             $con["status"] = 1;
             if ($type == "quick_select_prev") {
-                $last_question_info = D("EnglishViewRecord")->getViewedQuestionRecord($now_question_id, "prev", intval($_REQUEST['object']));
+                $last_question_info = D("EnglishViewRecord")->getViewedQuestionRecord($now_question_id, "prev");
                 $con["id"] = intval($last_question_info['question_id']);
                 $user_last_question = $questionModel->getQuestionWithOption($con);
             } else if ($type == 'quick_select_next') {
-                $last_question_info = D("EnglishViewRecord")->getViewedQuestionRecord($now_question_id, "next", intval($_REQUEST['object']));
+                $last_question_info = D("EnglishViewRecord")->getViewedQuestionRecord($now_question_id, "next", intval($_REQUEST['level']), intval($_REQUEST['object']), intval($_REQUEST['voice']), intval($_REQUEST['target']), intval($_REQUEST['pattern']));
                 $con["id"] = intval($last_question_info['question_id']);
                 $user_last_question = $questionModel->getQuestionWithOption($con);
             }
@@ -231,7 +231,11 @@ class IndexAction extends EnglishAction {
             } else {
                 $ret['question'] = $questionModel->getQuestionToIndex($object, $level, $voice, $target, $pattern);
             }
-            D("EnglishViewRecord")->addRecord($ret['question']['id'], $object); //记录用户查看题目
+            if ($type == "quick_select_prev" && empty($user_last_question)) {
+                D("EnglishViewRecord")->addRecord($ret['question']['id'], $object); //记录用户查看题目
+            } else {
+                D("EnglishViewRecord")->addRecord($ret['question']['id'], $object, $now_question_id); //记录用户查看题目
+            }
             $ret['english_user_info'] = D("EnglishUserInfo")->getEnglishUserInfo();
             $ret['user_count_info'] = D("EnglishUserCount")->getEnglishUserCountInfo($voice, $target, $object, $level);
 
