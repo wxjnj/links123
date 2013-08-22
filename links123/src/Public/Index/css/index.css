@@ -262,7 +262,8 @@ a,a:hover{ text-decoration: none; }
 	display: block;
 	color: #323232;
 	height: 29px;
-	line-height: 29px;
+	line-height: 26px;
+	line-height: 29px\9;
 	width: 54px;
 	text-align: center;
 	overflow: hidden;
@@ -281,7 +282,6 @@ a,a:hover{ text-decoration: none; }
 	line-height: 26px;
 	margin: 20px 0 0 200px;
 	width: 760px;
-	display: none;
 }
 .zld-edit-box .btnok{
 	background: url(../imgs/btn-ok.png) 0 0 no-repeat;
@@ -329,17 +329,17 @@ a,a:hover{ text-decoration: none; }
 }
 .ct{
 	margin-left: 330px;
-	padding-top: 5px;
 }
 .video-panel{
 	background: url(../imgs/vdbg.png) 0 0 no-repeat;
-	height: 220px;
-	width: 314px;
+	height: 194px;
+	width: 277px;
 	position: relative;
 }
 .videotarget{
 	width: 63px;
 	position: absolute;
+	display: none;
 	left: 10px;
 	top: 20px;
 	z-index: 2;
@@ -363,14 +363,15 @@ a,a:hover{ text-decoration: none; }
 .videotarget a.dm{ background-position: 0 -29px; }
 .video{
 	background: #ececec;
-	height: 202px;
+	height: 178px;
 	overflow: hidden;
 	position: absolute;
-	left: 10px;
-	top: 10px;
-	width: 293px;
+	left: 9px;
+	top: 9px;
+	width: 260px;
 	z-index: 1;
 }
+.video img{ vertical-align: middle; }
 /*引用列表*/
 .apps{
 	*zoom: 1;
@@ -396,7 +397,20 @@ a,a:hover{ text-decoration: none; }
 	height: 74px;
 	margin: 0 auto;
 	overflow: hidden;
+	position: relative;
 	width: 75px;
+}
+.apps .img a b{ display: none; }
+.apps .img a:hover b{
+	background: url(../imgs/close2.png) 0 0 no-repeat;
+	display: block;
+	height: 15px;
+	left: 6px;
+	overflow: hidden;
+	position: absolute;
+	text-indent: -999px;
+	top: 6px;
+	width: 15px;
 }
 .apps .img a:hover{
 	background-position: 0 0;
