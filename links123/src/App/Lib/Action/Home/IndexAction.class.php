@@ -1,17 +1,16 @@
 <?php
 /**
- * @name IndexAction.class.php
- * @package Home
+ * @name IndexAction
  * @desc 首页
+ * @package Home
+ * @version 1.0
  * @author frank UPDATE 2013-08-16
- * @version 0.0.1
  */
 import("@.Common.CommonAction");
 class IndexAction extends CommonAction {
 	
 	/**
-	 * 新首页
-	 *
+	 * @desc 新首页
 	 * @author slate date: 2013-08-20
 	 */
 	public function index() {
@@ -22,7 +21,7 @@ class IndexAction extends CommonAction {
 		$ann_name = $variable->getByVname('ann_name');
 	
 		$announce = M("Announcement");
-		$announces = $announce->where('status=1')->order('sort ASC, create_time DESC')->select();
+		$announces = $announce->where('status = 1')->order('sort ASC, create_time DESC')->select();
 	
 		// 我的地盘
 		$myarea = M("Myarea");
@@ -40,7 +39,6 @@ class IndexAction extends CommonAction {
 		}
 		$this->assign('ann_name', $ann_name['value_varchar']);
 		$this->assign("announces", $announces);
-		$this->assign('pauseTime', $catPics['pauseTime']);
 	
 		$this->getHeaderInfo();
 		$this->display('new_index');
@@ -49,7 +47,7 @@ class IndexAction extends CommonAction {
 	/**
 	 * @desc 旧首页（导航）
 	 * @author Frank UPDATE 2013-08-16
-	 * @see CommonAction::index()
+	 * @see IndexAction::index()
 	 */
 	public function nav() {
 		$cat = M("Category");
@@ -67,7 +65,7 @@ class IndexAction extends CommonAction {
 		
 		$rid = $this->getRoot($cid);
 		$catName = $cat->where("id = '%d'", $cid)->getField('cat_name'); 
-		$ridTip = $cat->where("id = %d'", $rid)->getField('intro');
+		$ridTip = $cat->where("id = '%d'", $rid)->getField('intro');
 		
 		$gradeArr = getGradeArr($rid);
 		$this->getLeftMenu($rid);
@@ -82,9 +80,10 @@ class IndexAction extends CommonAction {
 		if (empty($sort)) {
 			$sort = "csort ASC,sort ASC";
 		}
+		$memberAuthKey = intval($this->_session(C('MEMBER_AUTH_KEY')));
 		$paiLie = $this->_session('pailie');
+		
 		if (empty($paiLie)) {
-			$memberAuthKey = $this->_session(C('MEMBER_AUTH_KEY'));
 			$paiLie = empty($memberAuthKey) ? M("Variable")->where("vname='pailie'")->getField("value_int") : M("Member")->where("id = '%s'", $memberAuthKey)->getField('pailie');
 			session('pailie', $paiLie);
 		}
@@ -116,7 +115,6 @@ class IndexAction extends CommonAction {
 		$myarea = M("Myarea");
 		session('arealist_default', $myarea->where('mid = 0')->order('sort ASC')->select());
 		//存在用户登录，获取用户的我的地盘
-		$memberAuthKey = intval($this->_session(C('MEMBER_AUTH_KEY')));
 		
 		if ($memberAuthKey) {
 			$areaList = $myarea->where("mid = '%d'", $memberAuthKey)->order('sort ASC')->select();
@@ -148,7 +146,9 @@ class IndexAction extends CommonAction {
 	}
 
 	/**
+	 * @name directUrl
 	 * @desc 直达网址
+	 * @param string tag
 	 * @author Frank UPDATE 2013-08-17
 	 */
 	public function directUrl() {
@@ -178,6 +178,9 @@ class IndexAction extends CommonAction {
 
 	/**
 	 * @desc 连接导向
+	 * @name link_out
+	 * @param string mod
+	 * @param string url
 	 * @author Frank UPDATE 2013-08-17
 	 */
 	public function link_out() {
@@ -187,34 +190,37 @@ class IndexAction extends CommonAction {
 		if (empty($url)) {
 			$this->error("对不起，链接不存在！");
 		}
+		$flag = 0;
 		if ($mod == "myarea") {
 			$mid = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
 			$myarea = D("Myarea");
-			$myarea->where("mid = '%d' and url = '%s'", $mid, $url)->setInc("click_num");
+			$flag = $myarea->where("mid = '%d' and url = '%s'", $mid, $url)->setInc("click_num");
 		} else {
 			$linkModel = D("Links");
-			$linkModel->where("link = '%s'", $url)->setInc("click_num");
+			$flag = $linkModel->where("link = '%s'", $url)->setInc("click_num");
 		}
-	
-		echo '<style type="text/css">a{display:none}</style>
-			  <script src="http://s96.cnzz.com/stat.php?id=4907803&web_id=4907803" language="JavaScript"></script>
-			  <script type="text/javascript">
-			  window.location.href="http://' . $url . '";
-			  </script>';
+		
+		//避免任意网址跳转漏洞
+		if ($flag) {
+			echo '<style type="text/css">a{display:none}</style>
+				  <script src="http://s96.cnzz.com/stat.php?id=4907803&web_id=4907803" language="JavaScript"></script>
+				  <script type="text/javascript">window.location.href="http://' . $url . '";</script>';
+		}
 	}
 	
 	/**
-	 * @desc 更新我的地盘
 	 * @name updateArealist
-	 * @param url
-	 * @param id
+	 * @desc 更新我的地盘
+	 * @param string url
+	 * @param string web_name
+	 * @param int id
 	 * @author Frank UPDATE 2013-08-20
 	 */
 	public function updateArealist() {
 		$updated = false;
-		$url = $this->_post('url');
-		$webname = $this->_post('web_name');
-		$id = $this->_post('id');
+		$url = $this->_param('url');
+		$webname = $this->_param('web_name');
+		$id = $this->_param('id');
 		
 		foreach ($_SESSION['arealist'] as $key => $value) {	
 			if ($value['url'] == $url) {
@@ -284,8 +290,8 @@ class IndexAction extends CommonAction {
 		}
 	}
 	/**
-	 * @desc 拖动我的地盘进行排序
 	 * @name sortArealist
+	 * @desc 拖动我的地盘进行排序
 	 * @param string area
 	 * @author Frank UPDATE 2013-08-20
 	 */
@@ -352,8 +358,8 @@ class IndexAction extends CommonAction {
 	}
 	
 	/**
-	 * @desc 获取默认我的底盘
 	 * @name getArealistDefault
+	 * @desc 获取默认我的底盘
 	 * @author Frank UPDATE 2013-08-20
 	 */
 	public function getArealistDefault() {
@@ -367,8 +373,8 @@ class IndexAction extends CommonAction {
 	}
 	
 	/**
-	 * @desc 详细介绍
 	 * @name detail
+	 * @desc 详细介绍
 	 * @author Frank UPDATE 2013-08-20
 	 */
 	public function detail() {
@@ -490,8 +496,8 @@ class IndexAction extends CommonAction {
 	}
 
 	/**
-	 * @desc 公告明细
 	 * @name ann_detail
+	 * @desc 公告明细
 	 * @param id
 	 * @author Frank UPDATE 2013-08-20
 	 */
@@ -509,7 +515,9 @@ class IndexAction extends CommonAction {
 	}
 
 	/**
+	 * @name setPailie
 	 * @desc 设置排列
+	 * @param string val
 	 * @return boolean
 	 * @author Frank UPDATE 2013-08-20
 	 */
@@ -533,8 +541,8 @@ class IndexAction extends CommonAction {
 	}
 
 	/**
-	 * @desc 顶
 	 * @name ding
+	 * @desc 顶
 	 * @param id
 	 * @return boolean
 	 * @author Frank UPDATE 2013-08-20
@@ -555,8 +563,8 @@ class IndexAction extends CommonAction {
 	}
 
 	/**
-	 * @desc 踩
 	 * @name cai
+	 * @desc 踩
 	 * @param id
 	 * @return boolean
 	 * @author Frank UPDATE 2013-08-20
@@ -577,8 +585,8 @@ class IndexAction extends CommonAction {
 	}
 
 	/**
-	 * @desc 验证码
 	 * @name verify
+	 * @desc 验证码
 	 * @param type
 	 * @author Frank UPDATE 2013-08-20
 	 */
@@ -621,11 +629,12 @@ class IndexAction extends CommonAction {
 		}
 	}
 	/**
+	 * @name saveComment
 	 * @desc 保存说说
-	 * @author Frank UPDATE 2013-08-19
 	 * @param int lnk_id
 	 * @param string comment
 	 * @param string ip
+	 * @author Frank UPDATE 2013-08-19
 	 */
 	public function saveComment() {
 		if ($this->isAjax()) {
@@ -682,8 +691,8 @@ class IndexAction extends CommonAction {
 	}
 	
 	/**
-	 * @desc 搜索
 	 * @name search
+	 * @desc 搜索
 	 * @author Frank UPDATE 2013-08-20
 	 */
 	public function search() {
@@ -843,8 +852,8 @@ class IndexAction extends CommonAction {
 	}
 
 	/**
-	 * @desc 获取分类
 	 * @name category
+	 * @desc 获取分类
 	 * @param int lan
 	 * @param int rid
 	 * @author Frank UPDATE 2013-08-20
@@ -863,8 +872,8 @@ class IndexAction extends CommonAction {
 	}
 	
 	/**
-	 * @desc 设置seo头信息
 	 * @name SEOTitle
+	 * @desc 设置seo头信息
 	 * @param int $catid
 	 * @author Frank UPDATE 2013-08-20
 	 */
