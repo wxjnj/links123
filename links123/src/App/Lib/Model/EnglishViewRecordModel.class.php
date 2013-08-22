@@ -23,7 +23,7 @@ class EnglishViewRecordModel extends CommonModel {
             if ($map['user_id'] == 0) {
                 $map['user_id'] = $this->getNewTouristId();
             }
-            cookie('english_tourist_id', $map['user_id']); //更新游客id到cookie
+            cookie('english_tourist_id', $map['user_id'], 60 * 60 * 24 * 30); //更新游客id到cookie
             $map['user_id'] = -$map['user_id']; //游客id在数据库表中记录为负数
         } else {
             $map['user_id'] = intval($_SESSION[C("MEMBER_AUTH_KEY")]); //用户id为登录用户的对应用户id
@@ -54,11 +54,11 @@ class EnglishViewRecordModel extends CommonModel {
      * @param string $type [查看用户已看题目的方式next下一题/prev上一题]
      * @return max [用户看过的题目记录]
      */
-    public function getViewedQuestionRecord($now_question_id, $type = "next", $now_object) {
+    public function getViewedQuestionRecord($now_question_id, $type = "next", $now_object, $now_voice = 1, $now_target = 1, $now_pattern = 1) {
         $map = array();
         if (!isset($_SESSION[C('MEMBER_AUTH_KEY')]) || empty($_SESSION[C('MEMBER_AUTH_KEY')])) {
             $map['user_id'] = intval(cookie('english_tourist_id')); //从cookie获取游客id
-            //如果不存在游客id，返回的试题id为零
+            //如果不存在游客id，返回空数组
             if ($map['user_id'] == 0) {
                 return array();
             }
@@ -70,14 +70,20 @@ class EnglishViewRecordModel extends CommonModel {
         if ($type == "next") {
             $map['object'] = $now_object;
         }
-        $now_question_info = $this->where($map)->find(); //本次次的题目历史信息
+
+        $now_question_info = $this->where($map)->find(); //本次的题目历史信息
         if (false === $now_question_info || empty($now_question_info)) {
             return array();
         }
         unset($map['question_id']);
         if ($type == "next") {
             $map['sort'] = array('gt', intval($now_question_info['sort']));
+            $map['object'] = $now_object;
+            $map['question.voice'] = $now_voice;
+            $map['question.target'] = $now_target;
+            $map['question.pattern'] = $now_pattern;
             $order = "`sort` ASC";
+            $now_question_info = $this->aias("record")->join(C("DB_PREFIX") . "english_question question on record.question_id=question_id")->where($map)->find(); //本次的题目历史信息
         } else {
             $map['sort'] = array('lt', intval($now_question_info['sort']));
             $order = "`sort` DESC";

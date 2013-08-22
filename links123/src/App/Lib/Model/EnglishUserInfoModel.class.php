@@ -91,7 +91,7 @@ class EnglishUserInfoModel extends CommonModel {
             unset($data["continue_error_num"]);
             unset($data["right_num"]);
             unset($data["rice"]);
-            cookie("english_user_info", serialize($data));
+            cookie("english_user_info", serialize($data), 60 * 60 * 24 * 30);
         } else {
             $data['update'] = time();
             $map = array();
@@ -172,7 +172,7 @@ class EnglishUserInfoModel extends CommonModel {
     public function saveEnglishUserInfo($english_user_info) {
         //游客保存到cookie中
         if (intval($_SESSION[C('MEMBER_AUTH_KEY')]) <= 0) {
-            cookie("english_user_info", serialize($english_user_info));
+            cookie("english_user_info", serialize($english_user_info), 60 * 60 * 24 * 30);
         } else {
             $english_user_info['user_id'] = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
             $english_user_info['updated'] = time();

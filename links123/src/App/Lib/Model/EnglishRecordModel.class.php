@@ -54,7 +54,7 @@ class EnglishRecordModel extends CommonModel {
                 $data['user_id'] = $map['user_id'];
                 $englishTouristRecordModel->add($data); //新增游客记录
             }
-            cookie('english_tourist_id', $map['user_id']); //更新游客id到cookie
+            cookie('english_tourist_id', $map['user_id'], 60 * 60 * 24 * 30); //更新游客id到cookie
         } else {
             $map['user_id'] = intval($_SESSION[C('MEMBER_AUTH_KEY')]); //用户id
             $map['question_id'] = $question_info['id'];

@@ -65,6 +65,7 @@ class IndexAction extends EnglishAction {
         $user_last_select['level'] = $user_last_select['level_info']['id'];
 
         $this->assign("user_last_select", $user_last_select);
+        cookie('english_user_last_select', $user_last_select, 60 * 60 * 24 * 30);
 
         //获取题目
         $question = $questionModel->getQuestionToIndex($user_last_select['object'], $user_last_select['level'], $user_last_select['voice'], $user_last_select['target'], $user_last_select['pattern']);
@@ -206,7 +207,7 @@ class IndexAction extends EnglishAction {
             $user_last_select['voice'] = $voice;
             $user_last_select['target'] = $target;
             $user_last_select['pattern'] = $pattern;
-            cookie('english_user_last_select', $user_last_select);
+            cookie('english_user_last_select', $user_last_select, 60 * 60 * 24 * 30);
             /* 存储用户点击历史  结束 */
 
             $ret = array();
