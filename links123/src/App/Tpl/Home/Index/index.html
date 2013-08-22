@@ -9,31 +9,6 @@
 
 	<include file="Contorls:headerindex" />
 
-	<div class="annt">
-		<h2>{$ann_name}</h2>
-		<div class="annt_lie" id="annt">
-		    <ul>
-		    <volist name="announces" id="vo">
-				<li>
-				<empty name="vo.content">
-					{$vo.title}
-				<else />
-					<a href="__URL__/ann_detail/id/{$vo.id}" target="_blank">{$vo.title}</a>
-				</empty>
-				</li>
-			</volist>
-		    </ul>
-		</div>
-		<div id="myfave">
-			<ul>
-			<volist name="_SESSION['arealist']" id="vo">
-				<li><a href="{:U('Index/link_out')}?mod=myarea&url={$vo.url}" target="_blank" myid="{$vo.id}">{$vo.web_name}</a></li>
-			</volist>
-			</ul>
-			<div id="myarea" class="tip" title="你的自留地"></div>
-		</div>
-	</div>
-
 	<div class="container">
 	
 		<div class="cont_sx">

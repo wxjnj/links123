@@ -27,16 +27,6 @@ if (browserName == "Netscape") {
 
 $(function() {
 
-	//weather jack 2013.08.14
-	var city = '%E4%B8%8A%E6%B5%B7'; //默认为上海
-	var url = 'http://weather.news.sina.com.cn/chajian/iframe/weatherStyle0.html?city=';
-	$.getScript("http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=js").done(function(script){
-		city = encodeURI(remote_ip_info["city"]);
-		$('#sinaWeatherToolIframe').attr('src',url+city);
-	}).fail(function(){
-		$('#sinaWeatherToolIframe').attr('src',url+city);
-	});
-	
 	// 设为首页
 	$(".a_setHome").click(function() {
 		setHome('http://www.links123.cn');
@@ -51,20 +41,18 @@ $(function() {
 	});
 
 	// 弹出页
-	$(".newWin").click(function() {
+	$(".newWin").live('click', function() {
 		myWinOpen($(this).attr('url'), '', '');
 	});
-
-	// 时钟
-	if ($("#J_today")[0]) {
-		var invId = window.setInterval(function() {
-			$("#J_today").text(dateFormat("MM月DD日 周W hh:mm:ss"));
-		}, 1000);
-	}
 
 	// 直达框获得焦点
 	$(".J_header_top").mouseover(function() {
 		$("#direct_text").select();
+	});
+	
+	$('.J_header_top').mouseout(function() {
+		$('#search_text').select();
+		$('#direct_text').val($('#direct_text').attr('txt'));
 	});
 	
 	// 直达回车键响应 
@@ -267,11 +255,60 @@ $(function() {
 		}
 	});
 
-	
-	$("#myarea").click(function() {
-        $.post(URL + "/count_myarea_open");
-        openMyArea();
+	// 编辑自留地
+	$('.J_myarea').click(function() {
+
+		$('.J_myarea_div').addClass('zld-edit');
+		$('.J_myarea_div ul li a').removeClass('newWin');
+		
+		$('#J_sortable').sortable({
+			update: function (event, ui) {  
+
+				$.post(URL + '/sortArealist', {'area' : $(this).sortable('toArray')});
+		   }  
+	    });
+		$('#J_sortable').sortable('enable');
     });
+	
+	//保存自留地
+	$('.guide').click(function() {
+		$('#J_sortable').sortable('disable');
+		$('.J_myarea_div').removeClass('zld-edit');
+		$('.J_myarea_div ul li a').addClass('newWin');
+	});
+	
+	//自留地hover状态
+	$('.zld-edit ul li').live('mouseover', function() {
+		
+		$(this).addClass('on').siblings('li').removeClass('on');
+	});
+	
+	//编辑自留地网址
+	$('.zld-edit ul li a').live('click', function() {
+		$('#J_myarea_id').val($(this).attr('data-id'));
+		$('#J_myarea_web_name').val($(this).text());
+		$('#J_myarea_web_url').val($(this).attr('data-url'));
+		$('.J_zld_edit_box').show();
+	});
+	
+	//保存自留地网址
+	$('.J_myarea_web_save').click(function() {
+		$.post(URL + "/updateArealist", {
+		        id: $('#J_myarea_id').val(),
+		        web_name: $('#J_myarea_web_name').val(),
+		        url: $('#J_myarea_web_url').val()
+		    },
+		    function(data) {
+		        if (data.indexOf("updateOK") >= 0) {
+		        	$('.J_zld_edit_box').hide();
+		        	alert('保存成功！');
+		        }
+		        else {
+		            alert(data);
+		        }
+	    });
+	});
+	
 });
 
 // 设为首页
@@ -294,43 +331,6 @@ function setHome(url) {
 			prefs.setCharPref('browser.startup.homepage', url);
 		}
 	}
-}
-
-//---------------------------------------------------  
-//日期格式化  
-//格式 YYYY/yyyy/YY/yy 表示年份  
-//MM/M 月份  
-//W/w 星期  
-//dd/DD/d/D 日期  
-//hh/HH/h/H 时间  
-//mm/m 分钟  
-//ss/SS/s/S 秒  
-//---------------------------------------------------  
-function dateFormat(formatStr) {
-	var d = new Date();
-	var str = formatStr;
-	var Week = ['日', '一', '二', '三', '四', '五', '六'];
-
-	str = str.replace(/yyyy|YYYY/, d.getFullYear());
-	str = str.replace(/yy|YY/, (d.getYear() % 100) > 9 ? (d.getYear() % 100).toString() : '0' + (d.getYear() % 100));
-
-	str = str.replace(/MM/, d.getMonth() > 8 ? (d.getMonth() + 1).toString() : '0' + (d.getMonth() + 1));
-	str = str.replace(/M/g, (d.getMonth() + 1));
-
-	str = str.replace(/w|W/g, Week[d.getDay()]);
-
-	str = str.replace(/dd|DD/, d.getDate() > 9 ? d.getDate().toString() : '0' + d.getDate());
-	str = str.replace(/d|D/g, d.getDate());
-
-	str = str.replace(/hh|HH/, d.getHours() > 9 ? d.getHours().toString() : '0' + d.getHours());
-	str = str.replace(/h|H/g, d.getHours());
-	str = str.replace(/mm/, d.getMinutes() > 9 ? d.getMinutes().toString() : '0' + d.getMinutes());
-	str = str.replace(/m/g, d.getMinutes());
-
-	str = str.replace(/ss|SS/, d.getSeconds() > 9 ? d.getSeconds().toString() : '0' + d.getSeconds());
-	str = str.replace(/s|S/g, d.getSeconds());
-
-	return str;
 }
 
 // 弹出页
@@ -370,35 +370,3 @@ function setCookie(name, value) {
 	document.cookie = name + "=" + value + "; path=/;";
 }
 
-function openMyArea() {
-    $("#sb-container #ul_myarea").sortable({
-        placeholder: "ui-state-highlight"
-    });
-    $("#sb-container #ul_myarea").sortable({
-        stop: function(event, ui) {
-            var xx = $("#sb-container #ul_myarea").sortable("serialize");
-            //更新我的地盘排序
-            $.ajax({
-                type: 'POST',
-                url: URL + '/sortArealist',
-                data: xx,
-                success: function(msg) {
-                    if (msg) {
-                        msg = jQuery.parseJSON(msg);
-                        if (msg['status'] == 'ok') {
-                            var data = msg['data'];
-                            var hide_myarea_html = "";
-                            var myfave_html = "";
-                            for (var i = 0; i < data.length; i++) {
-                                hide_myarea_html += '<li id="area_' + data[i]['id'] + '" myid="' + data[i]['id'] + '" url="' + data[i]['url'] + '">' + data[i]['web_name'] + '</li>';
-                                myfave_html += '<li><a myid="' + data[i]['id'] + '" target="_blank" href="'+APP+'Index/link_out?mod=myarea&url=' + data[i]['url'] + '">' + data[i]['web_name'] + '</a></li>';
-                            }
-                            $(".div_myarea ul").html(hide_myarea_html);
-                            $("#myfave ul").html(myfave_html);
-                        }
-                    }
-                }
-            });
-        }
-    });
-}
