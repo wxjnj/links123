@@ -282,6 +282,7 @@ a,a:hover{ text-decoration: none; }
 	text-indent: -999px;
 	overflow: hidden;
 	margin: 11px;
+	cursor: pointer;
 }
 .zld ul{
 	*zoom: 1;
@@ -313,6 +314,22 @@ a,a:hover{ text-decoration: none; }
 	margin-right: -5px;
 }
 .zld ul li a:hover{
+	color: #d20015;
+}
+.zld ul li span{
+	display: block;
+	color: #323232;
+	height: 29px;
+	line-height: 26px;
+	line-height: 29px\9;
+	width: 54px;
+	text-align: center;
+	overflow: hidden;
+	padding-right: 5px;
+	margin-right: -5px;
+	cursor: pointer;
+}
+.zld ul li span:hover{
 	color: #d20015;
 }
 .zld-edit{ background-position: 0 -89px; }
@@ -459,6 +476,30 @@ a,a:hover{ text-decoration: none; }
 .apps .img a:hover{
 	background-position: 0 0;
 }
+.apps .img span{
+	background: url(../imgs/app/appbg.png) -75px 0 no-repeat;
+	display: block;
+	height: 74px;
+	margin: 0 auto;
+	position: relative;
+	width: 75px;
+	cursor: pointer;
+}
+.apps .img span b{ display: none; }
+.apps .img span:hover b{
+	background: url(../imgs/close.png) 0 0 no-repeat;
+	display: block;
+	height: 15px;
+	left: -2px;
+	overflow: hidden;
+	position: absolute;
+	text-indent: -999px;
+	top: -2px;
+	width: 15px;
+}
+.apps .img span:hover{
+	background-position: 0 0;
+}
 .apps .nm{
 	margin-top: 10px;
 }
@@ -466,6 +507,12 @@ a,a:hover{ text-decoration: none; }
 .apps .nm a:hover{
 	color: #dfdfdf;
 	font-weight: bold;
+}
+.apps .nm span,
+.apps .nm span:hover{
+	color: #dfdfdf;
+	font-weight: bold;
+	cursor: pointer;
 }
 /*皮肤*/
 .skins{

@@ -75,10 +75,10 @@
 			<div class="zld J_myarea_div">
 				<p class="guide">点击编辑我的自留地</p>
 				<a href="javascript:void(0);" class="tools J_myarea">自留地</a>
-				<a href="javascript:void(0);" class="close J_myarea_close">关闭编辑</a>
+				<span class="close J_myarea_close">关闭编辑</span>
 				<ul id="J_sortable">
 					<volist name="_SESSION['arealist']" id="vo">
-						<li id="{$vo.id}"><a href="#" url="{:U('Index/link_out')}?mod=myarea&url={$vo.url}"  class="newWin" data-id="{$vo.id}" data-url="{$vo.url}">{$vo.web_name}</a></li>
+						<li id="{$vo.id}"><span url="{:U('Index/link_out')}?mod=myarea&url={$vo.url}"  class="newWin" data-id="{$vo.id}" data-url="{$vo.url}">{$vo.web_name}</span></li>
 					</volist>
 				</ul>
 				<div class="zld-edit-box J_zld_edit_box">
@@ -124,37 +124,38 @@
 			<div class="ct">
 				<div class="apps">
 					<ul>
-						<li class="newWin" url="/English">
-							<p class="img"><a href="javascript:void(0);"><img src="__PUBLIC__/Index/imgs/app/app001.png" alt="" /><b>X</b></a></p>
+						<li>
+							<p class="img"><span class="newWin" url="/English"><img src="__PUBLIC__/Index/imgs/app/app001.png" alt="" /><b>X</b></span></p>
 							<p class="nm"><a href="/English" target="_blank">英语角</a></p>
 						</li>
-						<li class="newWin" url="/Index/nav">
-							<p class="img"><a href="javascript:void(0);"><img src="__PUBLIC__/Index/imgs/app/app002.png" alt="" /><b>X</b></a></p>
-							<p class="nm"><a href="/Index/nav" target="_blank">导航</a></p>
-						</li>
 						<li id="J_mail" >
-							<p class="img"><a href="javascript:void(0);"><img src="__PUBLIC__/Index/imgs/app/app003.png" alt="" /><b>X</b></a></p>
-							<p class="nm"><a href="javascript:void(0);">邮箱</a></p>
+							<p class="img"><span><img src="__PUBLIC__/Index/imgs/app/app003.png" alt="" /><b>X</b></span></p>
+							<p class="nm"><span>邮箱</span></p>
 						</li>
 						<li id="J_calendar" >
-							<p class="img"><a href="javascript:void(0);"><img src="__PUBLIC__/Index/imgs/app/app004.png" alt="" /><b>X</b></a></p>
-							<p class="nm"><a href="javascript:void(0);">日历</a></p>
+							<p class="img"><span><img src="__PUBLIC__/Index/imgs/app/app004.png" alt="" /><b>X</b></span></p>
+							<p class="nm"><span>日历</span></p>
 						</li>
 						<li id="J_weather">
-							<p class="img"><a href="javascript:void(0);"><img src="__PUBLIC__/Index/imgs/app/app005.png" alt="" /><b>X</b></a></p>
-							<p class="nm"><a href="javascript:void(0);">天气</a></p>
+							<p class="img"><span><img src="__PUBLIC__/Index/imgs/app/app005.png" alt="" /><b>X</b></span></p>
+							<p class="nm"><span>天气</span></p>
+						</li>
+						<li style="height:100px;"></li>
+						<li>
+							<p class="img"><span class="newWin" url="/Index/nav"><img src="__PUBLIC__/Index/imgs/app/app002.png" alt="" /><b>X</b></span></p>
+							<p class="nm"><a href="/Index/nav" target="_blank">导航</a></p>
 						</li>
 						<li id="J_calc" >
-							<p class="img"><a href="javascript:void(0);"><img src="__PUBLIC__/Index/imgs/app/app007.png" alt="" /><b>X</b></a></p>
-							<p class="nm"><a href="javascript:void(0);">计算器</a></p>
+							<p class="img"><span><img src="__PUBLIC__/Index/imgs/app/app007.png" alt="" /><b>X</b></span></p>
+							<p class="nm"><span>计算器</span></p>
 						</li>
 						<li id="J_stikynot" >
-							<p class="img"><a href="javascript:void(0);"><img src="__PUBLIC__/Index/imgs/app/app008.png" alt="" /><b>X</b></a></p>
-							<p class="nm"><a href="javascript:void(0);">便签</a></p>
+							<p class="img"><span><img src="__PUBLIC__/Index/imgs/app/app008.png" alt="" /><b>X</b></span></p>
+							<p class="nm"><span>便签</span></p>
 						</li>
 						<li id="J_translate" >
-							<p class="img"><a href="javascript:void(0);"><img src="__PUBLIC__/Index/imgs/app/app009.png" alt="" /><b>X</b></a></p>
-							<p class="nm"><a href="javascript:void(0);">翻译</a></p>
+							<p class="img"><span><img src="__PUBLIC__/Index/imgs/app/app009.png" alt="" /><b>X</b></span></p>
+							<p class="nm"><span>翻译</span></p>
 						</li>
 						<li id="J_apps_add">
 							<p class="img"><a href="javascript:void(0);"><img src="__PUBLIC__/Index/imgs/app/app-add.png" alt="" /></a></p>

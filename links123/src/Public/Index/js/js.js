@@ -254,7 +254,7 @@ $(function() {
 	$('.J_myarea').click(function() {
 
 		$('.J_myarea_div').addClass('zld-edit');
-		$('.J_myarea_div ul li a').removeClass('newWin');
+		$('.J_myarea_div ul li span').removeClass('newWin');
 		
 		$('#J_sortable').sortable({
 			update: function (event, ui) {  
@@ -269,7 +269,7 @@ $(function() {
 	$('.J_myarea_close').click(function() {
 		$('#J_sortable').sortable('disable');
 		$('.J_myarea_div').removeClass('zld-edit');
-		$('.J_myarea_div ul li a').addClass('newWin');
+		$('.J_myarea_div ul li span').addClass('newWin');
 		$('.J_zld_edit_box').hide();
 	});
 	
@@ -280,7 +280,7 @@ $(function() {
 	});
 	
 	//编辑自留地网址
-	$('.zld-edit ul li a').live('click', function() {
+	$('.zld-edit ul li span').live('click', function() {
 		$('#J_myarea_id').val($(this).attr('data-id'));
 		$('#J_myarea_web_name').val($(this).text());
 		$('#J_myarea_web_url').val($(this).attr('data-url'));
@@ -300,7 +300,7 @@ $(function() {
 		    function(data) {
 		        if (data.indexOf("updateOK") >= 0) {
 		        	$('.J_zld_edit_box').hide();
-		        	var myarea_web_obj = $('.J_myarea_div ul li[id="'+id+'"] a');
+		        	var myarea_web_obj = $('.J_myarea_div ul li[id="'+id+'"] span');
 		        	myarea_web_obj.text(web_name);
 		        	var new_url = myarea_web_obj.attr('url').replace(myarea_web_obj.attr('data-url'), url);
 		        	myarea_web_obj.attr('url', new_url);
