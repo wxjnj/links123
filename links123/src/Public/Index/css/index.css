@@ -663,3 +663,10 @@ a,a:hover{ text-decoration: none; }
 	right: 34px;
 	top: 6px;
 }
+.forgetpass{
+	background: url(../imgs/forgetbg.png) 0 0 no-repeat;
+	height: 304px;
+}
+.forgetpass .reglogin-bd{
+	height: 210px;
+}
