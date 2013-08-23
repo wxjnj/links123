@@ -75,6 +75,7 @@
 			<div class="zld J_myarea_div">
 				<p class="guide">点击编辑我的自留地</p>
 				<a href="javascript:void(0);" class="tools J_myarea">自留地</a>
+				<a href="javascript:void(0);" class="close J_myarea_close">关闭编辑</a>
 				<ul id="J_sortable">
 					<volist name="_SESSION['arealist']" id="vo">
 						<li id="{$vo.id}"><a href="#" url="{:U('Index/link_out')}?mod=myarea&url={$vo.url}"  class="newWin" data-id="{$vo.id}" data-url="{$vo.url}">{$vo.web_name}</a></li>
@@ -88,7 +89,7 @@
 					</form>
 				</div>
 			</div>
-			<a target="_blank" class="englishcorner" href="#">英语角</a>
+			<a target="_blank" class="englishcorner" href="/English">英语角</a>
 		</div>
 		<div class="wrap-bd">
 			<div class="sider">
@@ -139,13 +140,9 @@
 							<p class="img"><a href="javascript:void(0);"><img src="__PUBLIC__/Index/imgs/app/app004.png" alt="" /><b>X</b></a></p>
 							<p class="nm"><a href="javascript:void(0);">日历</a></p>
 						</li>
-						<li>
+						<li id="J_weather">
 							<p class="img"><a href="javascript:void(0);"><img src="__PUBLIC__/Index/imgs/app/app005.png" alt="" /><b>X</b></a></p>
 							<p class="nm"><a href="javascript:void(0);">天气</a></p>
-						</li>
-						<li class="newWin" url="/Thl/index?thl=搜&tid=1&q=">
-							<p class="img"><a href="javascript:void(0);"><img src="__PUBLIC__/Index/imgs/app/app006.png" alt="" /><b>X</b></a></p>
-							<p class="nm"><a href="/Thl/index?thl=搜&tid=1&q=" target="_blank">搜索</a></p>
 						</li>
 						<li id="J_calc" >
 							<p class="img"><a href="javascript:void(0);"><img src="__PUBLIC__/Index/imgs/app/app007.png" alt="" /><b>X</b></a></p>
@@ -159,7 +156,7 @@
 							<p class="img"><a href="javascript:void(0);"><img src="__PUBLIC__/Index/imgs/app/app009.png" alt="" /><b>X</b></a></p>
 							<p class="nm"><a href="javascript:void(0);">翻译</a></p>
 						</li>
-						<li>
+						<li id="J_apps_add">
 							<p class="img"><a href="javascript:void(0);"><img src="__PUBLIC__/Index/imgs/app/app-add.png" alt="" /></a></p>
 							<p class="nm"><a href="javascript:void(0);">添加应用</a></p>
 						</li>
@@ -175,9 +172,10 @@
 				<ul>
 					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-skin001.png" alt="" /></a></li>
 					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-skin002.png" alt="" /></a></li>
-					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-skin001.png" alt="" /></a></li>
-					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-skin002.png" alt="" /></a></li>
-					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-skin001.png" alt="" /></a></li>
+					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-skin003.png" alt="" /></a></li>
+					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-skin004.png" alt="" /></a></li>
+					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-skin005.png" alt="" /></a></li>
+					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-skin006.png" alt="" /></a></li>
 					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-skin-add.png" alt="" /></a></li>
 				</ul>
 			</div>
