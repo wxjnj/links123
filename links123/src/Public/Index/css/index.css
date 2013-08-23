@@ -670,3 +670,6 @@ a,a:hover{ text-decoration: none; }
 .forgetpass .reglogin-bd{
 	height: 210px;
 }
+.forgetpass .reglogin-bd .regbtn{
+	background-position: 0 -108px;
+}
