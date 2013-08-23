@@ -1,10 +1,10 @@
 <?php
 /**
- * @name SuggestionAction.class.php
- * @package Member
+ * @name SuggestionAction
  * @desc 留言板
+ * @package Member
+ * @version 1.0
  * @author frank qian 2013-08-13
- * @version 0.0.1
  */
 
 import("@.Common.CommonAction");
@@ -12,9 +12,8 @@ import("@.Common.CommonAction");
 class SuggestionAction extends CommonAction
 {
 	/**
-	 * @desc 我的留言建议页面
-	 * @package Members
 	 * @name index
+	 * @desc 我的留言建议页面
 	 * @param int VAR_PAGE
 	 * @return boolean
 	 * @author Frank UPDATE 2013-08-18
@@ -22,14 +21,14 @@ class SuggestionAction extends CommonAction
 	public function index()
 	{
 		$this->checkLog();
-		$mid = $_SESSION[C('MEMBER_AUTH_KEY')];
-		$pg = $_REQUEST[C('VAR_PAGE')];
+		$mid = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+		$pg = $this->_param(C('VAR_PAGE'));
 		$mbrNow = M("Member")->getById($mid);
 		
 		$condition['pid'] = 0;
 		$condition['mid'] = $mid;
 		
-		$listRows = 12;
+		$listRows = 6;
 		$pg = $pg ? : 1;
 		$rst = ($pg - 1) * $listRows;
 		
@@ -39,7 +38,7 @@ class SuggestionAction extends CommonAction
 			$value['create_time'] = date('Y-m-d h:i', $value['create_time']);
 		}
 		
-		$count = $sugView->where($condition)->count('id');
+		$count = $sugView->where($condition)->count('*');
 		if ($count > 0) {
 			import("@.ORG.Page");
 			$p = new Page($count, $listRows);
@@ -56,7 +55,6 @@ class SuggestionAction extends CommonAction
 	
 	/**
 	 * @desc 编辑我的说说
-	 * @package Members
 	 * @name saveSuggestion
 	 * @param int type
 	 * @param string comment
@@ -68,7 +66,7 @@ class SuggestionAction extends CommonAction
 		$suggestion = M("Suggestion");
 		
 		if (empty($_POST['id'])) {
-			$_POST['mid'] = $_SESSION[C('MEMBER_AUTH_KEY')];
+			$_POST['mid'] = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
 			$_POST['type'] = 1;
 			$_POST['create_time'] = time();
 			

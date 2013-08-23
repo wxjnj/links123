@@ -1,10 +1,10 @@
 <?php 
 /**
- * @name IndexAction.class.php
- * @package Member
+ * @name IndexAction
  * @desc 会员中心
+ * @package Member
+ * @version 1.0
  * @author frank qian 2013-08-13
- * @version 0.0.1
  */
 
 import("@.Common.CommonAction");
@@ -12,15 +12,15 @@ class IndexAction extends CommonAction
 {
 	/**
 	 * @desc 会员中心默认页面
-	 * @package Members
 	 * @name Index
 	 * @see IndexAction::index()
 	 */
 	public function index()
 	{
 		$this->checkLog();
-		$mbrNow = M("Member")->getById($_SESSION[C('MEMBER_AUTH_KEY')]);
-		$mbrNow['face'] =  $mbrNow['face']? : 'face.jpg';
+		$mid = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+		$mbrNow = M("Member")->getById($mid);
+		$mbrNow['face'] =  $mbrNow['face'] ? $mbrNow['face'] : 'face.jpg';
 		
 		for ($i = 1; $i != 120; ++$i) {
 			$faces[] = $i . ".jpg";
@@ -34,17 +34,17 @@ class IndexAction extends CommonAction
 	}
 	
 	/**
-	 * @desc 保存邮箱
 	 * @name saveEmail
-	 * @package Members
-	 * @param email 邮箱
+	 * @desc 保存邮箱
+	 * @param string email 邮箱
 	 * @return boolean
+	 * @author Frank UPDATE 2013-08-21
 	 */
 	public function saveEmail() {
 		$this->checkLog(1);
 		
-		$email = $_POST['email'];
-		$mid = $_SESSION[C('MEMBER_AUTH_KEY')];
+		$email = $this->_param('email');
+		$mid = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
 		if (empty($email)) {
 			echo "email丢失！";
 			return false;
@@ -65,18 +65,27 @@ class IndexAction extends CommonAction
 	}
 	
 	/**
-	 * @desc 上传图片
 	 * @name uploadPic
-	 * @package Members
+	 * @desc 上传图片
+	 * @param string folder
+	 * @param string width
+	 * @param string height
+	 * @param int id
 	 * @return string
+	 * @author Frank UPDATE 2013-08-21
 	 */
 	public function uploadPic() {
+		$folder = $this->_param('folder');
+		$width = $this->_param('width');
+		$height = $this->_param('height');
+		$id = $this->_param('id');
+		
 		import("@.ORG.UploadFile");
 		$upload = new UploadFile();
 		$upload->maxSize = 10240000;
 		$upload->allowExts = explode(',', 'jpg,gif');
 		$path = realpath('./Public/Uploads/uploads.txt');
-		$upload->savePath = str_replace('uploads.txt', $_REQUEST["folder"], $path) . '/';
+		$upload->savePath = str_replace('uploads.txt', $folder, $path) . '/';
 		$upload->thumb = false;
 		$upload->saveRule = uniqid;
 		
@@ -86,23 +95,23 @@ class IndexAction extends CommonAction
 			$uploadList = $upload->getUploadFileInfo();
 			import("@.ORG.Image");
 			$filename = $upload->savePath . $uploadList[0]['savename'];
-			Image::thumb_db($filename, $filename, '', 0, 0, $_REQUEST["width"], $_REQUEST["height"], true);
+			Image::thumb_db($filename, $filename, '', 0, 0, $width, $height, true);
 			
-			$idNow = $_REQUEST["id"] ? : 'pic';
+			$idNow = $id ? $id : 'pic';
 			echo $idNow . '|' . $uploadList[0]['savename'];
 		}
 	}
 	
 	/**
-	 * @desc 修改昵称
 	 * @name saveNickName
-	 * @package Members
-	 * @param nickname 昵称
+	 * @desc 修改昵称
+	 * @param string nickname 昵称
 	 * @return boolean
+	 * @author Frank UPDATE 2013-08-21
 	 */
 	public function saveNickname() {
 		$this->checkLog(1);
-		$nickname = $_POST['nickname'];
+		$nickname = $this->_param('nickname');
 		
 		if (empty($nickname)) {
 			echo "昵称丢失！";
@@ -110,7 +119,7 @@ class IndexAction extends CommonAction
 		}
 		
 		$member = M("Member");
-		$mid = $_SESSION[C('MEMBER_AUTH_KEY')];
+		$mid = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
 		if ($member->where("id <> '%d' and nickname = '%s'", $mid, $nickname)->find()) {
 			echo "该昵称已被使用，请换一个！";
 			return false;
@@ -126,16 +135,16 @@ class IndexAction extends CommonAction
 	}
 	
 	/**
-	 * @desc 修改密码
 	 * @name savePassword
-	 * @package Members
-	 * @param password 密码
+	 * @desc 修改密码
+	 * @param string password 密码
 	 * @return boolean
+	 * @author Frank UPDATE 2013-08-21
 	 */
 	public function savePassword() {
 		$this->checkLog(1);
-		$password = $_POST['password'];
-		$mid = $_SESSION[C('MEMBER_AUTH_KEY')];
+		$password = $this->_param('password');
+		$mid = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
 		
 		if (empty($password)) {
 			echo "密码丢失！";
@@ -144,7 +153,7 @@ class IndexAction extends CommonAction
 		$member = M("Member");
 		$salt = $member->where("id = '%d'", $mid)->getField('salt');
 		$password = md5(md5($password) . $salt);
-		if (false === $member->where("id = '%d'", $_SESSION[C('MEMBER_AUTH_KEY')])->setField('password', $password)) {
+		if (false === $member->where("id = '%d'", $mid)->setField('password', $password)) {
 			Log::write('保存密码失败：' . $member->getLastSql(), Log::SQL);
 			echo "保存密码失败！";
 		} else {
@@ -153,10 +162,9 @@ class IndexAction extends CommonAction
 	}
 	
 	/**
-	 * @desc 收藏
 	 * @name saveCollect
-	 * @package Members
-	 * @param lnk_id
+	 * @desc 收藏
+	 * @param int lnk_id
 	 * @return string
 	 */
 	public function saveCollect() {
@@ -235,16 +243,18 @@ class IndexAction extends CommonAction
 	 * @package Members
 	 * @param face
 	 * @return string
+	 * @author Frank UPDATE 2013-08-21
 	 */
 	public function saveFace() {
 		$this->checkLog(1);
-		$face = $_POST['face'];
+		$face = $this->_param('face');
 		if (empty($face)) {
 			echo "头像丢失！";
 			return false;
 		}
+		$mid = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
 		$member = M("Member");
-		if (false === $member->where("id = '%d'", $_SESSION[C('MEMBER_AUTH_KEY')])->setField('face', $face)) {
+		if (false === $member->where("id = '%d'", $mid)->setField('face', $face)) {
 			Log::write('设定头像失败：' . $member->getLastSql(), Log::SQL);
 			echo "设定头像失败！";
 		} else {

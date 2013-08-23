@@ -16,6 +16,11 @@ class LoginAction extends CommonAction
 	 */
 	public function index()
 	{
+		$mid = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+		if ($mid) {
+			header("Location: " . __APP__ . "/");
+			exit(0);
+		}
 		$this->assign('banner', $this->getAdvs(4, "banner"));
 		$this->assign('title', '另客岛民请登录，享受您另客岛民专有的服务');
 		$this->assign('Description', '另客会员专区有众多只有会员才能享有的资源和服务');
@@ -33,9 +38,9 @@ class LoginAction extends CommonAction
 	 */
 	public function checkLogin() 
 	{
-        $username = trim($_POST['username']);
-        $password = $_POST['password'];
-        $auto_login = $_POST['auto_login'];
+        $username = trim($this->_param('username'));
+        $password = $this->_param('password');
+        $auto_login = $this->_param('auto_login');
 
 		if (checkEmail($username)) {
 			$param = 'email';
@@ -47,7 +52,7 @@ class LoginAction extends CommonAction
 		}
 		
 		$member = M("Member");
-		$mbrNow = $member->where("$param='%s'", $username)->find();
+		$mbrNow = $member->where("$param = '%s'", $username)->find();
 		
 		if (empty($mbrNow)) {
 			echo "用户不存在";

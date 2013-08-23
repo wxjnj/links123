@@ -80,14 +80,18 @@ class SuggestionAction extends CommonAction {
 		$data['mid'] = $_SESSION[C('MEMBER_AUTH_KEY')];
 		$data['suggest'] = $suggest;
 		$data['create_time'] = time();
-		
-		if (false === $suggestion->add($data)) {
-			Log::write($operate . '提交失败：' . $suggestion->getLastSql(), Log::SQL);
-			$this->ajaxReturn("", $operate . "提交失败", false);
-		} else if ($data['pid'] > 0) {
-			$suggestion->where("id='%d'", $data['pid'])->setField("create_time", time());
-			$this->ajaxReturn("", $operate . "成功", true);
+	
+		if ($suggestion->add($data)) {
+			if ($data['pid'] > 0) {
+				$suggestion->where("id='%d'", $data['pid'])->setField("create_time", time());
+			}
+			$msg = $operate . "成功";
+		} else {
+			$msg = $operate . "提交失败";
+			Log::write($msg . $suggestion->getLastSql(), Log::SQL);
+			
 		}
+		$this->ajaxReturn("", $msg, true);
 	}
 	
 	/**

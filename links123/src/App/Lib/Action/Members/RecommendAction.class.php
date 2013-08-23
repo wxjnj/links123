@@ -37,7 +37,7 @@ class RecommendAction extends CommonAction
 		$links = M("Links");
 		$list = $links->where($condition)->order('create_time desc')->limit($rst . ',' . $listRows)->select();
 		
-		$count = $links->where($condition)->count('id');
+		$count = $links->where($condition)->count('*');
 		if ($count > 0) {
 			import("@.ORG.Page");
 			$p = new Page($count, $listRows);

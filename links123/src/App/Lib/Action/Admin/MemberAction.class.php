@@ -1,15 +1,20 @@
 <?php
-// 会员
+
+/**
+ * @name MemberAction.class.php
+ * @package Admin
+ * @desc 会员模块
+ * @author lawrence UPDATE 2013-08-20
+ * @version 0.0.1
+ */
 class MemberAction extends CommonAction {
-	// 
+
 	protected function _filter(&$map, &$param){
-		//
 		if ( isset($_REQUEST['nickname']) && !empty($_REQUEST['nickname']) ) {
 			$map['nickname'] = array('like',"%".$_REQUEST['nickname']."%");
 			$this->assign('nickname', $_REQUEST['nickname']);
 			$param['nickname'] = $_REQUEST['nickname'];
 		}
-		//
 		if (isset($_REQUEST['status']) && $_REQUEST['status']!='') {
 			$map['status'] = $_REQUEST['status'];
 		}
@@ -20,20 +25,20 @@ class MemberAction extends CommonAction {
 		$param['status'] = $map['status'];
 	}
 	
-	// 列表
+	/**
+	 * @desc 列表
+	 * @see MemberAction::index()
+	 */
 	public function index() {
-		//列表过滤器，生成查询Map对象
-		$map = array();
-		$param = array();
-		if (method_exists ( $this, '_filter' )) {
-			$this->_filter ( $map, $param );
+		$map=array();
+		$param=array();
+		if (method_exists($this,'_filter')) {
+			$this->_filter($map,$param);
 		}
 		$model = M("Member");
-		if (! empty ( $model )) {
-			$this->_list ( $model, $map, $param, 'id', false );
-			//echo $model->getLastSql();
+		if (!empty($model)) {
+			$this->_list($model,$map,$param,'id',false);
 		}
-		//
 		$this->display();
 	}
 
@@ -61,47 +66,55 @@ class MemberAction extends CommonAction {
 	}
 	*/
 	
-	//
+	/**
+	 * @desc 安全验证
+	 * @see MemberAction::checkPost()
+	 */
 	protected function checkPost() {
-		// 安全验证
         $_POST['nickname']	= htmlspecialchars(trim($_POST['nickname']));
 	}
 	
-	//
+	/**
+	 * @desc 编辑页面
+	 * @see MemberAction::edit()
+	 */
 	function edit() {
 		$model = M("Member");
-		$vo = $model->getById( $_REQUEST['id'] );
-		$this->assign ( 'vo', $vo );
-		//
+		$vo = $model->getById($_REQUEST['id']);
+		$this->assign('vo',$vo);
 		$this->display();
 	}
     
-	// 更新数据
+	/**
+	 * @desc 编辑操作
+	 * @see MemberAction::update()
+	 */
 	public function update() {
 		$model = D("Member");
         $this->checkPost();
-		//
-		if ( false === $model->create () ) {
-			$this->error( $model->getError() );
+		if (false === $model->create()) {
+			$this->error($model->getError());
 		}
-		if ( false !== $model->save() ) {
-			$this->assign( 'jumpUrl', __URL__.'/index?'.$_SESSION[C('SEARCH_PARAMS_KEY')] );
+		if (false !== $model->save()) {
+			$this->assign('jumpUrl', __URL__.'/index?'.$_SESSION[C('SEARCH_PARAMS_KEY')]);
 			$this->success('会员编辑成功!');
 		} else {
 			$this->error('会员编辑失败!');
 		}
 	}
 	
+	/**
+	 * @desc 恢复记录
+	 * @see MemberAction::resume()
+	 */
 	function resume() {
-		//恢复指定记录
 		$model = D("Member");
-		$condition = array('id' => array('in', $_REQUEST['id']));
-		if (false !== $model->where($condition)->setField('status', 1)) {
-			$this->success('状态恢复成功！', cookie('_currentUrl_'));
+		$condition = array('id' =>array('in',$_REQUEST['id']));
+		if (false !== $model->where($condition)->setField('status',1)) {
+			$this->success('状态恢复成功！',cookie('_currentUrl_'));
 		} else {
 			$this->error('状态恢复失败！');
 		}
 	}
-
 }
 ?>

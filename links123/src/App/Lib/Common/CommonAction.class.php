@@ -48,7 +48,9 @@ class CommonAction extends Action {
 	 * @return boolean
 	 */
 	protected function checkLog($ajax = 0) {
-		if (!isset($_SESSION[C('MEMBER_AUTH_KEY')]) || empty($_SESSION[C('MEMBER_AUTH_KEY')])) {
+		$mid = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+		
+		if (empty($mid)) {
 			if ($ajax) {
 				echo "请先登录！";
 				return false;
@@ -259,7 +261,8 @@ class CommonAction extends Action {
      */
     public function autoLogin() {
     	$user_str = $_COOKIE["USER_ID"];
-        if (!isset($_SESSION[C('MEMBER_AUTH_KEY')]) || empty($_SESSION[C('MEMBER_AUTH_KEY')])) {
+    	$mid = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+        if (empty($mid)) {
         	//没有用户session且自动登录标示Cookie USER_ID 存在执行自动登录过程
         	if (!empty($user_str)) {
         		$ret = explode("|", $user_str);

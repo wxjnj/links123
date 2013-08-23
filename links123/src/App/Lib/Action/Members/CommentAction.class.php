@@ -1,10 +1,11 @@
 <?php 
 /**
- * @name CommentAction.class.php
+ * @name CommentAction
  * @package Member
  * @desc 我的说说
+ * @version 1.0
  * @author frank qian 2013-08-13
- * @version 0.0.1
+ *
  */
 
 import("@.Common.CommonAction");
@@ -22,9 +23,10 @@ class CommentAction extends CommonAction
 	public function index()
 	{
 		$this->checkLog();
-		$mid = $_SESSION[C('MEMBER_AUTH_KEY')];
-		$rid = $_REQUEST['rid'];
-		$pg = intval($_REQUEST[C('VAR_PAGE')]);
+		$mid = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+		
+		$rid = $this->_param('rid');
+		$pg = intval($this->_param(C('VAR_PAGE')));
 		
 		$mbrNow = M("Member")->getById($mid);
 		$condition['mid'] = $mid;
@@ -39,13 +41,13 @@ class CommentAction extends CommonAction
 		$rst = ($pg - 1) * $listRows;
 		
 		$commentView = new CommentViewModel();
-		$mycmts = $commentView->where($condition)->order('create_time desc')->limit($rst . ',' . $listRows)->select();
+		$mycmts = $commentView->where($condition)->order('create_time DESC')->limit($rst . ',' . $listRows)->select();
 		foreach ($mycmts as &$value) {
 			$value["comment"] = checkLinkUrl($value["comment"]);
 			$value['create_time'] = date('Y-m-d h:i', $value['create_time']);
 		}
 		
-		$count = $commentView->where($condition)->count('id');
+		$count = $commentView->where($condition)->count('*');
 		if ($count > 0) {
 			import("@.ORG.Page");
 			$p = new Page($count, $listRows);
@@ -72,9 +74,9 @@ class CommentAction extends CommonAction
 	 */
 	public function editComment() {
 		$this->checkLog();
-		$mid = $_SESSION[C('MEMBER_AUTH_KEY')];
-		$id = intval($_POST['id']);
-		$comment = htmlspecialchars(trim($_POST['comment']));
+		$mid = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+		$id = intval($this->_param('id'));
+		$comment = htmlspecialchars(trim($this->_param('comment')));
 		if (empty($id)) {
 			echo '说说id丢失';
 			return false;

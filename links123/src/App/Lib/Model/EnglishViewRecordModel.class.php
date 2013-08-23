@@ -23,7 +23,7 @@ class EnglishViewRecordModel extends CommonModel {
             if ($map['user_id'] == 0) {
                 $map['user_id'] = $this->getNewTouristId();
             }
-            cookie('english_tourist_id', $map['user_id']); //更新游客id到cookie
+            cookie('english_tourist_id', $map['user_id'], 24 * 60 * 60 * 30); //更新游客id到cookie
             $map['user_id'] = -$map['user_id']; //游客id在数据库表中记录为负数
         } else {
             $map['user_id'] = intval($_SESSION[C("MEMBER_AUTH_KEY")]); //用户id为登录用户的对应用户id

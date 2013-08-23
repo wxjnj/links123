@@ -1,19 +1,29 @@
 <?php
+
+/**
+ * @name GroupAction.class.php
+ * @package Admin
+ * @desc 配置类型模块
+ * @author lawrence UPDATE 2013-08-20
+ * @version 0.0.1
+ */
 class GroupAction extends CommonAction {
-	//
+
 	protected function _filter(&$map, &$param){
-		//
-		if ( isset($_REQUEST['name']) ) {
+		if (isset($_REQUEST['name'])) {
 			$name = $_REQUEST['name'];
 		}
-		if ( !empty($name) ) {
-			$map['name'] = array('like',"%".$name."%");
+		if (!empty($name)) {
+			$map['name'] =array('like',"%".$name."%");
 		}
-		$this->assign('name', $name);
+		$this->assign('name',$name);
 		$param['name'] = $name;
 	}
 
-    // 排序
+	/**
+	 * @desc 排序
+	 * @see GroupAction::sort()
+	 */
     public function sort(){
     	$model = M("Group");
     	$map = array();
@@ -34,10 +44,9 @@ class GroupAction extends CommonAction {
     	foreach ($sortList as &$value) {
     		$value['txt_show'] = $value['name'];
     	}
-    	$this->assign("sortList", $sortList);
+    	$this->assign("sortList",$sortList);
     	$this->display("../Public/sort");
     	return;
     }
-
 }
 ?>

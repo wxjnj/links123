@@ -343,8 +343,12 @@ function array_sort($arr, $keys, $type = 'desc') {
     return $new_array;
 }
 
-/* 验证参数 */
-
+/**
+ * @desc 验证参数
+ * @author Frank UPDATE 2013-08-19
+ * @param string $param
+ * @return string
+ */
 function cleanParam($param) {
     $param = trim($param);
     $ary_change = array(
@@ -377,15 +381,12 @@ function cleanParam($param) {
         '*/' => '',
         'xp_' => '',
     );
+    
     $param = strtr($param, $ary_change);
-    //
     $param = htmlspecialchars($param);
     $param1 = strtolower($param);
-    if (strpos($param1, 'script') > 0 || strpos($param1, 'iframe') > 0) {
-        return '';
-    } else {
-        return $param;
-    }
+    $param = strpos($param1, 'script') > 0 || strpos($param1, 'iframe') > 0 ? '' : $param;
+    return $param;
 }
 
 /* 去除html标签 */

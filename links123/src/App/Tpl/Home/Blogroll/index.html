@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<include file="Contorls:headlinks" />
+	<link rel="canonical" href="http://links123.cn{$_SERVER['REQUEST_URI']}" />
+</head>
+
+<body>
+
+	<include file="Contorls:header" />
+
+	<!-- 友情链接 -->
+	<div class="login_reg">
+	<div class="login_reg_img login_reg_about">
+		<div class="login_reg_img_b"><img src="__PUBLIC__/Uploads/Others/{$banner.0.pic}" width="420" height="290" /></div>
+	</div>
+	<div class="loginreg_b yqlj">
+		<p class="about_tit">友情链接</p>
+		<div id="d_clip_container">
+			<textarea id="biao1"><a href="http://www.links123.cn" target="_blank">另客网</a></textarea><br />
+			<div id="d_clip_button"><a class="button01" >复制</a></div>
+		</div>
+		<p>
+			<br /><br />
+			说明：<br />
+			1.&nbsp;只同另客网收录的网站建立友情链接<br />
+			2.&nbsp;如尚未被另客网收录，请先推荐贵网<br />
+			3.&nbsp;另客网收录方式即为贵网友情链接的展示方式
+		</p>
+	</div>
+	<!-- 
+		<div class="yqlj_link">
+			<ul>
+			<volist name="outlinklist" id="vo">
+				<li>• <a href="http://{$vo.url}" target="_blank">{$vo.title}</a></li>
+			</volist>
+			</ul>
+		</div>
+	 -->
+		<div class="clr"></div>
+		<a id="btn_close_me" class="login_reg_close">关闭此页</a>
+	</div>
+	<!-- 结束 友情链接 -->
+
+	<include file="Contorls:footer" />
+	<include file="Contorls:footlinks" />
+	<load href="__STATIC__/v2/js/ZeroClipboard/ZeroClipboard.js" />
+	<script>
+	$(function(){
+		ZeroClipboard.setMoviePath("__STATIC__/v2/js/zeroclipboard/ZeroClipboard.swf" ); 
+		var clip = new ZeroClipboard.Client();
+		clip.setHandCursor(true);
+		clip.addEventListener('mouseOver', function(client){
+			clip.setText( $("#biao1").val() );
+		});
+		clip.addEventListener('complete', function(client, text) {
+			$("#biao1").select();
+			alert("已复制好，可贴粘。");
+		});
+		clip.glue('d_clip_button', 'd_clip_container');
+	});
+	</script>
+
+</body>
+</html>

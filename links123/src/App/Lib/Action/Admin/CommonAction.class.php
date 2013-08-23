@@ -364,7 +364,12 @@ class CommonAction extends BaseAction {
         }
     }
 
-    // 保存排序
+    /**
+     * @name saveSort
+     * @desc 保存排序
+     * @param string seqNoList
+     * @author Frank UPDATE 2013-08-21
+     */
     function saveSort() {
         $seqNoList = $_POST ['seqNoList'];
         if (!empty($seqNoList)) {
@@ -375,12 +380,12 @@ class CommonAction extends BaseAction {
             //启动事务
             $model->startTrans();
             $result = true;
-            //
             foreach ($col as $val) {
                 $val = explode(':', $val);
-                $sort = $model->where('id=' . $val[0])->getField('sort');
-                if ($sort == $val[1])
-                    continue;
+                $sort = $model->where("id = '%s'", $val[0])->getField('sort');
+                if ($sort == $val[1]) {
+                	continue;
+                }
                 $model->id = $val[0];
                 $model->sort = $val[1];
                 $temp_result = $model->save();
@@ -389,7 +394,7 @@ class CommonAction extends BaseAction {
                     Log::write('保存排序失败：' . $model->getLastSql(), Log::SQL);
                 }
             }
-            //
+            
             if ($result) {
                 $model->commit();
                 //采用普通方式跳转刷新页面
@@ -402,13 +407,16 @@ class CommonAction extends BaseAction {
         }
     }
 
-    // 获取所有目录
+    /**
+     * @name getCats
+     * @desc 获取所有目录
+     * @author Frank UPDATE 2013-08-21
+     */
     protected function getCats($flag = 0) {
         $condition['status'] = 1;
-        if ($flag > 0) {
-            $condition['flag'] = $flag;
-        }
-        $cats = M("Category")->field('id, cat_name, level')->where($condition)->order('path asc, sort asc')->select();
+        $flag > 0 &&  $condition['flag'] = $flag;
+        
+        $cats = M("Category")->field('id, cat_name, level')->where($condition)->order('path ASC, sort ASC')->select();
         foreach ($cats as &$value) {
             for ($i = 0; $i != $value['level']; ++$i) {
                 $value['cat_name'] = '　' . $value['cat_name'];
@@ -416,24 +424,34 @@ class CommonAction extends BaseAction {
         }
         $this->assign("cats", $cats);
     }
-
-    // 获取所有下级目录
+    
+    /**
+     * @name _getSubCats
+     * @desc 获取所有下级目录
+     * @param int pid
+     * @return array
+     * @author Frank UPDATE 2013-08-21
+     */
     protected function _getSubCats($pid) {
         $pids = array();
         array_push($pids, $pid);
-        //
         $cat = M("Category");
-        $list = $cat->field('id')->where('status=1 and prt_id=' . $pid)->select();
+        $list = $cat->field('id')->where("status = 1 and prt_id = '%d'", $pid)->select();
         if (count($list) > 0) {
             foreach ($list as &$value) {
                 $pids = array_merge($pids, $this->_getSubCats($value['id']));
             }
         }
-        //
         return $pids;
     }
 
-    // 获取根目录
+    /**
+     * @name getRoot
+     * @desc 获取根目录
+     * @param int cid
+     * @return array
+     * @author Frank UPDATE 2013-08-21
+     */
     protected function getRoot($cid) {
         $cat = M("Category");
         $catNow = $cat->getById($cid);
@@ -443,10 +461,14 @@ class CommonAction extends BaseAction {
             return $this->getRoot($catNow['prt_id']);
         }
     }
-
-    // 获取所有根目录
+    
+    /**
+     * @name getRootCats
+     * @desc 获取所有的根目录
+     * @author Frank UPDATE 2013-08-21
+     */
     protected function getRootCats() {
-        $cats = M("Category")->field('id, cat_name, level')->where('status=1 and level=1')->order('sort asc')->select();
+        $cats = M("Category")->field('id, cat_name, level')->where('status=1 and level=1')->order('sort ASC')->select();
         foreach ($cats as &$value) {
             for ($i = 0; $i != $value['level']; ++$i) {
                 $value['cat_name'] = '　' . $value['cat_name'];

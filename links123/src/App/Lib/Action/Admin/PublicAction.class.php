@@ -1,55 +1,72 @@
 <?php
+
+/**
+ * @name PublicAction.class.php
+ * @package Admin
+ * @desc 公共模块
+ * @author lawrence UPDATE 2013-08-20
+ * @version 0.0.1
+ */
 class PublicAction extends BaseAction {
+
+	/**
+	 * @desc 初始化
+	 */
     public function _initialize() {
         parent::_initialize();
     }
-    // 检查用户是否登录
+
+	/**
+	 * @desc 检查用户是否登录
+	 * @see PublicAction::checkUser()
+	 */
     protected function checkUser() {
         if(!isset($_SESSION[C('USER_AUTH_KEY')])) {
             $this->error('没有登录','Public/login');
         }
     }
 
-    // 顶部页面
+	/**
+	 * @desc 顶部页面
+	 * @see PublicAction::top()
+	 */
     public function top() {
-    	//
-        C('SHOW_RUN_TIME',false);			// 运行时间显示
+        C('SHOW_RUN_TIME',false);
         C('SHOW_PAGE_TRACE',false);
-        $model	=	M("Group");
-        $list	=	$model->where('status=1')->getField('id,title');
+        $model=M("Group");
+        $list=$model->where('status=1')->getField('id,title');
         $this->assign('nodeGroupList',$list);
-        //
         $this->menu();
-        //
         $this->display();
         return;
     }
 
     public function drag(){
         C('SHOW_PAGE_TRACE',false);
-        C('SHOW_RUN_TIME',false);			// 运行时间显示
+        C('SHOW_RUN_TIME',false);
         $this->display();
         return;
     }
 
-    // 尾部页面
+	/**
+	 * @desc 尾部页面
+	 * @see PublicAction::footer()
+	 */
     public function footer() {
-        C('SHOW_RUN_TIME',false);			// 运行时间显示
+        C('SHOW_RUN_TIME',false);
         C('SHOW_PAGE_TRACE',false);
         $this->display();
         return;
     }
 
-    // 菜单页面
+	/**
+	 * @desc 菜单页面
+	 * @see PublicAction::menu()
+	 */
     public function menu() {
         $this->checkUser();
         if(isset($_SESSION[C('USER_AUTH_KEY')])) {
-            //显示菜单项
             $menu  = array();
-            //if(isset($_SESSION['menu'.$_SESSION[C('USER_AUTH_KEY')]])) {
-                //如果已经缓存，直接读取缓存
-                //$menu = $_SESSION['menu'.$_SESSION[C('USER_AUTH_KEY')]];
-            //}else {
                 if(isset($_SESSION['_ACCESS_LIST'])) {
                     $accessList = $_SESSION['_ACCESS_LIST'];
                 }else{
@@ -60,7 +77,7 @@ class PublicAction extends BaseAction {
                 $groupModel = D("Group");
                 $group = $groupModel->where("`status`=1 and `show`=1")->select();
                 //读取数据库模块列表生成菜单项
-                $node    =   M("Node");
+                $node=M("Node");
                 foreach($group as $k=>$value){
                     $where['level']=2;
                     $where['status'] = 1;
@@ -68,18 +85,11 @@ class PublicAction extends BaseAction {
                     $group[$k]['menu'] = $node->where($where)->field('id,name,group_id,title')->order('sort asc')->select();
                     foreach ($group[$k]['menu'] as $key => $module) {
                         if (isset($accessList[strtoupper(GROUP_NAME)][strtoupper($module['name'])]) || isset($_SESSION[C('ADMIN_AUTH_KEY')])) {
-                            //设置模块访问权限
-//                            $module['access'] = 1;
                             $group[$k]['menu'][$key]['access']=1;
-//                            $menu[$key] = $module;
                         }
                     }
                 }
-                
-//                $id	=	$node->getField("id");
-                //缓存菜单访问
                 $_SESSION['menu'.$_SESSION[C('USER_AUTH_KEY')]]	= $group;
-            //}
             if(!empty($_GET['tag'])){
                 $this->assign('menuTag',$_GET['tag']);
             }
@@ -88,15 +98,16 @@ class PublicAction extends BaseAction {
             }
             $this->assign('menu',$group);
         }
-        //
-        C('SHOW_RUN_TIME',false);			// 运行时间显示
+        C('SHOW_RUN_TIME',false);
         C('SHOW_PAGE_TRACE',false);
-        //
         $this->display();
         return;
     }
 
-    // 后台首页 查看系统信息
+	/**
+	 * @desc 后台首页->查看系统信息
+	 * @see PublicAction::main()
+	 */
     public function main() {
         $info = array(
             '操作系统'=>PHP_OS,
@@ -118,9 +129,11 @@ class PublicAction extends BaseAction {
         return;
     }
 
-    // 用户登录页面
+	/**
+	 * @desc 用户登录页面
+	 * @see PublicAction::login()
+	 */
     public function login() {
-    	//
         if(!isset($_SESSION[C('USER_AUTH_KEY')])) {
             $this->display();
             return;
@@ -128,13 +141,19 @@ class PublicAction extends BaseAction {
             $this->redirect('Index/index');
         }
     }
-
+	
+	/**
+	 * @desc 首页,如果通过认证跳转到首页
+	 * @see PublicAction::index()
+	 */
     public function index() {
-        //如果通过认证跳转到首页
         redirect(__GROUP__);
     }
 
-    // 用户登出
+	/**
+	 * @desc 用户登出
+	 * @see PublicAction::logout()
+	 */
     public function logout() {
         if(isset($_SESSION[C('USER_AUTH_KEY')])) {
             unset($_SESSION[C('ADMIN_AUTH_KEY')]);
@@ -142,8 +161,6 @@ class PublicAction extends BaseAction {
             unset($_SESSION[C('USER_AUTH_KEY')]);
             unset($_SESSION['_ACCESS_LIST']);
             cookie(md5("manament_login_time"),null);
-            //session_unset();
-            //session_destroy();
             $this->assign("jumpUrl",__URL__.'/login/');
             $this->success('登出成功！');
         }
@@ -152,7 +169,10 @@ class PublicAction extends BaseAction {
         }
     }
 
-    // 登录检测
+	/**
+	 * @desc 登录检测
+	 * @see PublicAction::checkLogin()
+	 */
     public function checkLogin() {
         if(empty($_POST['account'])) {
             $this->error('帐号错误！');
@@ -162,14 +182,14 @@ class PublicAction extends BaseAction {
             $this->error('验证码必须！');
         }
         //生成认证条件
-        $map            =   array();
+        $map=array();
         // 支持使用绑定帐号登录
-        $map['account']	= $_POST['account'];
-        $map["status"]	=	array('gt',0);
-        if(session('verify') != md5($_POST['verify'])) {
+        $map['account']=$_POST['account'];
+        $map["status"]=array('gt',0);
+        if(session('verify')!= md5($_POST['verify'])) {
             $this->error('验证码错误！');
         }
-        import ( '@.ORG.RBAC' );
+        import('@.ORG.RBAC');
         $authInfo = RBAC::authenticate($map);
         //使用用户名、密码和状态的方式进行认证
         if(false === $authInfo) {
@@ -178,61 +198,65 @@ class PublicAction extends BaseAction {
             if($authInfo['password'] != md5($_POST['password'])) {
                 $this->error('密码错误！');
             }
-            $_SESSION[C('USER_AUTH_KEY')]	=	$authInfo['id'];
-            $_SESSION['email']				=	$authInfo['email'];
-            $_SESSION['loginUserName']		=	$authInfo['nickname'];
-            $_SESSION['lastLoginTime']		=	$authInfo['last_login_time'];
-            $_SESSION['login_count']		=	$authInfo['login_count'];
+            $_SESSION[C('USER_AUTH_KEY')]=$authInfo['id'];
+            $_SESSION['email']=	$authInfo['email'];
+            $_SESSION['loginUserName']=	$authInfo['nickname'];
+            $_SESSION['lastLoginTime']=	$authInfo['last_login_time'];
+            $_SESSION['login_count']=$authInfo['login_count'];
             if($authInfo['account']=='admin') {
                 $_SESSION[C('ADMIN_AUTH_KEY')] = true;
             }
             //使用cookie过期时间来控制后台登陆的过期时间
             $admin_session_expire = D("Variable")->getVariable("admin_session_expire");
-            cookie(md5("manament_login_time") , time() , $admin_session_expire);
+            cookie(md5("manament_login_time"),time(),$admin_session_expire);
             //保存登录信息
-            $User	=	M('User');
-            $ip		=	get_client_ip();
-            $time	=	time();
-            $data = array();
-            $data['id']	=	$authInfo['id'];
-            $data['last_login_time']	=	$time;
-            $data['login_count']	=	array('exp','login_count+1');
-            $data['last_login_ip']	=	$ip;
+            $User=M('User');
+            $ip=get_client_ip();
+            $time=time();
+            $data=array();
+            $data['id']=$authInfo['id'];
+            $data['last_login_time']=$time;
+            $data['login_count']=array('exp','login_count+1');
+            $data['last_login_ip']=$ip;
             $User->save($data);
-
             // 缓存访问权限
             RBAC::saveAccessList();
             $this->success('登录成功！',__GROUP__.'/Index/index');
-
         }
     }
     
-    // 更换密码
+	/**
+	 * @desc 修改密码
+	 * @see PublicAction::changePwd()
+	 */
     public function changePwd() {
         $this->checkUser();
         //对表单提交处理进行处理或者增加非表单数据
-        if(md5($_POST['verify'])	!= $_SESSION['verify']) {
+        if(md5($_POST['verify'])!=$_SESSION['verify']) {
             $this->error('验证码错误！');
         }
-        $map	=	array();
+        $map=array();
         $map['password']= pwdHash($_POST['oldpassword']);
         if(isset($_POST['account'])) {
-            $map['account']	 =	 $_POST['account'];
+            $map['account']=$_POST['account'];
         }elseif(isset($_SESSION[C('USER_AUTH_KEY')])) {
-            $map['id']		=	$_SESSION[C('USER_AUTH_KEY')];
+            $map['id']=$_SESSION[C('USER_AUTH_KEY')];
         }
         //检查用户
-        $User    =   M("User");
+        $User=M("User");
         if(!$User->where($map)->field('id')->find()) {
             $this->error('旧密码不符或者用户名错误！');
         }else {
-            $User->password	=	pwdHash($_POST['password']);
+            $User->password	=pwdHash($_POST['password']);
             $User->save();
             $this->success('密码修改成功！');
          }
     }
 
-    //显示个人资料
+	/**
+	 * @desc 显示个人资料
+	 * @see PublicAction::profile()
+	 */
     public function profile() {
     	$this->checkUser();
     	$User = M("User");
@@ -242,21 +266,27 @@ class PublicAction extends BaseAction {
     	return;
     }
 
-    //验证码
+	/**
+	 * @desc 验证码
+	 * @see PublicAction::verify()
+	 */
     public function verify() {
     	$type = isset($_GET['type'])?$_GET['type']:'gif';
     	import("@.ORG.Image");
     	Image::buildImageVerify(3,1,$type,36);
     }
 
-    // 修改资料
+	/**
+	 * @desc 修改资料
+	 * @see PublicAction::change()
+	 */
     public function change() {
         $this->checkUser();
-        $User = D("User");
+        $User=D("User");
         if(!$User->create()) {
             $this->error($User->getError());
         }
-        $result	=	$User->save();
+        $result=$User->save();
         if(false !== $result) {
             $this->success('资料修改成功！');
         }
@@ -265,7 +295,10 @@ class PublicAction extends BaseAction {
         }
     }
     
-    // 上传图片
+	/**
+	 * @desc 上传图片
+	 * @see PublicAction::uploadPic()
+	 */
     public function uploadPic() {
     	import("@.ORG.UploadFile");
     	$upload = new UploadFile();
@@ -286,11 +319,6 @@ class PublicAction extends BaseAction {
     	} else {
     		//取得成功上传的文件信息
     		$uploadList = $upload->getUploadFileInfo();
-    		//
-    		//import("@.ORG.Image");
-    		//$filename = $upload->savePath.$uploadList[0]['savename'];
-    		//Image::thumb_db($filename,$filename,'',0,0,$_REQUEST["width"],10000,true);
-    		//
     		$idNow = $_REQUEST["id"];
     		if ( empty($idNow) ) {
     			$idNow = "pic";
@@ -299,7 +327,10 @@ class PublicAction extends BaseAction {
     	}
     }
     
-    // 上传附件
+	/**
+	 * @desc 上传附件
+	 * @see PublicAction::uploadAtt()
+	 */
     public function uploadAtt() {
     	import("@.ORG.UploadFile");
     	$upload = new UploadFile();
@@ -309,7 +340,7 @@ class PublicAction extends BaseAction {
     	$upload->allowExts = explode(',', 'pdf,doc,docx,zip,rar,xlsx');
     	//设置附件上传目录
     	$path = realpath('./Public/Uploads/uploads.txt');
-    	$upload->savePath = str_replace('uploads.txt', $_REQUEST["folder"], $path).'/';
+    	$upload->savePath = str_replace('uploads.txt', $_REQUEST["folder"],$path).'/';
     	//设置需要生成缩略图，仅对图像文件有效
     	$upload->thumb = false;
     	//设置上传文件规则
@@ -320,7 +351,6 @@ class PublicAction extends BaseAction {
     	} else {
     		//取得成功上传的文件信息
     		$uploadList = $upload->getUploadFileInfo();
-    		//
     		$idNow = $_REQUEST["id"];
     		if ( empty($idNow) ) {
     			$idNow = "att";
@@ -336,7 +366,10 @@ class PublicAction extends BaseAction {
     	}
     }
     
-    // 备份
+	/**
+	 * @desc 备份
+	 * @see PublicAction::data2sql()
+	 */
     protected function data2sql($table) {
     	$model = new Model();
     	$tabledump =
@@ -347,12 +380,10 @@ class PublicAction extends BaseAction {
     	$tabledump .= "DROP TABLE IF EXISTS $table;\n";
     	$createtable = $model->query("SHOW CREATE TABLE $table");
     	$tabledump .= $createtable[0]['Create Table'].";\n\n";
-    
     	$tabledump .=
     	"--\n".
     	"-- 转存表中的数据 `".$table."`\n".
     	"--\n\n";
-    
     	$rows = $model->query("SELECT * FROM $table");
     	foreach($rows as &$row) {
     		$comma = "";
@@ -367,25 +398,23 @@ class PublicAction extends BaseAction {
     	return $tabledump;
     }
     
-    // 自动备份
+	/**
+	 * @desc 自动备份
+	 * @see PublicAction::autobackup()
+	 */
     public function autobackup() {
-    	//
     	@header('Content-type:text/html;charset=UTF-8');
-    	//
     	$model = new Model();
     	// 定义要保存的数据表
     	$tables = $model->query("SHOW TABLES"); //定义要保存的数据表，一个数组
-    
     	// 定义数据保存的文件名
     	$filename = "db/".C("DB_PREFIX")."_backup_".date('Y-m-d').".sql";
-    
     	// 获取数据库结构和数据内容
     	foreach($tables as $table) {
     		foreach($table as &$val) {
     			$sqldump .= $this->data2sql($val);
     		}
     	}
-    
     	// 如果数据内容不是空就开始保存
     	if( trim($sqldump) ) {
     		// 写入开头信息
@@ -422,7 +451,10 @@ class PublicAction extends BaseAction {
     	}
     }
     
-    // 清空缓存
+	/**
+	 * @desc 清空缓存
+	 * @see PublicAction::clearCache()
+	 */
     public function clearCache($path=null) {
     	//先删除目录下的文件：
     	if ( empty($path) ) {
@@ -448,7 +480,6 @@ class PublicAction extends BaseAction {
     			}
     		}
     	}
-    
     	closedir($dh);
     	//删除当前文件夹：
     	if(rmdir($path)) {
@@ -458,41 +489,31 @@ class PublicAction extends BaseAction {
     	}
     }
     
-    // 读取excel
+	/**
+	 * @desc 读取excel
+	 * @see PublicAction::read_excel()
+	 */
     public function read_excel() {
-    	//
     	$pattern = '/[^\x00-\x80]/';
-    	//
     	import("@.ORG.Pinyin");
     	$pinyin = new Pinyin();
-    	//
     	error_reporting(E_ALL);
     	date_default_timezone_set('Asia/Shanghai');
-    	//
     	vendor('PHPExcel.Classes.PHPExcel.IOFactory');
     	@header('Content-type: text/html;charset=UTF-8');
-    	//
-    	//echo date('H:i:s') . " Load from Excel5 template<br />";
     	$objReader = PHPExcel_IOFactory::createReader('Excel2007');
     	$path = realpath('./Public/Uploads/uploads.txt');
     	$dest = str_replace('uploads.txt', 'Excels/'.$_REQUEST['file'].'.xlsx', $path);
-    	//$dest = str_replace('uploads.txt', 'Excels/'.$_REQUEST['file'], $path);
     	$objPHPExcel = $objReader->load($dest);
-    	//
     	$model = M("DirectLinks");
-    	//
-    	//echo date('H:i:s') . " Iterate worksheets<br />";
     	foreach ($objPHPExcel->getWorksheetIterator() as $worksheet) {
-    		//echo '- ' . $worksheet->getTitle() . "<br />";
     		foreach ($worksheet->getRowIterator() as $row) {
-    			//echo '    - Row number: ' . $row->getRowIndex() . "<br />";
     			$url = '';
     			$tag = '';
     			$cellIterator = $row->getCellIterator();
-    			$cellIterator->setIterateOnlyExistingCells(false); // Loop all cells, even if it is not set
+    			$cellIterator->setIterateOnlyExistingCells(false);
     			foreach ($cellIterator as $cell) {
     				if (!is_null($cell)) {
-    					//echo '        - Cell: ' . $cell->getCoordinate() . ' - ' . $cell->getCalculatedValue() . "<br />";
     					if ($cell->getColumn()=="A") {
     						$url = $cell->getCalculatedValue();
     					}
@@ -530,7 +551,6 @@ class PublicAction extends BaseAction {
     						array_push($ary_tag, $pinyin->toPinyin($value));
     					}
     				}
-    				//
     				$data['url'] = $url;
     				$data['update_time'] = time();
     				$data['status'] = 1;	//默认从excel中导入数据为已审核，未查看状态
@@ -550,7 +570,6 @@ class PublicAction extends BaseAction {
     			}
     		}
     	}
-    	//
     	echo "excel文件导入已完成";
     }
     
