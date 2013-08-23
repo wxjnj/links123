@@ -199,15 +199,11 @@ class IndexAction extends CommonAction {
 			$linkModel = D("Links");
 			$flag = $linkModel->where("link = '%s'", $url)->setInc("click_num");
 		}
-		echo "<pre>";
-		print_r($_SERVER);
-		echo "</pre>";
-		exit;
+		
 		$check_url = $_SERVER['HTTP_REFERER'];
 		if ($check_url != '') {
 			$check_url = parse_url($check_url);
-			if ($check_url[host] != 'links123.net' && $check_url[host] != 'links123.cn') {
-				
+			if ($check_url[host] != 'links123.net' && $check_url[host] != 'links123.cn') {		
 				exit();
 			} else {
 				echo '<style type="text/css">a{display:none}</style>
