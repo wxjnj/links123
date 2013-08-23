@@ -380,7 +380,9 @@ a,a:hover{ text-decoration: none; }
 	background: url(../imgs/zldon.png) 0 0 no-repeat;
 }
 .zld-edit ul li.on a,
-.zld-edit ul li.on a:hover{
+.zld-edit ul li.on a:hover,
+.zld-edit ul li.on span,
+.zld-edit ul li.on span:hover{
 	background: url(../imgs/zldon.png) right -29px no-repeat;
 	color: #fff;
 }
@@ -485,7 +487,7 @@ a,a:hover{ text-decoration: none; }
 	cursor: pointer;
 }
 .apps .img span b{ display: none; }
-/**.apps .img span:hover b{
+/*.apps .img span:hover b{
 	background: url(../imgs/close.png) 0 0 no-repeat;
 	display: block;
 	height: 15px;
@@ -495,7 +497,7 @@ a,a:hover{ text-decoration: none; }
 	text-indent: -999px;
 	top: -2px;
 	width: 15px;
-}**/
+}*/
 .apps .img span:hover{
 	background-position: 0 0;
 }
