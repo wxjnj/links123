@@ -51,13 +51,9 @@ class CommonAction extends Action {
 		$mid = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
 		
 		if (empty($mid)) {
-			if ($ajax) {
-				echo "请先登录！";
-				return false;
-			} else {
-				header("Location: " . __APP__ . "/");
-				exit(0);
-			}
+			
+			echo $ajax ? "请先登录！" : header("Location: " . __APP__ . "/");
+			exit(0);
 		} else {
 			return true;
 		}
