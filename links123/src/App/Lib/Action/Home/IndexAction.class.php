@@ -262,7 +262,7 @@ class IndexAction extends CommonAction {
 						'create_time' => $now
 				);
 				
-				if (false === $myarea->save($saveData, array('id' => $id, 'mid' => $user_id))) {
+				if (false === $myarea->where(array('id' => $id, 'mid' => $user_id))->save($saveData)) {
 					$result = false;
 					Log::write('更新我的地盘失败：' . $myarea->getLastSql(), Log::SQL);
 					$reason = '保存我的地盘失败！';
