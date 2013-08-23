@@ -74,9 +74,9 @@ class IndexAction extends EnglishAction {
         $english_user_info = $englishUserInfoModel->getEnglishUserInfo();
         $this->assign("english_user_info", $english_user_info);
         if ($user_last_select['object_info']['name'] == "综合") {
-            D("EnglishViewRecord")->addRecord($question['id'], $user_last_select['object_info']['id']); //记录用户查看题目
+            D("EnglishViewRecord")->addRecord($question['id'], $question['level'], $user_last_select['object_info']['id'], $question['voice'], $question['target'], $question['pattern']); //记录用户查看题目
         } else {
-            D("EnglishViewRecord")->addRecord($question['id'], $question['object']); //记录用户查看题目
+            D("EnglishViewRecord")->addRecord($question['id'], $question['level'], $question['object'], $question['voice'], $question['target'], $question['pattern']); //记录用户查看题目
         }
 
         $englishUserCountModel = D("EnglishUserCount");
@@ -231,11 +231,12 @@ class IndexAction extends EnglishAction {
             } else {
                 $ret['question'] = $questionModel->getQuestionToIndex($object, $level, $voice, $target, $pattern);
             }
-            if ($type == "quick_select_prev" && empty($user_last_question)) {
-                D("EnglishViewRecord")->addRecord($ret['question']['id'], $object); //记录用户查看题目
-            } else {
-                D("EnglishViewRecord")->addRecord($ret['question']['id'], $object, $now_question_id); //记录用户查看题目
-            }
+            D("EnglishViewRecord")->addRecord($ret['question']['id'], $level, $object, $voice, $target, $pattern);//记录用户查看题目
+//            if ($type == "quick_select_prev" && empty($user_last_question)) {
+//                D("EnglishViewRecord")->addRecord($ret['question']['id'], $level, $object, $voice, $target, $pattern); //记录用户查看题目
+//            } else {
+//                D("EnglishViewRecord")->addRecord($ret['question']['id'], $level, $object, $voice, $target, $pattern); //记录用户查看题目
+//            }
             $ret['english_user_info'] = D("EnglishUserInfo")->getEnglishUserInfo();
             $ret['user_count_info'] = D("EnglishUserCount")->getEnglishUserCountInfo($voice, $target, $object, $level);
 
