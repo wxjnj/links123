@@ -431,7 +431,6 @@ a,a:hover{ text-decoration: none; }
 	left: 9px;
 	top: 9px;
 	width: 260px;
-	z-index: 1;
 }
 .video img{ vertical-align: middle; }
 /*引用列表*/
@@ -570,6 +569,7 @@ a,a:hover{ text-decoration: none; }
 	width: 587px;
 	font-family: \5FAE\8F6F\96C5\9ED1;
 	font-size: 18px;
+	display: none;
 }
 .reglogin .reglogin-hd{
 	padding: 30px 35px;

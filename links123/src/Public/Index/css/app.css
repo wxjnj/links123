@@ -712,10 +712,6 @@ div.gt-baf-translations {
 .ui-dialog .ui-dialog-content {
 	padding: 0;
 }
-.ui-dialog .ui-dialog-titlebar-close span {
-	left: 0;
-	top: 0;
-}
 .ui-widget-content {
 }
 .ui-dialog {

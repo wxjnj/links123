@@ -306,13 +306,186 @@ $(function() {
 		        	myarea_web_obj.attr('url', new_url);
 		        	myarea_web_obj.attr('data-url', url);
 		        	//alert('保存成功！');
-		        }
-		        else {
+		        } else {
 		            alert(data);
 		        }
 	    });
 	});
 	
+	//登录窗口
+	$('#J_signin').click(function(){
+		 $('#J_signin_form').dialog('open');
+		 $('.reglogin').show();
+		 $('.ui-dialog-titlebar').hide();
+		 return false;
+	});
+	
+	//注册窗口
+	$('.J_signup').click(function(){
+		 $('#J_signin_form').dialog('close');
+		 $("#verifyImg").trigger("click");
+		 $('#J_signup_form').dialog('open');
+		 $('.reglogin').show();
+		 $('.ui-dialog-titlebar').hide();
+		 return false;
+	});
+	
+	$('#J_forgetpass').click(function(){
+		 $('#J_signin_form').dialog('close');
+		 $('#J_forgetpass_form').dialog('open');
+		 $('.reglogin').show();
+		 $('.ui-dialog-titlebar').hide();
+		 return false;
+	});
+	
+	$('#J_signin_form').dialog({
+	      autoOpen: false,
+	      height: 463,
+	      width: 587,
+	      modal: true
+	});
+	
+	$('#J_signup_form').dialog({
+	      autoOpen: false,
+	      height: 463,
+	      width: 587,
+	      modal: true
+	});
+	
+	$('#J_forgetpass_form').dialog({
+	      autoOpen: false,
+	      height: 308,
+	      width: 587,
+	      modal: true
+	});
+	
+	$('.J_signin_close').click(function(){
+		$('#J_signin_form').dialog('close');
+	});
+	
+	$('.J_signup_close').click(function(){
+		$('#J_signup_form').dialog('close');
+	});
+	
+	$('.J_forgetpass_close').click(function(){
+		$('#J_forgetpass_form').dialog('close');
+	});
+	
+	$('.regbtn').mouseover(function(){
+		if (!$(this).hasClass('J_forgetpass_submit')) {
+			$('.reglogin-bd').addClass('regon');
+		}
+	});
+	
+	$('.regbtn').mouseout(function(){
+		$('.reglogin-bd').removeClass('regon');
+	});
+	
+	$('#verifyImg').click(function(){
+		var timenow = new Date().getTime();
+		$(this).attr("src", APP+'Verify?'+timenow);
+
+	});
+	
+	$('.J_signin_submit').click(function(){
+		
+		var username = $('#J_signin_user').val();
+		var password = $('#J_signin_password').val();
+		var auto_login = $('#auto_login').attr('checked');
+		
+		if (!username || username == '帐号') {
+			
+			alert('帐号不能为空');
+			return false;
+		}
+		
+		if (!password) {
+			alert('密码不能为空');
+			return false;
+		}
+		
+		var data = {"username":username,"password":password,"auto_login": (auto_login=='checked' ? 1 : 0)};
+		
+		$.post(APP + "Members/Login/checkLogin", data, 
+			function(data){
+				if ( data.indexOf("loginOK") >= 0 ) {
+	                if(window.opener){
+	                    window.opener.location.reload();
+	                }
+					window.location.href = APP+"Index";
+				}else{
+					alert(data);
+				}
+			}); 
+	});
+	
+	$('.J_signup_submit').click(function(){
+		
+		var username = $('#J_signup_user').val();
+		var password = $('#J_signup_password').val();
+		var repassword = $('#J_signup_repassword').val();
+		var verify = $('#vcode').val();
+		
+		if (!username || username == '昵称') {
+			
+			alert('昵称不能为空');
+			return false;
+		}
+		
+		if (!password) {
+			alert('密码不能为空');
+			return false;
+		}
+		
+		if (password != repassword) {
+			alert('密码不一致');
+			return false;
+		}
+		
+		if (!verify) {
+			alert('验证码不能为空');
+			return false;
+		}
+		
+		var data = {"nickname":username,"password":password,"verify":verify};
+		
+		$.post(APP + "Members/Register/saveReg", data, 
+			function(data){
+				if ( data.indexOf("regOK") >= 0 ) {
+					window.location.href = APP+"Members/Index/";
+				} else {
+					alert(data);
+				}
+		}); 
+	});
+	
+	$('.J_forgetpass_submit').click(function(){
+		
+		var email = $('#J_forgetpass_email').val();
+		if (!email) {
+			alert("请输入邮箱");
+			return false;
+		}
+		var result = email.match(/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/);
+		if (result == null) {
+			alert("请正确输入邮箱.");
+			return false;
+		}
+		
+		$.post(URL + "/missPwd", {
+			email: email
+			}, 
+			function(data){
+				if ( data.indexOf("sendOK") >= 0 ) {
+					var mailserver = data.split('|');
+					alert("请进入您的账户邮箱获取新密码。");
+					
+					window.open("http://" + mailserver[1]);
+				}else {
+					alert(data);
+				}
+			});
+	});
 });
 
 // 设为首页

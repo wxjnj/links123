@@ -7,6 +7,12 @@ $('#J_apps_add').click(function(){
 $('#J_weather').click(function(){
 	alert('Coming soon...');
 });
+$('.ting').click(function(){
+	alert('Coming soon...');
+});
+$('.liao').click(function(){
+	alert('Coming soon...');
+});
 	
 /** $计算器 * */
 $('#J_calc').click(function(){
