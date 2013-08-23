@@ -216,7 +216,7 @@ function bindLinksCollectEvent() {
 		if (typeof(label.text()) == "undefined" || label.text() == "") {
 			num = 0;
 		}
-		$.post(APP + "Member/saveCollect", {
+		$.post(APP + "Members/Collection/saveCollect", {
 			lnk_id: $(this).attr('lnk_id'),
 			link: $(this).attr('link')
 		},
