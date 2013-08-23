@@ -203,9 +203,7 @@ class IndexAction extends CommonAction {
 		$check_url = $_SERVER['HTTP_REFERER'];
 		if ($check_url != '') {
 			$check_url = parse_url($check_url);
-			if ($check_url[host] != 'links123.net' && $check_url[host] != 'links123.cn') {		
-				exit();
-			} else {
+			if ($check_url[host] == 'links123.net' || $check_url[host] == 'links123.cn') {
 				echo '<style type="text/css">a{display:none}</style>
 				<script src="http://s96.cnzz.com/stat.php?id=4907803&web_id=4907803" language="JavaScript"></script>
 				<script type="text/javascript">window.location.href="http://' . $url . '";</script>';
