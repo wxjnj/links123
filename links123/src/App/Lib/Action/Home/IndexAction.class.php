@@ -199,13 +199,22 @@ class IndexAction extends CommonAction {
 			$linkModel = D("Links");
 			$flag = $linkModel->where("link = '%s'", $url)->setInc("click_num");
 		}
-		
-		//避免任意网址跳转漏洞
-		//if ($flag) {
-			echo '<style type="text/css">a{display:none}</style>
-				  <script src="http://s96.cnzz.com/stat.php?id=4907803&web_id=4907803" language="JavaScript"></script>
-				  <script type="text/javascript">window.location.href="http://' . $url . '";</script>';
-		//}
+		echo "<pre>";
+		print_r($_SERVER);
+		echo "</pre>";
+		exit;
+		$check_url = $_SERVER['HTTP_REFERER'];
+		if ($check_url != '') {
+			$check_url = parse_url($check_url);
+			if ($check_url[host] != 'links123.net' && $check_url[host] != 'links123.cn') {
+				
+				exit();
+			} else {
+				echo '<style type="text/css">a{display:none}</style>
+				<script src="http://s96.cnzz.com/stat.php?id=4907803&web_id=4907803" language="JavaScript"></script>
+				<script type="text/javascript">window.location.href="http://' . $url . '";</script>';
+			}
+		}
 	}
 	
 	/**
