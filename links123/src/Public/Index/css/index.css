@@ -273,6 +273,16 @@ a,a:hover{ text-decoration: none; }
 .zld .tools:hover{
 	background-position: -40px 0;
 }
+.zld .close{
+	background: url(../imgs/exit.png) 0 0 no-repeat;
+	float: right;
+	display: none;
+	height: 15px;
+	width: 31px;
+	text-indent: -999px;
+	overflow: hidden;
+	margin: 11px;
+}
 .zld ul{
 	*zoom: 1;
 	width: 920px;
@@ -342,6 +352,8 @@ a,a:hover{ text-decoration: none; }
 }
 .zld-edit-box .nm{ width: 210px; }
 .zld-edit-box .url{ width: 310px; }
+.zld-edit .tools{ display: none; }
+.zld-edit .close{ display: block; }
 
 /*自留地 编辑状态*/
 .zld-edit  .guide{
@@ -429,7 +441,6 @@ a,a:hover{ text-decoration: none; }
 	display: block;
 	height: 74px;
 	margin: 0 auto;
-	overflow: hidden;
 	position: relative;
 	width: 75px;
 }
@@ -438,11 +449,11 @@ a,a:hover{ text-decoration: none; }
 	background: url(../imgs/close2.png) 0 0 no-repeat;
 	display: block;
 	height: 15px;
-	left: 6px;
+	left: -2px;
 	overflow: hidden;
 	position: absolute;
 	text-indent: -999px;
-	top: 6px;
+	top: -2px;
 	width: 15px;
 }
 .apps .img a:hover{
