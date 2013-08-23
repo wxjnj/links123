@@ -201,11 +201,11 @@ class IndexAction extends CommonAction {
 		}
 		
 		//避免任意网址跳转漏洞
-		if ($flag) {
+		//if ($flag) {
 			echo '<style type="text/css">a{display:none}</style>
 				  <script src="http://s96.cnzz.com/stat.php?id=4907803&web_id=4907803" language="JavaScript"></script>
 				  <script type="text/javascript">window.location.href="http://' . $url . '";</script>';
-		}
+		//}
 	}
 	
 	/**
@@ -217,39 +217,29 @@ class IndexAction extends CommonAction {
 	 * @author Frank UPDATE 2013-08-20
 	 */
 	public function updateArealist() {
-		$updated = false;
+		
 		$url = $this->_param('url');
 		$webname = $this->_param('web_name');
 		$id = $this->_param('id');
 		
-		foreach ($_SESSION['arealist'] as $key => $value) {	
-			if ($value['url'] == $url) {
-				echo "该链接已存在！";
-				exit(0);
-			}
-			
-			if ($value['id'] == $id) {
-				$_SESSION['arealist'][$key]['web_name'] = $webname;
-				$_SESSION['arealist'][$key]['url'] = $url;
-				$updated = true;
-				break;
-			}
-		}
+		$_SESSION['arealist'][$id]['web_name'] = $webname;
+		$_SESSION['arealist'][$id]['url'] = $url;
 		
 		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+		
+		$result = true;
+		$reason = "updateOK";
 		
 		if ($user_id) {
 			$myarea = M("Myarea");
 			$list = $myarea->where("mid = '%d'", $user_id)->order('sort')->select();	
 			$myarea->startTrans();
-			$result = true;
-			$reason = "未知";
 			
 			$now = time();
 			$data['mid'] = $user_id;
 			$data['create_time'] = $now;
 			if (empty($list)) {
-				foreach ($_SESSION['arealist'] as &$value) {
+				foreach ($_SESSION['arealist'] as $value) {
 					$data['web_name'] = $value['web_name'];
 					$data['url'] = $value['url'];
 					if (false === $myarea->add($data)) {
@@ -259,19 +249,17 @@ class IndexAction extends CommonAction {
 					}
 				}
 			} else {
-				foreach ($list as $key => $value) {
-					Log::write('session：' . $_SESSION['arealist'][$key]['web_name'], Log::SQL);
-					$value['web_name'] = $_SESSION['arealist'][$key]['web_name'];
-					$value['url'] = $_SESSION['arealist'][$key]['url'];
 					
-					if (!$value['web_name'] || !$value['url']) continue;
-					
-					$value['create_time'] = $now;
-					if (false === $myarea->save($value)) {
-						$result = false;
-						Log::write('更新我的地盘失败：' . $myarea->getLastSql(), Log::SQL);
-						$reason = '保存我的地盘失败！';
-					}
+				$saveData = array(
+						'url' => $url,
+						'web_name' => $webname,
+						'create_time' => $now
+				);
+				
+				if (false === $myarea->save($saveData, array('id' => $id, 'mid' => $user_id))) {
+					$result = false;
+					Log::write('更新我的地盘失败：' . $myarea->getLastSql(), Log::SQL);
+					$reason = '保存我的地盘失败！';
 				}
 			}
 			
@@ -279,15 +267,10 @@ class IndexAction extends CommonAction {
 				$myarea->commit();
 			} else {
 				$myarea->rollback();
-				echo $reason;
 			}
 		}
 		
-		if ($updated) {
-			echo "updateOK";
-		} else {
-			echo $_SESSION['arealist'] ? '无更新内容！' : 'updateOK';
-		}
+		echo $reason;
 	}
 	/**
 	 * @name sortArealist

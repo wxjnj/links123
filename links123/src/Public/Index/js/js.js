@@ -83,25 +83,20 @@ $(function() {
 			left = left1;
 		} else {
 			left = left1;
+			$('#J_thl_div').hide();
 		}
         
         $("#J_thl_div").css("top", top);
         //$("#J_thl_div").css("left", left);
 	}
 	
-	//显示糖葫芦
-	function thl_show() {
-		if ( !$("#J_thl_div:visible")[0] ) {
-			setThlPnt();
-			$("#J_thl_div").css("display", "block");
-		}
-	}
-	//隐藏糖葫芦
-	function thl_hid() {
-		if ( $("#J_thl_div:visible")[0] ) {
-			$("#J_thl_div").css("display", "none");
-		}
-	}
+	$('.thl').mouseover(function(){
+		$('#J_thl_div').show();
+	});
+	
+	$('.thl').mouseleave(function(){
+		$('#J_thl_div').hide();
+	});
 	
     //糖葫芦籽点击
     $(".J_thlz a").click(function(){
@@ -146,8 +141,8 @@ $(function() {
 	});
 	
 	$("#search_text").keyup(function(){
+		$('#J_thl_div').show();
 		setThlPnt();
-		thl_show();
 	});
 	
 	// 回车键响应 
@@ -271,10 +266,11 @@ $(function() {
     });
 	
 	//保存自留地
-	$('.guide').click(function() {
+	$('.J_myarea_close').click(function() {
 		$('#J_sortable').sortable('disable');
 		$('.J_myarea_div').removeClass('zld-edit');
 		$('.J_myarea_div ul li a').addClass('newWin');
+		$('.J_zld_edit_box').hide();
 	});
 	
 	//自留地hover状态
@@ -293,15 +289,23 @@ $(function() {
 	
 	//保存自留地网址
 	$('.J_myarea_web_save').click(function() {
+		var id = $('#J_myarea_id').val();
+		var web_name= $('#J_myarea_web_name').val();
+		var url= $('#J_myarea_web_url').val();
 		$.post(URL + "/updateArealist", {
-		        id: $('#J_myarea_id').val(),
-		        web_name: $('#J_myarea_web_name').val(),
-		        url: $('#J_myarea_web_url').val()
+		        id: id,
+		        web_name: web_name,
+		        url: url
 		    },
 		    function(data) {
 		        if (data.indexOf("updateOK") >= 0) {
 		        	$('.J_zld_edit_box').hide();
-		        	alert('保存成功！');
+		        	var myarea_web_obj = $('.J_myarea_div ul li[id="'+id+'"] a');
+		        	myarea_web_obj.text(web_name);
+		        	var new_url = myarea_web_obj.attr('url').replace(myarea_web_obj.attr('data-url'), url);
+		        	myarea_web_obj.attr('url', new_url);
+		        	myarea_web_obj.attr('data-url', url);
+		        	//alert('保存成功！');
 		        }
 		        else {
 		            alert(data);
