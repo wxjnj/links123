@@ -485,7 +485,7 @@ a,a:hover{ text-decoration: none; }
 	cursor: pointer;
 }
 .apps .img span b{ display: none; }
-.apps .img span:hover b{
+/**.apps .img span:hover b{
 	background: url(../imgs/close.png) 0 0 no-repeat;
 	display: block;
 	height: 15px;
@@ -495,7 +495,7 @@ a,a:hover{ text-decoration: none; }
 	text-indent: -999px;
 	top: -2px;
 	width: 15px;
-}
+}**/
 .apps .img span:hover{
 	background-position: 0 0;
 }
