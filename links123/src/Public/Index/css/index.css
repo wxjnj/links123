@@ -446,7 +446,7 @@ a,a:hover{ text-decoration: none; }
 }
 .apps .img a b{ display: none; }
 .apps .img a:hover b{
-	background: url(../imgs/close2.png) 0 0 no-repeat;
+	background: url(../imgs/close.png) 0 0 no-repeat;
 	display: block;
 	height: 15px;
 	left: -2px;
