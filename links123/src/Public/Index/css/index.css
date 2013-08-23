@@ -1,4 +1,4 @@
-body{ background: url("../imgs/skins/bg1.jpg") repeat-x scroll center top transparent; }
+body{ background: url(../imgs/skins/bg1.jpg) repeat-x scroll center top transparent; }
 input:focus{ outline: 0; }
 a,a:hover{ text-decoration: none; }
 .top{
@@ -47,6 +47,8 @@ a,a:hover{ text-decoration: none; }
 	width: 128px;
 	z-index: 3;
 }
+.coffee:hover{ background-position: -128px 0; }
+
 /*分辨率宽度*/
 .w1000 .wrap,
 .w1000 .top-inner,
