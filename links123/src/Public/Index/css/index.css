@@ -1,4 +1,4 @@
-body{ background: url(../imgs/skins/skin001.jpg) center top; }
+body{ background: url("../imgs/skins/bg1.jpg") repeat-x scroll center top transparent; }
 input:focus{ outline: 0; }
 a,a:hover{ text-decoration: none; }
 .top{
@@ -170,6 +170,7 @@ a,a:hover{ text-decoration: none; }
 	top: 64px;
 	left: 80px;
 	width: 280px;
+	display: none;
 }
 .thl .cate li{
 	float: left;
