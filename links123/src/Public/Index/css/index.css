@@ -36,7 +36,7 @@ a,a:hover{ text-decoration: none; }
 }
 .wrap{ margin-bottom: 100px; }
 .coffee{
-	background: url(../imgs/coffee.png) 0 0 no-repeat;
+	background: url(../imgs/coffee.png?20130823) 0 0 no-repeat;
 	bottom: 10px;
 	display: block;
 	height: 125px;
