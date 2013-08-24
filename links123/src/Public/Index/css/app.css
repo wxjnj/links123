@@ -737,7 +737,10 @@ div.gt-baf-translations {
 .ui-dialog .ui-dialog-title {
 	display: none;
 }
-
+.ui-widget-overlay {
+    background: none repeat scroll 0 0 #000000;
+    opacity: 0.5;
+}
 .box_stikynot_tip {
 	float: left; position: absolute; left: 180px;display: none;color: yellow;
 }

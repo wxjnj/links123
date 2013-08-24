@@ -17,7 +17,7 @@ $('.liao').click(function(){
 /** $计算器 * */
 $('#J_calc').click(function(){
 	
-	$('#J_calc_iframe').attr('src', 'http://app.yesky.com/cms/jsq/');
+	$('#J_calc_iframe').attr('src', 'http://qiqiapp3.duapp.com/yuyinjisuanqi/');
 	
 	$.fancybox({
 		href: '#J_box_calc',
