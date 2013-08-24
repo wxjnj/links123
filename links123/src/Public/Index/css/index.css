@@ -645,7 +645,7 @@ a,a:hover{ text-decoration: none; }
 	text-decoration: underline;
 }
 .reglogin .regbtn{
-	background: url(../imgs/regloginbtn.png) 0 0 no-repeat;
+	background: url(../imgs/regloginbtn.png?20130824) 0 0 no-repeat;
 	cursor: pointer;
 	border: 0 none;
 	width: 317px;
