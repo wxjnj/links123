@@ -757,7 +757,7 @@ class IndexAction extends CommonAction {
 			}
 		}
 		
-		foreach ($aimList as $value) {
+		foreach ($aimList as &$value) {
 			if (empty($value['notlink'])) {
 				$value["more"] = 0;
 				if (empty($value["logo"])) {

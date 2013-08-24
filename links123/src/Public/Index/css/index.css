@@ -340,7 +340,7 @@ a,a:hover{ text-decoration: none; }
 	height: 30px;
 	line-height: 26px;
 	margin: 20px 0 0 200px;
-	width: 760px;
+	width: 100%;
 	display: none;
 }
 .zld-edit-box .btnok{
@@ -371,6 +371,10 @@ a,a:hover{ text-decoration: none; }
 .zld-edit-box .url{ width: 310px; }
 .zld-edit .tools{ display: none; }
 .zld-edit .close{ display: block; }
+.zld-edit-box .tip{
+	color: #FF0000;
+	display: none;
+}
 
 /*自留地 编辑状态*/
 .zld-edit  .guide{

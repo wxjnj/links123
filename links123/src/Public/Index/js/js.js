@@ -285,6 +285,11 @@ $(function() {
 		$('#J_myarea_web_name').val($(this).text());
 		$('#J_myarea_web_url').val($(this).attr('data-url'));
 		$('.J_zld_edit_box').show();
+		$('#J_myarea_web_name').select();
+	});
+	
+	$('#J_myarea_web_url').mouseover(function() {
+		$(this).select();
 	});
 	
 	//保存自留地网址
@@ -299,16 +304,22 @@ $(function() {
 		    },
 		    function(data) {
 		        if (data.indexOf("updateOK") >= 0) {
-		        	$('.J_zld_edit_box').hide();
 		        	var myarea_web_obj = $('.J_myarea_div ul li[id="'+id+'"] span');
 		        	myarea_web_obj.text(web_name);
 		        	var new_url = myarea_web_obj.attr('url').replace(myarea_web_obj.attr('data-url'), url);
 		        	myarea_web_obj.attr('url', new_url);
 		        	myarea_web_obj.attr('data-url', url);
-		        	//alert('保存成功！');
+		        	$('#J_myarea_tip').text('保存成功!');
+		        	$('#J_myarea_tip').show();
+
 		        } else {
-		            alert(data);
+		            $('#J_myarea_tip').text('保存成功!');
+		        	$('#J_myarea_tip').show();
 		        }
+		        setTimeout(function(){
+		        	$('#J_myarea_tip').hide();
+	        		$('.J_zld_edit_box').hide();
+	        	}, 2000);
 	    });
 	});
 	
@@ -317,6 +328,7 @@ $(function() {
 		 $('#J_signin_form').dialog('open');
 		 $('.reglogin').show();
 		 $('.ui-dialog-titlebar').hide();
+		 $('#J_signin_user').select();
 		 return false;
 	});
 	
@@ -327,6 +339,8 @@ $(function() {
 		 $('#J_signup_form').dialog('open');
 		 $('.reglogin').show();
 		 $('.ui-dialog-titlebar').hide();
+		 $('#J_signup_user').select();
+		 
 		 return false;
 	});
 	
@@ -335,6 +349,8 @@ $(function() {
 		 $('#J_forgetpass_form').dialog('open');
 		 $('.reglogin').show();
 		 $('.ui-dialog-titlebar').hide();
+		 $('#J_forgetpass_email').select();
+		 
 		 return false;
 	});
 	
@@ -342,7 +358,7 @@ $(function() {
 	      autoOpen: false,
 	      height: 463,
 	      width: 587,
-	      modal: true
+	      modal: true,
 	});
 	
 	$('#J_signup_form').dialog({
@@ -485,6 +501,35 @@ $(function() {
 					alert(data);
 				}
 			});
+	});
+	
+
+	$('#J_signin_password').keypress(function(event) {
+		if (event.keyCode == 13) {
+			$(".J_signin_submit").trigger("click");
+			return false;
+		}
+	});
+
+	$('#verifyImg').keypress(function(event) {
+		if (event.keyCode == 13) {
+			$(".J_signup_submit").trigger("click");
+			return false;
+		}
+	});
+
+	$('#J_forgetpass_email').keypress(function(event) {
+		if (event.keyCode == 13) {
+			$(".J_forgetpass_submit").trigger("click");
+			return false;
+		}
+	});
+
+	$('#J_myarea_web_url').keypress(function(event) {
+		if (event.keyCode == 13) {
+			$(".J_myarea_web_save").trigger("click");
+			return false;
+		}
 	});
 });
 
