@@ -78,7 +78,9 @@
 				<span class="close J_myarea_close">关闭编辑</span>
 				<ul id="J_sortable">
 					<volist name="_SESSION['arealist']" id="vo">
+					<if condition="$vo['id'] neq ''">
 						<li id="{$vo.id}"><span url="{:U('Index/link_out')}?mod=myarea&url={$vo.url}"  class="newWin" data-id="{$vo.id}" data-url="{$vo.url}">{$vo.web_name}</span></li>
+					</if>
 					</volist>
 				</ul>
 				<div class="zld-edit-box J_zld_edit_box">

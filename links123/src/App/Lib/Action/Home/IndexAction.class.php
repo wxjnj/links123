@@ -228,8 +228,12 @@ class IndexAction extends CommonAction {
 		$webname = $this->_param('web_name');
 		$id = $this->_param('id');
 		
-		$_SESSION['arealist'][$id]['web_name'] = $webname;
-		$_SESSION['arealist'][$id]['url'] = $url;
+		foreach ($_SESSION['arealist'] as $key => $value) {
+			if ($id == $value['id']) {
+				$_SESSION['arealist'][$key]['url'] = $url;
+				$_SESSION['arealist'][$key]['web_name'] = $webname;
+			}
+		}
 		
 		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
 		
