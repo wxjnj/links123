@@ -71,23 +71,23 @@ $(function() {
 	
 	//调整糖葫芦位置
 	function setThlPnt() {
-       
-		var top = 64;
-        var left1 = $("#search_text").offset().left + ($("#search_text").width() - $("#J_thl_div").width())/2;
-        var left2 = $("#search_text").offset().left + ($("#search_text").width() - $("#J_thl_div").width()) - 1;
-        var left = 0;
-        
-        //当输入或复制的关键词触碰糖葫芦,糖葫芦就跳到搜索框下方
-        if ( $("#search_text").val() != "" ) {
-        	top = 85;
+	   
+		var top = 52;
+		var left1 = $("#search_text").offset().left + ($("#search_text").width() - $("#J_thl_div").width())/2;
+		var left2 = $("#search_text").offset().left + ($("#search_text").width() - $("#J_thl_div").width()) - 1;
+		var left = 0;
+		
+		//当输入或复制的关键词触碰糖葫芦,糖葫芦就跳到搜索框下方
+		if ( $("#search_text").val() != "" ) {
+			top = 80;
 			left = left1;
 		} else {
 			left = left1;
 			$('#J_thl_div').hide();
 		}
-        
-        $("#J_thl_div").css("top", top);
-        //$("#J_thl_div").css("left", left);
+
+		$("#J_thl_div").css("top", top);
+		//$("#J_thl_div").css("left", left);
 	}
 	
 	$('.thl').mouseover(function(){
@@ -98,32 +98,33 @@ $(function() {
 		$('#J_thl_div').hide();
 	});
 	
-    //糖葫芦籽点击
-    $(".J_thlz a").click(function(){
-    	
-            $(this).addClass("on").siblings("a").removeClass("on");
-            
-            $("#btn_search").trigger("click");
-    });
-            
-	//糖葫芦点击
-	$("#J_thl_div a").click(function(){
-        
+	//糖葫芦籽点击
+	$(".J_thlz a").click(function(){
+		
 		$(this).addClass("on").siblings("a").removeClass("on");
 		
-        var index = $(this).index();
-        
-        $(".J_thlz:eq(" + index + ")").show().siblings(".J_thlz").hide();
-        
-        $(".J_thlz a").removeClass("on");
-        $(".J_thlz:eq(" + index + ")").find("a:first").addClass("on");
-        
-        return false;
+		$("#btn_search").trigger("click");
+
+	});
+			
+	//糖葫芦点击
+	$("#J_thl_div a").click(function(){
+		
+		$(this).addClass("on").siblings("a").removeClass("on");
+		
+		var index = $(this).index();
+		
+		$(".J_thlz:eq(" + index + ")").show().siblings(".J_thlz").hide();
+		
+		$(".J_thlz a").removeClass("on");
+		$(".J_thlz:eq(" + index + ")").find("a:first").addClass("on");
+		
+		return false;
 	});
 	
 	// F5清key
 	$(document).keydown(function(event){
-		if (event.keyCode == 116) {	// F5
+		if (event.keyCode == 116) { // F5
 			$.cookies.set( 'keyword', '');
 		}
 	});
@@ -147,13 +148,13 @@ $(function() {
 	
 	// 回车键响应 
 	$("#search_text").keypress(function(event){
-    	  if(event.keyCode==13) {
-    		  //$(this).select();
-    		  $("#btn_search").trigger("click");
-    		  $("#search_text").select();
-    		  return false;
-    	  }
-    });
+		  if(event.keyCode==13) {
+			  //$(this).select();
+			  $("#btn_search").trigger("click");
+			  $("#search_text").select();
+			  return false;
+		  }
+	});
 	
 	//
 	$("#search_text").mouseover(function(){
@@ -182,7 +183,7 @@ $(function() {
 				var fw_right = fw_left + 700;
 				if ( ev.pageX > fw_left && ev.pageX < fw_right && ev.pageY > fw_top && ev.pageY < fw_bottom ) {
 					return;
-				}				
+				}               
 			}
 		}
 		//
@@ -261,9 +262,9 @@ $(function() {
 
 				$.post(URL + '/sortArealist', {'area' : $(this).sortable('toArray')});
 		   }  
-	    });
+		});
 		$('#J_sortable').sortable('enable');
-    });
+	});
 	
 	//保存自留地
 	$('.J_myarea_close').click(function() {
@@ -298,29 +299,29 @@ $(function() {
 		var web_name= $('#J_myarea_web_name').val();
 		var url= $('#J_myarea_web_url').val();
 		$.post(URL + "/updateArealist", {
-		        id: id,
-		        web_name: web_name,
-		        url: url
-		    },
-		    function(data) {
-		        if (data.indexOf("updateOK") >= 0) {
-		        	var myarea_web_obj = $('.J_myarea_div ul li[id="'+id+'"] span');
-		        	myarea_web_obj.text(web_name);
-		        	var new_url = myarea_web_obj.attr('url').replace(myarea_web_obj.attr('data-url'), url);
-		        	myarea_web_obj.attr('url', new_url);
-		        	myarea_web_obj.attr('data-url', url);
-		        	$('#J_myarea_tip').text('保存成功!');
-		        	$('#J_myarea_tip').show();
+				id: id,
+				web_name: web_name,
+				url: url
+			},
+			function(data) {
+				if (data.indexOf("updateOK") >= 0) {
+					var myarea_web_obj = $('.J_myarea_div ul li[id="'+id+'"] span');
+					myarea_web_obj.text(web_name);
+					var new_url = myarea_web_obj.attr('url').replace(myarea_web_obj.attr('data-url'), url);
+					myarea_web_obj.attr('url', new_url);
+					myarea_web_obj.attr('data-url', url);
+					$('#J_myarea_tip').text('保存成功!');
+					$('#J_myarea_tip').show();
 
-		        } else {
-		            $('#J_myarea_tip').text('保存成功!');
-		        	$('#J_myarea_tip').show();
-		        }
-		        setTimeout(function(){
-		        	$('#J_myarea_tip').hide();
-	        		$('.J_zld_edit_box').hide();
-	        	}, 2000);
-	    });
+				} else {
+					$('#J_myarea_tip').text('保存成功!');
+					$('#J_myarea_tip').show();
+				}
+				setTimeout(function(){
+					$('#J_myarea_tip').hide();
+					$('.J_zld_edit_box').hide();
+				}, 2000);
+		});
 	});
 	
 	//登录窗口
@@ -328,51 +329,58 @@ $(function() {
 		 $('#J_signin_form').dialog('open');
 		 $('.reglogin').show();
 		 $('.ui-dialog-titlebar').hide();
-		 $('#J_signin_user').select();
 		 return false;
 	});
 	
 	//注册窗口
 	$('.J_signup').click(function(){
-		 $('#J_signin_form').dialog('close');
-		 $("#verifyImg").trigger("click");
-		 $('#J_signup_form').dialog('open');
-		 $('.reglogin').show();
-		 $('.ui-dialog-titlebar').hide();
-		 $('#J_signup_user').select();
-		 
-		 return false;
+		$('#J_signin_form').dialog('close');
+		$("#verifyImg").trigger("click");
+		$('#J_signup_form').dialog('open');
+		$('.reglogin').show();
+		$('.ui-dialog-titlebar').hide();
+		return false;
 	});
 	
 	$('#J_forgetpass').click(function(){
-		 $('#J_signin_form').dialog('close');
-		 $('#J_forgetpass_form').dialog('open');
-		 $('.reglogin').show();
-		 $('.ui-dialog-titlebar').hide();
-		 $('#J_forgetpass_email').select();
-		 
-		 return false;
+		$('#J_signin_form').dialog('close');
+		$('#J_forgetpass_form').dialog('open');
+		$('.reglogin').show();
+		$('.ui-dialog-titlebar').hide();
+		return false;
 	});
 	
 	$('#J_signin_form').dialog({
-	      autoOpen: false,
-	      height: 463,
-	      width: 587,
-	      modal: true,
+		autoOpen: false,
+		height: 463,
+		width: 587,
+		modal: true,
+		resizable: false,
+		open: function(){
+			setTimeout(function(){$('#J_signin_user').select();}, 20);
+		}
 	});
 	
 	$('#J_signup_form').dialog({
-	      autoOpen: false,
-	      height: 463,
-	      width: 587,
-	      modal: true
+		autoOpen: false,
+		height: 463,
+		width: 587,
+		modal: true,
+		resizable: false,
+		open: function(){
+			setTimeout(function(){$('#J_signup_user').select();}, 20);
+		}
 	});
 	
 	$('#J_forgetpass_form').dialog({
-	      autoOpen: false,
-	      height: 308,
-	      width: 587,
-	      modal: true
+		autoOpen: false,
+		height: 308,
+		width: 587,
+		modal: true,
+		resizable: false,
+		open: function(){
+			setTimeout(function(){$('#J_forgetpass_email').select();}, 20);
+		}
 	});
 	
 	$('.J_signin_close').click(function(){
@@ -425,9 +433,9 @@ $(function() {
 		$.post(APP + "Members/Login/checkLogin", data, 
 			function(data){
 				if ( data.indexOf("loginOK") >= 0 ) {
-	                if(window.opener){
-	                    window.opener.location.reload();
-	                }
+					if(window.opener){
+						window.opener.location.reload();
+					}
 					window.location.href = APP+"Index";
 				}else{
 					alert(data);

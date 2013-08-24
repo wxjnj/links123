@@ -50,7 +50,7 @@ var stikynot_id = 1;
 var stikynot_max_id = 1;
 var _x,_y;// 鼠标离控件左上角的相对位置
 var _w = 350,_h=439;
-var _c = 'bg_y';
+var _c = 'bg_1';
 var isShowStikynot = false;
 
 $(document).on('click', '#J_stikynot', function(){
@@ -133,19 +133,22 @@ $(document).on('click', '.J_stikynot_add', function(){
 	stikynot += '<a href="#" title="新建便签" class="">add</a>';
 	stikynot += '</div>';
 	stikynot += '<div class="box_stikynot_color">';
-	stikynot += '<div class="box_stikynot_color_bar color_b" data-class="bg_b"></div>';
-	stikynot += '<div class="box_stikynot_color_bar color_g" data-class="bg_g"></div>';
-	stikynot += '<div class="box_stikynot_color_bar color_pink" data-class="bg_pink"></div>';
-	stikynot += '<div class="box_stikynot_color_bar color_p" data-class="bg_p"></div>';
-	stikynot += '<div class="box_stikynot_color_bar color_w" data-class="bg_w"></div>';
-	stikynot += '<div class="box_stikynot_color_bar color_y" data-class="bg_y"></div>';
+	stikynot += '<div class="box_stikynot_color_bar color_1" data-class="bg_1"></div>';
+	stikynot += '<div class="box_stikynot_color_bar color_2" data-class="bg_2"></div>';
+	stikynot += '<div class="box_stikynot_color_bar color_3" data-class="bg_3"></div>';
+	// stikynot += '<div class="box_stikynot_color_bar color_b" data-class="bg_b"></div>';
+	// stikynot += '<div class="box_stikynot_color_bar color_g" data-class="bg_g"></div>';
+	// stikynot += '<div class="box_stikynot_color_bar color_pink" data-class="bg_pink"></div>';
+	// stikynot += '<div class="box_stikynot_color_bar color_p" data-class="bg_p"></div>';
+	// stikynot += '<div class="box_stikynot_color_bar color_w" data-class="bg_w"></div>';
+	// stikynot += '<div class="box_stikynot_color_bar color_y" data-class="bg_y"></div>';
 	stikynot += '</div>';
 	stikynot += '<div class="box_stikynot_bar box_stikynot_del J_stikynot_del">';
 	stikynot += '<a href="#" title="删除便签" class="">del</a>';
 	stikynot += '</div>';
 	stikynot += '<div style="clear: float;"></div>';
 	stikynot += '</div>';
-	stikynot += '<div class="box_stikynot_text"><textarea name="text" class="J_stikynot_text bg_y"';
+	stikynot += '<div class="box_stikynot_text"><textarea name="text" class="J_stikynot_text bg_1"';
 	stikynot += '></textarea></div>';
 	stikynot += '</div>';
 	
@@ -158,13 +161,14 @@ $(document).on('click', '.J_stikynot_add', function(){
 		title:'',
 		width: _w,
 		height: _h,
-		minWidth: 350,
+		minWidth: 370,
 		minHeight: 441,
 		position: [_x, _y]
 	});
 	
 	stikynot_id = stikynot_max_id;
-	$('.ui-dialog').resizable({ alsoResize: '.box_stikynot_head,.box_stikynot_text,.J_stikynot_text',autoHide: true });  
+	$('.ui-dialog').resizable({ alsoResize: '.box_stikynot_head,.box_stikynot_text,.J_stikynot_text',autoHide: true }); 
+	return false;
 });
 
 //save stikynot
@@ -178,6 +182,7 @@ $(document).on('click', '.J_stikynot_del', function(){
 	stikynot_id = $(this).parents('.J_box_stikynot').attr('data-id');
 	$('#J_box_stikynot_' + stikynot_id).find('.J_stikynot_text').val('');
 	$.cookies.set('stikynot' + stikynot_id, '');
+	return false;
 });
 
 function stikynotShow(stikynot_id, x, y, w, h, _t, c) {
@@ -191,12 +196,15 @@ function stikynotShow(stikynot_id, x, y, w, h, _t, c) {
 			stikynot += '<a href="#" title="新建便签" class="">add</a>';
 			stikynot += '</div>';
 			stikynot += '<div class="box_stikynot_color">';
-			stikynot += '<div class="box_stikynot_color_bar color_b" data-class="bg_b"></div>';
-			stikynot += '<div class="box_stikynot_color_bar color_g" data-class="bg_g"></div>';
-			stikynot += '<div class="box_stikynot_color_bar color_pink" data-class="bg_pink"></div>';
-			stikynot += '<div class="box_stikynot_color_bar color_p" data-class="bg_p"></div>';
-			stikynot += '<div class="box_stikynot_color_bar color_w" data-class="bg_w"></div>';
-			stikynot += '<div class="box_stikynot_color_bar color_y" data-class="bg_y"></div>';
+			stikynot += '<div class="box_stikynot_color_bar color_1" data-class="bg_1"></div>';
+			stikynot += '<div class="box_stikynot_color_bar color_2" data-class="bg_2"></div>';
+			stikynot += '<div class="box_stikynot_color_bar color_3" data-class="bg_3"></div>';
+			// stikynot += '<div class="box_stikynot_color_bar color_b" data-class="bg_b"></div>';
+			// stikynot += '<div class="box_stikynot_color_bar color_g" data-class="bg_g"></div>';
+			// stikynot += '<div class="box_stikynot_color_bar color_pink" data-class="bg_pink"></div>';
+			// stikynot += '<div class="box_stikynot_color_bar color_p" data-class="bg_p"></div>';
+			// stikynot += '<div class="box_stikynot_color_bar color_w" data-class="bg_w"></div>';
+			// stikynot += '<div class="box_stikynot_color_bar color_y" data-class="bg_y"></div>';
 			stikynot += '</div>';
 			stikynot += '<div class="box_stikynot_bar box_stikynot_del J_stikynot_del">';
 			stikynot += '<a href="#" title="删除便签" class="">del</a>';
@@ -219,7 +227,7 @@ function stikynotShow(stikynot_id, x, y, w, h, _t, c) {
 		title:'',
 		width: w ? w : _w,
 		height: h ? h : _h,
-		minWidth: 350,
+		minWidth: 370,
 		minHeight: 441,
 		position: (x && y) ? [x, y] : '',
 		open : function(e, ui){
@@ -292,12 +300,12 @@ $(document).on('click', '.box_stikynot_color_bar', function(){
 	
 	stikynotSave(stikynot_id, 0, 0, 0, 0, '', _c);
 });
-$(document).on('mouseover', '.box_stikynot_color_bar', function(){
-	$(this).css('opacity', '1');
-});
-$(document).on('mouseout', '.box_stikynot_color_bar', function(){
-	$('.box_stikynot_color_bar').css('opacity', '0.5');
-});
+// $(document).on('mouseover', '.box_stikynot_color_bar', function(){
+// 	$(this).css('opacity', '1');
+// });
+// $(document).on('mouseout', '.box_stikynot_color_bar', function(){
+// 	$('.box_stikynot_color_bar').css('opacity', '0.5');
+// });
 /** 便签$ **/
 
 /** $闹钟 **/
