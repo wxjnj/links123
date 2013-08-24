@@ -868,7 +868,7 @@ div.gt-baf-translations {
 	right: -14px;
 }
 .ui-draggable .ui-dialog-titlebar{
-   
 	border-bottom-right-radius: 0;
 	border-bottom-left-radius: 0;
 }
+.ui-front{ z-index: 9999; }
