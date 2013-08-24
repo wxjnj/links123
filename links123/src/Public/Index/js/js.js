@@ -352,7 +352,7 @@ $(function() {
 	
 	$('#J_signin_form').dialog({
 		autoOpen: false,
-		height: 463,
+		height: 478,
 		width: 587,
 		modal: true,
 		resizable: false,
@@ -363,7 +363,7 @@ $(function() {
 	
 	$('#J_signup_form').dialog({
 		autoOpen: false,
-		height: 463,
+		height: 478,
 		width: 587,
 		modal: true,
 		resizable: false,
@@ -374,7 +374,7 @@ $(function() {
 	
 	$('#J_forgetpass_form').dialog({
 		autoOpen: false,
-		height: 308,
+		height: 323,
 		width: 587,
 		modal: true,
 		resizable: false,
