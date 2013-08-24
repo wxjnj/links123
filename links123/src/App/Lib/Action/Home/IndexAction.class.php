@@ -690,6 +690,13 @@ class IndexAction extends CommonAction {
 		
 		$condition['status'] = 1;
 		
+		$memberAuthKey = intval($this->_session(C('MEMBER_AUTH_KEY')));
+		$paiLie = $this->_session('pailie');
+		if (empty($paiLie)) {
+			$paiLie = empty($memberAuthKey) ? M("Variable")->where("vname='pailie'")->getField("value_int") : M("Member")->where("id = '%s'", $memberAuthKey)->getField('pailie');
+			session('pailie', $paiLie);
+		}
+		
 		$lan = intval($this->_param('lan'));
 		if (!empty($lan)) {
 			$condition['language'] = $lan;
@@ -711,7 +718,7 @@ class IndexAction extends CommonAction {
 		$listRows = $_SESSION['pailie'] == 1 ? 20 : 11;
 		
 		$pg = intval($this->_param(C('VAR_PAGE')));
-		empty($pg) && $pg = 0;
+		$pg = max(1, $pg);
 		$rst = ($pg - 1) * $listRows;
 		
 		$links = M("Links");
@@ -746,7 +753,7 @@ class IndexAction extends CommonAction {
 			}
 		}
 		
-		foreach ($aimList as &$value) {
+		foreach ($aimList as $value) {
 			if (empty($value['notlink'])) {
 				$value["more"] = 0;
 				if (empty($value["logo"])) {
@@ -827,7 +834,7 @@ class IndexAction extends CommonAction {
 		if ($count > 0) {
 			import("@.ORG.Page");
 			$p = new Page($count, $listRows);
-			$page = $p->show_js();
+			$page = $p->show();
 			$this->assign("page", $page);
 		}
 		
