@@ -1,6 +1,6 @@
 <?php
 /**
- * @name AboutAction.class.php
+ * @name AboutAction
  * @package Home
  * @desc 关于我们
  * @author frank UPDATE 2013-08-17

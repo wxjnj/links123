@@ -2,3 +2,5 @@
 /.settings/
 /*.project
 /*.buildpath
+/links123/src/nbproject/
+/links123/src/App/Conf/debug.php

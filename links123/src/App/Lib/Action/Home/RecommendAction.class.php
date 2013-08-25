@@ -69,7 +69,7 @@ class RecommendAction extends CommonAction {
 	 */
 	private function getMyCats($flag = 1) {
 		$cat = M("Category");
-		$cats = $cat->field('id, cat_name, level')->where('status=1 and level=1')->order('sort ASC')->select();
+		$cats = $cat->field('id, cat_name, level')->where('status = 1 and level = 1')->order('sort ASC')->select();
 		foreach ($cats as &$value) {
 			switch ($value['id']) {
 				case 1:

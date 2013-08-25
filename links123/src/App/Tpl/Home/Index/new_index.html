@@ -18,19 +18,19 @@
 			<div class="syt">
 				<form  id="frm_drct" method="post" action="__APP__/Index/directUrl/" target="_blank">
 					<input class="ips" x-webkit-speech type="text" name="tag" id="direct_text" value="{$directTip}"  txt="{$directTip}" />
-					<input class="btn" type="submit" value="确定" />
+					<input class="btn" type="submit" value="" />
 				</form>
 			</div>
 			<div class="toplinks">
 				<ul class="uc">
 					<li><a href="/">首页</a></li>
 					<empty name="_SESSION[C('MEMBER_AUTH_KEY')]">
-						<li><a href="__APP__/Members/Login" target="_blank">登录</a></li>
-						<li><a href="__APP__/Members/Register" target="_blank">注册</a></li>
+						<li id="J_signin"><a href="#">登录</a></li>
+						<li class="J_signup"><a href="#">注册</a></li>
 					<else />
 						<li><a href="__APP__/Members/Index" target="_blank">{$Think.session.nickname}</a></li>
 						<li><a href="__APP__/Members/Index" target="_blank">个人中心</a></li>
-						<li><a href="__APP__/Members/Logout" target="_blank">退出</a></li>
+						<li><a href="__APP__/Members/Logout">退出</a></li>
 					</empty>
 					<li><a href="__APP__/Suggestion" <eq name="newSuggestion" value="1">style='color:#FF0000'</eq> >留言板</a></li>
 				</ul>
@@ -64,7 +64,7 @@
 					<div class="ctls" id="rch_sch">
 						<input type="text" id="search_text" class="ipt" x-webkit-speech lang="zh-CN" value="{$_COOKIE['keyword']}" autocomplete="off" />
 						<input type="hidden" id="search_text_o" />
-						<input class="btn" type="submit" value="搜索" id="btn_search" />
+						<input class="btn" type="submit" value="" id="btn_search" />
 						<ul id="tips"></ul>
 					</div>
 				</form>
@@ -75,9 +75,12 @@
 			<div class="zld J_myarea_div">
 				<p class="guide">点击编辑我的自留地</p>
 				<a href="javascript:void(0);" class="tools J_myarea">自留地</a>
+				<span class="close J_myarea_close">关闭编辑</span>
 				<ul id="J_sortable">
 					<volist name="_SESSION['arealist']" id="vo">
-						<li id="{$vo.id}"><a href="#" url="{:U('Index/link_out')}?mod=myarea&url={$vo.url}"  class="newWin" data-id="{$vo.id}" data-url="{$vo.url}">{$vo.web_name}</a></li>
+					<if condition="$vo['id'] neq ''">
+						<li id="{$vo.id}"><span url="{:U('Index/link_out')}?mod=myarea&url={$vo.url}"  class="newWin" data-id="{$vo.id}" data-url="{$vo.url}">{$vo.web_name}</span></li>
+					</if>
 					</volist>
 				</ul>
 				<div class="zld-edit-box J_zld_edit_box">
@@ -85,10 +88,11 @@
 						<input class="nm" type="hidden" id="J_myarea_id" />
 					网站名称 <input class="nm" type="text" id="J_myarea_web_name" />
 					网址 <input class="url" type="text" id="J_myarea_web_url" /><input class="btnok J_myarea_web_save" type="button" value="保存" />
+					<span id="J_myarea_tip" class="tip"></span>
 					</form>
 				</div>
 			</div>
-			<a target="_blank" class="englishcorner" href="#">英语角</a>
+			<a target="_blank" class="englishcorner" href="/English">英语角</a>
 		</div>
 		<div class="wrap-bd">
 			<div class="sider">
@@ -101,8 +105,6 @@
 							<li><a class="gg" href="#">看公告</a></li>
 							<li><a class="dm" href="#">看动漫</a></li>
 							<div class="annt">
-								<h2>{$ann_name}</h2>
-								<div class="annt_lie" id="annt">
 								    <ul>
 								    <volist name="announces" id="vo">
 										<li>
@@ -114,7 +116,6 @@
 										</li>
 									</volist>
 								    </ul>
-								</div>
 							</div>
 						</ul>
 					</div>
@@ -123,46 +124,43 @@
 			<div class="ct">
 				<div class="apps">
 					<ul>
-						<li class="newWin" url="/English">
-							<p class="img"><a href="javascript:void(0);"><img src="__PUBLIC__/Index/imgs/app/app001.png" alt="" /><b>X</b></a></p>
+						<li>
+							<p class="img"><span class="newWin" url="/English"><img src="__PUBLIC__/Index/imgs/app/app001.png" alt="" /><b>X</b></span></p>
 							<p class="nm"><a href="/English" target="_blank">英语角</a></p>
 						</li>
-						<li class="newWin" url="/Index/nav">
-							<p class="img"><a href="javascript:void(0);"><img src="__PUBLIC__/Index/imgs/app/app002.png" alt="" /><b>X</b></a></p>
-							<p class="nm"><a href="/Index/nav" target="_blank">导航</a></p>
-						</li>
 						<li id="J_mail" >
-							<p class="img"><a href="javascript:void(0);"><img src="__PUBLIC__/Index/imgs/app/app003.png" alt="" /><b>X</b></a></p>
-							<p class="nm"><a href="javascript:void(0);">邮箱</a></p>
+							<p class="img"><span><img src="__PUBLIC__/Index/imgs/app/app003.png" alt="" /><b>X</b></span></p>
+							<p class="nm"><span>邮箱</span></p>
 						</li>
 						<li id="J_calendar" >
-							<p class="img"><a href="javascript:void(0);"><img src="__PUBLIC__/Index/imgs/app/app004.png" alt="" /><b>X</b></a></p>
-							<p class="nm"><a href="javascript:void(0);">日历</a></p>
+							<p class="img"><span><img src="__PUBLIC__/Index/imgs/app/app004.png" alt="" /><b>X</b></span></p>
+							<p class="nm"><span>日历</span></p>
 						</li>
+						<li id="J_weather">
+							<p class="img"><span><img src="__PUBLIC__/Index/imgs/app/app005.png" alt="" /><b>X</b></span></p>
+							<p class="nm"><span>天气</span></p>
+						</li>
+						<li style="height:100px;"></li>
 						<li>
-							<p class="img"><a href="javascript:void(0);"><img src="__PUBLIC__/Index/imgs/app/app005.png" alt="" /><b>X</b></a></p>
-							<p class="nm"><a href="javascript:void(0);">天气</a></p>
-						</li>
-						<li class="newWin" url="/Thl/index?thl=搜&tid=1&q=">
-							<p class="img"><a href="javascript:void(0);"><img src="__PUBLIC__/Index/imgs/app/app006.png" alt="" /><b>X</b></a></p>
-							<p class="nm"><a href="/Thl/index?thl=搜&tid=1&q=" target="_blank">搜索</a></p>
+							<p class="img"><span class="newWin" url="/Index/nav"><img src="__PUBLIC__/Index/imgs/app/app002.png" alt="" /><b>X</b></span></p>
+							<p class="nm"><a href="/Index/nav" target="_blank">导航</a></p>
 						</li>
 						<li id="J_calc" >
-							<p class="img"><a href="javascript:void(0);"><img src="__PUBLIC__/Index/imgs/app/app007.png" alt="" /><b>X</b></a></p>
-							<p class="nm"><a href="javascript:void(0);">计算器</a></p>
+							<p class="img"><span><img src="__PUBLIC__/Index/imgs/app/app007.png" alt="" /><b>X</b></span></p>
+							<p class="nm"><span>计算器</span></p>
 						</li>
 						<li id="J_stikynot" >
-							<p class="img"><a href="javascript:void(0);"><img src="__PUBLIC__/Index/imgs/app/app008.png" alt="" /><b>X</b></a></p>
-							<p class="nm"><a href="javascript:void(0);">便签</a></p>
+							<p class="img"><span><img src="__PUBLIC__/Index/imgs/app/app008.png" alt="" /><b>X</b></span></p>
+							<p class="nm"><span>便签</span></p>
 						</li>
 						<li id="J_translate" >
-							<p class="img"><a href="javascript:void(0);"><img src="__PUBLIC__/Index/imgs/app/app009.png" alt="" /><b>X</b></a></p>
-							<p class="nm"><a href="javascript:void(0);">翻译</a></p>
+							<p class="img"><span><img src="__PUBLIC__/Index/imgs/app/app009.png" alt="" /><b>X</b></span></p>
+							<p class="nm"><span>翻译</span></p>
 						</li>
-						<li>
+						<!-- <li id="J_apps_add">
 							<p class="img"><a href="javascript:void(0);"><img src="__PUBLIC__/Index/imgs/app/app-add.png" alt="" /></a></p>
 							<p class="nm"><a href="javascript:void(0);">添加应用</a></p>
-						</li>
+						</li> -->
 					</ul>
 				</div>
 			</div>
@@ -175,9 +173,10 @@
 				<ul>
 					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-skin001.png" alt="" /></a></li>
 					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-skin002.png" alt="" /></a></li>
-					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-skin001.png" alt="" /></a></li>
-					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-skin002.png" alt="" /></a></li>
-					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-skin001.png" alt="" /></a></li>
+					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-skin003.png" alt="" /></a></li>
+					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-skin004.png" alt="" /></a></li>
+					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-skin005.png" alt="" /></a></li>
+					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-skin006.png" alt="" /></a></li>
 					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-skin-add.png" alt="" /></a></li>
 				</ul>
 			</div>
@@ -192,9 +191,87 @@
 				</ul>
 			</div>
 		</div>
-		<a class="coffee" href="javascript:void(0);">咖啡</a>
+		<a class="coffee " href="javascript:void(0);">
+			<b class="ting" href="javascript:void(0);">听</b>
+			<b class="liao" href="javascript:void(0);">聊</b>
+		</a>
 	</div>
 	
+	<div id="J_signin_form">
+	  <div class="reglogin">
+			<div class="reglogin-hd">
+				<a class="close J_signin_close" href="javascript:void(0);">关闭</a>
+				<h3>登录</h3>
+			</div>
+			<div class="reglogin-bd">
+				<div class="reg">
+					<form action="">
+						<ul>
+							<li><input class="txt" type="text" name="" id="J_signin_user" placeholder="帐号" autofocus="autofocus" /><span>*</span></li>
+							<li>
+								<p><input class="txt" type="password" name="" id="J_signin_password" placeholder="密码" /><span>*</span></p>
+							</li>
+							<li class="ctls">
+								<a class="lostpass" href="#" id="J_forgetpass">忘记密码</a>
+								<label for="auto_login"><input type="checkbox" id="auto_login" name="auto_login" checked="checked" /> 记住密码</label>
+							</li>
+							<li class="btns">
+								<input class="regbtn J_signin_submit" type="button" value="上岛吧" />
+							</li>
+							<li class="ex">
+								还不是会员？<a href="javascript:void(0);" class="J_signup">注册吧！</a>
+							</li>
+						</ul>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="J_signup_form">
+		<div class="reglogin">
+			<div class="reglogin-hd">
+				<a class="close J_signup_close" href="javascript:void(0);">关闭</a>
+				<h3>注册</h3>
+			</div>
+			<div class="reglogin-bd">
+				<div class="login">
+					<form action="">
+						<ul>
+							<li><input class="txt" type="text" name="" id="J_signup_user" placeholder="昵称" /><span>*</span></li>
+							<li><input class="txt" type="password" name="" id="J_signup_password" placeholder="密码" /><span>*</span></li>
+							<li><input class="txt" type="password" name="" id="J_signup_repassword" placeholder="确认密码" /><span>*</span></li>
+							<li class="vcode"><input class="txt" maxlength="3" type="text" name="" id="vcode" placeholder="验证码" /><span>*</span>
+							<p class="v"><img src="/Verify" alt="验证码" id="verifyImg" title="点击刷新" /></p></li>
+							<li class="btns">
+								<input class="regbtn J_signup_submit" type="button" value="上岛吧" />
+							</li>
+						</ul>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 弹出层 - 忘记密码 -->
+	<div id="J_forgetpass_form">
+	<div class="reglogin forgetpass">
+		<div class="reglogin-hd">
+			<a class="close J_forgetpass_close" href="javascript:void(0);">关闭</a>
+			<h3>忘记密码</h3>
+		</div>
+		<div class="reglogin-bd">
+			<div class="reg">
+				<form action="">
+					<ul>
+						<li><input class="txt" type="text" name="" id="J_forgetpass_email" placeholder="请输入你的注册邮箱" /><span>*</span></li>
+						<li class="btns">
+							<input class="regbtn J_forgetpass_submit" type="button" value="确定" />
+						</li>
+					</ul>
+				</form>
+			</div>
+		</div>
+	</div>
+	</div>
 	<include file="Contorls:app" />
 	
 	<script type="text/javascript" src="__PUBLIC__/English/js/jquery-1.7.2.min.js"></script>
@@ -203,6 +280,8 @@
 	<script type="text/javascript" src="__PUBLIC__/skin/fancybox/jquery.fancybox.js?v=2.1.4"></script>
 	<script type="text/javascript" src="__PUBLIC__/skin/js/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="__PUBLIC__/Index/js/app.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/Index/js/jquery.placeholder.1.3.min.js"></script>
+	
 	
 </body>
 </html>

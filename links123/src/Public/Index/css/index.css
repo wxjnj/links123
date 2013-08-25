@@ -35,8 +35,14 @@ a,a:hover{ text-decoration: none; }
 	z-index: 2;
 }
 .wrap{ margin-bottom: 100px; }
+/*听聊*/
+.coffee,
+.coffee .ting,
+.coffee .liao{
+	background: url(../imgs/coffee.png?2013082302) 0 0 no-repeat;
+}
 .coffee{
-	background: url(../imgs/coffee.png?20130823) 0 0 no-repeat;
+	background-position: 0 0;
 	bottom: 10px;
 	display: block;
 	height: 125px;
@@ -47,7 +53,30 @@ a,a:hover{ text-decoration: none; }
 	width: 128px;
 	z-index: 3;
 }
-.coffee:hover{ background-position: -128px 0; }
+.coffee .ting,
+.coffee .liao{
+	display: none;
+	width: 26px;
+	text-indent: -999px;
+	overflow: hidden;
+	height: 36px;
+	position: absolute;
+	top: 48px;
+}
+.coffee .ting{
+	background-position: -199px 0;
+	left: 32px;
+}
+.coffee .liao{
+	background-position: -230px 0;
+	right: 40px;
+}
+.coffee:hover .ting,
+.coffee:hover .liao,
+.coffee-on .ting,
+.coffee-on .liao{
+	display: block;
+}
 
 /*分辨率宽度*/
 .w1000 .wrap,
@@ -153,7 +182,7 @@ a,a:hover{ text-decoration: none; }
 /*糖葫芦*/
 .thl{
 	background: url(../imgs/thlbg.png) 0 0 no-repeat;
-	height: 113px;
+	height: 114px;
 	position: absolute;
 	top: 30px;
 	left: 310px;
@@ -169,7 +198,7 @@ a,a:hover{ text-decoration: none; }
 .thl .cate{
 	height: 20px;
 	position: absolute;
-	top: 64px;
+	top: 52px;
 	left: 80px;
 	width: 280px;
 	display: none;
@@ -178,7 +207,8 @@ a,a:hover{ text-decoration: none; }
 	float: left;
 }
 .thl .subcate{
-	padding: 22px 0 0 50px;
+	padding: 16px 0 0 50px;
+	height: 14px;
 }
 .thl .on,
 .thl .on:hover{
@@ -186,7 +216,7 @@ a,a:hover{ text-decoration: none; }
 }
 .thl .ctls{
 	padding-left: 40px;
-	margin-top: 20px;
+	margin-top: 14px;
 	height: 30px;
 	overflow: hidden;
 }
@@ -196,6 +226,7 @@ a,a:hover{ text-decoration: none; }
 	float: left;
 	height: 20px;
 	line-height: 20px;
+	font-size: 14px;
 	padding: 6px;
 	width: 338px;
 }
@@ -239,10 +270,21 @@ a,a:hover{ text-decoration: none; }
 	width: 40px;
 	text-indent: -999px;
 	overflow: hidden;
-	margin: 9px;
+	margin: 9px 9px 0 0;
 }
 .zld .tools:hover{
 	background-position: -40px 0;
+}
+.zld .close{
+	background: url(../imgs/exit.png?20130824) 0 0 no-repeat;
+	float: right;
+	display: none;
+	height: 20px;
+	width: 41px;
+	text-indent: -999px;
+	overflow: hidden;
+	margin: 11px 11px 0 0;
+	cursor: pointer;
 }
 .zld ul{
 	*zoom: 1;
@@ -276,6 +318,22 @@ a,a:hover{ text-decoration: none; }
 .zld ul li a:hover{
 	color: #d20015;
 }
+.zld ul li span{
+	display: block;
+	color: #323232;
+	height: 29px;
+	line-height: 26px;
+	line-height: 29px\9;
+	width: 54px;
+	text-align: center;
+	overflow: hidden;
+	padding-right: 5px;
+	margin-right: -5px;
+	cursor: pointer;
+}
+.zld ul li span:hover{
+	color: #d20015;
+}
 .zld-edit{ background-position: 0 -89px; }
 .zld-edit-box{
 	color: #000;
@@ -283,8 +341,7 @@ a,a:hover{ text-decoration: none; }
 	font-weight: bold;
 	height: 30px;
 	line-height: 26px;
-	margin: 20px 0 0 200px;
-	width: 760px;
+	margin: 20px 0 0 180px;
 	display: none;
 }
 .zld-edit-box .btnok{
@@ -293,7 +350,7 @@ a,a:hover{ text-decoration: none; }
 	cursor: pointer;
 	font-size: 0;
 	height: 32px;
-	line-height: -999px;
+	line-height: 999px;
 	overflow: hidden;
 	vertical-align: middle;
 	width: 57px;
@@ -313,6 +370,12 @@ a,a:hover{ text-decoration: none; }
 }
 .zld-edit-box .nm{ width: 210px; }
 .zld-edit-box .url{ width: 310px; }
+.zld-edit .tools{ display: none; }
+.zld-edit .close{ display: block; }
+.zld-edit-box .tip{
+	color: #FF0000;
+	/*display: none;*/
+}
 
 /*自留地 编辑状态*/
 .zld-edit  .guide{
@@ -322,7 +385,9 @@ a,a:hover{ text-decoration: none; }
 	background: url(../imgs/zldon.png) 0 0 no-repeat;
 }
 .zld-edit ul li.on a,
-.zld-edit ul li.on a:hover{
+.zld-edit ul li.on a:hover,
+.zld-edit ul li.on span,
+.zld-edit ul li.on span:hover{
 	background: url(../imgs/zldon.png) right -29px no-repeat;
 	color: #fff;
 }
@@ -373,7 +438,6 @@ a,a:hover{ text-decoration: none; }
 	left: 9px;
 	top: 9px;
 	width: 260px;
-	z-index: 1;
 }
 .video img{ vertical-align: middle; }
 /*引用列表*/
@@ -400,23 +464,46 @@ a,a:hover{ text-decoration: none; }
 	display: block;
 	height: 74px;
 	margin: 0 auto;
-	overflow: hidden;
 	position: relative;
 	width: 75px;
 }
 .apps .img a b{ display: none; }
 .apps .img a:hover b{
-	background: url(../imgs/close2.png) 0 0 no-repeat;
+	background: url(../imgs/close.png) 0 0 no-repeat;
 	display: block;
 	height: 15px;
-	left: 6px;
+	left: -2px;
 	overflow: hidden;
 	position: absolute;
 	text-indent: -999px;
-	top: 6px;
+	top: -2px;
 	width: 15px;
 }
 .apps .img a:hover{
+	background-position: 0 0;
+}
+.apps .img span{
+	background: url(../imgs/app/appbg.png) -75px 0 no-repeat;
+	display: block;
+	height: 74px;
+	margin: 0 auto;
+	position: relative;
+	width: 75px;
+	cursor: pointer;
+}
+.apps .img span b{ display: none; }
+/*.apps .img span:hover b{
+	background: url(../imgs/close.png) 0 0 no-repeat;
+	display: block;
+	height: 15px;
+	left: -2px;
+	overflow: hidden;
+	position: absolute;
+	text-indent: -999px;
+	top: -2px;
+	width: 15px;
+}*/
+.apps .img span:hover{
 	background-position: 0 0;
 }
 .apps .nm{
@@ -426,6 +513,12 @@ a,a:hover{ text-decoration: none; }
 .apps .nm a:hover{
 	color: #dfdfdf;
 	font-weight: bold;
+}
+.apps .nm span,
+.apps .nm span:hover{
+	color: #dfdfdf;
+	font-weight: bold;
+	cursor: pointer;
 }
 /*皮肤*/
 .skins{
@@ -437,13 +530,17 @@ a,a:hover{ text-decoration: none; }
 }
 .skins li a{
 	display: block;
-	border: 1px solid transparent;
-	-moz-box-shadow: 1px 1px 5px #ececec;
-	-webkit-box-shadow: 1px 1px 5px #ececec;
-	box-shadow: 1px 1px 5px #ececec;
+	border: 0;
+	-moz-box-shadow: 1px 1px 3px #000;
+	-webkit-box-shadow: 1px 1px 3px #000;
+	box-shadow: 1px 1px 3px #000;
 }
 .skins li a:hover{
-	border: 1px solid #583516;
+	border: 2px solid #583516;
+}
+.skins li a:hover img{
+	width: 24px;
+	height: 24px;
 }
 .skins li img{
 	vertical-align: middle;
@@ -479,6 +576,8 @@ a,a:hover{ text-decoration: none; }
 	width: 587px;
 	font-family: \5FAE\8F6F\96C5\9ED1;
 	font-size: 18px;
+	display: none;
+	overflow: hidden;
 }
 .reglogin .reglogin-hd{
 	padding: 30px 35px;
@@ -500,18 +599,19 @@ a,a:hover{ text-decoration: none; }
 	overflow: hidden;
 	height: 16px;
 }
-.reglogin .reg{
+.reglogin .reg,
+.reglogin .login{
 	width: 350px;
 	margin: 0 auto;
 }
-.reglogin .reg li{
+.reglogin ul li{
 	padding-bottom: 28px;
 	height: 36px;
 	line-height: 36px;
 }
-.reglogin .reg li.ctls{ padding-bottom: 20px; }
-.reglogin .reg li.btns{ padding-bottom: 40px; }
-.reglogin .reg li.ex{ padding-bottom: 0; }
+.reglogin ul li.ctls{ padding-bottom: 20px; }
+.reglogin ul li.btns{ padding-bottom: 40px; }
+.reglogin ul li.ex{ padding-bottom: 0; }
 .reglogin .ctls{
 	padding-right: 30px;
 }
@@ -525,13 +625,13 @@ a,a:hover{ text-decoration: none; }
 	color: #efdcc1;
 	cursor: pointer;
 }
-.reglogin .reg li span{
+.reglogin ul li span{
 	color: #861714;
 	padding-left: 10px;
 	font-family: arial;
 	font-weight: bold;
 }
-.reglogin .reg .txt{
+.reglogin ul .txt{
 	background: #ece9e5;
 	color: #898989;
 	border: 1px solid #846d51;
@@ -551,7 +651,7 @@ a,a:hover{ text-decoration: none; }
 	text-decoration: underline;
 }
 .reglogin .regbtn{
-	background: url(../imgs/regloginbtn.png) 0 0 no-repeat;
+	background: url(../imgs/regloginbtn.png) 1000px 1000px no-repeat;
 	cursor: pointer;
 	border: 0 none;
 	width: 317px;
@@ -560,10 +660,14 @@ a,a:hover{ text-decoration: none; }
 	overflow: hidden;
 	height: 54px;
 }
+.reglogin .reg .regbtn{ background-position: 0 0; }
+.reglogin .regon .reg .regbtn{ background-position: 0 -54px; }
+.reglogin .login .regbtn{ background-position: 0 -162px; }
+.reglogin .regon .login .regbtn{ background-position: 0 -216px; }
 .reglogin .regon{
 	background: url(../imgs/tree.png) 463px 163px no-repeat;
 }
-.reglogin .regon .regbtn{ background-position: 0 -54px; }
+
 .reglogin .vcode{
 	position: relative;
 }
@@ -571,4 +675,14 @@ a,a:hover{ text-decoration: none; }
 	position: absolute;
 	right: 34px;
 	top: 6px;
+}
+.forgetpass{
+	background: url(../imgs/forgetbg.png) 0 0 no-repeat;
+	height: 304px;
+}
+.forgetpass .reglogin-bd{
+	height: 210px;
+}
+.forgetpass .reglogin-bd .regbtn{
+	background-position: 0 -108px;
 }

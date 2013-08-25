@@ -24,7 +24,7 @@
 			<ul class="grzx_sc_ul">
 			<volist name="collList" id="vo">
 				<li>
-					<span><a href="__APP__/Index/detail/id/{$vo.lnk_id}" target="_blank" class="button01">查看简介</a><a lnk_id="{$vo.lnk_id}" class="button01 del_coll">取消收藏</a></span>
+					<span><a href="{:U('Home/Detail/index')}?id={$vo.lnk_id}" target="_blank" class="button01">查看简介</a><a lnk_id="{$vo.lnk_id}" class="button01 del_coll">取消收藏</a></span>
 					<a href="http://{$vo.link}" target="_blank" class="grzx_sc_tit">{$vo.title}</a>
 					<div class="clr"></div>
 				</li>

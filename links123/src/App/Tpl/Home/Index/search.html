@@ -58,7 +58,7 @@
 							<div class="lst_dt">{$vo.grade_name}</div>
 						</empty>
 						</dl>
-						<dl class="cont_botfont">{$vo.sintro}<eq name="vo.more" value="1"><a url="__URL__/detail/id/{$vo.id}" class="newWin">&gt; 更多</a></eq></dl>
+						<dl class="cont_botfont">{$vo.sintro}<eq name="vo.more" value="1"><a url="{:U('Detail/index')}?id={$vo.id}" class="newWin">&gt; 更多</a></eq></dl>
 					</div>
 					
 					<div class="clr"></div>
@@ -81,7 +81,7 @@
 							<dd>
 							<!-- $当prt_id=5即当前结果为TED，连接修改为本地播放 -->
 							<if condition="($vo.prt_id eq 5)">
-								<a url="__URL__/detail/id/{$vo.id}" class="newWin">
+								<a url="{:U('Detail/index')}?id={$vo.id}" class="newWin">
 							<else />
 								<a href="http://{$vo.link}" target="_blank">
 							</if>
@@ -91,7 +91,7 @@
 						</dl>
 						<dl class="cont_botfont">{$vo.sintro}</dl>
 					<empty name="vo.notlink">
-						<dl class="dl_more"><a url="__URL__/detail/id/{$vo.id}" class="newWin">&gt; 更多</a></dl>
+						<dl class="dl_more"><a url="{:U('Detail/index')}?id={$vo.id}" class="newWin">&gt; 更多</a></dl>
 						<div class="clr"></div>
 						<dl class="cont_btns">
 							<div class="cai" lnk_id="{$vo.id}">{$vo.cai}</div>

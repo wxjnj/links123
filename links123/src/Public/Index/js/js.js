@@ -71,64 +71,60 @@ $(function() {
 	
 	//调整糖葫芦位置
 	function setThlPnt() {
-       
-		var top = 64;
-        var left1 = $("#search_text").offset().left + ($("#search_text").width() - $("#J_thl_div").width())/2;
-        var left2 = $("#search_text").offset().left + ($("#search_text").width() - $("#J_thl_div").width()) - 1;
-        var left = 0;
-        
-        //当输入或复制的关键词触碰糖葫芦,糖葫芦就跳到搜索框下方
-        if ( $("#search_text").val() != "" ) {
-        	top = 85;
+	   
+		var top = 52;
+		var left1 = $("#search_text").offset().left + ($("#search_text").width() - $("#J_thl_div").width())/2;
+		var left2 = $("#search_text").offset().left + ($("#search_text").width() - $("#J_thl_div").width()) - 1;
+		var left = 0;
+		
+		//当输入或复制的关键词触碰糖葫芦,糖葫芦就跳到搜索框下方
+		if ( $("#search_text").val() != "" ) {
+			top = 80;
 			left = left1;
 		} else {
 			left = left1;
+			$('#J_thl_div').hide();
 		}
-        
-        $("#J_thl_div").css("top", top);
-        //$("#J_thl_div").css("left", left);
+
+		$("#J_thl_div").css("top", top);
+		//$("#J_thl_div").css("left", left);
 	}
 	
-	//显示糖葫芦
-	function thl_show() {
-		if ( !$("#J_thl_div:visible")[0] ) {
-			setThlPnt();
-			$("#J_thl_div").css("display", "block");
-		}
-	}
-	//隐藏糖葫芦
-	function thl_hid() {
-		if ( $("#J_thl_div:visible")[0] ) {
-			$("#J_thl_div").css("display", "none");
-		}
-	}
+	$('.thl').mouseover(function(){
+		$('#J_thl_div').show();
+	});
 	
-    //糖葫芦籽点击
-    $(".J_thlz a").click(function(){
-    	
-            $(this).addClass("on").siblings("a").removeClass("on");
-            
-            $("#btn_search").trigger("click");
-    });
-            
-	//糖葫芦点击
-	$("#J_thl_div a").click(function(){
-        
+	$('.thl').mouseleave(function(){
+		$('#J_thl_div').hide();
+	});
+	
+	//糖葫芦籽点击
+	$(".J_thlz a").click(function(){
+		
 		$(this).addClass("on").siblings("a").removeClass("on");
 		
-        var index = $(this).index();
-        
-        $(".J_thlz:eq(" + index + ")").show().siblings(".J_thlz").hide();
-        
-        $(".J_thlz a").removeClass("on");
-        $(".J_thlz:eq(" + index + ")").find("a:first").addClass("on");
-        
-        return false;
+		$("#btn_search").trigger("click");
+
+	});
+			
+	//糖葫芦点击
+	$("#J_thl_div a").click(function(){
+		
+		$(this).addClass("on").siblings("a").removeClass("on");
+		
+		var index = $(this).index();
+		
+		$(".J_thlz:eq(" + index + ")").show().siblings(".J_thlz").hide();
+		
+		$(".J_thlz a").removeClass("on");
+		$(".J_thlz:eq(" + index + ")").find("a:first").addClass("on");
+		
+		return false;
 	});
 	
 	// F5清key
 	$(document).keydown(function(event){
-		if (event.keyCode == 116) {	// F5
+		if (event.keyCode == 116) { // F5
 			$.cookies.set( 'keyword', '');
 		}
 	});
@@ -146,19 +142,19 @@ $(function() {
 	});
 	
 	$("#search_text").keyup(function(){
+		$('#J_thl_div').show();
 		setThlPnt();
-		thl_show();
 	});
 	
 	// 回车键响应 
 	$("#search_text").keypress(function(event){
-    	  if(event.keyCode==13) {
-    		  //$(this).select();
-    		  $("#btn_search").trigger("click");
-    		  $("#search_text").select();
-    		  return false;
-    	  }
-    });
+		  if(event.keyCode==13) {
+			  //$(this).select();
+			  $("#btn_search").trigger("click");
+			  $("#search_text").select();
+			  return false;
+		  }
+	});
 	
 	//
 	$("#search_text").mouseover(function(){
@@ -187,7 +183,7 @@ $(function() {
 				var fw_right = fw_left + 700;
 				if ( ev.pageX > fw_left && ev.pageX < fw_right && ev.pageY > fw_top && ev.pageY < fw_bottom ) {
 					return;
-				}				
+				}               
 			}
 		}
 		//
@@ -259,22 +255,23 @@ $(function() {
 	$('.J_myarea').click(function() {
 
 		$('.J_myarea_div').addClass('zld-edit');
-		$('.J_myarea_div ul li a').removeClass('newWin');
+		$('.J_myarea_div ul li span').removeClass('newWin');
 		
 		$('#J_sortable').sortable({
 			update: function (event, ui) {  
 
 				$.post(URL + '/sortArealist', {'area' : $(this).sortable('toArray')});
 		   }  
-	    });
+		});
 		$('#J_sortable').sortable('enable');
-    });
+	});
 	
 	//保存自留地
-	$('.guide').click(function() {
+	$('.J_myarea_close').click(function() {
 		$('#J_sortable').sortable('disable');
 		$('.J_myarea_div').removeClass('zld-edit');
-		$('.J_myarea_div ul li a').addClass('newWin');
+		$('.J_myarea_div ul li span').addClass('newWin');
+		$('.J_zld_edit_box').hide();
 	});
 	
 	//自留地hover状态
@@ -284,31 +281,264 @@ $(function() {
 	});
 	
 	//编辑自留地网址
-	$('.zld-edit ul li a').live('click', function() {
+	$('.zld-edit ul li span').live('click', function() {
 		$('#J_myarea_id').val($(this).attr('data-id'));
 		$('#J_myarea_web_name').val($(this).text());
 		$('#J_myarea_web_url').val($(this).attr('data-url'));
 		$('.J_zld_edit_box').show();
+		$('#J_myarea_web_name').select();
+	});
+	
+	$('#J_myarea_web_url').mouseover(function() {
+		$(this).select();
 	});
 	
 	//保存自留地网址
 	$('.J_myarea_web_save').click(function() {
+		var id = $('#J_myarea_id').val();
+		var web_name= $('#J_myarea_web_name').val();
+		var url= $('#J_myarea_web_url').val();
 		$.post(URL + "/updateArealist", {
-		        id: $('#J_myarea_id').val(),
-		        web_name: $('#J_myarea_web_name').val(),
-		        url: $('#J_myarea_web_url').val()
-		    },
-		    function(data) {
-		        if (data.indexOf("updateOK") >= 0) {
-		        	$('.J_zld_edit_box').hide();
-		        	alert('保存成功！');
-		        }
-		        else {
-		            alert(data);
-		        }
-	    });
+				id: id,
+				web_name: web_name,
+				url: url
+			},
+			function(data) {
+				if (data.indexOf("updateOK") >= 0) {
+					var myarea_web_obj = $('.J_myarea_div ul li[id="'+id+'"] span');
+					myarea_web_obj.text(web_name);
+					var new_url = myarea_web_obj.attr('url').replace(myarea_web_obj.attr('data-url'), url);
+					myarea_web_obj.attr('url', new_url);
+					myarea_web_obj.attr('data-url', url);
+					$('#J_myarea_tip').text('保存成功!');
+					$('#J_myarea_tip').show();
+
+				} else {
+					$('#J_myarea_tip').text('保存成功!');
+					$('#J_myarea_tip').show();
+				}
+				setTimeout(function(){
+					$('#J_myarea_tip').hide();
+					$('.J_zld_edit_box').hide();
+				}, 2000);
+		});
 	});
 	
+	//登录窗口
+	$('#J_signin').click(function(){
+		 $('#J_signin_form').dialog('open');
+		 $('.reglogin').show();
+		 $('.ui-dialog-titlebar').hide();
+		 return false;
+	});
+	
+	//注册窗口
+	$('.J_signup').click(function(){
+		$('#J_signin_form').dialog('close');
+		$("#verifyImg").trigger("click");
+		$('#J_signup_form').dialog('open');
+		$('.reglogin').show();
+		$('.ui-dialog-titlebar').hide();
+		return false;
+	});
+	
+	$('#J_forgetpass').click(function(){
+		$('#J_signin_form').dialog('close');
+		$('#J_forgetpass_form').dialog('open');
+		$('.reglogin').show();
+		$('.ui-dialog-titlebar').hide();
+		return false;
+	});
+	
+	$('#J_signin_form').dialog({
+		autoOpen: false,
+		height: 478,
+		width: 587,
+		modal: true,
+		resizable: false,
+		open: function(){
+			setTimeout(function(){$('#J_signin_user').select();}, 20);
+		}
+	});
+	
+	$('#J_signup_form').dialog({
+		autoOpen: false,
+		height: 478,
+		width: 587,
+		modal: true,
+		resizable: false,
+		open: function(){
+			setTimeout(function(){$('#J_signup_user').select();}, 20);
+		}
+	});
+	
+	$('#J_forgetpass_form').dialog({
+		autoOpen: false,
+		height: 323,
+		width: 587,
+		modal: true,
+		resizable: false,
+		open: function(){
+			setTimeout(function(){$('#J_forgetpass_email').select();}, 20);
+		}
+	});
+	
+	$('.J_signin_close').click(function(){
+		$('#J_signin_form').dialog('close');
+	});
+	
+	$('.J_signup_close').click(function(){
+		$('#J_signup_form').dialog('close');
+	});
+	
+	$('.J_forgetpass_close').click(function(){
+		$('#J_forgetpass_form').dialog('close');
+	});
+	
+	$('.regbtn').mouseover(function(){
+		if (!$(this).hasClass('J_forgetpass_submit')) {
+			$('.reglogin-bd').addClass('regon');
+		}
+	});
+	
+	$('.regbtn').mouseout(function(){
+		$('.reglogin-bd').removeClass('regon');
+	});
+	
+	$('#verifyImg').click(function(){
+		var timenow = new Date().getTime();
+		$(this).attr("src", APP+'Verify?'+timenow);
+
+	});
+	
+	$('.J_signin_submit').click(function(){
+		
+		var username = $('#J_signin_user').val();
+		var password = $('#J_signin_password').val();
+		var auto_login = $('#auto_login').attr('checked');
+		
+		if (!username || username == '帐号') {
+			
+			alert('帐号不能为空');
+			return false;
+		}
+		
+		if (!password) {
+			alert('密码不能为空');
+			return false;
+		}
+		
+		var data = {"username":username,"password":password,"auto_login": (auto_login=='checked' ? 1 : 0)};
+		
+		$.post(APP + "Members/Login/checkLogin", data, 
+			function(data){
+				if ( data.indexOf("loginOK") >= 0 ) {
+					if(window.opener){
+						window.opener.location.reload();
+					}
+					window.location.href = APP+"Index";
+				}else{
+					alert(data);
+				}
+			}); 
+	});
+	
+	$('.J_signup_submit').click(function(){
+		
+		var username = $('#J_signup_user').val();
+		var password = $('#J_signup_password').val();
+		var repassword = $('#J_signup_repassword').val();
+		var verify = $('#vcode').val();
+		
+		if (!username || username == '昵称') {
+			
+			alert('昵称不能为空');
+			return false;
+		}
+		
+		if (!password) {
+			alert('密码不能为空');
+			return false;
+		}
+		
+		if (password != repassword) {
+			alert('密码不一致');
+			return false;
+		}
+		
+		if (!verify) {
+			alert('验证码不能为空');
+			return false;
+		}
+		
+		var data = {"nickname":username,"password":password,"verify":verify};
+		
+		$.post(APP + "Members/Register/saveReg", data, 
+			function(data){
+				if ( data.indexOf("regOK") >= 0 ) {
+					window.location.href = APP+"Members/Index/";
+				} else {
+					alert(data);
+				}
+		}); 
+	});
+	
+	$('.J_forgetpass_submit').click(function(){
+		
+		var email = $('#J_forgetpass_email').val();
+		if (!email) {
+			alert("请输入邮箱");
+			return false;
+		}
+		var result = email.match(/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/);
+		if (result == null) {
+			alert("请正确输入邮箱.");
+			return false;
+		}
+		
+		$.post(URL + "/missPwd", {
+			email: email
+			}, 
+			function(data){
+				if ( data.indexOf("sendOK") >= 0 ) {
+					var mailserver = data.split('|');
+					alert("请进入您的账户邮箱获取新密码。");
+					
+					window.open("http://" + mailserver[1]);
+				}else {
+					alert(data);
+				}
+			});
+	});
+	
+
+	$('#J_signin_password').keypress(function(event) {
+		if (event.keyCode == 13) {
+			$(".J_signin_submit").trigger("click");
+			return false;
+		}
+	});
+
+	$('#verifyImg').keypress(function(event) {
+		if (event.keyCode == 13) {
+			$(".J_signup_submit").trigger("click");
+			return false;
+		}
+	});
+
+	$('#J_forgetpass_email').keypress(function(event) {
+		if (event.keyCode == 13) {
+			$(".J_forgetpass_submit").trigger("click");
+			return false;
+		}
+	});
+
+	$('#J_myarea_web_url').keypress(function(event) {
+		if (event.keyCode == 13) {
+			$(".J_myarea_web_save").trigger("click");
+			return false;
+		}
+	});
 });
 
 // 设为首页

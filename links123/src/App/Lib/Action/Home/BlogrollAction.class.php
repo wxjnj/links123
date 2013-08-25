@@ -1,6 +1,6 @@
 <?php
 /**
- * @name BlogrollAction.class.php
+ * @name BlogrollAction
  * @package Home
  * @desc 友情链接
  * @author frank UPDATE 2013-08-19
