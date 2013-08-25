@@ -66,25 +66,12 @@ class CommonAction extends Action {
 	 */
 	private function _getVariable() {
 		$variable    = M("Variable");
-		$title       = $variable->getByVname('title');
-		$keywords    = $variable->getByVname('Keywords');
-		$description = $variable->getByVname('Description');
-		$cnTip       = $variable->getByVname('cn_tip');
-		$enTip       = $variable->getByVname('en_tip');
-		$directTip   = $variable->getByVname('directTip');
-		$thl         = $variable->getByVname('thl');
-		$pauseTime   = $variable->getByVname('pauseTime');
-
-		return array(
-			'title'       => $title['value_varchar'],
-			'keywords'    => $keywords['value_varchar'],
-			'description' => $description['value_varchar'],
-			'cnTip'       => $cnTip['value_varchar'],
-			'enTip'       => $enTip['value_varchar'],
-			'directTip'   => $directTip['value_varchar'],
-			'thl'         => $thl['value_varchar'],
-			'pauseTime'   => $pauseTime['value_int'],
-		);
+		
+		$vars = $variable->where("`vname` = 'title' OR `vname` = 'Keywords' OR `vname` = 'Description' OR `vname` = 'cn_tip' or `vname` = 'en_tip' or `vname` = 'directTip' or `vname` = 'thl' or `vname` = 'pauseTime'")->select();
+		foreach ($vars as $row) {
+			$arrs[$row['vname']] = $row['value_varchar'];
+		}
+		return $arrs;
 	}
 
 	/**
@@ -105,7 +92,7 @@ class CommonAction extends Action {
 	protected function getCatPics($rid = 1) {
 		$variable = $this->_getVariable();
 		return array(
-			'catPics' => M("CatPic")->where('rid=' . $rid)->order('sort')->select(),
+			'catPics' => M("CatPic")->where("rid = '%d'", $rid)->order('sort')->select(),
 			'pauseTime' => (int)$variable['pauseTime'] * 1000
 		);
 	}
@@ -257,7 +244,8 @@ class CommonAction extends Action {
      */
     public function autoLogin() {
     	$user_str = $_COOKIE["USER_ID"];
-    	$mid = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+    	isset($_SESSION[C('MEMBER_AUTH_KEY')]) && 
+    	$mid = @ intval($_SESSION[C('MEMBER_AUTH_KEY')]);
         if (empty($mid)) {
         	//没有用户session且自动登录标示Cookie USER_ID 存在执行自动登录过程
         	if (!empty($user_str)) {
