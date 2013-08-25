@@ -45,7 +45,7 @@
 					<div class="cont_lie_logoleft">
 						<div class="cont_lie_logo">
 							<if condition="($rid eq 5)">
-								<a url="__URL__/detail/id/{$vo.id}" class="newWin">
+								<a url="{:U('Detail/index')}?id={$vo.id}" class="newWin">
 							<else />
 								<a href="{:U('Index/link_out')}?url={$vo['link']}" target="_blank">
 							</if>
@@ -57,18 +57,18 @@
 							<div class="tlt_left">
 							
 							<if condition="($rid eq 5)">
-								<a url="__URL__/detail/id/{$vo.id}" class="newWin">
+								<a url="{:U('Detail/index')}?id={$vo.id}" class="newWin">
 							<else />
 								<a href="{:U('Index/link_out')}?url={$vo['link']}" target="_blank">
 							</if>
 							{$vo.title}</a><notempty name="vo.recommended">　<span>{$vo.recommended} 推荐</span></notempty></div>
 							<div class="sc"><a class="cont_fontright btn_collect" lnk_id="{$vo.id}" link="{$vo.link}">收藏</a>&nbsp;<label><notempty name="vo.collect_num">{$vo.collect_num}</notempty></label></div>
-							<!-- <dt><a url="__URL__/detail/id/{$vo.id}#say" class="cont_fontright newWin">说说</a>&nbsp;<notempty name="vo.say_num">{$vo.say_num}</notempty></dt> -->
+							
 							<div class="cai" lnk_id="{$vo.id}">{$vo.cai}</div>
 							<div class="ding" lnk_id="{$vo.id}">{$vo.ding}</div>
 							<div class="lst_dt">{$vo.grade_name}</div>
 						</dl>
-						<{$bq} class="cont_botfont">{$vo.sintro}<eq name="vo.more" value="1"><a url="__URL__/detail/id/{$vo.id}" class="newWin">&gt; 更多</a></eq></{$bq}>
+						<{$bq} class="cont_botfont">{$vo.sintro}<eq name="vo.more" value="1"><a url="{:U('Detail/index')}?id={$vo.id}" class="newWin">&gt; 更多</a></eq></{$bq}>
 					</div>
 					<div class="clr"></div>
 				</li>
@@ -84,7 +84,7 @@
 					<div class="cont_lie_logoleft">
 						<div class="cont_lie_logo">
 						<if condition="($rid eq 5)">
-							<a url="__URL__/detail/id/{$vo.id}" class="newWin">
+							<a url="{:U('Detail/index')}?id={$vo.id}" class="newWin">
 						<else />
 							<a href="{:U('Index/link_out')}?url={$vo['link']}" target="_blank">
 						</if>
@@ -95,14 +95,14 @@
 						<dl class="cont_tit" title="{$vo.linkTitle}">
 							<dd>
 								<if condition="($rid eq 5)">
-									<a url="__URL__/detail/id/{$vo.id}" class="newWin">
+									<a url="{:U('Detail/index')}?id={$vo.id}" class="newWin">
 								<else />
 									<a href="{:U('Index/link_out')}?url={$vo['link']}" target="_blank">
 								</if>
 								{$vo.title}</a>&nbsp;<notempty name="vo.recommended">　<span>{$vo.recommended} 推荐</span></notempty></dd>
 						</dl>
 						<{$bq} class="cont_botfont">{$vo.sintro}</{$bq}>
-						<dl class="dl_more"><a url="__URL__/detail/id/{$vo.id}" class="newWin">&gt; 更多</a></dl>
+						<dl class="dl_more"><a url="{:U('Detail/index')}?id={$vo.id}" class="newWin">&gt; 更多</a></dl>
 						<div class="clr"></div>
 						<dl class="cont_btns">
 							<div class="sc"><a class="cont_fontright btn_collect" lnk_id="{$vo.id}" link="{$vo.link}">收藏</a>&nbsp;<label><notempty name="vo.collect_num">{$vo.collect_num}</label></notempty></div>
