@@ -88,10 +88,10 @@ a,a:hover{ text-decoration: none; }
 
 /*顶部部分*/
 .syt{
-	background: url(../imgs/sytbg.png) 0 0 no-repeat;
-	height: 35px;
+	background: url(../imgs/sytbg.png) 0 -3px no-repeat;
+	height: 25px;
 	width: 317px;
-	margin-top: 3px;
+	margin-top: 6px;
 	padding-left: 10px;
 	float: left;
 }
@@ -99,7 +99,7 @@ a,a:hover{ text-decoration: none; }
 	background: #f1f1f1;
 	height: 16px;
 	line-height: 16px;
-	padding: 6px 0;
+	padding: 4px 0;
 	width: 286px;
 	float: left;
 	border: 0 none;
@@ -182,10 +182,10 @@ a,a:hover{ text-decoration: none; }
 }
 /*糖葫芦*/
 .thl{
-	background: url(../imgs/thlbg.png) 0 0 no-repeat;
-	height: 114px;
+	background: url(../imgs/thlbg.png) 0 -15px no-repeat;
+	height: 90px;
 	position: absolute;
-	top: 30px;
+	top: 35px;
 	left: 310px;
 	width: 456px;
 }
@@ -199,7 +199,7 @@ a,a:hover{ text-decoration: none; }
 .thl .cate{
 	height: 20px;
 	position: absolute;
-	top: 52px;
+	top: 40px;
 	left: 80px;
 	width: 280px;
 	display: none;
@@ -208,7 +208,7 @@ a,a:hover{ text-decoration: none; }
 	float: left;
 }
 .thl .subcate{
-	padding: 16px 0 0 50px;
+	padding: 10px 0 0 50px;
 	height: 14px;
 }
 .thl .on,
@@ -217,7 +217,7 @@ a,a:hover{ text-decoration: none; }
 }
 .thl .ctls{
 	padding-left: 40px;
-	margin-top: 14px;
+	margin-top: 12px;
 	height: 30px;
 	overflow: hidden;
 }
@@ -225,11 +225,11 @@ a,a:hover{ text-decoration: none; }
 	background: #eeeeee;
 	border: 0 none;
 	float: left;
-	height: 20px;
-	line-height: 20px;
+	height: 16px;
+	line-height: 16px;
 	font-size: 14px;
-	padding: 6px;
-	width: 338px;
+	padding: 3px;
+	width: 348px;
 }
 .thl .btn{
 	background: transparent;
@@ -238,10 +238,10 @@ a,a:hover{ text-decoration: none; }
 	display: block;
 	float: left;
 	font-size: 0;
-	height: 30px;
+	height: 23px;
 	line-height: -999px;
 	overflow: hidden;
-	width: 44px;
+	width: 35px;
 }
 /*自留地*/
 .zld{
@@ -292,7 +292,7 @@ a,a:hover{ text-decoration: none; }
 .zld ul{
 	*zoom: 1;
 	width: 900px;
-	padding: 13px 0 0 20px;
+	padding: 13px 0 0 18px;
 }
 .zld ul:after{
 	content: '\0020';
@@ -303,7 +303,7 @@ a,a:hover{ text-decoration: none; }
 .zld ul li{
 	float: left;
 	margin: 2px 1px 0;
-	padding-left: 5px;
+	padding-left: 3px;
 }
 .zld ul li a{
 	display: block;
@@ -311,7 +311,7 @@ a,a:hover{ text-decoration: none; }
 	height: 29px;
 	line-height: 26px;
 	line-height: 29px\9;
-	width: 52px;
+	width: 54px;
 	text-align: center;
 	overflow: hidden;
 	padding-right: 5px;
@@ -326,7 +326,7 @@ a,a:hover{ text-decoration: none; }
 	height: 29px;
 	line-height: 26px;
 	line-height: 29px\9;
-	width: 52px;
+	width: 54px;
 	text-align: center;
 	overflow: hidden;
 	padding-right: 5px;
@@ -343,8 +343,9 @@ a,a:hover{ text-decoration: none; }
 	font-weight: bold;
 	height: 30px;
 	line-height: 26px;
-	margin: 20px 0 0 100px;
+	margin: 20px 0 0 80px;
 	display: none;
+	position: relative;
 }
 .zld-edit-box .btnok{
 	background: url(../imgs/btn-ok.png) 0 0 no-repeat;
@@ -370,13 +371,22 @@ a,a:hover{ text-decoration: none; }
 	padding: 5px;
 	vertical-align: middle;
 }
-.zld-edit-box .nm{ width: 210px; }
+.zld-edit-box .nm{ width: 250px; }
 .zld-edit-box .url{ width: 310px; }
 .zld-edit .tools{ display: none; }
 .zld-edit .close{ display: block; }
 .zld-edit-box .tip{
 	color: #84aa03;
-	padding-left: 10px;;
+	padding-left: 10px;
+	font-weight: normal;
+}
+.zld-edit-box .utips{
+	position: absolute;
+	top: 3px;
+	left: 180px;
+	font-weight: normal;
+	font-size: 12px;
+	color: #999;
 }
 
 /*自留地 编辑状态*/
@@ -462,7 +472,7 @@ a,a:hover{ text-decoration: none; }
 }
 .apps .img{ font-size: 0; }
 .apps .img a{
-	background: url(../imgs/app/appbg.png) -75px 0 no-repeat;
+	background: url(../imgs/app/appbg.png) -75px 1px no-repeat;
 	display: block;
 	height: 74px;
 	margin: 0 auto;
@@ -471,7 +481,7 @@ a,a:hover{ text-decoration: none; }
 }
 .apps .img a b{ display: none; }
 .apps .img a:hover b{
-	background: url(../imgs/close.png) 0 0 no-repeat;
+	background: url(../imgs/close.png) 0 1px no-repeat;
 	display: block;
 	height: 15px;
 	left: -2px;
@@ -485,7 +495,7 @@ a,a:hover{ text-decoration: none; }
 	background-position: 0 0;
 }
 .apps .img span{
-	background: url(../imgs/app/appbg.png) -75px 0 no-repeat;
+	background: url(../imgs/app/appbg.png) -75px 1px no-repeat;
 	display: block;
 	height: 74px;
 	margin: 0 auto;
@@ -506,7 +516,7 @@ a,a:hover{ text-decoration: none; }
 	width: 15px;
 }*/
 .apps .img span:hover{
-	background-position: 0 0;
+	background-position: 0 1px;
 }
 .apps .nm{
 	margin-top: 10px;

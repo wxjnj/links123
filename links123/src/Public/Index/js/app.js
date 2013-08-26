@@ -101,7 +101,7 @@ $(document).on('click', '#J_stikynot', function(){
 		
 		if (stikynotIsNullNUm >= stikynot_num) {
 			stikynot_num = 1;
-			$.cookies.set('stikynot_num', stikynot_num);
+			$.cookies.set('stikynot_num', stikynot_num); //TODO 兼容模式下从这往下不执行了
 			stikynotShow(1, 0, 0, _w, _h, '', _c);
 		}
 		
@@ -148,6 +148,9 @@ $(document).on('click', '.J_stikynot_add', function(){
 	stikynot += '<div class="box_stikynot_color_bar color_1" data-class="bg_1"></div>';
 	stikynot += '<div class="box_stikynot_color_bar color_2" data-class="bg_2"></div>';
 	stikynot += '<div class="box_stikynot_color_bar color_3" data-class="bg_3"></div>';
+	stikynot += '<div class="box_stikynot_color_bar color_4" data-class="bg_4"></div>';
+	stikynot += '<div class="box_stikynot_color_bar color_5" data-class="bg_5"></div>';
+	stikynot += '<div class="box_stikynot_color_bar color_6" data-class="bg_6"></div>';
 	// stikynot += '<div class="box_stikynot_color_bar color_b" data-class="bg_b"></div>';
 	// stikynot += '<div class="box_stikynot_color_bar color_g" data-class="bg_g"></div>';
 	// stikynot += '<div class="box_stikynot_color_bar color_pink" data-class="bg_pink"></div>';
@@ -211,6 +214,9 @@ function stikynotShow(stikynot_id, x, y, w, h, _t, c) {
 			stikynot += '<div class="box_stikynot_color_bar color_1" data-class="bg_1"></div>';
 			stikynot += '<div class="box_stikynot_color_bar color_2" data-class="bg_2"></div>';
 			stikynot += '<div class="box_stikynot_color_bar color_3" data-class="bg_3"></div>';
+			stikynot += '<div class="box_stikynot_color_bar color_4" data-class="bg_4"></div>';
+			stikynot += '<div class="box_stikynot_color_bar color_5" data-class="bg_5"></div>';
+			stikynot += '<div class="box_stikynot_color_bar color_6" data-class="bg_6"></div>';
 			// stikynot += '<div class="box_stikynot_color_bar color_b" data-class="bg_b"></div>';
 			// stikynot += '<div class="box_stikynot_color_bar color_g" data-class="bg_g"></div>';
 			// stikynot += '<div class="box_stikynot_color_bar color_pink" data-class="bg_pink"></div>';

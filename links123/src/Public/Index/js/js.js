@@ -76,14 +76,14 @@ $(function() {
 	//调整糖葫芦位置
 	function setThlPnt() {
 	   
-		var top = 52;
+		var top = 40;
 		var left1 = $("#search_text").offset().left + ($("#search_text").width() - $("#J_thl_div").width())/2;
 		var left2 = $("#search_text").offset().left + ($("#search_text").width() - $("#J_thl_div").width()) - 1;
 		var left = 0;
 		
 		//当输入或复制的关键词触碰糖葫芦,糖葫芦就跳到搜索框下方
 		if ( $("#search_text").val() != "" ) {
-			top = 80;
+			top = 65;
 			left = left1;
 		} else {
 			left = left1;
@@ -236,28 +236,27 @@ $(function() {
 				window.open(url);
 		} else {
 				
-				url = APP + "Thl/index";
-				//window.open(url);
-				//因window.open会被浏览器阻止，所以才用表单提交
-				var searchFormObj = $('#searchForm');
-				
-				$('#J_thl').val($("#J_thl_div a.on").text());
-				$('#J_tid').val(tid);
-				$('#J_q').val(keyword);
-				
-				searchFormObj.attr('action', url);
-				searchFormObj.attr('target', '_blank');
-				searchFormObj.submit();
-				searchFormObj.attr('action', '');
-				searchFormObj.attr('target', '');
-				$("#search_text").select();
-				return false;
+			url = APP + "Thl/index";
+			//window.open(url);
+			//因window.open会被浏览器阻止，所以才用表单提交
+			var searchFormObj = $('#searchForm');
+			
+			$('#J_thl').val($("#J_thl_div a.on").text());
+			$('#J_tid').val(tid);
+			$('#J_q').val(keyword);
+			
+			searchFormObj.attr('action', url);
+			searchFormObj.attr('target', '_blank');
+			searchFormObj.submit();
+			searchFormObj.attr('action', '');
+			searchFormObj.attr('target', '');
+			$("#search_text").select();
+			return false;
 		}
 	});
 
 	// 编辑自留地
 	$('.J_myarea').click(function() {
-
 		$('.J_myarea_div').addClass('zld-edit');
 		$('.J_myarea_div ul li span').removeClass('newWin');
 		
@@ -280,7 +279,6 @@ $(function() {
 	
 	//自留地hover状态
 	$('.zld-edit ul li').live('mouseover', function() {
-		
 		$(this).addClass('on').siblings('li').removeClass('on');
 	});
 	
@@ -291,17 +289,51 @@ $(function() {
 		$('#J_myarea_web_url').val($(this).attr('data-url'));
 		$('.J_zld_edit_box').show();
 		$('#J_myarea_web_name').select();
+		$('#J_myarea_tip').text('');
+
 	});
 	
 	$('#J_myarea_web_url').mouseover(function() {
 		$(this).select();
 	});
 	
+	//绑定事件
+	$('#J_myarea_web_name').on('keyup', function(event){
+		var web_name = $(this).val();
+		var t = getLength(web_name);
+		if(t==0||t>8){
+			$('.utips').css({'color':'#f00'});
+		}else{
+			$('.utips').css({'color':'#999'});
+		}
+	});
+
+	var getLength = function(s){
+		s = s.toString();
+		var len = 0;
+		for (var i = 0; i < s.length; i++) {
+			len++;
+			if (s.charCodeAt(i) >= 255) {
+				len++;
+			}
+		}
+		return len;
+	}
+
 	//保存自留地网址
 	$('.J_myarea_web_save').click(function() {
 		var id = $('#J_myarea_id').val();
 		var web_name= $('#J_myarea_web_name').val();
 		var url= $('#J_myarea_web_url').val();
+		var t = getLength(url);
+
+		$('#J_myarea_web_name').trigger('keyup');
+
+		if(t == 0){
+			$('#J_myarea_tip').text('链接为空!').css('color', '#f00');
+			return false;
+		}
+
 		$.post(URL + "/updateArealist", {
 				id: id,
 				web_name: web_name,
@@ -314,11 +346,11 @@ $(function() {
 					var new_url = myarea_web_obj.attr('url').replace(myarea_web_obj.attr('data-url'), url);
 					myarea_web_obj.attr('url', new_url);
 					myarea_web_obj.attr('data-url', url);
-					$('#J_myarea_tip').text('保存成功!');
+					$('#J_myarea_tip').text('保存成功!').css('color', '#84aa03');
 					$('#J_myarea_tip').show();
 
 				} else {
-					$('#J_myarea_tip').text('保存成功!');
+					$('#J_myarea_tip').text('保存失败!').css('color', '#f00');
 					$('#J_myarea_tip').show();
 				}
 				setTimeout(function(){
