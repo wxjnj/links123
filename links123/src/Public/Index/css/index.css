@@ -79,12 +79,12 @@ a,a:hover{ text-decoration: none; }
 }
 
 /*分辨率宽度*/
+.w1000{ min-width: 1000px; }
 .w1000 .wrap,
 .w1000 .top-inner,
 .w1000 .end-inner{
 	margin: 0 auto;
 	width: 1000px;
-	min-width: 1000px;
 }
 
 /*顶部部分*/
