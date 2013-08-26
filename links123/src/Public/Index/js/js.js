@@ -55,6 +55,10 @@ $(function() {
 		$('#direct_text').val($('#direct_text').attr('txt'));
 	});
 	
+	$('#direct_text').click(function() {
+		$('#direct_text').val('');
+	});
+	
 	// 直达回车键响应 
 	$("#direct_text").keydown(function(event) {
 		if (event.keyCode == 13) {

@@ -77,7 +77,7 @@ class RegisterAction extends CommonAction
 			$_SESSION['face'] = 'face.jpg';
 			//给新增用户添加默认自留地
 			$myareaModel = D("Myarea");
-			$default_myarea = $myareaModel->field("web_name, url, sort")->where("mid = 0")->Group("url")->order("sort ASC")->limit(20)->select();
+			$default_myarea = $myareaModel->field("web_name, url, sort")->where("mid = 0")->Group("url")->order("sort ASC")->limit(30)->select();
 
 			foreach ($default_myarea as $value) {
 				$value['create_time'] = &$data['create_time'];
