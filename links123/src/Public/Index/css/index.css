@@ -79,12 +79,11 @@ a,a:hover{ text-decoration: none; }
 }
 
 /*分辨率宽度*/
-.w1000{ min-width: 1000px; }
-.w1000 .wrap,
-.w1000 .top-inner,
-.w1000 .end-inner{
+.w960 .wrap,
+.w960 .top-inner,
+.w960 .end-inner{
 	margin: 0 auto;
-	width: 1000px;
+	width: 960px;
 }
 
 /*顶部部分*/
@@ -246,7 +245,7 @@ a,a:hover{ text-decoration: none; }
 }
 /*自留地*/
 .zld{
-	background: url(../imgs/zldbg.png) 0 0 no-repeat;
+	background: url(../imgs/zldbg.png?20130825) 0 0 no-repeat;
 	height: 89px;
 	position: absolute;
 	top: 165px;
@@ -265,33 +264,35 @@ a,a:hover{ text-decoration: none; }
 	display: none;
 }
 .zld .tools{
-	background: url(../imgs/tool-icons.png) 0 0 no-repeat;
-	float: right;
+	background: url(../imgs/tool-icons.png) -2px 0 no-repeat;
+	position: absolute;
 	display: block;
-	height: 40px;
-	width: 40px;
+	height: 35px;
+	width: 35px;
 	text-indent: -999px;
 	overflow: hidden;
-	margin: 9px 9px 0 0;
+	top: 4px;
+	right: 4px;
 }
 .zld .tools:hover{
-	background-position: -40px 0;
+	background-position: -42px 0;
 }
 .zld .close{
 	background: url(../imgs/exit.png?20130824) 0 0 no-repeat;
-	float: right;
+	position: absolute;
 	display: none;
 	height: 20px;
 	width: 41px;
 	text-indent: -999px;
 	overflow: hidden;
-	margin: 11px 11px 0 0;
+	right: 11px;
+	top: 11px;
 	cursor: pointer;
 }
 .zld ul{
 	*zoom: 1;
-	width: 920px;
-	margin-left: 22px;
+	width: 900px;
+	margin-left: 20px;
 	padding-top: 13px;
 }
 .zld ul:after{
@@ -311,7 +312,7 @@ a,a:hover{ text-decoration: none; }
 	height: 29px;
 	line-height: 26px;
 	line-height: 29px\9;
-	width: 54px;
+	width: 52px;
 	text-align: center;
 	overflow: hidden;
 	padding-right: 5px;
@@ -326,7 +327,7 @@ a,a:hover{ text-decoration: none; }
 	height: 29px;
 	line-height: 26px;
 	line-height: 29px\9;
-	width: 54px;
+	width: 52px;
 	text-align: center;
 	overflow: hidden;
 	padding-right: 5px;
