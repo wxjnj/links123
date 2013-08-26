@@ -9,7 +9,9 @@
 	<link href="__PUBLIC__/Index/css/index.css?2013082501" rel="stylesheet" type="text/css" />
 	<link rel="stylesheet" type="text/css" href="__PUBLIC__/skin/fancybox/jquery.fancybox.css?v=2.1.4" media="screen" />
 	<link href="__PUBLIC__/Index/css/jquery-ui.css" rel="stylesheet" type="text/css"/>
+	<link href="__PUBLIC__/skin/FlexSlider/flexslider.css" rel="stylesheet" type="text/css"/>
 	<link href="__PUBLIC__/Index/css/app.css?2013082501" rel="stylesheet" type="text/css" />
+	
 </head>
 
 <body class="w960">
@@ -98,26 +100,22 @@
 			<div class="sider">
 				<div class="video-panel">
 					<div class="video">
-						<img src="__PUBLIC__/Index/imgs/meinv.png" alt="" />
+						<div class="flexslider">
+				          <ul class="slides">
+				          	<li>
+				          		<img src="__PUBLIC__/Index/imgs/meinv.png" alt="" />
+				          	</li>
+				          	<volist name="announces" id="vo">
+								<li>
+								<empty name="vo.content">
+									{$vo.title}
+								<else />
+									<a href="__URL__/ann_detail/id/{$vo.id}" target="_blank">{$vo.title}</a>
+								</empty>
+								</li>
+							</volist>
+				          </ul>
 					</div>
-					<div class="videotarget">
-						<ul>
-							<li><a class="gg" href="#">看公告</a></li>
-							<li><a class="dm" href="#">看动漫</a></li>
-							<div class="annt">
-								    <ul>
-								    <volist name="announces" id="vo">
-										<li>
-										<empty name="vo.content">
-											{$vo.title}
-										<else />
-											<a href="__URL__/ann_detail/id/{$vo.id}" target="_blank">{$vo.title}</a>
-										</empty>
-										</li>
-									</volist>
-								    </ul>
-							</div>
-						</ul>
 					</div>
 				</div>
 			</div>
@@ -281,7 +279,15 @@
 	<script type="text/javascript" src="__PUBLIC__/skin/js/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="__PUBLIC__/Index/js/app.js?2013082602"></script>
 	<script type="text/javascript" src="__PUBLIC__/Index/js/jquery.placeholder.1.3.min.js"></script>
-	
-	
+	<script type="text/javascript" src="__PUBLIC__/skin/FlexSlider/jquery.flexslider-min.js"></script>
+	<script>
+	$(window).load(function() {
+        $('.flexslider').flexslider({
+          animation: "slide",
+          slideshowSpeed: 5000,//设置幻灯片循环的速度，单位为毫秒
+          animationSpeed: 1500,//设置动画的速度，单位为毫秒                            directionNav: true,
+        });
+      });
+	</script>
 </body>
 </html>
