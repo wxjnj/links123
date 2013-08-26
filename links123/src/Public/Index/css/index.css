@@ -3,11 +3,11 @@ input:focus{ outline: 0; }
 a,a:hover{ text-decoration: none; }
 .top{
 	background: url(../imgs/topbg.png) 0 0 repeat-x;
-	height: 35px;
 	top: 0;
 	left: 0;
 	width: 100%;
 }
+.top .top-inner{ height: 35px; }
 .end{
 	height: 52px;
 	position: fixed;
