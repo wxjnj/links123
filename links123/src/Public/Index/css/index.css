@@ -84,6 +84,7 @@ a,a:hover{ text-decoration: none; }
 .w1000 .end-inner{
 	margin: 0 auto;
 	width: 1000px;
+	min-width: 1000px;
 }
 
 /*顶部部分*/
