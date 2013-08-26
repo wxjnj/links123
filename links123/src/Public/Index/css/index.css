@@ -292,8 +292,7 @@ a,a:hover{ text-decoration: none; }
 .zld ul{
 	*zoom: 1;
 	width: 900px;
-	margin-left: 20px;
-	padding-top: 13px;
+	padding: 13px 0 0 20px;
 }
 .zld ul:after{
 	content: '\0020';
