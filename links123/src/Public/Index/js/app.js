@@ -5,7 +5,19 @@ $('#J_apps_add').click(function(){
 	alert('Coming soon...');
 });
 $('#J_weather').click(function(){
-	alert('Coming soon...');
+	$.fancybox({
+		href: '#J_box_weather',
+		helpers:  {
+	        title:  null,
+	        overlay : null
+	    },
+	    width: 400,
+	    height: 280,
+	    autoSize: false
+	    
+	});
+	
+	return false;
 });
 $('.ting').click(function(){
 	alert('Coming soon...');
