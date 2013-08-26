@@ -343,7 +343,7 @@ a,a:hover{ text-decoration: none; }
 	font-weight: bold;
 	height: 30px;
 	line-height: 26px;
-	margin: 20px 0 0 180px;
+	margin: 20px 0 0 100px;
 	display: none;
 }
 .zld-edit-box .btnok{
@@ -375,8 +375,8 @@ a,a:hover{ text-decoration: none; }
 .zld-edit .tools{ display: none; }
 .zld-edit .close{ display: block; }
 .zld-edit-box .tip{
-	color: #FF0000;
-	/*display: none;*/
+	color: #84aa03;
+	padding-left: 10px;;
 }
 
 /*自留地 编辑状态*/
