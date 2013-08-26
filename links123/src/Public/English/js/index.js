@@ -1,6 +1,7 @@
 var ajaxRequest;
 var next_question_lvlup = false;
 $(function() {
+    $("ul.tabs").tabs("div.panes > div");
     if ($("#J_currentRice").text() == 1000) {
         next_question_lvlup = true;
     }
