@@ -17,9 +17,6 @@ class IndexAction extends CommonAction {
 		import("@.ORG.String");
 	
 		// 公告
-		$variable = M("Variable");
-		$ann_name = $variable->getByVname('ann_name');
-	
 		$announce = M("Announcement");
 		$announces = $announce->where('status = 1')->order('sort ASC, create_time DESC')->select();
 	
@@ -37,7 +34,6 @@ class IndexAction extends CommonAction {
 			$areaList = $this->_session('arealist');
 			!empty($areaList) || session('arealist', session('arealist_default'));
 		}
-		$this->assign('ann_name', $ann_name['value_varchar']);
 		$this->assign("announces", $announces);
 	
 		$this->getHeaderInfo();
