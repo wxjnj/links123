@@ -398,15 +398,17 @@ var Config = {
                 }
 			},
 			{
-				action: "https://edit.bjs.yahoo.com/config/login",
-				name: "@yahoo.cn",
-                params: {
-                    login: "#{u}@yahoo.cn",
-                    passwd: "#{p}",
-                    domainss: "yahoocn",
-                    ".intl": "cn",
-                    ".done": "http://mail.cn.yahoo.com/inset.html"
-                }
+				action : "https://login.sina.com.cn/sso/login.php",
+				name: "@sina.cn",
+				params : {
+					username : "#{u}@sina.cn",
+					password : "#{p}",
+					entry : "freemail",
+					gateway : "0",
+					encoding : "UTF-8",
+					url : "http://mail.sina.com.cn/",
+					returntype : "META"
+				}
 			},
 			{
 				action: "http://passport.sohu.com/login.jsp",
