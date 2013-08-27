@@ -31,7 +31,7 @@ function getMediaPatternName($pattern) {
 function getMediaPlayTypeName($type) {
     //0:正常URL播放;1:Object内嵌播放;2:iframe内嵌播放;3:swfobject插件播放;4:本地视频播放
     $name = "未知";
-    if (empty($type)) {
+    if ($type != "0" && empty($type)) {
         return $name;
     }
     switch ($type) {

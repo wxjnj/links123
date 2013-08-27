@@ -17,5 +17,4 @@ class EnglishMediaModel extends CommonModel {
     );
 
 }
-
 ?>

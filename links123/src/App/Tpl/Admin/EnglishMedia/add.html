@@ -1,5 +1,6 @@
 <tagLib name="html" />
 <include file="Public:header" />
+<load href="__PUBLIC__/skin/js/jquery-1.8.0.min.js" />
 
 <div id="main" class="main" >
     <div class="content">
@@ -11,26 +12,71 @@
                     <td class="tLeft" ><input type="text" class="bLeftRequire" name="name" value='' /></td>
                 </tr>
                 <tr>
-                    <td class="tRight" >媒体格式类型：</td>
+                    <td class="tRight" >学科：</td>
+                    <td class="tLeft object_td" >
+                        <input type="hidden" value="{$vo.object}" name="object" />
+                        <volist name="object_list" id="object">
+                            <neq name="object['name']" value="综合">
+                            <label id="object_{$object.id}" class="radio_label object_lable">
+                                {$object.name}
+                            </label>
+                            </neq>
+                        </volist>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tRight" >等级：</td>
+                    <td class="tLeft level_td" >
+                        <input type="hidden" value="{$vo.level}" name="level" />
+                        <volist name="level_list" id="level">
+                            <label id="level_{$level.id}" class="radio_label level_label">
+                                {$level.name}
+                            </label>
+                        </volist>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tRight" >专题：</td>
+                    <td class="tLeft subject_td" >
+                        <input type="hidden" value="{$vo.subject}" name="subject" />
+                        <volist name="subject_list" id="subject">
+                            <label id="subject_{$subject.id}" class="radio_label subject_label">
+                                {$subject.name}
+                            </label>
+                        </volist>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tRight" >难度：</td>
                     <td class="tLeft" >
-                        <label><input type="radio" name="pattern" value="1" checked="checked" />视频</label>&nbsp;&nbsp;
-                        <label><input type="radio" name="pattern" value="2" />音频</label>
+                        <label><input type="radio" name="difficulty" value="1" checked="checked" />初级</label>&nbsp;&nbsp;
+                        <label><input type="radio" name="difficulty" value="2" />中级</label>&nbsp;&nbsp;
+                        <label><input type="radio" name="difficulty" value="3" />高级</label>
                     </td>
                 </tr>
                 <tr>
                     <td class="tRight" >媒体播放类型：</td>
                     <td class="tLeft" >
-                        <label><input type="radio" name="play_type" value="0" checked="checked" />正常URL播放</label>&nbsp;&nbsp;
+                        <label><input type="radio" name="play_type" value="0"  checked="checked"/>正常URL播放</label>&nbsp;&nbsp;
                         <label><input type="radio" name="play_type" value="1" />Object内嵌播放</label>&nbsp;&nbsp;
                         <label><input type="radio" name="play_type" value="2" />iframe内嵌播放</label>&nbsp;&nbsp;
                         <label><input type="radio" name="play_type" value="3" />swfobject插件播放</label>&nbsp;&nbsp;
                         <label><input type="radio" name="play_type" value="4" />本地视频播放</label>
                 </tr>
                 <tr>
-                    <td class="tRight" >媒体存储类型：</td>
+                    <td class="tRight" >媒体格式类型：</td>
                     <td class="tLeft" >
-                        <label><input type="radio" name="storage_type" value="1" checked="checked" />本地</label>&nbsp;&nbsp;
-                        <label><input type="radio" name="storage_type" value="2" />外链</label>
+                        <label><input type="radio" name="pattern" value="1" checked="checked"/>视频</label>&nbsp;
+                        <label><input type="radio" name="pattern" value="2" />音频</label>&nbsp;&nbsp;
+                        媒体存储类型：
+                        <label><input type="radio" name="storage_type" value="1"  checked="checked"/>本地</label>&nbsp;
+                        <label><input type="radio" name="storage_type" value="2" />外链</label>&nbsp;&nbsp;
+                        推荐视频：
+                        <label><input type="radio" name="recommend" value="1" />是</label>&nbsp;
+                        <label><input type="radio" name="recommend" value="0"  checked="checked"/>否</label>&nbsp;&nbsp;
+                        特别推荐：
+                        <label><input type="radio" name="special_recommend" value="1" />是</label>&nbsp;
+                        <label><input type="radio" name="special_recommend" value="0"  checked="checked"/>否</label>
                     </td>
                 </tr>
                 <tr>
@@ -67,3 +113,29 @@
         </form>
     </div>
 </div>
+
+<script type="text/javascript">
+    $(function() {
+
+        $(".object_td").children("label").click(function() {
+            $(this).css("color", "#FF0000").siblings("label").css("color", "#000000");
+            var value = $(this).attr("id").substr($(this).attr("id").indexOf("_") + 1);
+            $("input[name='object']").val(value);
+        })
+        $(".level_td").children("label").click(function() {
+            $(this).css("color", "#FF0000").siblings("label").css("color", "#000000");
+            var value = $(this).attr("id").substr($(this).attr("id").indexOf("_") + 1);
+            $("input[name='level']").val(value);
+        })
+        $(".subject_td").children("label").click(function() {
+            var value = $(this).attr("id").substr($(this).attr("id").indexOf("_") + 1);
+            if ($(this).css("color") == "rgb(255, 0, 0)") {
+                value = 0;
+                $(this).css("color", "#000000")
+            } else {
+                $(this).css("color", "#FF0000").siblings("label").css("color", "#000000");
+            }
+            $("input[name='subject']").val(value);
+        })
+    })
+</script>

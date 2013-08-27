@@ -9,14 +9,6 @@ class EnglishMediaAction extends CommonAction {
 
     public function _filter(&$map, &$param) {
         if (isset($_REQUEST['name'])) {
-            $name = $this->_request("name");
-            $map['name'] = array("like", "%" . $name . "%");
-            $map['path'] = array("like", "%" . $name . "%");
-            $map['media_url'] = array("like", "%" . $name . "%");
-            $map['_logic'] = "or";
-            $param['name'] = $name;
-        }
-        if (isset($_REQUEST['name'])) {
             $name = ftrim($_REQUEST['name']);
         }
         if (intval($_REQUEST['pattern']) > 0) {
@@ -73,13 +65,13 @@ class EnglishMediaAction extends CommonAction {
         }
         //
         //科目列表
-        $object_list = D("EnglishObject")->getList("status=1","`sort` ASC");
+        $object_list = D("EnglishObject")->getList("status=1", "`sort` ASC");
         $this->assign("object_list", $object_list);
         //等级列表
-        $level_list = D("EnglishLevel")->getList("status=1","`sort` ASC");
+        $level_list = D("EnglishLevel")->getList("status=1", "`sort` ASC");
         $this->assign("level_list", $level_list);
         //专题列表
-        $subject_list = D("EnglishMediaSubject")->getList("status=1","`sort` ASC");
+        $subject_list = D("EnglishMediaSubject")->getList("status=1", "`sort` ASC");
         $this->assign("subject_list", $subject_list);
         //
         $this->assign("param", $param);
@@ -118,6 +110,36 @@ class EnglishMediaAction extends CommonAction {
                 $this->error('非法操作');
             }
         }
+    }
+
+    public function add() {
+        $object_list = D("EnglishObject")->where("`status`=1")->order("sort")->select();
+        $this->assign("object_list", $object_list);
+        $level_list = D("EnglishLevel")->where("`status`=1")->order("sort")->select();
+        $this->assign("level_list", $level_list);
+        $subject_list = D("EnglishMediaSubject")->where("`status`=1")->order("`sort`")->select();
+        $this->assign("subject_list", $subject_list);
+
+        $this->display();
+    }
+
+    public function edit() {
+        $name = $this->getActionName();
+        $model = M($name);
+        $id = intval($_REQUEST [$model->getPk()]);
+        $vo = $model->getById($id);
+        $option_list = D("EnglishOptions")->getQuestionOptionList($id);
+        $this->assign('option_list', $option_list);
+        $this->assign('vo', $vo);
+
+        $object_list = D("EnglishObject")->where("`status`=1")->order("sort")->select();
+        $this->assign("object_list", $object_list);
+        $level_list = D("EnglishLevel")->where("`status`=1")->order("sort")->select();
+        $this->assign("level_list", $level_list);
+        $subject_list = D("EnglishMediaSubject")->where("`status`=1")->order("`sort`")->select();
+        $this->assign("subject_list", $subject_list);
+
+        $this->display();
     }
 
 }
