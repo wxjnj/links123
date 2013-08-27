@@ -1,0 +1,81 @@
+<!-- 
+ http://m.weather.com.cn/img/c0.gif
+ http://m.weather.com.cn/img/b0.gif
+ 
+ http://www.weather.com.cn/m/i/weatherpic/29x20/d0.gif
+ http://www.weather.com.cn/m2/i/icon_weather/29x20/n00.gif 
+ 这个图就是天气现象0（晴）的图片，其他天气现象的图片依此类推。
+ c打头的图片是20*20像素的，
+ b打头的是50*46像素的，
+ d打头的是反白的图标，29*20像素，
+ n打头的是夜间反白图标，29*20像素，注意这里的文件名是两位数字！
+ -->
+<div id="ArtList">
+<table width="560" border='1' align="center">
+<tbody><tr>
+<td align="left"><strong>{$sixweather.weatherinfo.date_y}&nbsp;{$sixweather.weatherinfo.week}&nbsp;{$sixweather.weatherinfo.city}</strong></td>
+</tr></tbody>
+</table>
+
+<table width="560" border="1" align="center">
+<tbody>
+<tr>
+<td align="left" colspan="3"><strong>当前天气</strong></td>
+</tr>
+
+<tr>
+<td width="208" height="80">
+<img src="http://m.weather.com.cn/img/b{$sixweather.weatherinfo.img1}.gif">
+</td>
+<td width="165">{$sixweather.weatherinfo.weather1}<br>{$sixweather.weatherinfo.temp1}</td>
+<td width="183">·风力：{$sixweather.weatherinfo.fl1}<br>·紫外线强度：{$sixweather.weatherinfo.index_uv}</td>
+</tr>
+</tbody>
+</table>
+
+<table width="560" height="110"  border="1" align="center">
+<tbody>
+<tr>
+<td colspan='3'><strong>72小时天气预报</strong></td>
+</tr>
+
+<tr>
+
+<td align="center">
+<table width="175" cellspacing="0" cellpadding="0" border="0" align="center">
+<tbody>
+<tr><td height="23" align="center">{$data.0}</td></tr>
+<tr><td height="60" align="center"><img src="http://m.weather.com.cn/img/b{$sixweather.weatherinfo.img1}.gif"></td></tr>
+<tr><td height="57" align="center">{$sixweather.weatherinfo.weather1}<br>{$sixweather.weatherinfo.temp1}
+<br>{$sixweather.weatherinfo.wind1}</td></tr>
+</tbody>
+</table>
+</td>
+
+<td align="center">
+<table width="175" cellspacing="0" cellpadding="0" border="0" align="center">
+<tbody>
+<tr><td height="23" align="center">{$data.1}</td></tr>
+<tr><td height="60" align="center"><img src="http://m.weather.com.cn/img/b{$sixweather.weatherinfo.img3}.gif"></td></tr>
+<tr><td height="57" align="center">{$sixweather.weatherinfo.weather2}<br>{$sixweather.weatherinfo.temp2}
+<br>{$sixweather.weatherinfo.wind2}</td></tr>
+</tbody>
+</table>
+</td>
+
+<td align="center">
+<table width="175" cellspacing="0" cellpadding="0" border="0" align="center">
+<tbody>
+<tr><td height="23" align="center">{$data.2}</td></tr>
+<tr><td height="60" align="center"><img src="http://m.weather.com.cn/img/b{$sixweather.weatherinfo.img5}.gif"></td></tr>
+<tr><td height="57" align="center">{$sixweather.weatherinfo.weather3}<br>{$sixweather.weatherinfo.temp3}
+<br>{$sixweather.weatherinfo.wind3}</td></tr>
+</tbody>
+</table>
+</td>
+
+</tr>
+</tbody>
+
+</table>
+</div>

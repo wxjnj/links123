@@ -751,11 +751,11 @@ class IndexAction extends CommonAction {
 	public function ajax_get_links() {
 		if ($this->isAjax()) {
 			$lan = intval($this->_param('lan'));
-			$page = (int)$this->_param('p');
+			$page = intval($this->_param('p'));
 			$cid = intval($this->_param('cid'));
 			$grade = $this->_param('grade');
 			$sort = $this->_param('sort');
-			$page = $page ? $page : 1;
+			$page = $page >1 ? $page : 1;
 			
 			if ($lan == 0) {
 				$lan = session('lanNow');
