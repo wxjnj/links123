@@ -98,7 +98,7 @@ $(function() {
 		$('#J_thl_div').show();
 	});
 	
-	$('.thl').mouseleave(function(){
+	$('.J_thl_area').mouseleave(function(){
 		$('#J_thl_div').hide();
 	});
 	
