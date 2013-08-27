@@ -2,6 +2,7 @@
 <include file="Public:header" />
 
 <load href="__PUBLIC__/Js/jquery.js" />
+<load href="__PUBLIC__/Js/My97DatePicker/WdatePicker.js" />
 
 <div id="main" class="main" >
     <div class="content" >
@@ -9,6 +10,9 @@
 
         <div class="operate" >
             <html:imageBtn name="add" click="add()" style="hMargin fLeft" />
+            <html:imageBtn name="edit" click="edit()" style="hMargin fLeft" />
+            <html:imageBtn name="forbid" click="forbid()" style="hMargin fLeft" />
+            <html:imageBtn name="delete" click="foreverdel()" style="hMargin fLeft" />
         </div>
 
         <form method='post' action="__URL__">
@@ -16,10 +20,64 @@
                 <div class="fLeft">媒体查询：<span id="key"><input type="text" name="name" value="{$name}" class="medium" /></span></div>
                 <html:imageBtn type="submit" name="search" style="hMargin fLeft" />
             </div>
+            <div class="search cBoth">
+                格式：
+                <label>
+                    <input class="checkbox" type="checkbox" value="1" name="pattern" <eq name="param['pattern']" value="1">checked="checked"</eq>>
+                    视频
+                </label>
+                <label>
+                    <input class="checkbox" type="checkbox" value="2" name="pattern" <eq name="param['pattern']" value="2">checked="checked"</eq>>
+                    音频
+                </label>&nbsp;&nbsp;
+                科目：
+                <select name="object">
+                    <volist name="object_list" id="object">
+                        <option value="{$object.id}"  <eq name="param['object']" value="$object['id']">selected="true"</eq>>{$object.name}</option>
+                    </volist>
+                </select>&nbsp;&nbsp;
+                <select name="level">
+                    <option value="0">全部</option>
+                    <volist name="level_list" id="level">
+                        <option value="{$level.id}" <eq name="param['level']" value="$level['id']">selected="true"</eq>>{$level.name}</option>
+                    </volist>
+                </select>
+                &nbsp;&nbsp;
+                专题：
+                <select name="subject">
+                    <option value="0">全部</option>
+                    <volist name="subject_list" id="subject">
+                        <option value="{$subject.id}" <eq name="param['subject']" value="$subject['id']">selected="true"</eq>>{$subject.name}</option>
+                    </volist>
+                </select>
+                <select name="difficulty">
+                    <option value="0">全部</option>
+                    <option value="1">初级</option>
+                    <option value="2">中级</option>
+                    <option value="3">高级</option>
+                </select>
+                &nbsp;&nbsp;
+                添加时间：
+                <input type="text" id="J_createTime" name="created" value="{$param['created']}" />
+                &nbsp;&nbsp;
+                状态：
+                <label>
+                    <input class="checkbox" type="checkbox" value="-2" name="status" <if condition="($param['status'] eq -2)OR(!isset($param['status']))">checked="checked"</if>>
+                    全部
+                </label>&nbsp;
+                <label>
+                    <input class="checkbox" type="checkbox" value="1" name="status" <if condition="$param['status'] eq 1">checked="checked"</if>>
+                    正常
+                </label>&nbsp;
+                <label>
+                    <input class="checkbox" type="checkbox" value="0" name="status" <eq name="param['status']" value="0">checked="checked"</eq>>
+                    禁用
+                </label>
+            </div>
         </form>
 
         <div class="list" >
-            <html:list id="checkList" name="category" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,name:名称:edit,pattern|getMediaPatternName:格式类型,play_type|getMediaPlayTypeName:播放类型,storage_type|getStorageTypeName:视频存储类型,media_source_url|getLinkToHref:视频来源地址,path:视频地址,media_thumb_img:缩略图,created|toDateShort:发布时间,status|getStatus:状态" actionlist="edit:编辑" />
+            <html:list id="checkList" name="category" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,name:名称:edit,object_name:科目,level_name:等级,subject_name:专题,difficulty|getMediaDifficultyName:难度,pattern|getMediaPatternName:格式类型,play_type|getMediaPlayTypeName:播放类型,storage_type|getStorageTypeName:视频存储类型,media_source_url|getLinkToHref:视频来源地址,recommend|getYorN:是否推荐,special_recommend|getYorN:是否特别推荐,created|toDate:发布时间,status|getStatus:状态" actionlist="edit:编辑" />
         </div>
 
         <div class="page">{$page}</div>
@@ -28,4 +86,24 @@
 
 </div>
 </body>
+<script type="text/javascript">
+    $(function() {
+        $("#J_createTime").focus(function() {
+            WdatePicker({dateFmt: 'yyyy-MM-dd', maxDate: "%y-%M-%d", onpicked: function() {
+                    $("[name='search']").click();
+                }, oncleared: function() {
+                    $("[name='search']").click();
+                }
+            });
+            $(this).blur();
+        })
+        $(".search .checkbox").click(function() {
+            $("[name='" + $(this).attr("name") + "']").not("[value='" + $(this).val() + "']").removeAttr("checked");
+            $("[name='search']").click();
+        })
+        $("[name='object'],[name='level'],[name='subject'],[name='difficulty']").change(function() {
+            $("[name='search']").click();
+        })
+    })
+</script>
 </html>

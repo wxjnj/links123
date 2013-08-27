@@ -79,4 +79,44 @@ function getStorageTypeName($type) {
     return $name;
 }
 
+/**
+ * 获取媒体专题父类名称
+ * @param int $pid
+ * @return string
+ * @author Adam $date2013.08.26$
+ */
+function getEnglishMediaSubjectPidName($pid) {
+    $name = "顶级专题";
+    if (intval($pid) > 0) {
+        $map['id'] = intval($pid);
+        $name = D("EnglishMediaSubject")->where($map)->getField("name");
+    }
+    return $name;
+}
+
+/**
+ * 获取媒体难度名称
+ * @param int $difficulty
+ * @return string
+ * @author Adam $date2013.08.27$
+ */
+function getMediaDifficultyName($difficulty) {
+    $name = "";
+    switch ($difficulty) {
+        case 1:
+            $name = "初级";
+            break;
+        case 2:
+            $name = "中级";
+            break;
+        case 3:
+            $name = "高级";
+            break;
+        default:
+            $name = "未知";
+            break;
+    }
+    return $name;
+}
+
 ?>
