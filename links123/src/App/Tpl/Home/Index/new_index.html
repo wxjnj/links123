@@ -81,7 +81,7 @@
 				<ul id="J_sortable">
 					<volist name="_SESSION['arealist']" id="vo">
 					<if condition="$vo['id'] neq ''">
-						<li id="{$vo.id}"><span url="{:U('Link/index')}?mod=myarea&url={$vo.url}"  class="newWin" data-id="{$vo.id}" data-url="{$vo.url}">{$vo.web_name}</span></li>
+						<li id="{$vo.id}"><span url="{:U('Link/index')}?mod=myarea&url={$vo.url}"  class="newWin" data-id="{$vo.id}" data-url="{$vo.url}"><b>{$vo.web_name}</b></span></li>
 					</if>
 					</volist>
 				</ul>
@@ -173,13 +173,13 @@
 		<div class="end-inner">
 			<div class="skins">
 				<ul>
-					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-skin001.png" alt="" /></a></li>
-					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-skin002.png" alt="" /></a></li>
-					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-skin003.png" alt="" /></a></li>
-					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-skin004.png" alt="" /></a></li>
-					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-skin005.png" alt="" /></a></li>
-					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-skin006.png" alt="" /></a></li>
-					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-skin-add.png" alt="" /></a></li>
+					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-s-001.png" alt="" /></a></li>
+					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-s-001.png" alt="" /></a></li>
+					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-s-001.png" alt="" /></a></li>
+					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-s-001.png" alt="" /></a></li>
+					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-s-001.png" alt="" /></a></li>
+					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-s-001.png" alt="" /></a></li>
+					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-s-001.png" alt="" /></a></li>
 				</ul>
 			</div>
 			<div class="copyright">
@@ -188,7 +188,7 @@
 					<li><a href="__APP__/Suggestion" target="_blank">留言板</a><span>|</span></li>
 					<li><a href="__APP__/Blogroll" target="_blank">友情链接</a><span>|</span></li>
 					<li><a href="__APP__/Recommend" target="_blank">推荐链接</a><span>|</span></li>
-					<li><a href="#" class="a_setHome">设为首页</a></li>
+					<li><a href="javascript:void(0);" class="a_setHome">设为首页</a></li>
 					<li class="icp">沪ICP备12036721号</li>
 				</ul>
 			</div>

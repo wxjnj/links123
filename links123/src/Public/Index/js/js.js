@@ -32,14 +32,6 @@ $(function() {
 		setHome('http://www.links123.cn');
 	});
 
-	// tip标签
-	//$(".tip").tipTip({maxWidth: "auto", edgeOffset: 3, defaultPosition: "top"});
-
-	// 关闭本页
-	$("#btn_close_me").click(function() {
-		closeme();
-	});
-
 	// 弹出页
 	$(".newWin").live('click', function() {
 		myWinOpen($(this).attr('url'), '', '');
@@ -48,212 +40,16 @@ $(function() {
 	// 直达框获得焦点
 	$(".J_header_top").mouseover(function() {
 		$("#direct_text").select();
-	});
-	
-	$('.J_header_top').mouseout(function() {
+	}).mouseout(function() {
 		$('#search_text').select();
-		$('#direct_text').val($('#direct_text').attr('txt'));
+		$('#direct_text').val($('#direct_text').attr('txt')).removeClass('ipson');
 	});
-	
 	$('#direct_text').click(function() {
-		$('#direct_text').val('');
+		$('#direct_text').val('').addClass('ipson');
 	});
-	
-	// 直达回车键响应 
-	$("#direct_text").keydown(function(event) {
-		if (event.keyCode == 13) {
-			var tag = $.trim($(this).val());
-			if (tag != '') {
-				$("#direct_text").select();
-				//$("#frm_drct").submit();
-			}
-		}
-	});
-	
-	/* 糖葫芦 */
-	var top = $("#search_text").offset().top + Math.floor(($("#search_text").height() - $("#J_thl_div").height())/2)+1;
-	
-	//调整糖葫芦位置
-	function setThlPnt() {
-	   
-		var top = 40;
-		var left1 = $("#search_text").offset().left + ($("#search_text").width() - $("#J_thl_div").width())/2;
-		var left2 = $("#search_text").offset().left + ($("#search_text").width() - $("#J_thl_div").width()) - 1;
-		var left = 0;
-		
-		//当输入或复制的关键词触碰糖葫芦,糖葫芦就跳到搜索框下方
-		if ( $("#search_text").val() != "" ) {
-			top = 65;
-			left = left1;
-		} else {
-			left = left1;
-			$('#J_thl_div').hide();
-		}
-
-		$("#J_thl_div").css("top", top);
-		//$("#J_thl_div").css("left", left);
-	}
-	
-	$('.thl').mouseover(function(){
-		$('#J_thl_div').show();
-	});
-	
-	$('.J_thl_area').mouseleave(function(){
-		$('#J_thl_div').hide();
-	});
-	
-	//糖葫芦籽点击
-	$(".J_thlz a").click(function(){
-		
-		$(this).addClass("on").siblings("a").removeClass("on");
-		
-		$("#btn_search").trigger("click");
-
-	});
-			
-	//糖葫芦点击
-	$("#J_thl_div a").click(function(){
-		
-		$(this).addClass("on").siblings("a").removeClass("on");
-		
-		var index = $(this).index();
-		
-		$(".J_thlz:eq(" + index + ")").show().siblings(".J_thlz").hide();
-		
-		$(".J_thlz a").removeClass("on");
-		$(".J_thlz:eq(" + index + ")").find("a:first").addClass("on");
-		
-		return false;
-	});
-	
-	// F5清key
-	$(document).keydown(function(event){
-		if (event.keyCode == 116) { // F5
-			$.cookies.set( 'keyword', '');
-		}
-	});
-	
-	// 点击logo清key
-	$(".logo a").click(function(){
-		$.cookies.set( 'keyword', '');
-	});
-	
-	// 清key
-	$("#search_text").blur(function(){
-		if ($(this).val()=='') {
-			$.cookies.set( 'keyword', '');
-		}
-	});
-	
-	$("#search_text").keyup(function(){
-		$('#J_thl_div').show();
-		setThlPnt();
-	});
-	
-	// 回车键响应 
-	$("#search_text").keypress(function(event){
-		  if(event.keyCode==13) {
-			  //$(this).select();
-			  $("#btn_search").trigger("click");
-			  $("#search_text").select();
-			  return false;
-		  }
-	});
-	
-	//
-	$("#search_text").mouseover(function(){
-		$("#search_text").select();
-		return false;
-	});
-	
-	$("#search_text").select();
-	
-	// 搜索文本框始终获取焦点
-	$(document).mouseup(function(ev){
-		//
-		if ( document.activeElement.tagName == "INPUT" 
-			|| document.activeElement.tagName == "TEXTAREA" 
-			|| document.activeElement.tagName == "IFRAME" 
-			|| document.activeElement.className == "ding"
-			|| document.activeElement.className == "cai" 
-			|| window.location.href.indexOf("suggestion") > 0  ) {
-			return;
-		}
-		if ( document.activeElement.tagName == "BODY" ) {
-			if ($("#frm_say")[0]) {
-				var fw_top = $("#frm_say").offset().top;
-				var fw_bottom = fw_top + 200;
-				var fw_left = $("#frm_say").offset().left;
-				var fw_right = fw_left + 700;
-				if ( ev.pageX > fw_left && ev.pageX < fw_right && ev.pageY > fw_top && ev.pageY < fw_bottom ) {
-					return;
-				}               
-			}
-		}
-		//
-		var txt = '';
-		if (window.getSelection) { // mozilla FF 
-			txt = window.getSelection();
-		} else if (document.getSelection) {
-			txt = document.getSelection();
-		} else if (document.selection) { //IE
-			txt = document.selection.createRange().text;
-		}
-		//
-		if ( txt == '' ) {
-			$("#search_text").select();
-		}
-		
-		if ($.cookies.get( 'keyword')) {
-			$("#search_text").select();
-		}
-	});
-	
-	/* 搜索 */ 
-
-	$("#btn_search").click(function() {
-		
-		$("#search_text").select();
-		
-		var keyword  = $.trim($("#search_text").val());
-		$.cookies.set( 'keyword', keyword);
-		
-		keyword = keyword.replace('http://','');
-		
-		//十六进制的转义
-		keyword = encodeURIComponent(keyword);
-		
-		var url = $(".J_thlz a.on").attr("url");
-		url = url.replace('keyword', keyword);
-		var tid = $(".J_thlz a.on").attr("tid");
-		
-		if (tid == '4' || tid == '40' || tid == '58' || tid == '110' || tid == '117') { // 谷歌、美试、啪啪、PQuora
-			
-			$.post(URL + "/thl_count", {tid : tid}, function() {});
-			window.open("http://" + url);
-			
-		} else if (tid == '10' || tid == '20') { // 另客、维修
-				window.open(url);
-		} else {
-				
-			url = APP + "Thl/index";
-			//window.open(url);
-			//因window.open会被浏览器阻止，所以才用表单提交
-			var searchFormObj = $('#searchForm');
-			
-			$('#J_thl').val($("#J_thl_div a.on").text());
-			$('#J_tid').val(tid);
-			$('#J_q').val(keyword);
-			
-			searchFormObj.attr('action', url);
-			searchFormObj.attr('target', '_blank');
-			searchFormObj.submit();
-			searchFormObj.attr('action', '');
-			searchFormObj.attr('target', '');
-			$("#search_text").select();
-			return false;
-		}
-	});
+	$('#frm_drct').submit(function(){
+		if($.trim($(this).val()) == '') return false; //输入内容为空不提交
+	});	
 
 	// 编辑自留地
 	$('.J_myarea').click(function() {
@@ -281,6 +77,11 @@ $(function() {
 	$('.zld-edit ul li').live('mouseover', function() {
 		$(this).addClass('on').siblings('li').removeClass('on');
 	});
+
+	//自留地竖线边框
+	var zldli = $('.zld ul li');
+	zldli.eq(0).css('background', 'none');
+	zldli.eq(15).css('background', 'none');
 	
 	//编辑自留地网址
 	$('.zld-edit ul li span').live('click', function() {
@@ -358,6 +159,11 @@ $(function() {
 					$('.J_zld_edit_box').hide();
 				}, 2000);
 		});
+	});
+
+	//应用部分选中
+	$('.apps li').on('mouseleave mouseenter', function(){
+		$(this).toggleClass('on');
 	});
 	
 	//登录窗口
@@ -575,6 +381,8 @@ $(function() {
 			return false;
 		}
 	});
+
+	THL.init();
 });
 
 // 设为首页
@@ -634,5 +442,125 @@ function getCookie(name) {
 //
 function setCookie(name, value) {
 	document.cookie = name + "=" + value + "; path=/;";
+}
+
+/* 糖葫芦 */
+var THL = {
+	conf : {
+		topnm : 40,
+		topex : 65
+	},
+	init : function(){
+		var self = this;
+
+		//重新加载页面清除keyword 清除浏览器未清除的文本框的值
+		$.cookies.set('keyword', '');
+		$("#search_text").val('');
+		
+		$('.thl').mouseover(function(){ $('#J_thl_div').show(); }); //移入糖葫芦区域 显示糖葫芦
+		$('.J_thl_area').mouseleave(function(){ $('#J_thl_div').hide(); }); //移除糖葫芦主区域 隐藏糖葫芦
+		
+		$(".J_thlz a").click(function(){ //糖葫芦籽点击
+			$(this).addClass("on").siblings("a").removeClass("on");
+			$("#btn_search").trigger("click");
+			return false;
+		});
+		
+		$("#J_thl_div a").click(function(){ //糖葫芦点击
+			$(this).addClass("on").siblings("a").removeClass("on");
+			var index = $(this).index();
+			$(".J_thlz:eq(" + index + ")").show().siblings(".J_thlz").hide();
+			$(".J_thlz a").removeClass("on");
+			$(".J_thlz:eq(" + index + ")").find("a:first").addClass("on");
+			return false;
+		});
+
+		$("#search_text").blur(function(){ //文本框失去焦点 如 内容为空 清除keyword
+			if ($(this).val() == '') {
+				$.cookies.set('keyword', '');
+			}
+		});
+		
+		$("#search_text").keyup(function(){ //文本框输入内容 设置糖葫芦 位置
+			$('#J_thl_div').show();
+			self.setpos();
+		});
+		
+		$("#search_text").keypress(function(event){ // 回车键响应
+			if(event.keyCode==13) {
+				$("#btn_search").trigger("click");
+				$("#search_text").select();
+				return false;
+			}
+		});
+
+		$("#search_text").mouseover(function(){ $("#search_text").select(); }); //移入 文本框 选中 文本
+		
+		$("#search_text").select(); //选中文本框
+
+		$(document).mouseup(function(ev){ // 搜索文本框始终获取焦点
+			if ( document.activeElement.tagName == "INPUT" 
+				|| document.activeElement.tagName == "TEXTAREA" 
+				|| document.activeElement.tagName == "IFRAME"   ) {
+				return;
+			}
+			var txt = '';
+			if (window.getSelection){ // mozilla FF 
+				txt = window.getSelection();
+			}else if(document.getSelection){
+				txt = document.getSelection();
+			}else if(document.selection){ //IE
+				txt = document.selection.createRange().text;
+			}
+			if (txt == '') { $("#search_text").select(); } //未划选文本 划选 文本框
+			if ($.cookies.get('keyword')){ $("#search_text").select(); } //有keyword时 直接划选 文本框
+		});
+
+		$("#btn_search").click(function() { //单击搜索按钮
+			$("#search_text").select();
+			var keyword  = $.trim($("#search_text").val());
+			$.cookies.set( 'keyword', keyword); //保存keyword
+			keyword = keyword.replace('http://','');
+			keyword = encodeURIComponent(keyword);
+			var url = $(".J_thlz a.on").attr("url").replace('keyword', keyword);
+			var tid = $(".J_thlz a.on").attr("tid");
+			self.go(url, tid, keyword);
+			return false;
+		});
+	},
+	go : function(url, tid, keyword){
+		if (tid == '4' || tid == '40' || tid == '58' || tid == '110' || tid == '117') { // 谷歌、美试、啪啪、PQuora
+			$.post(URL + "/thl_count", {tid : tid}, function() {});
+			window.open("http://" + url);
+		} else if (tid == '10' || tid == '20') { // 另客、维修
+			window.open(url);
+		} else {	
+			url = APP + "Thl/index";
+			//window.open(url);
+			//因window.open会被浏览器阻止，所以才用表单提交
+			var searchFormObj = $('#searchForm');
+			
+			$('#J_thl').val($("#J_thl_div a.on").text());
+			$('#J_tid').val(tid);
+			$('#J_q').val(keyword);
+			
+			searchFormObj.attr('action', url);
+			searchFormObj.attr('target', '_blank');
+			searchFormObj.submit();
+			searchFormObj.attr('action', '');
+			searchFormObj.attr('target', '');
+			$("#search_text").select();
+		}
+	},
+	setpos : function(){
+		var top, self = this;
+		if($("#search_text").val() != ''){ //文本框有值调整位置
+			top = self.conf.topex;
+		}else{
+			top = self.conf.topnm;
+			$('#J_thl_div').hide(); //没值隐藏
+		}
+		$("#J_thl_div").css("top", top);		
+	}
 }
 
