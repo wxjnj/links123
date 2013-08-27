@@ -69,7 +69,7 @@ class CommonAction extends Action {
 		if (empty($arrs)) {
 			$variable    = M("Variable");
 			
-			$vars = $variable->where("`vname` = 'title' OR `vname` = 'Keywords' OR `vname` = 'Description' OR `vname` = 'cn_tip' or `vname` = 'en_tip' or `vname` = 'directTip' or `vname` = 'thl' or `vname` = 'pauseTime'")->select();
+			$vars = $variable->select();
 			foreach ($vars as $row) {
 				$arrs[$row['vname']] = empty($row['value_int']) ? $row['value_varchar'] : $row['value_int'];
 			}

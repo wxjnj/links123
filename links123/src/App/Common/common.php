@@ -344,10 +344,11 @@ function array_sort($arr, $keys, $type = 'desc') {
 }
 
 /**
+ * @name cleanParam
  * @desc 验证参数
- * @author Frank UPDATE 2013-08-19
  * @param string $param
  * @return string
+ * @author Frank UPDATE 2013-08-19
  */
 function cleanParam($param) {
     $param = trim($param);

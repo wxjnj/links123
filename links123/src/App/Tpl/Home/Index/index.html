@@ -48,7 +48,7 @@
 							<if condition="($rid eq 5)">
 								<a url="{:U('Detail/index')}?id={$vo.id}" class="newWin">
 							<else />
-								<a href="{:U('Index/link_out')}?url={$vo['link']}" target="_blank">
+								<a href="{:U('Link/index')}?url={$vo['link']}" target="_blank">
 							</if>
 						<img src="__PUBLIC__/Uploads/Links/{$vo.logo}" width="76px" height="76px"  alt="{$vo.linkTitle}"/></a></div>
 					</div>
@@ -60,7 +60,7 @@
 							<if condition="($rid eq 5)">
 								<a url="{:U('Detail/index')}?id={$vo.id}" class="newWin">
 							<else />
-								<a href="{:U('Index/link_out')}?url={$vo['link']}" target="_blank">
+								<a href="{:U('Link/index')}?url={$vo['link']}" target="_blank">
 							</if>
 							{$vo.title}</a><notempty name="vo.recommended">　<span>{$vo.recommended} 推荐</span></notempty></div>
 							<div class="sc"><a class="cont_fontright btn_collect" lnk_id="{$vo.id}" link="{$vo.link}">收藏</a>&nbsp;<label><notempty name="vo.collect_num">{$vo.collect_num}</notempty></label></div>
@@ -87,7 +87,7 @@
 						<if condition="($rid eq 5)">
 							<a url="{:U('Detail/index')}?id={$vo.id}" class="newWin">
 						<else />
-							<a href="{:U('Index/link_out')}?url={$vo['link']}" target="_blank">
+							<a href="{:U('Link/index')}?url={$vo['link']}" target="_blank">
 						</if>
 						<img src="__PUBLIC__/Uploads/Links/{$vo.logo}" width="76px" height="76px" alt="{$vo.linkTitle}"/></a></div>
 					</div>
@@ -98,7 +98,7 @@
 								<if condition="($rid eq 5)">
 									<a url="{:U('Detail/index')}?id={$vo.id}" class="newWin">
 								<else />
-									<a href="{:U('Index/link_out')}?url={$vo['link']}" target="_blank">
+									<a href="{:U('Link/index')}?url={$vo['link']}" target="_blank">
 								</if>
 								{$vo.title}</a>&nbsp;<notempty name="vo.recommended">　<span>{$vo.recommended} 推荐</span></notempty></dd>
 						</dl>
