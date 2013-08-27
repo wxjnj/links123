@@ -10,14 +10,14 @@ import("@.Common.CommonAction");
 class WeatherAction extends CommonAction {
 	
 	public function index() {
-		//$ip = get_client_ip();
-		$ip = '112.22.83.38';
-// 		$url = 'http://ip.taobao.com/service/getIpInfo.php?ip='.urlencode($ip);
-// 		$body = getContent($url);
-// 		$d = json_decode($body, true);
-// 		$city = $d['data']['city'];
-// 		$city = str_replace('市', '', $city);
-        $city = '无锡';
+		$ip = get_client_ip();
+		//$ip = '112.22.83.38';
+ 		$url = 'http://ip.taobao.com/service/getIpInfo.php?ip='.urlencode($ip);
+ 		$body = getContent($url);
+ 		$d = json_decode($body, true);
+ 		$city = $d['data']['city'];
+ 		$city = str_replace('市', '', $city);
+        //$city = '无锡';
 		$cities = M('cities');
 		$cityId = $cities->where("city = '%s'", $city)->getField('id');
 		
