@@ -521,16 +521,18 @@ a,a:hover{ text-decoration: none; }
 .apps .nm{
 	margin-top: 10px;
 }
-.apps .nm a,
-.apps .nm a:hover{
+.apps .nm a{
 	color: #dfdfdf;
 	font-weight: bold;
 }
-.apps .nm span,
-.apps .nm span:hover{
+.apps .nm span{
 	color: #dfdfdf;
 	font-weight: bold;
 	cursor: pointer;
+}
+.apps .nm a:hover, .apps .nm span:hover {
+	color:  #d20015;
+	font-weight: normal;
 }
 /*皮肤*/
 .skins{

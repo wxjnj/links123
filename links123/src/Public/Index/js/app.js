@@ -182,7 +182,9 @@ $(document).on('click', '.J_stikynot_add', function(){
 	});
 	
 	stikynot_id = stikynot_max_id;
-	$('.ui-dialog').resizable({ alsoResize: '.box_stikynot_head,.box_stikynot_text,.J_stikynot_text',autoHide: true }); 
+	$('.ui-dialog').resizable({ alsoResize: '.box_stikynot_head,.box_stikynot_text,.J_stikynot_text',autoHide: true });
+	
+	$('.J_stikynot_text').select();
 	return false;
 });
 
@@ -317,6 +319,7 @@ $(document).on('click', '.box_stikynot_color_bar', function(){
 	textObj.addClass('J_stikynot_text ' + _c);
 	
 	stikynotSave(stikynot_id, 0, 0, 0, 0, '', _c);
+	$('.J_stikynot_text').select();
 });
 // $(document).on('mouseover', '.box_stikynot_color_bar', function(){
 // 	$(this).css('opacity', '1');
