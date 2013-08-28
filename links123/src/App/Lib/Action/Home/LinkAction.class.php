@@ -35,6 +35,7 @@ class LinkAction extends CommonAction {
 		echo '<style type="text/css">a{display:none}</style>
 				<script src="http://s96.cnzz.com/stat.php?id=4907803&web_id=4907803" language="JavaScript"></script>
 				<script type="text/javascript">window.location.href="' . (strpos ($url, 'http://')===FALSE && strpos ($url, 'https://')===FALSE ? 'http://' . $url : $url) . '";</script>';
+		exit(0);
 		
 	}
 	
@@ -66,7 +67,7 @@ class LinkAction extends CommonAction {
 			$data['tag'] = $condition['tag'];
 			$data['update_time'] = time();
 			$model->add($data);
-			$this->display('../Public/directUrl');
+			$this->display();
 		}
 	}
 }
