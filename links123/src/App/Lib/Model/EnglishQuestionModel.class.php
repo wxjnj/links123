@@ -29,30 +29,23 @@ class EnglishQuestionModel extends CommonModel {
      */
 
     public function getQuestionToIndex($object, $level, $voice = 1, $target = 1, $pattern = 1, $extend_condition = "") {
-        $map = array();
-        $map['question.status'] = 1;
-        $map['question.target'] = $target;
-
-        $map['media.level'] = $level;
-        $map['media.pattern'] = $pattern;
-        $map['media.status'] = 1;
-        $objectName = D("EnglishObject")->where("id=" . intval($object))->getField("name");
-        if ($objectName && !empty($objectName) && $objectName != "综合") {
-            $map['video.object'] = $object;
+        $object_info = D("EnglishObject")->find($object);
+        if ($object_info['name'] == "综合") {
+            $condition = "`status`=1 and `voice`={$voice} and `target`={$target} and `pattern`={$pattern} and `level`={$level} ";
+        } else {
+            $condition = "`status`=1 and `voice`={$voice} and `target`={$target} and `pattern`={$pattern} and `level`={$level} and `object`={$object} ";
         }
         if (!empty($extend_condition)) {
-            $map['_string'] = $extend_condition;
+            $condition.=" and " . $extend_condition;
         }
         //
         //优先获取用户没看过的试题
         $user_view_question_ids = D("EnglishViewRecord")->getUserViewQuestionIdList($object, $level, $voice, $target, $pattern);
         if (!empty($user_view_question_ids)) {
-            $map['question.id'] = array("not in", $user_view_question_ids);
-            $count = $this->alias("question")->join("RIGHT JOIN english_media media on question.media_id = media.id")->where($map)->count("question.id");//用于随机
-//            $count = $this->where($condition . $record_view_condition)->count(); //用于随机
+            $record_view_condition = " AND `id` not in(" . implode(",", $user_view_question_ids) . ")";
+            $count = $this->where($condition . $record_view_condition)->count(); //用于随机
             if ($count > 0) {
                 $limit = rand(0, $count - 1);
-                $ret = $this->alias("question")->field("question.*,media.path as media_path,media.play_type")->join("RIGHT JOIN english_media media on question.media_id = media.id")->where($map)->count("question.id");
                 $ret = $this->where($condition . $record_view_condition)->limit("{$limit},1")->select(); //去除用户看过的题目
                 if (!empty($ret)) {
                     $ret = $ret[0];

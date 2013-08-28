@@ -46,43 +46,6 @@
 //                document.getElementsByTagName("link")[0].href="__PUBLIC__/English/css/"+title;
             }
         </script>
-        <style>
-        .video_ttl{
-        left:0;
-        position:absolute;
-        top:0;
-        width:100%;
-        height: 36px;
-        }
-        .video_ttl .video_ttl_mask{
-        height: 36px;
-        -moz-opacity: 0.7;
-        background:#4b2500;
-        filter: alpha(opacity=70);
-        left: 0;
-        line-height: 20px;
-        opacity: 0.7;
-        opacity: 0.7;
-        position: absolute;
-        top: 0;
-        width: 100%;
-        z-index: 99998;
-        }
-        .video_ttl em{
-        color: #fff;
-        display: block;
-        font-size: 14px;
-        text-align: center;
-        text-align:center;
-        width: 100%;
-        font-style: normal;
-        position: absolute;
-        top: 7px;
-        left: 0;
-        width: 100%;
-        z-index: 99999;
-        }
-        </style>
         <link href="__PUBLIC__/English/css/tabs.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="__PUBLIC__/English/js/jquery.tools.min.js"></script>
         <!--<load href="__PUBLIC__/skin/easyui/jquery.easyui.min.js" />-->
@@ -125,8 +88,8 @@
                 <div class="menuright">
                     <ul class="tabs">
                         <li><a class="current" href="#">选择课程和年级</a></li>
-                        <li><a href="#">选择专题</a></li>
-                        <li><a href="#">选择推荐视频</a></li>
+                        <!--<li><a href="#">选择专题</a></li>-->
+                        <!--<li><a href="#">选择推荐视频</a></li>-->
                     </ul>
                     <div class="panes">
                         <div class="box1">
@@ -150,7 +113,7 @@
                                 </ul>
                             </div>
                         </div>
-                        <div class="box1" style="display: none">
+<!--                        <div class="box1" style="display: none">
                             <div class="kechenggrade">
                                 <ul class="kecheng">
                                     <li class="current"><span>初级</span></li>
@@ -178,7 +141,7 @@
                                     <li><span>历史</span></li>
                                 </ul>
                             </div>
-                        </div>
+                        </div>-->
                     </div>
                 </div>
                 <div class="contentcenter">
@@ -204,7 +167,6 @@
                                     class="media_div"  style="visibility: hidden;" data_media_url="{$question['media_url']}" 
                                 </if> 
                                      data_isAboutVideo="{$isAboutVideo}">
-                                <div class="video_ttl"><div class="video_ttl_mask"></div><em>测试标题</em></div>
                                 <if condition="$isAboutVideo neq '1'">
                                     <if condition="$question['media_type'] eq '1'">
                                         {$question['media']}
