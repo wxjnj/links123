@@ -40,7 +40,7 @@ $(function() {
 	// 直达框获得焦点
 	$(".J_header_top").mouseover(function() {
 		$("#direct_text").select().addClass('ipson');
-	}).mouseout(function() {
+	}).mouseleave(function() {
 		$('#search_text').select();
 		$('#direct_text').val($('#direct_text').attr('txt')).removeClass('ipson');
 	});
@@ -56,6 +56,12 @@ $(function() {
 		$('#J_sortable').sortable({
 			update: function (event, ui) {  
 
+				$('.zld .bg-none').removeClass('bg-none');
+				
+				var zldli = $('.zld ul li');
+				zldli.eq(0).addClass('bg-none');
+				zldli.eq(15).addClass('bg-none');
+				
 				$.post(URL + '/sortArealist', {'area' : $(this).sortable('toArray')});
 		   }  
 		});
@@ -77,8 +83,8 @@ $(function() {
 
 	//自留地竖线边框
 	var zldli = $('.zld ul li');
-	zldli.eq(0).css('background', 'none');
-	zldli.eq(15).css('background', 'none');
+	zldli.eq(0).addClass('bg-none');
+	zldli.eq(15).addClass('bg-none');
 	
 	//编辑自留地网址
 	$('.zld-edit ul li span').live('click', function() {
@@ -382,11 +388,19 @@ $(function() {
 	$('#direct_text').keypress(function(event) {
 		if (event.keyCode == 13) {
 			var tag = $.trim($(this).val());
-			if (tag != '') {
+			if (tag != '' && tag != $(this).attr('txt')) {
 				$("#frm_drct").submit();
 			}
 			return false;
 		}
+	});
+	
+	$(".J_direct_submit").click(function(){
+		var tag = $.trim($('#direct_text').val());
+		if (tag != '' && tag != $('#direct_text').attr('txt')) {
+			$("#frm_drct").submit();
+		}
+		return false;
 	});
 	
 	THL.init();
