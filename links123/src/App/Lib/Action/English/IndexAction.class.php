@@ -24,9 +24,9 @@ class IndexAction extends EnglishAction {
         }
         //
         //默认情况
-        $user_last_select['voice'] = intval($user_last_select['voice']) > 0 ? intval($user_last_select['voice']) : 1;
-        $user_last_select['target'] = intval($user_last_select['target']) > 0 ? intval($user_last_select['target']) : 1;
-        $user_last_select['pattern'] = intval($user_last_select['pattern']) > 0 ? intval($user_last_select['pattern']) : 1;
+        $user_last_select['voice'] = intval($user_last_select['voice']) == 1 || intval($user_last_select['voice']) == 2 ? intval($user_last_select['voice']) : 1;
+        $user_last_select['target'] = intval($user_last_select['target']) == 1 || intval($user_last_select['target']) == 2 ? intval($user_last_select['target']) : 1;
+        $user_last_select['pattern'] = intval($user_last_select['pattern']) == 1 || intval($user_last_select['pattern']) == 2 ? intval($user_last_select['pattern']) : 1;
 
         //默认的科目列表
         $object_list = $objectModel->getObjectListToIndex($user_last_select['voice'], $user_last_select['target'], $user_last_select['pattern']);
@@ -206,13 +206,11 @@ class IndexAction extends EnglishAction {
             }
             /* 存储用户点击历史  开始 */
             $user_last_select = array();
-            $user_last_select['object'] = $object;
-            $user_last_select['level'] = $level;
             $user_last_select['voice'] = $voice;
             $user_last_select['target'] = $target;
             $user_last_select['pattern'] = $pattern;
-            cookie('english_user_last_select', $user_last_select, 60 * 60 * 24 * 30);
-            /* 存储用户点击历史  结束 */
+
+
 
             $ret = array();
 //            if ($type == "category") {
@@ -229,6 +227,9 @@ class IndexAction extends EnglishAction {
                 $ret['level_info'] = $levelModel->getDefaultLevelInfo($object, $voice, $target, $pattern);
                 $level = intval($ret['level_info']['id']);
             }
+            
+            $user_last_select['object'] = $object;
+            $user_last_select['level'] = $level;
 
             if (!empty($user_last_question)) {
                 $ret['question'] = $user_last_question;
@@ -244,6 +245,7 @@ class IndexAction extends EnglishAction {
             $ret['english_user_info'] = D("EnglishUserInfo")->getEnglishUserInfo();
             $ret['user_count_info'] = D("EnglishUserCount")->getEnglishUserCountInfo($voice, $target, $object, $level);
 
+            cookie('english_user_last_select', $user_last_select, 60 * 60 * 24 * 30); // 存储用户点击历史
             //media_url为空，则进行视频解析
             if (!$ret['question']['media_url'] && !$ret['question']['media']) {
 
