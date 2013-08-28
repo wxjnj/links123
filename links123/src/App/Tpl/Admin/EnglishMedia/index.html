@@ -17,8 +17,8 @@
             <html:imageBtn name="edit" click="edit()" style="hMargin fLeft" />
             <html:imageBtn name="forbid" click="forbid()" style="hMargin fLeft" />
             <html:imageBtn name="delete" click="foreverdel()" style="hMargin fLeft" />
-            <button id="pointSubjectBtn">指定专题</button>
-            <button id="pointDifficultyBtn">指定难度</button>
+            <html:imageBtn name="subject" click="subject()" style="hMargin fLeft" />
+            <html:imageBtn name="difficulty" click="difficulty()" style="hMargin fLeft" />
         </div>
 
         <form method='post' action="__URL__">
@@ -59,9 +59,9 @@
                     </select>
                     <select name="difficulty">
                         <option value="0">全部</option>
-                        <option value="1">初级</option>
-                        <option value="2">中级</option>
-                        <option value="3">高级</option>
+                        <option value="1" <eq name="param['difficulty']" value="1">selected="true"</eq>>初级</option>
+                        <option value="2" <eq name="param['difficulty']" value="2]">selected="true"</eq>>中级</option>
+                        <option value="3" <eq name="param['difficulty']" value="3">selected="true"</eq>>高级</option>
                     </select>
                     &nbsp;&nbsp;
                     添加时间：
@@ -102,7 +102,7 @@
         </form>
 
         <div class="list" >
-            <html:list id="checkList" name="category" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,name:名称:edit,object_name:科目,level_name:等级,subject_name:专题,difficulty|getMediaDifficultyName:难度,pattern|getMediaPatternName:格式类型,play_type|getMediaPlayTypeName:播放类型,storage_type|getStorageTypeName:视频存储类型,media_source_url|getLinkToHref:视频来源地址,recommend|getYorN:是否推荐,special_recommend|getYorN:特别推荐,created|toDate:发布时间,status|getStatus:状态" actionlist="edit:编辑" />
+            <html:list id="checkList" name="category" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,name:名称:edit,object_name:科目,level_name:等级,subject_name:专题,difficulty|getMediaDifficultyName:难度,voice|getVoiceName:语音,pattern|getMediaPatternName:格式类型,play_type|getMediaPlayTypeName:播放类型,storage_type|getStorageTypeName:存储类型,media_source_url|getLinkToHref:来源地址,recommend|getYorN:推荐,special_recommend|getYorN:特别推荐,created|toDate:发布时间,status|getStatus:状态" actionlist="edit:编辑" />
         </div>
 
         <div class="page">{$page}</div>
@@ -162,58 +162,56 @@
         })
         //
         //指定专题
-        $("#pointSubjectBtn").click(function() {
-            var id = getSelectCheckboxValues();
-            if (!id) {
-                alert('请选择操作项！');
-                $("#export_dialog").window("close");
-                return false;
-            }
-            $("#point_subject_dialog").window("open");
-        })
         $("#J_pointSubjectBtn").click(function() {
             $("#load_dialog").window("open");
             $("#point_subject_dialog").window("close");
             var id = getSelectCheckboxValues();
             var targetSubject = $("#J_pointSubjectSelect").val();
-            $.post("__URL__/pointSubject",{id:id,targetSubject:targetSubject},function(msg){
-                if(msg){
+            $.post("__URL__/pointSubject", {id: id, targetSubject: targetSubject}, function(msg) {
+                if (msg) {
                     alert(msg.info);
                 }
                 $("#load_dialog").window("close");
                 window.location.reload();
-            },"json");
+            }, "json");
         })
         $("#J_pointSubjectCancelBtn").click(function() {
             $("#point_subject_dialog").window("close");
         })
         //
         //指定难度
-        $("#pointDifficultyBtn").click(function(){
-            var id = getSelectCheckboxValues();
-            if (!id) {
-                alert('请选择操作项！');
-                $("#export_dialog").window("close");
-                return false;
-            }
-            $("#point_difficulty_dialog").window("open");
-        })
-        $("#J_pointDifficultyBtn").click(function(){
+        $("#J_pointDifficultyBtn").click(function() {
             $("#load_dialog").window("open");
             $("#point_difficulty_dialog").window("close");
             var id = getSelectCheckboxValues();
             var targetDifficulty = $("#J_pointDifficultySelect").val();
-            $.post("__URL__/pointDifficulty",{id:id,targetDifficulty:targetDifficulty},function(msg){
-                if(msg){
+            $.post("__URL__/pointDifficulty", {id: id, targetDifficulty: targetDifficulty}, function(msg) {
+                if (msg) {
                     alert(msg.info);
                 }
                 $("#load_dialog").window("close");
                 window.location.reload();
-            },"json");
+            }, "json");
         })
         $("#J_pointDifficultyCancelBtn").click(function() {
             $("#point_difficulty_dialog").window("close");
         })
     })
+    function subject() {
+        var id = getSelectCheckboxValues();
+        if (!id) {
+            alert('请选择操作项！');
+            return false;
+        }
+        $("#point_subject_dialog").window("open");
+    }
+    function difficulty() {
+        var id = getSelectCheckboxValues();
+        if (!id) {
+            alert('请选择操作项！');
+            return false;
+        }
+        $("#point_difficulty_dialog").window("open");
+    }
 </script>
 </html>

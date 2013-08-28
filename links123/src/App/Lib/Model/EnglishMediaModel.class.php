@@ -13,8 +13,10 @@ class EnglishMediaModel extends CommonModel {
         array("media_source_url", "unique", "来源地址已存在", 1, "unique", 1),
     );
     protected $_auto = array(
+        array("updated", "time", 3, "function"),
         array("created", "time", 3, "function")
     );
 
 }
+
 ?>

@@ -134,6 +134,8 @@ input.myimport{background-image:url(../Images/btn_import.jpg)}
 input.myexport{background-image:url(../Images/btn_export.gif)}
 input.forbid{background-image:url(../Images/forbid.gif)}
 input.resume{background-image:url(../Images/resume.gif)}
+input.subject{background-image:url(../Images/btn_subject.jpg)}
+input.difficulty{background-image:url(../Images/btn_difficulty.jpg)}
 
 /*input.login{background-image:url(../Images/login.gif)}*/
 input.return{background-image:url(../Images/up_arrow.gif)}

@@ -10,8 +10,8 @@ class EnglishQuestionViewModel extends ViewModel {
       ); */
 
     public $viewFields = array(
-        'englishQuestion' => array('id', 'voice', 'target', 'media_url', 'media_text_url', 'name', 'answer', 'created', 'updated', 'answer_num', 'status', 'content', '_type' => 'LEFT'),
-        'englishMedia' => array('englishMedia.pattern'=>'pattern','_on' => 'englishQuestion.media_id=englishMedia.id', '_type' => 'LEFT'),
+        'englishQuestion' => array('id', 'target', 'media_url', 'media_text_url', 'name', 'answer', 'created', 'updated', 'answer_num', 'status', 'content', '_type' => 'LEFT'),
+        'englishMedia' => array('englishMedia.pattern'=>'pattern','englishMedia.voice'=>'voice','_on' => 'englishQuestion.media_id=englishMedia.id', '_type' => 'LEFT'),
         'englishObject' => array('name' => "object_name", '_on' => 'englishMedia.object=englishObject.id', '_type' => 'LEFT'),
         'englishLevel' => array('name' => "level_name", '_on' => 'englishMedia.level=englishLevel.id', '_type' => 'LEFT')
     );

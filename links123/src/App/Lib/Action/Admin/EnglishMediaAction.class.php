@@ -23,15 +23,21 @@ class EnglishMediaAction extends CommonAction {
             }
             $param['object'] = intval($_REQUEST['object']);
         }
+        if (intval($_REQUEST['subject']) > 0) {
+            $map['englishMedia.subject'] = intval($_REQUEST['subject']);
+            $param['subject'] = intval($_REQUEST['subject']);
+        }
+        if (intval($_REQUEST['difficulty']) > 0) {
+            $map['englishMedia.difficulty'] = intval($_REQUEST['difficulty']);
+            $param['difficulty'] = intval($_REQUEST['difficulty']);
+        }
         if (intval($_REQUEST['level']) > 0) {
             $map['englishMedia.level'] = intval($_REQUEST['level']);
             $param['level'] = intval($_REQUEST['level']);
         }
         if (isset($_REQUEST['status'])) {
-            if (intval($_REQUEST['status']) > 0) {
-                $map['englishMedia.status'] = intval($_REQUEST['status']);
-                $param['status'] = intval($_REQUEST['status']);
-            }
+            $map['englishMedia.status'] = intval($_REQUEST['status']);
+            $param['status'] = intval($_REQUEST['status']);
         }
         if (isset($_REQUEST['recommend'])) {
             $map['englishMedia.recommend'] = intval($_REQUEST['recommend']);

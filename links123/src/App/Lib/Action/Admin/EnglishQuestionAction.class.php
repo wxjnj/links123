@@ -37,7 +37,7 @@ class EnglishQuestionAction extends CommonAction {
             $param['status'] = intval($_REQUEST['status']);
         }
         if (isset($_REQUEST['created']) && strtotime($_REQUEST['created'])) {
-            $map['_string'] = "DATE_FORMAT(FROM_UNIXTIME(`created`),'%Y-%m-%d')='" . $_REQUEST['created'] . "'";
+            $map['_string'] = "DATE_FORMAT(FROM_UNIXTIME(englishQuestion.`created`),'%Y-%m-%d')='" . $_REQUEST['created'] . "'";
             $param['created'] = $_REQUEST['created'];
         }
         if (!empty($name)) {
@@ -46,7 +46,7 @@ class EnglishQuestionAction extends CommonAction {
             $key['englishMedia.media_source_url'] = array('like', "%" . $name . "%");
             $englishOptionsModel = D("EnglishOptions");
             $option_list = $englishOptionsModel->where("`content` like '%{$name}%'")->group("question_id")->select();
-            if (!empty($question_id)) {
+            if (!empty($option_list)) {
                 foreach ($option_list as $value) {
                     $question_id[] = $value['question_id'];
                 }
@@ -101,9 +101,6 @@ class EnglishQuestionAction extends CommonAction {
     }
 
     public function insert() {
-        //记住用户本次的选择
-        cookie("admin_english_object", intval($_REQUEST['object']));
-        cookie("admin_english_level", intval($_REQUEST['level']));
         $model = D("EnglishQuestion");
         $answer = intval($_POST['answer']);
         $optionModel = D("EnglishOptions");
@@ -155,22 +152,34 @@ class EnglishQuestionAction extends CommonAction {
             $model->rollback();
             $this->error($model->getError());
         }
+        //
+        //根据媒体来源或媒体名称对应到媒体id
+        $mediaId = 0;
+        $mediaModel = D("EnglishMedia");
+        if (!empty($_REQUEST['media_source_url'])) {
+            $this->media_text_url = $_REQUEST['media_source_url'];
+            $mediaMap = array();
+            $mediaMap['media_source_url'] = ftrim($_REQUEST['media_source_url']);
+            $mediaId = intval($mediaModel->where($mediaMap)->getField('id'));
+        }
+        if ($mediaId == 0 && !empty($_REQUEST['media_name'])) {
+            $mediaMap = array();
+            $mediaMap['name'] = $_REQUEST['media_name'];
+            $mediaId = intval($mediaModel->where($mediaMap)->getField('id'));
+        }
+        //
+        //媒体id为零，将试题置为禁用
+        $model->media_id = $mediaId;
+        if ($model->status == 1 && $mediaId == 0) {
+            $model->status = 0;
+        }
         //选项是否有重复，有则题目停用
-        if (count(array_unique($_POST['option'])) < count($_POST['option']) && !($is_double_false && $is_double_true)) {
+        if ($model->status == 1 && count(array_unique($_POST['option'])) < count($_POST['option']) && !($is_double_false && $is_double_true)) {
             $model->status = 0;
         }
 
-        $time = date("Ym");
-        if (!empty($_POST['media_local_url'])) {
-            if (false === @copy("./Public/Uploads/Temp/" . $_POST['media_local_url'], "./Public/Uploads/Video/" . $time . "/" . $_POST['media_local_url'])) {
-                $model->rollback();
-                $this->error('新增失败1!');
-            }
-            @unlink("./Public/Uploads/Temp/" . $_POST['media_local_url']);
-            $model->media_local_url = $time . "/" . $_POST['media_local_url'];
-        }
         $model->answer = $option_id[$answer - 1];
-        if ($answer <= 0 || empty($option_id) || empty($option_id[$answer - 1])) {
+        if ($model->status == 1 && $answer <= 0 || empty($option_id) || empty($option_id[$answer - 1])) {
             $model->status = 0;
             $model->answer = 0;
         }
@@ -194,7 +203,8 @@ class EnglishQuestionAction extends CommonAction {
         $name = $this->getActionName();
         $model = M($name);
         $id = intval($_REQUEST [$model->getPk()]);
-        $vo = $model->getById($id);
+//        $vo = $model->getById($id);
+        $vo = $model->alias("question")->field("question.*,media.name as media_name,media.media_source_url as media_source_url")->join(C("DB_PREFIX") . "english_media media on media.id=question.media_id")->where("question.id=" . intval($id))->find();
         $option_list = D("EnglishOptions")->getQuestionOptionList($id);
         $this->assign('option_list', $option_list);
         $this->assign('vo', $vo);
@@ -209,16 +219,7 @@ class EnglishQuestionAction extends CommonAction {
     }
 
     public function update() {
-        //记住用户本次的选择
-        cookie("admin_english_object", intval($_REQUEST['object']));
-        cookie("admin_english_level", intval($_REQUEST['level']));
-//        if (empty($_POST['option']) || empty($_POST['option'][0]) || empty($_POST['option'][1]) || empty($_POST['option'][2]) || empty($_POST['option'][3])) {
-//            $this->error("四个选项都不能为空！");
-//        }
         $answer = intval($_POST['answer']);
-//        if ($answer <= 0) {
-//            $this->error("请选择正确答案！");
-//        }
         $optionModel = D("EnglishOptions");
         $id = intval($_REQUEST['id']);
         $optionModel->startTrans();
@@ -278,22 +279,30 @@ class EnglishQuestionAction extends CommonAction {
             $model->rollback();
             $this->error($model->getError());
         }
+        //
+        //根据媒体来源或媒体名称对应到媒体id
+        $mediaId = 0;
+        $mediaModel = D("EnglishMedia");
+        if (!empty($_REQUEST['media_source_url'])) {
+            $this->media_text_url = ftrim($_REQUEST['media_source_url']);
+            $mediaMap = array();
+            $mediaMap['media_source_url'] = $_REQUEST['media_source_url'];
+            $mediaId = intval($mediaModel->where($mediaMap)->getField('id'));
+        }
+        if ($mediaId == 0 && !empty($_REQUEST['media_name'])) {
+            $mediaMap = array();
+            $mediaMap['name'] = $_REQUEST['media_name'];
+            $mediaId = intval($mediaModel->where($mediaMap)->getField('id'));
+        }
+        //
+        //媒体id为零，将试题置为禁用
+        $model->media_id = $mediaId;
+        if ($model->status == 1 && $mediaId == 0) {
+            $model->status = 0;
+        }
         //选项是否有重复，有则题目停用
         if ($model->status == 1 && count(array_unique($_POST['option'])) < count($_POST['option']) && !($is_double_false && $is_double_true)) {
             $model->status = 0;
-        }
-        $time = date("Ym");
-        if (!empty($_POST['media_local_url'])) {
-//            $ext = substr($_POST['media_local_url'], strpos($_POST['media_local_url'], "."));
-            if (false === @copy("./Public/Uploads/Temp/" . $_POST['media_local_url'], "./Public/Uploads/Video/" . $time . "/" . $_POST['media_local_url'])) {
-                $model->rollback();
-                $this->error('编辑失败!');
-            }
-            @unlink("./Public/Uploads/Video/" . $_POST['media_local_url_old']);
-            @unlink("./Public/Uploads/Temp/" . $_POST['media_local_url']);
-            $model->media_local_url = $time . "/" . $_POST['media_local_url'];
-        } else {
-            $model->media_local_url = $_POST['media_local_url_old'];
         }
         $model->answer = $answer_id;
         if ($model->status == 1 && ($answer <= 0 || $answer_id == 0)) {
@@ -352,6 +361,7 @@ class EnglishQuestionAction extends CommonAction {
 
             vendor('PHPExcel.Classes.PHPExcel.IOFactory');
             @header('Content-type: text/html;charset=UTF-8');
+            //
             //读取excel;
             if ($uploadList[0]['extension'] == "xls") {
                 $objReader = PHPExcel_IOFactory::createReader('Excel5');
@@ -362,27 +372,41 @@ class EnglishQuestionAction extends CommonAction {
             $dest = str_replace('uploads.txt', 'Excels/' . $uploadList[0]['savename'], $path);
 
             $objPHPExcel = $objReader->load($dest);
+            //
+            //声明模型类
             $model = D("EnglishQuestion");
             $optionModel = D("EnglishOptions");
             $levelModel = D("EnglishLevel");
-            //提取等级列表
+            $mediaModel = D("EnglishMedia");
+            //
+            //提取等级列表备用
             $levels = $levelModel->select();
             foreach ($levels as $key => $value) {
                 $level_list[$value['name']] = $value['id'];
             }
-            //读取科目列表
+            //
+            //读取科目列表备用
             $objectModel = D("EnglishObject");
             $objects = $objectModel->select();
             foreach ($objects as $key => $value) {
                 $object_list[$value['name']] = $value['id'];
             }
+            //
+            //读取专题列表
+            $subjectModel = D("EnglishMediaSubject");
+            $subjects = $subjectModel->select();
+            foreach ($subjects as $key => $value) {
+                $subject_list[$value['name']] = $value['id'];
+            }
             $model->startTrans();
+            //
             //循环读取所有表,表迭代器
             foreach ($objPHPExcel->getWorksheetIterator() as $worksheet) {
                 foreach ($worksheet->getRowIterator() as $row) {
                     //行迭代器
                     $cellIterator = $row->getCellIterator();
                     $data = array(); //暂时保存数据的数组
+                    $media_data = array();
                     $repeat_ret = false; //题目是否重复
                     $cellIterator->setIterateOnlyExistingCells(false); //单元格为空也迭代
                     foreach ($cellIterator as $cell) {
@@ -391,36 +415,63 @@ class EnglishQuestionAction extends CommonAction {
                             if ($cell->getColumn() == "A") {
                                 $data['name'] = ftrim($cell->getCalculatedValue()); //名称
                             } else if ($cell->getColumn() == "B") {
-                                $data['voice'] = $cell->getCalculatedValue(); //语种，英音，美音
+                                $media_data['voice'] = $cell->getCalculatedValue(); //语种，英音，美音
                             } else if ($cell->getColumn() == "C") {
-                                $data['pattern'] = $cell->getCalculatedValue(); //类型，视频，音频
+                                $media_data['pattern'] = $cell->getCalculatedValue(); //类型，视频，音频
                             } else if ($cell->getColumn() == "D") {
                                 $data['target'] = $cell->getCalculatedValue(); //目标，听力，说力
                             } else if ($cell->getColumn() == "E") {
-                                $data['level'] = ftrim($cell->getCalculatedValue()); //等级名称
+                                $media_data['level'] = ftrim($cell->getCalculatedValue()); //等级
                             } else if ($cell->getColumn() == "F") {
-                                $data['object'] = ftrim($cell->getCalculatedValue()); //科目名称
+                                $media_data['object'] = ftrim($cell->getCalculatedValue()); //科目
                             } else if ($cell->getColumn() == "G") {
-                                $data['media_text_url'] = ftrim($cell->getCalculatedValue()); //媒体内容地址
+                                $media_data['subject'] = ftrim($cell->getCalculatedValue()); //专题
                             } else if ($cell->getColumn() == "H") {
-                                $data['content'] = ftrim($cell->getCalculatedValue()); //题目内容
+                                $media_data['difficulty'] = intval($cell->getCalculatedValue()); //难度
                             } else if ($cell->getColumn() == "I") {
-                                $data['answer'] = ftrim($cell->getCalculatedValue()); //题目答案
+                                $media_data['recommend'] = intval($cell->getCalculatedValue()); //是否推荐
                             } else if ($cell->getColumn() == "J") {
-                                $data['option'][0] = ftrim($cell->getCalculatedValue()); //题目选项一
+                                $media_data['special_recommend'] = intval($cell->getCalculatedValue()); //是否特别推荐
                             } else if ($cell->getColumn() == "K") {
-                                $data['option'][1] = ftrim($cell->getCalculatedValue()); //题目选项二
+                                $data['media_text_url'] = $media_data['media_source_url'] = ftrim($cell->getCalculatedValue()); //媒体内容地址
                             } else if ($cell->getColumn() == "L") {
-                                $data['option'][2] = ftrim($cell->getCalculatedValue()); //题目选项三
+                                $data['content'] = ftrim($cell->getCalculatedValue()); //题目内容
                             } else if ($cell->getColumn() == "M") {
-                                $data['option'][3] = ftrim($cell->getCalculatedValue()); //题目选项四
+                                $data['answer'] = ftrim($cell->getCalculatedValue()); //题目答案
                             } else if ($cell->getColumn() == "N") {
-                                $data['media_text'] = ftrim($cell->getCalculatedValue()); //媒体内容
+                                $data['option'][0] = ftrim($cell->getCalculatedValue()); //题目选项一
+                            } else if ($cell->getColumn() == "O") {
+                                $data['option'][1] = ftrim($cell->getCalculatedValue()); //题目选项二
+                            } else if ($cell->getColumn() == "P") {
+                                $data['option'][2] = ftrim($cell->getCalculatedValue()); //题目选项三
+                            } else if ($cell->getColumn() == "Q") {
+                                $data['option'][3] = ftrim($cell->getCalculatedValue()); //题目选项四
                             }
                         }
                     }
                     if (empty($data['name']) || $data['name'] == "试题名称") {
                         continue;
+                    }
+                    $time = time();
+                    //
+                    //获取媒体的id
+                    $mediaId = intval($mediaModel->where("media_source_url='" . $media_data['media_source_url'] . "'")->getField("id"));
+                    //
+                    //来源地址未匹配到媒体，则添加媒体
+                    if ($mediaId == 0) {
+                        $media_data['name'] = $data['name'];
+                        $media_data['updated'] = $time;
+                        $media_data['created'] = $time;
+                        //等级、科目、专题的名称换成对应的id
+                        $media_data['object'] = intval($object_list[$media_data['object']]);
+                        $media_data['level'] = intval($level_list[$media_data['level']]);
+                        $media_data['subject'] = intval($subject_list[$media_data['subject']]);
+                        $mediaId = $mediaModel->add($media_data);
+                    }
+                    $data['media_id'] = intval($mediaId);
+                    //没有媒体id，题目禁用
+                    if ($data['media_id'] == 0) {
+                        $data['status'] = 0;
                     }
                     $condition['content'] = $data['content'];
                     $repeat_ret = $model->where($condition)->find(); //根据问题内容查询是否有重复
@@ -445,8 +496,9 @@ class EnglishQuestionAction extends CommonAction {
                     if (count(array_unique($data['option'])) < count($data['option']) && !($is_double_false && $is_double_true)) {
                         $data['status'] = 0;
                     }
+                    //
                     //依次存入选项，不知道问题id
-                    $option_data['created'] = time();
+                    $option_data['created'] = $time;
                     $index = 1;
                     foreach ($data['option'] as $key => $value) {
                         if (!empty($value)) {
@@ -480,9 +532,6 @@ class EnglishQuestionAction extends CommonAction {
                         $data['status'] = 0;
                         $data['answer'] = 0;
                     }
-                    //等级和科目
-                    $data['object'] = intval($object_list[$data['object']]);
-                    $data['level'] = intval($level_list[$data['level']]);
 
                     //如果题目状态非停用，则进行视频来源是否可以解析检测 @author: slate
                     if (!isset($data['status']) || $data['status'] != 0) {
@@ -531,7 +580,7 @@ class EnglishQuestionAction extends CommonAction {
                             }
                         }
                     }
-                    $data['created'] = time();
+                    $data['created'] = $time;
                     $data['updated'] = $data['created'];
 
                     if ($repeat_ret) {
