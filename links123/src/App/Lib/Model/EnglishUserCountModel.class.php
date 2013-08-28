@@ -77,7 +77,7 @@ class EnglishUserCountModel extends CommonModel {
             $map['user_id'] = intval(cookie('english_tourist_id')); //从cookie获取游客id
             if ($map['user_id'] > 0) {
                 $englishTouristCountModel = D("EnglishTouristCount");
-                $ret = $englishTouristCountModel->where($map)->save($user_count_info);//如果存在修改记录
+                $ret = $englishTouristCountModel->where($map)->save($user_count_info); //如果存在修改记录
                 //
                 //不存在记录则增加记录
                 if (false !== $ret && $ret < 1) {
@@ -88,7 +88,7 @@ class EnglishUserCountModel extends CommonModel {
         } else {
             $map['user_id'] = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
             if ($map['user_id'] > 0) {
-                $ret = $this->where($map)->save($user_count_info);//如果存在修改记录
+                $ret = $this->where($map)->save($user_count_info); //如果存在修改记录
                 //
                 //不存在记录则增加记录
                 if (false !== $ret && $ret < 1) {
@@ -135,7 +135,7 @@ class EnglishUserCountModel extends CommonModel {
                 ->field("SUM(user_count_info.rice) as rice_sum,user.nickname as nickname,level.name as best_level_name")
                 ->join(C("DB_PREFIX") . "english_user_info english_user_info on user_count_info.user_id=english_user_info.user_id")
                 ->join(C("DB_PREFIX") . "english_level level on english_user_info.best_level=level.id")
-                ->join(C("DB_PREFIX") . "member user on user_count_info.user_id=user.id")
+                ->join("RIGHT JOIN " . C("DB_PREFIX") . "member user on user_count_info.user_id=user.id")
                 ->where($condition)
                 ->group("user_count_info.user_id")
                 ->order("rice_sum DESC")

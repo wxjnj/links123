@@ -1,6 +1,11 @@
 var ajaxRequest;
 var next_question_lvlup = false;
 $(function() {
+    //
+    //easyloader加载主题和插件
+    easyloader.theme = "metro";
+    easyloader.load('messager');
+    $("ul.tabs").tabs("div.panes > div");
     if ($("#J_currentRice").text() == 1000) {
         next_question_lvlup = true;
     }

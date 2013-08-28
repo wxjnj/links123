@@ -7,7 +7,7 @@ class CommonModel extends Model {
         return isset($_SESSION[C('USER_AUTH_KEY')]) ? $_SESSION[C('USER_AUTH_KEY')] : 0;
     }
 
-    /*
+    /**
      * 获取记录列表
      * @author adam 2013.5.28
      * @param string/array $condition [条件]
