@@ -154,9 +154,25 @@ class EnglishMediaAction extends CommonAction {
         if ($this->isAjax()) {
             $id = $_REQUEST['id'];
             $tartgetSubject = $_REQUEST['targetSubject'];
-            if ($tartgetSubject > 0) {
+            if (intval($tartgetSubject) > 0) {
                 $map['id'] = array("in", $id);
-                $data['subject'] = $tartgetSubject;
+                $data['subject'] = intval($tartgetSubject);
+                $ret = D("EnglishMedia")->where($map)->save($data);
+                if (false !== $ret) {
+                    $this->ajaxReturn("", "操作成功", true);
+                }
+            }
+            $this->ajaxReturn("", "操作失败", false);
+        }
+    }
+
+    public function pointDifficulty() {
+        if ($this->isAjax()) {
+            $id = $_REQUEST['id'];
+            $tartgetDifficulty = $_REQUEST['targetDifficulty'];
+            if (intval($tartgetDifficulty) > 0) {
+                $map['id'] = array("in", $id);
+                $data['difficulty'] = intval($tartgetDifficulty);
                 $ret = D("EnglishMedia")->where($map)->save($data);
                 if (false !== $ret) {
                     $this->ajaxReturn("", "操作成功", true);

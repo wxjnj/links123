@@ -15,19 +15,19 @@ class EnglishQuestionAction extends CommonAction {
             $param['target'] = intval($_REQUEST['target']);
         }
         if (intval($_REQUEST['pattern']) > 0) {
-            $map['englishQuestion.pattern'] = intval($_REQUEST['pattern']);
+            $map['englishMedia.pattern'] = intval($_REQUEST['pattern']);
             $param['pattern'] = intval($_REQUEST['pattern']);
         }
         if (intval($_REQUEST['object']) > 0) {
-            $map['englishQuestion.object'] = intval($_REQUEST['object']);
-            $object_info = D("EnglishObject")->find($map['englishQuestion.object']);
+            $map['englishMedia.object'] = intval($_REQUEST['object']);
+            $object_info = D("EnglishObject")->find($map['englishMedia.object']);
             if ($object_info['name'] == "综合") {
-                unset($map['englishQuestion.object']);
+                unset($map['englishMedia.object']);
             }
             $param['object'] = intval($_REQUEST['object']);
         }
         if (intval($_REQUEST['level']) > 0) {
-            $map['englishQuestion.level'] = intval($_REQUEST['level']);
+            $map['englishMedia.level'] = intval($_REQUEST['level']);
             $param['level'] = intval($_REQUEST['level']);
         }
         if (isset($_REQUEST['status'])) {
@@ -43,14 +43,16 @@ class EnglishQuestionAction extends CommonAction {
         if (!empty($name)) {
             $key['englishQuestion.name'] = array('like', "%" . $name . "%");
             $key['englishQuestion.content'] = array('like', "%" . $name . "%");
-            $key['englishQuestion.media_text_url'] = array('like', "%" . $name . "%");
+            $key['englishMedia.media_source_url'] = array('like', "%" . $name . "%");
             $englishOptionsModel = D("EnglishOptions");
             $option_list = $englishOptionsModel->where("`content` like '%{$name}%'")->group("question_id")->select();
-            $question_id[0] = 0;
-            foreach ($option_list as $value) {
-                $question_id[] = $value['question_id'];
+            if (!empty($question_id)) {
+                foreach ($option_list as $value) {
+                    $question_id[] = $value['question_id'];
+                }
+                $question_id[] = 0;
+                $key['englishQuestion.id'] = array('in', $question_id);
             }
-            $key['englishQuestion.id'] = array('in', $question_id);
             $key['_logic'] = 'or';
         }
         if (!empty($key)) {

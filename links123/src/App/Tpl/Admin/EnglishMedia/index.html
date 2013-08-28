@@ -110,6 +110,9 @@
     </div>
 
 </div>
+<div id="load_dialog" class="easyui-dialog" style="width:225px;height:auto;" data-options="title:'正在处理',shadow:false,modal:true,closed:true,closable:false">
+    <img style="" src="__PUBLIC__/Images/loading.gif" />
+</div>
 <div id="point_subject_dialog" class="easyui-dialog" style="width:250px;height:auto;" data-options="title:'确认操作',shadow:false,modal:true,closed:true,closable:true">
     <h2>请选择需要指定的专题：</h2>
     <div style='margin:10px 0 0 10px;'>
@@ -122,6 +125,20 @@
     <div style="margin: 20px 0 10px 0;">
         <input type="button" id='J_pointSubjectBtn' style='margin: 0 30px' value="确 认" class="small submit" />&nbsp;
         <input type="button" id='J_pointSubjectCancelBtn' value="取消" class="small submit" />&nbsp;
+    </div>
+</div>
+<div id="point_difficulty_dialog" class="easyui-dialog" style="width:250px;height:auto;" data-options="title:'确认操作',shadow:false,modal:true,closed:true,closable:true">
+    <h2>请选择需要指定的等级：</h2>
+    <div style='margin:10px 0 0 10px;'>
+        <select id="J_pointDifficultySelect">
+            <option value="1">初级</option>
+            <option value="2">中级</option>
+            <option value="3">高级</option>
+        </select>
+    </div>
+    <div style="margin: 20px 0 10px 0;">
+        <input type="button" id='J_pointDifficultyBtn' style='margin: 0 30px' value="确 认" class="small submit" />&nbsp;
+        <input type="button" id='J_pointDifficultyCancelBtn' value="取消" class="small submit" />&nbsp;
     </div>
 </div>
 </body>
@@ -143,6 +160,8 @@
         $("[name='object'],[name='level'],[name='subject'],[name='difficulty']").change(function() {
             $("[name='search']").click();
         })
+        //
+        //指定专题
         $("#pointSubjectBtn").click(function() {
             var id = getSelectCheckboxValues();
             if (!id) {
@@ -153,17 +172,47 @@
             $("#point_subject_dialog").window("open");
         })
         $("#J_pointSubjectBtn").click(function() {
+            $("#load_dialog").window("open");
+            $("#point_subject_dialog").window("close");
             var id = getSelectCheckboxValues();
             var targetSubject = $("#J_pointSubjectSelect").val();
             $.post("__URL__/pointSubject",{id:id,targetSubject:targetSubject},function(msg){
                 if(msg){
                     alert(msg.info);
-                    $("#point_subject_dialog").window("close");
                 }
+                $("#load_dialog").window("close");
+                window.location.reload();
             },"json");
         })
         $("#J_pointSubjectCancelBtn").click(function() {
             $("#point_subject_dialog").window("close");
+        })
+        //
+        //指定难度
+        $("#pointDifficultyBtn").click(function(){
+            var id = getSelectCheckboxValues();
+            if (!id) {
+                alert('请选择操作项！');
+                $("#export_dialog").window("close");
+                return false;
+            }
+            $("#point_difficulty_dialog").window("open");
+        })
+        $("#J_pointDifficultyBtn").click(function(){
+            $("#load_dialog").window("open");
+            $("#point_difficulty_dialog").window("close");
+            var id = getSelectCheckboxValues();
+            var targetDifficulty = $("#J_pointDifficultySelect").val();
+            $.post("__URL__/pointDifficulty",{id:id,targetDifficulty:targetDifficulty},function(msg){
+                if(msg){
+                    alert(msg.info);
+                }
+                $("#load_dialog").window("close");
+                window.location.reload();
+            },"json");
+        })
+        $("#J_pointDifficultyCancelBtn").click(function() {
+            $("#point_difficulty_dialog").window("close");
         })
     })
 </script>

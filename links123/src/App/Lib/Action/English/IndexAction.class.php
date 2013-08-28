@@ -33,18 +33,22 @@ class IndexAction extends EnglishAction {
 
         //用户上次选择的科目
         $user_last_select['object'] = intval($user_last_select['object']);
-        if ($user_last_select['object'] == 0) {
+        $objectInfo = $objectModel->where(array("id" => $user_last_select['object'], "status" => 1))->find();
+        //科目不存在或不可用
+        if (false == $objectInfo && empty($objectInfo)) {
             $user_last_select['object_info'] = $objectModel->getDefaultObjectInfo($user_last_select['voice'], $user_last_select['target'], $user_last_select['pattern']);
         } else {
-            $user_last_select['object_info'] = $objectModel->getInfoById($user_last_select['object']);
+            $user_last_select['object_info'] = $objectInfo;
         }
         $user_last_select['object'] = intval($user_last_select['object_info']['id']) > 0 ? intval($user_last_select['object_info']['id']) : $user_last_select['object'];
         //用户上次选择的等级
         $user_last_select['level'] = intval($user_last_select['level']);
-        if ($user_last_select['level'] == 0) {
+        $levelInfo = $levelModel->where(array("id" => $user_last_select['level'], "status" => 1))->find();
+        //等级不存在或不可用
+        if (false == $levelInfo && empty($levelInfo)) {
             $user_last_select['level_info'] = $levelModel->getDefaultLevelInfo($user_last_select['level'], $user_last_select['voice'], $user_last_select['target'], $user_last_select['pattern']);
         } else {
-            $user_last_select['level_info'] = $levelModel->getInfoById($user_last_select['level']);
+            $user_last_select['level_info'] = $levelInfo;
         }
 
         //默认的等级列表
@@ -231,7 +235,7 @@ class IndexAction extends EnglishAction {
             } else {
                 $ret['question'] = $questionModel->getQuestionToIndex($object, $level, $voice, $target, $pattern);
             }
-            D("EnglishViewRecord")->addRecord($ret['question']['id'], $level, $object, $voice, $target, $pattern);//记录用户查看题目
+            D("EnglishViewRecord")->addRecord($ret['question']['id'], $level, $object, $voice, $target, $pattern); //记录用户查看题目
 //            if ($type == "quick_select_prev" && empty($user_last_question)) {
 //                D("EnglishViewRecord")->addRecord($ret['question']['id'], $level, $object, $voice, $target, $pattern); //记录用户查看题目
 //            } else {
