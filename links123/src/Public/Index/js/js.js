@@ -47,6 +47,9 @@ $(function() {
 	$('#direct_text').click(function() {
 		$('#direct_text').val('').addClass('ipson');
 	});
+	$('#direct_text').keydown(function() {
+		$('#direct_text').addClass('ipson');
+	});
 	$('#frm_drct').submit(function(){
 		if($.trim($(this).val()) == '') return false; //输入内容为空不提交
 	});	
