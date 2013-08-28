@@ -547,6 +547,10 @@ a,a:hover{ text-decoration: none; }
 .copyright li.icp{
 	padding-left: 40px;
 }
+.copyright li.icp img{
+	vertical-align: middle;
+	margin-right: 10px;
+}
 .copyright li a{
 	color: #010101;
 }
