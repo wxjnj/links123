@@ -28,10 +28,18 @@ class EnglishMediaAction extends CommonAction {
             $param['level'] = intval($_REQUEST['level']);
         }
         if (isset($_REQUEST['status'])) {
-            if ($_REQUEST['status'] != -2) {
+            if (intval($_REQUEST['status']) > 0) {
                 $map['englishMedia.status'] = intval($_REQUEST['status']);
+                $param['status'] = intval($_REQUEST['status']);
             }
-            $param['status'] = intval($_REQUEST['status']);
+        }
+        if (isset($_REQUEST['recommend'])) {
+            $map['englishMedia.recommend'] = intval($_REQUEST['recommend']);
+            $param['recommend'] = intval($_REQUEST['recommend']);
+        }
+        if (isset($_REQUEST['special_recommend'])) {
+            $map['englishMedia.special_recommend'] = intval($_REQUEST['special_recommend']);
+            $param['special_recommend'] = intval($_REQUEST['special_recommend']);
         }
         if (isset($_REQUEST['created']) && strtotime($_REQUEST['created'])) {
             $map['_string'] = "DATE_FORMAT(FROM_UNIXTIME(englishMedia.created),'%Y-%m-%d')='" . $_REQUEST['created'] . "'";

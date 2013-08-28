@@ -13,6 +13,8 @@
             <html:imageBtn name="edit" click="edit()" style="hMargin fLeft" />
             <html:imageBtn name="forbid" click="forbid()" style="hMargin fLeft" />
             <html:imageBtn name="delete" click="foreverdel()" style="hMargin fLeft" />
+            <html:imageBtn name="subject" click="subject()" style="hMargin fLeft" />
+            <html:imageBtn name="difficulty" click="difficulty()" style="hMargin fLeft" />
         </div>
 
         <form method='post' action="__URL__">
@@ -20,59 +22,78 @@
                 <div class="fLeft">媒体查询：<span id="key"><input type="text" name="name" value="{$name}" class="medium" /></span></div>
                 <html:imageBtn type="submit" name="search" style="hMargin fLeft" />
             </div>
-            <div class="search cBoth">
-                格式：
-                <label>
-                    <input class="checkbox" type="checkbox" value="1" name="pattern" <eq name="param['pattern']" value="1">checked="checked"</eq>>
-                    视频
-                </label>
-                <label>
-                    <input class="checkbox" type="checkbox" value="2" name="pattern" <eq name="param['pattern']" value="2">checked="checked"</eq>>
-                    音频
-                </label>&nbsp;&nbsp;
-                科目：
-                <select name="object">
-                    <volist name="object_list" id="object">
-                        <option value="{$object.id}"  <eq name="param['object']" value="$object['id']">selected="true"</eq>>{$object.name}</option>
-                    </volist>
-                </select>&nbsp;&nbsp;
-                <select name="level">
-                    <option value="0">全部</option>
-                    <volist name="level_list" id="level">
-                        <option value="{$level.id}" <eq name="param['level']" value="$level['id']">selected="true"</eq>>{$level.name}</option>
-                    </volist>
-                </select>
-                &nbsp;&nbsp;
-                专题：
-                <select name="subject">
-                    <option value="0">全部</option>
-                    <volist name="subject_list" id="subject">
-                        <option value="{$subject.id}" <eq name="param['subject']" value="$subject['id']">selected="true"</eq>>{$subject.name}</option>
-                    </volist>
-                </select>
-                <select name="difficulty">
-                    <option value="0">全部</option>
-                    <option value="1">初级</option>
-                    <option value="2">中级</option>
-                    <option value="3">高级</option>
-                </select>
-                &nbsp;&nbsp;
-                添加时间：
-                <input type="text" id="J_createTime" name="created" value="{$param['created']}" />
-                &nbsp;&nbsp;
-                状态：
-                <label>
-                    <input class="checkbox" type="checkbox" value="-2" name="status" <if condition="($param['status'] eq -2)OR(!isset($param['status']))">checked="checked"</if>>
-                    全部
-                </label>&nbsp;
-                <label>
-                    <input class="checkbox" type="checkbox" value="1" name="status" <if condition="$param['status'] eq 1">checked="checked"</if>>
-                    正常
-                </label>&nbsp;
-                <label>
-                    <input class="checkbox" type="checkbox" value="0" name="status" <eq name="param['status']" value="0">checked="checked"</eq>>
-                    禁用
-                </label>
+            <div class="search cBoth" style="height: 60px;">
+                <div>
+                    格式：
+                    <label>
+                        <input class="checkbox" type="checkbox" value="1" name="pattern" <eq name="param['pattern']" value="1">checked="checked"</eq>>
+                        视频
+                    </label>
+                    <label>
+                        <input class="checkbox" type="checkbox" value="2" name="pattern" <eq name="param['pattern']" value="2">checked="checked"</eq>>
+                        音频
+                    </label>&nbsp;&nbsp;
+                    科目：
+                    <select name="object">
+                        <volist name="object_list" id="object">
+                            <option value="{$object.id}"  <eq name="param['object']" value="$object['id']">selected="true"</eq>>{$object.name}</option>
+                        </volist>
+                    </select>&nbsp;&nbsp;
+                    <select name="level">
+                        <option value="0">全部</option>
+                        <volist name="level_list" id="level">
+                            <option value="{$level.id}" <eq name="param['level']" value="$level['id']">selected="true"</eq>>{$level.name}</option>
+                        </volist>
+                    </select>
+                    &nbsp;&nbsp;
+                    专题：
+                    <select name="subject">
+                        <option value="0">全部</option>
+                        <volist name="subject_list" id="subject">
+                            <option value="{$subject.id}" <eq name="param['subject']" value="$subject['id']">selected="true"</eq>>{$subject.name}</option>
+                        </volist>
+                    </select>
+                    <select name="difficulty">
+                        <option value="0">全部</option>
+                        <option value="1">初级</option>
+                        <option value="2">中级</option>
+                        <option value="3">高级</option>
+                    </select>
+                    &nbsp;&nbsp;
+                    添加时间：
+                    <input type="text" id="J_createTime" name="created" value="{$param['created']}" />
+                    &nbsp;&nbsp;
+                    状态：
+                    <label>
+                        <input class="checkbox" type="checkbox" value="1" name="status" <if condition="$param['status'] eq 1">checked="checked"</if>>
+                        正常
+                    </label>&nbsp;
+                    <label>
+                        <input class="checkbox" type="checkbox" value="0" name="status" <eq name="param['status']" value="0">checked="checked"</eq>>
+                        禁用
+                    </label>
+                </div>
+                <div style="margin-top: 10px;">
+                    推荐：
+                    <label>
+                        <input class="checkbox" type="checkbox" value="1" name="recommend" <if condition="$param['recommend'] eq 1">checked="checked"</if>>
+                        是
+                    </label>&nbsp;
+                    <label>
+                        <input class="checkbox" type="checkbox" value="0" name="recommend" <eq name="param['recommend']" value="0">checked="checked"</eq>>
+                        否
+                    </label>
+                    &nbsp;&nbsp;
+                    特别推荐：
+                    <label>
+                        <input class="checkbox" type="checkbox" value="1" name="special_recommend" <if condition="$param['special_recommend'] eq 1">checked="checked"</if>>
+                        是
+                    </label>&nbsp;
+                    <label>
+                        <input class="checkbox" type="checkbox" value="0" name="special_recommend" <eq name="param['special_recommend']" value="0">checked="checked"</eq>>
+                        否
+                    </label>
+                </div>
             </div>
         </form>
 
