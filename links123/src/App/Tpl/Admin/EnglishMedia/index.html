@@ -113,7 +113,7 @@
 <div id="point_subject_dialog" class="easyui-dialog" style="width:250px;height:auto;" data-options="title:'确认操作',shadow:false,modal:true,closed:true,closable:true">
     <h2>请选择需要指定的专题：</h2>
     <div style='margin:10px 0 0 10px;'>
-        <select name="point_subject">
+        <select id="J_pointSubjectSelect">
             <volist name="subject_list" id="subject">
                 <option value="{$subject.id}">{$subject.name}</option>
             </volist>
@@ -144,7 +144,23 @@
             $("[name='search']").click();
         })
         $("#pointSubjectBtn").click(function() {
+            var id = getSelectCheckboxValues();
+            if (!id) {
+                alert('请选择操作项！');
+                $("#export_dialog").window("close");
+                return false;
+            }
             $("#point_subject_dialog").window("open");
+        })
+        $("#J_pointSubjectBtn").click(function() {
+            var id = getSelectCheckboxValues();
+            var targetSubject = $("#J_pointSubjectSelect").val();
+            $.post("__URL__/pointSubject",{id:id,targetSubject:targetSubject},function(msg){
+                if(msg){
+                    alert(msg.info);
+                    $("#point_subject_dialog").window("close");
+                }
+            },"json");
         })
         $("#J_pointSubjectCancelBtn").click(function() {
             $("#point_subject_dialog").window("close");
