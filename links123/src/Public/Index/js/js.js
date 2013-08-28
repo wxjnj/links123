@@ -37,15 +37,40 @@ $(function() {
 		myWinOpen($(this).attr('url'), '', '');
 	});
 
-	// 直达框获得焦点
-	$(".J_header_top").mouseover(function() {
-		$("#direct_text").select().addClass('ipson');
-	}).mouseout(function() {
-		$('#search_text').select();
+	// 直达框
+	$(document).on('click', function(){
 		$('#direct_text').val($('#direct_text').attr('txt')).removeClass('ipson');
 	});
-	$('#direct_text').click(function() {
-		$('#direct_text').val('').addClass('ipson');
+	$("#direct_text").on('mouseenter', function(){
+		var tag = $.trim($('#direct_text').val());
+		if(tag == $('#direct_text').attr('txt')){
+			$("#direct_text").select().addClass('ipson');
+		}else{
+			$("#direct_text").addClass('ipson');
+		}
+	}).on('mouseleave', function(){
+		var tag = $.trim($('#direct_text').val());
+		if(tag == '' || tag == $('#direct_text').attr('txt')){
+			$('#search_text').select();
+			$('#direct_text').removeClass('ipson');
+		}
+	}).on('click', function() {
+		var tag = $.trim($('#direct_text').val());
+		if (tag == $('#direct_text').attr('txt')){
+			$('#direct_text').val('').addClass('ipson');
+		}
+		return false;
+	});
+	$('.J_direct_submit').on('click', function(){
+		$("#frm_drct").trigger('submit');
+		$("#direct_text")[0].focus();
+		return false;
+	});
+	$("#frm_drct").on('submit', function(){
+		var tag = $.trim($('#direct_text').val());
+		if (tag == '' || tag == $('#direct_text').attr('txt')){
+			return false;
+		}
 	});
 
 	// 编辑自留地
@@ -56,6 +81,12 @@ $(function() {
 		$('#J_sortable').sortable({
 			update: function (event, ui) {  
 
+				$('.zld .bg-none').removeClass('bg-none');
+				
+				var zldli = $('.zld ul li');
+				zldli.eq(0).addClass('bg-none');
+				zldli.eq(15).addClass('bg-none');
+				
 				$.post(URL + '/sortArealist', {'area' : $(this).sortable('toArray')});
 		   }  
 		});
@@ -77,8 +108,8 @@ $(function() {
 
 	//自留地竖线边框
 	var zldli = $('.zld ul li');
-	zldli.eq(0).css('background', 'none');
-	zldli.eq(15).css('background', 'none');
+	zldli.eq(0).addClass('bg-none');
+	zldli.eq(15).addClass('bg-none');
 	
 	//编辑自留地网址
 	$('.zld-edit ul li span').live('click', function() {
@@ -378,16 +409,6 @@ $(function() {
 			return false;
 		}
 	});
-
-	$('#direct_text').keypress(function(event) {
-		if (event.keyCode == 13) {
-			var tag = $.trim($(this).val());
-			if (tag != '') {
-				$("#frm_drct").submit();
-			}
-			return false;
-		}
-	});
 	
 	THL.init();
 });
@@ -508,7 +529,8 @@ var THL = {
 		$(document).mouseup(function(ev){ // 搜索文本框始终获取焦点
 			if ( document.activeElement.tagName == "INPUT" 
 				|| document.activeElement.tagName == "TEXTAREA" 
-				|| document.activeElement.tagName == "IFRAME"   ) {
+				|| document.activeElement.tagName == "IFRAME"
+				|| document.activeElement.id == "direct_text") {
 				return;
 			}
 			var txt = '';

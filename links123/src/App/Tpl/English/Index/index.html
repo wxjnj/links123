@@ -48,11 +48,12 @@
         </script>
         <link href="__PUBLIC__/English/css/tabs.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="__PUBLIC__/English/js/jquery.tools.min.js"></script>
-        <load href='__PUBLIC__/skin/easyui/themes/metro/easyui.css' />
-        <load href="__PUBLIC__/skin/easyui/jquery.easyui.min.js" />
+        <!--<load href="__PUBLIC__/skin/easyui/jquery.easyui.min.js" />-->
+        <!--<load href='__PUBLIC__/skin/easyui/themes/metro/easyui.css' />-->
+        <load href="__PUBLIC__/skin/easyui/easyloader.js" />
         <SCRIPT src="__PUBLIC__/English/js/select.js?2013081701"></SCRIPT>
         <script type="text/javascript" src="__PUBLIC__/Js/Links123PlayerV1.1.1.1/swfobject.js"></script>
-        <SCRIPT src="__PUBLIC__/English/js/index.js?2013081901"></SCRIPT>
+        <SCRIPT src="__PUBLIC__/English/js/index.js?2013082701"></SCRIPT>
         
         <script type="text/javascript" src="__PUBLIC__/Js/flowplayer/flowplayer-3.2.12.min.js"></script>
 		
@@ -87,7 +88,8 @@
                 <div class="menuright">
                     <ul class="tabs">
                         <li><a class="current" href="#">选择课程和年级</a></li>
-                        <!--<li><a href="#">选择推荐视频和年级</a></li>-->
+                        <!--<li><a href="#">选择专题</a></li>-->
+                        <!--<li><a href="#">选择推荐视频</a></li>-->
                     </ul>
                     <div class="panes">
                         <div class="box1">
@@ -114,19 +116,29 @@
 <!--                        <div class="box1" style="display: none">
                             <div class="kechenggrade">
                                 <ul class="kecheng">
-                                    <li><span>综合</span></li>
-                                    <li><span>语文</span></li>
-                                    <li class="current"><span>数学</span></li>
-                                    <li><span>英语</span></li>
-                                    <li><span>地理</span></li>
+                                    <li class="current"><span>初级</span></li>
+                                    <li><span>中级</span></li>
+                                    <li><span>高级</span></li>
                                 </ul>
-                                <br />
                                 <ul class="grade">
-                                    <li><span>高三</span></li>
-                                    <li><span>大一</span></li>
-                                    <li><span>大二</span></li>
-                                    <li><span>大三</span></li>
-                                    <li class="current"><span>大四</span></li>
+                                    <li><span>娱乐</span></li>
+                                    <li><span>体育</span></li>
+                                    <li><span>教育</span></li>
+                                    <li class="current"><span>饮食</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="box1" style="display: none">
+                            <div class="kechenggrade">
+                                <ul class="kecheng">
+                                    <li><span>体育</span></li>
+                                    <li><span>教育</span></li>
+                                    <li><span>广告</span></li>
+                                </ul>
+                                <ul class="grade">
+                                    <li><span>语文</span></li>
+                                    <li><span>数学</span></li>
+                                    <li><span>历史</span></li>
                                 </ul>
                             </div>
                         </div>-->
@@ -148,14 +160,13 @@
                                     <img src="__PUBLIC__/English/images/deafult_media_img.jpg" id="J_media_img">
                                 </div>
                             </div>
-                            <div id="J_media_div" media_type="{$question['media_type']}" 
+                            <div id="J_media_div" style="position: relative;" media_type="{$question['media_type']}" 
                                 <if condition="$isAboutVideo neq '1'">
                                     class="normal_media_div media_div"
                                 <else />
                                     class="media_div"  style="visibility: hidden;" data_media_url="{$question['media_url']}" 
                                 </if> 
                                      data_isAboutVideo="{$isAboutVideo}">
-                                
                                 <if condition="$isAboutVideo neq '1'">
                                     <if condition="$question['media_type'] eq '1'">
                                         {$question['media']}

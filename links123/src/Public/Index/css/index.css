@@ -308,6 +308,7 @@ a,a:hover{ text-decoration: none; }
 	height: 0;
 	clear: both;
 }
+
 .zld ul li{
 	background: url(../imgs/line.png) left 10px no-repeat;
 	float: left;
@@ -334,6 +335,10 @@ a,a:hover{ text-decoration: none; }
 .zld ul li span b:hover{
 	color: #d20015;
 }
+.zld .bg-none{
+	background : none;
+}
+
 .zld-edit{ background-position: 0 -89px; }
 .zld-edit-box{
 	color: #000;

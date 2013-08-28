@@ -3,16 +3,27 @@
 
 <div id="main" class="main" >
     <div class="content">
-        <div class="title">编辑英语角科目[ <a href="__URL__">返回列表</a> ]</div>
+        <div class="title">编辑英语角媒体专题[ <a href="__URL__">返回列表</a> ]</div>
         <form method='post' id="form1" action="__URL__/update/" >
             <table cellpadding=3 cellspacing=3>
                 <tr>
-                    <td class="tRight" >科目名称：</td>
-                    <td class="tLeft" ><input type="text" class="bLeftRequire" name="name" value='{$vo.name}' /></td>
+                    <td class="tRight" >专题名称：</td>
+                    <td class="tLeft" ><input type="text" class="bLeftRequire" name="name" value="{$vo.name}" /></td>
+                </tr>
+                <tr>
+                    <td class="tRight" >父级专题：</td>
+                    <td class="tLeft" >
+                        <select name="pid">
+                            <option value="0">顶级专题</option>
+                            <volist name="top_subject_list" id="subject">
+                                <option value="{$subject.id}" <eq name="vo['pid']" value='$subject["id"]'>selected="true"</eq> >{$subject.name}</option>
+                            </volist>
+                        </select>
+                    </td>
                 </tr>
                 <tr>
                     <td class="tRight" >排序：</td>
-                    <td class="tLeft" ><input type="text" class="bLeftRequire" name="sort" value='{$vo.sort}' /></td>
+                    <td class="tLeft" ><input type="text" class="bLeftRequire" name="sort" value="{$vo.sort}" /></td>
                 </tr>
                 <tr>
                     <td class="tRight" >状态：</td>

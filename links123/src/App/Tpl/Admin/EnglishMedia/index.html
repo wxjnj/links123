@@ -1,0 +1,217 @@
+<tagLib name="html" />
+<include file="Public:header" />
+
+<load href="__PUBLIC__/Js/Jquery/jquery.js" />
+<load href="__PUBLIC__/Js/My97DatePicker/WdatePicker.js" />
+<load href="__PUBLIC__/skin/easyui/themes/metro/easyui.css" />
+<load href="__PUBLIC__/Js/Jquery/jqueryform.js" />
+<load href="__PUBLIC__/skin/easyui/locale/easyui-lang-zh_CN.js" /> 
+<load href="__PUBLIC__/skin/easyui/jquery.easyui.min.js" />
+
+<div id="main" class="main" >
+    <div class="content" >
+        <div class="title">英语角媒体列表</div>
+
+        <div class="operate" >
+            <html:imageBtn name="add" click="add()" style="hMargin fLeft" />
+            <html:imageBtn name="edit" click="edit()" style="hMargin fLeft" />
+            <html:imageBtn name="forbid" click="forbid()" style="hMargin fLeft" />
+            <html:imageBtn name="delete" click="foreverdel()" style="hMargin fLeft" />
+            <html:imageBtn name="subject" click="subject()" style="hMargin fLeft" />
+            <html:imageBtn name="difficulty" click="difficulty()" style="hMargin fLeft" />
+        </div>
+
+        <form method='post' action="__URL__">
+            <div class="rSearch">
+                <div class="fLeft">媒体查询：<span id="key"><input type="text" name="name" value="{$name}" class="medium" /></span></div>
+                <html:imageBtn type="submit" name="search" style="hMargin fLeft" />
+            </div>
+            <div class="search cBoth" style="height: 60px;">
+                <div>
+                    格式：
+                    <label>
+                        <input class="checkbox" type="checkbox" value="1" name="pattern" <eq name="param['pattern']" value="1">checked="checked"</eq>>
+                        视频
+                    </label>
+                    <label>
+                        <input class="checkbox" type="checkbox" value="2" name="pattern" <eq name="param['pattern']" value="2">checked="checked"</eq>>
+                        音频
+                    </label>&nbsp;&nbsp;
+                    科目：
+                    <select name="object">
+                        <volist name="object_list" id="object">
+                            <option value="{$object.id}"  <eq name="param['object']" value="$object['id']">selected="true"</eq>>{$object.name}</option>
+                        </volist>
+                    </select>&nbsp;&nbsp;
+                    <select name="level">
+                        <option value="0">全部</option>
+                        <volist name="level_list" id="level">
+                            <option value="{$level.id}" <eq name="param['level']" value="$level['id']">selected="true"</eq>>{$level.name}</option>
+                        </volist>
+                    </select>
+                    &nbsp;&nbsp;
+                    专题：
+                    <select name="subject">
+                        <option value="0">全部</option>
+                        <volist name="subject_list" id="subject">
+                            <option value="{$subject.id}" <eq name="param['subject']" value="$subject['id']">selected="true"</eq>>{$subject.name}</option>
+                        </volist>
+                    </select>
+                    <select name="difficulty">
+                        <option value="0">全部</option>
+                        <option value="1" <eq name="param['difficulty']" value="1">selected="true"</eq>>初级</option>
+                        <option value="2" <eq name="param['difficulty']" value="2]">selected="true"</eq>>中级</option>
+                        <option value="3" <eq name="param['difficulty']" value="3">selected="true"</eq>>高级</option>
+                    </select>
+                    &nbsp;&nbsp;
+                    添加时间：
+                    <input type="text" id="J_createTime" name="created" value="{$param['created']}" />
+                    &nbsp;&nbsp;
+                    状态：
+                    <label>
+                        <input class="checkbox" type="checkbox" value="1" name="status" <if condition="$param['status'] eq 1">checked="checked"</if>>
+                        正常
+                    </label>&nbsp;
+                    <label>
+                        <input class="checkbox" type="checkbox" value="0" name="status" <eq name="param['status']" value="0">checked="checked"</eq>>
+                        禁用
+                    </label>
+                </div>
+                <div style="margin-top: 10px;">
+                    推荐：
+                    <label>
+                        <input class="checkbox" type="checkbox" value="1" name="recommend" <if condition="$param['recommend'] eq 1">checked="checked"</if>>
+                        是
+                    </label>&nbsp;
+                    <label>
+                        <input class="checkbox" type="checkbox" value="0" name="recommend" <eq name="param['recommend']" value="0">checked="checked"</eq>>
+                        否
+                    </label>
+                    &nbsp;&nbsp;
+                    特别推荐：
+                    <label>
+                        <input class="checkbox" type="checkbox" value="1" name="special_recommend" <if condition="$param['special_recommend'] eq 1">checked="checked"</if>>
+                        是
+                    </label>&nbsp;
+                    <label>
+                        <input class="checkbox" type="checkbox" value="0" name="special_recommend" <eq name="param['special_recommend']" value="0">checked="checked"</eq>>
+                        否
+                    </label>
+                </div>
+            </div>
+        </form>
+
+        <div class="list" >
+            <html:list id="checkList" name="category" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,name:名称:edit,object_name:科目,level_name:等级,subject_name:专题,difficulty|getMediaDifficultyName:难度,voice|getVoiceName:语音,pattern|getMediaPatternName:格式类型,play_type|getMediaPlayTypeName:播放类型,storage_type|getStorageTypeName:存储类型,media_source_url|getLinkToHref:来源地址,recommend|getYorN:推荐,special_recommend|getYorN:特别推荐,created|toDate:发布时间,status|getStatus:状态" actionlist="edit:编辑" />
+        </div>
+
+        <div class="page">{$page}</div>
+
+    </div>
+
+</div>
+<div id="load_dialog" class="easyui-dialog" style="width:225px;height:auto;" data-options="title:'正在处理',shadow:false,modal:true,closed:true,closable:false">
+    <img style="" src="__PUBLIC__/Images/loading.gif" />
+</div>
+<div id="point_subject_dialog" class="easyui-dialog" style="width:250px;height:auto;" data-options="title:'确认操作',shadow:false,modal:true,closed:true,closable:true">
+    <h2>请选择需要指定的专题：</h2>
+    <div style='margin:10px 0 0 10px;'>
+        <select id="J_pointSubjectSelect">
+            <volist name="subject_list" id="subject">
+                <option value="{$subject.id}">{$subject.name}</option>
+            </volist>
+        </select>
+    </div>
+    <div style="margin: 20px 0 10px 0;">
+        <input type="button" id='J_pointSubjectBtn' style='margin: 0 30px' value="确 认" class="small submit" />&nbsp;
+        <input type="button" id='J_pointSubjectCancelBtn' value="取消" class="small submit" />&nbsp;
+    </div>
+</div>
+<div id="point_difficulty_dialog" class="easyui-dialog" style="width:250px;height:auto;" data-options="title:'确认操作',shadow:false,modal:true,closed:true,closable:true">
+    <h2>请选择需要指定的等级：</h2>
+    <div style='margin:10px 0 0 10px;'>
+        <select id="J_pointDifficultySelect">
+            <option value="1">初级</option>
+            <option value="2">中级</option>
+            <option value="3">高级</option>
+        </select>
+    </div>
+    <div style="margin: 20px 0 10px 0;">
+        <input type="button" id='J_pointDifficultyBtn' style='margin: 0 30px' value="确 认" class="small submit" />&nbsp;
+        <input type="button" id='J_pointDifficultyCancelBtn' value="取消" class="small submit" />&nbsp;
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+    $(function() {
+        $("#J_createTime").focus(function() {
+            WdatePicker({dateFmt: 'yyyy-MM-dd', maxDate: "%y-%M-%d", onpicked: function() {
+                    $("[name='search']").click();
+                }, oncleared: function() {
+                    $("[name='search']").click();
+                }
+            });
+            $(this).blur();
+        })
+        $(".search .checkbox").click(function() {
+            $("[name='" + $(this).attr("name") + "']").not("[value='" + $(this).val() + "']").removeAttr("checked");
+            $("[name='search']").click();
+        })
+        $("[name='object'],[name='level'],[name='subject'],[name='difficulty']").change(function() {
+            $("[name='search']").click();
+        })
+        //
+        //指定专题
+        $("#J_pointSubjectBtn").click(function() {
+            $("#load_dialog").window("open");
+            $("#point_subject_dialog").window("close");
+            var id = getSelectCheckboxValues();
+            var targetSubject = $("#J_pointSubjectSelect").val();
+            $.post("__URL__/pointSubject", {id: id, targetSubject: targetSubject}, function(msg) {
+                if (msg) {
+                    alert(msg.info);
+                }
+                $("#load_dialog").window("close");
+                window.location.reload();
+            }, "json");
+        })
+        $("#J_pointSubjectCancelBtn").click(function() {
+            $("#point_subject_dialog").window("close");
+        })
+        //
+        //指定难度
+        $("#J_pointDifficultyBtn").click(function() {
+            $("#load_dialog").window("open");
+            $("#point_difficulty_dialog").window("close");
+            var id = getSelectCheckboxValues();
+            var targetDifficulty = $("#J_pointDifficultySelect").val();
+            $.post("__URL__/pointDifficulty", {id: id, targetDifficulty: targetDifficulty}, function(msg) {
+                if (msg) {
+                    alert(msg.info);
+                }
+                $("#load_dialog").window("close");
+                window.location.reload();
+            }, "json");
+        })
+        $("#J_pointDifficultyCancelBtn").click(function() {
+            $("#point_difficulty_dialog").window("close");
+        })
+    })
+    function subject() {
+        var id = getSelectCheckboxValues();
+        if (!id) {
+            alert('请选择操作项！');
+            return false;
+        }
+        $("#point_subject_dialog").window("open");
+    }
+    function difficulty() {
+        var id = getSelectCheckboxValues();
+        if (!id) {
+            alert('请选择操作项！');
+            return false;
+        }
+        $("#point_difficulty_dialog").window("open");
+    }
+</script>
+</html>
