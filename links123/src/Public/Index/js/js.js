@@ -39,7 +39,7 @@ $(function() {
 
 	// 直达框获得焦点
 	$(".J_header_top").mouseover(function() {
-		$("#direct_text").select();
+		$("#direct_text").select().addClass('ipson');
 	}).mouseout(function() {
 		$('#search_text').select();
 		$('#direct_text').val($('#direct_text').attr('txt')).removeClass('ipson');
@@ -47,12 +47,6 @@ $(function() {
 	$('#direct_text').click(function() {
 		$('#direct_text').val('').addClass('ipson');
 	});
-	$('#direct_text').keydown(function() {
-		$('#direct_text').addClass('ipson');
-	});
-	$('#frm_drct').submit(function(){
-		if($.trim($(this).val()) == '') return false; //输入内容为空不提交
-	});	
 
 	// 编辑自留地
 	$('.J_myarea').click(function() {
@@ -146,7 +140,7 @@ $(function() {
 			function(data) {
 				if (data.indexOf("updateOK") >= 0) {
 					var myarea_web_obj = $('.J_myarea_div ul li[id="'+id+'"] span');
-					myarea_web_obj.text(web_name);
+					$('.J_myarea_div ul li[id="'+id+'"] span b').text(web_name);
 					var new_url = myarea_web_obj.attr('url').replace(myarea_web_obj.attr('data-url'), url);
 					myarea_web_obj.attr('url', new_url);
 					myarea_web_obj.attr('data-url', url);
@@ -385,6 +379,16 @@ $(function() {
 		}
 	});
 
+	$('#direct_text').keypress(function(event) {
+		if (event.keyCode == 13) {
+			var tag = $.trim($(this).val());
+			if (tag != '') {
+				$("#frm_drct").submit();
+			}
+			return false;
+		}
+	});
+	
 	THL.init();
 });
 
