@@ -5,19 +5,18 @@ $('#J_apps_add').click(function(){
 	alert('Coming soon...');
 });
 $('#J_weather').click(function(){
-	$.post("/Weather/index", function(data){
+	/*$.post("/Weather/index", function(data){
 		$('#J_box_weather').html(data);
 	}); 
-	
-	
+	*/
 	$.fancybox({
 		href: '#J_box_weather',
 		helpers:  {
 	        title:  null,
 	        overlay : null
 	    },
-	    width: 600,
-	    height: 320,
+	    width: 400,
+	    height: 230,
 	    autoSize: false
 	    
 	});
