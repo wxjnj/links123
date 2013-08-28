@@ -46,6 +46,43 @@
 //                document.getElementsByTagName("link")[0].href="__PUBLIC__/English/css/"+title;
             }
         </script>
+        <style>
+        .video_ttl{
+        left:0;
+        position:absolute;
+        top:0;
+        width:100%;
+        height: 36px;
+        }
+        .video_ttl .video_ttl_mask{
+        height: 36px;
+        -moz-opacity: 0.7;
+        background:#4b2500;
+        filter: alpha(opacity=70);
+        left: 0;
+        line-height: 20px;
+        opacity: 0.7;
+        opacity: 0.7;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: 99998;
+        }
+        .video_ttl em{
+        color: #fff;
+        display: block;
+        font-size: 14px;
+        text-align: center;
+        text-align:center;
+        width: 100%;
+        font-style: normal;
+        position: absolute;
+        top: 7px;
+        left: 0;
+        width: 100%;
+        z-index: 99999;
+        }
+        </style>
         <link href="__PUBLIC__/English/css/tabs.css" rel="stylesheet" type="text/css" />
         <script type="text/javascript" src="__PUBLIC__/English/js/jquery.tools.min.js"></script>
         <!--<load href="__PUBLIC__/skin/easyui/jquery.easyui.min.js" />-->
@@ -160,14 +197,14 @@
                                     <img src="__PUBLIC__/English/images/deafult_media_img.jpg" id="J_media_img">
                                 </div>
                             </div>
-                            <div id="J_media_div" media_type="{$question['media_type']}" 
+                            <div id="J_media_div" style="position: relative;" media_type="{$question['media_type']}" 
                                 <if condition="$isAboutVideo neq '1'">
                                     class="normal_media_div media_div"
                                 <else />
                                     class="media_div"  style="visibility: hidden;" data_media_url="{$question['media_url']}" 
                                 </if> 
                                      data_isAboutVideo="{$isAboutVideo}">
-                                
+                                <div class="video_ttl"><div class="video_ttl_mask"></div><em>测试标题</em></div>
                                 <if condition="$isAboutVideo neq '1'">
                                     <if condition="$question['media_type'] eq '1'">
                                         {$question['media']}

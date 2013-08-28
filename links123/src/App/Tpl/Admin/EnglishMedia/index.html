@@ -1,8 +1,12 @@
 <tagLib name="html" />
 <include file="Public:header" />
 
-<load href="__PUBLIC__/Js/jquery.js" />
+<load href="__PUBLIC__/Js/Jquery/jquery.js" />
 <load href="__PUBLIC__/Js/My97DatePicker/WdatePicker.js" />
+<load href="__PUBLIC__/skin/easyui/themes/metro/easyui.css" />
+<load href="__PUBLIC__/Js/Jquery/jqueryform.js" />
+<load href="__PUBLIC__/skin/easyui/locale/easyui-lang-zh_CN.js" /> 
+<load href="__PUBLIC__/skin/easyui/jquery.easyui.min.js" />
 
 <div id="main" class="main" >
     <div class="content" >
@@ -13,8 +17,8 @@
             <html:imageBtn name="edit" click="edit()" style="hMargin fLeft" />
             <html:imageBtn name="forbid" click="forbid()" style="hMargin fLeft" />
             <html:imageBtn name="delete" click="foreverdel()" style="hMargin fLeft" />
-            <html:imageBtn name="subject" click="subject()" style="hMargin fLeft" />
-            <html:imageBtn name="difficulty" click="difficulty()" style="hMargin fLeft" />
+            <button id="pointSubjectBtn">指定专题</button>
+            <button id="pointDifficultyBtn">指定难度</button>
         </div>
 
         <form method='post' action="__URL__">
@@ -106,6 +110,20 @@
     </div>
 
 </div>
+<div id="point_subject_dialog" class="easyui-dialog" style="width:250px;height:auto;" data-options="title:'确认操作',shadow:false,modal:true,closed:true,closable:true">
+    <h2>请选择需要指定的专题：</h2>
+    <div style='margin:10px 0 0 10px;'>
+        <select name="point_subject">
+            <volist name="subject_list" id="subject">
+                <option value="{$subject.id}">{$subject.name}</option>
+            </volist>
+        </select>
+    </div>
+    <div style="margin: 20px 0 10px 0;">
+        <input type="button" id='J_pointSubjectBtn' style='margin: 0 30px' value="确 认" class="small submit" />&nbsp;
+        <input type="button" id='J_pointSubjectCancelBtn' value="取消" class="small submit" />&nbsp;
+    </div>
+</div>
 </body>
 <script type="text/javascript">
     $(function() {
@@ -124,6 +142,12 @@
         })
         $("[name='object'],[name='level'],[name='subject'],[name='difficulty']").change(function() {
             $("[name='search']").click();
+        })
+        $("#pointSubjectBtn").click(function() {
+            $("#point_subject_dialog").window("open");
+        })
+        $("#J_pointSubjectCancelBtn").click(function() {
+            $("#point_subject_dialog").window("close");
         })
     })
 </script>
