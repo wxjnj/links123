@@ -751,6 +751,7 @@ div.gt-baf-translations {
 }
 
 .box_stikynot_color_bar {
+	border: 1px solid #999;
 	cursor: pointer;
 	width: 16px;
 	height: 16px;
@@ -829,11 +830,17 @@ div.gt-baf-translations {
 * 新增的3个颜色
 ***************************************************/
 .color_1{ background: #fff; margin-left: 25px; }
-.color_2{ background: #f8f7d2; }
-.color_3{ background: #dcf0e8; }
+.color_2{ background: #f6ebb5; }
+.color_3{ background: #cee7dd; }
+.color_4{ background: #fbd9f3; }
+.color_5{ background: #b9e1fa; }
+.color_6{ background: #fab0a4; }
 .bg_1{ background: #fff; color: #333; }
-.bg_2{ background: #f8f7d2; color: #333; }
-.bg_3{ background: #dcf0e8; color: #333; }
+.bg_2{ background: #f6ebb5; color: #333; }
+.bg_3{ background: #cee7dd; color: #333; }
+.bg_4{ background: #fbd9f3; color: #333; }
+.bg_5{ background: #b9e1fa; color: #333; }
+.bg_6{ background: #fab0a4; color: #fff; }
 /***************************************************/
 /** 便签$ **/
 #head_tools {

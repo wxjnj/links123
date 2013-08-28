@@ -344,10 +344,11 @@ function array_sort($arr, $keys, $type = 'desc') {
 }
 
 /**
+ * @name cleanParam
  * @desc 验证参数
- * @author Frank UPDATE 2013-08-19
  * @param string $param
  * @return string
+ * @author Frank UPDATE 2013-08-19
  */
 function cleanParam($param) {
     $param = trim($param);
@@ -682,7 +683,7 @@ function getGradeArr($rid) {
  * @desc 防采集
  * @name randString
  * @return string randstr
- * @author Frank UPDATE 2013-08-25
+ * @author Frank 2013-08-25
  */
 function randString() {
 	$array_bq = array("span", "font", "b", "strong", "div", "em");
@@ -697,4 +698,22 @@ function randString() {
 	return $arr;
 }
 
+/**
+ * @desc 根据url获取页面内容，大部分返回的是json格式的数据
+ * @name getContent
+ * @param string url
+ * @return array
+ * @author Frank 2013-08-27
+ */
+function getContent($url) {
+	$curl = curl_init();
+	$options = array(
+			CURLOPT_RETURNTRANSFER => 1,
+			CURLOPT_URL => $url
+	);
+	curl_setopt_array($curl, $options);
+	$body = curl_exec($curl);
+	curl_close($curl);
+	return $body;
+}
 ?>

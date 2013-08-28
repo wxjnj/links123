@@ -3,11 +3,11 @@ input:focus{ outline: 0; }
 a,a:hover{ text-decoration: none; }
 .top{
 	background: url(../imgs/topbg.png) 0 0 repeat-x;
-	height: 35px;
 	top: 0;
 	left: 0;
 	width: 100%;
 }
+.top .top-inner{ height: 35px; }
 .end{
 	height: 52px;
 	position: fixed;
@@ -79,31 +79,33 @@ a,a:hover{ text-decoration: none; }
 }
 
 /*分辨率宽度*/
-.w1000 .wrap,
-.w1000 .top-inner,
-.w1000 .end-inner{
+.w960 .wrap,
+.w960 .top-inner,
+.w960 .end-inner{
 	margin: 0 auto;
-	width: 1000px;
+	width: 960px;
 }
 
 /*顶部部分*/
 .syt{
-	background: url(../imgs/sytbg.png) 0 0 no-repeat;
-	height: 35px;
+	background: url(../imgs/sytbg.png) 0 -3px no-repeat;
+	height: 25px;
 	width: 317px;
-	margin-top: 3px;
+	margin-top: 6px;
 	padding-left: 10px;
 	float: left;
 }
 .syt .ips{
 	background: #f1f1f1;
+	color: #a9a9a9;
 	height: 16px;
 	line-height: 16px;
-	padding: 6px 0;
+	padding: 4px 0;
 	width: 286px;
 	float: left;
 	border: 0 none;
 }
+.syt .ipson{ color: #333; }
 .syt .btn{
 	background: transparent;
 	display: block;
@@ -131,7 +133,8 @@ a,a:hover{ text-decoration: none; }
 }
 .toplinks .uc li{
 	float: left;
-	padding: 10px 10px 0 10px;
+	display: inline;
+	padding: 10px 0 0 20px;
 }
 .toplinks .weather,
 .toplinks .timenow{
@@ -181,10 +184,10 @@ a,a:hover{ text-decoration: none; }
 }
 /*糖葫芦*/
 .thl{
-	background: url(../imgs/thlbg.png) 0 0 no-repeat;
-	height: 114px;
+	background: url(../imgs/thlbg.png) 0 -15px no-repeat;
+	height: 90px;
 	position: absolute;
-	top: 30px;
+	top: 35px;
 	left: 310px;
 	width: 456px;
 }
@@ -198,7 +201,7 @@ a,a:hover{ text-decoration: none; }
 .thl .cate{
 	height: 20px;
 	position: absolute;
-	top: 52px;
+	top: 40px;
 	left: 80px;
 	width: 280px;
 	display: none;
@@ -207,7 +210,7 @@ a,a:hover{ text-decoration: none; }
 	float: left;
 }
 .thl .subcate{
-	padding: 16px 0 0 50px;
+	padding: 10px 0 0 50px;
 	height: 14px;
 }
 .thl .on,
@@ -216,7 +219,7 @@ a,a:hover{ text-decoration: none; }
 }
 .thl .ctls{
 	padding-left: 40px;
-	margin-top: 14px;
+	margin-top: 12px;
 	height: 30px;
 	overflow: hidden;
 }
@@ -224,11 +227,11 @@ a,a:hover{ text-decoration: none; }
 	background: #eeeeee;
 	border: 0 none;
 	float: left;
-	height: 20px;
-	line-height: 20px;
+	height: 16px;
+	line-height: 16px;
 	font-size: 14px;
-	padding: 6px;
-	width: 338px;
+	padding: 3px;
+	width: 348px;
 }
 .thl .btn{
 	background: transparent;
@@ -237,10 +240,10 @@ a,a:hover{ text-decoration: none; }
 	display: block;
 	float: left;
 	font-size: 0;
-	height: 30px;
+	height: 23px;
 	line-height: -999px;
 	overflow: hidden;
-	width: 44px;
+	width: 35px;
 }
 /*自留地*/
 .zld{
@@ -263,34 +266,41 @@ a,a:hover{ text-decoration: none; }
 	display: none;
 }
 .zld .tools{
-	background: url(../imgs/tool-icons.png) 0 0 no-repeat;
-	float: right;
+	background: url(../imgs/tool-icons.png) -2px 0 no-repeat;
+	position: absolute;
 	display: block;
-	height: 40px;
-	width: 40px;
+	height: 35px;
+	width: 35px;
 	text-indent: -999px;
 	overflow: hidden;
-	margin: 9px 9px 0 0;
+	right: 4px;
+	top: 4px;
 }
 .zld .tools:hover{
-	background-position: -40px 0;
+	background-position: -42px 0;
 }
 .zld .close{
-	background: url(../imgs/exit.png?20130824) 0 0 no-repeat;
-	float: right;
+	background: url(../imgs/exit.png) 0 0 no-repeat;
+	position: absolute;
 	display: none;
-	height: 20px;
-	width: 41px;
+	height: 19px;
+	width: 38px;
 	text-indent: -999px;
 	overflow: hidden;
-	margin: 11px 11px 0 0;
+	right: 4px;
+	top: 4px;
 	cursor: pointer;
+	z-index: 1;
 }
 .zld ul{
 	*zoom: 1;
-	width: 920px;
-	margin-left: 22px;
-	padding-top: 13px;
+	width: 900px;
+	position: absolute;
+	top: 13px;
+	left: 15px;
+	overflow: hidden;
+	height: 62px;
+	z-index: 2;
 }
 .zld ul:after{
 	content: '\0020';
@@ -298,42 +308,37 @@ a,a:hover{ text-decoration: none; }
 	height: 0;
 	clear: both;
 }
+
 .zld ul li{
+	background: url(../imgs/line.png) left 10px no-repeat;
 	float: left;
-	margin: 2px 1px 0;
-	padding-left: 5px;
-}
-.zld ul li a{
-	display: block;
-	color: #323232;
-	height: 29px;
-	line-height: 26px;
-	line-height: 29px\9;
-	width: 54px;
-	text-align: center;
-	overflow: hidden;
-	padding-right: 5px;
-	margin-right: -5px;
-}
-.zld ul li a:hover{
-	color: #d20015;
 }
 .zld ul li span{
 	display: block;
+	margin: 2px 4px 0 1px;
+	padding-left: 3px;
+}
+.zld ul li span b{
 	color: #323232;
+	cursor: pointer;
+	display: block;
+	font-weight: normal;
 	height: 29px;
 	line-height: 26px;
 	line-height: 29px\9;
-	width: 54px;
-	text-align: center;
+	margin-right: -5px;
 	overflow: hidden;
 	padding-right: 5px;
-	margin-right: -5px;
-	cursor: pointer;
+	text-align: center;
+	width: 52px;
 }
-.zld ul li span:hover{
+.zld ul li span b:hover{
 	color: #d20015;
 }
+.zld .bg-none{
+	background : none;
+}
+
 .zld-edit{ background-position: 0 -89px; }
 .zld-edit-box{
 	color: #000;
@@ -341,8 +346,10 @@ a,a:hover{ text-decoration: none; }
 	font-weight: bold;
 	height: 30px;
 	line-height: 26px;
-	margin: 20px 0 0 180px;
+	top: 95px;
+	left: 80px;
 	display: none;
+	position: absolute;
 }
 .zld-edit-box .btnok{
 	background: url(../imgs/btn-ok.png) 0 0 no-repeat;
@@ -368,26 +375,33 @@ a,a:hover{ text-decoration: none; }
 	padding: 5px;
 	vertical-align: middle;
 }
-.zld-edit-box .nm{ width: 210px; }
+.zld-edit-box .nm{ width: 250px; }
 .zld-edit-box .url{ width: 310px; }
 .zld-edit .tools{ display: none; }
 .zld-edit .close{ display: block; }
 .zld-edit-box .tip{
-	color: #FF0000;
-	/*display: none;*/
+	color: #84aa03;
+	padding-left: 10px;
+	font-weight: normal;
+}
+.zld-edit-box .utips{
+	position: absolute;
+	top: 3px;
+	left: 180px;
+	font-weight: normal;
+	font-size: 12px;
+	color: #999;
 }
 
 /*自留地 编辑状态*/
 .zld-edit  .guide{
 	display: block;
 }
-.zld-edit ul li.on{
-	background: url(../imgs/zldon.png) 0 0 no-repeat;
+.zld-edit ul li.on span{
+	background: url(../imgs/zldon.png) 0 0 no-repeat;	
 }
-.zld-edit ul li.on a,
-.zld-edit ul li.on a:hover,
-.zld-edit ul li.on span,
-.zld-edit ul li.on span:hover{
+.zld-edit ul li.on b,
+.zld-edit ul li.on b:hover{
 	background: url(../imgs/zldon.png) right -29px no-repeat;
 	color: #fff;
 }
@@ -440,7 +454,7 @@ a,a:hover{ text-decoration: none; }
 	width: 260px;
 }
 .video img{ vertical-align: middle; }
-/*引用列表*/
+/*应用列表*/
 .apps{
 	*zoom: 1;
 	width: 550px;
@@ -459,41 +473,21 @@ a,a:hover{ text-decoration: none; }
 	text-align: center;
 }
 .apps .img{ font-size: 0; }
-.apps .img a{
-	background: url(../imgs/app/appbg.png) -75px 0 no-repeat;
-	display: block;
-	height: 74px;
-	margin: 0 auto;
-	position: relative;
-	width: 75px;
-}
-.apps .img a b{ display: none; }
-.apps .img a:hover b{
-	background: url(../imgs/close.png) 0 0 no-repeat;
-	display: block;
-	height: 15px;
-	left: -2px;
-	overflow: hidden;
-	position: absolute;
-	text-indent: -999px;
-	top: -2px;
-	width: 15px;
-}
-.apps .img a:hover{
-	background-position: 0 0;
-}
+.apps .img a,
 .apps .img span{
-	background: url(../imgs/app/appbg.png) -75px 0 no-repeat;
+	background: url(../imgs/app/appbg.png) -75px 1px no-repeat;
 	display: block;
 	height: 74px;
 	margin: 0 auto;
 	position: relative;
 	width: 75px;
-	cursor: pointer;
 }
-.apps .img span b{ display: none; }
-/*.apps .img span:hover b{
-	background: url(../imgs/close.png) 0 0 no-repeat;
+.apps .img a b,
+.apps .img span b{
+	display: none;
+}
+.apps .img a:hover b{
+	background: url(../imgs/close.png) 0 1px no-repeat;
 	display: block;
 	height: 15px;
 	left: -2px;
@@ -502,31 +496,34 @@ a,a:hover{ text-decoration: none; }
 	text-indent: -999px;
 	top: -2px;
 	width: 15px;
-}*/
-.apps .img span:hover{
-	background-position: 0 0;
 }
 .apps .nm{
 	margin-top: 10px;
 }
 .apps .nm a,
-.apps .nm a:hover{
+.apps .nm span{
 	color: #dfdfdf;
 	font-weight: bold;
 }
-.apps .nm span,
-.apps .nm span:hover{
-	color: #dfdfdf;
-	font-weight: bold;
-	cursor: pointer;
+.apps li{ cursor: pointer; }
+.apps li.on a,
+.apps li.on span{
+	background-position: 0 1px;
 }
+.apps li.on .nm a,
+.apps li.on .nm span{
+	color: #d20015;
+	font-weight: normal;
+}
+
 /*皮肤*/
 .skins{
 	float: left;
+	padding-top: 17px;
 }
 .skins li{
 	float: left;
-	padding: 12px 8px 0 0;
+	padding: 0 8px 0 0;
 }
 .skins li a{
 	display: block;
@@ -535,12 +532,10 @@ a,a:hover{ text-decoration: none; }
 	-webkit-box-shadow: 1px 1px 3px #000;
 	box-shadow: 1px 1px 3px #000;
 }
-.skins li a:hover{
-	border: 2px solid #583516;
-}
 .skins li a:hover img{
-	width: 24px;
-	height: 24px;
+	border: 2px solid #583516;
+	height: 14px;
+	width: 14px;
 }
 .skins li img{
 	vertical-align: middle;
@@ -556,6 +551,10 @@ a,a:hover{ text-decoration: none; }
 }
 .copyright li.icp{
 	padding-left: 40px;
+}
+.copyright li.icp img{
+	vertical-align: middle;
+	margin-right: 10px;
 }
 .copyright li a{
 	color: #010101;

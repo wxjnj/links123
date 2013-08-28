@@ -6,19 +6,21 @@
 	<meta name="Keywords" content="{$keywords}" />
 	<meta name="Description" content="{$description}" />
 	<link href="__PUBLIC__/Index/css/base.css" rel="stylesheet" type="text/css" />
-	<link href="__PUBLIC__/Index/css/index.css" rel="stylesheet" type="text/css" />
+	<link href="__PUBLIC__/Index/css/index.css?2013082803" rel="stylesheet" type="text/css" />
 	<link rel="stylesheet" type="text/css" href="__PUBLIC__/skin/fancybox/jquery.fancybox.css?v=2.1.4" media="screen" />
 	<link href="__PUBLIC__/Index/css/jquery-ui.css" rel="stylesheet" type="text/css"/>
-	<link href="__PUBLIC__/Index/css/app.css" rel="stylesheet" type="text/css" />
+	<link href="__PUBLIC__/skin/FlexSlider/flexslider.css" rel="stylesheet" type="text/css"/>
+	<link href="__PUBLIC__/Index/css/app.css?2013082802" rel="stylesheet" type="text/css" />
+	
 </head>
 
-<body class="w1000">
+<body class="w960">
 	<div class="top J_header_top">
 		<div class="top-inner">
 			<div class="syt">
-				<form  id="frm_drct" method="post" action="__APP__/Index/directUrl/" target="_blank">
-					<input class="ips" x-webkit-speech type="text" name="tag" id="direct_text" value="{$directTip}"  txt="{$directTip}" />
-					<input class="btn" type="submit" value="" />
+				<form  id="frm_drct" method="post" action="__APP__/Link/direct/" target="_blank">
+					<input class="ips" x-webkit-speech type="text" name="tag" id="direct_text" value="{$directTip}"  txt="{$directTip}" autocomplete="off" />
+					<input class="btn J_direct_submit" type="button" value="" />
 				</form>
 			</div>
 			<div class="toplinks">
@@ -32,13 +34,13 @@
 						<li><a href="__APP__/Members/Index" target="_blank">个人中心</a></li>
 						<li><a href="__APP__/Members/Logout">退出</a></li>
 					</empty>
-					<li><a href="__APP__/Suggestion" <eq name="newSuggestion" value="1">style='color:#FF0000'</eq> >留言板</a></li>
+					<li><a href="__APP__/Suggestion" target="_blank" <eq name="newSuggestion" value="1">style='color:#FF0000'</eq> >留言板</a></li>
 				</ul>
 			</div>
 		</div>
 	</div>
 	<div class="wrap">
-		<div class="wrap-hd">
+		<div class="wrap-hd J_thl_area">
 			<h1><a class="logo" href="/" rel="home">另客网</a></h1>
 			<div class="thl">
 				<form action="" id="searchForm">
@@ -79,16 +81,17 @@
 				<ul id="J_sortable">
 					<volist name="_SESSION['arealist']" id="vo">
 					<if condition="$vo['id'] neq ''">
-						<li id="{$vo.id}"><span url="{:U('Index/link_out')}?mod=myarea&url={$vo.url}"  class="newWin" data-id="{$vo.id}" data-url="{$vo.url}">{$vo.web_name}</span></li>
+						<li id="{$vo.id}"><span url="{:U('Link/index')}?mod=myarea&url={$vo.url}"  class="newWin" data-id="{$vo.id}" data-url="{$vo.url}"><b>{$vo.web_name}</b></span></li>
 					</if>
 					</volist>
 				</ul>
 				<div class="zld-edit-box J_zld_edit_box">
 					<form action="">
 						<input class="nm" type="hidden" id="J_myarea_id" />
-					网站名称 <input class="nm" type="text" id="J_myarea_web_name" />
-					网址 <input class="url" type="text" id="J_myarea_web_url" /><input class="btnok J_myarea_web_save" type="button" value="保存" />
-					<span id="J_myarea_tip" class="tip"></span>
+						网站名称 <input class="nm" type="text" id="J_myarea_web_name" maxlength="8" />
+						网址 <input class="url" type="text" id="J_myarea_web_url" /><input class="btnok J_myarea_web_save" type="button" value="保存" />
+						<span class="utips">4个中文或8个英文字符以内</span>
+						<span id="J_myarea_tip" class="tip"></span>
 					</form>
 				</div>
 			</div>
@@ -99,25 +102,24 @@
 				<div class="video-panel">
 					<div class="video">
 						<img src="__PUBLIC__/Index/imgs/meinv.png" alt="" />
-					</div>
-					<div class="videotarget">
-						<ul>
-							<li><a class="gg" href="#">看公告</a></li>
-							<li><a class="dm" href="#">看动漫</a></li>
-							<div class="annt">
-								    <ul>
-								    <volist name="announces" id="vo">
-										<li>
-										<empty name="vo.content">
-											{$vo.title}
-										<else />
-											<a href="__URL__/ann_detail/id/{$vo.id}" target="_blank">{$vo.title}</a>
-										</empty>
-										</li>
-									</volist>
-								    </ul>
-							</div>
-						</ul>
+						<!-- 
+						<div class="flexslider">
+				          <ul class="slides">
+				          	<li>
+				          		<img src="__PUBLIC__/Index/imgs/meinv.png" alt="" />
+				          	</li>
+				          	<volist name="announces" id="vo">
+								<li>
+								<empty name="vo.content">
+									{$vo.title}
+								<else />
+									<a href="__URL__/ann_detail/id/{$vo.id}" target="_blank">{$vo.title}</a>
+								</empty>
+								</li>
+							</volist>
+				          </ul>
+						</div>
+					 -->
 					</div>
 				</div>
 			</div>
@@ -130,20 +132,20 @@
 						</li>
 						<li id="J_mail" >
 							<p class="img"><span><img src="__PUBLIC__/Index/imgs/app/app003.png" alt="" /><b>X</b></span></p>
-							<p class="nm"><span>邮箱</span></p>
+							<p class="nm"><span>邮&nbsp;箱</span></p>
 						</li>
 						<li id="J_calendar" >
 							<p class="img"><span><img src="__PUBLIC__/Index/imgs/app/app004.png" alt="" /><b>X</b></span></p>
-							<p class="nm"><span>日历</span></p>
+							<p class="nm"><span>日&nbsp;历</span></p>
 						</li>
 						<li id="J_weather">
 							<p class="img"><span><img src="__PUBLIC__/Index/imgs/app/app005.png" alt="" /><b>X</b></span></p>
-							<p class="nm"><span>天气</span></p>
+							<p class="nm"><span>天&nbsp;气</span></p>
 						</li>
 						<li style="height:100px;"></li>
 						<li>
 							<p class="img"><span class="newWin" url="/Index/nav"><img src="__PUBLIC__/Index/imgs/app/app002.png" alt="" /><b>X</b></span></p>
-							<p class="nm"><a href="/Index/nav" target="_blank">导航</a></p>
+							<p class="nm"><a href="/Index/nav" target="_blank">另客导航</a></p>
 						</li>
 						<li id="J_calc" >
 							<p class="img"><span><img src="__PUBLIC__/Index/imgs/app/app007.png" alt="" /><b>X</b></span></p>
@@ -151,11 +153,11 @@
 						</li>
 						<li id="J_stikynot" >
 							<p class="img"><span><img src="__PUBLIC__/Index/imgs/app/app008.png" alt="" /><b>X</b></span></p>
-							<p class="nm"><span>便签</span></p>
+							<p class="nm"><span>便&nbsp;签</span></p>
 						</li>
 						<li id="J_translate" >
 							<p class="img"><span><img src="__PUBLIC__/Index/imgs/app/app009.png" alt="" /><b>X</b></span></p>
-							<p class="nm"><span>翻译</span></p>
+							<p class="nm"><span>翻&nbsp;译</span></p>
 						</li>
 						<!-- <li id="J_apps_add">
 							<p class="img"><a href="javascript:void(0);"><img src="__PUBLIC__/Index/imgs/app/app-add.png" alt="" /></a></p>
@@ -171,13 +173,13 @@
 		<div class="end-inner">
 			<div class="skins">
 				<ul>
-					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-skin001.png" alt="" /></a></li>
-					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-skin002.png" alt="" /></a></li>
-					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-skin003.png" alt="" /></a></li>
-					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-skin004.png" alt="" /></a></li>
-					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-skin005.png" alt="" /></a></li>
-					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-skin006.png" alt="" /></a></li>
-					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-skin-add.png" alt="" /></a></li>
+					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-s-001.png" alt="" /></a></li>
+					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-s-001.png" alt="" /></a></li>
+					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-s-001.png" alt="" /></a></li>
+					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-s-001.png" alt="" /></a></li>
+					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-s-001.png" alt="" /></a></li>
+					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-s-001.png" alt="" /></a></li>
+					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-s-001.png" alt="" /></a></li>
 				</ul>
 			</div>
 			<div class="copyright">
@@ -186,8 +188,8 @@
 					<li><a href="__APP__/Suggestion" target="_blank">留言板</a><span>|</span></li>
 					<li><a href="__APP__/Blogroll" target="_blank">友情链接</a><span>|</span></li>
 					<li><a href="__APP__/Recommend" target="_blank">推荐链接</a><span>|</span></li>
-					<li><a href="#" class="a_setHome">设为首页</a></li>
-					<li class="icp"><a href="#">沪ICP备12036721号</a></li>
+					<li><a href="javascript:void(0);" class="a_setHome">设为首页</a></li>
+					<li class="icp"><script src="http://s96.cnzz.com/stat.php?id=4908341&web_id=4908341&show=pic1" type="text/javascript"></script>沪ICP备12036721号</li>
 				</ul>
 			</div>
 		</div>
@@ -273,15 +275,26 @@
 	</div>
 	</div>
 	<include file="Contorls:app" />
-	
 	<script type="text/javascript" src="__PUBLIC__/English/js/jquery-1.7.2.min.js"></script>
-	<script type="text/javascript" src="__PUBLIC__/Index/js/js.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/Index/js/js.js?2013082803"></script>
 	<script type="text/javascript" src="__PUBLIC__/skin/js/jquery.cookies.2.2.0.min.js"></script>
 	<script type="text/javascript" src="__PUBLIC__/skin/fancybox/jquery.fancybox.js?v=2.1.4"></script>
 	<script type="text/javascript" src="__PUBLIC__/skin/js/jquery-ui.min.js"></script>
-	<script type="text/javascript" src="__PUBLIC__/Index/js/app.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/Index/js/app.js?2013082802"></script>
 	<script type="text/javascript" src="__PUBLIC__/Index/js/jquery.placeholder.1.3.min.js"></script>
-	
-	
+	<script type="text/javascript" src="__PUBLIC__/skin/FlexSlider/jquery.flexslider-min.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/skin/js/json2.js"></script>
+	<!-- 
+	<script>
+	$(window).load(function() {
+        $('.flexslider').flexslider({
+          animation: "slide",
+          slideshowSpeed: 5000,//设置幻灯片循环的速度，单位为毫秒
+          animationSpeed: 1500,//设置动画的速度，单位为毫秒 
+          pauseOnHover: true
+        });
+      });
+	</script>
+	 -->
 </body>
 </html>

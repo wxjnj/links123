@@ -186,7 +186,7 @@ class PublicAction extends BaseAction {
         // 支持使用绑定帐号登录
         $map['account']=$_POST['account'];
         $map["status"]=array('gt',0);
-        if(session('verify')!= md5($_POST['verify'])) {
+        if(session('verify')!= md5(strtoupper($_POST['verify']))) {
             $this->error('验证码错误！');
         }
         import('@.ORG.RBAC');
@@ -265,15 +265,15 @@ class PublicAction extends BaseAction {
     	$this->display();
     	return;
     }
-
+     
 	/**
 	 * @desc 验证码
-	 * @see PublicAction::verify()
-	 */
+     * @author Lee UPDATE 2013-08-27
+	 */           
     public function verify() {
-    	$type = isset($_GET['type'])?$_GET['type']:'gif';
+    	$type = isset($_GET['type']) ? $_GET['type'] : 'gif';
     	import("@.ORG.Image");
-    	Image::buildImageVerify(3,1,$type,36);
+    	Image::buildImageVerify(3, 5, $type, 36);
     }
 
 	/**

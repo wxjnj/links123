@@ -5,6 +5,10 @@ $('#J_apps_add').click(function(){
 	alert('Coming soon...');
 });
 $('#J_weather').click(function(){
+	/*$.post("/Weather/index", function(data){
+		$('#J_box_weather').html(data);
+	}); 
+	*/
 	$.fancybox({
 		href: '#J_box_weather',
 		helpers:  {
@@ -12,7 +16,7 @@ $('#J_weather').click(function(){
 	        overlay : null
 	    },
 	    width: 400,
-	    height: 280,
+	    height: 230,
 	    autoSize: false
 	    
 	});
@@ -101,7 +105,7 @@ $(document).on('click', '#J_stikynot', function(){
 		
 		if (stikynotIsNullNUm >= stikynot_num) {
 			stikynot_num = 1;
-			$.cookies.set('stikynot_num', stikynot_num);
+			$.cookies.set('stikynot_num', stikynot_num); //TODO 兼容模式下从这往下不执行了
 			stikynotShow(1, 0, 0, _w, _h, '', _c);
 		}
 		
@@ -148,6 +152,9 @@ $(document).on('click', '.J_stikynot_add', function(){
 	stikynot += '<div class="box_stikynot_color_bar color_1" data-class="bg_1"></div>';
 	stikynot += '<div class="box_stikynot_color_bar color_2" data-class="bg_2"></div>';
 	stikynot += '<div class="box_stikynot_color_bar color_3" data-class="bg_3"></div>';
+	stikynot += '<div class="box_stikynot_color_bar color_4" data-class="bg_4"></div>';
+	stikynot += '<div class="box_stikynot_color_bar color_5" data-class="bg_5"></div>';
+	stikynot += '<div class="box_stikynot_color_bar color_6" data-class="bg_6"></div>';
 	// stikynot += '<div class="box_stikynot_color_bar color_b" data-class="bg_b"></div>';
 	// stikynot += '<div class="box_stikynot_color_bar color_g" data-class="bg_g"></div>';
 	// stikynot += '<div class="box_stikynot_color_bar color_pink" data-class="bg_pink"></div>';
@@ -179,7 +186,9 @@ $(document).on('click', '.J_stikynot_add', function(){
 	});
 	
 	stikynot_id = stikynot_max_id;
-	$('.ui-dialog').resizable({ alsoResize: '.box_stikynot_head,.box_stikynot_text,.J_stikynot_text',autoHide: true }); 
+	$('.ui-dialog').resizable({ alsoResize: '.box_stikynot_head,.box_stikynot_text,.J_stikynot_text',autoHide: true });
+	
+	$('.J_stikynot_text').select();
 	return false;
 });
 
@@ -211,6 +220,9 @@ function stikynotShow(stikynot_id, x, y, w, h, _t, c) {
 			stikynot += '<div class="box_stikynot_color_bar color_1" data-class="bg_1"></div>';
 			stikynot += '<div class="box_stikynot_color_bar color_2" data-class="bg_2"></div>';
 			stikynot += '<div class="box_stikynot_color_bar color_3" data-class="bg_3"></div>';
+			stikynot += '<div class="box_stikynot_color_bar color_4" data-class="bg_4"></div>';
+			stikynot += '<div class="box_stikynot_color_bar color_5" data-class="bg_5"></div>';
+			stikynot += '<div class="box_stikynot_color_bar color_6" data-class="bg_6"></div>';
 			// stikynot += '<div class="box_stikynot_color_bar color_b" data-class="bg_b"></div>';
 			// stikynot += '<div class="box_stikynot_color_bar color_g" data-class="bg_g"></div>';
 			// stikynot += '<div class="box_stikynot_color_bar color_pink" data-class="bg_pink"></div>';
@@ -311,6 +323,7 @@ $(document).on('click', '.box_stikynot_color_bar', function(){
 	textObj.addClass('J_stikynot_text ' + _c);
 	
 	stikynotSave(stikynot_id, 0, 0, 0, 0, '', _c);
+	$('.J_stikynot_text').select();
 });
 // $(document).on('mouseover', '.box_stikynot_color_bar', function(){
 // 	$(this).css('opacity', '1');
@@ -398,15 +411,17 @@ var Config = {
                 }
 			},
 			{
-				action: "https://edit.bjs.yahoo.com/config/login",
-				name: "@yahoo.cn",
-                params: {
-                    login: "#{u}@yahoo.cn",
-                    passwd: "#{p}",
-                    domainss: "yahoocn",
-                    ".intl": "cn",
-                    ".done": "http://mail.cn.yahoo.com/inset.html"
-                }
+				action : "https://login.sina.com.cn/sso/login.php",
+				name: "@sina.cn",
+				params : {
+					username : "#{u}@sina.cn",
+					password : "#{p}",
+					entry : "freemail",
+					gateway : "0",
+					encoding : "UTF-8",
+					url : "http://mail.sina.com.cn/",
+					returntype : "META"
+				}
 			},
 			{
 				action: "http://passport.sohu.com/login.jsp",

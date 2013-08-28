@@ -25,8 +25,14 @@ class ThlAction extends CommonAction {
 		$topParam = "thl/" . $thl . "/tid/" . $tid;
 		
 		$thlInfo = M("Thl")->find($tid);
-		$url = str_replace("keyword", cleanParam($this->_param('q')), $thlInfo['url']);
 		
+		//TODO 少儿关键词参数被替换临时修复
+		if ($tid == 21) {
+			
+			$url = str_replace("{keyword}", cleanParam($this->_param('q')), $thlInfo['url']);
+		} else {
+			$url = str_replace("keyword", cleanParam($this->_param('q')), $thlInfo['url']);
+		}
 		$this->assign('topParam', $topParam);
 		$this->assign('subUrl', $url);
 		$this->assign("thlNow", $thlInfo['thl']);
