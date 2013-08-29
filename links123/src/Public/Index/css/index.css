@@ -1,4 +1,4 @@
-body{ background: url(../imgs/skins/bg1.jpg) repeat-x scroll center top transparent; }
+body{ background: url(../imgs/skins/bg1.jpg) center top; }
 input:focus{ outline: 0; }
 a,a:hover{ text-decoration: none; }
 .top{
@@ -135,6 +135,10 @@ a,a:hover{ text-decoration: none; }
 	float: left;
 	display: inline;
 	padding: 10px 0 0 20px;
+}
+.toplinks .uc li img{
+	vertical-align: middle;
+	margin-left: 5px;
 }
 .toplinks .weather,
 .toplinks .timenow{
@@ -497,6 +501,20 @@ a,a:hover{ text-decoration: none; }
 	top: -2px;
 	width: 15px;
 }
+.apps .img i,
+.apps .img s{
+	font-weight: bold;
+	color: #fff;
+	position: absolute;
+	font-style: normal;
+	width: 98%;
+	text-align: center;
+	font-size: 12px;
+	text-decoration: none;
+	left: 0;
+}
+.apps .img i{ top: 22px; }
+.apps .img s{ top: 38px; color: #000; font-size: 16px; }
 .apps .nm{
 	margin-top: 10px;
 }
@@ -516,35 +534,11 @@ a,a:hover{ text-decoration: none; }
 	font-weight: normal;
 }
 
-/*皮肤*/
-.skins{
-	float: left;
-	padding-top: 17px;
-}
-.skins li{
-	float: left;
-	padding: 0 8px 0 0;
-}
-.skins li a{
-	display: block;
-	border: 0;
-	-moz-box-shadow: 1px 1px 3px #000;
-	-webkit-box-shadow: 1px 1px 3px #000;
-	box-shadow: 1px 1px 3px #000;
-}
-.skins li a:hover img{
-	border: 2px solid #583516;
-	height: 14px;
-	width: 14px;
-}
-.skins li img{
-	vertical-align: middle;
-}
 /*版权*/
 .copyright{
 	float: left;
 	padding-top: 20px;
-	margin-left: 90px;
+	margin-left: 50px;
 }
 .copyright li{
 	float: left;
@@ -684,4 +678,90 @@ a,a:hover{ text-decoration: none; }
 }
 .forgetpass .reglogin-bd .regbtn{
 	background-position: 0 -108px;
+}
+
+/*皮肤*/
+.skins{
+	float: left;
+	height: 52px;
+	width: 230px;
+	position: relative;
+}
+.skins li{
+	float: left;
+	display: inline;
+	margin: 0 4px 0 0;
+}
+.skins li p{
+	border: 0;
+	cursor:pointer;
+	display: block;
+	-moz-box-shadow: 1px 1px 3px #000;
+	-webkit-box-shadow: 1px 1px 3px #000;
+	box-shadow: 1px 1px 3px #000;
+}
+.skins li img{
+	vertical-align: middle;
+}
+.skins .skins-style{
+	position: absolute;
+	left: 36px;
+	top: 17px;
+}
+.skins .skins-style li{
+	border: 2px solid transparent;
+}
+.skins .skins-style li:hover{
+	border: 2px solid #583516;
+}
+.skins .skins-all{
+	position: absolute;
+	top: -38px;
+	left: 31px;
+	height: 28px;
+	width: 500px;
+}
+.skins .skins-all dd{
+	display: none;
+	height: 52px;
+}
+.skins .skins-all ul li{
+	border: 2px solid transparent;
+	width: 28px;
+	height: 28px;
+	position: relative;
+}
+.skins .skins-all ul li.on,
+.skins .skins-all ul li:hover{
+	border: 2px solid #583516;
+}
+.skins .skins-all s{
+	border-color: transparent transparent #583516 transparent;
+	border-style: dashed dashed solid dashed;
+	border-width: 5px;
+	top: -12px;
+	font-size: 0;
+	height: 0;
+	left: 9px;
+	line-height: 0;
+	overflow: hidden;
+	position: absolute;
+	vertical-align: middle;
+	width: 0;
+	display: none;
+}
+.skins .skins-all .imgb{
+	position: absolute;
+	top: -90px;
+	left: -21px;
+	display: none;
+	-moz-box-shadow: 1px 1px 3px #000;
+	-webkit-box-shadow: 1px 1px 3px #000;
+	box-shadow: 1px 1px 3px #000;
+}
+.skins .skins-all ul li.on s,
+.skins .skins-all ul li.on .imgb,
+.skins .skins-all ul li:hover s,
+.skins .skins-all ul li:hover .imgb{
+	display: block;
 }

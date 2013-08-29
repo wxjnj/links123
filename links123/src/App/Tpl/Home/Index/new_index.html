@@ -34,7 +34,7 @@
 						<li><a href="__APP__/Members/Index" target="_blank">个人中心</a></li>
 						<li><a href="__APP__/Members/Logout">退出</a></li>
 					</empty>
-					<li><a href="__APP__/Suggestion" target="_blank" <eq name="newSuggestion" value="1">style='color:#FF0000'</eq> >留言板</a></li>
+					<li><a href="__APP__/Suggestion" target="_blank">留言板<eq name="newSuggestion" value="1"><img src="__PUBLIC__/Index/imgs/new.png" /></eq></a></li>
 				</ul>
 			</div>
 		</div>
@@ -135,7 +135,7 @@
 							<p class="nm"><span>邮&nbsp;箱</span></p>
 						</li>
 						<li id="J_calendar" >
-							<p class="img"><span><img src="__PUBLIC__/Index/imgs/app/app004.png" alt="" /><b>X</b></span></p>
+							<p class="img"><span><img src="__PUBLIC__/Index/imgs/app/app004.png" alt="" /><b>X</b><i>Fri</i><s>18</s></span></p>
 							<p class="nm"><span>日&nbsp;历</span></p>
 						</li>
 						<li id="J_weather">
@@ -171,15 +171,70 @@
 		<div class="end-mark"></div>
 		<div class="end-inner">
 			<div class="skins">
-				<ul>
-					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-s-001.png" alt="" /></a></li>
-					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-s-001.png" alt="" /></a></li>
-					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-s-001.png" alt="" /></a></li>
-					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-s-001.png" alt="" /></a></li>
-					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-s-001.png" alt="" /></a></li>
-					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-s-001.png" alt="" /></a></li>
-					<li><a href="#"><img src="__PUBLIC__/Index/imgs/skins/icon-s-001.png" alt="" /></a></li>
+				<ul class="skins-style">
+					<li data-id="1"><p><img src="__PUBLIC__/Index/imgs/skins/icon-s-001.png" alt="" /></p></li>
+					<li data-id="2"><p><img src="__PUBLIC__/Index/imgs/skins/icon-s-001.png" alt="" /></p></li>
+					<li data-id="3"><p><img src="__PUBLIC__/Index/imgs/skins/icon-s-001.png" alt="" /></p></li>
 				</ul>
+				<dl class="skins-all">
+					<dd class="sa1">
+						<ul>
+							<li data-bg="__PUBLIC__/Index/imgs/skins/icon-b-001.png">
+								<p><img src="__PUBLIC__/Index/imgs/skins/icon-m-001.png" alt="" /></p>
+								<s></s>
+								<img class="imgb" src="__PUBLIC__/Index/imgs/skins/icon-b-001.png" />
+							</li>
+							<li data-bg="__PUBLIC__/Index/imgs/skins/icon-s-001.png">
+								<p><img src="__PUBLIC__/Index/imgs/skins/icon-m-001.png" alt="" /></p>
+								<s></s>
+								<img class="imgb" src="__PUBLIC__/Index/imgs/skins/icon-b-001.png" />
+							</li>
+							<li data-bg="__PUBLIC__/Index/imgs/skins/icon-m-001.png">
+								<p><img src="__PUBLIC__/Index/imgs/skins/icon-m-001.png" alt="" /></p>
+								<s></s>
+								<img class="imgb" src="__PUBLIC__/Index/imgs/skins/icon-b-001.png" />
+							</li>
+							<li data-bg="__PUBLIC__/Index/imgs/skins/icon-b-001.png">
+								<p><img src="__PUBLIC__/Index/imgs/skins/icon-m-001.png" alt="" /></p>
+								<s></s>
+								<img class="imgb" src="__PUBLIC__/Index/imgs/skins/icon-b-001.png" />
+							</li>
+						</ul>
+					</dd>
+					<dd class="sa2">
+						<ul>
+							<li data-bg="__PUBLIC__/Index/imgs/skins/icon-s-001.png">
+								<p><img src="__PUBLIC__/Index/imgs/skins/icon-m-001.png" alt="" /></p>
+								<s></s>
+								<img class="imgb" src="__PUBLIC__/Index/imgs/skins/icon-b-001.png" />
+							</li>
+							<li data-bg="__PUBLIC__/Index/imgs/skins/icon-m-001.png">
+								<p><img src="__PUBLIC__/Index/imgs/skins/icon-m-001.png" alt="" /></p>
+								<s></s>
+								<img class="imgb" src="__PUBLIC__/Index/imgs/skins/icon-b-001.png" />
+							</li>
+						</ul>
+					</dd>
+					<dd class="sa3">
+						<ul>
+							<li data-bg="__PUBLIC__/Index/imgs/skins/icon-s-001.png">
+								<p><img src="__PUBLIC__/Index/imgs/skins/icon-m-001.png" alt="" /></p>
+								<s></s>
+								<img class="imgb" src="__PUBLIC__/Index/imgs/skins/icon-b-001.png" />
+							</li>
+							<li data-bg="__PUBLIC__/Index/imgs/skins/icon-b-001.png">
+								<p><img src="__PUBLIC__/Index/imgs/skins/icon-m-001.png" alt="" /></p>
+								<s></s>
+								<img class="imgb" src="__PUBLIC__/Index/imgs/skins/icon-b-001.png" />
+							</li>
+							<li data-bg="__PUBLIC__/Index/imgs/skins/icon-m-001.png">
+								<p><img src="__PUBLIC__/Index/imgs/skins/icon-m-001.png" alt="" /></p>
+								<s></s>
+								<img class="imgb" src="__PUBLIC__/Index/imgs/skins/icon-b-001.png" />
+							</li>
+						</ul>
+					</dd>
+				</dl>
 			</div>
 			<div class="copyright">
 				<ul>
@@ -283,6 +338,27 @@
 	<script type="text/javascript" src="__PUBLIC__/Index/js/jquery.placeholder.1.3.min.js"></script>
 	<script type="text/javascript" src="__PUBLIC__/skin/FlexSlider/jquery.flexslider-min.js"></script>
 	<script type="text/javascript" src="__PUBLIC__/skin/js/json2.js"></script>
+	<script>
+		$(function(){
+			//背景一共四种尺寸的图片
+			//小图18X18：icon-s-001.png
+			//中图28X28：icon-m-001.png
+			//大图72X72：icon-b-001.png
+			//正式使用的图片data-bg：大小不限
+			$('.skins-style li').on('hover', function(){
+				var id = $(this).data('id');
+				$(this).toggleClass('on');
+				$('.sa'+id).show().siblings().hide();
+			});
+			$('.skins-all li').on('click', function(){
+				var bg = $(this).data('bg');
+				$('body').css('background-image', 'url('+bg+')');
+			});
+			$('.skins').on('mouseleave', function(){
+				$('.skins-all dd').hide();
+			});
+		});
+	</script>
 	<!-- 
 	<script>
 	$(window).load(function() {
