@@ -59,7 +59,7 @@ $(function() {
                 showType: 'fade',
                 width: 175,
                 height: 45,
-                timeout: 4000,
+                timeout: 2000,
                 style: {
                     left: left,
                     top: top
@@ -88,7 +88,7 @@ $(function() {
                 showType: 'fade',
                 width: 155,
                 height: 45,
-                timeout: 4000,
+                timeout: 2000,
                 style: {
                     left: left,
                     top: top
@@ -131,14 +131,14 @@ $(function() {
         if (typeof next_level_li != "undefined") {
             next_level_li.click();
         } else {
-            var top = $("#J_levelUpButton").offset().top - 50;
-            var left = $("#J_levelUpButton").offset().left - 35;
+            var top = $(".videoplay").offset().top - 30;
+            var left = $(".videoplay").offset().left + $(".videoplay").width() / 2 - 80;
             $.messager.show({
                 msg: "<span  class='messager_span'>最高级别，无法升级！</span>",
                 showType: 'fade',
                 width: 155,
                 height: 45,
-                timeout: 4000,
+                timeout: 2000,
                 style: {
                     left: left,
                     top: top
@@ -159,14 +159,14 @@ $(function() {
         if (typeof prev_level_li != "undefined") {
             prev_level_li.click();
         } else {
-            var top = $(this).offset().top - 50;
-            var left = $(this).offset().left - 35;
+            var top = $(".videoplay").offset().top - 30;
+            var left = $(".videoplay").offset().left + $(".videoplay").width() / 2 - 80;
             $.messager.show({
                 msg: "<span  class='messager_span'>最小级别，无法降级！</span>",
                 showType: 'fade',
                 width: 155,
                 height: 45,
-                timeout: 4000,
+                timeout: 2000,
                 style: {
                     left: left,
                     top: top
@@ -191,7 +191,7 @@ $(function() {
                 showType: 'fade',
                 width: 120,
                 height: 45,
-                timeout: 4000,
+                timeout: 2000,
                 style: {
                     left: left,
                     top: top
@@ -219,7 +219,7 @@ $(function() {
                 showType: 'fade',
                 width: 120,
                 height: 45,
-                timeout: 4000,
+                timeout: 2000,
                 style: {
                     left: left,
                     top: top
@@ -246,7 +246,7 @@ $(function() {
                 showType: 'fade',
                 width: 120,
                 height: 45,
-                timeout: 4000,
+                timeout: 2000,
                 style: {
                     left: left,
                     top: top
@@ -346,14 +346,14 @@ $(function() {
 function requestQuestion(type, clickObject) {
     //如果有题目正在请求，中断此次请求并提示（修改为abort ajax）
     if (typeof ajaxRequest != "undefined") {
-        var top = $("#J_nextQuestion").offset().top + 50;
-        var left = $("#J_nextQuestion").offset().left - 45;
+        var top = $(".videoplay").offset().top - 30;
+        var left = $(".videoplay").offset().left + $(".videoplay").width() / 2 - 80;
         $.messager.show({
             msg: "<span class='messager_span'>题目正在加载，请稍后...</span>",
             showType: 'fade',
             width: 175,
             height: 45,
-            timeout: 4000,
+            timeout: 2000,
             style: {
                 left: left,
                 top: top
@@ -414,7 +414,7 @@ function requestQuestion(type, clickObject) {
                         showType: 'fade',
                         width: 180,
                         height: 45,
-                        timeout: 3000,
+                        timeout: 2000,
                         style: {
                             left: '50%',
                             top: '4%'
@@ -426,14 +426,14 @@ function requestQuestion(type, clickObject) {
                 }
 
                 if (data.question && data.question.tested) {
-                    var top = $("#J_nextQuestion").offset().top - 50;
-                    var left = $("#J_nextQuestion").offset().left - 32;
+                    var top = $(".videoplay").offset().top - 30;
+                    var left = $(".videoplay").offset().left + $(".videoplay").width() / 2 - 80;
                     $.messager.show({
                         msg: "<span class='messager_span'>暂无新题，升级吧!</span>",
                         showType: 'fade',
                         width: 150,
                         height: 45,
-                        timeout: 3000,
+                        timeout: 2000,
                         style: {
                             left: left,
                             top: top
@@ -525,14 +525,14 @@ function requestQuestion(type, clickObject) {
                 if (next_question_lvlup) {
                     //
                     //提示可以升级了
-                    var top = $(".videoplay").offset().top - 20;
+                    var top = $(".videoplay").offset().top - 30;
                     var left = $(".videoplay").offset().left + $(".videoplay").width() / 2 - 75;
                     $.messager.show({
                         msg: "<span  class='messager_span'>恭喜，你可以升级了</span>",
                         showType: 'fade',
                         width: 175,
                         height: 45,
-                        timeout: 4000,
+                        timeout: 2000,
                         style: {
                             left: left,
                             top: top
@@ -701,14 +701,14 @@ function bindOptionClickEvent() {
                 $("#J_totalRice").text(english_user_info.total_rice);
 
                 if (data.level_up) {
-                    var top = $(".videoplay").offset().top - 20;
-                    var left = $(".videoplay").offset().left + $(".videoplay").width() / 2 - 75;
+                    var top = $(".videoplay").offset().top - 30;
+                    var left = $(".videoplay").offset().left + $(".videoplay").width() / 2 - 80;
                     $.messager.show({
                         msg: "<span  class='messager_span'>恭喜，你可以升级了</span>",
                         showType: 'fade',
                         width: 175,
                         height: 45,
-                        timeout: 3000,
+                        timeout: 2000,
                         style: {
                             left: left,
                             top: top
@@ -752,28 +752,28 @@ function bindOptionClickEvent() {
                         next_question_lvlup = false;
                         content = "本题已做对" + english_user_record.right_num + "次，换新题吧";
                     }
-                    var top = $(".videoplay").offset().top - 20;
+                    var top = $(".videoplay").offset().top - 30;
                     var left = $(".videoplay").offset().left + $(".videoplay").width() / 2 - 100;
                     $.messager.show({
                         msg: "<span  class='messager_span'>" + content + "</span>",
                         showType: 'fade',
                         width: 200,
                         height: 45,
-                        timeout: 4000,
+                        timeout: 2000,
                         style: {
                             left: left,
                             top: top
                         }
                     });
                 } else if (english_user_record.is_right == 0 && english_user_record.error_num >= 2) {
-                    var top = $(".videoplay").offset().top - 20;
+                    var top = $(".videoplay").offset().top - 30;
                     var left = $(".videoplay").offset().left + $(".videoplay").width() / 2 - 65;
                     $.messager.show({
                         msg: "<span  class='messager_span'>唉，又错了！</span>",
                         showType: 'fade',
                         width: 125,
                         height: 45,
-                        timeout: 4000,
+                        timeout: 2000,
                         style: {
                             left: left,
                             top: top
@@ -830,14 +830,14 @@ function bindMediaTextClickEvent(type) {
         $("#J_textButton").click(function() {
             var url = trim($(this).attr("media_text_url"));
             if (url == "") {
-                var top = $("#J_answerButton").offset().top - 5;
-                var left = $("#J_answerButton").offset().left + 70;
+                var top = $(".videoplay").offset().top - 30;
+                var left = $(".videoplay").offset().left + $(".videoplay").width() / 2 - 80;
                 $.messager.show({
                     msg: "<span class='messager_span'>对不起，文本不存在!</span>",
                     showType: 'fade',
                     width: 155,
                     height: 45,
-                    timeout: 3000,
+                    timeout: 2000,
                     style: {
                         left: left,
                         top: top
@@ -849,14 +849,14 @@ function bindMediaTextClickEvent(type) {
         })
     } else {
         $("#J_textButton").click(function() {
-            var top = $("#J_answerButton").offset().top - 50;
-            var left = $("#J_answerButton").offset().left - 38;
+            var top = $(".videoplay").offset().top - 30;
+            var left = $(".videoplay").offset().left + $(".videoplay").width() / 2 - 80;
             $.messager.show({
                 msg: "<span class='messager_span'>答题后才能查看文本！</span>",
                 showType: 'fade',
                 width: 155,
                 height: 45,
-                timeout: 3000,
+                timeout: 2000,
                 style: {
                     left: left,
                     top: top

@@ -473,11 +473,21 @@ class EnglishQuestionAction extends CommonAction {
                     if ($data['media_id'] == 0) {
                         $data['status'] = 0;
                     }
-                    $condition['content'] = $data['content'];
-                    $repeat_ret = $model->where($condition)->find(); //根据问题内容查询是否有重复
-                    //重复条件下删除原选项
-                    if ($repeat_ret) {
-                        $optionModel->where("question_id=" . intval($repeat_ret['id']))->delete();
+                    //根据问题内容、视频、科目、等级以及答案内容查询是否有重复
+                    $condition['question.content'] = array("like", $data['content']);
+                    $condition['media.media_source_url'] = array("like", $media_data['media_source_url']);
+                    $condition['media.object'] = $object_list[$media_data['object']];
+                    $condition['media.level'] = $level_list[$media_data['level']];
+                    $condition['english_options.content'] = array("like", $data['option'][$data['answer'] - 1]);
+                    $repeat_ret = $model->alias("question")
+                            ->join(C("DB_PREFIX") . "english_media media on media.id=question.media_id")
+                            ->join(C("DB_PREFIX") . "english_options english_options on question.answer=english_options.id")
+                            ->where($condition)
+                            ->count();
+                    //重复则跳过
+                    if (false != $repeat_ret && $repeat_ret > 0) {
+                        continue;
+//                        $optionModel->where("question_id=" . intval($repeat_ret['id']))->delete();
                     }
                     //插入答案
                     $option_id = array();
@@ -583,17 +593,17 @@ class EnglishQuestionAction extends CommonAction {
                     $data['created'] = $time;
                     $data['updated'] = $data['created'];
 
-                    if ($repeat_ret) {
-                        $list = $model->where("id=" . intval($repeat_ret['id']))->save($data);
-                    } else {
-                        //保存当前数据对象
-                        $list = $model->add($data);
-                    }
+//                    if ($repeat_ret) {
+//                        $list = $model->where("id=" . intval($repeat_ret['id']))->save($data);
+//                    } else {
+                    //保存当前数据对象
+                    $list = $model->add($data);
+//                    }
                     if ($list !== false) { //保存成功
                         if (!empty($option_id)) {
-                            if ($repeat_ret) {
-                                $list = $repeat_ret['id'];
-                            }
+//                            if ($repeat_ret) {
+//                                $list = $repeat_ret['id'];
+//                            }
                             if (false === $optionModel->where("id in (" . implode(",", $option_id) . ")")->setField("question_id", $list)) {
                                 //更新答案对应的题目id
                                 $model->rollback();
