@@ -46,8 +46,19 @@ $(function() {
     $('.kecheng li').live('click', function() {
 
         if ($(this).hasClass("grey")) {
-
-            alert("抱歉，该科目不存在试题！");
+            var top = $(this).offset().top - 50;
+            var left = $(this).offset().left - 10;
+            $.messager.show({
+                msg: "<span  class='messager_span'>抱歉，该科目没有试题！</span>",
+                showType: 'fade',
+                width: 185,
+                height: 45,
+                timeout: 4000,
+                style: {
+                    left: left,
+                    top: top
+                }
+            });
             return false;
         } else if ($(this).hasClass("current")) {
 
@@ -56,7 +67,7 @@ $(function() {
             $.messager.show({
                 msg: "<span  class='messager_span'>您已在科目: " + $(this).text() + "</span>",
                 showType: 'fade',
-                width: 155,
+                width: 175,
                 height: 45,
                 timeout: 4000,
                 style: {
@@ -76,7 +87,19 @@ $(function() {
 
         if ($(this).hasClass("grey")) {
 
-            alert("抱歉，该等级不存在试题！");
+            var top = $(this).offset().top - 50;
+            var left = $(this).offset().left - 10;
+            $.messager.show({
+                msg: "<span  class='messager_span'>抱歉，该等级没有试题！</span>",
+                showType: 'fade',
+                width: 185,
+                height: 45,
+                timeout: 4000,
+                style: {
+                    left: left,
+                    top: top
+                }
+            });
             return false;
         } else if ($(this).hasClass("current")) {
 
@@ -178,11 +201,23 @@ $(function() {
     //英音美音点击事件
     $(".menuleft ul li.class1").click(function() {
         if ($(this).hasClass("grey")) {
-            alert("抱歉，该类不存在试题！");
+            var top = $(".menuleft").offset().top - 50;
+            var left = $(".menuleft").offset().left - 10;
+            $.messager.show({
+                msg: "<span  class='messager_span'>抱歉，该类别没有试题！</span>",
+                showType: 'fade',
+                width: 185,
+                height: 45,
+                timeout: 4000,
+                style: {
+                    left: left,
+                    top: top
+                }
+            });
             return false;
         } else if ($(this).hasClass("current")) {
             var top = $(".menuleft").offset().top - 50;
-            var left = $(".menuleft").offset().left - 10;
+            var left = $(".menuleft").offset().left + 23;
             $.messager.show({
                 msg: "<span  class='messager_span'>您已在" + trim_all($(this).children("span").text()) + "状态</span>",
                 showType: 'fade',
@@ -203,11 +238,23 @@ $(function() {
     //说力听力点击事件
     $(".menuleft ul li.class2").click(function() {
         if ($(this).hasClass("grey")) {
-            alert("抱歉，该类不存在试题！");
+            var top = $(".menuleft").offset().top - 50;
+            var left = $(".menuleft").offset().left - 10;
+            $.messager.show({
+                msg: "<span  class='messager_span'>抱歉，该类别没有试题！</span>",
+                showType: 'fade',
+                width: 185,
+                height: 45,
+                timeout: 4000,
+                style: {
+                    left: left,
+                    top: top
+                }
+            });
             return false;
         } else if ($(this).hasClass("current")) {
             var top = $(".menuleft").offset().top - 50;
-            var left = $(".menuleft").offset().left - 10;
+            var left = $(".menuleft").offset().left+ 23;
             $.messager.show({
                 msg: "<span  class='messager_span'>您已在" + trim_all($(this).children("span").text()) + "状态</span>",
                 showType: 'fade',
@@ -228,11 +275,23 @@ $(function() {
     //视频音频点击事件
     $(".menuleft ul li.class3").click(function() {
         if ($(this).hasClass("grey")) {
-            alert("抱歉，该类不存在试题！");
+            var top = $(".menuleft").offset().top - 50;
+            var left = $(".menuleft").offset().left - 10;
+            $.messager.show({
+                msg: "<span  class='messager_span'>抱歉，该类别没有试题！</span>",
+                showType: 'fade',
+                width: 185,
+                height: 45,
+                timeout: 4000,
+                style: {
+                    left: left,
+                    top: top
+                }
+            });
             return false;
         } else if ($(this).hasClass("current")) {
             var top = $(".menuleft").offset().top - 50;
-            var left = $(".menuleft").offset().left - 10;
+            var left = $(".menuleft").offset().left + 23;
             $.messager.show({
                 msg: "<span  class='messager_span'>您已在" + trim_all($(this).children("span").text()) + "状态</span>",
                 showType: 'fade',
