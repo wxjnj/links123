@@ -33,6 +33,7 @@ class ThlAction extends CommonAction {
 		} else {
 			$url = str_replace("keyword", cleanParam($this->_param('q')), $thlInfo['url']);
 		}
+		
 		$this->assign('topParam', $topParam);
 		$this->assign('subUrl', $url);
 		$this->assign("thlNow", $thlInfo['thl']);
