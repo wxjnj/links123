@@ -276,6 +276,69 @@ class CommonAction extends Action {
         	unset($_SESSION['face']);
         }
     }
+    
+    /**
+     * @name getMyCats
+     * @desc 获取目录
+     * @author Frank 2013-08-28
+     */
+    public function getMyCats($flag = 1) {
+    	$cat = M("Category");
+    	$cats = $cat->field('id, cat_name, level')->where('status = 1 and level = 1')->order('sort ASC')->select();
+    	foreach ($cats as &$value) {
+    		switch ($value['id']) {
+    			case 1:
+    				$value['grades'] = array(
+    				array('name' => '初级', 'value' => '1'),
+    				array('name' => '初级中级', 'value' => '1,2'),
+    				array('name' => '初级中级高级', 'value' => '1,2,3'),
+    				array('name' => '中级', 'value' => '2'),
+    				array('name' => '中级高级', 'value' => '2,3'),
+    				array('name' => '高级', 'value' => '3')
+    				);
+    				break;
+    			case 4:
+    				$value['grades'] = array(
+    				array('name' => '苹果', 'value' => '1'),
+    				array('name' => '安卓+', 'value' => '2'),
+    				array('name' => '苹果安卓+', 'value' => '1,2')
+    				);
+    				break;
+    		}
+    		$value['subCats'] = $cat->field('id, cat_name, level')->where("status = 1 and flag = '%s' and prt_id = '%s'", $flag, $value['id'])->order('sort ASC')->select();
+    	}
+    	$this->assign("cats", $cats);
+    }
+    
+    /**
+     * 获取皮肤列表
+     * 
+     * @TODO 缓存使用
+     * 
+     * @return skins: 皮肤列表数据
+     * 
+     * @author slate date:2013-08-29
+     */
+    public function getSkins() {
+    	
+    	$skins = array();
+    	
+    	$model = new Model();
+		
+    	$sql = 'SELECT A.`categoryId`, A.`categoryName`, A.`categoryImg`, B.`skinId`, B.`skinName`, B.`smallSkin`, B.`middleSkin`, B.`skin`, B.`categoryId` AS cid '
+    	.'FROM `lnk_skin_category` A LEFT JOIN `lnk_skin` B ON A.`categoryId` = B.`categoryId`';
+		
+		$result = $model->query($sql);
+		
+		foreach ($result as $skin) {
+			
+			$skins['list'][$skin['categoryId']][] = $skin;
+			$skins['category'][$skin['categoryId']] = array('categoryId' => $skin['categoryId'], 'categoryImg' => $skin['categoryImg']);
+			$skins['skin'][$skin['skinId']] = $skin['skin'];
+		}
+		
+		return $skins;
+    }
 }
 
 ?>

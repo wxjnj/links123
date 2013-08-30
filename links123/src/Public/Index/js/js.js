@@ -37,19 +37,41 @@ $(function() {
 		myWinOpen($(this).attr('url'), '', '');
 	});
 
-	// 直达框获得焦点
-	$(".J_header_top").mouseover(function() {
-		$("#direct_text").select();
-	}).mouseout(function() {
-		$('#search_text').select();
+	// 直达框
+	$(document).on('click', function(){
 		$('#direct_text').val($('#direct_text').attr('txt')).removeClass('ipson');
 	});
-	$('#direct_text').click(function() {
-		$('#direct_text').val('').addClass('ipson');
+	$("#direct_text").on('mouseenter', function(){
+		var tag = $.trim($('#direct_text').val());
+		if(tag == $('#direct_text').attr('txt')){
+			$("#direct_text").select().addClass('ipson');
+		}else{
+			$("#direct_text").addClass('ipson');
+		}
+	}).on('mouseleave', function(){
+		var tag = $.trim($('#direct_text').val());
+		if(tag == '' || tag == $('#direct_text').attr('txt')){
+			$('#search_text').select();
+			$('#direct_text').removeClass('ipson');
+		}
+	}).on('click', function() {
+		var tag = $.trim($('#direct_text').val());
+		if (tag == $('#direct_text').attr('txt')){
+			$('#direct_text').val('').addClass('ipson');
+		}
+		return false;
 	});
-	$('#frm_drct').submit(function(){
-		if($.trim($(this).val()) == '') return false; //输入内容为空不提交
-	});	
+	$('.J_direct_submit').on('click', function(){
+		$("#frm_drct").trigger('submit');
+		$("#direct_text")[0].focus();
+		return false;
+	});
+	$("#frm_drct").on('submit', function(){
+		var tag = $.trim($('#direct_text').val());
+		if (tag == '' || tag == $('#direct_text').attr('txt')){
+			return false;
+		}
+	});
 
 	// 编辑自留地
 	$('.J_myarea').click(function() {
@@ -59,6 +81,12 @@ $(function() {
 		$('#J_sortable').sortable({
 			update: function (event, ui) {  
 
+				$('.zld .bg-none').removeClass('bg-none');
+				
+				var zldli = $('.zld ul li');
+				zldli.eq(0).addClass('bg-none');
+				zldli.eq(15).addClass('bg-none');
+				
 				$.post(URL + '/sortArealist', {'area' : $(this).sortable('toArray')});
 		   }  
 		});
@@ -80,8 +108,8 @@ $(function() {
 
 	//自留地竖线边框
 	var zldli = $('.zld ul li');
-	zldli.eq(0).css('background', 'none');
-	zldli.eq(15).css('background', 'none');
+	zldli.eq(0).addClass('bg-none');
+	zldli.eq(15).addClass('bg-none');
 	
 	//编辑自留地网址
 	$('.zld-edit ul li span').live('click', function() {
@@ -143,7 +171,7 @@ $(function() {
 			function(data) {
 				if (data.indexOf("updateOK") >= 0) {
 					var myarea_web_obj = $('.J_myarea_div ul li[id="'+id+'"] span');
-					myarea_web_obj.text(web_name);
+					$('.J_myarea_div ul li[id="'+id+'"] span b').text(web_name);
 					var new_url = myarea_web_obj.attr('url').replace(myarea_web_obj.attr('data-url'), url);
 					myarea_web_obj.attr('url', new_url);
 					myarea_web_obj.attr('data-url', url);
@@ -381,8 +409,23 @@ $(function() {
 			return false;
 		}
 	});
-
+	
 	THL.init();
+	
+	/** $换肤 **/
+	$('.skins-style li').on('mouseover', function(){
+		var id = $(this).data('id');
+		$(this).toggleClass('on');
+		$('.sa'+id).show().siblings().hide();
+	});
+	$('.skins-all li').on('click', function(){
+		var bg = $(this).data('bg');
+		$('body').css('background-image', 'url('+bg+')');
+		$(this).addClass('added').siblings().removeClass('added');
+		$.post(URL + "/updateSkin", {'skinId': $(this).data('id')});
+	});
+	
+	/** 换肤$ **/
 });
 
 // 设为首页
@@ -501,7 +544,8 @@ var THL = {
 		$(document).mouseup(function(ev){ // 搜索文本框始终获取焦点
 			if ( document.activeElement.tagName == "INPUT" 
 				|| document.activeElement.tagName == "TEXTAREA" 
-				|| document.activeElement.tagName == "IFRAME"   ) {
+				|| document.activeElement.tagName == "IFRAME"
+				|| document.activeElement.id == "direct_text") {
 				return;
 			}
 			var txt = '';

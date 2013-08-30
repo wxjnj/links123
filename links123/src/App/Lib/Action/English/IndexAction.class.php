@@ -24,27 +24,31 @@ class IndexAction extends EnglishAction {
         }
         //
         //默认情况
-        $user_last_select['voice'] = intval($user_last_select['voice']) > 0 ? intval($user_last_select['voice']) : 1;
-        $user_last_select['target'] = intval($user_last_select['target']) > 0 ? intval($user_last_select['target']) : 1;
-        $user_last_select['pattern'] = intval($user_last_select['pattern']) > 0 ? intval($user_last_select['pattern']) : 1;
+        $user_last_select['voice'] = intval($user_last_select['voice']) == 1 || intval($user_last_select['voice']) == 2 ? intval($user_last_select['voice']) : 1;
+        $user_last_select['target'] = intval($user_last_select['target']) == 1 || intval($user_last_select['target']) == 2 ? intval($user_last_select['target']) : 1;
+        $user_last_select['pattern'] = intval($user_last_select['pattern']) == 1 || intval($user_last_select['pattern']) == 2 ? intval($user_last_select['pattern']) : 1;
 
         //默认的科目列表
         $object_list = $objectModel->getObjectListToIndex($user_last_select['voice'], $user_last_select['target'], $user_last_select['pattern']);
 
         //用户上次选择的科目
         $user_last_select['object'] = intval($user_last_select['object']);
-        if ($user_last_select['object'] == 0) {
+        $objectInfo = $objectModel->where(array("id" => $user_last_select['object'], "status" => 1))->find();
+        //科目不存在或不可用
+        if (false == $objectInfo && empty($objectInfo)) {
             $user_last_select['object_info'] = $objectModel->getDefaultObjectInfo($user_last_select['voice'], $user_last_select['target'], $user_last_select['pattern']);
         } else {
-            $user_last_select['object_info'] = $objectModel->getInfoById($user_last_select['object']);
+            $user_last_select['object_info'] = $objectInfo;
         }
         $user_last_select['object'] = intval($user_last_select['object_info']['id']) > 0 ? intval($user_last_select['object_info']['id']) : $user_last_select['object'];
         //用户上次选择的等级
         $user_last_select['level'] = intval($user_last_select['level']);
-        if ($user_last_select['level'] == 0) {
+        $levelInfo = $levelModel->where(array("id" => $user_last_select['level'], "status" => 1))->find();
+        //等级不存在或不可用
+        if (false == $levelInfo && empty($levelInfo)) {
             $user_last_select['level_info'] = $levelModel->getDefaultLevelInfo($user_last_select['level'], $user_last_select['voice'], $user_last_select['target'], $user_last_select['pattern']);
         } else {
-            $user_last_select['level_info'] = $levelModel->getInfoById($user_last_select['level']);
+            $user_last_select['level_info'] = $levelInfo;
         }
 
         //默认的等级列表
@@ -74,9 +78,9 @@ class IndexAction extends EnglishAction {
         $english_user_info = $englishUserInfoModel->getEnglishUserInfo();
         $this->assign("english_user_info", $english_user_info);
         if ($user_last_select['object_info']['name'] == "综合") {
-            D("EnglishViewRecord")->addRecord($question['id'], $user_last_select['object_info']['id']); //记录用户查看题目
+            D("EnglishViewRecord")->addRecord($question['id'], $question['level'], $user_last_select['object_info']['id'], $question['voice'], $question['target'], $question['pattern']); //记录用户查看题目
         } else {
-            D("EnglishViewRecord")->addRecord($question['id'], $question['object']); //记录用户查看题目
+            D("EnglishViewRecord")->addRecord($question['id'], $question['level'], $question['object'], $question['voice'], $question['target'], $question['pattern']); //记录用户查看题目
         }
 
         $englishUserCountModel = D("EnglishUserCount");
@@ -202,13 +206,11 @@ class IndexAction extends EnglishAction {
             }
             /* 存储用户点击历史  开始 */
             $user_last_select = array();
-            $user_last_select['object'] = $object;
-            $user_last_select['level'] = $level;
             $user_last_select['voice'] = $voice;
             $user_last_select['target'] = $target;
             $user_last_select['pattern'] = $pattern;
-            cookie('english_user_last_select', $user_last_select, 60 * 60 * 24 * 30);
-            /* 存储用户点击历史  结束 */
+
+
 
             $ret = array();
 //            if ($type == "category") {
@@ -225,20 +227,25 @@ class IndexAction extends EnglishAction {
                 $ret['level_info'] = $levelModel->getDefaultLevelInfo($object, $voice, $target, $pattern);
                 $level = intval($ret['level_info']['id']);
             }
+            
+            $user_last_select['object'] = $object;
+            $user_last_select['level'] = $level;
 
             if (!empty($user_last_question)) {
                 $ret['question'] = $user_last_question;
             } else {
                 $ret['question'] = $questionModel->getQuestionToIndex($object, $level, $voice, $target, $pattern);
             }
-            if ($type == "quick_select_prev" && empty($user_last_question)) {
-                D("EnglishViewRecord")->addRecord($ret['question']['id'], $object); //记录用户查看题目
-            } else {
-                D("EnglishViewRecord")->addRecord($ret['question']['id'], $object, $now_question_id); //记录用户查看题目
-            }
+            D("EnglishViewRecord")->addRecord($ret['question']['id'], $level, $object, $voice, $target, $pattern); //记录用户查看题目
+//            if ($type == "quick_select_prev" && empty($user_last_question)) {
+//                D("EnglishViewRecord")->addRecord($ret['question']['id'], $level, $object, $voice, $target, $pattern); //记录用户查看题目
+//            } else {
+//                D("EnglishViewRecord")->addRecord($ret['question']['id'], $level, $object, $voice, $target, $pattern); //记录用户查看题目
+//            }
             $ret['english_user_info'] = D("EnglishUserInfo")->getEnglishUserInfo();
             $ret['user_count_info'] = D("EnglishUserCount")->getEnglishUserCountInfo($voice, $target, $object, $level);
 
+            cookie('english_user_last_select', $user_last_select, 60 * 60 * 24 * 30); // 存储用户点击历史
             //media_url为空，则进行视频解析
             if (!$ret['question']['media_url'] && !$ret['question']['media']) {
 

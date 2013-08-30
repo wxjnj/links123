@@ -11,9 +11,9 @@ class CommonAction extends BaseAction {
         import('@.ORG.Cookie');
         //根据cookie检查session是否过期
         $time = cookie(md5("manament_login_time"));
-        if(empty($time)){
+        if (empty($time)) {
             unset($_SESSION[C('ADMIN_AUTH_KEY')]);
-            unset($_SESSION['menu'.$_SESSION[C('USER_AUTH_KEY')]]);
+            unset($_SESSION['menu' . $_SESSION[C('USER_AUTH_KEY')]]);
             unset($_SESSION[C('USER_AUTH_KEY')]);
             unset($_SESSION['_ACCESS_LIST']);
         }
@@ -129,6 +129,8 @@ class CommonAction extends BaseAction {
             $count = $model->where($map)->count('catPic.id');
         } elseif ($model->getModelName() == 'EnglishQuestionView') {
             $count = $model->where($map)->count('englishQuestion.id');
+        } elseif ($model->getModelName() == 'EnglishMediaView') {
+            $count = $model->where($map)->count('englishMedia.id');
         } else {
             $count = $model->where($map)->count('id');
         }
@@ -384,7 +386,7 @@ class CommonAction extends BaseAction {
                 $val = explode(':', $val);
                 $sort = $model->where("id = '%s'", $val[0])->getField('sort');
                 if ($sort == $val[1]) {
-                	continue;
+                    continue;
                 }
                 $model->id = $val[0];
                 $model->sort = $val[1];
@@ -394,7 +396,7 @@ class CommonAction extends BaseAction {
                     Log::write('保存排序失败：' . $model->getLastSql(), Log::SQL);
                 }
             }
-            
+
             if ($result) {
                 $model->commit();
                 //采用普通方式跳转刷新页面
@@ -414,8 +416,8 @@ class CommonAction extends BaseAction {
      */
     protected function getCats($flag = 0) {
         $condition['status'] = 1;
-        $flag > 0 &&  $condition['flag'] = $flag;
-        
+        $flag > 0 && $condition['flag'] = $flag;
+
         $cats = M("Category")->field('id, cat_name, level')->where($condition)->order('path ASC, sort ASC')->select();
         foreach ($cats as &$value) {
             for ($i = 0; $i != $value['level']; ++$i) {
@@ -424,7 +426,7 @@ class CommonAction extends BaseAction {
         }
         $this->assign("cats", $cats);
     }
-    
+
     /**
      * @name _getSubCats
      * @desc 获取所有下级目录
@@ -461,7 +463,7 @@ class CommonAction extends BaseAction {
             return $this->getRoot($catNow['prt_id']);
         }
     }
-    
+
     /**
      * @name getRootCats
      * @desc 获取所有的根目录
