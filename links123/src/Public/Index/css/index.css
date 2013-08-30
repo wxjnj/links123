@@ -732,6 +732,7 @@ a,a:hover{ text-decoration: none; }
 	position: relative;
 }
 .skins .skins-all ul li.on,
+.skins .skins-all ul li.added,
 .skins .skins-all ul li:hover{
 	border: 2px solid #583516;
 }

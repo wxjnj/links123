@@ -411,6 +411,21 @@ $(function() {
 	});
 	
 	THL.init();
+	
+	/** $换肤 **/
+	$('.skins-style li').on('mouseover', function(){
+		var id = $(this).data('id');
+		$(this).toggleClass('on');
+		$('.sa'+id).show().siblings().hide();
+	});
+	$('.skins-all li').on('click', function(){
+		var bg = $(this).data('bg');
+		$('body').css('background-image', 'url('+bg+')');
+		$(this).addClass('added').siblings().removeClass('added');
+		$.post(URL + "/updateSkin", {'skinId': $(this).data('id')});
+	});
+	
+	/** 换肤$ **/
 });
 
 // 设为首页

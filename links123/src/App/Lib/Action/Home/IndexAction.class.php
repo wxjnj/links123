@@ -19,25 +19,75 @@ class IndexAction extends CommonAction {
 		// 公告
 		$announce = M("Announcement");
 		$announces = $announce->where('status = 1')->order('sort ASC, create_time DESC')->select();
-	
+		
+		$skins = $this->getSkins();
+		
 		// 我的地盘
 		$myarea = M("Myarea");
 		session('arealist_default', $myarea->where('mid=0')->order('sort ASC')->select());
+		
 		//存在用户登录，获取用户的我的地盘
 		$memberAuthKey = $this->_session(C('MEMBER_AUTH_KEY'));
 	
-		if (!empty($memberAuthKey)) {
-			$areaList = $myarea->where('mid=' . $memberAuthKey)->order('sort ASC')->select();
-			!empty($areaList) || $areaList = session('arealist_default');
-			session('arealist', $areaList);
+		if ($memberAuthKey) {
+			
+			$areaList = $myarea->where(array('mid' => $memberAuthKey))->order('sort ASC')->select();
+			session('arealist', $areaList ? $areaList : session('arealist_default'));
+			
+			$skinId = session('skin');
 		} else {
+			
 			$areaList = $this->_session('arealist');
 			!empty($areaList) || session('arealist', session('arealist_default'));
+			
+			$skinId = cookie('skinId');
 		}
+		
 		$this->assign("announces", $announces);
+		$this->assign("skinId", $skinId);
+		$this->assign("skin", $skins['skin'][$skinId]);
+		$this->assign("skinList", $skins['list']);
+		$this->assign("skinCategory", $skins['category']);
 	
 		$this->getHeaderInfo();
 		$this->display('new_index');
+	}
+	
+	/**
+	 * 更新首页背景皮肤
+	 * 
+	 * @param skinId: 皮肤ID
+	 * 
+	 * @return void
+	 * 
+	 * @author slate date:2013-08-29
+	 */
+	public function updateSkin() {
+		
+		$skinId = intval($this->_param('skinId'));
+		
+		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+		
+		$result = true;
+		
+		if ($user_id) {
+			
+			$memberModel = M("member");
+					
+			if ($memberModel->where(array('id' => $user_id))->save(array('skin' => $skinId))) {
+				
+				session('skin', $skinId);
+			} else {
+				
+				$result = false;
+			}
+			
+		} else {
+			
+			cookie('skinId', $skinId, array('expire' => 0));
+		}
+		
+		$this->ajaxReturn($result);
 	}
 	
 	/**

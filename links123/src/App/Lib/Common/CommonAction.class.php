@@ -309,6 +309,36 @@ class CommonAction extends Action {
     	}
     	$this->assign("cats", $cats);
     }
+    
+    /**
+     * 获取皮肤列表
+     * 
+     * @TODO 缓存使用
+     * 
+     * @return skins: 皮肤列表数据
+     * 
+     * @author slate date:2013-08-29
+     */
+    public function getSkins() {
+    	
+    	$skins = array();
+    	
+    	$model = new Model();
+		
+    	$sql = 'SELECT A.`categoryId`, A.`categoryName`, A.`categoryImg`, B.`skinId`, B.`skinName`, B.`smallSkin`, B.`middleSkin`, B.`skin`, B.`categoryId` AS cid '
+    	.'FROM `lnk_skin_category` A LEFT JOIN `lnk_skin` B ON A.`categoryId` = B.`categoryId`';
+		
+		$result = $model->query($sql);
+		
+		foreach ($result as $skin) {
+			
+			$skins['list'][$skin['categoryId']][] = $skin;
+			$skins['category'][$skin['categoryId']] = array('categoryId' => $skin['categoryId'], 'categoryImg' => $skin['categoryImg']);
+			$skins['skin'][$skin['skinId']] = $skin['skin'];
+		}
+		
+		return $skins;
+    }
 }
 
 ?>
