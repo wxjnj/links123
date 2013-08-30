@@ -624,9 +624,21 @@ var HelpMouse = {
 	init: function(){
 		var self = this;
 		var isSearchTxtSelected = false;
+
 		$(document).on('mousemove', function(ev){
+			var isNeedHelp = 1;
+			$('.ui-dialog').each(function(){
+				if($(this).is(":visible")){
+					isNeedHelp ? isNeedHelp = 0 : '';
+				}
+			});
+			$('.fancybox-wrap').each(function(){
+				if($(this).is(":visible")){
+					isNeedHelp ? isNeedHelp = 0 : '';
+				}
+			});
+			if(!isNeedHelp){ return false; }
 			var mousePos = self.getcoords(ev);
-			console.log(mousePos.y);
 			if(mousePos.y < 70){
 				if($('#direct_text').val() == $('#direct_text').attr('txt')){
 					$('#direct_text').select();
