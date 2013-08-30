@@ -87,6 +87,9 @@ class EnglishMediaAction extends CommonAction {
         //专题列表
         $subject_list = D("EnglishMediaSubject")->getList("status=1", "`sort` ASC");
         $this->assign("subject_list", $subject_list);
+        //推荐列表
+        $recommend_list = D("EnglishMediaRecommend")->getList("status=1", "`sort` ASC");
+        $this->assign("recommend_list", $recommend_list);
         //
         $this->assign("param", $param);
         foreach ($param as $key => $value) {
@@ -127,14 +130,48 @@ class EnglishMediaAction extends CommonAction {
     }
 
     public function add() {
+        //科目列表
         $object_list = D("EnglishObject")->where("`status`=1")->order("sort")->select();
         $this->assign("object_list", $object_list);
+        //等级列表
         $level_list = D("EnglishLevel")->where("`status`=1")->order("sort")->select();
         $this->assign("level_list", $level_list);
+        //专题列表
         $subject_list = D("EnglishMediaSubject")->where("`status`=1")->order("`sort`")->select();
         $this->assign("subject_list", $subject_list);
+        //推荐分类列表
+        $recommend_list = D("EnglishMediaRecommend")->where("`status`=1")->order("`sort`")->select();
+        $this->assign("recommend_list", $recommend_list);
 
         $this->display();
+    }
+
+    public function insert() {
+        $name = $this->getActionName();
+        $model = D($name);
+        if (false === $model->create()) {
+            $this->error($model->getError());
+        }
+        $levels = D("EnglishLevel")->order("`sort` ASC")->select();
+        foreach ($levels as $key => $value) {
+            $level_list[$value['id']] = $value;
+            $level_name_list_info[$value['name']] = $value;
+        }
+        if ($level_list[intval($_REQUEST['level'])]['sort'] <= $level_name_list_info['小六']['sort']) {
+            $model->difficulty = 1;
+        } else if ($level_list[intval($_REQUEST['level'])]['sort'] >= $level_name_list_info['大一']['sort']) {
+            $model->difficulty = 3;
+        } else {
+            $model->difficulty = 2;
+        }
+        //保存当前数据对象
+        $list = $model->add();
+        if ($list !== false) { //保存成功
+            $this->success('新增成功!', cookie('_currentUrl_'));
+        } else {
+            //失败提示
+            $this->error('新增失败!');
+        }
     }
 
     public function edit() {
@@ -146,45 +183,131 @@ class EnglishMediaAction extends CommonAction {
         $this->assign('option_list', $option_list);
         $this->assign('vo', $vo);
 
+        //科目列表
         $object_list = D("EnglishObject")->where("`status`=1")->order("sort")->select();
         $this->assign("object_list", $object_list);
+        //等级列表
         $level_list = D("EnglishLevel")->where("`status`=1")->order("sort")->select();
         $this->assign("level_list", $level_list);
+        //专题列表
         $subject_list = D("EnglishMediaSubject")->where("`status`=1")->order("`sort`")->select();
         $this->assign("subject_list", $subject_list);
+        //推荐分类列表
+        $recommend_list = D("EnglishMediaRecommend")->where("`status`=1")->order("`sort`")->select();
+        $this->assign("recommend_list", $recommend_list);
 
         $this->display();
+    }
+    public function update() {
+        $name = $this->getActionName();
+        $model = D($name);
+        if (false === $model->create()) {
+            $this->error($model->getError());
+        }
+        $levels = D("EnglishLevel")->order("`sort` ASC")->select();
+        foreach ($levels as $key => $value) {
+            $level_list[$value['id']] = $value;
+            $level_name_list_info[$value['name']] = $value;
+        }
+        if ($level_list[intval($_REQUEST['level'])]['sort'] <= $level_name_list_info['小六']['sort']) {
+            $model->difficulty = 1;
+        } else if ($level_list[intval($_REQUEST['level'])]['sort'] >= $level_name_list_info['大一']['sort']) {
+            $model->difficulty = 3;
+        } else {
+            $model->difficulty = 2;
+        }
+        // 更新数据
+        $list = $model->save();
+        if (false !== $list) {
+            //成功提示
+            $this->success('编辑成功!', cookie('_currentUrl_'));
+        } else {
+            //错误提示
+            $this->error('编辑失败!');
+        }
     }
 
     public function pointSubject() {
         if ($this->isAjax()) {
             $id = $_REQUEST['id'];
-            $tartgetSubject = $_REQUEST['targetSubject'];
-            if (intval($tartgetSubject) > 0) {
+            $tartget = $_REQUEST['target'];
+            if (intval($tartget) > 0) {
                 $map['id'] = array("in", $id);
-                $data['subject'] = intval($tartgetSubject);
+                $data['subject'] = intval($tartget);
                 $ret = D("EnglishMedia")->where($map)->save($data);
                 if (false !== $ret) {
-                    $this->ajaxReturn("", "操作成功", true);
+                    $this->ajaxReturn($tartget, "操作成功", true);
                 }
             }
             $this->ajaxReturn("", "操作失败", false);
         }
     }
 
-    public function pointDifficulty() {
+    public function pointRecommend() {
         if ($this->isAjax()) {
             $id = $_REQUEST['id'];
-            $tartgetDifficulty = $_REQUEST['targetDifficulty'];
-            if (intval($tartgetDifficulty) > 0) {
+            $tartget = $_REQUEST['target'];
+            if (intval($tartget) > 0) {
                 $map['id'] = array("in", $id);
-                $data['difficulty'] = intval($tartgetDifficulty);
+                $data['recommend'] = intval($tartget);
                 $ret = D("EnglishMedia")->where($map)->save($data);
                 if (false !== $ret) {
-                    $this->ajaxReturn("", "操作成功", true);
+                    $this->ajaxReturn($tartget, "操作成功", true);
                 }
             }
             $this->ajaxReturn("", "操作失败", false);
+        }
+    }
+
+    /**
+     * 批量设置
+     * @return
+     * @author  Adam $date2013.08.30$
+     */
+    public function groupSet() {
+        if ($this->isAjax()) {
+            $id = $_REQUEST['id'];
+            if (intval($_REQUEST['targetSubject']) > 0) {
+                $data['subject'] = intval($_REQUEST['targetSubject']);
+            }
+            if (intval($_REQUEST['targetRecommend']) > 0) {
+                $data['recommend'] = intval($_REQUEST['targetRecommend']);
+            }
+            if (isset($_REQUEST['targetSpecialRecommend'])) {
+                $data['special_recommend'] = intval($_REQUEST['targetSpecialRecommend']);
+            }
+            if (!empty($data)) {
+                $map['id'] = array("in", $id);
+                $ret = D("EnglishMedia")->where($map)->save($data);
+                if (false !== $ret) {
+                    $this->ajaxReturn($data, "操作成功", true);
+                }
+            } else {
+                $this->ajaxReturn("", "请选择目标", false);
+            }
+            $this->ajaxReturn("", "操作失败", false);
+        }
+    }
+
+    /**
+     * 设置特别推荐
+     * @author Adam $date2013.08.30$
+     */
+    public function setSpecialRecommend() {
+        if ($this->isAjax()) {
+            $id = $_REQUEST['id'];
+            $model = D("EnglishMedia");
+            $special_recommend = $model->where(array("id" => $id))->getField("special_recommend");
+            if (intval($special_recommend) == 0) {
+                $special_recommend = 1;
+            } else {
+                $special_recommend = 0;
+            }
+            if (false === $model->where(array("id" => $id))->setField("special_recommend", $special_recommend)) {
+                $this->ajaxReturn("", "操作失败", false);
+            } else {
+                $this->ajaxReturn($special_recommend, "操作成功", true);
+            }
         }
     }
 

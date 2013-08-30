@@ -380,9 +380,19 @@ class EnglishQuestionAction extends CommonAction {
             $mediaModel = D("EnglishMedia");
             //
             //提取等级列表备用
-            $levels = $levelModel->select();
+            $levels = $levelModel->order("`sort` ASC")->select();
             foreach ($levels as $key => $value) {
                 $level_list[$value['name']] = $value['id'];
+                $level_name_list_info[$value['name']] = $value;
+            }
+            foreach ($levels as $key => $value) {
+                if ($value['sort'] <= $level_name_list_info['小六']['sort']) {
+                    $difficulty_list[$value['name']] = 1;
+                } else if ($value['sort'] >= $level_name_list_info['大一']['sort']) {
+                    $difficulty_list[$value['name']] = 3;
+                } else {
+                    $difficulty_list[$value['name']] = 2;
+                }
             }
             //
             //读取科目列表备用
@@ -397,6 +407,13 @@ class EnglishQuestionAction extends CommonAction {
             $subjects = $subjectModel->select();
             foreach ($subjects as $key => $value) {
                 $subject_list[$value['name']] = $value['id'];
+            }
+            //
+            //读取推荐分类列表
+            $recommendModel = D("EnglishMediaRecommend");
+            $recommends = $recommendModel->select();
+            foreach ($recommends as $key => $value) {
+                $recommend_list[$value['name']] = $value['id'];
             }
             $model->startTrans();
             //
@@ -427,24 +444,23 @@ class EnglishQuestionAction extends CommonAction {
                             } else if ($cell->getColumn() == "G") {
                                 $media_data['subject'] = ftrim($cell->getCalculatedValue()); //专题
                             } else if ($cell->getColumn() == "H") {
-                                $media_data['difficulty'] = intval($cell->getCalculatedValue()); //难度
+                                //$media_data['difficulty'] = intval($cell->getCalculatedValue()); //难度
+                                $media_data['recommend'] = ftrim($cell->getCalculatedValue()); //推荐
                             } else if ($cell->getColumn() == "I") {
-                                $media_data['recommend'] = intval($cell->getCalculatedValue()); //是否推荐
-                            } else if ($cell->getColumn() == "J") {
                                 $media_data['special_recommend'] = intval($cell->getCalculatedValue()); //是否特别推荐
-                            } else if ($cell->getColumn() == "K") {
+                            } else if ($cell->getColumn() == "J") {
                                 $data['media_text_url'] = $media_data['media_source_url'] = ftrim($cell->getCalculatedValue()); //媒体内容地址
-                            } else if ($cell->getColumn() == "L") {
+                            } else if ($cell->getColumn() == "K") {
                                 $data['content'] = ftrim($cell->getCalculatedValue()); //题目内容
-                            } else if ($cell->getColumn() == "M") {
+                            } else if ($cell->getColumn() == "L") {
                                 $data['answer'] = ftrim($cell->getCalculatedValue()); //题目答案
-                            } else if ($cell->getColumn() == "N") {
+                            } else if ($cell->getColumn() == "M") {
                                 $data['option'][0] = ftrim($cell->getCalculatedValue()); //题目选项一
-                            } else if ($cell->getColumn() == "O") {
+                            } else if ($cell->getColumn() == "N") {
                                 $data['option'][1] = ftrim($cell->getCalculatedValue()); //题目选项二
-                            } else if ($cell->getColumn() == "P") {
+                            } else if ($cell->getColumn() == "O") {
                                 $data['option'][2] = ftrim($cell->getCalculatedValue()); //题目选项三
-                            } else if ($cell->getColumn() == "Q") {
+                            } else if ($cell->getColumn() == "P") {
                                 $data['option'][3] = ftrim($cell->getCalculatedValue()); //题目选项四
                             }
                         }
@@ -464,8 +480,10 @@ class EnglishQuestionAction extends CommonAction {
                         $media_data['created'] = $time;
                         //等级、科目、专题的名称换成对应的id
                         $media_data['object'] = intval($object_list[$media_data['object']]);
+                        $media_data['difficulty'] = intval($difficulty_list[$media_data['level']]);
                         $media_data['level'] = intval($level_list[$media_data['level']]);
                         $media_data['subject'] = intval($subject_list[$media_data['subject']]);
+                        $media_data['recommend'] = intval($recommend_list[$media_data['recommend']]);
                         $mediaId = $mediaModel->add($media_data);
                     }
                     $data['media_id'] = intval($mediaId);

@@ -47,11 +47,14 @@
                 </td>
                 </tr>
                 <tr>
-                    <td class="tRight" >难度：</td>
-                    <td class="tLeft" >
-                        <label><input type="radio" name="difficulty" value="1" <eq name='vo["difficulty"]' value='1'>checked="checked"</eq> />初级</label>&nbsp;&nbsp;
-                        <label><input type="radio" name="difficulty" value="2" <eq name='vo["difficulty"]' value='2'>checked="checked"</eq> />中级</label>&nbsp;&nbsp;
-                        <label><input type="radio" name="difficulty" value="3" <eq name='vo["difficulty"]' value='3'>checked="checked"</eq> />高级</label>
+                    <td class="tRight" >推荐分类：</td>
+                    <td class="tLeft recommend_td" >
+                        <input type="hidden" value="{$vo.recommend}" name="recommend" />
+                        <volist name="recommend_list" id="recommend">
+                            <label id="recommend_{$recommend.id}" class="radio_label recommend_label">
+                                {$recommend.name}
+                            </label>
+                        </volist>
                     </td>
                 </tr>
                 <tr>
@@ -123,6 +126,8 @@
         $("#level_" + level).css("color", "#FF0000").siblings("label").css("color", "#000000");
         var subject = $("input[name='subject']").val();
         $("#subject_" + subject).css("color", "#FF0000").siblings("label").css("color", "#000000");
+        var recommend = $("input[name='recommend']").val();
+        $("#recommend_" + recommend).css("color", "#FF0000").siblings("label").css("color", "#000000");
 
         $(".object_td").children("label").click(function() {
             $(this).css("color", "#FF0000").siblings("label").css("color", "#000000");
@@ -143,6 +148,16 @@
                 $(this).css("color", "#FF0000").siblings("label").css("color", "#000000");
             }
             $("input[name='subject']").val(value);
+        })
+        $(".recommend_td").children("label").click(function() {
+            var value = $(this).attr("id").substr($(this).attr("id").indexOf("_") + 1);
+            if ($(this).css("color") == "rgb(255, 0, 0)") {
+                value = 0;
+                $(this).css("color", "#000000")
+            } else {
+                $(this).css("color", "#FF0000").siblings("label").css("color", "#000000");
+            }
+            $("input[name='recommend']").val(value);
         })
     })
 </script>

@@ -4,11 +4,11 @@ class EnglishQuestionModel extends CommonModel {
 
     protected $_validate = array(
         array("name", "require", "名称必须"),
-        array("voice", "require", "口音（美音/英音）必须"),
+//        array("voice", "require", "口音（美音/英音）必须"),
         array("target", "require", "目标（听力/说力）必须"),
-        array("pattern", "require", "形式（视频/音频）必须"),
-        array("object", "require", "学科必须"),
-        array("level", "require", "等级必须"),
+//        array("pattern", "require", "形式（视频/音频）必须"),
+//        array("object", "require", "学科必须"),
+//        array("level", "require", "等级必须"),
         array("content", "require", "试题必须")
     );
     protected $_auto = array(
@@ -16,37 +16,75 @@ class EnglishQuestionModel extends CommonModel {
         array("updated", "time", 3, "function")
     );
 
-    /*
+    /**
      * 获取题目到首页
      * @author adam 2013.5.29
      * @param int $object [科目id]
      * @param int $level [等级id]
-     * @param int $voice [口音]
-     * @param int $target [训练目标]
-     * @param int $pattern [类型]
+     * @param int $subject [专题id]
+     * @param int $difficulty [难度值，1初级，2中级，3高级]
+     * @param int $voice [口音，1美音，2英音]
+     * @param int $target [训练目标，1听力，2说力]
+     * @param int $pattern [类型，1视频，2音频]
      * @param string $extend_condition [额外条件]
      * return array [题目数组]
      */
-
-    public function getQuestionToIndex($object, $level, $voice = 1, $target = 1, $pattern = 1, $extend_condition = "") {
-        $object_info = D("EnglishObject")->find($object);
-        if ($object_info['name'] == "综合") {
-            $condition = "`status`=1 and `voice`={$voice} and `target`={$target} and `pattern`={$pattern} and `level`={$level} ";
-        } else {
-            $condition = "`status`=1 and `voice`={$voice} and `target`={$target} and `pattern`={$pattern} and `level`={$level} and `object`={$object} ";
+    public function getQuestionToIndex($object, $level, $subject, $difficulty, $voice = 1, $target = 1, $pattern = 1, $extend_condition = "") {
+        $map = array();
+        //
+        //获取科目条件
+        if (intval($object) > 0) {
+            //检测科目是否为综合
+            $object_name = D("EnglishObject")->where(array("id" => $object, "status" => 1))->getField("name");
+            //科目名不为综合
+            if ($object_name != "综合") {
+                $map['media.object'] = $object;
+            }
         }
+        if (intval($level) > 0) {
+            $map['media.level'] = $level;
+        }
+        if (intval($subject) > 0) {
+            $map['media.subject'] = $subject;
+        }
+        if (intval($level) > 0) {
+            $map['media.level'] = $level;
+        }
+        if (intval($difficulty) > 0) {
+            $map['media.difficulty'] = $difficulty;
+        }
+        if (intval($voice) > 0) {
+            $map['media.voice'] = $voice;
+        }
+        if (intval($pattern) > 0) {
+            $map['media.pattern'] = $pattern;
+        }
+        $map['media.status'] = 1;
+        $map['question.status'] = 1;
+        if (intval($target) > 0) {
+            $map['question.target'] = $target;
+        }
+
         if (!empty($extend_condition)) {
-            $condition.=" and " . $extend_condition;
+            $map['_string'] = $extend_condition;
         }
         //
         //优先获取用户没看过的试题
-        $user_view_question_ids = D("EnglishViewRecord")->getUserViewQuestionIdList($object, $level, $voice, $target, $pattern);
+        $user_view_question_ids = D("EnglishViewRecord")->getUserViewQuestionIdList($object, $level, $subject, $difficulty, $voice, $target, $pattern);
         if (!empty($user_view_question_ids)) {
-            $record_view_condition = " AND `id` not in(" . implode(",", $user_view_question_ids) . ")";
-            $count = $this->where($condition . $record_view_condition)->count(); //用于随机
+            $map['question.id'] = array("not in", $user_view_question_ids);
+            $count = $this->alias("question")->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media ON question.media_id=media.id")->where($map)->count();
+            //$count = $this->where($condition . $record_view_condition)->count(); //用于随机
             if ($count > 0) {
                 $limit = rand(0, $count - 1);
-                $ret = $this->where($condition . $record_view_condition)->limit("{$limit},1")->select(); //去除用户看过的题目
+                //去除用户看过的题目
+                $ret = $this->alias("question")
+                        ->field("question.id as question_id,question.target,question.content,question.answer,question.media_id,media.*")
+                        ->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media ON question.media_id=media.id")
+                        ->where($map)
+                        ->limit("{$limit},1")
+                        ->select();
+//                $ret = $this->where($condition . $record_view_condition)->limit("{$limit},1")->select(); 
                 if (!empty($ret)) {
                     $ret = $ret[0];
                 }
@@ -56,12 +94,19 @@ class EnglishQuestionModel extends CommonModel {
         if (empty($ret)) {
             //
             //优先获取用户没做过的题目
-            $user_question_ids = $englishRecordModel->getUserTestQuestionIdList($object, $level, $voice, $target, $pattern); //用户做过的题目id数组
-            $record_condition = " AND `id` not in(" . implode(",", $user_question_ids) . ")";
-            $count = $this->where($condition . $record_condition)->count(); //用于随机
+            $user_question_ids = $englishRecordModel->getUserTestQuestionIdList($object, $level, $subject, $difficulty, $voice, $target, $pattern); //用户做过的题目id数组
+            $map['question.id'] = array("not in", $user_question_ids);
+            $count = $this->alias("question")->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media ON question.media_id=media.id")->where($map)->count();
             if ($count > 0) {
                 $limit = rand(0, $count - 1);
-                $ret = $this->where($condition . $record_condition)->limit("{$limit},1")->select(); //去除用户做过的题目
+                //去除用户看过的题目
+                $ret = $this->alias("question")
+                        ->field("question.id as question_id,question.target,question.content,question.answer,question.media_id,media.*")
+                        ->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media ON question.media_id=media.id")
+                        ->where($map)
+                        ->limit("{$limit},1")
+                        ->select();
+//                $ret = $this->where($condition . $record_view_condition)->limit("{$limit},1")->select(); 
                 if (!empty($ret)) {
                     $ret = $ret[0];
                 }
@@ -69,14 +114,15 @@ class EnglishQuestionModel extends CommonModel {
             //
             //用户题目都做过，视作未做过一题
             if (empty($ret)) {
-//            //优先获取用户做错，做的最少次数的题目
-//            $englishRecordModel->alias("english_record")
-//                    ->join(C("DB_PREFIX")."english_question question on question.id=english_record.question_id")
-//                    
-                $count = $this->where($condition)->count(); //用于随机
+                $count = $this->alias("question")->join("RIGHT JOIN " . C("D_PREFIX") . "english_media media ON question.media_id=media.id")->where($map)->count();
                 if ($count > 0) {
                     $limit = rand(0, $count - 1);
-                    $ret = $this->where($condition)->limit("{$limit},1")->select();
+                    $ret = $this->alias("question")
+                            ->field("question.id as question_id,question.target,question.content,question.answer,question.media_id,media.*")
+                            ->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media ON question.media_id=media.id")
+                            ->where($map)
+                            ->limit("{$limit},1")
+                            ->select();
                     if (!empty($ret)) {
                         $ret = $ret[0];
                         $ret['tested'] = true;
@@ -87,10 +133,12 @@ class EnglishQuestionModel extends CommonModel {
                 return array();
             }
         }
+        $ret['id'] = $ret['question_id'];
         $ret['record'] = $englishRecordModel->getQuestionUserRecord($ret['id']);
-        $ret['record']['untested_num'] = $englishRecordModel->getUserUntestedQuestionNum($object, $level, $voice, $target, $pattern);
+        $ret['record']['untested_num'] = $englishRecordModel->getUserUntestedQuestionNum($object, $level, $subject, $difficulty, $voice, $target, $pattern);
         $ret['content'] = ftrim($ret['content']);
-        $ret['media_url'] = htmlspecialchars_decode($ret['media_url']);
+        $ret['media_path'] = htmlspecialchars_decode($ret['path']);
+//        $ret['media_url'] = htmlspecialchars_decode($ret['media_url']);
         $ret['option'] = D("EnglishOptions")->getQuestionOptionList($ret['id']);
 //        $ret['option'] = D("EnglishOptions")->where("question_id={$ret['id']} and status=1")->order("sort asc")->select();
         foreach ($ret['option'] as $key => $value) {

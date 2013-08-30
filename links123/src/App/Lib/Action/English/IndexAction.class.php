@@ -24,128 +24,136 @@ class IndexAction extends EnglishAction {
         }
         //
         //默认情况
-        $user_last_select['voice'] = intval($user_last_select['voice']) == 1 || intval($user_last_select['voice']) == 2 ? intval($user_last_select['voice']) : 1;
-        $user_last_select['target'] = intval($user_last_select['target']) == 1 || intval($user_last_select['target']) == 2 ? intval($user_last_select['target']) : 1;
-        $user_last_select['pattern'] = intval($user_last_select['pattern']) == 1 || intval($user_last_select['pattern']) == 2 ? intval($user_last_select['pattern']) : 1;
-
+        $user_last_select['voice'] = in_array(intval($user_last_select['voice']), array(1, 2)) ? intval($user_last_select['voice']) : 1;
+        $user_last_select['target'] = in_array(intval($user_last_select['target']), array(1, 2)) ? intval($user_last_select['target']) : 1;
+        $user_last_select['pattern'] = in_array(intval($user_last_select['pattern']), array(1, 2)) ? intval($user_last_select['pattern']) : 1;
+        $user_last_select['view_type'] = in_array(intval($user_last_select['view_type']), array(1, 2, 3)) ? $user_last_select['view_type'] : 1; //查看方式，1科目等级，2专题难度，3推荐
         //默认的科目列表
         $object_list = $objectModel->getObjectListToIndex($user_last_select['voice'], $user_last_select['target'], $user_last_select['pattern']);
-
-        //用户上次选择的科目
-        $user_last_select['object'] = intval($user_last_select['object']);
-        $objectInfo = $objectModel->where(array("id" => $user_last_select['object'], "status" => 1))->find();
-        //科目不存在或不可用
-        if (false == $objectInfo && empty($objectInfo)) {
-            $user_last_select['object_info'] = $objectModel->getDefaultObjectInfo($user_last_select['voice'], $user_last_select['target'], $user_last_select['pattern']);
-        } else {
-            $user_last_select['object_info'] = $objectInfo;
-        }
-        $user_last_select['object'] = intval($user_last_select['object_info']['id']) > 0 ? intval($user_last_select['object_info']['id']) : $user_last_select['object'];
-        //用户上次选择的等级
-        $user_last_select['level'] = intval($user_last_select['level']);
-        $levelInfo = $levelModel->where(array("id" => $user_last_select['level'], "status" => 1))->find();
-        //等级不存在或不可用
-        if (false == $levelInfo && empty($levelInfo)) {
-            $user_last_select['level_info'] = $levelModel->getDefaultLevelInfo($user_last_select['level'], $user_last_select['voice'], $user_last_select['target'], $user_last_select['pattern']);
-        } else {
-            $user_last_select['level_info'] = $levelInfo;
-        }
-
         //默认的等级列表
         $level_list = $levelModel->getLevelListToIndex($user_last_select['object'], $user_last_select['voice'], $user_last_select['target'], $user_last_select['pattern']);
-        $ret = array();
-        foreach ($level_list as $value) {
-            $ret[$value['id']] = $value;
-        }
-        //确保上次选择的等级下拥有题目
-        if ($ret[$user_last_select['level']]['question_num'] == 0) {
+        //
+        //用户上次选择的浏览方式
+        if ($user_last_select['view_type'] == 2) {
+            $subject_info = D("EnglishMeidaSubject")->where(array("id" => $user_last_select['subject'], "status" => 1))->find();
+            if (false != $subject_info && !empty($subject_info)) {
+                $user_last_select['subject'] = 1;
+            }
+            $user_last_select['difficulty'] = in_array(intval($user_last_select['difficulty']), array(1, 2, 3)) ? intval($user_last_select['difficulty']) : 1;
+        } else if ($user_last_select['view_type'] == 1) {
+            //用户上次选择的科目
+            $user_last_select['object'] = intval($user_last_select['object']);
+            $objectInfo = $objectModel->where(array("id" => $user_last_select['object'], "status" => 1))->find();
+            //科目不存在或不可用
+            if (false == $objectInfo && empty($objectInfo)) {
+                $user_last_select['object_info'] = $objectModel->getDefaultObjectInfo($user_last_select['voice'], $user_last_select['target'], $user_last_select['pattern']);
+            } else {
+                $user_last_select['object_info'] = $objectInfo;
+            }
+            $user_last_select['object'] = intval($user_last_select['object_info']['id']) > 0 ? intval($user_last_select['object_info']['id']) : $user_last_select['object'];
+            //
+            //用户上次选择的等级
+            $user_last_select['level'] = intval($user_last_select['level']);
+            $levelInfo = $levelModel->where(array("id" => $user_last_select['level'], "status" => 1))->find();
+            //等级不存在或不可用
+            if (false == $levelInfo && empty($levelInfo)) {
+                $user_last_select['level_info'] = $levelModel->getDefaultLevelInfo($user_last_select['level'], $user_last_select['voice'], $user_last_select['target'], $user_last_select['pattern']);
+            } else {
+                $user_last_select['level_info'] = $levelInfo;
+            }
+
+            //
+            //确保上次选择的等级下拥有题目
+            $ret = array();
             foreach ($level_list as $value) {
-                if ($value['question_num'] > 0) {
-                    $user_last_select['level_info'] = $levelModel->getInfoById($value['id']);
-                    break;
+                $ret[$value['id']] = $value;
+            }
+            if ($ret[$user_last_select['level']]['question_num'] == 0) {
+                foreach ($level_list as $value) {
+                    if ($value['question_num'] > 0) {
+                        $user_last_select['level_info'] = $levelModel->getInfoById($value['id']);
+                        break;
+                    }
                 }
             }
+            $user_last_select['level'] = $user_last_select['level_info']['id'];
         }
-        $user_last_select['level'] = $user_last_select['level_info']['id'];
 
         $this->assign("user_last_select", $user_last_select);
         cookie('english_user_last_select', $user_last_select, 60 * 60 * 24 * 30);
 
         //获取题目
-        $question = $questionModel->getQuestionToIndex($user_last_select['object'], $user_last_select['level'], $user_last_select['voice'], $user_last_select['target'], $user_last_select['pattern']);
+        $question = $questionModel->getQuestionToIndex($user_last_select['object'], $user_last_select['level'], $user_last_select['subject'], $user_last_select['difficulty'], $user_last_select['voice'], $user_last_select['target'], $user_last_select['pattern']);
+        //
         //获取用户英语角信息
         $englishUserInfoModel = D("EnglishUserInfo");
         $english_user_info = $englishUserInfoModel->getEnglishUserInfo();
         $this->assign("english_user_info", $english_user_info);
+        //
+        //记录浏览题目
         if ($user_last_select['object_info']['name'] == "综合") {
-            D("EnglishViewRecord")->addRecord($question['id'], $question['level'], $user_last_select['object_info']['id'], $question['voice'], $question['target'], $question['pattern']); //记录用户查看题目
+            D("EnglishViewRecord")->addRecord($question['id'], $question['level'], $user_last_select['object_info']['id'], $question['subject'], $question['difficulty'], $question['voice'], $question['target'], $question['pattern']); //记录用户查看题目
         } else {
-            D("EnglishViewRecord")->addRecord($question['id'], $question['level'], $question['object'], $question['voice'], $question['target'], $question['pattern']); //记录用户查看题目
+            D("EnglishViewRecord")->addRecord($question['id'], $question['level'], $question['object'], $question['subject'], $question['difficulty'], $question['voice'], $question['target'], $question['pattern']); //记录用户查看题目
         }
-
+        //
+        //获取用户统计信息
         $englishUserCountModel = D("EnglishUserCount");
         $user_conut_info = $englishUserCountModel->getEnglishUserCountInfo($user_last_select['voice'], $user_last_select['target'], $user_last_select['object'], $user_last_select['level']);
         $this->assign("user_conut_info", $user_conut_info);
 
-        //media_url为空，则进行视频解析
-        if (!$question['media_url'] && !$question['media']) {
+        //path为空，则进行视频解析
+        //!$question['media_url'] && !$question['media']
+        if (!$question['path']) {
 
             $videoHooks = new VideoHooks();
 
-            $question['media_text_url'] = trim(str_replace(' ', '', $question['media_text_url']));
-            $videoInfo = $videoHooks->analyzer($question['media_text_url']);
+            $question['media_source_url'] = trim(str_replace(' ', '', $question['media_source_url']));
+            $videoInfo = $videoHooks->analyzer($question['media_source_url']);
 
-            $media_url = $videoInfo['swf'];
+            $path = $videoInfo['swf'];
 
-            $media_img_url = $videoInfo['img'];
+            $media_thumb_img = $videoInfo['img'];
 
             //解析成功，保存视频解析地址
-            if (!$videoHooks->getError() && $media_url) {
+            if (!$videoHooks->getError() && $path) {
 
-                $media_type = $videoInfo['media_type'];
+                $play_type = $videoInfo['media_type'];
                 $saveData = array(
-                    'media_img_url' => $media_img_url,
-                    'media_type' => $media_type
+                    'id' => $question['media_id'],
+                    'media_thumb_img' => $media_thumb_img,
+                    'play_type' => $play_type
                 );
 
-                if ($media_type) {
-
-                    $saveData['media'] = $media_url;
-                    $question['media'] = $media_url;
-                } else {
-
-                    $saveData['media_url'] = $media_url;
-                }
-                $questionModel->where('id=' . $question['id'])->save($saveData);
+                D("EnglishMedia")->save($saveData);
             }
 
-            $question['media_url'] = $media_url;
+            $question['path'] = $path;
 
-            $question['media_img_url'] = $media_img_url;
+            $question['media_thumb_img'] = $media_thumb_img;
 
-            $question['media_type'] = $media_type;
+            $question['play_type'] = $play_type;
         }
 
         //判断是否为about.com视频
         $isAboutVideo = 0;
-        if (strpos($question['media_url'], 'http://c.brightcove.com') !== FALSE) {
+        if (strpos($question['media_source_url'], 'http://video.about.com') !== FALSE) {
             $isAboutVideo = 1;
 
             //about.com视频修改自动播放为false
             //$question['media_url'] = str_replace('&autoStart=true', '&autoStart=false', $question['media_url']);
         }
-        if ($question['media']) {
-            if (strpos($question['media_text_url'], 'britishcouncil.org') !== FALSE) {
-                $question['media'] = preg_replace('/<!--<!\[endif\]-->(.*)/is', '</object></object>', $question['media']);
-                $question['media'] = str_replace('width=585&amp;height=575', 'width=100%&amp;height=100%', $question['media']);
+        if ($question['path']) {
+            if (strpos($question['media_source_url'], 'britishcouncil.org') !== FALSE) {
+                $question['path'] = preg_replace('/<!--<!\[endif\]-->(.*)/is', '</object></object>', $question['path']);
+                $question['path'] = str_replace('width=585&amp;height=575', 'width=100%&amp;height=100%', $question['path']);
             }
-            $question['media'] = preg_replace(array('/width="(.*?)"/is', '/height="(.*?)"/is', '/width=300 height=280/is', '/width=600 height=400/is'), array('width="100%"', 'height="100%"', 'width="100%" height="100%"', 'width="100%" height="100%"'), $question['media']);
+            $question['path'] = preg_replace(array('/width="(.*?)"/is', '/height="(.*?)"/is', '/width=300 height=280/is', '/width=600 height=400/is'), array('width="100%"', 'height="100%"', 'width="100%" height="100%"', 'width="100%" height="100%"'), $question['path']);
         }
 
-        if ($question['media_type'] && !$question['media']) {
-            $question['media_url'] ? $question['media'] = $question['media_url'] : '';
-        }
-
+//        if ($question['media_type'] && !$question['media']) {
+//            $question['media_url'] ? $question['media'] = $question['media_url'] : '';
+//        }
         //排行榜数据
         $ret = $englishUserInfoModel->getTopUserListByTypeName("object_综合");
 
@@ -181,7 +189,7 @@ class IndexAction extends EnglishAction {
                 $con["id"] = intval($last_question_info['question_id']);
                 $user_last_question = $questionModel->getQuestionWithOption($con);
             } else if ($type == 'quick_select_next') {
-                $last_question_info = D("EnglishViewRecord")->getViewedQuestionRecord($now_question_id, "next", intval($_REQUEST['level']), intval($_REQUEST['object']), intval($_REQUEST['voice']), intval($_REQUEST['target']), intval($_REQUEST['pattern']));
+                $last_question_info = D("EnglishViewRecord")->getViewedQuestionRecord($now_question_id, "next", intval($_REQUEST['object']), intval($_REQUEST['level']), intval($_REQUEST['subject']), intval($_REQUEST['difficulty']), intval($_REQUEST['voice']), intval($_REQUEST['target']), intval($_REQUEST['pattern']));
                 $con["id"] = intval($last_question_info['question_id']);
                 $user_last_question = $questionModel->getQuestionWithOption($con);
             }
@@ -227,7 +235,7 @@ class IndexAction extends EnglishAction {
                 $ret['level_info'] = $levelModel->getDefaultLevelInfo($object, $voice, $target, $pattern);
                 $level = intval($ret['level_info']['id']);
             }
-            
+
             $user_last_select['object'] = $object;
             $user_last_select['level'] = $level;
 

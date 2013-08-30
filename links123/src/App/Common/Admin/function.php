@@ -95,6 +95,21 @@ function getEnglishMediaSubjectPidName($pid) {
 }
 
 /**
+ * 获取媒体推荐分类父类名称
+ * @param int $pid
+ * @return string
+ * @author Adam $date2013.08.30$
+ */
+function getEnglishMediaRecommendPidName($pid) {
+    $name = "顶级推荐";
+    if (intval($pid) > 0) {
+        $map['id'] = intval($pid);
+        $name = D("EnglishMediaRecommend")->where($map)->getField("name");
+    }
+    return $name;
+}
+
+/**
  * 获取媒体难度名称
  * @param int $difficulty
  * @return string
@@ -117,6 +132,11 @@ function getMediaDifficultyName($difficulty) {
             break;
     }
     return $name;
+}
+
+//
+function getLinkToHrefWithOutHttp($link) {
+    return "<a target='_blank' href='" . $link . "'>" . $link . "</a>";
 }
 
 ?>
