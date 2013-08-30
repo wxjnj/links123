@@ -187,6 +187,10 @@ a,a:hover{ text-decoration: none; }
 	top: 35px;
 	width: 150px;
 }
+.englishcorner:hover{
+	background-position: -150px 0;
+	
+}
 /*糖葫芦*/
 .thl{
 	background: url(../imgs/thlbg.png) 0 -15px no-repeat;
