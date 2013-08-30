@@ -168,13 +168,13 @@ a,a:hover{ text-decoration: none; }
 }
 .logo{
 	background: url(../imgs/logo.png) 0 0 no-repeat;
-	height: 46px;
+	height: 47px;
 	text-indent: -999px;
 	overflow: hidden;
 	position: absolute;
 	left: 0;
 	top: 58px;
-	width: 226px;
+	width: 229px;
 }
 .englishcorner{
 	background: url(../imgs/englishcorner.png) 0 0 no-repeat;
