@@ -701,6 +701,17 @@ a,a:hover{ text-decoration: none; }
 	-webkit-box-shadow: 1px 1px 3px #000;
 	box-shadow: 1px 1px 3px #000;
 }
+.skins li p.imgb{
+	height: 90px;
+	width: 74px;
+	position: absolute;
+	top: -90px;
+	left: -21px;
+	display: none;
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
 .skins li img{
 	vertical-align: middle;
 }
@@ -752,11 +763,7 @@ a,a:hover{ text-decoration: none; }
 	width: 0;
 	display: none;
 }
-.skins .skins-all .imgb{
-	position: absolute;
-	top: -90px;
-	left: -21px;
-	display: none;
+.skins .skins-all .imgb img{
 	-moz-box-shadow: 1px 1px 3px #000;
 	-webkit-box-shadow: 1px 1px 3px #000;
 	box-shadow: 1px 1px 3px #000;
