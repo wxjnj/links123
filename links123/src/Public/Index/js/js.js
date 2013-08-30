@@ -425,6 +425,9 @@ $(function() {
 		$.post(URL + "/updateSkin", {'skinId': $(this).data('id')});
 	});
 	
+	$('.skins').on('mouseleave', function(){
+		$('.skins-all dd').hide();
+	});
 	/** 换肤$ **/
 });
 
