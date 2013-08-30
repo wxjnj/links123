@@ -121,6 +121,7 @@ a,a:hover{ text-decoration: none; }
 }
 .toplinks{
 	float: right;
+	margin-right: 5px;
 }
 .toplinks a{
 	color: #dfdfdf;
