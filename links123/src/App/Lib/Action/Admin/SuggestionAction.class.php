@@ -80,36 +80,47 @@ class SuggestionAction extends CommonAction {
 	
 	/**
 	 * @desc 留言板回复保存
-     * @author Lee UPDATE 2013-08-20 
+     * @author Lee UPDATE 2013-08-26 
 	 */
-	function update() {
-		$model = D("Suggestion");
+	function update() {        
+        $model = D("Suggestion");
+
+        $data['status'] = !empty($_REQUEST['status']) ? $_REQUEST['status'] : 0;
         
-		if (false === $model->create()) {
-			$this->error($model->getError());
-		}
-        
-        $model->__set('is_reply', 1);
-        $model->__set('create_time', time());
-        $model->__set('mid', -1);
-		$list = $model->add();
-		if (false !== $list) {
-			$this->assign('jumpUrl',cookie('_currentUrl_'));
-			$this->success('回复成功!');
-		} else {
-			$this->error('回复失败!');
-		}
+        if (false === $model->create()) {
+            $this->error($model->getError());
+        }
+        if (false !== $model->where('id='.$_REQUEST['pid'])->save($data)) {
+            if (!empty($_REQUEST['suggest'])) {
+                $model->__set('is_reply', 1);
+                $model->__set('status', 0);
+                $model->__set('create_time', time());
+                $model->__set('mid', -1);
+                
+                $list = $model->add();   
+                if (false !== $list) {
+                    $this->assign('jumpUrl',cookie('_currentUrl_'));
+                    $this->success('回复成功!');
+                } else {
+                $this->error('回复失败!');
+                }             
+            } else {
+            $this->error('回复失败!');
+            }   
+        } else {
+            $this->error('回复失败!');
+        }
 	}
-	
+	     
 	/**
-	 * @desc 恢复指定记录
-	 * @see SuggestionAction::resume()
-	 */
+	 * @desc 留言板恢复指定的一条记录
+     * @author Lee UPDATE 2013-08-26 
+	 */     
 	function resume() {
 		$model = D("Suggestion");
-		$condition = array('id' => array('in', $_REQUEST['id']));
-		if (false !== $model->where($condition)->setField('status', 1)) {
-			$this->success('状态恢复成功！',cookie('_currentUrl_'));
+        
+		if (false !== $model->where('id='.$_REQUEST['id'])->setField('status', 1)) {
+			$this->success('状态恢复成功！', cookie('_currentUrl_'));
 		} else {
 			$this->error('状态恢复失败！');
 		}

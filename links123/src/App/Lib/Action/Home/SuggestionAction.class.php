@@ -1,6 +1,6 @@
 <?php
 /**
- * @name FeedbackAction.class.php
+ * @name SuggestionAction
  * @package Home
  * @desc 留言建议
  * @author frank qian 2013-08-12
@@ -11,11 +11,11 @@ class SuggestionAction extends CommonAction {
 	/**
 	 * @desc 留言建议页面
 	 * @author Frank UPDATE 2013-08-18
-	 * @see SuggestionActionAction::index()
+	 * @see SuggestionAction::index()
 	 */
 	public function index() {
 		import("@.ORG.String");
-		$pg = intval($_REQUEST[C('VAR_PAGE')]) ? : 1;
+		$pg = intval($this->_param(C('VAR_PAGE'))) ? intval($this->_param(C('VAR_PAGE'))) : 1;
 		$listRows = 20;
 		$rst = ($pg - 1) * $listRows;
 		
@@ -23,26 +23,9 @@ class SuggestionAction extends CommonAction {
 		$condition['status'] = array('egt', 0);
 		
 		$sugView = new SuggestionViewModel();
-		$list = $sugView->where($condition)->order('create_time desc')->limit($rst . ',' . $listRows)->select();
-		$total = count($list);
-		foreach ($list as $key => &$value) {
-			$list[$key]['number'] = $total - $key;
-			$reply = $sugView->getSuggestionReplyList($value['id']);
-			!empty($reply) && $list[$key]['reply'] = $reply;
-			$value['create_time'] = date('Y-m-d H:i', $value['create_time']);
-			
-			if ($value['mid'] == -1) {
-				$list[$key]['nickname'] = "另客";
-			} else if ($value['mid'] == 0 || empty($value['nickname'])) {
-				$list[$key]['nickname'] = "游客";
-			} else if ($value['mid'] == $_SESSION[C('MEMBER_AUTH_KEY')]) {
-				 $value['editable'] = "1";
-			}
-			empty($value['face']) && $value['face'] = "face.jpg";
-		}
+		$list = $sugView->getSuggestion($condition, $rst, $listRows);
 		
-		$this->assign('suglist', $list);
-		$count = $sugView->where($condition)->count('suggestion.id');
+		$count = $sugView->where($condition)->count('*');
 		if ($count > 0) {
 			import("@.ORG.Page");
 			$p = new Page($count, $listRows);
@@ -51,6 +34,7 @@ class SuggestionAction extends CommonAction {
 			$this->assign("count", $count);
 		}
 		
+		$this->assign('suglist', $list);
 		$this->assign('banner', $this->getAdvs(3, "banner"));
 		$this->assign('title', '您的意见对另客非常重要！让我们一起努力，让另客变得更好！');
 		$this->assign('Description', '另客的成功离不开您的意见和建议。我们欢迎您给我们提意见，我们将据此不断改进，为您提供更好的服务。');
@@ -68,7 +52,7 @@ class SuggestionAction extends CommonAction {
 	public function saveSuggestion() {
 		
 		$suggestion = M("Suggestion");
-		$replyId = intval($_POST['reply_id']);
+		$replyId = intval($this->_param('reply_id'));
 		$suggest = stripslashes($_POST['suggest']);
 		
 		$operate = "留言";
@@ -77,34 +61,36 @@ class SuggestionAction extends CommonAction {
 			$data['is_reply'] = 1;
 			$operate = "点评";
 		}
-		$data['mid'] = $_SESSION[C('MEMBER_AUTH_KEY')];
+		$data['mid'] = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
 		$data['suggest'] = $suggest;
 		$data['create_time'] = time();
-	
+		
 		if ($suggestion->add($data)) {
 			if ($data['pid'] > 0) {
-				$suggestion->where("id='%d'", $data['pid'])->setField("create_time", time());
+				$suggestion->where("id = '%d'", $data['pid'])->setField("create_time", time());
 			}
 			$msg = $operate . "成功";
 		} else {
 			$msg = $operate . "提交失败";
 			Log::write($msg . $suggestion->getLastSql(), Log::SQL);
-			
 		}
+		
 		$this->ajaxReturn("", $msg, true);
 	}
 	
 	/**
-	 * @desc 更新留言
 	 * @name updateSuggestion
+	 * @desc 更新留言
 	 * @param int id [留言id]
 	 * @param content [留言内容]
 	 * @author Frank UPDATE 2013-08-18
 	 */
 	public function updateSuggestion() {
 		if ($this->isPost()) {
-			$id = intval($_POST['id']);
+			$id = intval($this->_param('id'));
 			$content = stripslashes($_POST['content']);
+			
+			$mid = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
 			
 			$data['id'] = $id;
 			$data['create_time'] = time();
@@ -115,7 +101,7 @@ class SuggestionAction extends CommonAction {
 			if (false === $suggestion_info || empty($suggestion_info)) {
 				$this->ajaxReturn("", "留言不存在", false);
 			}
-			if ($_SESSION[C('MEMBER_AUTH_KEY')] != $suggestion_info['mid']) {
+			if ($mid != $suggestion_info['mid']) {
 				$this->ajaxReturn("", "对不起，你不能编辑他人的留言", false);
 			}
 			if (empty($data['suggest'])) {

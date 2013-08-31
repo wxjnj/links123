@@ -238,7 +238,7 @@ function changeCat() {
                 if (links != null) {
                     for (var i = 0; i < links.length; i++) {
                     	
-                    	link = (root_cat_info.id == 5) ? ('Index/detail/id/' + links[i]['id']) : ('Index/link_out?url=' + links[i]['link']);
+                    	link = (root_cat_info.id == 5) ? ('Index/detail/id/' + links[i]['id']) : ('Link?url=' + links[i]['link']);
                     	
                         if (pailie == 1 && i % 2 == 1) {
                             str += '<li style="float: right;">';

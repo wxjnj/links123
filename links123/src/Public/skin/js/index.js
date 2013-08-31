@@ -48,7 +48,7 @@ $(function() {
                                                 var myfave_html = "";
                                                 for (var i = 0; i < data.length; i++) {
                                                     hide_myarea_html += '<li id="area_' + data[i]['id'] + '" myid="' + data[i]['id'] + '" url="' + data[i]['url'] + '">' + data[i]['web_name'] + '</li>';
-                                                    myfave_html += '<li><a myid="' + data[i]['id'] + '" target="_blank" href="'+APP+'Index/link_out?mod=myarea&url=' + data[i]['url'] + '">' + data[i]['web_name'] + '</a></li>';
+                                                    myfave_html += '<li><a myid="' + data[i]['id'] + '" target="_blank" href="'+APP+'Link?mod=myarea&url=' + data[i]['url'] + '">' + data[i]['web_name'] + '</a></li>';
                                                 }
                                                 $(".div_myarea ul").html(hide_myarea_html);
                                                 $("#myfave ul").html(myfave_html);

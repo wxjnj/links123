@@ -344,10 +344,11 @@ function array_sort($arr, $keys, $type = 'desc') {
 }
 
 /**
+ * @name cleanParam
  * @desc 验证参数
- * @author Frank UPDATE 2013-08-19
  * @param string $param
  * @return string
+ * @author Frank UPDATE 2013-08-19
  */
 function cleanParam($param) {
     $param = trim($param);
@@ -472,14 +473,18 @@ function clearLink($cnt) {
     }
 }
 
-// 发邮件
+/**
+ * @name sendMail
+ * @desc 发邮件
+ * @param string mail
+ * @author Frank UPDATE 2013-08-25
+ */
 function sendMail($mail) {
-    //
+	
     $variable = M("Variable");
-    $send_from = $variable->where('vname=\'send_from\'')->getField('value_varchar');
-    //lTrace('Log/lastSql', 'sendMail', $send_from);
+    $send_from = $variable->where("vname = 'send_from'")->getField('value_varchar');
     $arrSendFrom = explode(',', $send_from);
-    //
+    
     import('@.ORG.Email');
     $space = "\r\n";
     $emailer = new Email();
@@ -488,15 +493,13 @@ function sendMail($mail) {
     $emailer->setConfig('smtp_pass', $arrSendFrom[2]);
     $emailer->setConfig('from', $arrSendFrom[1]);
     $emailer->setConfig('charset', 'UTF-8');
-    //
+    
     $fname = "=?UTF-8?B?" . base64_encode('另客网') . "?=";
     $emailer->setConfig('fromName', $fname);
-    //
     $emailer->sendTo = $mail['mailto'];
-    //
     $mail['title'] = "=?UTF-8?B?" . base64_encode($mail['title']) . "?=";
     $emailer->subject = $mail['title'];
-    //
+    
     $emailer->content = $mail['content'];
 
     return $emailer->send();
@@ -676,5 +679,41 @@ function getGradeArr($rid) {
 	$gradeArr['grades'] = $grades;
 	return $gradeArr;
 }
-		
+/**
+ * @desc 防采集
+ * @name randString
+ * @return string randstr
+ * @author Frank 2013-08-25
+ */
+function randString() {
+	$array_bq = array("span", "font", "b", "strong", "div", "em");
+	$array_class = array("cprt", "lnkcpt", "cpit", "lnkcpit", "fjc", "lnkfcj");
+	$idx1 = rand(0, 5);
+	$idx2 = rand(0, 5);
+	
+	$arr['bq1'] = $array_bq[$idx1];
+	$arr['bq2'] = $array_bq[$idx2];
+	$rdm = String::uuid();
+	$arr['randstr'] = "<" . $array_bq[$idx1] . " class='" . $array_class[$idx2] . "'>欢迎来到另客网，" . $rdm . "近一点，更近一点" . $rdm . "</" . $array_bq[$idx1] . ">";
+	return $arr;
+}
+
+/**
+ * @desc 根据url获取页面内容，大部分返回的是json格式的数据
+ * @name getContent
+ * @param string url
+ * @return array
+ * @author Frank 2013-08-27
+ */
+function getContent($url) {
+	$curl = curl_init();
+	$options = array(
+			CURLOPT_RETURNTRANSFER => 1,
+			CURLOPT_URL => $url
+	);
+	curl_setopt_array($curl, $options);
+	$body = curl_exec($curl);
+	curl_close($curl);
+	return $body;
+}
 ?>

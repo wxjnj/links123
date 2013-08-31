@@ -87,7 +87,7 @@ $(window).load(function() {
                 $("#frm_links input[name='lan']").val(2);
                 changeCat();
             } else {
-                window.location.href = APP + "Index/index/cid/" + $("#rid").val() + "/lan/2";
+                window.location.href = APP + "Index/nav/cid/" + $("#rid").val() + "/lan/2";
             }
         });
         $("#sider_tit01").click(function() {
@@ -103,7 +103,7 @@ $(window).load(function() {
                 $("#frm_links input[name='lan']").val(1);
                 changeCat();
             } else {
-                window.location.href = APP + "Index/index/cid/" + $("#rid").val() + "/lan/1";
+                window.location.href = APP + "Index/nav/cid/" + $("#rid").val() + "/lan/1";
             }
         });
         // 主菜单
@@ -175,7 +175,7 @@ function changeCat() {
                 if (cat_list != null) {
                     for (var i = 0; i < cat_list.length; i++) {
                         str += '<a id="sider_' + cat_list[i]['id'] + '" class="tip" title="' + cat_list[i]['cat_name'] +
-                                '" href="' + APP + 'Index/index/lan/' + cat_list[i]['flag'] + '/cid/' + cat_list[i]['id'] + '">' + cat_list[i]['cat_name'] + '</a>';
+                                '" href="' + APP + 'Index/nav/lan/' + cat_list[i]['flag'] + '/cid/' + cat_list[i]['id'] + '">' + cat_list[i]['cat_name'] + '</a>';
                     }
                     $(".sider_cont:visible").html(str);
                     siderLinksBindClickEvent();
@@ -238,7 +238,7 @@ function changeCat() {
                 if (links != null) {
                     for (var i = 0; i < links.length; i++) {
                     	
-                    	link = (root_cat_info.id == 5) ? ('Index/detail/id/' + links[i]['id']) : ('Index/link_out?url=' + links[i]['link']);
+                    	link = (root_cat_info.id == 5) ? ('Detail?id=' + links[i]['id']) : ('Link?url=' + links[i]['link']);
                     	
                         if (pailie == 1 && i % 2 == 1) {
                             str += '<li style="float: right;">';
@@ -262,7 +262,7 @@ function changeCat() {
                             }
                             str += '</dd></dl><dl class="cont_botfont">' + links[i]['sintro'] + '</dl>';
 //                        if(links[i]['more']==1){
-                            str += '<dl class="dl_more"><a class="newWin" url="' + APP + 'Index/detail/id/' + links[i]['id'] + '">> 更多</a></dl>'
+                            str += '<dl class="dl_more"><a class="newWin" url="' + APP + 'Detail?id=' + links[i]['id'] + '">> 更多</a></dl>'
 //                        }
                             str += '<div class="clr"></div><dl class="cont_btns"><div class="sc">' +
                                     '<a class="cont_fontright btn_collect" link="' + links[i]['link'] + '" lnk_id="' + links[i]['id'] + '">收藏</a>&nbsp;<label>';
@@ -296,7 +296,7 @@ function changeCat() {
                                 str += links[i]['grade_name'];
                             }
                             str += '</div></dl><div class="cont_botfont">' + links[i]['sintro'] +
-                                    '<a class="newWin" url="' + APP + 'Index/detail/id/' + links[i]['id'] + '">> 更多</a></div>';
+                                    '<a class="newWin" url="' + APP + 'Detail?id=' + links[i]['id'] + '">> 更多</a></div>';
                         }
                         str += '</div>';
                         if (pailie == 2) {

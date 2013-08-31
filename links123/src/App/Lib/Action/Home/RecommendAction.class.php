@@ -63,39 +63,6 @@ class RecommendAction extends CommonAction {
 	}
 	
 	/**
-	 * @name getMyCats
-	 * @desc 获取目录
-	 * @author Frank UPDATE 2013-08-21
-	 */
-	private function getMyCats($flag = 1) {
-		$cat = M("Category");
-		$cats = $cat->field('id, cat_name, level')->where('status=1 and level=1')->order('sort ASC')->select();
-		foreach ($cats as &$value) {
-			switch ($value['id']) {
-				case 1:
-					$value['grades'] = array(
-					array('name' => '初级', 'value' => '1'),
-					array('name' => '初级中级', 'value' => '1,2'),
-					array('name' => '初级中级高级', 'value' => '1,2,3'),
-					array('name' => '中级', 'value' => '2'),
-					array('name' => '中级高级', 'value' => '2,3'),
-					array('name' => '高级', 'value' => '3')
-					);
-					break;
-				case 4:
-					$value['grades'] = array(
-					array('name' => '苹果', 'value' => '1'),
-					array('name' => '安卓+', 'value' => '2'),
-					array('name' => '苹果安卓+', 'value' => '1,2')
-					);
-					break;
-			}
-			$value['subCats'] = $cat->field('id, cat_name, level')->where("status = 1 and flag = '%s' and prt_id = '%s'", $flag, $value['id'])->order('sort ASC')->select();
-		}
-		$this->assign("cats", $cats);
-	}
-	
-	/**
 	 * @name saveRecommend
 	 * @desc 保存推荐链接
 	 * @param string title

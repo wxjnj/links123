@@ -245,8 +245,17 @@ $(function(){
 			window.open(URL + "/wang/q/" + keyword);
 		} else {
 			var url = $(".thlz dl a.light").attr("url");
-			url = url.replace('keyword', keyword);
+			
 			var tid = $(".thlz dl a.light").attr("tid");
+			
+			//TODO 少儿关键词参数被替换临时修复
+			if (tid == 21) {
+				
+				url = url.replace('{keyword}', keyword);
+			} else {
+				url = url.replace('keyword', keyword);
+			}
+			
 			//
 			if (window.location.href.indexOf("/Thl/top") > 0) { // 框架页
 				if (tid == '4' || tid == '40' || tid == '58' || tid == '110' || tid == '117') { // 谷歌、美试、啪啪、PP、Quora

@@ -51,13 +51,9 @@ class CommonAction extends Action {
 		$mid = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
 		
 		if (empty($mid)) {
-			if ($ajax) {
-				echo "请先登录！";
-				return false;
-			} else {
-				header("Location: " . __APP__ . "/");
-				exit(0);
-			}
+			
+			echo $ajax ? "请先登录！" : header("Location: " . __APP__ . "/");
+			exit(0);
 		} else {
 			return true;
 		}
@@ -69,26 +65,17 @@ class CommonAction extends Action {
 	 * @author heyanlong 2013-07-30
 	 */
 	private function _getVariable() {
-		$variable    = M("Variable");
-		$title       = $variable->getByVname('title');
-		$keywords    = $variable->getByVname('Keywords');
-		$description = $variable->getByVname('Description');
-		$cnTip       = $variable->getByVname('cn_tip');
-		$enTip       = $variable->getByVname('en_tip');
-		$directTip   = $variable->getByVname('directTip');
-		$thl         = $variable->getByVname('thl');
-		$pauseTime   = $variable->getByVname('pauseTime');
-
-		return array(
-			'title'       => $title['value_varchar'],
-			'keywords'    => $keywords['value_varchar'],
-			'description' => $description['value_varchar'],
-			'cnTip'       => $cnTip['value_varchar'],
-			'enTip'       => $enTip['value_varchar'],
-			'directTip'   => $directTip['value_varchar'],
-			'thl'         => $thl['value_varchar'],
-			'pauseTime'   => $pauseTime['value_int'],
-		);
+		$arrs = cache('variable');
+		if (empty($arrs)) {
+			$variable    = M("Variable");
+			
+			$vars = $variable->select();
+			foreach ($vars as $row) {
+				$arrs[$row['vname']] = empty($row['value_int']) ? $row['value_varchar'] : $row['value_int'];
+			}
+			cache('variable',$arrs);
+		}
+		return $arrs;
 	}
 
 	/**
@@ -109,7 +96,7 @@ class CommonAction extends Action {
 	protected function getCatPics($rid = 1) {
 		$variable = $this->_getVariable();
 		return array(
-			'catPics' => M("CatPic")->where('rid=' . $rid)->order('sort')->select(),
+			'catPics' => M("CatPic")->where("rid = '%d'", $rid)->order('sort')->select(),
 			'pauseTime' => (int)$variable['pauseTime'] * 1000
 		);
 	}
@@ -261,7 +248,8 @@ class CommonAction extends Action {
      */
     public function autoLogin() {
     	$user_str = $_COOKIE["USER_ID"];
-    	$mid = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+    	isset($_SESSION[C('MEMBER_AUTH_KEY')]) && 
+    	$mid = @ intval($_SESSION[C('MEMBER_AUTH_KEY')]);
         if (empty($mid)) {
         	//没有用户session且自动登录标示Cookie USER_ID 存在执行自动登录过程
         	if (!empty($user_str)) {
@@ -280,13 +268,76 @@ class CommonAction extends Action {
         		}
         	}
         }
-        
-        if(empty($_COOKIE[md5("home_session_expire")])) {
-        	//自动登录标示Cookie USER_ID 时间过期
-        	unset($_SESSION[C('MEMBER_AUTH_KEY')]);
-        	unset($_SESSION['nickname']);
-        	unset($_SESSION['face']);
-        }
+//去掉用户自动登录过期 @author slate 2013-08-30       
+//         if(empty($_COOKIE[md5("home_session_expire")])) {
+//         	//自动登录标示Cookie USER_ID 时间过期
+//         	unset($_SESSION[C('MEMBER_AUTH_KEY')]);
+//         	unset($_SESSION['nickname']);
+//         	unset($_SESSION['face']);
+//         }
+    }
+    
+    /**
+     * @name getMyCats
+     * @desc 获取目录
+     * @author Frank 2013-08-28
+     */
+    public function getMyCats($flag = 1) {
+    	$cat = M("Category");
+    	$cats = $cat->field('id, cat_name, level')->where('status = 1 and level = 1')->order('sort ASC')->select();
+    	foreach ($cats as &$value) {
+    		switch ($value['id']) {
+    			case 1:
+    				$value['grades'] = array(
+    				array('name' => '初级', 'value' => '1'),
+    				array('name' => '初级中级', 'value' => '1,2'),
+    				array('name' => '初级中级高级', 'value' => '1,2,3'),
+    				array('name' => '中级', 'value' => '2'),
+    				array('name' => '中级高级', 'value' => '2,3'),
+    				array('name' => '高级', 'value' => '3')
+    				);
+    				break;
+    			case 4:
+    				$value['grades'] = array(
+    				array('name' => '苹果', 'value' => '1'),
+    				array('name' => '安卓+', 'value' => '2'),
+    				array('name' => '苹果安卓+', 'value' => '1,2')
+    				);
+    				break;
+    		}
+    		$value['subCats'] = $cat->field('id, cat_name, level')->where("status = 1 and flag = '%s' and prt_id = '%s'", $flag, $value['id'])->order('sort ASC')->select();
+    	}
+    	$this->assign("cats", $cats);
+    }
+    
+    /**
+     * 获取皮肤列表
+     * 
+     * @TODO 缓存使用
+     * 
+     * @return skins: 皮肤列表数据
+     * 
+     * @author slate date:2013-08-29
+     */
+    public function getSkins() {
+    	
+    	$skins = array();
+    	
+    	$model = new Model();
+		
+    	$sql = 'SELECT A.`categoryId`, A.`categoryName`, A.`categoryImg`, B.`skinId`, B.`skinName`, B.`smallSkin`, B.`middleSkin`, B.`skin`, B.`categoryId` AS cid '
+    	.'FROM `lnk_skin_category` A LEFT JOIN `lnk_skin` B ON A.`categoryId` = B.`categoryId`';
+		
+		$result = $model->query($sql);
+		
+		foreach ($result as $skin) {
+			
+			$skins['list'][$skin['categoryId']][] = $skin;
+			$skins['category'][$skin['categoryId']] = array('categoryId' => $skin['categoryId'], 'categoryImg' => $skin['categoryImg']);
+			$skins['skin'][$skin['skinId']] = $skin['skin'];
+		}
+		
+		return $skins;
     }
 }
 
