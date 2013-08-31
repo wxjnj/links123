@@ -35,6 +35,10 @@ class IndexAction extends CommonAction {
 			session('arealist', $areaList ? $areaList : session('arealist_default'));
 			
 			$skinId = session('skin');
+			if (!$skinId) {
+				
+				$skinId = cookie('skinId');
+			}
 		} else {
 			
 			$areaList = $this->_session('arealist');
@@ -74,14 +78,12 @@ class IndexAction extends CommonAction {
 			
 			$memberModel = M("member");
 					
-			if ($memberModel->where(array('id' => $user_id))->save(array('skin' => $skinId))) {
-				
-				session('skin', $skinId);
-			} else {
+			if (!$memberModel->where(array('id' => $user_id))->setField('skin' , $skinId)) {
 				
 				$result = false;
 			}
 			
+			session('skin', $skinId);
 		} else {
 			
 			cookie('skinId', $skinId, array('expire' => 0));

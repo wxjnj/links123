@@ -90,7 +90,7 @@ a,a:hover{ text-decoration: none; }
 .syt{
 	background: url(../imgs/sytbg.png) 0 -3px no-repeat;
 	height: 25px;
-	width: 317px;
+	width: 297px;
 	margin-top: 6px;
 	padding-left: 10px;
 	float: left;
@@ -101,7 +101,7 @@ a,a:hover{ text-decoration: none; }
 	height: 16px;
 	line-height: 16px;
 	padding: 4px 0;
-	width: 286px;
+	width: 266px;
 	float: left;
 	border: 0 none;
 }
@@ -168,13 +168,13 @@ a,a:hover{ text-decoration: none; }
 }
 .logo{
 	background: url(../imgs/logo.png) 0 0 no-repeat;
-	height: 46px;
+	height: 47px;
 	text-indent: -999px;
 	overflow: hidden;
 	position: absolute;
 	left: 0;
 	top: 58px;
-	width: 226px;
+	width: 229px;
 }
 .englishcorner{
 	background: url(../imgs/englishcorner.png) 0 0 no-repeat;
@@ -186,6 +186,10 @@ a,a:hover{ text-decoration: none; }
 	text-indent: -999px;
 	top: 35px;
 	width: 150px;
+}
+.englishcorner:hover{
+	background-position: -150px 0;
+	
 }
 /*糖葫芦*/
 .thl{
@@ -385,7 +389,7 @@ a,a:hover{ text-decoration: none; }
 .zld-edit .tools{ display: none; }
 .zld-edit .close{ display: block; }
 .zld-edit-box .tip{
-	color: #84aa03;
+	color: #d20015;
 	padding-left: 10px;
 	font-weight: normal;
 }
@@ -409,6 +413,7 @@ a,a:hover{ text-decoration: none; }
 .zld-edit ul li.on b:hover{
 	background: url(../imgs/zldon.png) right -29px no-repeat;
 	color: #fff;
+	cursor: move;
 }
 /*主内容区域2栏*/
 .sider{
@@ -701,6 +706,17 @@ a,a:hover{ text-decoration: none; }
 	-webkit-box-shadow: 1px 1px 3px #000;
 	box-shadow: 1px 1px 3px #000;
 }
+.skins li p.imgb{
+	height: 90px;
+	width: 74px;
+	position: absolute;
+	top: -90px;
+	left: -21px;
+	display: none;
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
 .skins li img{
 	vertical-align: middle;
 }
@@ -752,11 +768,7 @@ a,a:hover{ text-decoration: none; }
 	width: 0;
 	display: none;
 }
-.skins .skins-all .imgb{
-	position: absolute;
-	top: -90px;
-	left: -21px;
-	display: none;
+.skins .skins-all .imgb img{
 	-moz-box-shadow: 1px 1px 3px #000;
 	-webkit-box-shadow: 1px 1px 3px #000;
 	box-shadow: 1px 1px 3px #000;

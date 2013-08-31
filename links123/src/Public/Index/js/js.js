@@ -41,7 +41,7 @@ $(function() {
 	$(document).on('click', function(){
 		$('#direct_text').val($('#direct_text').attr('txt')).removeClass('ipson');
 	});
-	$("#direct_text").on('mouseenter', function(){
+	$(".J_header_top").on('mouseenter', function(){
 		var tag = $.trim($('#direct_text').val());
 		if(tag == $('#direct_text').attr('txt')){
 			$("#direct_text").select().addClass('ipson');
@@ -54,7 +54,8 @@ $(function() {
 			$('#search_text').select();
 			$('#direct_text').removeClass('ipson');
 		}
-	}).on('click', function() {
+	});
+	$("#direct_text").on('click', function() {
 		var tag = $.trim($('#direct_text').val());
 		if (tag == $('#direct_text').attr('txt')){
 			$('#direct_text').val('').addClass('ipson');
@@ -175,7 +176,7 @@ $(function() {
 					var new_url = myarea_web_obj.attr('url').replace(myarea_web_obj.attr('data-url'), url);
 					myarea_web_obj.attr('url', new_url);
 					myarea_web_obj.attr('data-url', url);
-					$('#J_myarea_tip').text('保存成功!').css('color', '#84aa03');
+					$('#J_myarea_tip').text('保存成功!').css('color', '#d20015');
 					$('#J_myarea_tip').show();
 
 				} else {
@@ -422,9 +423,20 @@ $(function() {
 		var bg = $(this).data('bg');
 		$('body').css('background-image', 'url('+bg+')');
 		$(this).addClass('added').siblings().removeClass('added');
+		$(this).find('.imgb').hide();
+		$(this).find('s').hide();
 		$.post(URL + "/updateSkin", {'skinId': $(this).data('id')});
+	}).on('mouseenter', function(){
+		$(this).find('.imgb').show();
+		$(this).find('s').show();
+	}).on('mouseleave', function(){
+		$(this).find('.imgb').hide();
+		$(this).find('s').hide();
 	});
 	
+	$('.skins').on('mouseleave', function(){
+		$('.skins-all dd').hide();
+	});
 	/** 换肤$ **/
 });
 
@@ -607,4 +619,59 @@ var THL = {
 		$("#J_thl_div").css("top", top);		
 	}
 }
+
+var HelpMouse = {
+	init: function(){
+		var self = this;
+		var isSearchTxtSelected = false;
+
+		$(document).on('mousemove', function(ev){
+			var isNeedHelp = 1;
+			$('.ui-dialog').each(function(){
+				if($(this).is(":visible")){
+					isNeedHelp ? isNeedHelp = 0 : '';
+				}
+			});
+			$('.fancybox-wrap').each(function(){
+				if($(this).is(":visible")){
+					isNeedHelp ? isNeedHelp = 0 : '';
+				}
+			});
+			if(!isNeedHelp){ return false; }
+			var mousePos = self.getcoords(ev);
+			if(mousePos.y < 70){
+				if($('#direct_text').val() == $('#direct_text').attr('txt')){
+					$('#direct_text').select().addClass('ipson');
+					isSearchTxtSelected = false;
+					if($.trim($('#search_text').val()) ==""){
+						$('#J_thl_div').hide();
+					}
+				}
+			}
+			if(mousePos.y > 100 && mousePos.y < 200){
+				$('#direct_text').val($('#direct_text').attr('txt')).removeClass('ipson');
+				if(!isSearchTxtSelected){
+					$('#search_text').select().trigger('mouseenter');
+					isSearchTxtSelected = true;
+				}
+			}
+			if(mousePos.y > 290){
+				if($.trim($('#search_text').val()) ==""){
+					$('#search_text').select().trigger('mouseleave');
+					isSearchTxtSelected = false;
+				}
+			}
+		});
+	},
+	getcoords: function(ev){
+		if(ev.pageX || ev.pageY){ 
+			return { x: ev.pageX, y: ev.pageY }; 
+		} 
+		return{ 
+			x: ev.clientX + document.body.scrollLeft - document.body.clientLeft, 
+			y: ev.clientY + document.body.scrollTop - document.body.clientTop 
+		}; 
+	}
+}
+HelpMouse.init();
 
