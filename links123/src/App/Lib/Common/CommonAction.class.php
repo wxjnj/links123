@@ -261,6 +261,7 @@ class CommonAction extends Action {
         			$_SESSION[C('MEMBER_AUTH_KEY')] = $user_info['id'];
         			$_SESSION['nickname'] = $user_info['nickname'];
         			$_SESSION['face'] = empty($user_info['face'])?'face.jpg':$user_info['face'];
+        			$_SESSION['skinId'] = $user_info['skin'];
         		
         			//使用cookie过期时间来控制前台登陆的过期时间
         			$home_session_expire = intval(D("Variable")->getVariable("home_session_expire"));

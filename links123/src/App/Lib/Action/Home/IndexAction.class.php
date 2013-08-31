@@ -35,6 +35,10 @@ class IndexAction extends CommonAction {
 			session('arealist', $areaList ? $areaList : session('arealist_default'));
 			
 			$skinId = session('skin');
+			if (!$skinId) {
+				
+				$skinId = cookie('skinId');
+			}
 		} else {
 			
 			$areaList = $this->_session('arealist');

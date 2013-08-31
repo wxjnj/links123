@@ -176,7 +176,7 @@ $(function() {
 					var new_url = myarea_web_obj.attr('url').replace(myarea_web_obj.attr('data-url'), url);
 					myarea_web_obj.attr('url', new_url);
 					myarea_web_obj.attr('data-url', url);
-					$('#J_myarea_tip').text('保存成功!').css('color', '#84aa03');
+					$('#J_myarea_tip').text('保存成功!').css('color', '#d20015');
 					$('#J_myarea_tip').show();
 
 				} else {
@@ -641,7 +641,7 @@ var HelpMouse = {
 			var mousePos = self.getcoords(ev);
 			if(mousePos.y < 70){
 				if($('#direct_text').val() == $('#direct_text').attr('txt')){
-					$('#direct_text').select();
+					$('#direct_text').select().addClass('ipson');
 					isSearchTxtSelected = false;
 					if($.trim($('#search_text').val()) ==""){
 						$('#J_thl_div').hide();

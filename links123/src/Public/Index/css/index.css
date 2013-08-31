@@ -389,7 +389,7 @@ a,a:hover{ text-decoration: none; }
 .zld-edit .tools{ display: none; }
 .zld-edit .close{ display: block; }
 .zld-edit-box .tip{
-	color: #84aa03;
+	color: #d20015;
 	padding-left: 10px;
 	font-weight: normal;
 }
@@ -413,6 +413,7 @@ a,a:hover{ text-decoration: none; }
 .zld-edit ul li.on b:hover{
 	background: url(../imgs/zldon.png) right -29px no-repeat;
 	color: #fff;
+	cursor: move;
 }
 /*主内容区域2栏*/
 .sider{
