@@ -139,4 +139,16 @@ function getLinkToHrefWithOutHttp($link) {
     return "<a target='_blank' href='" . $link . "'>" . $link . "</a>";
 }
 
+//
+function getMediaRecommendYorN($recommend, $info) {
+    $str = "否";
+    if (!empty($recommend) && $recommend != 0) {
+        $ret = D("EnglishMediaRecommend")->where(array("id", array("in", $recommend), "status" => 1))->count();
+        if (intval($ret) > 0) {
+            $str = "是";
+        }
+    }
+    return $str;
+}
+
 ?>

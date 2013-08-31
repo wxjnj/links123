@@ -40,7 +40,11 @@ class EnglishMediaAction extends CommonAction {
             $param['status'] = intval($_REQUEST['status']);
         }
         if (isset($_REQUEST['recommend'])) {
-            $map['englishMedia.recommend'] = intval($_REQUEST['recommend']);
+            if (intval($_REQUEST['recommend']) == 0) {
+                $map['englishMedia.recommend'] = 0;
+            } else {
+                $map['englishMedia.recommend'] = array("neq",0);
+            }
             $param['recommend'] = intval($_REQUEST['recommend']);
         }
         if (isset($_REQUEST['special_recommend'])) {
@@ -198,6 +202,7 @@ class EnglishMediaAction extends CommonAction {
 
         $this->display();
     }
+
     public function update() {
         $name = $this->getActionName();
         $model = D($name);
@@ -270,9 +275,6 @@ class EnglishMediaAction extends CommonAction {
             if (intval($_REQUEST['targetSubject']) > 0) {
                 $data['subject'] = intval($_REQUEST['targetSubject']);
             }
-            if (intval($_REQUEST['targetRecommend']) > 0) {
-                $data['recommend'] = intval($_REQUEST['targetRecommend']);
-            }
             if (isset($_REQUEST['targetSpecialRecommend'])) {
                 $data['special_recommend'] = intval($_REQUEST['targetSpecialRecommend']);
             }
@@ -307,6 +309,74 @@ class EnglishMediaAction extends CommonAction {
                 $this->ajaxReturn("", "操作失败", false);
             } else {
                 $this->ajaxReturn($special_recommend, "操作成功", true);
+            }
+        }
+    }
+
+    /**
+     * 设置推荐
+     * @author Adam $date2013.08.31$
+     */
+    public function setRecommend() {
+        if ($this->isAjax()) {
+            $id = $_REQUEST['id'];
+            $object = intval($_REQUEST['object']);
+            $subject = intval($_REQUEST['subject']);
+            $model = D("EnglishMedia");
+            $recommend = intval($model->where(array("id" => $id))->getField("recommend"));
+            if ($recommend == 0) {
+                $time = time();
+                $recommend_ids = array();
+                $model->startTrans();
+                //科目存在
+                if ($object > 0) {
+                    $recommendModel = D("EnglishMediaRecommend");
+                    $maxSort = $recommendModel->field("max(`sort`) as max_sort")->find();
+                    $recommendSort = intval($maxSort['max_sort']) + 1;
+                    $object_name = D("EnglishObject")->where(array("id" => $object))->getField("name");
+                    $recommend_id_a = $recommendModel->where(array("name" => $object_name))->getField("id");
+                    //推荐类存在科目名
+                    if (intval($recommend_id_a == 0) && $object_name) {
+                        $recommend_data['sort'] = $recommendSort;
+                        $recommend_data['name'] = $object_name;
+                        $recommend_data['created'] = $time;
+                        $recommend_data['updated'] = $time;
+                        $recommend_id_a = $recommendModel->add($recommend_data);
+                        if (false === $recommend_id_a) {
+                            $model->rollback();
+                            die(json_encode(array("info" => "操作失败1", "status" => false)));
+                        }
+                    }
+                    $recommendSort++;
+                    array_push($recommend_ids, $recommend_id_a);
+                }
+                //专题存在
+                if ($subject > 0) {
+                    $subject_name = D("EnglishMediaSubject")->where(array("id" => $subject))->getField("name");
+                    $recommend_id_b = $recommendModel->where(array("name" => $subject_name))->getField("id");
+                    //推荐类存在专题名
+                    if (intval($recommend_id_b == 0) && $subject_name) {
+                        $recommend_data['sort'] = $recommendSort;
+                        $recommend_data['name'] = $subject_name;
+                        $recommend_data['created'] = $time;
+                        $recommend_data['updated'] = $time;
+                        $recommend_id_b = $recommendModel->add($recommend_data);
+                        if (false === $recommend_id_b) {
+                            $model->rollback();
+                            die(json_encode(array("info" => "操作失败2", "status" => false)));
+                        }
+                    }
+                    array_push($recommend_ids, $recommend_id_b);
+                }
+                $recommend = implode(",", $recommend_ids);
+            } else {
+                $recommend = 0;
+            }
+            if (false === $model->where(array("id" => $id))->setField("recommend", $recommend)) {
+                $this->ajaxReturn("", "操作失败", false);
+            } else {
+                $model->commit();
+                $this->ajaxReturn($recommend, "操作成功", true);
             }
         }
     }

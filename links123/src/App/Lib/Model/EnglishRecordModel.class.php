@@ -24,6 +24,7 @@ class EnglishRecordModel extends CommonModel {
         $data['object'] = intval($question_info['real_object']) > 0 ? intval($question_info['real_object']) : $question_info['object']; //排除科目为综合的影响
         $data['level'] = $question_info['level'];
         $data['subject'] = $question_info['subject'];
+        $data['recommend'] = $question_info['recommend'];
         $data['difficulty'] = $question_info['difficulty'];
         $data['user_answer'] = $answer;
         $data['is_right'] = $answer === intval($question_info['answer']) ? 1 : 0; //用户是否答对，1是0否
@@ -106,6 +107,7 @@ class EnglishRecordModel extends CommonModel {
      * @param int $object [科目id]
      * @param int $level [等级id]
      * @param int $subject [专题id]
+     * @param int $recommend [推荐id]
      * @param int $difficulty [难度值，1初级，2中级，3高级]
      * @param int $voice [口音，1美音，2英音]
      * @param int $target [训练目标，1听力，2说力]
@@ -114,7 +116,7 @@ class EnglishRecordModel extends CommonModel {
      * @return array
      * @author Adam $date2013.08.30$
      */
-    public function getUserTestQuestionIdList($object, $level, $subject, $difficulty, $voice, $target, $pattern, $extend_condition = "") {
+    public function getUserTestQuestionIdList($object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern, $extend_condition = "") {
         $question_ids = array();
         $question_ids[0] = 0;
         if (intval($object)) {
@@ -130,6 +132,9 @@ class EnglishRecordModel extends CommonModel {
         }
         if (intval($subject) > 0) {
             $map['subject'] = intval($subject);
+        }
+        if (intval($recommend) > 0) {
+            $map['recommend'] = intval($recommend);
         }
         if (intval($difficulty) > 0) {
             $map['difficulty'] = intval($difficulty);

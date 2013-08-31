@@ -19,7 +19,7 @@ class EnglishViewRecordModel extends CommonModel {
      * @param int $pattern [类型]
      * @return
      */
-    public function addRecord($question_id, $level, $object, $diffculty, $subject, $voice = 1, $target = 1, $pattern = 1) {
+    public function addRecord($question_id, $level, $object, $subject, $recommend, $difficulty = 1, $voice = 1, $target = 1, $pattern = 1) {
         $map = array();
         //游客
         if (!isset($_SESSION[C('MEMBER_AUTH_KEY')]) || empty($_SESSION[C('MEMBER_AUTH_KEY')])) {
@@ -36,6 +36,7 @@ class EnglishViewRecordModel extends CommonModel {
         $map['object'] = intval($object);
         $map['level'] = intval($level);
         $map['subject'] = intval($subject);
+        $map['recommend'] = intval($recommend);
         $map['difficulty'] = intval($difficulty);
         $map['voice'] = intval($voice);
         $map['target'] = intval($target);
@@ -66,13 +67,14 @@ class EnglishViewRecordModel extends CommonModel {
      * @param int $object [当前科目id]
      * @param int $level [当前等级id]
      * @param int $subject [当前专题id]
+     * @param int $$recommend [当前推荐id]
      * @param int $difficulty [当前难度]
      * @param int $voice [当前口音]
      * @param int $target [当前目标]
      * @param int $pattern [当前类型]
      * @return array
      */
-    public function getViewedQuestionRecord($question_id, $type = "next", $object, $level, $subject, $difficulty, $voice, $target, $pattern) {
+    public function getViewedQuestionRecord($question_id, $type = "next", $object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern) {
         $map = array();
         //
         //获取用户id
@@ -109,6 +111,7 @@ class EnglishViewRecordModel extends CommonModel {
             $map['object'] = intval($object);
             $map['level'] = intval($level);
             $map['subject'] = intval($subject);
+            $map['recommend'] = intval($recommend);
             $map['difficulty'] = intval($difficulty);
             $map['voice'] = intval($voice);
             $map['target'] = intval($target);
@@ -119,9 +122,11 @@ class EnglishViewRecordModel extends CommonModel {
             if (intval($object) > 0) {
                 $map['object'] = intval($object);
                 $map['level'] = intval($level);
-            }
-            if (intval($subject) > 0) {
+            } else if (intval($subject) > 0) {
                 $map['subject'] = intval($subject);
+                $map['difficulty'] = intval($difficulty);
+            } else if (intval($recommend) > 0) {
+                $map['recommend'] = intval($recommend);
                 $map['difficulty'] = intval($difficulty);
             }
             $map['sort'] = array('lt', intval($now_question_info['sort']));
@@ -140,6 +145,7 @@ class EnglishViewRecordModel extends CommonModel {
      * @param int $object [科目id]
      * @param int $level [等级id]
      * @param int $subject [专题id]
+     * @param int $recommend [推荐id]
      * @param int $difficulty [难度值，1初级，2中级，3高级]
      * @param int $voice [口音，1美音，2英音]
      * @param int $target [训练目标，1听力，2说力]
@@ -147,7 +153,7 @@ class EnglishViewRecordModel extends CommonModel {
      * @param string $extend_condition [额外条件]
      * @return array
      */
-    public function getUserViewQuestionIdList($object, $level, $subject, $difficulty, $voice, $target, $pattern, $extend_condition = "") {
+    public function getUserViewQuestionIdList($object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern, $extend_condition = "") {
         //试题id数组初始化
         $question_ids = array();
         if (intval($object)) {
@@ -164,6 +170,10 @@ class EnglishViewRecordModel extends CommonModel {
         if (intval($subject) > 0) {
             $map['media.subject'] = intval($subject);
         }
+        if (intval($recommend) > 0) {
+            $map['_string'] = "FIND_IN_SET('" + $recommend + "',media.recomend)";
+            //$map['media.recommend'] = intval($recommend);
+        }
         if (intval($difficulty) > 0) {
             $map['media.difficulty'] = intval($difficulty);
         }
@@ -177,7 +187,7 @@ class EnglishViewRecordModel extends CommonModel {
             $map['media.pattern'] = intval($pattern);
         }
         if (!empty($extend_condition)) {
-            $map['_string'] = $extend_condition;
+            $map['_string'] .= $extend_condition;
         }
         if (isset($_SESSION[C('MEMBER_AUTH_KEY')]) && intval($_SESSION[C('MEMBER_AUTH_KEY')]) > 0) {
             $map['record.user_id'] = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
