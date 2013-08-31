@@ -40,7 +40,11 @@ class EnglishMediaAction extends CommonAction {
             $param['status'] = intval($_REQUEST['status']);
         }
         if (isset($_REQUEST['recommend'])) {
-            $map['englishMedia.recommend'] = intval($_REQUEST['recommend']);
+            if (intval($_REQUEST['recommend']) == 0) {
+                $map['englishMedia.recommend'] = 0;
+            } else {
+                $map['englishMedia.recommend'] = array("neq",0);
+            }
             $param['recommend'] = intval($_REQUEST['recommend']);
         }
         if (isset($_REQUEST['special_recommend'])) {
@@ -87,6 +91,9 @@ class EnglishMediaAction extends CommonAction {
         //专题列表
         $subject_list = D("EnglishMediaSubject")->getList("status=1", "`sort` ASC");
         $this->assign("subject_list", $subject_list);
+        //推荐列表
+        $recommend_list = D("EnglishMediaRecommend")->getList("status=1", "`sort` ASC");
+        $this->assign("recommend_list", $recommend_list);
         //
         $this->assign("param", $param);
         foreach ($param as $key => $value) {
@@ -127,14 +134,48 @@ class EnglishMediaAction extends CommonAction {
     }
 
     public function add() {
+        //科目列表
         $object_list = D("EnglishObject")->where("`status`=1")->order("sort")->select();
         $this->assign("object_list", $object_list);
+        //等级列表
         $level_list = D("EnglishLevel")->where("`status`=1")->order("sort")->select();
         $this->assign("level_list", $level_list);
+        //专题列表
         $subject_list = D("EnglishMediaSubject")->where("`status`=1")->order("`sort`")->select();
         $this->assign("subject_list", $subject_list);
+        //推荐分类列表
+        $recommend_list = D("EnglishMediaRecommend")->where("`status`=1")->order("`sort`")->select();
+        $this->assign("recommend_list", $recommend_list);
 
         $this->display();
+    }
+
+    public function insert() {
+        $name = $this->getActionName();
+        $model = D($name);
+        if (false === $model->create()) {
+            $this->error($model->getError());
+        }
+        $levels = D("EnglishLevel")->order("`sort` ASC")->select();
+        foreach ($levels as $key => $value) {
+            $level_list[$value['id']] = $value;
+            $level_name_list_info[$value['name']] = $value;
+        }
+        if ($level_list[intval($_REQUEST['level'])]['sort'] <= $level_name_list_info['小六']['sort']) {
+            $model->difficulty = 1;
+        } else if ($level_list[intval($_REQUEST['level'])]['sort'] >= $level_name_list_info['大一']['sort']) {
+            $model->difficulty = 3;
+        } else {
+            $model->difficulty = 2;
+        }
+        //保存当前数据对象
+        $list = $model->add();
+        if ($list !== false) { //保存成功
+            $this->success('新增成功!', cookie('_currentUrl_'));
+        } else {
+            //失败提示
+            $this->error('新增失败!');
+        }
     }
 
     public function edit() {
@@ -146,45 +187,197 @@ class EnglishMediaAction extends CommonAction {
         $this->assign('option_list', $option_list);
         $this->assign('vo', $vo);
 
+        //科目列表
         $object_list = D("EnglishObject")->where("`status`=1")->order("sort")->select();
         $this->assign("object_list", $object_list);
+        //等级列表
         $level_list = D("EnglishLevel")->where("`status`=1")->order("sort")->select();
         $this->assign("level_list", $level_list);
+        //专题列表
         $subject_list = D("EnglishMediaSubject")->where("`status`=1")->order("`sort`")->select();
         $this->assign("subject_list", $subject_list);
+        //推荐分类列表
+        $recommend_list = D("EnglishMediaRecommend")->where("`status`=1")->order("`sort`")->select();
+        $this->assign("recommend_list", $recommend_list);
 
         $this->display();
+    }
+
+    public function update() {
+        $name = $this->getActionName();
+        $model = D($name);
+        if (false === $model->create()) {
+            $this->error($model->getError());
+        }
+        $levels = D("EnglishLevel")->order("`sort` ASC")->select();
+        foreach ($levels as $key => $value) {
+            $level_list[$value['id']] = $value;
+            $level_name_list_info[$value['name']] = $value;
+        }
+        if ($level_list[intval($_REQUEST['level'])]['sort'] <= $level_name_list_info['小六']['sort']) {
+            $model->difficulty = 1;
+        } else if ($level_list[intval($_REQUEST['level'])]['sort'] >= $level_name_list_info['大一']['sort']) {
+            $model->difficulty = 3;
+        } else {
+            $model->difficulty = 2;
+        }
+        // 更新数据
+        $list = $model->save();
+        if (false !== $list) {
+            //成功提示
+            $this->success('编辑成功!', cookie('_currentUrl_'));
+        } else {
+            //错误提示
+            $this->error('编辑失败!');
+        }
     }
 
     public function pointSubject() {
         if ($this->isAjax()) {
             $id = $_REQUEST['id'];
-            $tartgetSubject = $_REQUEST['targetSubject'];
-            if (intval($tartgetSubject) > 0) {
+            $tartget = $_REQUEST['target'];
+            if (intval($tartget) > 0) {
                 $map['id'] = array("in", $id);
-                $data['subject'] = intval($tartgetSubject);
+                $data['subject'] = intval($tartget);
                 $ret = D("EnglishMedia")->where($map)->save($data);
                 if (false !== $ret) {
-                    $this->ajaxReturn("", "操作成功", true);
+                    $this->ajaxReturn($tartget, "操作成功", true);
                 }
             }
             $this->ajaxReturn("", "操作失败", false);
         }
     }
 
-    public function pointDifficulty() {
+    public function pointRecommend() {
         if ($this->isAjax()) {
             $id = $_REQUEST['id'];
-            $tartgetDifficulty = $_REQUEST['targetDifficulty'];
-            if (intval($tartgetDifficulty) > 0) {
+            $tartget = $_REQUEST['target'];
+            if (intval($tartget) > 0) {
                 $map['id'] = array("in", $id);
-                $data['difficulty'] = intval($tartgetDifficulty);
+                $data['recommend'] = intval($tartget);
                 $ret = D("EnglishMedia")->where($map)->save($data);
                 if (false !== $ret) {
-                    $this->ajaxReturn("", "操作成功", true);
+                    $this->ajaxReturn($tartget, "操作成功", true);
                 }
             }
             $this->ajaxReturn("", "操作失败", false);
+        }
+    }
+
+    /**
+     * 批量设置
+     * @return
+     * @author  Adam $date2013.08.30$
+     */
+    public function groupSet() {
+        if ($this->isAjax()) {
+            $id = $_REQUEST['id'];
+            if (intval($_REQUEST['targetSubject']) > 0) {
+                $data['subject'] = intval($_REQUEST['targetSubject']);
+            }
+            if (isset($_REQUEST['targetSpecialRecommend'])) {
+                $data['special_recommend'] = intval($_REQUEST['targetSpecialRecommend']);
+            }
+            if (!empty($data)) {
+                $map['id'] = array("in", $id);
+                $ret = D("EnglishMedia")->where($map)->save($data);
+                if (false !== $ret) {
+                    $this->ajaxReturn($data, "操作成功", true);
+                }
+            } else {
+                $this->ajaxReturn("", "请选择目标", false);
+            }
+            $this->ajaxReturn("", "操作失败", false);
+        }
+    }
+
+    /**
+     * 设置特别推荐
+     * @author Adam $date2013.08.30$
+     */
+    public function setSpecialRecommend() {
+        if ($this->isAjax()) {
+            $id = $_REQUEST['id'];
+            $model = D("EnglishMedia");
+            $special_recommend = $model->where(array("id" => $id))->getField("special_recommend");
+            if (intval($special_recommend) == 0) {
+                $special_recommend = 1;
+            } else {
+                $special_recommend = 0;
+            }
+            if (false === $model->where(array("id" => $id))->setField("special_recommend", $special_recommend)) {
+                $this->ajaxReturn("", "操作失败", false);
+            } else {
+                $this->ajaxReturn($special_recommend, "操作成功", true);
+            }
+        }
+    }
+
+    /**
+     * 设置推荐
+     * @author Adam $date2013.08.31$
+     */
+    public function setRecommend() {
+        if ($this->isAjax()) {
+            $id = $_REQUEST['id'];
+            $object = intval($_REQUEST['object']);
+            $subject = intval($_REQUEST['subject']);
+            $model = D("EnglishMedia");
+            $recommend = intval($model->where(array("id" => $id))->getField("recommend"));
+            if ($recommend == 0) {
+                $time = time();
+                $recommend_ids = array();
+                $model->startTrans();
+                //科目存在
+                if ($object > 0) {
+                    $recommendModel = D("EnglishMediaRecommend");
+                    $maxSort = $recommendModel->field("max(`sort`) as max_sort")->find();
+                    $recommendSort = intval($maxSort['max_sort']) + 1;
+                    $object_name = D("EnglishObject")->where(array("id" => $object))->getField("name");
+                    $recommend_id_a = $recommendModel->where(array("name" => $object_name))->getField("id");
+                    //推荐类存在科目名
+                    if (intval($recommend_id_a == 0) && $object_name) {
+                        $recommend_data['sort'] = $recommendSort;
+                        $recommend_data['name'] = $object_name;
+                        $recommend_data['created'] = $time;
+                        $recommend_data['updated'] = $time;
+                        $recommend_id_a = $recommendModel->add($recommend_data);
+                        if (false === $recommend_id_a) {
+                            $model->rollback();
+                            die(json_encode(array("info" => "操作失败1", "status" => false)));
+                        }
+                    }
+                    $recommendSort++;
+                    array_push($recommend_ids, $recommend_id_a);
+                }
+                //专题存在
+                if ($subject > 0) {
+                    $subject_name = D("EnglishMediaSubject")->where(array("id" => $subject))->getField("name");
+                    $recommend_id_b = $recommendModel->where(array("name" => $subject_name))->getField("id");
+                    //推荐类存在专题名
+                    if (intval($recommend_id_b == 0) && $subject_name) {
+                        $recommend_data['sort'] = $recommendSort;
+                        $recommend_data['name'] = $subject_name;
+                        $recommend_data['created'] = $time;
+                        $recommend_data['updated'] = $time;
+                        $recommend_id_b = $recommendModel->add($recommend_data);
+                        if (false === $recommend_id_b) {
+                            $model->rollback();
+                            die(json_encode(array("info" => "操作失败2", "status" => false)));
+                        }
+                    }
+                    array_push($recommend_ids, $recommend_id_b);
+                }
+                $recommend = implode(",", $recommend_ids);
+            } else {
+                $recommend = 0;
+            }
+            if (false === $model->where(array("id" => $id))->setField("recommend", $recommend)) {
+                $this->ajaxReturn("", "操作失败", false);
+            } else {
+                $model->commit();
+                $this->ajaxReturn($recommend, "操作成功", true);
+            }
         }
     }
 

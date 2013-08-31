@@ -86,15 +86,15 @@
                     </ul>
                 </div>
                 <div class="menuright">
-                    <ul class="tabs">
-                        <li><a class="current" href="#">选择课程和年级</a></li>
-                        <!--<li><a href="#">选择专题</a></li>-->
-                        <!--<li><a href="#">选择推荐视频</a></li>-->
+                    <ul class="tabs J_tabs">
+                        <li><a class="current" href="#" value="1">选择课程和年级</a></li>
+                        <li><a href="#" value="2">选择专题视频</a></li>
+                        <li><a href="#" value="3">选择推荐视频</a></li>
                     </ul>
                     <div class="panes">
                         <div class="box1">
                             <div class="kechenggrade">
-                                <ul class="kecheng">
+                                <ul class="kecheng J_object">
                                     <volist name="object_list" id="object">
                                         <li value="{$object.id}" <if condition="$user_last_select['object'] eq $object['id']">class="current"
                                             <elseif condition="$object['question_num'] eq 0 AND $object['name'] neq '综合'" />class="grey not_allowed"</if>>
@@ -102,7 +102,7 @@
                                         </li>
                                     </volist>
                                 </ul>
-                                <ul class="grade">
+                                <ul class="grade J_level">
                                     <volist name="level_list" id="level">
                                         <li value="{$level.id}" 
                                             <if condition="($user_last_select['level'] eq $level['id'])AND($level['question_num'] gt 0)">class="current"
@@ -113,35 +113,39 @@
                                 </ul>
                             </div>
                         </div>
-<!--                        <div class="box1" style="display: none">
+                        <div class="box1" style="display: none">
                             <div class="kechenggrade">
-                                <ul class="kecheng">
-                                    <li class="current"><span>初级</span></li>
-                                    <li><span>中级</span></li>
-                                    <li><span>高级</span></li>
+                                <ul class="kecheng J_subject">
+                                    <volist name="subject_list" id="subject">
+                                        <li value="{$subject.id}" 
+                                            <if condition="($user_last_select['subject'] eq $subject['id'])AND($subject['question_num'] gt 0)">class="current"
+                                            <elseif condition="$subject['question_num'] eq 0" />class="grey not_allowed"</if>>
+                                            <span>{$subject.name}</span>
+                                        </li>
+                                    </volist>
                                 </ul>
-                                <ul class="grade">
-                                    <li><span>娱乐</span></li>
-                                    <li><span>体育</span></li>
-                                    <li><span>教育</span></li>
-                                    <li class="current"><span>饮食</span></li>
+                                <ul class="grade J_subjectDifficulty">
+                                    <li value="1" <eq name="user_last_select['difficulty']" value="1">class="current"</eq>><span>初级</span></li>
+                                    <li value="2" <eq name="user_last_select['difficulty']" value="2">class="current"</eq>><span>中级</span></li>
+                                    <li value="3" <eq name="user_last_select['difficulty']" value="3">class="current"</eq>><span>高级</span></li>
                                 </ul>
                             </div>
                         </div>
                         <div class="box1" style="display: none">
                             <div class="kechenggrade">
-                                <ul class="kecheng">
-                                    <li><span>体育</span></li>
-                                    <li><span>教育</span></li>
-                                    <li><span>广告</span></li>
+                                <ul class="kecheng J_recommend">
+                                    <volist name="recommend_list" id="recommend">
+                                        <li value="{$recommend.id}" <if condition="($user_last_select['recommend'] eq $recommend['id'])">class="current"</if>>
+                                        <span>{$recommend.name}</span></li>
+                                    </volist>
                                 </ul>
-                                <ul class="grade">
-                                    <li><span>语文</span></li>
-                                    <li><span>数学</span></li>
-                                    <li><span>历史</span></li>
+                                <ul class="grade J_recommendDifficulty">
+                                    <li value="1" <eq name="user_last_select['difficulty']" value="1">class="current"</eq>><span>初级</span></li>
+                                    <li value="2" <eq name="user_last_select['difficulty']" value="2">class="current"</eq>><span>中级</span></li>
+                                    <li value="3" <eq name="user_last_select['difficulty']" value="3">class="current"</eq>><span>高级</span></li>
                                 </ul>
                             </div>
-                        </div>-->
+                        </div>
                     </div>
                 </div>
                 <div class="contentcenter">
@@ -160,19 +164,19 @@
                                     <img src="__PUBLIC__/English/images/deafult_media_img.jpg" id="J_media_img">
                                 </div>
                             </div>
-                            <div id="J_media_div" style="position: relative;" media_type="{$question['media_type']}" 
+                            <div id="J_media_div" style="position: relative;" media_type="{$question['play_type']}" 
                                 <if condition="$isAboutVideo neq '1'">
                                     class="normal_media_div media_div"
                                 <else />
-                                    class="media_div"  style="visibility: hidden;" data_media_url="{$question['media_url']}" 
+                                    class="media_div"  style="visibility: hidden;" data_media_url="{$question['path']}" 
                                 </if> 
                                      data_isAboutVideo="{$isAboutVideo}">
                                 <if condition="$isAboutVideo neq '1'">
-                                    <if condition="$question['media_type'] eq '1'">
+                                    <if condition="$question['play_type'] eq '1'">
                                         {$question['media']}
-                                    <elseif condition="$question['media_type'] eq '2'"/>
-                                        <iframe class="media_iframe" src="{$question['media']}" scrolling="no" frameborder="0"></iframe>
-                                    <elseif condition="$question['media_type'] eq '3'"/>
+                                    <elseif condition="$question['play_type'] eq '2'"/>
+                                        <iframe class="media_iframe" src="{$question['path']}" scrolling="no" frameborder="0"></iframe>
+                                    <elseif condition="$question['play_type'] eq '3'"/>
                                     	<div id="J_media_swfobject_div"></div>
                                         <script type="text/javascript">
                                             var swfUrl = 'http://www.kizphonics.com/wp-content/uploads/jw-player-plugin-for-wordpress/player/player.swf';
@@ -187,26 +191,26 @@
                                                 bgColor: "#000000"
                                             };
 
-                                            swfobject.embedSWF(swfUrl, "J_media_swfobject_div", "100%", "100%", version, "/swf/playerProductInstall.swf", {$question['media']}, params );
+                                            swfobject.embedSWF(swfUrl, "J_media_swfobject_div", "100%", "100%", version, "/swf/playerProductInstall.swf", {$question['path']}, params );
 
                                         </script>
-                                    <elseif condition="$question['media_type'] eq '4'"/>
+                                    <elseif condition="$question['play_type'] eq '4'"/>
                                     	<div id="J_media_swfobject_div"></div>
 	                                    <script type="text/javascript">
 	                                    $('#J_media_swfobject_div').css({
 	                                        'height': media_height,
 	                                        'width': media_width
 	                                    });
-	                                    var media_img_url = "{$question['media_img_url']}";
-	                                    var media_url = "{$question['media']}";
-	                                    flowplayer("J_media_swfobject_div", "http://releases.flowplayer.org/swf/flowplayer-3.2.16.swf", {playlist:[media_img_url,{url: media_url,autoPlay: false}]});
+	                                    var media_img_url = "{$question['media_thumb_img']}";
+	                                    var media_url = "{$question['path']}";
+	                                    flowplayer("J_media_swfobject_div", "http://releases.flowplayer.org/swf/flowplayer-3.2.16.swf", {playlist:[media_thumb_img,{url: path,autoPlay: false}]});
 	                                    </script>
                                     <else />
                                         <object id="J_media_object" height="100%" width="100%" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">
                                             <param name="wmode" value="transparent">
-                                            <param name="movie" value="{$question['media_url']}">
+                                            <param name="movie" value="{$question['path']}">
                                             <embed name="swf" swliveconnect="true" height="100%" width="100%" type="application/x-shockwave-flash"
-                                                allowfullscreen="true" wmode="transparent" src="{$question['media_url']}" play="false">
+                                                allowfullscreen="true" wmode="transparent" src="{$question['path']}" play="false">
                                         </object>
                                     </if>
                                 </if>

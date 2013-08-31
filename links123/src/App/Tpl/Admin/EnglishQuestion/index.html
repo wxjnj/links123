@@ -25,7 +25,7 @@
         </div>
         <form method='post' action="__URL__">
             <div class="rSearch">
-                <div class="fLeft">试题查询：<span id="key"><input type="text" name="name" value="{$name}" class="medium" /></span></div>
+                <div class="fLeft">试题查询：<span id="key"><input autocomplete="off" type="text" name="name" value="{$name}" class="medium" /></span></div>
                 <html:imageBtn type="submit" name="search" style="hMargin fLeft" />
             </div>
             <div class="search cBoth">
@@ -156,6 +156,15 @@
         $("#J_exportBtn").click(function(){
             export_action();
         })
+        
+        /* 直达 */
+        $(".page input").keydown(function(event) {
+            if (event.keyCode == 13) {	// 回车
+                if ($(this).val() != '' && !isNaN($(this).val())) {
+                    window.location.href = $(this).attr("url") + "&p=" + $(this).val();
+                }
+            }
+        });
     })
     function showRequest(formData, jqForm, options) {
         $("#dialog").window({title: "导入视频中"});
