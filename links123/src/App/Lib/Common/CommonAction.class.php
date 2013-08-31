@@ -268,13 +268,13 @@ class CommonAction extends Action {
         		}
         	}
         }
-        
-        if(empty($_COOKIE[md5("home_session_expire")])) {
-        	//自动登录标示Cookie USER_ID 时间过期
-        	unset($_SESSION[C('MEMBER_AUTH_KEY')]);
-        	unset($_SESSION['nickname']);
-        	unset($_SESSION['face']);
-        }
+//去掉用户自动登录过期 @author slate 2013-08-30       
+//         if(empty($_COOKIE[md5("home_session_expire")])) {
+//         	//自动登录标示Cookie USER_ID 时间过期
+//         	unset($_SESSION[C('MEMBER_AUTH_KEY')]);
+//         	unset($_SESSION['nickname']);
+//         	unset($_SESSION['face']);
+//         }
     }
     
     /**

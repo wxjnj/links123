@@ -74,14 +74,12 @@ class IndexAction extends CommonAction {
 			
 			$memberModel = M("member");
 					
-			if ($memberModel->where(array('id' => $user_id))->save(array('skin' => $skinId))) {
-				
-				session('skin', $skinId);
-			} else {
+			if (!$memberModel->where(array('id' => $user_id))->setField('skin' , $skinId)) {
 				
 				$result = false;
 			}
 			
+			session('skin', $skinId);
 		} else {
 			
 			cookie('skinId', $skinId, array('expire' => 0));
