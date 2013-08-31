@@ -17,14 +17,14 @@
 1. 安装virtualbox
 2. 安装vagrant(`http://www.vagrantup.com/`)
 3. 进入要初始化vagrant的目录，可以是任意目录
-4. `vagrant init lnmp filepath.box`(也可以用迅雷等下载工具下载完以后，指定到本地路径)
+4. `vagrant init lnmp filepath.box`(用迅雷等下载工具下载完以后，指定到本地路径)
 5. 编辑Vagrantfile中guest机（虚拟机）与主机的端口映射和共享目录
 `config.vm.network :forwarded_port, guest: 80, host: 80`
 `config.vm.synced_folder "project_dir", "/mnt/www/links123"`
 6. `vagrant up`
 7. 可以使用putty登入虚拟机进行操作(IP:127.0.0.1 PORT:2222 USER:vagrant PASSWD:vagrant)
 
-备注：centos镜像文件放在百度云盘，我会定期维护（Paul）
+备注：centos镜像文件放在百度云盘，我会定期维护（Paul） `http://pan.baidu.com/share/link?shareid=3153135892&uk=2753792316`
 
 ### 对于php自动构建工具Phing的使用 ###
 
