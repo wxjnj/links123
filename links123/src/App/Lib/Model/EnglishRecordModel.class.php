@@ -23,9 +23,6 @@ class EnglishRecordModel extends CommonModel {
         $data['pattern'] = $question_info['pattern'];
         $data['object'] = intval($question_info['real_object']) > 0 ? intval($question_info['real_object']) : $question_info['object']; //排除科目为综合的影响
         $data['level'] = $question_info['level'];
-        $data['subject'] = $question_info['subject'];
-        $data['recommend'] = $question_info['recommend'];
-        $data['difficulty'] = $question_info['difficulty'];
         $data['user_answer'] = $answer;
         $data['is_right'] = $answer === intval($question_info['answer']) ? 1 : 0; //用户是否答对，1是0否
         $data['created'] = time();
@@ -104,19 +101,10 @@ class EnglishRecordModel extends CommonModel {
 
     /**
      * 获取用户做过的题目id列表
-     * @param int $object [科目id]
-     * @param int $level [等级id]
-     * @param int $subject [专题id]
-     * @param int $recommend [推荐id]
-     * @param int $difficulty [难度值，1初级，2中级，3高级]
-     * @param int $voice [口音，1美音，2英音]
-     * @param int $target [训练目标，1听力，2说力]
-     * @param int $pattern [类型，1视频，2音频]
-     * @param string $extend_condition [额外条件]
-     * @return array
-     * @author Adam $date2013.08.30$
+     * @author Adam $date2013.6.15
+     * @return array [题目id数组] 
      */
-    public function getUserTestQuestionIdList($object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern, $extend_condition = "") {
+    public function getUserTestQuestionIdList($object, $level, $voice, $target, $pattern, $extend_condition = "") {
         $question_ids = array();
         $question_ids[0] = 0;
         if (intval($object)) {
@@ -129,15 +117,6 @@ class EnglishRecordModel extends CommonModel {
         }
         if (intval($level) > 0) {
             $map['level'] = intval($level);
-        }
-        if (intval($subject) > 0) {
-            $map['subject'] = intval($subject);
-        }
-        if (intval($recommend) > 0) {
-            $map['recommend'] = intval($recommend);
-        }
-        if (intval($difficulty) > 0) {
-            $map['difficulty'] = intval($difficulty);
         }
         if (intval($voice) > 0) {
             $map['voice'] = intval($voice);
@@ -174,7 +153,7 @@ class EnglishRecordModel extends CommonModel {
 
     /**
      * 判断用户是否答过此题
-     * @param int $question_id
+     * @param type $question_id
      * @return boolean
      * @author Adam $date2013.6.27$
      */
@@ -197,37 +176,16 @@ class EnglishRecordModel extends CommonModel {
         return $ret;
     }
 
-    /**
-     * 获取用户没有做过的题目的数量
-     * @param int $object [科目id]
-     * @param int $level [等级id]
-     * @param int $subject [专题id]
-     * @param int $difficulty [难度值，1初级，2中级，3高级]
-     * @param int $voice [口音，1美音，2英音]
-     * @param int $target [训练目标，1听力，2说力]
-     * @param int $pattern [类型，1视频，2音频]
-     * @param string $extend_condition [额外条件]
-     * @return int
-     * @author Adam $date2013.08.30$
-     */
-    public function getUserUntestedQuestionNum($object, $level, $subject, $difficulty, $voice, $target, $pattern) {
-        if (intval($object)) {
-            $object_name = D("EnglishObject")->where(array("id" => $object))->getField("name");
-            if ($object_name == "综合") {
-                $object = 0;
-            }
+    public function getUserUntestedQuestionNum($object, $level, $voice, $target, $pattern) {
+        $object_info = D("EnglishObject")->find($object);
+        if ($object_info['name'] == "综合") {
+            $object = 0;
         }
         if (intval($object) > 0) {
             $map['object'] = intval($object);
         }
         if (intval($level) > 0) {
             $map['level'] = intval($level);
-        }
-        if (intval($subject) > 0) {
-            $map['subject'] = intval($subject);
-        }
-        if (intval($difficulty) > 0) {
-            $map['difficulty'] = intval($difficulty);
         }
         if (intval($voice) > 0) {
             $map['voice'] = intval($voice);
@@ -239,7 +197,7 @@ class EnglishRecordModel extends CommonModel {
             $map['pattern'] = intval($pattern);
         }
         //用户做过的题目去除
-        $user_question_ids = $this->getUserTestQuestionIdList($object, $map, $subject, $difficulty, $voice, $target, $pattern);
+        $user_question_ids = $this->getUserTestQuestionIdList($object, $level, $voice, $target, $pattern);
         $map['status'] = 1;
         $map['_string'] = "`id` not in(" . implode(",", $user_question_ids) . ")";
         $englishQuestionModel = D("EnglishQuestion");
@@ -251,8 +209,6 @@ class EnglishRecordModel extends CommonModel {
      * 清除用户的做题记录
      * @param int $object [科目]
      * @param int $level [等级]
-     * @param int $subject [专题id]
-     * @param int $difficulty [难度值，1初级，2中级，3高级]
      * @param int $voice [口语]
      * @param int $target [目标]
      * @param int $pattern [形式]
@@ -260,28 +216,20 @@ class EnglishRecordModel extends CommonModel {
      * @return void
      * @author Adam $date2013.7.2$
      */
-    public function clearUserRecord($object, $level, $subject, $difficulty, $voice, $target, $pattern, $question_id) {
+    public function clearUserRecord($object, $level, $voice, $target, $pattern, $question_id) {
         $map = array();
         if (intval($question_id > 0)) {
             $map['question_id'] = $question_id;
         } else {
-            if (intval($object)) {
-                $object_name = D("EnglishObject")->where(array("id" => $object))->getField("name");
-                if ($object_name == "综合") {
-                    $object = 0;
-                }
+            $object_info = D("EnglishObject")->find($object);
+            if ($object_info['name'] == "综合") {
+                $object = 0;
             }
             if (intval($object) > 0) {
                 $map['object'] = intval($object);
             }
             if (intval($level) > 0) {
                 $map['level'] = intval($level);
-            }
-            if (intval($subject) > 0) {
-                $map['subject'] = intval($subject);
-            }
-            if (intval($difficulty) > 0) {
-                $map['difficulty'] = intval($difficulty);
             }
             if (intval($voice) > 0) {
                 $map['voice'] = intval($voice);
@@ -295,15 +243,11 @@ class EnglishRecordModel extends CommonModel {
         }
         if (isset($_SESSION[C('MEMBER_AUTH_KEY')]) && !empty($_SESSION[C('MEMBER_AUTH_KEY')])) {
             $map['user_id'] = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
-            if ($map['user_id'] > 0) {
-                $ret = $this->where($map)->delete();
-            }
+            $ret = $this->where($map)->delete();
         } else {
             $map['user_id'] = intval(cookie("english_tourist_id"));
-            if ($map['user_id'] > 0) {
-                $englishTouristRecordModel = D("EnglishTouristRecord");
-                $ret = $englishTouristRecordModel->where($map)->delete();
-            }
+            $englishTouristRecordModel = D("EnglishTouristRecord");
+            $ret = $englishTouristRecordModel->where($map)->delete();
 //            dump($englishTouristRecordModel->getLastSql());exit;
         }
     }

@@ -1,14 +1,17 @@
 <tagLib name="html" />
 <include file="Public:header" />
+<load href="__PUBLIC__/skin/easyui/themes/metro/easyui.css" />
+<load href="__PUBLIC__/Js/Jquery/jquery.js" />
+<load href="__PUBLIC__/skin/easyui/locale/easyui-lang-zh_CN.js" /> 
+<load href="__PUBLIC__/skin/easyui/jquery.easyui.min.js" />
+<!--<script language="JavaScript">
 
-<script language="JavaScript">
-<!--
 function resetPwd(){
 	var pass	 =	 $F('resetPwd');
 	ThinkAjax.send('__URL__/resetPwd/','ajax=1&id={$vo.id}&password='+encodeURIComponent(pass));
 }
-//-->
-</script>
+//
+</script>-->
 
 <div id="main" class="main" >
 	<div class="content">
@@ -16,8 +19,8 @@ function resetPwd(){
 		<table cellpadding=3 cellspacing=3>
 			<tr>
 				<td class="tRight">重置密码：</td>
-				<td class="tLeft" ><input type="text" name="resetPwd" />&nbsp;
-					<input type="button" value="重置密码" onclick="resetPwd()" class="submit" style="height:25px" />
+                <td class="tLeft" ><input type="text" id="newPwd" name="resetPwd" />&nbsp;
+                    <input type="button" value="重置密码" onclick="resetPwd()" class="submit" style="height:25px" />
 				</td>
 			</tr>
 			<tr>
@@ -59,3 +62,17 @@ function resetPwd(){
 		</table>
 	</div>
 </div>
+<div id="dialog" class="easyui-dialog" style="width:225px;height:auto;" data-options="title:'导入试题中',shadow:false,modal:true,closed:true,closable:false">
+    <img style="" src="__PUBLIC__/Images/loading.gif" />
+</div>
+<script type="text/javascript">
+    function resetPwd(){
+        var newPwd = encodeURIComponent($("#newPwd").val());
+        var id = "{$vo.id}";
+        $.post("__URL__/resetPwd/",{id:id,ajax:1,password:newPwd},function(msg){
+            if(msg){
+               alert(msg.info);
+            }
+        },"json")
+    }
+</script>

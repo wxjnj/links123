@@ -7,18 +7,6 @@
  */
 class EnglishMediaSubjectAction extends CommonAction {
 
-    public function _filter(&$map, &$param) {
-        if (isset($_REQUEST['name'])) {
-            $name = ftrim($_REQUEST['name']);
-        }
-        if (!empty($name)) {
-            $map['name'] = array('like', "%" . $name . "%");
-        }
-        $this->assign('name', $name);
-        $param['name'] = $name;
-        $this->assign("name", $name);
-    }
-
     public function add() {
         //
         //获取顶级专题列表

@@ -9,17 +9,12 @@ class EnglishViewRecordModel extends CommonModel {
 
     /**
      * 添加用户查看记录
-     * @param int $question_id [试题id]
-     * @param int $level [等级]
-     * @param int $object [科目]
-     * @param int $diffculty [难度值]
-     * @param int $subject [专题]
-     * @param int $voice [口语]
-     * @param int $target [目标]
-     * @param int $pattern [类型]
-     * @return
+     * @param int $question_id [题目id]
+     * @param int $object [题目科目id,存在综合特殊情况故需要记录]
+     * @return  void 
+     * @author Adam 2013.7.13
      */
-    public function addRecord($question_id, $level, $object, $subject, $recommend, $difficulty = 1, $voice = 1, $target = 1, $pattern = 1) {
+    public function addRecord($question_id, $level, $object, $voice = 1, $target = 1, $pattern = 1) {
         $map = array();
         //游客
         if (!isset($_SESSION[C('MEMBER_AUTH_KEY')]) || empty($_SESSION[C('MEMBER_AUTH_KEY')])) {
@@ -35,9 +30,6 @@ class EnglishViewRecordModel extends CommonModel {
         }
         $map['object'] = intval($object);
         $map['level'] = intval($level);
-        $map['subject'] = intval($subject);
-        $map['recommend'] = intval($recommend);
-        $map['difficulty'] = intval($difficulty);
         $map['voice'] = intval($voice);
         $map['target'] = intval($target);
         $map['pattern'] = intval($pattern);
@@ -62,22 +54,12 @@ class EnglishViewRecordModel extends CommonModel {
     /**
      * 获取用户看过的题目记录
      * 根据用户当前的题目id，根据上下题的方式获取用户看过的题目记录
-     * @param int $question_id [用户当前题目id]
+     * @param int $now_question_id [用户当前题目id]
      * @param string $type [查看用户已看题目的方式next下一题/prev上一题]
-     * @param int $object [当前科目id]
-     * @param int $level [当前等级id]
-     * @param int $subject [当前专题id]
-     * @param int $$recommend [当前推荐id]
-     * @param int $difficulty [当前难度]
-     * @param int $voice [当前口音]
-     * @param int $target [当前目标]
-     * @param int $pattern [当前类型]
-     * @return array
+     * @return max [用户看过的题目记录]
      */
-    public function getViewedQuestionRecord($question_id, $type = "next", $object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern) {
+    public function getViewedQuestionRecord($now_question_id, $type = "next", $now_level, $now_object, $now_voice, $now_target, $now_pattern) {
         $map = array();
-        //
-        //获取用户id
         $user_id = 0;
         if (!isset($_SESSION[C('MEMBER_AUTH_KEY')]) || empty($_SESSION[C('MEMBER_AUTH_KEY')])) {
             $user_id = intval(cookie('english_tourist_id')); //从cookie获取游客id
@@ -93,42 +75,25 @@ class EnglishViewRecordModel extends CommonModel {
         if ($user_id == 0) {
             return array();
         }
-        $map['question_id'] = $question_id;
+        $map['question_id'] = $now_question_id;
         if ($type == "next") {
-            if (intval($object) > 0) {
-                $map['object'] = $object; //科目由于综合包含所有题目，需要区别科目
-            }
+            $map['object'] = $now_object; //科目由于综合包含所有题目，需要区别科目
         }
-        //
-        //本次次的题目历史信息
-        $now_question_info = $this->where($map)->find();
+        $now_question_info = $this->where($map)->find(); //本次次的题目历史信息
         if (false === $now_question_info || empty($now_question_info)) {
             return array();
         }
         $map = array();
         $map['user_id'] = $user_id;
         if ($type == "next") {
-            $map['object'] = intval($object);
-            $map['level'] = intval($level);
-            $map['subject'] = intval($subject);
-            $map['recommend'] = intval($recommend);
-            $map['difficulty'] = intval($difficulty);
-            $map['voice'] = intval($voice);
-            $map['target'] = intval($target);
-            $map['pattern'] = intval($pattern);
+            $map['object'] = $now_object;
+            $map['level'] = $now_level;
+            $map['voice'] = $now_voice;
+            $map['target'] = $now_target;
+            $map['pattern'] = $now_pattern;
             $map['sort'] = array('gt', intval($now_question_info['sort']));
             $order = "`sort` ASC";
         } else {
-            if (intval($object) > 0) {
-                $map['object'] = intval($object);
-                $map['level'] = intval($level);
-            } else if (intval($subject) > 0) {
-                $map['subject'] = intval($subject);
-                $map['difficulty'] = intval($difficulty);
-            } else if (intval($recommend) > 0) {
-                $map['recommend'] = intval($recommend);
-                $map['difficulty'] = intval($difficulty);
-            }
             $map['sort'] = array('lt', intval($now_question_info['sort']));
             $order = "`sort` DESC";
         }
@@ -140,20 +105,7 @@ class EnglishViewRecordModel extends CommonModel {
         return $ret;
     }
 
-    /**
-     * 获取用户看过的题目id列表
-     * @param int $object [科目id]
-     * @param int $level [等级id]
-     * @param int $subject [专题id]
-     * @param int $recommend [推荐id]
-     * @param int $difficulty [难度值，1初级，2中级，3高级]
-     * @param int $voice [口音，1美音，2英音]
-     * @param int $target [训练目标，1听力，2说力]
-     * @param int $pattern [类型，1视频，2音频]
-     * @param string $extend_condition [额外条件]
-     * @return array
-     */
-    public function getUserViewQuestionIdList($object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern, $extend_condition = "") {
+    public function getUserViewQuestionIdList($object, $level, $voice, $target, $pattern, $extend_condition = "") {
         //试题id数组初始化
         $question_ids = array();
         if (intval($object)) {
@@ -162,43 +114,29 @@ class EnglishViewRecordModel extends CommonModel {
             }
         }
         if (intval($object) > 0) {
-            $map['media.object'] = intval($object);
+            $map['question.object'] = intval($object);
         }
         if (intval($level) > 0) {
-            $map['media.level'] = intval($level);
-        }
-        if (intval($subject) > 0) {
-            $map['media.subject'] = intval($subject);
-        }
-        if (intval($recommend) > 0) {
-            $map['_string'] = "FIND_IN_SET('" + $recommend + "',media.recomend)";
-            //$map['media.recommend'] = intval($recommend);
-        }
-        if (intval($difficulty) > 0) {
-            $map['media.difficulty'] = intval($difficulty);
+            $map['question.level'] = intval($level);
         }
         if (intval($voice) > 0) {
-            $map['media.voice'] = intval($voice);
+            $map['question.voice'] = intval($voice);
         }
         if (intval($target) > 0) {
             $map['question.target'] = intval($target);
         }
         if (intval($pattern) > 0) {
-            $map['media.pattern'] = intval($pattern);
+            $map['question.pattern'] = intval($pattern);
         }
         if (!empty($extend_condition)) {
-            $map['_string'] .= $extend_condition;
+            $map['_string'] = $extend_condition;
         }
         if (isset($_SESSION[C('MEMBER_AUTH_KEY')]) && intval($_SESSION[C('MEMBER_AUTH_KEY')]) > 0) {
             $map['record.user_id'] = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
         } else {
             $map['record.user_id'] = intval(cookie("english_tourist_id")) > 0 ? -intval(cookie("english_tourist_id")) : 0;
         }
-        $ret = $this->alias("record")
-                        ->field("record.question_id")
-                        ->join(C("DB_PREFIX") . "english_question question on record.question_id=question.id")
-                        ->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media on question.media_id=media.id")
-                        ->where($map)->select();
+        $ret = $this->alias("record")->field("record.question_id")->join(C("DB_PREFIX") . "english_question question on record.question_id=question.id")->where($map)->select();
         if (false !== $ret && !empty($ret)) {
             foreach ($ret as $key => $value) {
                 $question_ids[] = intval($value['question_id']);
@@ -210,7 +148,7 @@ class EnglishViewRecordModel extends CommonModel {
     /**
      * 获取新游客id
      * @return int
-     * @author Adam $date2013-08-13$
+     * @author Adam #date2013-08-13$
      */
     public function getNewTouristId() {
         $ret = 0;

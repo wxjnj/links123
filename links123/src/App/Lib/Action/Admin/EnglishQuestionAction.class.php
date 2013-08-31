@@ -378,22 +378,11 @@ class EnglishQuestionAction extends CommonAction {
             $optionModel = D("EnglishOptions");
             $levelModel = D("EnglishLevel");
             $mediaModel = D("EnglishMedia");
-            $recommendModel = D("EnglishMediaRecommend");
             //
             //提取等级列表备用
-            $levels = $levelModel->order("`sort` ASC")->select();
+            $levels = $levelModel->select();
             foreach ($levels as $key => $value) {
                 $level_list[$value['name']] = $value['id'];
-                $level_name_list_info[$value['name']] = $value;
-            }
-            foreach ($levels as $key => $value) {
-                if ($value['sort'] <= $level_name_list_info['小六']['sort']) {
-                    $difficulty_list[$value['name']] = 1;
-                } else if ($value['sort'] >= $level_name_list_info['大一']['sort']) {
-                    $difficulty_list[$value['name']] = 3;
-                } else {
-                    $difficulty_list[$value['name']] = 2;
-                }
             }
             //
             //读取科目列表备用
@@ -409,9 +398,6 @@ class EnglishQuestionAction extends CommonAction {
             foreach ($subjects as $key => $value) {
                 $subject_list[$value['name']] = $value['id'];
             }
-            //推荐的最大排序
-            $maxSort = $recommendModel->field("max(`sort`) as max_sort")->find();
-            $recommendSort = intval($maxSort['max_sort']) + 1;
             $model->startTrans();
             //
             //循环读取所有表,表迭代器
@@ -437,27 +423,28 @@ class EnglishQuestionAction extends CommonAction {
                             } else if ($cell->getColumn() == "E") {
                                 $media_data['level'] = ftrim($cell->getCalculatedValue()); //等级
                             } else if ($cell->getColumn() == "F") {
-                                $media_data['object_name'] = ftrim($cell->getCalculatedValue()); //科目
+                                $media_data['object'] = ftrim($cell->getCalculatedValue()); //科目
                             } else if ($cell->getColumn() == "G") {
-                                $media_data['subject_name'] = ftrim($cell->getCalculatedValue()); //专题
+                                $media_data['subject'] = ftrim($cell->getCalculatedValue()); //专题
                             } else if ($cell->getColumn() == "H") {
-                                //$media_data['difficulty'] = intval($cell->getCalculatedValue()); //难度
-                                $media_data['recommend'] = intval($cell->getCalculatedValue()); //推荐
+                                $media_data['difficulty'] = intval($cell->getCalculatedValue()); //难度
                             } else if ($cell->getColumn() == "I") {
-                                $media_data['special_recommend'] = intval($cell->getCalculatedValue()); //是否特别推荐
+                                $media_data['recommend'] = intval($cell->getCalculatedValue()); //是否推荐
                             } else if ($cell->getColumn() == "J") {
-                                $data['media_text_url'] = $media_data['media_source_url'] = ftrim($cell->getCalculatedValue()); //媒体内容地址
+                                $media_data['special_recommend'] = intval($cell->getCalculatedValue()); //是否特别推荐
                             } else if ($cell->getColumn() == "K") {
-                                $data['content'] = ftrim($cell->getCalculatedValue()); //题目内容
+                                $data['media_text_url'] = $media_data['media_source_url'] = ftrim($cell->getCalculatedValue()); //媒体内容地址
                             } else if ($cell->getColumn() == "L") {
-                                $data['answer'] = ftrim($cell->getCalculatedValue()); //题目答案
+                                $data['content'] = ftrim($cell->getCalculatedValue()); //题目内容
                             } else if ($cell->getColumn() == "M") {
-                                $data['option'][0] = ftrim($cell->getCalculatedValue()); //题目选项一
+                                $data['answer'] = ftrim($cell->getCalculatedValue()); //题目答案
                             } else if ($cell->getColumn() == "N") {
-                                $data['option'][1] = ftrim($cell->getCalculatedValue()); //题目选项二
+                                $data['option'][0] = ftrim($cell->getCalculatedValue()); //题目选项一
                             } else if ($cell->getColumn() == "O") {
-                                $data['option'][2] = ftrim($cell->getCalculatedValue()); //题目选项三
+                                $data['option'][1] = ftrim($cell->getCalculatedValue()); //题目选项二
                             } else if ($cell->getColumn() == "P") {
+                                $data['option'][2] = ftrim($cell->getCalculatedValue()); //题目选项三
+                            } else if ($cell->getColumn() == "Q") {
                                 $data['option'][3] = ftrim($cell->getCalculatedValue()); //题目选项四
                             }
                         }
@@ -476,51 +463,9 @@ class EnglishQuestionAction extends CommonAction {
                         $media_data['updated'] = $time;
                         $media_data['created'] = $time;
                         //等级、科目、专题的名称换成对应的id
-                        $media_data['object'] = intval($object_list[$media_data['object_name']]);
-                        $media_data['difficulty'] = intval($difficulty_list[$media_data['level']]);
+                        $media_data['object'] = intval($object_list[$media_data['object']]);
                         $media_data['level'] = intval($level_list[$media_data['level']]);
-                        $media_data['subject'] = intval($subject_list[$media_data['subject_name']]);
-                        //是推荐
-                        if ($media_data['recommend'] == 1) {
-                            $recommend_ids = array();
-                            //科目存在
-                            if ($media_data['object'] > 0) {
-                                $recommend_id_a = $recommendModel->where(array("name" => $media_data['object_name']))->getField("id");
-                                //推荐类存在科目名
-                                if (intval($recommend_id_a == 0)) {
-                                    $recommend_data['sort'] = $recommendSort;
-                                    $recommend_data['name'] = $media_data['object_name'];
-                                    $recommend_data['created'] = $time;
-                                    $recommend_data['updated'] = $time;
-                                    $recommend_id_a = $recommendModel->add($recommend_data);
-                                    if (false === $recommend_id_a) {
-                                        $model->rollback();
-                                        die(json_encode(array("info" => "导入失败", "status" => false)));
-                                    }
-                                    $recommendSort++;
-                                }
-                                array_push($recommend_ids, $recommend_id_a);
-                            }
-                            //专题存在
-                            if ($media_data['subject'] > 0) {
-                                $recommend_id_b = $recommendModel->where(array("name" => $media_data['subject_name']))->getField("id");
-                                //推荐类存在专题名
-                                if (intval($recommend_id_b == 0)) {
-                                    $recommend_data['sort'] = $recommendSort;
-                                    $recommend_data['name'] = $media_data['subject_name'];
-                                    $recommend_data['created'] = $time;
-                                    $recommend_data['updated'] = $time;
-                                    $recommend_id_b = $recommendModel->add($recommend_data);
-                                    if (false === $recommend_id_b) {
-                                        $model->rollback();
-                                        die(json_encode(array("info" => "导入失败", "status" => false)));
-                                    }
-                                    $recommendSort++;
-                                }
-                                array_push($recommend_ids, $recommend_id_b);
-                            }
-                            $media_data['recommend'] = implode(",", $recommend_ids);
-                        }
+                        $media_data['subject'] = intval($subject_list[$media_data['subject']]);
                         $mediaId = $mediaModel->add($media_data);
                     }
                     $data['media_id'] = intval($mediaId);

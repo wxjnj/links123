@@ -43,7 +43,8 @@ $(function() {
     });
 
     //科目点击事件
-    $('.J_object li').live('click', function() {
+    // bindObjectClickEvent();
+    $('.kecheng li').live('click', function() {
         if ($(this).hasClass("grey")) {
             var top = $(this).offset().top - 15;
             var left = $(this).offset().left + 10;
@@ -71,7 +72,8 @@ $(function() {
 
     });
     //等级点击事件
-    $(".J_level li").live('click', function() {
+    //bindLevelClickEvent();
+    $(".grade li").live('click', function() {
         if ($(this).hasClass("grey")) {
             var top = $(this).offset().top - 10;
             var left = $(this).offset().left + 5;
@@ -97,85 +99,11 @@ $(function() {
 
         requestQuestion("level", $(this));
 
-    });
-    //专题点击事件
-    $('.J_subject li').live('click', function() {
-        if ($(this).hasClass("grey")) {
-            var top = $(this).offset().top - 15;
-            var left = $(this).offset().left + 10;
-            fadeTip("<span  class='messager_span'>Coming soon...</span>", top, left);
-            return false;
-        } else if ($(this).hasClass("current")) {
-
-            var top = $(this).offset().top - 50;
-            var left = $(this).offset().left - 10;
-            $.messager.show({
-                msg: "<span  class='messager_span'>您已在专题: " + $(this).text() + "</span>",
-                showType: 'fade',
-                width: 175,
-                height: 45,
-                timeout: 2000,
-                style: {
-                    left: left,
-                    top: top
-                }
-            });
-            return false;
-        }
-        requestQuestion("subject", $(this));
-
-    });
-    //推荐点击事件
-    $('.J_recommend li').live('click', function() {
-        if ($(this).hasClass("grey")) {
-            var top = $(this).offset().top - 15;
-            var left = $(this).offset().left + 10;
-            fadeTip("<span  class='messager_span'>Coming soon...</span>", top, left);
-            return false;
-        } else if ($(this).hasClass("current")) {
-
-            var top = $(this).offset().top - 50;
-            var left = $(this).offset().left - 10;
-            $.messager.show({
-                msg: "<span  class='messager_span'>您已在: " + $(this).text() + "</span>",
-                showType: 'fade',
-                width: 175,
-                height: 45,
-                timeout: 2000,
-                style: {
-                    left: left,
-                    top: top
-                }
-            });
-            return false;
-        }
-        requestQuestion("recommend", $(this));
-
-    });
-    //难度点击事件
-    $('.J_subjectDifficulty li,.recommendDifficulty li').live('click', function() {
-        if ($(this).hasClass("current")) {
-
-            var top = $(this).offset().top - 50;
-            var left = $(this).offset().left - 10;
-            $.messager.show({
-                msg: "<span  class='messager_span'>您已在难度: " + $(this).text() + "</span>",
-                showType: 'fade',
-                width: 175,
-                height: 45,
-                timeout: 2000,
-                style: {
-                    left: left,
-                    top: top
-                }
-            });
-            return false;
-        }
-        requestQuestion("difficulty", $(this));
-
+        //$(this).addClass("current").siblings("li").removeClass("current");
     });
 
     //升级事件
+    //bindLevelUpEvent();
     $("#J_levelUpButton").live('click', function() {
         var next_level_li;
         //已是最高级
@@ -411,7 +339,7 @@ $(function() {
 /**
  * 请求题目
  * 响应分类、科目、等级以及上下题的点击，最终目的为请求题目。
- * @param {string} type [请求类型，大类为category，科目为object，等级为level,专题为subject，推荐为recommend，难度为difficulty,上一题下一题为quick_select_prev和quick_select_next
+ * @param {string} type [请求类型，大类为category，科目为object，等级为level,上一题下一题为quick_select_prev和quick_select_next
  * @returns {void}
  * @author Adam $date2013-07-26$
  */
@@ -434,55 +362,44 @@ function requestQuestion(type, clickObject) {
         //return false;
         ajaxRequest.abort();
     }
-    var viewType = $(".J_tabs li a.current").attr("value");
+
+    var voice = $(".voice.current").attr("value");
+    var target = $(".target.current").attr("value");
+    var pattern = $(".pattern.current").attr("value");
+    var object = $(".kecheng .current").attr("value");
+    var level = $(".grade .current").attr("value");
+
+
+    if (type == 'level') {
+        level = clickObject.attr("value");
+    } else if (type == 'category') {
+        if (clickObject.hasClass("target")) {
+            target = clickObject.attr("value");
+        } else if (clickObject.hasClass("pattern")) {
+            pattern = clickObject.attr("value");
+        } else {
+            voice = clickObject.attr("value");
+        }
+    } else if (type == 'object') {
+        object = clickObject.attr("value");
+    }
 
     var now_question_id = $("#J_questionId").text();
     if ($(".answer").is(":visible")) {
         $("#J_answerButton").click();
     }
-    var data = {
-        'viewType': viewType,
-        'voice': $(".voice.current").attr("value"),
-        'target': $(".target.current").attr("value"),
-        'pattern': $(".pattern.current").attr("value"),
-        'type': type,
-        'now_question_id': now_question_id
-    };
-    if (viewType == 3) {
-        data.recommend = $(".J_recommend .current").attr("value");
-        data.difficulty = $(".J_difficulty .current").attr("value");
-    } else if (viewType == 2) {
-        data.subject = $(".J_subject .current").attr("value");
-        data.difficulty = $(".J_difficulty .current").attr("value");
-    } else {
-        data.object = $(".kecheng .current").attr("value");
-        data.level = $(".grade .current").attr("value");
-    }
-    //根据点击的对象，获取最新请求的条件
-    if (type == "category") {
-        if (clickObject.hasClass("target")) {
-            data.target = clickObject.attr("value");
-        } else if (clickObject.hasClass("pattern")) {
-            data.pattern = clickObject.attr("value");
-        } else {
-            data.voice = clickObject.attr("value");
-        }
-    } else if (type == 'level') {
-        data.level = clickObject.attr("value");
-    } else if (type == 'object') {
-        data.object = clickObject.attr("value");
-    } else if (type == "subject") {
-        data.subject = clickObject.attr("value");
-    } else if (type == "recommend") {
-        data.recommend = clickObject.attr("value");
-    } else if (type == "difficulty") {
-        data.difficulty = clickObject.attr("value");
-    }
-
     layer_div("show");
     ajaxRequest = $.ajax({
         url: URL + '/ajax_get_question',
-        data: data,
+        data: {
+            'voice': voice,
+            'target': target,
+            'pattern': pattern,
+            'object': object,
+            'level': level,
+            'type': type,
+            'now_question_id': now_question_id
+        },
         type: 'POST',
         dataType: 'json',
         cache: false,
@@ -491,6 +408,7 @@ function requestQuestion(type, clickObject) {
             if (msg) {
                 var data = msg.data;
                 if (data == null) {
+
                     $.messager.show({
                         msg: "<span  class='messager_span'>该题目不存在，请重试...</span>",
                         showType: 'fade',
@@ -522,28 +440,58 @@ function requestQuestion(type, clickObject) {
                         }
                     });
                 }
-                if (viewType == 3) {
-                    if (type == "category") {
-                        rewriteObjectAndLevelList(data.object_list, 1, data.level_list, 1)
+                //
+                //科目为空
+                if (data['object_info'] == null) {
+                    data['object_info'] = new Array();
+                    data['object_info']['id'] = 0;
+                }
+                //更新科目列表
+                var object_list = data.object_list;
+                if (object_list != null) {
+                    var str = '';
+                    for (var i = 0; i < object_list.length; i++) {
+                        str += '<li value="' + object_list[i]['id'] + '"';
+                        if (data['object_info']['id'] == object_list[i]['id']) {
+                            str += ' class="current" ';
+                        } else {
+                            if (object_list[i]['question_num'] == 0) {
+                                str += ' class="grey not_allowed" ';
+                            }
+                        }
+                        str += '><span>' + object_list[i]['name'] + '</span></li>';
                     }
-                } else if (viewType == 2) {
-                    if (type == "category") {
-                        rewriteObjectAndLevelList(data.object_list, 1, data.level_list, 1)
+                    $(".kecheng").html(str);
+                    if ($(".kecheng .current").size() < 1) {
+                        $(".kecheng li").not(".grey").first().addClass("current");
                     }
-                } else {
-                    //
-                    //科目为空
-                    if (data['object_info'] == null) {
-                        data['object_info'] = new Array();
-                        data['object_info']['id'] = 0;
+                }
+                //
+                //等级为空
+                if (data['level_info'] == null) {
+                    data['level_info'] = new Array();
+                    data['level_info']['id'] = 0;
+                }
+                //更新等级列表
+                var level_list = data.level_list;
+                if (level_list != null) {
+                    var str = '';
+                    for (var i = 0; i < level_list.length; i++) {
+                        str += '<li value="' + level_list[i]['id'] + '"';
+                        if (data['level_info']['id'] == level_list[i]['id']) {
+                            str += ' class="current" ';
+                        } else {
+                            if (level_list[i]['question_num'] == 0) {
+                                str += ' class="grey not_allowed" ';
+                            }
+                        }
+                        str += '><span>' + level_list[i]['name'] + '</span></li>';
                     }
-                    //
-                    //等级为空
-                    if (data['level_info'] == null) {
-                        data['level_info'] = new Array();
-                        data['level_info']['id'] = 0;
+                    $(".grade").html(str);
+                    if ($(".grade .current").size() < 1) {
+                        $(".grade li").not(".grey").first().addClass("current");
                     }
-                    rewriteObjectAndLevelList(data.object_list, data['object_info']['id'], data.level_list, data['level_info']['id'])
+                    $(".grade li:eq(13)").css("margin-left", level_margin_index + "px");
                 }
                 //
                 //更新题目
@@ -599,14 +547,14 @@ function requestQuestion(type, clickObject) {
                 var videoStr = '';
                 $('#J_media_div').html(videoStr);
 
-                if (question.path) {
+                if (question.media || question.media_url) {
 
                     if (question.isAboutVideo != 1) {
-                        if (question.play_type == 1) {
-                            videoStr = question.path;
-                        } else if (question.play_type == 2) {
-                            videoStr = '<iframe class="media_iframe" src="' + question.path + '" width="100%" height="100%" scrolling="no" frameborder="0">';
-                        } else if (question.play_type == 3) {
+                        if (question.media_type == 1) {
+                            videoStr = question.media;
+                        } else if (question.media_type == 2) {
+                            videoStr = '<iframe class="media_iframe" src="' + question.media + '" width="100%" height="100%" scrolling="no" frameborder="0">';
+                        } else if (question.media_type == 3) {
 
                             $('#J_media_div').html('<div id="J_media_swfobject_div"></div>');
 
@@ -622,19 +570,19 @@ function requestQuestion(type, clickObject) {
                                 bgColor: "#000000"
                             };
 
-                            swfobject.embedSWF(swfUrl, "J_media_swfobject_div", "100%", "100%", version, "/swf/playerProductInstall.swf", question.path, params);
+                            swfobject.embedSWF(swfUrl, "J_media_swfobject_div", "100%", "100%", version, "/swf/playerProductInstall.swf", question.media, params);
 
-                        } else if (question.play_type == 4) {
+                        } else if (question.media_type == 4) {
                             $('#J_media_div').html('<div id="J_media_swfobject_div" style="height:' + media_height + 'px;width:' + media_width + 'px;"></div>');
 
-                            flowplayer("J_media_swfobject_div", "http://releases.flowplayer.org/swf/flowplayer-3.2.16.swf", {playlist: [question.media_thumb_url, {url: question.path, autoPlay: false}]});
+                            flowplayer("J_media_swfobject_div", "http://releases.flowplayer.org/swf/flowplayer-3.2.16.swf", {playlist: [question.media_img_url, {url: question.media, autoPlay: false}]});
 
                         } else {
 
                             videoStr += '<object id="J_media_object" height="100%" width="100%" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">';
                             videoStr += '<param name="wmode" value="transparent">';
-                            videoStr += '<param name="movie" value="' + question.path + '">';
-                            videoStr += '<embed name="swf" menu="true" height="100%" width="100%" play="false" type="application/x-shockwave-flash" allowfullscreen="true" wmode="transparent" src="' + question.path + '">';
+                            videoStr += '<param name="movie" value="' + question.media_url + '">';
+                            videoStr += '<embed name="swf" menu="true" height="100%" width="100%" play="false" type="application/x-shockwave-flash" allowfullscreen="true" wmode="transparent" src="' + question.media_url + '">';
                             videoStr += '</object>';
                         }
                     }
@@ -644,7 +592,7 @@ function requestQuestion(type, clickObject) {
                 }
 
                 if (question.isAboutVideo) {
-                    $('#J_media_img').attr('src', question.media_thumb_url);
+                    $('#J_media_img').attr('src', question.media_img_url);
                     $('#J_media_div').css('visibility', 'hidden');
 
                     $('.J_player').css('display', 'block');
@@ -665,11 +613,11 @@ function requestQuestion(type, clickObject) {
                 }
 
                 if (question.isAboutVideo == 1) {
-                    $('#J_media_div').attr('data_media_url', question.path);
+                    $('#J_media_div').attr('data_media_url', question.media_url);
                 } else {
                     $('#J_media_div').attr('data_media_url', '');
                 }
-                $('#J_media_div').attr('play_type', question.play_type);
+                $('#J_media_div').attr('media_type', question.media_type);
 
                 $('#J_media_div').attr('data_isAboutVideo', question.isAboutVideo);
 
@@ -681,7 +629,9 @@ function requestQuestion(type, clickObject) {
                 trimWhiteSpace();
                 layer_div("hide");
 
-                if (type == 'category') {
+                if (type == 'level' || type == 'object') {
+                    clickObject.addClass("current").siblings("li").removeClass("current");
+                } else if (type == 'category') {
                     if (clickObject.hasClass("target")) {
                         clickObject.addClass("current").siblings("li.target").removeClass("current");
                     } else if (clickObject.hasClass("pattern")) {
@@ -689,8 +639,6 @@ function requestQuestion(type, clickObject) {
                     } else {
                         clickObject.addClass("current").siblings("li.voice").removeClass("current");
                     }
-                } else {
-                    clickObject.addClass("current").siblings("li").removeClass("current");
                 }
 
                 ajaxRequest = undefined;
@@ -838,58 +786,7 @@ function bindOptionClickEvent() {
         $(".J_option").unbind();
     })
 }
-/**
- * 重写科目和等级列表
- * @param {object} object_list [科目列表]
- * @param {int} object [当前科目id]
- * @param {object} level_list [等级列表]
- * @param {int} level [当前等级id]
- * @returns {void}
- * @author Adam $date2013.08.31$
- */
-function rewriteObjectAndLevelList(object_list, object, level_list, level) {
-    //
-    //更新科目列表
-    if (object_list != null) {
-        var str = '';
-        for (var i = 0; i < object_list.length; i++) {
-            str += '<li value="' + object_list[i]['id'] + '"';
-            if (object == object_list[i]['id']) {
-                str += ' class="current" ';
-            } else {
-                if (object_list[i]['question_num'] == 0) {
-                    str += ' class="grey not_allowed" ';
-                }
-            }
-            str += '><span>' + object_list[i]['name'] + '</span></li>';
-        }
-        $(".J_object").html(str);
-        if ($(".J_object .current").size() < 1) {
-            $(".J_object li").not(".grey").first().addClass("current");
-        }
-    }
-    //
-    //更新等级列表
-    if (level_list != null) {
-        var str = '';
-        for (var i = 0; i < level_list.length; i++) {
-            str += '<li value="' + level_list[i]['id'] + '"';
-            if (level == level_list[i]['id']) {
-                str += ' class="current" ';
-            } else {
-                if (level_list[i]['question_num'] == 0) {
-                    str += ' class="grey not_allowed" ';
-                }
-            }
-            str += '><span>' + level_list[i]['name'] + '</span></li>';
-        }
-        $(".J_level").html(str);
-        if ($(".J_level .current").size() < 1) {
-            $(".J_level li").not(".grey").first().addClass("current");
-        }
-        $(".J_level li:eq(13)").css("margin-left", level_margin_index + "px");
-    }
-}
+
 /**
  * 更新选项
  * @param {array} option [选项数组]
