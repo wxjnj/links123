@@ -55,13 +55,14 @@ $(function() {
 			$('#direct_text').removeClass('ipson');
 		}
 	});
-	$("#direct_text").on('click', function() {
+	$("#direct_text").on('click', function(){
 		var tag = $.trim($('#direct_text').val());
 		if (tag == $('#direct_text').attr('txt')){
 			$('#direct_text').val('').addClass('ipson');
 		}
 		return false;
 	});
+
 	$('.J_direct_submit').on('click', function(){
 		$("#frm_drct").trigger('submit');
 		$("#direct_text")[0].focus();
@@ -510,7 +511,7 @@ var THL = {
 
 		//重新加载页面清除keyword 清除浏览器未清除的文本框的值
 		$.cookies.set('keyword', '');
-		$("#search_text").val('');
+		$("#search_text").val('').select(); //选中文本框
 		
 		$('.thl').mouseover(function(){ $('#J_thl_div').show(); }); //移入糖葫芦区域 显示糖葫芦
 		$('.J_thl_area').mouseleave(function(){ $('#J_thl_div').hide(); }); //移除糖葫芦主区域 隐藏糖葫芦
@@ -539,9 +540,6 @@ var THL = {
 		$("#search_text").keyup(function(){ //文本框输入内容 设置糖葫芦 位置
 			$('#J_thl_div').show();
 			self.setpos();
-		});
-		
-		$("#search_text").keypress(function(event){ // 回车键响应
 			if(event.keyCode==13) {
 				$("#btn_search").trigger("click");
 				$("#search_text").select();
@@ -550,8 +548,8 @@ var THL = {
 		});
 
 		$("#search_text").mouseover(function(){ $("#search_text").select(); }); //移入 文本框 选中 文本
-		
-		$("#search_text").select(); //选中文本框
+
+		$('#search_text').on('webkitspeechchange', function(){ self.setpos(); }); //onwebkitspeechchange	
 
 		$(document).mouseup(function(ev){ // 搜索文本框始终获取焦点
 			if ( document.activeElement.tagName == "INPUT" 
@@ -575,7 +573,7 @@ var THL = {
 		$("#btn_search").click(function() { //单击搜索按钮
 			$("#search_text").select();
 			var keyword  = $.trim($("#search_text").val());
-			$.cookies.set( 'keyword', keyword); //保存keyword
+			$.cookies.set('keyword', keyword); //保存keyword
 			keyword = keyword.replace('http://','');
 			keyword = encodeURIComponent(keyword);
 			var url = $(".J_thlz a.on").attr("url").replace('keyword', keyword);
