@@ -232,7 +232,7 @@ class PublicAction extends BaseAction {
     public function changePwd() {
         $this->checkUser();
         //对表单提交处理进行处理或者增加非表单数据
-        if(md5($_POST['verify'])!=$_SESSION['verify']) {
+        if(md5(strtoupper($_POST['verify']))!=$_SESSION['verify']) {
             $this->error('验证码错误！');
         }
         $map=array();
