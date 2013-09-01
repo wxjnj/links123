@@ -541,11 +541,6 @@ var THL = {
 		$("#search_text").keyup(function(event){ //文本框输入内容 设置糖葫芦 位置
 			$('#J_thl_div').show();
 			self.setpos();
-			if(event.keyCode==13) {
-				$("#btn_search").trigger("click");
-				$("#search_text").select();
-				return false;
-			}
 		});
 
 		$(".thl").mouseenter(function(){ $("#search_text").select(); }); //移入 糖葫芦 选中 文本
