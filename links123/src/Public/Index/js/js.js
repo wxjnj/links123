@@ -549,13 +549,25 @@ var THL = {
 
 		$("#search_text").mouseover(function(){ $("#search_text").select(); }); //移入 文本框 选中 文本
 
-		//用于语音输入搜索词被覆盖修复
-		$('#search_text').on('click', function() {
-			if (!$.cookies.get('keyword')){ 
-				$(this).val($(this).val());
+		$('#search_text').on('click', function(){
+			if (!$.cookies.get('keyword')) {
+				var key  = $.trim($("#search_text").val());
+				if(key != ''){
+					$(this).data('key', key);
+				}
+			} else {
+				
+				$(this).data('key', '');
 			}
 		});
-		$('#search_text').on('webkitspeechchange', function(){ self.setpos(); }); //onwebkitspeechchange	
+
+		$('#search_text').on('webkitspeechchange', function(){ //onwebkitspeechchange
+			if($(this).data('key') && $(this).data('key') != ''){
+				$(this).val($(this).data('key') + ' ' + $(this).val());
+				$(this).data('key', '');
+			}
+			self.setpos();
+		}); 
 
 		$(document).mouseup(function(ev){ // 搜索文本框始终获取焦点
 			if ( document.activeElement.tagName == "INPUT" 
