@@ -547,13 +547,14 @@ var THL = {
 			}
 		});
 
-		$("#search_text").mouseover(function(){ $("#search_text").select(); }); //移入 文本框 选中 文本
+		$(".thl").mouseenter(function(){ $("#search_text").select(); }); //移入 糖葫芦 选中 文本
 
 		$('#search_text').on('click', function(){
 			if (!$.cookies.get('keyword')) {
 				var key  = $.trim($("#search_text").val());
 				if(key != ''){
 					$(this).data('key', key);
+					$(this).val(key);
 				}
 			} else {
 				
@@ -562,9 +563,13 @@ var THL = {
 		});
 
 		$('#search_text').on('webkitspeechchange', function(){ //onwebkitspeechchange
-			if($(this).data('key') && $(this).data('key') != ''){
-				$(this).val($(this).data('key') + ' ' + $(this).val());
-				$(this).data('key', '');
+			var key = $(this).data('key');
+			if(key && key != ''){
+				var v = $(this).val();
+				if(v.indexOf(key) == 0){
+					$(this).val(v.replace(key, key+' '));
+					$(this).data('key', '');
+				}
 			}
 			self.setpos();
 		}); 
@@ -573,7 +578,9 @@ var THL = {
 			if ( document.activeElement.tagName == "INPUT" 
 				|| document.activeElement.tagName == "TEXTAREA" 
 				|| document.activeElement.tagName == "IFRAME"
-				|| document.activeElement.id == "direct_text") {
+				|| document.activeElement.id == "direct_text"
+				|| document.activeElement.id == "search_text"
+			) {
 				return;
 			}
 			var txt = '';
