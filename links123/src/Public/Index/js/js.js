@@ -551,8 +551,9 @@ var THL = {
 
 		//用于语音输入搜索词被覆盖修复
 		$('#search_text').on('click', function() {
-
-			$(this).val($(this).val()+" ");
+			if (!$.cookies.get('keyword')){ 
+				$(this).val($(this).val());
+			}
 		});
 		$('#search_text').on('webkitspeechchange', function(){ self.setpos(); }); //onwebkitspeechchange	
 
