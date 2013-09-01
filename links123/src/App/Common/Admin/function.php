@@ -63,17 +63,17 @@ function getMediaPlayTypeName($type) {
  * @return string
  * @author Adam $date2013.08.26$
  */
-function getStorageTypeName($type) {
+function getMediaPriorityTypeName($type) {
     $name = "";
     switch ($type) {
         case 1:
-            $name = "本地";
-            break;
-        case 2:
             $name = "外链";
             break;
+        case 2:
+            $name = "本地";
+            break;
         default:
-            $name = "未知";
+            $name = "外链";
             break;
     }
     return $name;

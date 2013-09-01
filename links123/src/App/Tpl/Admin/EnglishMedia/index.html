@@ -23,12 +23,12 @@
                     <option value="{$subject.id}" <eq name="param['subject']" value="$subject['id']">selected="true"</eq>>{$subject.name}</option>
                 </volist>
             </select>&nbsp;&nbsp;
-<!--            <select id="selectRecommendSource" style='float:left;margin:0 5px 0 0;'>
-                <option value='0'>选择推荐</option>
-                <volist name="recommend_list" id="recommend">
-                    <option value="{$recommend.id}" <eq name="param['recommend']" value="$recommend['id']">selected="true"</eq>>{$recommend.name}</option>
-                </volist>
-            </select>-->
+            <!--            <select id="selectRecommendSource" style='float:left;margin:0 5px 0 0;'>
+                            <option value='0'>选择推荐</option>
+                            <volist name="recommend_list" id="recommend">
+                                <option value="{$recommend.id}" <eq name="param['recommend']" value="$recommend['id']">selected="true"</eq>>{$recommend.name}</option>
+                            </volist>
+                        </select>-->
             <label style='float: left; margin: 5px 5px 0px 0px;'>特别推荐:</label>
             <label style='float: left; margin: 5px 5px 0px 0px;'>是<input style='float: left; margin: 3px 2px 0px 0px;' type='checkbox' value="1" name="special_recommend"/></label>
             <label style='float: left; margin: 5px 5px 0px 0px;'>否<input style='float: left; margin: 3px 2px 0px 0px;' type='checkbox' value="0" name="special_recommend"/></label>
@@ -116,7 +116,7 @@
         </form>
 
         <div class="list" >
-            <html:list id="checkList" name="category" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,name:名称:edit,object_name:科目,level_name:等级,subject_name|default=无:专题:selectSubject,difficulty|getMediaDifficultyName:难度,recommend|getMediaRecommendYorN:推荐:recommend|id^object^subject,special_recommend|getYorN:特别推荐:special_recommend,voice|getVoiceName:语音,pattern|getMediaPatternName:格式类型,play_type|getMediaPlayTypeName:播放类型,storage_type|getStorageTypeName:存储类型,media_source_url|getLinkToHrefWithOutHttp:来源地址,created|toDate:发布时间,status|getStatus:状态" actionlist="edit:编辑" />
+            <html:list id="checkList" name="category" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,name:名称:edit,object_name:科目,level_name:等级,subject_name|default=无:专题:selectSubject,difficulty|getMediaDifficultyName:难度,recommend|getMediaRecommendYorN:推荐:recommend|id^object^subject,special_recommend|getYorN:特别推荐:special_recommend,voice|getVoiceName:语音,pattern|getMediaPatternName:格式类型,play_type|getMediaPlayTypeName:播放类型,priority_type|getMediaPriorityTypeName:优先播放:setMediaPriorityType,media_source_url|getLinkToHrefWithOutHttp:来源地址,created|toDate:发布时间,status|getStatus:状态" actionlist="edit:编辑" />
         </div>
 
         <div class="page">{$page}</div>
@@ -197,10 +197,13 @@
             $.post("__URL__/setSpecialRecommend", {id: id}, function(msg) {
                 if (msg) {
                     if (msg.status) {
-                        if (msg.data == 0) {
-                            $("a[href=\"javascript:recommend('" + id + "')\"]").text("否");
+                        if (msg.data.special_recommend == 0) {
+                            $("a[href=\"javascript:special_recommend('" + id + "')\"]").text("否");
                         } else {
-                            $("a[href=\"javascript:recommend('" + id + "')\"]").text("是");
+                            if (msg.data.recommend) {
+                                $("a[href^=\"javascript:recommend('" + id + "'\"]").text("是");
+                            }
+                            $("a[href=\"javascript:special_recommend('" + id + "')\"]").text("是");
                         }
                     }
                 }
@@ -225,6 +228,30 @@
                             $("a[href=\"javascript:recommend('" + id + "','" + object + "','" + subject + "')\"]").text("否");
                         } else {
                             $("a[href=\"javascript:recommend('" + id + "','" + object + "','" + subject + "')\"]").text("是");
+                        }
+                    }
+                }
+                $("#load_dialog").window("close");
+            }, "json");
+        } else {
+            alert("非法操作！");
+        }
+    }
+    /**
+     * 设置媒体优先播放类型
+     * @param {int} id
+     * @returns {undefined}
+     */
+    function setMediaPriorityType(id) {
+        if (id > 0) {
+            $("#load_dialog").window("open");
+            $.post("__URL__/setPriorityType", {id: id}, function(msg) {
+                if (msg) {
+                    if (msg.status) {
+                        if (msg.data == 1) {
+                            $("a[href=\"javascript:setMediaPriorityType('" + id + "')\"]").text("外链");
+                        } else {
+                            $("a[href=\"javascript:setMediaPriorityType('" + id + "')\"]").text("本地");
                         }
                     }
                 }
@@ -274,52 +301,6 @@
                         $("a[href=\"javascript:selectSubject('" + id + "')\"]").text(targetName);
                         select.remove();
                         $("a[href=\"javascript:selectSubject('" + id + "')\"]").show();
-                    }
-                }
-                $("#load_dialog").window("close");
-            }, "json")
-        })
-    }
-    /**
-     * 选择推荐
-     * @param {number} id
-     * @returns {void}     
-     * @author Adam $date2013.08.30$
-     */
-    function selectRecommend(id) {
-        $(".recommendSelect").unbind();
-        //现有的select
-        var old_select_id = $(".recommendSelect").attr("id");
-        //现有的select移除，还原链接
-        if (old_select_id) {
-            var old_id = old_select_id.substr(old_select_id.indexOf("_") + 1);
-            $("#recommendSelect_" + old_id).remove();
-            $("a[href=\"javascript:selectRecommend('" + old_id + "')\"]").show();
-        }
-        //显示当前选中的
-        var td = $("a[href=\"javascript:selectRecommend('" + id + "')\"]").parent("td");
-        $("a[href=\"javascript:selectRecommend('" + id + "')\"]").hide();
-        var now_text = $("a[href=\"javascript:selectRecommend('" + id + "')\"]").text();
-        td.append("<select class='recommendSelect' id='recommendSelect_" + id + "'></select>");
-        $("#recommendSelect_" + id).html($("#selectRecommendSource").html());
-        $("#recommendSelect_" + id + " option:contains('" + now_text + "')").attr("selected", "selected");
-        //
-        //绑定事件
-        $(".recommendSelect").change(function() {
-            if (parseInt($(this).val()) == 0) {
-                return false;
-            }
-            var select = $(this);
-            var id = $(this).attr("id").substr($(this).attr("id").indexOf("_") + 1);
-            var target = $(this).val();
-            var targetName = $(".recommendSelect option[value='" + target + "']").text();
-            $("#load_dialog").window("open");
-            $.post("__URL__/pointRecommend", {id: id, target: target}, function(msg) {
-                if (msg) {
-                    if (msg.status) {
-                        $("a[href=\"javascript:selectRecommend('" + id + "')\"]").text(targetName);
-                        select.remove();
-                        $("a[href=\"javascript:selectRecommend('" + id + "')\"]").show();
                     }
                 }
                 $("#load_dialog").window("close");

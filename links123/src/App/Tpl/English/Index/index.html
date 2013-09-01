@@ -87,9 +87,9 @@
                 </div>
                 <div class="menuright">
                     <ul class="tabs J_tabs">
-                        <li><a class="current" href="#" value="1">选择课程和年级</a></li>
-                        <li><a href="#" value="2">选择专题视频</a></li>
-                        <li><a href="#" value="3">选择推荐视频</a></li>
+                        <li><a class="current" href="#" value="1">选择课程</a></li>
+                        <li><a href="#" value="2">选择专题</a></li>
+                        <li><a href="#" value="3">选择推荐</a></li>
                     </ul>
                     <div class="panes">
                         <div class="box1">
@@ -138,6 +138,7 @@
                                         <li value="{$recommend.id}" <if condition="($user_last_select['recommend'] eq $recommend['id'])">class="current"</if>>
                                         <span>{$recommend.name}</span></li>
                                     </volist>
+                                    <li value="0"  <if condition="($user_last_select['recommend'] eq 0)">class="current"</if>><span>特别推荐</span></li>
                                 </ul>
                                 <ul class="grade J_recommendDifficulty">
                                     <li value="1" <eq name="user_last_select['difficulty']" value="1">class="current"</eq>><span>初级</span></li>
@@ -338,17 +339,28 @@
                   <!-- root element for the items -->
                   <div class="items">
 
-                    <!-- 1-5 -->
+                        <volist name="special_media" id="media" mod="4">
+                            <eq name="mod" value="0">
+                                <div>
+                                <ul>
+                            </eq>
+                                <li><img title='{$media.name}' question_id="{$media.id}" src="{$media.media_thumb_img}" /></li>
+                            <eq name="mod" value="3">
+                                </ul>
+                                </div>
+                            </eq>
+                        </volist>
+<!--                     1-5 
                     <div>
-                    <ul>
-                      <li><img title='推荐视频，敬请期待！' src="http://pkstatic.b0.upaiyun.com/upload/20130614/695e590d7bd36c205086520c81fbdd95.PNG" /></li>
+                      <ul>
+                        <li><img title='推荐视频，敬请期待！' src="http://pkstatic.b0.upaiyun.com/upload/20130614/695e590d7bd36c205086520c81fbdd95.PNG" /></li>
                         <li><img title='推荐视频，敬请期待！' src="http://pkstatic.b0.upaiyun.com/upload/20130711/5afe6c90a0f065f6c43eae3a37613966.PNG" /></li>
                         <li><img title='推荐视频，敬请期待！' src="http://pkstatic.b0.upaiyun.com/upload/20130711/7b11de37c5c7c1f0cb578cda623de628.PNG" /></li>
                        <li><img title='推荐视频，敬请期待！' src="http://pkstatic.b0.upaiyun.com/upload/20130711/ede6952299a7998daa7be20493077482.PNG" /></li>
                       </ul>
                     </div>
 
-                    <!-- 5-10 -->
+                     5-10 
                     <div>
                         <ul>
                       <li><img title='推荐视频，敬请期待！' src="http://pkstatic.b0.upaiyun.com/upload/20130711/ec4112ffbacb599e8d97b4a357ff3246.PNG" /></li>
@@ -358,7 +370,7 @@
                       </ul>
                     </div>
 
-                    <!-- 10-15 -->
+                     10-15 
                     <div>
                          <ul>
                       <li> <img title='推荐视频，敬请期待！' src="http://farm4.static.flickr.com/3629/3323896446_3b87a8bf75_t.jpg" /></li>
@@ -366,7 +378,7 @@
                         <li> <img title='推荐视频，敬请期待！' src="http://pkstatic.b0.upaiyun.com/upload/20130711/5afe6c90a0f065f6c43eae3a37613966.PNG" /></li>
                        <li> <img title='推荐视频，敬请期待！' src="http://pkstatic.b0.upaiyun.com/upload/20130711/ec4112ffbacb599e8d97b4a357ff3246.PNG" /></li>
                       </ul>
-                    </div>
+                    </div>-->
 
                   </div>
 

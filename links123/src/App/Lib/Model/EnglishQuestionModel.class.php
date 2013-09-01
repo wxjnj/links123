@@ -205,6 +205,21 @@ class EnglishQuestionModel extends CommonModel {
         return $ret;
     }
 
+    /**
+     * 获取特别推荐的题目列表
+     * @return max
+     * @author Adam $date2013.09.01$
+     */
+    public function getSpecialRecommendQuestionList() {
+        $ret = $this->alias("question")
+                ->field("media.media_thumb_img,media.name,question.id,media.id as media_id,media.object,media.level,media.difficulty")
+                ->join(C("DB_PREFIX") . "english_media media on question.media_id=media.id")
+                ->where("media.special_recommend=1 and media.media_thumb_img!=''")
+                ->limit("20")
+                ->select();
+        return $ret;
+    }
+
 }
 
 ?>

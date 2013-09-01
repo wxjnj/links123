@@ -153,7 +153,7 @@ $(function() {
 
     });
     //难度点击事件
-    $('.J_subjectDifficulty li,.recommendDifficulty li').live('click', function() {
+    $('.J_subjectDifficulty li,.J_recommendDifficulty li').live('click', function() {
         if ($(this).hasClass("current")) {
 
             var top = $(this).offset().top - 50;

@@ -209,6 +209,14 @@ ul.grade li.current {
 	background:url(../images/currentbg1.png) no-repeat;
 }
 
+.kecheng.J_recommend {
+    margin: 10px 0 15px 30px;
+}
+
+ul.kecheng.J_recommend li {
+    margin: 0 2px 0 0;
+}
+
 
 .ricewan{
 	width:203px;

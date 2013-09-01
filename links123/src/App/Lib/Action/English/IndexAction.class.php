@@ -165,9 +165,12 @@ class IndexAction extends EnglishAction {
 //        }
         //排行榜数据
         $ret = $englishUserInfoModel->getTopUserListByTypeName("object_综合");
-
         $this->assign("top_1", $ret[0]);
         $this->assign("top_2", $ret[1]);
+        //
+        //特别推荐
+        $special_media = $questionModel->getSpecialRecommendQuestionList();
+        $this->assign("special_media", $special_media);
 
         $this->assign("question", $question);
         $this->assign("level_list", $level_list);
@@ -573,4 +576,5 @@ class IndexAction extends EnglishAction {
     }
 
 }
+
 ?>
