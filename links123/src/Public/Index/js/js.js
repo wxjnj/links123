@@ -537,7 +537,7 @@ var THL = {
 			}
 		});
 		
-		$("#search_text").keyup(function(){ //文本框输入内容 设置糖葫芦 位置
+		$("#search_text").keyup(function(event){ //文本框输入内容 设置糖葫芦 位置
 			$('#J_thl_div').show();
 			self.setpos();
 			if(event.keyCode==13) {
@@ -549,6 +549,10 @@ var THL = {
 
 		$("#search_text").mouseover(function(){ $("#search_text").select(); }); //移入 文本框 选中 文本
 
+		//用于语音输入搜索词被覆盖修复
+		$('#search_text').on('click', function() {
+			$(this).val($(this).val());
+		});
 		$('#search_text').on('webkitspeechchange', function(){ self.setpos(); }); //onwebkitspeechchange	
 
 		$(document).mouseup(function(ev){ // 搜索文本框始终获取焦点
