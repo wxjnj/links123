@@ -28,6 +28,16 @@
 
 </div>
 <script type="text/javascript">
+    $(function() {
+        /* 直达 */
+        $(".page input").keydown(function(event) {
+            if (event.keyCode == 13) {	// 回车
+                if ($(this).val() != '' && !isNaN($(this).val())) {
+                    window.location.href = $(this).attr("url") + "&p=" + $(this).val();
+                }
+            }
+        });
+    })
     function setDefault(id){
         $.post("{:U('EnglishObject/setDefault')}",{id:id},function(msg){
             alert(msg.info);

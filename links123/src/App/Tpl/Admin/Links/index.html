@@ -120,6 +120,14 @@
 				$("#tab li").eq(parseInt(catNow)-1).trigger("click");
 			}
 		});
+        /* 直达 */
+        $(".page input").keydown(function(event) {
+            if (event.keyCode == 13) {	// 回车
+                if ($(this).val() != '' && !isNaN($(this).val())) {
+                    window.location.href = $(this).attr("url") + "&p=" + $(this).val();
+                }
+            }
+        });
 	});
 	//
 	function groupEdit() {
