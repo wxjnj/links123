@@ -73,6 +73,7 @@ $(function() {
 		if (tag == '' || tag == $('#direct_text').attr('txt')){
 			return false;
 		}
+		$('#direct_text').select();
 	});
 
 	// 编辑自留地

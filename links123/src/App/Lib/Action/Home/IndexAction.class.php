@@ -34,7 +34,7 @@ class IndexAction extends CommonAction {
 			$areaList = $myarea->where(array('mid' => $memberAuthKey))->order('sort ASC')->select();
 			session('arealist', $areaList ? $areaList : session('arealist_default'));
 			
-			$skinId = session('skin');
+			$skinId = session('skinId');
 			if (!$skinId) {
 				
 				$skinId = cookie('skinId');
@@ -83,11 +83,10 @@ class IndexAction extends CommonAction {
 				$result = false;
 			}
 			
-			session('skin', $skinId);
-		} else {
-			
-			cookie('skinId', $skinId, array('expire' => 0));
+			session('skinId', $skinId);
 		}
+			
+		cookie('skinId', $skinId, array('expire' => 0));
 		
 		$this->ajaxReturn($result);
 	}
