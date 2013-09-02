@@ -26,7 +26,7 @@ class EnglishMediaModel extends CommonModel {
      * @author Adam $date2013.09.01$
      */
     public function setRecommend($id, $object, $subject) {
-        if(intval($id)==0){
+        if (intval($id) == 0) {
             return false;
         }
         $data['id'] = $id;
@@ -87,6 +87,20 @@ class EnglishMediaModel extends CommonModel {
             $this->commit();
             return $recommend;
         }
+    }
+
+    /**
+     * 获取特别推荐的视频列表
+     * @return max
+     * @author Adam $date2013.09.01$
+     */
+    public function getSpecialRecommendMediaList($limit = 20) {
+        $ret = $this->field("id,name,media_thumb_img")
+                ->where("special_recommend=1 and media_thumb_img!=''")
+//                ->limit($limit)
+                ->order("difficulty desc")
+                ->select();
+        return $ret;
     }
 
 }

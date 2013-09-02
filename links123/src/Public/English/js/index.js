@@ -10,7 +10,13 @@ $(function() {
     if ($("#J_currentRice").text() == 1000) {
         next_question_lvlup = true;
     }
-    $(".scrollable").scrollable({circular: true});
+    // custom easing called "custom"
+    $.easing.custom = function (x, t, b, c, d) {
+        var s = 1.70158;
+        if ((t/=d/2) < 1) return c/2*(t*t*(((s*=(1.525))+1)*t - s)) + b;
+        return c/2*((t-=2)*t*(((s*=(1.525))+1)*t + s) + 2) + b;
+    }
+    $(".scrollable").scrollable({easing: 'custom', speed: 700, circular: true});
     $(".grade li:eq(13)").css("margin-left", level_margin_index + "px");
 
     //答题按钮点击事件
@@ -174,6 +180,13 @@ $(function() {
         requestQuestion("difficulty", $(this));
 
     });
+
+    //
+    //特别推荐点击
+    $("#J_specialReommendDiv img").live('click', function() {
+        var media_id = $(this).attr("media_id");
+        requestQuestion("special_recommend", $(this), media_id);
+    })
 
     //升级事件
     $("#J_levelUpButton").live('click', function() {
@@ -411,11 +424,11 @@ $(function() {
 /**
  * 请求题目
  * 响应分类、科目、等级以及上下题的点击，最终目的为请求题目。
- * @param {string} type [请求类型，大类为category，科目为object，等级为level,专题为subject，推荐为recommend，难度为difficulty,上一题下一题为quick_select_prev和quick_select_next
+ * @param {string} type [请求类型，大类为category，科目为object，等级为level,专题为subject，推荐为recommend，难度为difficulty,特别推荐为special_recommend,上一题下一题为quick_select_prev和quick_select_next
  * @returns {void}
  * @author Adam $date2013-07-26$
  */
-function requestQuestion(type, clickObject) {
+function requestQuestion(type, clickObject, media_id) {
     //如果有题目正在请求，中断此次请求并提示（修改为abort ajax）
     if (typeof ajaxRequest != "undefined") {
         var top = $(".videoplay").offset().top - 30;
@@ -434,11 +447,15 @@ function requestQuestion(type, clickObject) {
         //return false;
         ajaxRequest.abort();
     }
+
     var viewType = $(".J_tabs li a.current").attr("value");
 
     var now_question_id = $("#J_questionId").text();
     if ($(".answer").is(":visible")) {
         $("#J_answerButton").click();
+    }
+    if (type == "special_recommend") {
+        viewType = 3;
     }
     var data = {
         'viewType': viewType,
@@ -449,8 +466,12 @@ function requestQuestion(type, clickObject) {
         'now_question_id': now_question_id
     };
     if (viewType == 3) {
-        data.recommend = $(".J_recommend .current").attr("value");
-        data.difficulty = $(".J_difficulty .current").attr("value");
+        if (type == "special_recommend") {
+            data.media_id = media_id;
+        } else {
+            data.recommend = $(".J_recommend .current").attr("value");
+            data.difficulty = $(".J_difficulty .current").attr("value");
+        }
     } else if (viewType == 2) {
         data.subject = $(".J_subject .current").attr("value");
         data.difficulty = $(".J_difficulty .current").attr("value");
@@ -523,12 +544,16 @@ function requestQuestion(type, clickObject) {
                     });
                 }
                 if (viewType == 3) {
+                    $(".J_tabs li a[value='3']").click();
                     if (type == "category") {
-                        rewriteObjectAndLevelList(data.object_list, 1, data.level_list, 1)
+                        rewriteObjectAndLevelList(data.object_list, 1, data.level_list, 1);
+                    } else if (type == "special_recommend") {
+                        $(".J_recommend li[value='0']").addClass("current").siblings(".current").removeClass("current");
+                        $(".J_recommendDifficulty li[value='"+data.question.difficulty+"']").addClass("current").siblings(".current").removeClass("current");
                     }
                 } else if (viewType == 2) {
                     if (type == "category") {
-                        rewriteObjectAndLevelList(data.object_list, 1, data.level_list, 1)
+                        rewriteObjectAndLevelList(data.object_list, 1, data.level_list, 1);
                     }
                 } else {
                     //

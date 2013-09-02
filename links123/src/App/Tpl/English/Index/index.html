@@ -87,9 +87,9 @@
                 </div>
                 <div class="menuright">
                     <ul class="tabs J_tabs">
-                        <li><a class="current" href="#" value="1">选择课程</a></li>
-                        <li><a href="#" value="2">选择专题</a></li>
-                        <li><a href="#" value="3">选择推荐</a></li>
+                        <li><a class="current" href="javascript:;" value="1">选择课程</a></li>
+                        <li><a href="javascript:;" value="2">选择专题</a></li>
+                        <li><a href="javascript:;" value="3">选择推荐</a></li>
                     </ul>
                     <div class="panes">
                         <div class="box1">
@@ -337,18 +337,14 @@
                 <div class="scrollable" id="scrollable">
 
                   <!-- root element for the items -->
-                  <div class="items">
+                  <div class="items" id="J_specialReommendDiv">
 
                         <volist name="special_media" id="media" mod="4">
-                            <eq name="mod" value="0">
                                 <div>
                                 <ul>
-                            </eq>
-                                <li><img title='{$media.name}' question_id="{$media.id}" src="{$media.media_thumb_img}" /></li>
-                            <eq name="mod" value="3">
+                                <li><img title='{$media.name}' media_id="{$media.id}" src="{$media.media_thumb_img}" /></li>
                                 </ul>
                                 </div>
-                            </eq>
                         </volist>
 <!--                     1-5 
                     <div>

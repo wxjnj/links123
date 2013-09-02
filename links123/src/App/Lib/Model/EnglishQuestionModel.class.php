@@ -28,120 +28,129 @@ class EnglishQuestionModel extends CommonModel {
      * @param int $voice [口音，1美音，2英音]
      * @param int $target [训练目标，1听力，2说力]
      * @param int $pattern [类型，1视频，2音频]
+     * @param int $media_id [视频id]
      * @param string $extend_condition [额外条件]
      * return array [题目数组]
      */
-    public function getQuestionToIndex($viewType = 1, $object, $level, $subject, $recommend, $difficulty, $voice = 1, $target = 1, $pattern = 1, $extend_condition = "") {
+    public function getQuestionToIndex($viewType = 1, $object, $level, $subject, $recommend, $difficulty, $voice = 1, $target = 1, $pattern = 1, $media_id = 0, $extend_condition = "") {
         $map = array();
-        $needField = "question.id as question_id,question.target,question.content,question.answer,question.media_id,media.*";
-        if ($viewType == 1) {
-            //
-            //获取科目条件
-            if (intval($object) > 0) {
-                //检测科目是否为综合
-                $object_name = D("EnglishObject")->where(array("id" => $object, "status" => 1))->getField("name");
-                //科目名不为综合
-                if ($object_name != "综合") {
-                    $map['media.object'] = $object;
-                }
-            }
-            if (intval($level) > 0) {
-                $map['media.level'] = $level;
-            }
-        } else if ($viewType == 2) {
-            if (intval($subject) > 0) {
-                $map['media.subject'] = $subject;
-            }
-            if (intval($difficulty) > 0) {
-                $map['media.difficulty'] = $difficulty;
-            }
-        } else if ($viewType == 3) {
-            if (intval($recommend) > 0) {
-                $map['_string'] = "FIND_IN_SET('" + $recommend + "',media.recomend)";
-//                $map['media.recommend'] = $recommend;
-            }
-            if (intval($difficulty) > 0) {
-                $map['media.difficulty'] = $difficulty;
-            }
-        }
-        if (intval($voice) > 0) {
-            $map['media.voice'] = $voice;
-        }
-        if (intval($pattern) > 0) {
-            $map['media.pattern'] = $pattern;
-        }
-        if (intval($target) > 0) {
-            $map['question.target'] = $target;
-        }
-        $map['media.status'] = 1;
-        $map['question.status'] = 1;
-
-        if (!empty($extend_condition)) {
-            $map['_string'] = $extend_condition;
-        }
-        //
-        //优先获取用户没看过的试题
-        $user_view_question_ids = D("EnglishViewRecord")->getUserViewQuestionIdList($object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern);
-        if (!empty($user_view_question_ids)) {
-            $map['question.id'] = array("not in", $user_view_question_ids);
-            $count = $this->alias("question")->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media ON question.media_id=media.id")->where($map)->count();
-            //$count = $this->where($condition . $record_view_condition)->count(); //用于随机
-            if ($count > 0) {
-                $limit = rand(0, $count - 1);
-                //去除用户看过的题目
-                $ret = $this->alias("question")
-                        ->field($needField)
-                        ->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media ON question.media_id=media.id")
-                        ->where($map)
-                        ->limit("{$limit},1")
-                        ->select();
-//                $ret = $this->where($condition . $record_view_condition)->limit("{$limit},1")->select(); 
-                if (!empty($ret)) {
-                    $ret = $ret[0];
-                }
-            }
-        }
         $englishRecordModel = D("EnglishRecord");
-        if (empty($ret)) {
-            //
-            //优先获取用户没做过的题目
-            $user_question_ids = $englishRecordModel->getUserTestQuestionIdList($object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern); //用户做过的题目id数组
-            $map['question.id'] = array("not in", $user_question_ids);
-            $count = $this->alias("question")->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media ON question.media_id=media.id")->where($map)->count();
-            if ($count > 0) {
-                $limit = rand(0, $count - 1);
-                //去除用户看过的题目
-                $ret = $this->alias("question")
-                        ->field($needField)
-                        ->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media ON question.media_id=media.id")
-                        ->where($map)
-                        ->limit("{$limit},1")
-                        ->select();
-//                $ret = $this->where($condition . $record_view_condition)->limit("{$limit},1")->select(); 
-                if (!empty($ret)) {
-                    $ret = $ret[0];
+        $needField = "question.id as question_id,question.target,question.content,question.answer,question.media_id,media.*";
+        if ($viewType == 3 && intval($media_id) > 0) {
+            $ret = $this->alias("question")
+                    ->field($needField)
+                    ->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media ON question.media_id=media.id")
+                    ->where(array("media.id" => $media_id))
+                    ->find();
+        } else {
+            if ($viewType == 1) {
+                //
+                //获取科目条件
+                if (intval($object) > 0) {
+                    //检测科目是否为综合
+                    $object_name = D("EnglishObject")->where(array("id" => $object, "status" => 1))->getField("name");
+                    //科目名不为综合
+                    if ($object_name != "综合") {
+                        $map['media.object'] = $object;
+                    }
+                }
+                if (intval($level) > 0) {
+                    $map['media.level'] = $level;
+                }
+            } else if ($viewType == 2) {
+                if (intval($subject) > 0) {
+                    $map['media.subject'] = $subject;
+                }
+                if (intval($difficulty) > 0) {
+                    $map['media.difficulty'] = $difficulty;
+                }
+            } else if ($viewType == 3) {
+                if (intval($recommend) > 0) {
+                    $map['_string'] = "FIND_IN_SET('" + $recommend + "',media.recomend)";
+//                $map['media.recommend'] = $recommend;
+                }
+                if (intval($difficulty) > 0) {
+                    $map['media.difficulty'] = $difficulty;
                 }
             }
+            if (intval($voice) > 0) {
+                $map['media.voice'] = $voice;
+            }
+            if (intval($pattern) > 0) {
+                $map['media.pattern'] = $pattern;
+            }
+            if (intval($target) > 0) {
+                $map['question.target'] = $target;
+            }
+            $map['media.status'] = 1;
+            $map['question.status'] = 1;
+
+            if (!empty($extend_condition)) {
+                $map['_string'] = $extend_condition;
+            }
             //
-            //用户题目都做过，视作未做过一题
-            if (empty($ret)) {
-                $count = $this->alias("question")->join("RIGHT JOIN " . C("D_PREFIX") . "english_media media ON question.media_id=media.id")->where($map)->count();
+            //优先获取用户没看过的试题
+            $user_view_question_ids = D("EnglishViewRecord")->getUserViewQuestionIdList($object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern);
+            if (!empty($user_view_question_ids)) {
+                $map['question.id'] = array("not in", $user_view_question_ids);
+                $count = $this->alias("question")->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media ON question.media_id=media.id")->where($map)->count();
+                //$count = $this->where($condition . $record_view_condition)->count(); //用于随机
                 if ($count > 0) {
                     $limit = rand(0, $count - 1);
+                    //去除用户看过的题目
                     $ret = $this->alias("question")
                             ->field($needField)
                             ->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media ON question.media_id=media.id")
                             ->where($map)
                             ->limit("{$limit},1")
                             ->select();
+//                $ret = $this->where($condition . $record_view_condition)->limit("{$limit},1")->select(); 
                     if (!empty($ret)) {
                         $ret = $ret[0];
-                        $ret['tested'] = true;
                     }
                 }
             }
-            if (false === $ret) {
-                return array();
+            if (empty($ret)) {
+                //
+                //优先获取用户没做过的题目
+                $user_question_ids = $englishRecordModel->getUserTestQuestionIdList($object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern); //用户做过的题目id数组
+                $map['question.id'] = array("not in", $user_question_ids);
+                $count = $this->alias("question")->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media ON question.media_id=media.id")->where($map)->count();
+                if ($count > 0) {
+                    $limit = rand(0, $count - 1);
+                    //去除用户看过的题目
+                    $ret = $this->alias("question")
+                            ->field($needField)
+                            ->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media ON question.media_id=media.id")
+                            ->where($map)
+                            ->limit("{$limit},1")
+                            ->select();
+//                $ret = $this->where($condition . $record_view_condition)->limit("{$limit},1")->select(); 
+                    if (!empty($ret)) {
+                        $ret = $ret[0];
+                    }
+                }
+                //
+                //用户题目都做过，视作未做过一题
+                if (empty($ret)) {
+                    $count = $this->alias("question")->join("RIGHT JOIN " . C("D_PREFIX") . "english_media media ON question.media_id=media.id")->where($map)->count();
+                    if ($count > 0) {
+                        $limit = rand(0, $count - 1);
+                        $ret = $this->alias("question")
+                                ->field($needField)
+                                ->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media ON question.media_id=media.id")
+                                ->where($map)
+                                ->limit("{$limit},1")
+                                ->select();
+                        if (!empty($ret)) {
+                            $ret = $ret[0];
+                            $ret['tested'] = true;
+                        }
+                    }
+                }
+                if (false === $ret) {
+                    return array();
+                }
             }
         }
         $ret['id'] = $ret['question_id'];
@@ -202,21 +211,6 @@ class EnglishQuestionModel extends CommonModel {
         if (!empty($ret)) {
             $ret['option'] = D("EnglishOptions")->getQuestionOptionList($ret['id']);
         }
-        return $ret;
-    }
-
-    /**
-     * 获取特别推荐的题目列表
-     * @return max
-     * @author Adam $date2013.09.01$
-     */
-    public function getSpecialRecommendQuestionList() {
-        $ret = $this->alias("question")
-                ->field("media.media_thumb_img,media.name,question.id,media.id as media_id,media.object,media.level,media.difficulty")
-                ->join(C("DB_PREFIX") . "english_media media on question.media_id=media.id")
-                ->where("media.special_recommend=1 and media.media_thumb_img!=''")
-                ->limit("20")
-                ->select();
         return $ret;
     }
 

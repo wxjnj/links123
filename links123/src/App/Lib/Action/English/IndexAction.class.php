@@ -133,8 +133,8 @@ class IndexAction extends EnglishAction {
                     'path' => $path,
                     'play_type' => $play_type
                 );
-
-                D("EnglishMedia")->save($saveData);
+                $englishMediaModel = $englishMediaModel ? $englishMediaModel : D("EnglishMedia");
+                $englishMediaModel->save($saveData);
             }
 
             $question['path'] = $path;
@@ -169,7 +169,8 @@ class IndexAction extends EnglishAction {
         $this->assign("top_2", $ret[1]);
         //
         //特别推荐
-        $special_media = $questionModel->getSpecialRecommendQuestionList();
+        $englishMediaModel = $englishMediaModel ? $englishMediaModel : D("EnglishMedia");
+        $special_media = $englishMediaModel->getSpecialRecommendMediaList();
         $this->assign("special_media", $special_media);
 
         $this->assign("question", $question);
@@ -188,8 +189,6 @@ class IndexAction extends EnglishAction {
      * @todo [请求的参数为空的时候的默认，暂时为指定的ID，需要获取默认]
      */
     public function ajax_get_question() {
-
-
         if ($this->isAjax()) {
             $levelModel = D("EnglishLevel");
             $objectModel = D("EnglishObject");
@@ -204,8 +203,13 @@ class IndexAction extends EnglishAction {
             $now_question_id = intval($_REQUEST['now_question_id']); //当前的题目id
             //不同的浏览方式获取不同的数据
             if ($viewType == 3) {
-                $recommend = intval($_REQUEST['recommend']) > 0 ? intval($_REQUEST['recommend']) : 1; //推荐分类id
-                $difficulty = intval($_REQUEST['difficulty']) > 0 ? intval($_REQUEST['difficulty']) : 1; //难度值
+                //如果是特别推荐图片点击来的
+                if ($type == "special_recommend") {
+                    $media_id = intval($_REQUEST['media_id']);
+                } else {
+                    $recommend = intval($_REQUEST['recommend']) > 0 ? intval($_REQUEST['recommend']) : 1; //推荐分类id
+                    $difficulty = intval($_REQUEST['difficulty']) > 0 ? intval($_REQUEST['difficulty']) : 1; //难度值
+                }
             } else if ($viewType == 2) {
                 $subject = intval($_REQUEST['subject']) > 0 ? intval($_REQUEST['subject']) : 1; //专题id
                 $difficulty = intval($_REQUEST['difficulty']) > 0 ? intval($_REQUEST['difficulty']) : 1; //难度值
@@ -252,23 +256,22 @@ class IndexAction extends EnglishAction {
                     $level = $object == 0 ? $levelModel->getDefaultLevelInfo($object, $voice, $target, $pattern) : $object; //等级
                 }
             }
-            /* 存储用户点击历史  开始 */
-            $user_last_select = array();
-            $user_last_select['voice'] = $voice;
-            $user_last_select['target'] = $target;
-            $user_last_select['pattern'] = $pattern;
-            $user_last_select['viewType'] = $viewType;
-
 
             $ret = array();
             if ($viewType == 3) {
+                //推荐下点击美音等大类要更新科目和等级的列表
                 if ($type == "category") {
                     $ret['object_list'] = $objectModel->getObjectListToIndex($voice, $target, $pattern);
                     $ret['level_list'] = $levelModel->getLevelListToIndex($object, $voice, $target, $pattern);
                 }
-                $user_last_select['recommend'] = $recommend;
-                $user_last_select['difficulty'] = $difficulty;
+                if ($type != "special_recommend") {
+                    $user_last_select['recommend'] = $recommend;
+                    $user_last_select['difficulty'] = $difficulty;
+                } else {
+                    $user_last_select['recommend'] = 0;
+                }
             } else if ($viewType == 2) {
+                //推荐下点击美音等大类要更新科目和等级的列表
                 if ($type == "category") {
                     $ret['object_list'] = $objectModel->getObjectListToIndex($voice, $target, $pattern);
                     $ret['level_list'] = $levelModel->getLevelListToIndex($object, $voice, $target, $pattern);
@@ -294,7 +297,7 @@ class IndexAction extends EnglishAction {
             if (!empty($user_last_question)) {
                 $ret['question'] = $user_last_question;
             } else {
-                $ret['question'] = $questionModel->getQuestionToIndex($viewType, $object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern);
+                $ret['question'] = $questionModel->getQuestionToIndex($viewType, $object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern, $media_id);
             }
             //
             //记录浏览题目
@@ -308,7 +311,30 @@ class IndexAction extends EnglishAction {
 //            D("EnglishViewRecord")->addRecord($ret['question']['id'], $level, $object, $voice, $target, $pattern); //记录用户查看题目
             $ret['english_user_info'] = D("EnglishUserInfo")->getEnglishUserInfo();
             $ret['user_count_info'] = D("EnglishUserCount")->getEnglishUserCountInfo($voice, $target, $object, $level);
-
+            /* 存储用户点击历史  开始 */
+            $user_last_select = cookie('english_user_last_select');
+            if (!is_array($user_last_select)) {
+                $user_last_select = array();
+            }
+            $user_last_select['voice'] = $voice;
+            $user_last_select['target'] = $target;
+            $user_last_select['pattern'] = $pattern;
+            $user_last_select['viewType'] = $viewType;
+            if ($viewType == 3) {
+                if ($type != "special_recommend") {
+                    $user_last_select['recommend'] = $recommend;
+                    $user_last_select['difficulty'] = $difficulty;
+                } else {
+                    $user_last_select['recommend'] = 0;
+                    $user_last_select['difficulty'] = $ret['question']['difficulty'];
+                }
+            } else if ($viewType == 2) {
+                $user_last_select['subject'] = $subject;
+                $user_last_select['difficulty'] = $difficulty;
+            } else {
+                $user_last_select['object'] = $object;
+                $user_last_select['level'] = $level;
+            }
             cookie('english_user_last_select', $user_last_select, 60 * 60 * 24 * 30); // 存储用户点击历史
             //media_url为空，则进行视频解析
             if (!$ret['question']['path']) {
