@@ -644,7 +644,9 @@ a.disabled {
 .ranklist .idx{ width: 40px; text-align: center; }
 .ranklist .idx img{ vertical-align: middle; }
 .ranklist .nm{
-	width: 70px;
+	margin-right: 28px;
+    overflow: hidden;
+    width: 42px;
 }
 .ranklist .sum{
 	background-position: 52px -34px;
