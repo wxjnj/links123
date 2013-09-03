@@ -6,7 +6,7 @@
 	<meta name="Keywords" content="{$keywords}" />
 	<meta name="Description" content="{$description}" />
 	<link href="__PUBLIC__/Index/css/base.css" rel="stylesheet" type="text/css" />
-	<link href="__PUBLIC__/Index/css/index.css?2013083005" rel="stylesheet" type="text/css" />
+	<link href="__PUBLIC__/Index/css/index.css?2013083103" rel="stylesheet" type="text/css" />
 	<link rel="stylesheet" type="text/css" href="__PUBLIC__/skin/fancybox/jquery.fancybox.css?v=2.1.4" media="screen" />
 	<link href="__PUBLIC__/Index/css/jquery-ui.css" rel="stylesheet" type="text/css"/>
 	<link href="__PUBLIC__/skin/FlexSlider/flexslider.css" rel="stylesheet" type="text/css"/>
@@ -19,7 +19,7 @@
 		<div class="top-inner">
 			<div class="syt">
 				<form  id="frm_drct" method="post" action="__APP__/Link/direct/" target="_blank">
-					<input class="ips" type="text" name="tag" id="direct_text" value="{$directTip}"  txt="{$directTip}" autocomplete="off"/>
+					<input class="ips" type="text" name="tag" id="direct_text" value="{$directTip}"  txt="{$directTip}" autocomplete="on"/>
 					<input class="btn J_direct_submit" type="button" value="" />
 				</form>
 			</div>
@@ -64,7 +64,7 @@
 						</dl>
 					</div>
 					<div class="ctls" id="rch_sch">
-						<input type="text" id="search_text" class="ipt" x-webkit-speech lang="zh-CN" value="{$_COOKIE['keyword']}" autocomplete="off"  onwebkitspeechchange="THL.setpos();"/>
+						<input type="text" id="search_text" class="ipt" x-webkit-speech lang="zh-CN" value="{$_COOKIE['keyword']}" autocomplete="on" />
 						<input type="hidden" id="search_text_o" />
 						<input class="btn" type="submit" value="" id="btn_search" />
 						<ul id="tips"></ul>
@@ -101,8 +101,9 @@
 			<div class="sider">
 				<div class="video-panel">
 					<div class="video">
-						<img src="__PUBLIC__/Index/imgs/meinv.png" alt="" />
-						<!--  where shoaly wants to start from....
+						<!-- where shoaly start from.... -->
+						{:R('Slider/run',array(array("width"=>260,"height"=>178)),'Widget')}
+						<!--  
 						<div class="flexslider">
 				          <ul class="slides">
 				          	<li>
@@ -128,11 +129,11 @@
 					<ul>
 						<li>
 							<p class="img"><span class="newWin" url="/English"><img src="__PUBLIC__/Index/imgs/app/app001.png" alt="" /><b>X</b></span></p>
-							<p class="nm"><a href="/English" target="_blank">英语角</a></p>
+							<p class="nm"><a href="/English" target="_blank">另客英语</a></p>
 						</li>
-						<li id="J_mail" >
-							<p class="img"><span><img src="__PUBLIC__/Index/imgs/app/app003.png" alt="" /><b>X</b></span></p>
-							<p class="nm"><span>邮&nbsp;箱</span></p>
+						<li>
+							<p class="img"><span class="newWin" url="/Index/nav"><img src="__PUBLIC__/Index/imgs/app/app002.png" alt="" /><b>X</b></span></p>
+							<p class="nm"><a href="/Index/nav" target="_blank">另客导航</a></p>
 						</li>
 						<li id="J_calendar" >
 							<p class="img"><span><img src="__PUBLIC__/Index/imgs/app/app004.png" alt="" /><b>X</b><i>{:date('D')}</i><s>{:date('d')}</s></span></p>
@@ -142,17 +143,17 @@
 							<p class="img"><span><img src="__PUBLIC__/Index/imgs/app/app005.png" alt="" /><b>X</b></span></p>
 							<p class="nm"><span>天&nbsp;气</span></p>
 						</li>
-						<li>
-							<p class="img"><span class="newWin" url="/Index/nav"><img src="__PUBLIC__/Index/imgs/app/app002.png" alt="" /><b>X</b></span></p>
-							<p class="nm"><a href="/Index/nav" target="_blank">另客导航</a></p>
+						<li id="J_stikynot" >
+							<p class="img"><span><img src="__PUBLIC__/Index/imgs/app/app008.png" alt="" /><b>X</b></span></p>
+							<p class="nm"><span>便&nbsp;签</span></p>
 						</li>
 						<li id="J_calc" >
 							<p class="img"><span><img src="__PUBLIC__/Index/imgs/app/app007.png" alt="" /><b>X</b></span></p>
 							<p class="nm"><span>计算器</span></p>
 						</li>
-						<li id="J_stikynot" >
-							<p class="img"><span><img src="__PUBLIC__/Index/imgs/app/app008.png" alt="" /><b>X</b></span></p>
-							<p class="nm"><span>便&nbsp;签</span></p>
+						<li id="J_mail" >
+							<p class="img"><span><img src="__PUBLIC__/Index/imgs/app/app003.png" alt="" /><b>X</b></span></p>
+							<p class="nm"><span>邮&nbsp;箱</span></p>
 						</li>
 						<li id="J_translate" >
 							<p class="img"><span><img src="__PUBLIC__/Index/imgs/app/app009.png" alt="" /><b>X</b></span></p>
@@ -286,11 +287,11 @@
 	</div>
 	<include file="Contorls:app" />
 	<script type="text/javascript" src="__PUBLIC__/English/js/jquery-1.7.2.min.js"></script>
-	<script type="text/javascript" src="__PUBLIC__/Index/js/js.js?2013083001"></script>
+	<script type="text/javascript" src="__PUBLIC__/Index/js/js.js?2013090101"></script>
 	<script type="text/javascript" src="__PUBLIC__/skin/js/jquery.cookies.2.2.0.min.js"></script>
 	<script type="text/javascript" src="__PUBLIC__/skin/fancybox/jquery.fancybox.js?v=2.1.4"></script>
 	<script type="text/javascript" src="__PUBLIC__/skin/js/jquery-ui.min.js"></script>
-	<script type="text/javascript" src="__PUBLIC__/Index/js/app.js?2013083001"></script>
+	<script type="text/javascript" src="__PUBLIC__/Index/js/app.js?2013083101"></script>
 	<script type="text/javascript" src="__PUBLIC__/Index/js/jquery.placeholder.1.3.min.js"></script>
 	<script type="text/javascript" src="__PUBLIC__/skin/FlexSlider/jquery.flexslider-min.js"></script>
 	<script type="text/javascript" src="__PUBLIC__/skin/js/json2.js"></script>

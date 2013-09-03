@@ -55,13 +55,14 @@ $(function() {
 			$('#direct_text').removeClass('ipson');
 		}
 	});
-	$("#direct_text").on('click', function() {
+	$("#direct_text").on('click', function(){
 		var tag = $.trim($('#direct_text').val());
 		if (tag == $('#direct_text').attr('txt')){
 			$('#direct_text').val('').addClass('ipson');
 		}
 		return false;
 	});
+
 	$('.J_direct_submit').on('click', function(){
 		$("#frm_drct").trigger('submit');
 		$("#direct_text")[0].focus();
@@ -72,6 +73,7 @@ $(function() {
 		if (tag == '' || tag == $('#direct_text').attr('txt')){
 			return false;
 		}
+		$('#direct_text').select();
 	});
 
 	// 编辑自留地
@@ -176,7 +178,7 @@ $(function() {
 					var new_url = myarea_web_obj.attr('url').replace(myarea_web_obj.attr('data-url'), url);
 					myarea_web_obj.attr('url', new_url);
 					myarea_web_obj.attr('data-url', url);
-					$('#J_myarea_tip').text('保存成功!').css('color', '#84aa03');
+					$('#J_myarea_tip').text('保存成功!').css('color', '#d20015');
 					$('#J_myarea_tip').show();
 
 				} else {
@@ -510,7 +512,7 @@ var THL = {
 
 		//重新加载页面清除keyword 清除浏览器未清除的文本框的值
 		$.cookies.set('keyword', '');
-		$("#search_text").val('');
+		$("#search_text").val('').select(); //选中文本框
 		
 		$('.thl').mouseover(function(){ $('#J_thl_div').show(); }); //移入糖葫芦区域 显示糖葫芦
 		$('.J_thl_area').mouseleave(function(){ $('#J_thl_div').hide(); }); //移除糖葫芦主区域 隐藏糖葫芦
@@ -536,28 +538,45 @@ var THL = {
 			}
 		});
 		
-		$("#search_text").keyup(function(){ //文本框输入内容 设置糖葫芦 位置
+		$("#search_text").keyup(function(event){ //文本框输入内容 设置糖葫芦 位置
 			$('#J_thl_div').show();
 			self.setpos();
 		});
-		
-		$("#search_text").keypress(function(event){ // 回车键响应
-			if(event.keyCode==13) {
-				$("#btn_search").trigger("click");
-				$("#search_text").select();
-				return false;
+
+		$(".thl").mouseenter(function(){ $("#search_text").select(); }); //移入 糖葫芦 选中 文本
+
+		$('#search_text').on('click', function(){
+			if (!$.cookies.get('keyword')) {
+				var key  = $.trim($("#search_text").val());
+				if(key != ''){
+					$(this).data('key', key);
+					$(this).val(key);
+				}
+			} else {
+				
+				$(this).data('key', '');
 			}
 		});
 
-		$("#search_text").mouseover(function(){ $("#search_text").select(); }); //移入 文本框 选中 文本
-		
-		$("#search_text").select(); //选中文本框
+		$('#search_text').on('webkitspeechchange', function(){ //onwebkitspeechchange
+			var key = $(this).data('key');
+			if(key && key != ''){
+				var v = $(this).val();
+				if(v.indexOf(key) == 0){
+					$(this).val(v.replace(key, key+' '));
+					$(this).data('key', '');
+				}
+			}
+			self.setpos();
+		}); 
 
 		$(document).mouseup(function(ev){ // 搜索文本框始终获取焦点
 			if ( document.activeElement.tagName == "INPUT" 
 				|| document.activeElement.tagName == "TEXTAREA" 
 				|| document.activeElement.tagName == "IFRAME"
-				|| document.activeElement.id == "direct_text") {
+				|| document.activeElement.id == "direct_text"
+				|| document.activeElement.id == "search_text"
+			) {
 				return;
 			}
 			var txt = '';
@@ -575,7 +594,7 @@ var THL = {
 		$("#btn_search").click(function() { //单击搜索按钮
 			$("#search_text").select();
 			var keyword  = $.trim($("#search_text").val());
-			$.cookies.set( 'keyword', keyword); //保存keyword
+			$.cookies.set('keyword', keyword); //保存keyword
 			keyword = keyword.replace('http://','');
 			keyword = encodeURIComponent(keyword);
 			var url = $(".J_thlz a.on").attr("url").replace('keyword', keyword);
@@ -641,7 +660,7 @@ var HelpMouse = {
 			var mousePos = self.getcoords(ev);
 			if(mousePos.y < 70){
 				if($('#direct_text').val() == $('#direct_text').attr('txt')){
-					$('#direct_text').select();
+					$('#direct_text').select().addClass('ipson');
 					isSearchTxtSelected = false;
 					if($.trim($('#search_text').val()) ==""){
 						$('#J_thl_div').hide();
