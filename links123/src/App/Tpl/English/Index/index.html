@@ -13,6 +13,7 @@
             var media_width = 518;
             var media_marin = '18px 0 0 20px';
             var level_margin_index = -5;
+            var user_last_view_type = "{$user_last_select['viewType']|default=1}";
             if (window.navigator.userAgent.indexOf("MSIE")>=1){
                 var IE1024="style_small.css";
                 var IEother="style.css";
@@ -87,12 +88,12 @@
                 </div>
                 <div class="menuright">
                     <ul class="tabs J_tabs">
-                        <li><a class="current" href="javascript:;" value="1">选择课程</a></li>
+                        <li><a href="javascript:;" value="1">选择课程</a></li>
                         <li><a href="javascript:;" value="2">选择专题</a></li>
                         <li><a href="javascript:;" value="3">选择推荐</a></li>
                     </ul>
                     <div class="panes">
-                        <div class="box1">
+                        <div class="box1" <neq name="user_last_select['viewType']" value='1'>style="display:none"</neq>>
                             <div class="kechenggrade">
                                 <ul class="kecheng J_object">
                                     <volist name="object_list" id="object">
@@ -113,7 +114,7 @@
                                 </ul>
                             </div>
                         </div>
-                        <div class="box1" style="display: none">
+                        <div class="box1" <neq name="user_last_select['viewType']" value='2'>style="display:none"</neq>>
                             <div class="kechenggrade">
                                 <ul class="kecheng J_subject">
                                     <volist name="subject_list" id="subject">
@@ -125,25 +126,32 @@
                                     </volist>
                                 </ul>
                                 <ul class="grade J_subjectDifficulty">
-                                    <li value="1" <eq name="user_last_select['difficulty']" value="1">class="current"</eq>><span>初级</span></li>
-                                    <li value="2" <eq name="user_last_select['difficulty']" value="2">class="current"</eq>><span>中级</span></li>
-                                    <li value="3" <eq name="user_last_select['difficulty']" value="3">class="current"</eq>><span>高级</span></li>
+                                    <volist name="subjectDifficultyList" id="difficulty">
+                                        <li value="{$difficulty.id}" 
+                                            <if condition="($user_last_select['subjectDifficulty'] eq $difficulty['id'])AND($difficulty['question_num'] gt 0)">class="current"
+                                            <elseif condition="$difficulty['question_num'] eq 0" />class="grey not_allowed"</if>>
+                                            <span>{$difficulty.name}</span>
+                                        </li>
+                                    </volist>
                                 </ul>
                             </div>
                         </div>
-                        <div class="box1" style="display: none">
+                        <div class="box1" <neq name="user_last_select['viewType']" value='3'>style="display:none"</neq>>
                             <div class="kechenggrade">
                                 <ul class="kecheng J_recommend">
                                     <volist name="recommend_list" id="recommend">
                                         <li value="{$recommend.id}" <if condition="($user_last_select['recommend'] eq $recommend['id'])">class="current"</if>>
                                         <span>{$recommend.name}</span></li>
                                     </volist>
-                                    <li value="0"  <if condition="($user_last_select['recommend'] eq 0)">class="current"</if>><span>特别推荐</span></li>
                                 </ul>
                                 <ul class="grade J_recommendDifficulty">
-                                    <li value="1" <eq name="user_last_select['difficulty']" value="1">class="current"</eq>><span>初级</span></li>
-                                    <li value="2" <eq name="user_last_select['difficulty']" value="2">class="current"</eq>><span>中级</span></li>
-                                    <li value="3" <eq name="user_last_select['difficulty']" value="3">class="current"</eq>><span>高级</span></li>
+                                    <volist name="recommendDifficultyList" id="difficulty">
+                                        <li value="{$difficulty.id}" 
+                                            <if condition="($user_last_select['recommendDifficulty'] eq $difficulty['id'])AND($difficulty['question_num'] gt 0)">class="current"
+                                            <elseif condition="$difficulty['question_num'] eq 0" />class="grey not_allowed"</if>>
+                                            <span>{$difficulty.name}</span>
+                                        </li>
+                                    </volist>
                                 </ul>
                             </div>
                         </div>
@@ -169,14 +177,14 @@
                                 <if condition="$isAboutVideo neq '1'">
                                     class="normal_media_div media_div"
                                 <else />
-                                    class="media_div"  style="visibility: hidden;" data_media_url="{$question['path']}" 
+                                    class="media_div"  style="visibility: hidden;" data_media_url="{$question['play_code']}" 
                                 </if> 
                                      data_isAboutVideo="{$isAboutVideo}">
                                 <if condition="$isAboutVideo neq '1'">
                                     <if condition="$question['play_type'] eq '1'">
-                                        {$question['media']}
+                                        {$question['play_code']}
                                     <elseif condition="$question['play_type'] eq '2'"/>
-                                        <iframe class="media_iframe" src="{$question['path']}" scrolling="no" frameborder="0"></iframe>
+                                        <iframe class="media_iframe" src="{$question['play_code']}" scrolling="no" frameborder="0"></iframe>
                                     <elseif condition="$question['play_type'] eq '3'"/>
                                     	<div id="J_media_swfobject_div"></div>
                                         <script type="text/javascript">
@@ -192,7 +200,7 @@
                                                 bgColor: "#000000"
                                             };
 
-                                            swfobject.embedSWF(swfUrl, "J_media_swfobject_div", "100%", "100%", version, "/swf/playerProductInstall.swf", {$question['path']}, params );
+                                            swfobject.embedSWF(swfUrl, "J_media_swfobject_div", "100%", "100%", version, "/swf/playerProductInstall.swf", {$question['play_code']}, params );
 
                                         </script>
                                     <elseif condition="$question['play_type'] eq '4'"/>
@@ -203,15 +211,15 @@
 	                                        'width': media_width
 	                                    });
 	                                    var media_img_url = "{$question['media_thumb_img']}";
-	                                    var media_url = "{$question['path']}";
+	                                    var media_url = "{$question['play_code']}";
 	                                    flowplayer("J_media_swfobject_div", "http://releases.flowplayer.org/swf/flowplayer-3.2.16.swf", {playlist:[media_thumb_img,{url: path,autoPlay: false}]});
 	                                    </script>
                                     <else />
                                         <object id="J_media_object" height="100%" width="100%" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">
                                             <param name="wmode" value="transparent">
-                                            <param name="movie" value="{$question['path']}">
+                                            <param name="movie" value="{$question['play_code']}">
                                             <embed name="swf" swliveconnect="true" height="100%" width="100%" type="application/x-shockwave-flash"
-                                                allowfullscreen="true" wmode="transparent" src="{$question['path']}" play="false">
+                                                allowfullscreen="true" wmode="transparent" src="{$question['play_code']}" play="false">
                                         </object>
                                     </if>
                                 </if>
@@ -339,42 +347,17 @@
                   <!-- root element for the items -->
                   <div class="items" id="J_specialReommendDiv">
 
-                        <volist name="special_media" id="media" mod="4">
+                        <volist name="special_media" id="media" mod="6">
+                            <eq name="mod" value="0">
                                 <div>
                                 <ul>
+                            </eq>
                                 <li><img title='{$media.name}' media_id="{$media.id}" src="{$media.media_thumb_img}" /></li>
+                            <if condition="$mod eq 5 or $key eq $special_media_num">
                                 </ul>
                                 </div>
+                            </if>
                         </volist>
-<!--                     1-5 
-                    <div>
-                      <ul>
-                        <li><img title='推荐视频，敬请期待！' src="http://pkstatic.b0.upaiyun.com/upload/20130614/695e590d7bd36c205086520c81fbdd95.PNG" /></li>
-                        <li><img title='推荐视频，敬请期待！' src="http://pkstatic.b0.upaiyun.com/upload/20130711/5afe6c90a0f065f6c43eae3a37613966.PNG" /></li>
-                        <li><img title='推荐视频，敬请期待！' src="http://pkstatic.b0.upaiyun.com/upload/20130711/7b11de37c5c7c1f0cb578cda623de628.PNG" /></li>
-                       <li><img title='推荐视频，敬请期待！' src="http://pkstatic.b0.upaiyun.com/upload/20130711/ede6952299a7998daa7be20493077482.PNG" /></li>
-                      </ul>
-                    </div>
-
-                     5-10 
-                    <div>
-                        <ul>
-                      <li><img title='推荐视频，敬请期待！' src="http://pkstatic.b0.upaiyun.com/upload/20130711/ec4112ffbacb599e8d97b4a357ff3246.PNG" /></li>
-                        <li><img title='推荐视频，敬请期待！' src="http://pkstatic.b0.upaiyun.com/upload/20130716/4b136b6b50897a693369cf2479503322.JPG" /></li>
-                        <li><img title='推荐视频，敬请期待！' src="http://pkstatic.b0.upaiyun.com/upload/20130711/5ace3b29da0f5c0806a7e07d979b158c.PNG" /></li>
-                       <li><img title='推荐视频，敬请期待！' src="http://pkstatic.b0.upaiyun.com/upload/20130711/b15f4de1c814257114c1fc3fec333e96.PNG" /></li>
-                      </ul>
-                    </div>
-
-                     10-15 
-                    <div>
-                         <ul>
-                      <li> <img title='推荐视频，敬请期待！' src="http://farm4.static.flickr.com/3629/3323896446_3b87a8bf75_t.jpg" /></li>
-                        <li> <img title='推荐视频，敬请期待！' src="http://pkstatic.b0.upaiyun.com/upload/20130711/26830387c1cfa5b7c620560593d5f373.PNG" /></li>
-                        <li> <img title='推荐视频，敬请期待！' src="http://pkstatic.b0.upaiyun.com/upload/20130711/5afe6c90a0f065f6c43eae3a37613966.PNG" /></li>
-                       <li> <img title='推荐视频，敬请期待！' src="http://pkstatic.b0.upaiyun.com/upload/20130711/ec4112ffbacb599e8d97b4a357ff3246.PNG" /></li>
-                      </ul>
-                    </div>-->
 
                   </div>
 
@@ -384,7 +367,7 @@
                 <a class="next browse right"></a>
 
                 </div>
-                    </div>
         <include file='Public:footer' />
+        </div>
     </body>
 </html>

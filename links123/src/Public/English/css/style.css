@@ -244,12 +244,13 @@ ul.grade li.current {
 .red{color:#9d1300;}
 .kafei{color:#885d36;}
 /*播放器图片.listenstyle{display:none;}*/
-.focus_player {background: none repeat scroll 0 0 #999999;height: 448px;position: relative;width: 710px;margin:24px 0 0 28px}
+.focus_player {background: none repeat scroll 0 0 #999999;height: 448px;position: relative;width: 710px;}
 .focus_player_link a {background: url("http://static.youku.com/index/img/sprite.gif") repeat scroll 0 0 transparent;display: block;height: 448px;left: 0;position: absolute;top: 0;width: 710px;z-index: 3;}
 .focus_player_play {background: url("http://res.mfs.ykimg.com/051000005087AA646714C05F5D09B2EC") no-repeat scroll 0 0 transparent;height: 58px;left: 10px;position: absolute;top: 380px;width: 58px;z-index: 2;}
 .focus_player_picture img {display: block;height: 448px;left: 0;position: absolute;top: 0;width: 710px;z-index: 1;}
+.video_div{margin: 24px 0 0 28px;}
 .normal_media_div{
-	margin: 24px 0 0 28px;
+	/*margin: 24px 0 0 28px;*/
 	width: 710px;
 	height: 448px;
 }
@@ -474,7 +475,7 @@ UL.tabs LI.current {
 }
 .items div {
 	float:left;
-	width:668px;margin-top:40px;margin-left:-35px; 
+	width:auto;margin-top:40px;margin-left:-33px; 
 }
 
 .scrollable .active {

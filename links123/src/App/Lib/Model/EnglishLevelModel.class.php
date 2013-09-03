@@ -45,14 +45,17 @@ class EnglishLevelModel extends CommonModel {
     public function getLevelListToIndex($object_id, $voice = 1, $target = 1, $pattern = 1) {
         $object_name = D("EnglishObject")->where("id={$object_id}")->getField("name");
         if ($object_name == "综合") {
-            $condition = "question.voice={$voice} and question.target={$target} and question.pattern={$pattern} and question.level=level.id and question.status=1";
+            $condition = "question.voice={$voice} and question.target={$target} and question.pattern={$pattern}
+                and question.level=level.id and question.status=1 and media.status=1";
         } else {
-            $condition = "question.voice={$voice} and question.target={$target} and question.pattern={$pattern} and question.level=level.id and question.status=1  and question.object={$object_id}";
+            $condition = "question.voice={$voice} and question.target={$target} and question.pattern={$pattern} 
+                and question.level=level.id and question.status=1 and media.status=1  and question.object=" . intval($object_id);
         }
         $ret = $this->alias("level")
                 ->field("level.*,(SELECT COUNT(question.id) from " .
-                        C("DB_PREFIX") . "english_question question
-                        where {$condition}) as question_num")
+                        C("DB_PREFIX") . "english_question question 
+                        right join " . C("DB_PREFIX") . "english_media media on question.media_id=media.id 
+                        where " . $condition . ") as question_num")
                 ->where("level.status=1")
                 ->order("level.sort asc")
                 ->select();

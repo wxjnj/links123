@@ -116,7 +116,7 @@
         </form>
 
         <div class="list" >
-            <html:list id="checkList" name="category" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,name:名称:edit,object_name:科目,level_name:等级,subject_name|default=无:专题:selectSubject,difficulty|getMediaDifficultyName:难度,recommend|getMediaRecommendYorN:推荐:recommend|id^object^subject,special_recommend|getYorN:特别推荐:special_recommend,voice|getVoiceName:语音,pattern|getMediaPatternName:格式类型,play_type|getMediaPlayTypeName:播放类型,priority_type|getMediaPriorityTypeName:优先播放:setMediaPriorityType,media_source_url|getLinkToHrefWithOutHttp:来源地址,created|toDate:发布时间,status|getStatus:状态" actionlist="edit:编辑" />
+            <html:list id="checkList" name="category" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,name:名称:edit,object_name:科目,level_name:等级,subject_name|default=无:专题:selectSubject,difficulty|getMediaDifficultyName:难度,recommend|getMediaRecommendYorN:推荐:recommend,special_recommend|getYorN:特别推荐:special_recommend,voice|getVoiceName:语音,pattern|getMediaPatternName:格式类型,play_type|getMediaPlayTypeName:播放类型,priority_type|getMediaPriorityTypeName:优先播放:setMediaPriorityType,media_source_url|getLinkToHrefWithOutHttp:来源地址,created|toDate:发布时间,status|getStatus:状态" actionlist="edit:编辑" />
         </div>
 
         <div class="page">{$page}</div>
@@ -218,16 +218,17 @@
      * @param {int} id 操作对象id
      * @returns {void}
      */
-    function recommend(id, object, subject) {
+    function recommend(id) {
         if (id > 0) {
             $("#load_dialog").window("open");
-            $.post("__URL__/setRecommend", {id: id, object: object, subject: subject}, function(msg) {
+            $.post("__URL__/setRecommend", {id: id}, function(msg) {
                 if (msg) {
                     if (msg.status) {
                         if (msg.data == 0) {
-                            $("a[href=\"javascript:recommend('" + id + "','" + object + "','" + subject + "')\"]").text("否");
+                            $("a[href=\"javascript:recommend('" + id + "')\"]").text("否");
+                            $("a[href=\"javascript:special_recommend('" + id + "')\"]").text("否");
                         } else {
-                            $("a[href=\"javascript:recommend('" + id + "','" + object + "','" + subject + "')\"]").text("是");
+                            $("a[href=\"javascript:recommend('" + id +  "')\"]").text("是");
                         }
                     }
                 }

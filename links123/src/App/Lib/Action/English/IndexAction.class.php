@@ -15,31 +15,36 @@ class IndexAction extends EnglishAction {
         $levelModel = D("EnglishLevel");
         $questionModel = D("EnglishQuestion");
         //记录用户上次选择的数组
-        $user_last_select = array();
         $user_last_select = cookie('english_user_last_select');
         if (!is_array($user_last_select)) {
             $user_last_select = array();
         }
         //
-        //默认情况
+        //用户第一次进入的默认情况
         $user_last_select['voice'] = in_array(intval($user_last_select['voice']), array(1, 2)) ? intval($user_last_select['voice']) : 1;
         $user_last_select['target'] = in_array(intval($user_last_select['target']), array(1, 2)) ? intval($user_last_select['target']) : 1;
         $user_last_select['pattern'] = in_array(intval($user_last_select['pattern']), array(1, 2)) ? intval($user_last_select['pattern']) : 1;
-        $user_last_select['view_type'] = in_array(intval($user_last_select['view_type']), array(1, 2, 3)) ? $user_last_select['view_type'] : 1; //查看方式，1科目等级，2专题难度，3推荐
+        $user_last_select['viewType'] = in_array(intval($user_last_select['viewType']), array(1, 2, 3)) ? $user_last_select['viewType'] : 1; //查看方式，1科目等级，2专题难度，3推荐
         $user_last_select['recommend'] = intval($user_last_select['recommend']) > 0 ? intval($user_last_select['recommend']) : 1;
-        //默认的科目列表
+        //科目列表
         $object_list = $objectModel->getObjectListToIndex($user_last_select['voice'], $user_last_select['target'], $user_last_select['pattern']);
-        //
+        //专题和推荐列表
         $subject_list = D("EnglishMediaSubject")->getSubjectListToIndex($user_last_select['voice'], $user_last_select['target'], $user_last_select['pattern']);
-        $recommend_list = D("EnglishMediaRecommend")->getRecommendListToIndex();
+        $recommend_list = D("EnglishMediaRecommend")->getRecommendListToIndex($user_last_select['voice'], $user_last_select['target'], $user_last_select['pattern']);
         //
         //用户上次选择的专题
         $subject_id = D("EnglishMediaSubject")->where(array("id" => $user_last_select['subject'], "status" => 1))->getField("id");
         if (intval($subject_id) == 0) {
             $user_last_select['subject'] = 1;
         }
+        //难度列表
+        $subjectDifficultyList = $questionModel->getDifficultyList(2, $user_last_select['subject'], 0, $user_last_select['voice'], $user_last_select['target'], $user_last_select['pattern']);
+        $recommendDifficultyList = $questionModel->getDifficultyList(3, 0, $user_last_select['recommend'], $user_last_select['voice'], $user_last_select['target'], $user_last_select['pattern']);
+        $this->assign("subjectDifficultyList", $subjectDifficultyList);
+        $this->assign("recommendDifficultyList", $recommendDifficultyList);
         //难度
-        $user_last_select['difficulty'] = in_array(intval($user_last_select['difficulty']), array(1, 2, 3)) ? intval($user_last_select['difficulty']) : 1;
+        $user_last_select['subjectDifficulty'] = in_array(intval($user_last_select['subjectDifficulty']), array(1, 2, 3)) ? intval($user_last_select['subjectDifficulty']) : 1;
+        $user_last_select['recommendDifficulty'] = in_array(intval($user_last_select['recommendDifficulty']), array(1, 2, 3)) ? intval($user_last_select['recommendDifficulty']) : 1;
         //
         //用户上次选择的科目
         $user_last_select['object'] = intval($user_last_select['object']);
@@ -83,7 +88,7 @@ class IndexAction extends EnglishAction {
         cookie('english_user_last_select', $user_last_select, 60 * 60 * 24 * 30);
 
         //获取题目
-        $question = $questionModel->getQuestionToIndex($user_last_select['view_type'], $user_last_select['object'], $user_last_select ['level'], $user_last_select['subject'], $user_last_select['recommend'], $user_last_select['difficulty'], $user_last_select ['voice'], $user_last_select['target'], $user_last_select['pattern']);
+        $question = $questionModel->getQuestionToIndex($user_last_select['viewType'], $user_last_select['object'], $user_last_select ['level'], $user_last_select['subject'], $user_last_select['recommend'], $user_last_select['difficulty'], $user_last_select ['voice'], $user_last_select['target'], $user_last_select['pattern']);
         //
         //获取用户英语角信息
         $englishUserInfoModel = D("EnglishUserInfo");
@@ -111,7 +116,7 @@ class IndexAction extends EnglishAction {
 
         //path为空，则进行视频解析
         //!$question['media_url'] && !$question['media']
-        if (!$question['path']) {
+        if (!$question['play_code']) {
             //视频解析库
             import("@.ORG.VideoHooks");
             $videoHooks = new VideoHooks();
@@ -119,7 +124,7 @@ class IndexAction extends EnglishAction {
             $question['media_source_url'] = trim(str_replace(' ', '', $question['media_source_url']));
             $videoInfo = $videoHooks->analyzer($question['media_source_url']);
 
-            $path = $videoInfo['swf'];
+            $play_code = $videoInfo['swf'];
 
             $media_thumb_img = $videoInfo['img'];
 
@@ -130,14 +135,14 @@ class IndexAction extends EnglishAction {
                 $saveData = array(
                     'id' => $question['media_id'],
                     'media_thumb_img' => $media_thumb_img,
-                    'path' => $path,
+                    'play_code' => $play_code,
                     'play_type' => $play_type
                 );
                 $englishMediaModel = $englishMediaModel ? $englishMediaModel : D("EnglishMedia");
                 $englishMediaModel->save($saveData);
             }
 
-            $question['path'] = $path;
+            $question['play_code'] = $play_code;
 
             $question['media_thumb_img'] = $media_thumb_img;
 
@@ -152,17 +157,14 @@ class IndexAction extends EnglishAction {
             //about.com视频修改自动播放为false
             //$question['media_url'] = str_replace('&autoStart=true', '&autoStart=false', $question['media_url']);
         }
-        if ($question['path']) {
+        if ($question['play_code']) {
             if (strpos($question['media_source_url'], 'britishcouncil.org') !== FALSE) {
-                $question['path'] = preg_replace('/<!--<!\[endif\]-->(.*)/is', '</object></object>', $question['path']);
-                $question['path'] = str_replace('width=585&amp;height=575', 'width=100%&amp;height=100%', $question['path']);
+                $question['play_code'] = preg_replace('/<!--<!\[endif\]-->(.*)/is', '</object></object>', $question['play_code']);
+                $question['play_code'] = str_replace('width=585&amp;height=575', 'width=100%&amp;height=100%', $question['play_code']);
             }
-            $question['path'] = preg_replace(array('/width="(.*?)"/is', '/height="(.*?)"/is', '/width=300 height=280/is', '/width=600 height=400/is'), array('width="100%"', 'height="100%"', 'width="100%" height="100%"', 'width="100%" height="100%"'), $question['path']);
+            $question['play_code'] = preg_replace(array('/width="(.*?)"/is', '/height="(.*?)"/is', '/width=300 height=280/is', '/width=600 height=400/is'), array('width="100%"', 'height="100%"', 'width="100%" height="100%"', 'width="100%" height="100%"'), $question['play_code']);
         }
 
-//        if ($question['media_type'] && !$question['media']) {
-//            $question['media_url'] ? $question['media'] = $question['media_url'] : '';
-//        }
         //排行榜数据
         $ret = $englishUserInfoModel->getTopUserListByTypeName("object_综合");
         $this->assign("top_1", $ret[0]);
@@ -172,6 +174,7 @@ class IndexAction extends EnglishAction {
         $englishMediaModel = $englishMediaModel ? $englishMediaModel : D("EnglishMedia");
         $special_media = $englishMediaModel->getSpecialRecommendMediaList();
         $this->assign("special_media", $special_media);
+        $this->assign("special_media_num", count($special_media) - 1);
 
         $this->assign("question", $question);
         $this->assign("level_list", $level_list);
@@ -201,11 +204,18 @@ class IndexAction extends EnglishAction {
             $pattern = intval($_REQUEST['pattern']) == 0 ? 1 : intval($_REQUEST['pattern']); //类型
             $type = empty($_REQUEST['type']) ? "category" : $_REQUEST['type']; //请求类型
             $now_question_id = intval($_REQUEST['now_question_id']); //当前的题目id
+            //
+            //用户点击历史
+            $user_last_select = cookie('english_user_last_select');
+            if (!is_array($user_last_select)) {
+                $user_last_select = array();
+            }
             //不同的浏览方式获取不同的数据
             if ($viewType == 3) {
                 //如果是特别推荐图片点击来的
                 if ($type == "special_recommend") {
                     $media_id = intval($_REQUEST['media_id']);
+//                    $difficulty = intval($user_last_select['difficulty']) > 0 ? intval($user_last_select['difficulty']) : 1;
                 } else {
                     $recommend = intval($_REQUEST['recommend']) > 0 ? intval($_REQUEST['recommend']) : 1; //推荐分类id
                     $difficulty = intval($_REQUEST['difficulty']) > 0 ? intval($_REQUEST['difficulty']) : 1; //难度值
@@ -215,22 +225,42 @@ class IndexAction extends EnglishAction {
                 $difficulty = intval($_REQUEST['difficulty']) > 0 ? intval($_REQUEST['difficulty']) : 1; //难度值
             } else {
                 $viewType = 1; //统一为空的浏览方式
-                $object = intval($_REQUEST['object']) > 0 ? intval($_REQUEST['object']) : 1; //科目
-                $level = intval($_REQUEST['level']) ? intval($_REQUEST['level']) : 1; //等级
+                $object = intval($_REQUEST['object']) == 0 ? $objectModel->getDefaultObjectInfo($voice, $target, $pattern) : intval($_REQUEST['object']); //科目
+                $level = intval($_REQUEST['level']) == 0 ? $levelModel->getDefaultLevelInfo($object, $voice, $target, $pattern) : intval($_REQUEST['level']); //等级
+                $levelNum = $questionModel->getQuestionNum($object, $level, $voice, $target, $pattern);
+                if ($levelNum == 0) {
+                    $ret['level_info'] = $levelModel->getDefaultLevelInfo($object, $voice, $target, $pattern);
+                    $level = intval($ret['level_info']['id']);
+                }
             }
             //上下题
             $user_last_question = array();
             $con = array();
-            $con["status"] = 1;
+            $con["question.status"] = 1;
             if ($type == "quick_select_prev") {
-                $last_question_info = D("EnglishViewRecord")->getViewedQuestionRecord($now_question_id, "prev", intval($_REQUEST['object']), intval($_REQUEST['level']), intval($_REQUEST['subject']), intval($_REQUEST['recommend']), intval($_REQUEST['difficulty']), intval($_REQUEST['voice']), intval($_REQUEST['target']), intval($_REQUEST['pattern']));
-                $con["id"] = intval($last_question_info['question_id']);
+                $last_question_info = D("EnglishViewRecord")->getViewedQuestionRecord($now_question_id, "prev", $object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern);
+                $con["question.id"] = intval($last_question_info['question_id']);
                 $user_last_question = $questionModel->getQuestionWithOption($con);
             } else if ($type == 'quick_select_next') {
-                $last_question_info = D("EnglishViewRecord")->getViewedQuestionRecord($now_question_id, "next", intval($_REQUEST['object']), intval($_REQUEST['level']), intval($_REQUEST['subject']), intval($_REQUEST['recommend']), intval($_REQUEST['difficulty']), intval($_REQUEST['voice']), intval($_REQUEST['target']), intval($_REQUEST['pattern']));
-                $con["id"] = intval($last_question_info['question_id']);
+                $last_question_info = D("EnglishViewRecord")->getViewedQuestionRecord($now_question_id, "next", $object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern);
+                $con["question.id"] = intval($last_question_info['question_id']);
                 $user_last_question = $questionModel->getQuestionWithOption($con);
+            } else if ($type == "category") {
+                $recommend = 1;
+                $difficulty = 1;
+                $subject = 1;
+                $object = 1;
+                $level = 1;
+                $ret['object_info'] = $objectModel->getInfoById($object);
+                $ret['level_info'] = $levelModel->getInfoById($level);
+                $ret['object_list'] = $objectModel->getObjectListToIndex($voice, $target, $pattern);
+                $ret['level_list'] = $levelModel->getLevelListToIndex($object, $voice, $target, $pattern);
+                $ret['recommend_list'] = D("EnglishMediaRecommend")->getRecommendListToIndex($voice, $target, $pattern);
+                $ret['subject_list'] = D("EnglishMediaSubject")->getSubjectListToIndex($voice, $target, $pattern);
+                $ret['recommend_difficulty_list'] = $questionModel->getDifficultyList(3, 0, $recommend, $voice, $target, $pattern);
+                $ret['subject_difficulty_list'] = $questionModel->getDifficultyList(2, $subject, 0, $voice, $target, $pattern);
             }
+            dump($ret);exit;
             if (!empty($user_last_question)) {
                 $user_last_question['object'] = $last_question_info['object'];
                 $voice = $user_last_question['voice'];
@@ -238,62 +268,31 @@ class IndexAction extends EnglishAction {
                 $pattern = $user_last_question['pattern'];
                 $object = $user_last_question['object'];
                 $level = $user_last_question['level'];
-            } else {
-                //点击口语等大类
-                if ($type == "category") {
-                    if ($viewType == 3) {
-                        $recommend = 1;
-                        $difficulty = 1;
-                    } else if ($viewType == 2) {
-                        $subject = 1;
-                        $difficulty = 1;
-                    } else {
-                        $object = 1;
-                        $level = 1;
-                    }
-                } else {
-                    $object = $object == 0 ? $objectModel->getDefaultObjectInfo($voice, $target, $pattern) : $object; //科目
-                    $level = $object == 0 ? $levelModel->getDefaultLevelInfo($object, $voice, $target, $pattern) : $object; //等级
-                }
             }
 
             $ret = array();
             if ($viewType == 3) {
-                //推荐下点击美音等大类要更新科目和等级的列表
-                if ($type == "category") {
-                    $ret['object_list'] = $objectModel->getObjectListToIndex($voice, $target, $pattern);
-                    $ret['level_list'] = $levelModel->getLevelListToIndex($object, $voice, $target, $pattern);
-                }
-                if ($type != "special_recommend") {
-                    $user_last_select['recommend'] = $recommend;
-                    $user_last_select['difficulty'] = $difficulty;
-                } else {
-                    $user_last_select['recommend'] = 0;
+                if (type == "quick_select_prev") {
+                    $ret['recommend_list'] = D("EnglishMediaRecommend")->getRecommendListToIndex($voice, $target, $pattern);
+                    $ret['recommend_difficulty_list'] = $questionModel->getDifficultyList(3, 0, $recommend, $voice, $target, $pattern);
+                } elseif ($type != "category") {
+                    $ret['recommend_difficulty_list'] = $questionModel->getDifficultyList(3, 0, $recommend, $voice, $target, $pattern);
                 }
             } else if ($viewType == 2) {
-                //推荐下点击美音等大类要更新科目和等级的列表
-                if ($type == "category") {
+                if (type == "quick_select_prev") {
+                    $ret['subject_list'] = D("EnglishMediaSubject")->getSubjectListToIndex($voice, $target, $pattern);
+                    $ret['subject_difficulty_list'] = $questionModel->getDifficultyList(2, $subject, 0, $voice, $target, $pattern);
+                } elseif ($type != "category") {
+                    $ret['subject_difficulty_list'] = $questionModel->getDifficultyList(2, $subject, 0, $voice, $target, $pattern);
+                }
+            } else {
+                if ($type != "category") {
                     $ret['object_list'] = $objectModel->getObjectListToIndex($voice, $target, $pattern);
                     $ret['level_list'] = $levelModel->getLevelListToIndex($object, $voice, $target, $pattern);
+                    $ret['object_info'] = $objectModel->getInfoById($object);
+                    $ret['level_info'] = $levelModel->getInfoById($level);
                 }
-                $user_last_select['subject'] = $subject;
-                $user_last_select['difficulty'] = $difficulty;
-            } else {
-                $ret['object_list'] = $objectModel->getObjectListToIndex($voice, $target, $pattern);
-                $ret['level_list'] = $levelModel->getLevelListToIndex($object, $voice, $target, $pattern);
-                $ret['object_info'] = $objectModel->getInfoById($object);
-                $ret['level_info'] = $levelModel->getInfoById($level);
-                //记录上次选择等级，如等级下题目数为空则获取默认等级
-                $levelNum = $questionModel->getQuestionNum($object, $level, $voice, $target, $pattern);
-                if ($levelNum == 0) {
-                    $ret['level_info'] = $levelModel->getDefaultLevelInfo($object, $voice, $target, $pattern);
-                    $level = intval($ret['level_info']['id']);
-                }
-
-                $user_last_select['object'] = $object;
-                $user_last_select['level'] = $level;
             }
-
             if (!empty($user_last_question)) {
                 $ret['question'] = $user_last_question;
             } else {
@@ -311,33 +310,24 @@ class IndexAction extends EnglishAction {
 //            D("EnglishViewRecord")->addRecord($ret['question']['id'], $level, $object, $voice, $target, $pattern); //记录用户查看题目
             $ret['english_user_info'] = D("EnglishUserInfo")->getEnglishUserInfo();
             $ret['user_count_info'] = D("EnglishUserCount")->getEnglishUserCountInfo($voice, $target, $object, $level);
-            /* 存储用户点击历史  开始 */
-            $user_last_select = cookie('english_user_last_select');
-            if (!is_array($user_last_select)) {
-                $user_last_select = array();
-            }
+
             $user_last_select['voice'] = $voice;
             $user_last_select['target'] = $target;
             $user_last_select['pattern'] = $pattern;
             $user_last_select['viewType'] = $viewType;
             if ($viewType == 3) {
-                if ($type != "special_recommend") {
-                    $user_last_select['recommend'] = $recommend;
-                    $user_last_select['difficulty'] = $difficulty;
-                } else {
-                    $user_last_select['recommend'] = 0;
-                    $user_last_select['difficulty'] = $ret['question']['difficulty'];
-                }
+                $user_last_select['recommend'] = $ret['question']['recommend'];
+                $user_last_select['recommendDifficulty'] = $ret['question']['difficulty'];
             } else if ($viewType == 2) {
                 $user_last_select['subject'] = $subject;
-                $user_last_select['difficulty'] = $difficulty;
+                $user_last_select['subjectDifficulty'] = $difficulty;
             } else {
                 $user_last_select['object'] = $object;
                 $user_last_select['level'] = $level;
             }
             cookie('english_user_last_select', $user_last_select, 60 * 60 * 24 * 30); // 存储用户点击历史
             //media_url为空，则进行视频解析
-            if (!$ret['question']['path']) {
+            if (!$ret['question']['play_code']) {
                 //视频解析库
                 import("@.ORG.VideoHooks");
                 $videoHooks = new VideoHooks();
@@ -345,17 +335,17 @@ class IndexAction extends EnglishAction {
                 $ret['question']['media_source_url'] = trim(str_replace(' ', '', $ret['question']['media_source_url']));
                 $videoInfo = $videoHooks->analyzer($ret['question']['media_source_url']);
 
-                $path = $videoInfo['swf'];
+                $play_code = $videoInfo['swf'];
 
                 $media_thumb_img = $videoInfo['img'];
 
                 //解析成功，保存视频解析地址
-                if (!$videoHooks->getError() && $path) {
+                if (!$videoHooks->getError() && $play_code) {
 
                     $play_type = $videoInfo['media_type'];
                     $saveData = array(
                         'id' => $ret['question']['media_id'],
-                        'path' => $path,
+                        'play_code' => $play_code,
                         'media_thumb_url' => $media_thumb_img,
                         'play_type' => $play_type
                     );
@@ -365,7 +355,7 @@ class IndexAction extends EnglishAction {
                 }
 
                 $ret['question']['media_thumb_url'] = $media_thumb_img;
-                $ret['question']['path'] = $path;
+                $ret['question']['play_code'] = $play_code;
                 $ret['question']['play_type'] = $play_type;
             }
 
@@ -378,17 +368,19 @@ class IndexAction extends EnglishAction {
                 //$ret['question']['media_url'] = str_replace('&autoStart=true', '&autoStart=false', $ret['question']['media_url']);
             }
 
-            if ($ret['question']['path']) {
+            if ($ret['question']['play_code']) {
                 if (strpos($ret['question']['media_source_url'], 'britishcouncil.org') !== FALSE) {
-                    $ret['question']['path'] = preg_replace('/<!--<!\[endif\]-->(.*)/is', '</object></object>', $ret['question']['path']);
-                    $ret['question']['path'] = str_replace('width=585&amp;height=575', 'width=100%&amp;height=100%', $ret['question']['path']);
+                    $ret['question']['play_code'] = preg_replace('/<!--<!\[endif\]-->(.*)/is', '</object></object>', $ret['question']['play_code']);
+                    $ret['question']['play_code'] = str_replace('width=585&amp;height=575', 'width=100%&amp;height=100%', $ret['question']['play_code']);
                 }
-                $ret['question']['path'] = preg_replace(array('/width="(.*?)"/is', '/height="(.*?)"/is', '/width=300 height=280/is', '/width=600 height=400/is'), array('width="100%"', 'height="100%"', 'width="100%" height="100%"', 'width="100%" height="100%"'), $ret['question']['path']);
+                $ret['question']['play_code'] = preg_replace(array('/width="(.*?)"/is', '/height="(.*?)"/is', '/width=300 height=280/is', '/width=600 height=400/is'), array('width="100%"', 'height="100%"', 'width="100%" height="100%"', 'width="100%" height="100%"'), $ret['question']['play_code']);
             }
 
-            if ($ret['question']['play_type'] && !$ret['question']['path']) {
-                $ret['question']['path'] ? $ret['question']['path'] = $ret['question']['path'] : '';
-            }
+            /*
+              if ($ret['question']['play_type'] && !$ret['question']['play_code']) {
+              $ret['question']['play_code'] ? $ret['question']['play_code'] = $ret['question']['play_code'] : '';
+              }
+             * */
 
             $ret['question']['isAboutVideo'] = $isAboutVideo;
 

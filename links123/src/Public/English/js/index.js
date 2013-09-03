@@ -6,17 +6,11 @@ $(function() {
     //easyloader加载主题和插件
     easyloader.theme = "metro";
     easyloader.load('messager');
-    $("ul.tabs").tabs("div.panes > div");
+    $("ul.tabs").tabs("div.panes > div", {initialIndex: parseInt(user_last_view_type) - 1});
     if ($("#J_currentRice").text() == 1000) {
         next_question_lvlup = true;
     }
-    // custom easing called "custom"
-    $.easing.custom = function (x, t, b, c, d) {
-        var s = 1.70158;
-        if ((t/=d/2) < 1) return c/2*(t*t*(((s*=(1.525))+1)*t - s)) + b;
-        return c/2*((t-=2)*t*(((s*=(1.525))+1)*t + s) + 2) + b;
-    }
-    $(".scrollable").scrollable({easing: 'custom', speed: 700, circular: true});
+    $(".scrollable").scrollable({circular: true});
     $(".grade li:eq(13)").css("margin-left", level_margin_index + "px");
 
     //答题按钮点击事件
@@ -160,7 +154,12 @@ $(function() {
     });
     //难度点击事件
     $('.J_subjectDifficulty li,.J_recommendDifficulty li').live('click', function() {
-        if ($(this).hasClass("current")) {
+        if ($(this).hasClass("grey")) {
+            var top = $(this).offset().top - 15;
+            var left = $(this).offset().left + 10;
+            fadeTip("<span  class='messager_span'>Coming soon...</span>", top, left);
+            return false;
+        } else if ($(this).hasClass("current")) {
 
             var top = $(this).offset().top - 50;
             var left = $(this).offset().left - 10;
@@ -470,11 +469,11 @@ function requestQuestion(type, clickObject, media_id) {
             data.media_id = media_id;
         } else {
             data.recommend = $(".J_recommend .current").attr("value");
-            data.difficulty = $(".J_difficulty .current").attr("value");
+            data.difficulty = $(".J_recommendDifficulty .current").attr("value");
         }
     } else if (viewType == 2) {
         data.subject = $(".J_subject .current").attr("value");
-        data.difficulty = $(".J_difficulty .current").attr("value");
+        data.difficulty = $(".J_subjectDifficulty .current").attr("value");
     } else {
         data.object = $(".kecheng .current").attr("value");
         data.level = $(".grade .current").attr("value");
@@ -543,32 +542,39 @@ function requestQuestion(type, clickObject, media_id) {
                         }
                     });
                 }
+                if (type == "category") {
+                    rewriteObjectAndLevelList(data.object_list, 1, data.level_list, 1);
+                    rewriteReommendAndDifficultyList(data.recommend_list, data.question.recommend, data.recommend_difficulty_list, data.question.difficulty);
+                    rewriteSubjectAndDifficultyList(data.subject_list, data.question.subject, data.subject_difficulty_list, data.question.difficulty);
+                }
                 if (viewType == 3) {
                     $(".J_tabs li a[value='3']").click();
-                    if (type == "category") {
-                        rewriteObjectAndLevelList(data.object_list, 1, data.level_list, 1);
-                    } else if (type == "special_recommend") {
-                        $(".J_recommend li[value='0']").addClass("current").siblings(".current").removeClass("current");
-                        $(".J_recommendDifficulty li[value='"+data.question.difficulty+"']").addClass("current").siblings(".current").removeClass("current");
+                    if (type == "special_recommend") {
+                        $(".J_recommend li.current").removeClass("current");
+                        $(".J_recommendDifficulty li.current").removeClass("current");
+                    } else if (type == "recommend") {
+                        rewriteReommendAndDifficultyList(null, 0, data.recommend_difficulty_list, data.question.difficulty);
                     }
                 } else if (viewType == 2) {
-                    if (type == "category") {
-                        rewriteObjectAndLevelList(data.object_list, 1, data.level_list, 1);
+                    if (type == "subject") {
+                        rewriteSubjectAndDifficultyList(null, 0, data.subject_difficulty_list, data.question.difficulty);
                     }
                 } else {
-                    //
-                    //科目为空
-                    if (data['object_info'] == null) {
-                        data['object_info'] = new Array();
-                        data['object_info']['id'] = 0;
+                    if (type != "category") {
+                        //
+                        //科目为空
+                        if (data['object_info'] == null) {
+                            data['object_info'] = new Array();
+                            data['object_info']['id'] = 0;
+                        }
+                        //
+                        //等级为空
+                        if (data['level_info'] == null) {
+                            data['level_info'] = new Array();
+                            data['level_info']['id'] = 0;
+                        }
+                        rewriteObjectAndLevelList(data.object_list, data['object_info']['id'], data.level_list, data['level_info']['id']);
                     }
-                    //
-                    //等级为空
-                    if (data['level_info'] == null) {
-                        data['level_info'] = new Array();
-                        data['level_info']['id'] = 0;
-                    }
-                    rewriteObjectAndLevelList(data.object_list, data['object_info']['id'], data.level_list, data['level_info']['id'])
                 }
                 //
                 //更新题目
@@ -624,13 +630,13 @@ function requestQuestion(type, clickObject, media_id) {
                 var videoStr = '';
                 $('#J_media_div').html(videoStr);
 
-                if (question.path) {
+                if (question.play_code) {
 
                     if (question.isAboutVideo != 1) {
                         if (question.play_type == 1) {
-                            videoStr = question.path;
+                            videoStr = question.play_code;
                         } else if (question.play_type == 2) {
-                            videoStr = '<iframe class="media_iframe" src="' + question.path + '" width="100%" height="100%" scrolling="no" frameborder="0">';
+                            videoStr = '<iframe class="media_iframe" src="' + question.play_code + '" width="100%" height="100%" scrolling="no" frameborder="0">';
                         } else if (question.play_type == 3) {
 
                             $('#J_media_div').html('<div id="J_media_swfobject_div"></div>');
@@ -647,19 +653,19 @@ function requestQuestion(type, clickObject, media_id) {
                                 bgColor: "#000000"
                             };
 
-                            swfobject.embedSWF(swfUrl, "J_media_swfobject_div", "100%", "100%", version, "/swf/playerProductInstall.swf", question.path, params);
+                            swfobject.embedSWF(swfUrl, "J_media_swfobject_div", "100%", "100%", version, "/swf/playerProductInstall.swf", question.play_code, params);
 
                         } else if (question.play_type == 4) {
                             $('#J_media_div').html('<div id="J_media_swfobject_div" style="height:' + media_height + 'px;width:' + media_width + 'px;"></div>');
 
-                            flowplayer("J_media_swfobject_div", "http://releases.flowplayer.org/swf/flowplayer-3.2.16.swf", {playlist: [question.media_thumb_url, {url: question.path, autoPlay: false}]});
+                            flowplayer("J_media_swfobject_div", "http://releases.flowplayer.org/swf/flowplayer-3.2.16.swf", {playlist: [question.media_thumb_url, {url: question.play_code, autoPlay: false}]});
 
                         } else {
 
                             videoStr += '<object id="J_media_object" height="100%" width="100%" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">';
                             videoStr += '<param name="wmode" value="transparent">';
-                            videoStr += '<param name="movie" value="' + question.path + '">';
-                            videoStr += '<embed name="swf" menu="true" height="100%" width="100%" play="false" type="application/x-shockwave-flash" allowfullscreen="true" wmode="transparent" src="' + question.path + '">';
+                            videoStr += '<param name="movie" value="' + question.play_code + '">';
+                            videoStr += '<embed name="swf" menu="true" height="100%" width="100%" play="false" type="application/x-shockwave-flash" allowfullscreen="true" wmode="transparent" src="' + question.play_code + '">';
                             videoStr += '</object>';
                         }
                     }
@@ -680,7 +686,7 @@ function requestQuestion(type, clickObject, media_id) {
                     $('#J_media_div').css({
                         'height': media_height,
                         'width': media_width,
-                        'margin': media_marin,
+//                        'margin': media_marin,
                         'visibility': ''
                     });
                 }
@@ -690,7 +696,7 @@ function requestQuestion(type, clickObject, media_id) {
                 }
 
                 if (question.isAboutVideo == 1) {
-                    $('#J_media_div').attr('data_media_url', question.path);
+                    $('#J_media_div').attr('data_media_url', question.play_code);
                 } else {
                     $('#J_media_div').attr('data_media_url', '');
                 }
@@ -714,7 +720,7 @@ function requestQuestion(type, clickObject, media_id) {
                     } else {
                         clickObject.addClass("current").siblings("li.voice").removeClass("current");
                     }
-                } else {
+                } else if (type == "object" || type == "level" || type == "subject" || type == "recommend" || type == "difficulty") {
                     clickObject.addClass("current").siblings("li").removeClass("current");
                 }
 
@@ -916,6 +922,108 @@ function rewriteObjectAndLevelList(object_list, object, level_list, level) {
     }
 }
 /**
+ * 重写专题和难度列表
+ * @param {object} subject_list [专题列表]
+ * @param {int} subject [当前专题id]
+ * @param {object} difficulty_list [难度列表]
+ * @param {int} difficulty [当前难度id]
+ * @returns {void}
+ * @author Adam $date2013.09.03$
+ */
+function rewriteSubjectAndDifficultyList(subject_list, subject, difficulty_list, difficulty) {
+    //
+    //更新专题列表
+    if (subject_list != null) {
+        var str = '';
+        for (var i = 0; i < subject_list.length; i++) {
+            str += '<li value="' + subject_list[i]['id'] + '"';
+            if (subject == subject_list[i]['id']) {
+                str += ' class="current" ';
+            } else {
+                if (subject_list[i]['question_num'] == 0) {
+                    str += ' class="grey not_allowed" ';
+                }
+            }
+            str += '><span>' + subject_list[i]['name'] + '</span></li>';
+        }
+        $(".J_subject").html(str);
+        if ($(".J_subject .current").size() < 1) {
+            $(".J_subject li").not(".grey").first().addClass("current");
+        }
+    }
+    //
+    //更新等级列表
+    if (difficulty_list != null) {
+        var str = '';
+        for (var i = 0; i < difficulty_list.length; i++) {
+            str += '<li value="' + difficulty_list[i]['id'] + '"';
+            if (difficulty == difficulty_list[i]['id']) {
+                str += ' class="current" ';
+            } else {
+                if (difficulty_list[i]['question_num'] == 0) {
+                    str += ' class="grey not_allowed" ';
+                }
+            }
+            str += '><span>' + difficulty_list[i]['name'] + '</span></li>';
+        }
+        $(".J_subjectDifficulty").html(str);
+        if ($(".J_subjectDifficulty .current").size() < 1) {
+            $(".J_subjectDifficulty li").not(".grey").first().addClass("current");
+        }
+    }
+}
+/**
+ * 重写推荐和难度列表
+ * @param {object} recommend_list [推荐列表]
+ * @param {int} recommend [当前推荐id]
+ * @param {object} difficulty_list [难度列表]
+ * @param {int} difficulty [当前难度id]
+ * @returns {void}
+ * @author Adam $date2013.09.03$
+ */
+function rewriteReommendAndDifficultyList(recommend_list, recommend, difficulty_list, difficulty) {
+    //
+    //更新专题列表
+    if (recommend_list != null) {
+        var str = '';
+        for (var i = 0; i < recommend_list.length; i++) {
+            str += '<li value="' + recommend_list[i]['id'] + '"';
+            if (recommend == recommend_list[i]['id']) {
+                str += ' class="current" ';
+            } else {
+                if (recommend_list[i]['question_num'] == 0) {
+                    str += ' class="grey not_allowed" ';
+                }
+            }
+            str += '><span>' + recommend_list[i]['name'] + '</span></li>';
+        }
+        $(".J_recommend").html(str);
+        if ($(".J_recommend .current").size() < 1) {
+            $(".J_recommend li").not(".grey").first().addClass("current");
+        }
+    }
+    //
+    //更新等级列表
+    if (difficulty_list != null) {
+        var str = '';
+        for (var i = 0; i < difficulty_list.length; i++) {
+            str += '<li value="' + difficulty_list[i]['id'] + '"';
+            if (difficulty == difficulty_list[i]['id']) {
+                str += ' class="current" ';
+            } else {
+                if (difficulty_list[i]['question_num'] == 0) {
+                    str += ' class="grey not_allowed" ';
+                }
+            }
+            str += '><span>' + difficulty_list[i]['name'] + '</span></li>';
+        }
+        $(".J_recommendDifficulty").html(str);
+        if ($(".J_recommendDifficulty .current").size() < 1) {
+            $(".J_recommendDifficulty li").not(".grey").first().addClass("current");
+        }
+    }
+}
+/**
  * 更新选项
  * @param {array} option [选项数组]
  * @returns {void}
@@ -1100,7 +1208,6 @@ function checkObjectLoaded() {
             'height': media_height,
             'width': media_width,
             'visibility': '',
-            'margin': media_marin
         });
         layer_div("hide");
     } else {

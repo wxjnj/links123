@@ -66,7 +66,7 @@ class EnglishQuestionModel extends CommonModel {
                 }
             } else if ($viewType == 3) {
                 if (intval($recommend) > 0) {
-                    $map['_string'] = "FIND_IN_SET('" + $recommend + "',media.recomend)";
+                    $map['_string'] = "FIND_IN_SET('" . $recommend . "',media.recommend)";
 //                $map['media.recommend'] = $recommend;
                 }
                 if (intval($difficulty) > 0) {
@@ -133,7 +133,7 @@ class EnglishQuestionModel extends CommonModel {
                 //
                 //用户题目都做过，视作未做过一题
                 if (empty($ret)) {
-                    $count = $this->alias("question")->join("RIGHT JOIN " . C("D_PREFIX") . "english_media media ON question.media_id=media.id")->where($map)->count();
+                    $count = $this->alias("question")->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media ON question.media_id=media.id")->where($map)->count();
                     if ($count > 0) {
                         $limit = rand(0, $count - 1);
                         $ret = $this->alias("question")
@@ -160,10 +160,9 @@ class EnglishQuestionModel extends CommonModel {
         $ret['record'] = $englishRecordModel->getQuestionUserRecord($ret['id']);
         $ret['record']['untested_num'] = $englishRecordModel->getUserUntestedQuestionNum($object, $level, $subject, $difficulty, $voice, $target, $pattern);
         $ret['content'] = ftrim($ret['content']);
-        $ret['media_path'] = htmlspecialchars_decode($ret['path']);
+//        $ret['media_source_url'] = htmlspecialchars_decode($ret['media_source_url']);
 //        $ret['media_url'] = htmlspecialchars_decode($ret['media_url']);
         $ret['option'] = D("EnglishOptions")->getQuestionOptionList($ret['id']);
-//        $ret['option'] = D("EnglishOptions")->where("question_id={$ret['id']} and status=1")->order("sort asc")->select();
         foreach ($ret['option'] as $key => $value) {
             $ret['option'][$key]['content'] = ftrim($value['content']);
         }
@@ -207,11 +206,58 @@ class EnglishQuestionModel extends CommonModel {
      * @author Adam $date:2013.6.16$
      */
     public function getQuestionWithOption($condition) {
-        $ret = $this->where($condition)->find();
+        $ret = $this->alias("question")
+                ->field("question.id as question_id,question.target,question.content,question.answer,question.media_id,media.*")
+                ->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media on question.media_id=media.id")
+                ->where($condition)
+                ->find();
         if (!empty($ret)) {
+            $ret['id'] = $ret['question_id'];
             $ret['option'] = D("EnglishOptions")->getQuestionOptionList($ret['id']);
         }
         return $ret;
+    }
+
+    /**
+     * 获取困难值列表
+     * @param int $viewType
+     * @param int $subject
+     * @param int $recommend
+     * @param int $voice
+     * @param int $target
+     * @param int $pattern
+     * @return array
+     * @author Adam $date2013.09.03$
+     */
+    public function getDifficultyList($viewType = 2, $subject, $recommend, $voice = 1, $target = 1, $pattern = 1) {
+        $map = array();
+        $map['media.voice'] = $voice;
+        $map['media.pattern'] = $pattern;
+        $map['question.target'] = $target;
+        if ($viewType == 2) {
+            $map['media.subject'] = intval($subject) > 0 ? intval($subject) : 1;
+        } else if ($viewType == 3) {
+            $map['_string'] = "FIND_IN_SET('" . $recommend . "',media.recommend)";
+        }
+        $ret = $this->alias("question")
+                ->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media on question.media_id=media.id")
+                ->field("count(question.id) as question_num,media.difficulty")
+                ->where($map)
+                ->group("difficulty")
+                ->select();
+        $difficultyList = array(
+            array("id" => 1, "name" => "初级", "question_num" => 0),
+            array("id" => 2, "name" => "中级", "question_num" => 0),
+            array("id" => 3, "name" => "高级", "question_num" => 0)
+        );
+        if ($ret) {
+            foreach ($ret as $value) {
+                if (in_array($value['difficulty'] - 1, array(0, 1, 2))) {
+                    $difficultyList[$value['difficulty'] - 1]['question_num'] = $value['question_num'];
+                }
+            }
+        }
+        return $difficultyList;
     }
 
 }
