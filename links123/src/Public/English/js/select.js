@@ -78,7 +78,7 @@ function getTopUserList(type, target) {
                     }
                     
                     top_str_1 += '</p>';
-                    top_str_1 += '<p class="nm">' + top_1[i]['nickname'] + '</p>';
+                    top_str_1 += '<p class="nm" title="' + top_1[i]['nickname'] + '">' + top_1[i]['nickname'] + '</p>';
                     top_str_1 += '<p class="sum">' + top_1[i]['rice_sum'] + '</p>';
                     top_str_1 += '<p class="ln">' + top_1[i]['best_level_name'] + '</p>';
                     top_str_1 += '</li>';

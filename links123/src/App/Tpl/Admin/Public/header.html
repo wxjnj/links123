@@ -11,7 +11,6 @@
 <load href="__PUBLIC__/Js/Form/CheckForm.js" />
 <load href="__PUBLIC__/Js/Form/common.js" />
 <load href="__PUBLIC__/Js/common.js" />
-<load href="__PUBLIC__/Js/Jquery/jquery.js" />
 <script language="JavaScript">
 
 	//指定当前组模块URL地址 
@@ -20,16 +19,6 @@
 	var GROUP =	 '__GROUP__';
 	var PUBLIC = '__PUBLIC__';
 
-    $(function(){
-        /* 直达 */
-		$(".page input").keydown(function(event){
-			if (event.keyCode == 13) {	// 回车
-				if ( $(this).val()!='' && !isNaN($(this).val()) ) {
-					window.location.href = $(this).attr("url") + "&p=" + $(this).val();
-				}
-			}
-		});
-    });
 </script>
 </head>
 
