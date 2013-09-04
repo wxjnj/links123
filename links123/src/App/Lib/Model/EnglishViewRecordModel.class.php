@@ -46,10 +46,12 @@ class EnglishViewRecordModel extends CommonModel {
         if (!empty($ret)) {
             return;
         }
-//        $data = array();
-//        $data['user_id'] = $map['user_id'];
-//        $data['question_id'] = $map['question_id'];
-//        $data['object'] = $map['object'];
+        /*
+          $data = array();
+          $data['user_id'] = $map['user_id'];
+          $data['question_id'] = $map['question_id'];
+          $data['object'] = $map['object'];
+         */
         $map['created'] = time();
         $max_sort = $this->where('`user_id`=' . intval($map['user_id']))->field("MAX(sort) as max_sort")->find();
         if (false === $max_sort || empty($max_sort) || $max_sort['max_sort'] == null) {
@@ -99,6 +101,9 @@ class EnglishViewRecordModel extends CommonModel {
                 $map['object'] = $object; //科目由于综合包含所有题目，需要区别科目
             }
         }
+        if (intval($recommend) > 0) {
+            $map['recommend'] = $recommend;
+        }
         //
         //本次次的题目历史信息
         $now_question_info = $this->where($map)->find();
@@ -120,20 +125,20 @@ class EnglishViewRecordModel extends CommonModel {
             $order = "`sort` ASC";
         } else {
             if (intval($object) > 0) {
-                $map['object'] = intval($object);
-                $map['level'] = intval($level);
+                $map['object'] = array('gt', 0);
+                $map['level'] = array('gt', 0);
             } else if (intval($subject) > 0) {
-                $map['subject'] = intval($subject);
-                $map['difficulty'] = intval($difficulty);
+                $map['subject'] = array('gt', 0);
+                $map['difficulty'] = array('gt', 0);
             } else if (intval($recommend) > 0) {
-                $map['recommend'] = intval($recommend);
-                $map['difficulty'] = intval($difficulty);
+                $map['recommend'] = array('gt', 0);
+                $map['difficulty'] = array('gt', 0);
             }
             $map['sort'] = array('lt', intval($now_question_info['sort']));
             $order = "`sort` DESC";
         }
         $ret = $this->where($map)->order($order)->find();
-//        dump($this->getLastSql());exit;.
+        //echo $this->getLastSql();exit;
         if (false === $ret) {
             $ret = array();
         }

@@ -153,6 +153,7 @@ class EnglishQuestionModel extends CommonModel {
                 }
             }
         }
+        //echo $this->getLastSql();exit;
         $ret['id'] = $ret['question_id'];
         if ($viewType == 3) {
             $ret['recommend'] = $recommend;
@@ -234,6 +235,8 @@ class EnglishQuestionModel extends CommonModel {
         $map['media.voice'] = $voice;
         $map['media.pattern'] = $pattern;
         $map['question.target'] = $target;
+        $map['question.status'] = 1;
+        $map['media.status'] = 1;
         if ($viewType == 2) {
             $map['media.subject'] = intval($subject) > 0 ? intval($subject) : 1;
         } else if ($viewType == 3) {
@@ -258,6 +261,20 @@ class EnglishQuestionModel extends CommonModel {
             }
         }
         return $difficultyList;
+    }
+
+    public function getInfoById($id) {
+        $ret = $this->alias("question")
+                ->field("question.*,media.*")
+                ->join(C("DB_PREFIX") . "english_media media on question.media_id=media.id")
+                ->where(array("question.id" => $id))
+                ->find();
+        if (false == $ret || empty($ret)) {
+            $ret = array();
+        } else {
+            $ret['id'] = $id;
+        }
+        return $ret;
     }
 
 }

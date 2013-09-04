@@ -6,7 +6,9 @@ $(function() {
     //easyloader加载主题和插件
     easyloader.theme = "metro";
     easyloader.load('messager');
-    $("ul.tabs").tabs("div.panes > div", {initialIndex: parseInt(user_last_view_type) - 1});
+    $(".J_tabs a").click(function() {
+        requestQuestion("switch_view_type", $(this));
+    })
     if ($("#J_currentRice").text() == 1000) {
         next_question_lvlup = true;
     }
@@ -448,6 +450,9 @@ function requestQuestion(type, clickObject, media_id) {
     }
 
     var viewType = $(".J_tabs li a.current").attr("value");
+    if (type == "switch_view_type") {
+        viewType = clickObject.attr("value");
+    }
 
     var now_question_id = $("#J_questionId").text();
     if ($(".answer").is(":visible")) {
@@ -484,7 +489,7 @@ function requestQuestion(type, clickObject, media_id) {
             data.target = clickObject.attr("value");
         } else if (clickObject.hasClass("pattern")) {
             data.pattern = clickObject.attr("value");
-        } else {
+        } else if (clickObject.hasClass("voice")) {
             data.voice = clickObject.attr("value");
         }
     } else if (type == 'level') {
@@ -548,16 +553,19 @@ function requestQuestion(type, clickObject, media_id) {
                     rewriteSubjectAndDifficultyList(data.subject_list, data.question.subject, data.subject_difficulty_list, data.question.difficulty);
                 }
                 if (viewType == 3) {
-                    $(".J_tabs li a[value='3']").click();
                     if (type == "special_recommend") {
                         $(".J_recommend li.current").removeClass("current");
                         $(".J_recommendDifficulty li.current").removeClass("current");
                     } else if (type == "recommend") {
                         rewriteReommendAndDifficultyList(null, 0, data.recommend_difficulty_list, data.question.difficulty);
+                    } else if (type == "quick_select_prev" || type == "switch_view_type") {
+                        rewriteReommendAndDifficultyList(data.recommend_list, data.question.recommend, data.recommend_difficulty_list, data.question.difficulty);
                     }
                 } else if (viewType == 2) {
                     if (type == "subject") {
                         rewriteSubjectAndDifficultyList(null, 0, data.subject_difficulty_list, data.question.difficulty);
+                    } else if (type == "quick_select_prev" || type == "switch_view_type") {
+                        rewriteSubjectAndDifficultyList(data.subject_list, data.question.subject, data.subject_difficulty_list, data.question.difficulty);
                     }
                 } else {
                     if (type != "category") {
@@ -717,11 +725,24 @@ function requestQuestion(type, clickObject, media_id) {
                         clickObject.addClass("current").siblings("li.target").removeClass("current");
                     } else if (clickObject.hasClass("pattern")) {
                         clickObject.addClass("current").siblings("li.pattern").removeClass("current");
-                    } else {
+                    } else if (clickObject.hasClass("voice")) {
                         clickObject.addClass("current").siblings("li.voice").removeClass("current");
                     }
                 } else if (type == "object" || type == "level" || type == "subject" || type == "recommend" || type == "difficulty") {
                     clickObject.addClass("current").siblings("li").removeClass("current");
+                } else if (type == "switch_view_type") {
+                    var index = clickObject.parent("li").index();
+                    if (viewType == 1) {
+                        $("#J_currentRiceNameLabel").text("本级：");
+                    } else {
+                        $("#J_currentRiceNameLabel").text("本类：");
+                    }
+                    clickObject.addClass("current");
+                    clickObject.parent("li").siblings().children("a").removeClass("current");
+                    $(".panes > div:eq(" + index + ")").show().siblings().hide();
+                } else if (type == "special_recommend") {
+                    $(".J_tabs a[value='3']").addClass("current").parent("li").siblings("li").children("a").removeClass("current");
+                    $(".panes > div:eq(2)").show().siblings().hide();
                 }
 
                 ajaxRequest = undefined;
@@ -762,11 +783,17 @@ function bindOptionClickEvent() {
         var target = $(this);
         var select_option = $(this).attr("value");
         var object = $(".kecheng .current").attr("value");
-        $.post(URL + "/answer_question", {
-            question_id: $("#J_questionId").text(),
-            object: object,
-            select_option: select_option
-        }, function(msg) {
+        var viewType = $(".J_tabs a.current").attr("value");
+        var data = {
+            'question_id': $("#J_questionId").text(),
+            'viewType': viewType,
+            'object': object,
+            'select_option': select_option
+        };
+        if (viewType == 3) {
+            data.recommend = $(".J_recommend .current").attr("value");
+        }
+        $.post(URL + "/answer_question", data, function(msg) {
             if (msg.status) {
                 var data = msg.data;
                 var user_count_info = data.user_count_info

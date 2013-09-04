@@ -21,7 +21,7 @@ class EnglishMediaRecommendModel extends CommonModel {
                 ->field("recommend.*")
                 ->where("recommend.status=1 AND (SELECT COUNT(question.id) from " .
                         C("DB_PREFIX") . "english_question question 
-                        right join " . C("DB_PREFIX") . "english_media media on question.media_id=media.id 
+                        RIGHT JOIN " . C("DB_PREFIX") . "english_media media on question.media_id=media.id 
                         where media.voice={$voice} and question.target={$target} and media.pattern={$pattern} and FIND_IN_SET(recommend.id,media.recommend) and media.status=1 
                         and question.status=1)>0")
                 ->order("recommend.sort asc")

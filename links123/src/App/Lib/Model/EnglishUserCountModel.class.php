@@ -16,19 +16,28 @@ class EnglishUserCountModel extends CommonModel {
      * @throws
      * @author Adam $date2013.8.18$ 
      */
-    public function getEnglishUserCountInfo($voice, $target, $object, $level) {
+    public function getEnglishUserCountInfo($object, $level, $subject, $recommend, $difficulty, $voice = 1, $target = 1) {
         $user_count_info = array();
-        if ($voice > 0) {
-            $map['voice'] = $voice;
+        if (intval($level) > 0) {
+            $map['level'] = $level;
         }
-        if ($target > 0) {
-            $map['target'] = $target;
-        }
-        if ($object > 0) {
+        if (intval($object) > 0) {
             $map['object'] = $object;
         }
-        if ($level > 0) {
-            $map['level'] = $level;
+        if (intval($subject) > 0) {
+            $map['subject'] = $subject;
+        }
+        if (intval($recommend) > 0) {
+            $map['recommend'] = $recommend;
+        }
+        if (intval($difficulty) > 0) {
+            $map['difficulty'] = $difficulty;
+        }
+        if (intval($voice) > 0) {
+            $map['voice'] = $voice;
+        }
+        if (intval($target) > 0) {
+            $map['target'] = $target;
         }
         //
         //游客对应游客信息统计表english_tourist_count
@@ -53,7 +62,10 @@ class EnglishUserCountModel extends CommonModel {
         $user_count_info['target'] = intval($user_count_info['target']) > 0 ? intval($user_count_info['target']) : $target;
         $user_count_info['object'] = intval($user_count_info['object']) > 0 ? intval($user_count_info['object']) : $object;
         $user_count_info['level'] = intval($user_count_info['level']) > 0 ? intval($user_count_info['level']) : $level;
-
+        $user_count_info['subject'] = intval($user_count_info['subject']) > 0 ? intval($user_count_info['subject']) : $subject;
+        $user_count_info['recommend'] = intval($user_count_info['recommend']) > 0 ? intval($user_count_info['recommend']) : $recommend;
+        $user_count_info['difficulty'] = intval($user_count_info['difficulty']) > 0 ? intval($user_count_info['difficulty']) : $difficulty;
+        
         return $user_count_info;
     }
 
@@ -67,10 +79,13 @@ class EnglishUserCountModel extends CommonModel {
     public function saveEnglishUserCountInfo($user_count_info) {
         $map = array();
         $user_count_info['updated'] = time();
-        $map['voice'] = $user_count_info['voice'];
-        $map['target'] = $user_count_info['target'];
-        $map['object'] = $user_count_info['object'];
-        $map['level'] = $user_count_info['level'];
+        $map['voice'] = intval($user_count_info['voice']);
+        $map['target'] = intval($user_count_info['target']);
+        $map['object'] = intval($user_count_info['object']);
+        $map['level'] = intval($user_count_info['level']);
+        $map['subject'] = intval($user_count_info['subject']);
+        $map['recommend'] = intval($user_count_info['recommend']);
+        $map['difficulty'] = intval($user_count_info['difficulty']);
         //
         //游客对应游客信息统计表english_tourist_count
         if (intval($_SESSION[C('MEMBER_AUTH_KEY')]) <= 0) {

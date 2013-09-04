@@ -88,9 +88,9 @@
                 </div>
                 <div class="menuright">
                     <ul class="tabs J_tabs">
-                        <li><a href="javascript:;" value="1">选择课程</a></li>
-                        <li><a href="javascript:;" value="2">选择专题</a></li>
-                        <li><a href="javascript:;" value="3">选择推荐</a></li>
+                        <li><a href="javascript:;" value="1" <eq name="user_last_select['viewType']" value='1'>class="current"</eq>>选择课程</a></li>
+                        <li><a href="javascript:;" value="2" <eq name="user_last_select['viewType']" value='2'>class="current"</eq>>选择专题</a></li>
+                        <li><a href="javascript:;" value="3" <eq name="user_last_select['viewType']" value='3'>class="current"</eq>>选择推荐</a></li>
                     </ul>
                     <div class="panes">
                         <div class="box1" <neq name="user_last_select['viewType']" value='1'>style="display:none"</neq>>
@@ -272,7 +272,7 @@
                             <li id="J_nextQuestion"><img src="__PUBLIC__/English/images/down.png" width="14" height="21" /> 下一题</li>
                         </ul>
                     </div>
-                    <div class="leveltext">本级：<span id="J_currentRice" class="red">{$user_conut_info['right_num']*100}</span>粒<br />
+                    <div class="leveltext"><label id="J_currentRiceNameLabel">本级：</label><span id="J_currentRice" class="red">{$user_conut_info['right_num']*100}</span>粒<br />
                         累计：<span id="J_totalRice" class="red">{$english_user_info['total_rice']|default=0}</span>粒<br />
                         <span class="kafei">登陆可以保留记录和复习</span></div>
                     <div class="videobutton">

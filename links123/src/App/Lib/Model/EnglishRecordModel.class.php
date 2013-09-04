@@ -73,16 +73,24 @@ class EnglishRecordModel extends CommonModel {
 
     /**
      * 获取用户题目的作答记录
-     * @param int $question_id
+     * @param int $question_id [题目id]
+     * @param int $viewType [查看方式，1科目等级，2专题难度，3推荐难度]
+     * @param int $object [科目id]
+     * @param int $recommend [推荐id]
      * @return max [做题记录数组] 
      */
-    public function getQuestionUserRecord($question_id) {
+    public function getQuestionUserRecord($question_id, $viewType, $object, $recommend) {
         $record = array();
         $question_id = intval($question_id);
+        $map['question_id'] = $question_id;
+        if ($viewType == 1 && intval($object) > 0) {
+            $map['object'] = intval($object);
+        } else if ($viewType == 3 && intval($recommend) > 0) {
+            $map['recommend'] = intval($recommend);
+        }
         if (!isset($_SESSION[C('MEMBER_AUTH_KEY')]) || empty($_SESSION[C('MEMBER_AUTH_KEY')])) {
             $tourist_id = intval(cookie("english_tourist_id"));
             $map['user_id'] = $tourist_id;
-            $map['question_id'] = $question_id;
             $englishTourishRecordModel = D("EnglishTouristRecord");
             $ret = $englishTourishRecordModel->where($map)->find();
             if (false !== $ret) {
@@ -90,7 +98,6 @@ class EnglishRecordModel extends CommonModel {
             }
         } else {
             $map['user_id'] = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
-            $map['question_id'] = $question_id;
             $ret = $this->where($map)->find();
             if (false !== $ret) {
                 $record = $ret;
@@ -202,6 +209,7 @@ class EnglishRecordModel extends CommonModel {
      * @param int $object [科目id]
      * @param int $level [等级id]
      * @param int $subject [专题id]
+     * @param int $recommend [推荐id]
      * @param int $difficulty [难度值，1初级，2中级，3高级]
      * @param int $voice [口音，1美音，2英音]
      * @param int $target [训练目标，1听力，2说力]
@@ -210,7 +218,7 @@ class EnglishRecordModel extends CommonModel {
      * @return int
      * @author Adam $date2013.08.30$
      */
-    public function getUserUntestedQuestionNum($object, $level, $subject, $difficulty, $voice, $target, $pattern) {
+    public function getUserUntestedQuestionNum($object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern) {
         if (intval($object)) {
             $object_name = D("EnglishObject")->where(array("id" => $object))->getField("name");
             if ($object_name == "综合") {
@@ -226,6 +234,9 @@ class EnglishRecordModel extends CommonModel {
         if (intval($subject) > 0) {
             $map['subject'] = intval($subject);
         }
+        if (intval($recommend) > 0) {
+            $map['recommend'] = intval($recommend);
+        }
         if (intval($difficulty) > 0) {
             $map['difficulty'] = intval($difficulty);
         }
@@ -239,7 +250,7 @@ class EnglishRecordModel extends CommonModel {
             $map['pattern'] = intval($pattern);
         }
         //用户做过的题目去除
-        $user_question_ids = $this->getUserTestQuestionIdList($object, $map, $subject, $difficulty, $voice, $target, $pattern);
+        $user_question_ids = $this->getUserTestQuestionIdList($object, $map, $subject, $recommend, $difficulty, $voice, $target, $pattern);
         $map['status'] = 1;
         $map['_string'] = "`id` not in(" . implode(",", $user_question_ids) . ")";
         $englishQuestionModel = D("EnglishQuestion");
@@ -252,6 +263,7 @@ class EnglishRecordModel extends CommonModel {
      * @param int $object [科目]
      * @param int $level [等级]
      * @param int $subject [专题id]
+     * @param int $recommend [推荐id]
      * @param int $difficulty [难度值，1初级，2中级，3高级]
      * @param int $voice [口语]
      * @param int $target [目标]
@@ -260,7 +272,7 @@ class EnglishRecordModel extends CommonModel {
      * @return void
      * @author Adam $date2013.7.2$
      */
-    public function clearUserRecord($object, $level, $subject, $difficulty, $voice, $target, $pattern, $question_id) {
+    public function clearUserRecord($object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern, $question_id) {
         $map = array();
         if (intval($question_id > 0)) {
             $map['question_id'] = $question_id;
