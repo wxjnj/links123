@@ -222,7 +222,7 @@ class PublicAction extends BaseAction {
             $User->save($data);
             // 缓存访问权限
             RBAC::saveAccessList();
-            $this->success('登录成功！',__GROUP__.'/Index/index');
+            $this->success('登录成功！', __GROUP__.'/Index/index');
         }
     }
     
