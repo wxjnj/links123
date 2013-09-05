@@ -16,7 +16,7 @@ class WeatherAction extends CommonAction {
  		$body = getContent($url);
  		$d = json_decode($body, true);
  		$city = $d['data']['city'];
- 		$city = str_replace('市', '', $city);
+ 		$city = trim(str_replace('市', '', $city));
         //$city = '无锡';
 		$cities = M('cities');
 		$cityId = $cities->where("city = '%s'", $city)->getField('id');

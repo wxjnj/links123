@@ -11,14 +11,103 @@
  n打头的是夜间反白图标，29*20像素，注意这里的文件名是两位数字！
  -->
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head id="Head1">
-<link href="http://static.thinkpage.cn/weather/skin/widget.css?v=11022001" type="text/css" rel="stylesheet">
-<link href="http://static.thinkpage.cn/weather/skin/1.css?v=12122501" type="text/css" rel="stylesheet" id="linkCSS">
-<title>ThinkPage Weather</title>
-<body>
+<head>
 <style type="text/css">
-    a, a:hover, a:visited {color:#000000;}
+a, a:hover, a:visited {color:#000000;}
+body, p, li, input, h1, h2, h3, td, select, textarea, div
+{
+	font-family: Tahoma;
+	font-size: 12px;
+}
+
+body
+{
+	text-align: center;
+	padding: 0;
+	margin: 0;
+}
+
+#tp-weather-widget #changeCity 
+{
+    vertical-align: middle;
+    margin: 0 3px;
+    font-weight: normal;
+    cursor: pointer;
+    color: #999;
+}
+
+/* Clear Fix */
+
+.clearfix:after
+{
+content:".";
+display:block;
+height:0;
+clear:both;
+visibility:hidden;
+}
+.clearfix
+{
+display:inline-block;
+}
+/* Hide from IE Mac */
+.clearfix {display:block;}
+/* End hide from IE Mac */
+/* end of clearfix */
+
+.weatherIcon { _behavior: url(/js/iepngfix/iepngfix.htc) }
+
+.icon
+{
+    background: url('/weather/images/icons.gif');
+    background-repeat: no-repeat;
+}
+
+.icon_search
+{
+	width: 15px;
+	height: 15px;
+	background-position: left 0;
+}
+
+.icon_more
+{
+	width: 12px;
+	height: 12px;
+	background-position: left -20px;
+}
+
+.icon_info
+{
+	width: 16px;
+	height: 16px;
+	background-position: left -40px;
+	margin: -2px 0;
+}
+
+.corner-all { -moz-border-radius: 3px/*{cornerRadius}*/; -webkit-border-radius: 3px/*{cornerRadius}*/; border-radius: 3px/*{cornerRadius}*/; }
+.corner-tl { -moz-border-radius-topleft: 3px/*{cornerRadius}*/; -webkit-border-top-left-radius: 3px/*{cornerRadius}*/; border-top-left-radius: 3px/*{cornerRadius}*/; }
+.corner-tr { -moz-border-radius-topright: 3px/*{cornerRadius}*/; -webkit-border-top-right-radius: 3px/*{cornerRadius}*/; border-top-right-radius: 3px/*{cornerRadius}*/; }
+.corner-bl { -moz-border-radius-bottomleft: 3px/*{cornerRadius}*/; -webkit-border-bottom-left-radius: 3px/*{cornerRadius}*/; border-bottom-left-radius: 3px/*{cornerRadius}*/; }
+.corner-br { -moz-border-radius-bottomright: 3px/*{cornerRadius}*/; -webkit-border-bottom-right-radius: 3px/*{cornerRadius}*/; border-bottom-right-radius: 3px/*{cornerRadius}*/; }
+.corner-top { -moz-border-radius-topleft: 3px/*{cornerRadius}*/; -webkit-border-top-left-radius: 3px/*{cornerRadius}*/; border-top-left-radius: 3px/*{cornerRadius}*/; -moz-border-radius-topright: 3px/*{cornerRadius}*/; -webkit-border-top-right-radius: 3px/*{cornerRadius}*/; border-top-right-radius: 3px/*{cornerRadius}*/; }
+.corner-bottom { -moz-border-radius-bottomleft: 3px/*{cornerRadius}*/; -webkit-border-bottom-left-radius: 3px/*{cornerRadius}*/; border-bottom-left-radius: 3px/*{cornerRadius}*/; -moz-border-radius-bottomright: 3px/*{cornerRadius}*/; -webkit-border-bottom-right-radius: 3px/*{cornerRadius}*/; border-bottom-right-radius: 3px/*{cornerRadius}*/; }
+.corner-right {  -moz-border-radius-topright: 3px/*{cornerRadius}*/; -webkit-border-top-right-radius: 3px/*{cornerRadius}*/; border-top-right-radius: 3px/*{cornerRadius}*/; -moz-border-radius-bottomright: 3px/*{cornerRadius}*/; -webkit-border-bottom-right-radius: 3px/*{cornerRadius}*/; border-bottom-right-radius: 3px/*{cornerRadius}*/; }
+.corner-left { -moz-border-radius-topleft: 3px/*{cornerRadius}*/; -webkit-border-top-left-radius: 3px/*{cornerRadius}*/; border-top-left-radius: 3px/*{cornerRadius}*/; -moz-border-radius-bottomleft: 3px/*{cornerRadius}*/; -webkit-border-bottom-left-radius: 3px/*{cornerRadius}*/; border-bottom-left-radius: 3px/*{cornerRadius}*/; }
+
+.zfix 
+{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index:-1;
+    left:0;
+    top:0;
+    border:none;
+}
 </style>
+<title>另客-天气预报</title>
+<body>
 <div id="divHeader" class="header">
     <strong>天气预报</strong>
 </div>
