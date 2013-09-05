@@ -10,8 +10,8 @@ import("@.Common.CommonAction");
 class WeatherAction extends CommonAction {
 	
 	public function index() {
-		$ip = get_client_ip();
-		//$ip = '112.22.83.38';
+		//$ip = get_client_ip();
+		$ip = '112.22.83.38';
  		$url = 'http://ip.taobao.com/service/getIpInfo.php?ip='.urlencode($ip);
  		$body = getContent($url);
  		$d = json_decode($body, true);
@@ -32,12 +32,14 @@ class WeatherAction extends CommonAction {
 		$url = 'http://www.weather.com.cn/data/cityinfo/'.$cityId.'.html';
 		$curweather = getContent($url);
 		$curweather = json_decode($curweather, true);
+		$weekarray=array("日","一","二","三","四","五","六");
 		//echo "<br>";
 		//print_r($curweather);
-		$data[] = date("Y-m-d");
-		$data[] = date("Y-m-d",strtotime('+1 day'));
-		$data[] = date("Y-m-d",strtotime('+2 day'));
-		//print_r($data);
+		$data[] = "星期".$weekarray[date("w")%7];
+		$data[] = "星期".$weekarray[(date("w")+1)%7];
+		$data[] = "星期".$weekarray[(date("w")+2)%7];
+		$data[] = "星期".$weekarray[(date("w")+3)%7];
+		$data[] = "星期".$weekarray[(date("w")+4)%7];
 		//http://www.weather.com.cn/data/cityinfo/101010100.html
 		$this->assign('data', $data);
 		$this->assign('sixweather', $sixweather);

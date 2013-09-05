@@ -3,8 +3,8 @@
  * @name ThlAction.class.php
  * @package Home
  * @desc 糖葫芦搜索
+ * @version 1.0
  * @author frank UPDATE 2013-08-17
- * @version 0.0.1
  */
 
 import("@.Common.CommonAction");
@@ -19,6 +19,7 @@ class ThlAction extends CommonAction {
 		$thl = $this->_param('thl');
 		if (empty($tid)) {
 			$this->error("糖葫芦籽掉了！");
+			exit(0);
 		}
 		
 		M("Thl")->where("id = '%d'", $tid)->setInc("click_num");
@@ -28,7 +29,6 @@ class ThlAction extends CommonAction {
 		
 		//TODO 少儿关键词参数被替换临时修复
 		if ($tid == 21) {
-			
 			$url = str_replace("{keyword}", cleanParam($this->_param('q')), $thlInfo['url']);
 		} else {
 			$url = str_replace("keyword", cleanParam($this->_param('q')), $thlInfo['url']);

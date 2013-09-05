@@ -10,72 +10,73 @@
  d打头的是反白的图标，29*20像素，
  n打头的是夜间反白图标，29*20像素，注意这里的文件名是两位数字！
  -->
-<div id="ArtList">
-<table width="560" border='1' align="center">
-<tbody><tr>
-<td align="left"><strong>{$sixweather.weatherinfo.date_y}&nbsp;{$sixweather.weatherinfo.week}&nbsp;{$sixweather.weatherinfo.city}</strong></td>
-</tr></tbody>
-</table>
-
-<table width="560" border="1" align="center">
-<tbody>
-<tr>
-<td align="left" colspan="3"><strong>当前天气</strong></td>
-</tr>
-
-<tr>
-<td width="208" height="80">
-<img src="http://m.weather.com.cn/img/b{$sixweather.weatherinfo.img1}.gif">
-</td>
-<td width="165">{$sixweather.weatherinfo.weather1}<br>{$sixweather.weatherinfo.temp1}</td>
-<td width="183">·风力：{$sixweather.weatherinfo.fl1}<br>·紫外线强度：{$sixweather.weatherinfo.index_uv}</td>
-</tr>
-</tbody>
-</table>
-
-<table width="560" height="110"  border="1" align="center">
-<tbody>
-<tr>
-<td colspan='3'><strong>72小时天气预报</strong></td>
-</tr>
-
-<tr>
-
-<td align="center">
-<table width="175" cellspacing="0" cellpadding="0" border="0" align="center">
-<tbody>
-<tr><td height="23" align="center">{$data.0}</td></tr>
-<tr><td height="60" align="center"><img src="http://m.weather.com.cn/img/b{$sixweather.weatherinfo.img1}.gif"></td></tr>
-<tr><td height="57" align="center">{$sixweather.weatherinfo.weather1}<br>{$sixweather.weatherinfo.temp1}
-<br>{$sixweather.weatherinfo.wind1}</td></tr>
-</tbody>
-</table>
-</td>
-
-<td align="center">
-<table width="175" cellspacing="0" cellpadding="0" border="0" align="center">
-<tbody>
-<tr><td height="23" align="center">{$data.1}</td></tr>
-<tr><td height="60" align="center"><img src="http://m.weather.com.cn/img/b{$sixweather.weatherinfo.img3}.gif"></td></tr>
-<tr><td height="57" align="center">{$sixweather.weatherinfo.weather2}<br>{$sixweather.weatherinfo.temp2}
-<br>{$sixweather.weatherinfo.wind2}</td></tr>
-</tbody>
-</table>
-</td>
-
-<td align="center">
-<table width="175" cellspacing="0" cellpadding="0" border="0" align="center">
-<tbody>
-<tr><td height="23" align="center">{$data.2}</td></tr>
-<tr><td height="60" align="center"><img src="http://m.weather.com.cn/img/b{$sixweather.weatherinfo.img5}.gif"></td></tr>
-<tr><td height="57" align="center">{$sixweather.weatherinfo.weather3}<br>{$sixweather.weatherinfo.temp3}
-<br>{$sixweather.weatherinfo.wind3}</td></tr>
-</tbody>
-</table>
-</td>
-
-</tr>
-</tbody>
-
-</table>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1">
+<link href="http://static.thinkpage.cn/weather/skin/widget.css?v=11022001" type="text/css" rel="stylesheet">
+<link href="http://static.thinkpage.cn/weather/skin/1.css?v=12122501" type="text/css" rel="stylesheet" id="linkCSS">
+<title>ThinkPage Weather</title>
+<body>
+<style type="text/css">
+    a, a:hover, a:visited {color:#000000;}
+</style>
+<div id="divHeader" class="header">
+    <strong>天气预报</strong>
 </div>
+    
+<div style="padding: 5px 0px; border-bottom: 1px dotted rgb(153, 153, 153); cursor: pointer;" class="clearfix linkBody" id="divCurrentWeather">
+    <div style="width:50%; float:left; text-align:center;">
+        <span class="cityName" id="ltlCity">{$sixweather.weatherinfo.city}</span>
+        <br>
+        <br>
+        <img alt="" title="" src="http://m.weather.com.cn/img/b{$sixweather.weatherinfo.img1}.gif" class="weatherIcon currentIcon">
+        <br>
+        <span id="ltlText">{$sixweather.weatherinfo.weather1}</span>
+    </div>
+    <div style="float:left; line-height: 20px; text-align: left; margin-left:5px;">
+        <span id="ltlTemperature">气温: {$sixweather.weatherinfo.temp1}</span><br>
+        <span id="ltlSpeed">风力: {$sixweather.weatherinfo.fl1}</span><br>
+        <span id="ltlHumidity">紫外线强度: {$sixweather.weatherinfo.index_uv}</span>
+        
+    </div>
+</div>
+<div style="padding: 5px 0px; border-bottom: 1px dotted rgb(153, 153, 153); cursor: pointer;" class="clearfix linkBody" id="divForecastWeather">
+    <table width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-left: auto; margin-right: auto;">
+        <tbody><tr>
+            <td style="text-align: center;" class="forecast">
+                <div class="forecastDay">{$data.0}</div>
+                <img title="{$sixweather.weatherinfo.weather1}" src="http://m.weather.com.cn/img/b{$sixweather.weatherinfo.img1}.gif" />
+                <div title="" class="forecastTemp"><span class="temp">{$sixweather.weatherinfo.temp1}</span></div>
+            </td>
+            <td style="text-align: center;" class="forecast">
+            	<div class="forecastDay">{$data.1}</div>
+                <img title="{$sixweather.weatherinfo.weather2}" src="http://m.weather.com.cn/img/b{$sixweather.weatherinfo.img3}.gif" />
+                <div title="" class="forecastTemp"><span class="temp">{$sixweather.weatherinfo.temp2}</span></div>
+            </td>
+            <td style="text-align: center;" class="forecast">
+            	<div class="forecastDay">{$data.2}</div>
+                <img title="{$sixweather.weatherinfo.weather3}" src="http://m.weather.com.cn/img/b{$sixweather.weatherinfo.img5}.gif" />
+                <div title="" class="forecastTemp"><span class="temp">{$sixweather.weatherinfo.temp3}</span></div>	
+            </td>
+            <td style="text-align: center;" class="forecast">
+            	<div class="forecastDay">{$data.3}</div>
+                <img title="{$sixweather.weatherinfo.weather4}" src="http://m.weather.com.cn/img/b{$sixweather.weatherinfo.img7}.gif" />
+                <div title="" class="forecastTemp"><span class="temp">{$sixweather.weatherinfo.temp4}</span></div>	
+            </td>
+            <td style="text-align: center;" class="forecast">
+            	<div class="forecastDay">{$data.4}</div>
+                <img title="{$sixweather.weatherinfo.weather5}" src="http://m.weather.com.cn/img/b{$sixweather.weatherinfo.img9}.gif" />
+                <div title="" class="forecastTemp"><span class="temp">{$sixweather.weatherinfo.temp5}</span></div>	
+            </td>
+            
+        </tr>
+    </tbody></table>
+</div>
+    
+<div id="divInfo" class="info">
+
+<span id="spanDate">更新于<span id="ltlTime">{$curweather.weatherinfo.ptime}</span></span>
+
+</div>
+  
+</body>
+</html>

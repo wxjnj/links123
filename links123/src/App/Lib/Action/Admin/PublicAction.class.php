@@ -23,6 +23,7 @@ class PublicAction extends BaseAction {
     protected function checkUser() {
         if(!isset($_SESSION[C('USER_AUTH_KEY')])) {
             $this->error('没有登录','Public/login');
+            exit(0);
         }
     }
 
