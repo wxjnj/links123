@@ -55,11 +55,16 @@ class EnglishObjectModel extends CommonModel {
      * @author Adam $date2013.6$
      */
     public function getDefaultObjectInfo($voice = 1, $target = 1, $pattern = 1) {
-        $condition = "(select count(question.id) from " . C("DB_PREFIX")
-                . "english_question question where question.voice={$voice} and question.target={$target} and question.pattern={$pattern} and question.status=1)>0";
-        $default_ret = $this->where("`default`=1 and {$condition}")->find();
+        $object_info = $this->where("`default`=1")->find();
+        if ($object_info['name'] == "综合") {
+            return $object_info;
+        }
+        $condition = "(select count(question.id) from " . C("DB_PREFIX") . "english_question question 
+                    right join " . C("DB_PREFIX") . "english_media media on question.media_id=media.id where media.object=object.id and media.voice={$voice} 
+                    and question.target={$target} and media.pattern={$pattern} and media.status=1 and question.status=1)>0";
+        $default_ret = $this->alias("object")->where("`default`=1 and {$condition}")->find();
         if (false === $default_ret || empty($default_ret)) {
-            $default_ret = $this->where($condition)->find();
+            $default_ret = $this->alias("object")->where($condition)->find();
         }
         return $default_ret;
     }

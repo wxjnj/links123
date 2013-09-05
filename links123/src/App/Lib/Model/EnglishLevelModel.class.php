@@ -18,13 +18,15 @@ class EnglishLevelModel extends CommonModel {
      * @author Adam $date2013.5$
      */
     public function getDefaultLevelInfo($object, $voice = 1, $target = 1, $pattern = 1) {
-        $object_name = D("EnglishObject")->where("id={$object}")->getField("name");
+        $object_name = D("EnglishObject")->where(array("id" => $object))->getField("name");
         if ($object_name == "综合") {
-            $condition = "(select count(question.id) from " . C("DB_PREFIX")
-                    . "english_question question where question.level=level.id and question.voice={$voice} and question.target={$target} and question.pattern={$pattern} and question.status=1)>0";
+            $condition = "(select count(question.id) from " . C("DB_PREFIX") . "english_question question 
+                    right join " . C("DB_PREFIX") . "english_media media on question.media_id=media.id where media.level=level.id and media.voice={$voice} 
+                    and question.target={$target} and media.pattern={$pattern} and media.status=1 and question.status=1)>0";
         } else {
-            $condition = "(select count(question.id) from " . C("DB_PREFIX")
-                    . "english_question question where question.level=level.id and question.object={$object} and question.voice={$voice} and question.target={$target} and question.pattern={$pattern} and question.status=1)>0";
+            $condition = "(select count(question.id) from " . C("DB_PREFIX") . "english_question question 
+                    right join " . C("DB_PREFIX") . "english_media media on question.media_id=media.id where media.level=level.id  and media.voice={$voice} 
+                    and media.object={$object} and question.target={$target} and media.pattern={$pattern} and media.status=1 and question.status=1)>0";
         }
         $default_ret = $this->alias("level")->where("level.default=1 and {$condition}")->find();
         if (false === $default_ret || empty($default_ret)) {

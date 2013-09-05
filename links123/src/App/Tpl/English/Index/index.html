@@ -90,7 +90,7 @@
                     <ul class="tabs J_tabs">
                         <li><a href="javascript:;" value="1" <eq name="user_last_select['viewType']" value='1'>class="current"</eq>>选择课程</a></li>
                         <li><a href="javascript:;" value="2" <eq name="user_last_select['viewType']" value='2'>class="current"</eq>>选择专题</a></li>
-                        <li><a href="javascript:;" value="3" <eq name="user_last_select['viewType']" value='3'>class="current"</eq>>选择推荐</a></li>
+                        <li><a href="javascript:;" value="3" <if condition="($user_last_select['viewType'] eq 3)OR($user_last_select['viewType'] eq 4)">class="current"</if>>选择推荐</a></li>
                     </ul>
                     <div class="panes">
                         <div class="box1" <neq name="user_last_select['viewType']" value='1'>style="display:none"</neq>>
@@ -136,7 +136,7 @@
                                 </ul>
                             </div>
                         </div>
-                        <div class="box1" <neq name="user_last_select['viewType']" value='3'>style="display:none"</neq>>
+                        <div class="box1" <if condition="($user_last_select['viewType'] neq 3)AND($user_last_select['viewType'] neq 4)">style="display:none"</if>>
                             <div class="kechenggrade">
                                 <ul class="kecheng J_recommend">
                                     <volist name="recommend_list" id="recommend">

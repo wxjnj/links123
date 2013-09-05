@@ -21,11 +21,12 @@ class EnglishRecordModel extends CommonModel {
         $data['voice'] = $question_info['voice'];
         $data['target'] = $question_info['target'];
         $data['pattern'] = $question_info['pattern'];
-        $data['object'] = intval($question_info['real_object']) > 0 ? intval($question_info['real_object']) : $question_info['object']; //排除科目为综合的影响
+        $data['object'] = $question_info['object'];
         $data['level'] = $question_info['level'];
         $data['subject'] = $question_info['subject'];
         $data['recommend'] = $question_info['recommend'];
         $data['difficulty'] = $question_info['difficulty'];
+        $data['special_recommend'] = $question_info['special_recommend'];
         $data['user_answer'] = $answer;
         $data['is_right'] = $answer === intval($question_info['answer']) ? 1 : 0; //用户是否答对，1是0否
         $data['created'] = time();
@@ -42,9 +43,9 @@ class EnglishRecordModel extends CommonModel {
         //
         //游客记录的更新保存
         $map = array();
+        $map['question_id'] = $question_info['id'];
         if (!isset($_SESSION[C('MEMBER_AUTH_KEY')]) || empty($_SESSION[C('MEMBER_AUTH_KEY')])) {
             $map['user_id'] = intval(cookie('english_tourist_id')); //从cookie获取游客id
-            $map['question_id'] = $question_info['id'];
             $englishTouristRecordModel = D("EnglishTouristRecord");
             $ret = $englishTouristRecordModel->where($map)->save($data); //保存游客记录
             //记录不存在的情况
@@ -60,7 +61,6 @@ class EnglishRecordModel extends CommonModel {
             cookie('english_tourist_id', $map['user_id'], 60 * 60 * 24 * 30); //更新游客id到cookie
         } else {
             $map['user_id'] = intval($_SESSION[C('MEMBER_AUTH_KEY')]); //用户id
-            $map['question_id'] = $question_info['id'];
             $ret = $this->where($map)->save($data); //更新记录
             //不存在记录，添加记录
             if (false !== $ret && $ret < 1) {
@@ -74,20 +74,12 @@ class EnglishRecordModel extends CommonModel {
     /**
      * 获取用户题目的作答记录
      * @param int $question_id [题目id]
-     * @param int $viewType [查看方式，1科目等级，2专题难度，3推荐难度]
-     * @param int $object [科目id]
-     * @param int $recommend [推荐id]
      * @return max [做题记录数组] 
      */
-    public function getQuestionUserRecord($question_id, $viewType, $object, $recommend) {
+    public function getQuestionUserRecord($question_id) {
         $record = array();
         $question_id = intval($question_id);
         $map['question_id'] = $question_id;
-        if ($viewType == 1 && intval($object) > 0) {
-            $map['object'] = intval($object);
-        } else if ($viewType == 3 && intval($recommend) > 0) {
-            $map['recommend'] = intval($recommend);
-        }
         if (!isset($_SESSION[C('MEMBER_AUTH_KEY')]) || empty($_SESSION[C('MEMBER_AUTH_KEY')])) {
             $tourist_id = intval(cookie("english_tourist_id"));
             $map['user_id'] = $tourist_id;
@@ -119,11 +111,12 @@ class EnglishRecordModel extends CommonModel {
      * @param int $voice [口音，1美音，2英音]
      * @param int $target [训练目标，1听力，2说力]
      * @param int $pattern [类型，1视频，2音频]
+     * @param int $special_recommend [特别推荐，1是，0不是，-1全部]
      * @param string $extend_condition [额外条件]
      * @return array
      * @author Adam $date2013.08.30$
      */
-    public function getUserTestQuestionIdList($object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern, $extend_condition = "") {
+    public function getUserTestQuestionIdList($object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern, $special_recommend = -1, $extend_condition = "") {
         $question_ids = array();
         $question_ids[0] = 0;
         if (intval($object)) {
@@ -141,7 +134,7 @@ class EnglishRecordModel extends CommonModel {
             $map['subject'] = intval($subject);
         }
         if (intval($recommend) > 0) {
-            $map['recommend'] = intval($recommend);
+            $map['_string'] = "FIND_IN_SET('" . $recommend . "',media.recommend)";
         }
         if (intval($difficulty) > 0) {
             $map['difficulty'] = intval($difficulty);
@@ -155,8 +148,11 @@ class EnglishRecordModel extends CommonModel {
         if (intval($pattern) > 0) {
             $map['pattern'] = intval($pattern);
         }
+        if (intval($special_recommend) > 0) {
+            $map['special_recommend'] = intval($special_recommend);
+        }
         if (!empty($extend_condition)) {
-            $map['_string'] = $extend_condition;
+            $map['_string'] .= $extend_condition;
         }
         if (isset($_SESSION[C('MEMBER_AUTH_KEY')]) && intval($_SESSION[C('MEMBER_AUTH_KEY')]) > 0) {
             $map['user_id'] = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
@@ -214,11 +210,11 @@ class EnglishRecordModel extends CommonModel {
      * @param int $voice [口音，1美音，2英音]
      * @param int $target [训练目标，1听力，2说力]
      * @param int $pattern [类型，1视频，2音频]
-     * @param string $extend_condition [额外条件]
+     * @param int $special_recommend [特别推荐，1是，0不是，-1全部]
      * @return int
      * @author Adam $date2013.08.30$
      */
-    public function getUserUntestedQuestionNum($object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern) {
+    public function getUserUntestedQuestionNum($object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern, $special_recommend = -1) {
         if (intval($object)) {
             $object_name = D("EnglishObject")->where(array("id" => $object))->getField("name");
             if ($object_name == "综合") {
@@ -235,7 +231,7 @@ class EnglishRecordModel extends CommonModel {
             $map['subject'] = intval($subject);
         }
         if (intval($recommend) > 0) {
-            $map['recommend'] = intval($recommend);
+            $map['_string'] = "FIND_IN_SET('" . $recommend . "',media.recommend)";
         }
         if (intval($difficulty) > 0) {
             $map['difficulty'] = intval($difficulty);
@@ -249,8 +245,11 @@ class EnglishRecordModel extends CommonModel {
         if (intval($pattern) > 0) {
             $map['pattern'] = intval($pattern);
         }
+        if (intval($special_recommend) > 0) {
+            $map['special_recommend'] = intval($special_recommend);
+        }
         //用户做过的题目去除
-        $user_question_ids = $this->getUserTestQuestionIdList($object, $map, $subject, $recommend, $difficulty, $voice, $target, $pattern);
+        $user_question_ids = $this->getUserTestQuestionIdList($object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern);
         $map['status'] = 1;
         $map['_string'] = "`id` not in(" . implode(",", $user_question_ids) . ")";
         $englishQuestionModel = D("EnglishQuestion");
@@ -316,7 +315,6 @@ class EnglishRecordModel extends CommonModel {
                 $englishTouristRecordModel = D("EnglishTouristRecord");
                 $ret = $englishTouristRecordModel->where($map)->delete();
             }
-//            dump($englishTouristRecordModel->getLastSql());exit;
         }
     }
 

@@ -284,8 +284,10 @@ class EnglishMediaAction extends CommonAction {
                 $englishMediaModel->startTrans();
                 $ret = $englishMediaModel->where($map)->save($data);
                 if (false !== $ret) {
-                    if (false == $englishMediaModel->setRecommend($id)) {
-                        $this->ajaxReturn("", "操作失败", false);
+                    if ($data['special_recommend'] == 1) {
+                        if (false == $englishMediaModel->setRecommend($id, 1)) {
+                            $this->ajaxReturn("", "操作失败1", false);
+                        }
                     }
                     $englishMediaModel->commit();
                     $this->ajaxReturn($data, "操作成功", true);

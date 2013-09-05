@@ -17,9 +17,10 @@ class EnglishViewRecordModel extends CommonModel {
      * @param int $voice [口语]
      * @param int $target [目标]
      * @param int $pattern [类型]
+     * @param int $view_type [查看方式，1科目等级，2专题难度，3推荐难度,4特别推荐]
      * @return
      */
-    public function addRecord($question_id, $level, $object, $subject, $recommend, $difficulty = 1, $voice = 1, $target = 1, $pattern = 1) {
+    public function addRecord($question_id, $level, $object, $subject, $recommend, $difficulty = 1, $voice = 1, $target = 1, $pattern = 1, $view_type = 1) {
         $map = array();
         //游客
         if (!isset($_SESSION[C('MEMBER_AUTH_KEY')]) || empty($_SESSION[C('MEMBER_AUTH_KEY')])) {
@@ -33,15 +34,21 @@ class EnglishViewRecordModel extends CommonModel {
         } else {
             $map['user_id'] = intval($_SESSION[C("MEMBER_AUTH_KEY")]); //用户id为登录用户的对应用户id
         }
-        $map['object'] = intval($object);
-        $map['level'] = intval($level);
-        $map['subject'] = intval($subject);
-        $map['recommend'] = intval($recommend);
-        $map['difficulty'] = intval($difficulty);
         $map['voice'] = intval($voice);
         $map['target'] = intval($target);
         $map['pattern'] = intval($pattern);
         $map['question_id'] = $question_id;
+        $map['view_type'] = $view_type > 0 ? $view_type : 1;
+        if ($view_type == 3) {
+            $map['recommend'] = intval($recommend);
+            $map['difficulty'] = intval($difficulty);
+        } else if ($view_type == 2) {
+            $map['subject'] = intval($subject);
+            $map['difficulty'] = intval($difficulty);
+        } else if ($view_type == 1) {
+            $map['object'] = intval($object);
+            $map['level'] = intval($level);
+        }
         $ret = $this->where($map)->find();
         if (!empty($ret)) {
             return;
@@ -74,9 +81,10 @@ class EnglishViewRecordModel extends CommonModel {
      * @param int $voice [当前口音]
      * @param int $target [当前目标]
      * @param int $pattern [当前类型]
+     * @param int $view_type [查看方式，1科目等级，2专题难度，3推荐难度，4特别推荐]
      * @return array
      */
-    public function getViewedQuestionRecord($question_id, $type = "next", $object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern) {
+    public function getViewedQuestionRecord($question_id, $type = "next", $object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern, $view_type = 1) {
         $map = array();
         //
         //获取用户id
@@ -96,14 +104,14 @@ class EnglishViewRecordModel extends CommonModel {
             return array();
         }
         $map['question_id'] = $question_id;
-        if ($type == "next") {
-            if (intval($object) > 0) {
-                $map['object'] = $object; //科目由于综合包含所有题目，需要区别科目
-            }
+        $map['view_type'] = $view_type;
+        if ($view_type == 1 && intval($object) > 0) {
+            $map['object'] = $object; //科目由于综合包含所有题目，需要区别科目
         }
-        if (intval($recommend) > 0) {
+        if ($view_type == 3 && intval($recommend) > 0) {
             $map['recommend'] = $recommend;
         }
+
         //
         //本次次的题目历史信息
         $now_question_info = $this->where($map)->find();
@@ -112,28 +120,24 @@ class EnglishViewRecordModel extends CommonModel {
         }
         $map = array();
         $map['user_id'] = $user_id;
+        $map['view_type'] = $view_type;
         if ($type == "next") {
-            $map['object'] = intval($object);
-            $map['level'] = intval($level);
-            $map['subject'] = intval($subject);
-            $map['recommend'] = intval($recommend);
-            $map['difficulty'] = intval($difficulty);
+            if ($view_type == 3) {
+                $map['recommend'] = intval($recommend);
+                $map['difficulty'] = intval($difficulty);
+            } else if ($view_type == 2) {
+                $map['subject'] = intval($subject);
+                $map['difficulty'] = intval($difficulty);
+            } else if ($view_type == 1) {
+                $map['object'] = intval($object);
+                $map['level'] = intval($level);
+            }
             $map['voice'] = intval($voice);
             $map['target'] = intval($target);
             $map['pattern'] = intval($pattern);
             $map['sort'] = array('gt', intval($now_question_info['sort']));
             $order = "`sort` ASC";
         } else {
-            if (intval($object) > 0) {
-                $map['object'] = array('gt', 0);
-                $map['level'] = array('gt', 0);
-            } else if (intval($subject) > 0) {
-                $map['subject'] = array('gt', 0);
-                $map['difficulty'] = array('gt', 0);
-            } else if (intval($recommend) > 0) {
-                $map['recommend'] = array('gt', 0);
-                $map['difficulty'] = array('gt', 0);
-            }
             $map['sort'] = array('lt', intval($now_question_info['sort']));
             $order = "`sort` DESC";
         }

@@ -32,6 +32,14 @@ class EnglishMediaRecommendModel extends CommonModel {
         return $ret;
     }
 
+    public function getDefaultRecommendId($voice = 1, $target = 1, $pattern = 1) {
+        $condition = "(select count(question.id) from " . C("DB_PREFIX") . "english_question question 
+                    right join " . C("DB_PREFIX") . "english_media media on question.media_id=media.id where FIND_IN_SET(recommend.id,media.recommend) 
+                    and media.voice={$voice} and question.target={$target} and media.pattern={$pattern} and media.status=1 and question.status=1)>0";
+        $default_id = $this->alias("recommend")->where("{$condition}")->getField("id");
+        return $default_id;
+    }
+
 }
 
 ?>

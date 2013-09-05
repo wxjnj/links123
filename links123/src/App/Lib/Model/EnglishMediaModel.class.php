@@ -23,7 +23,7 @@ class EnglishMediaModel extends CommonModel {
      * @return boolean|string
      * @author Adam $date2013.09.01$
      */
-    public function setRecommend($id) {
+    public function setRecommend($id, $target_recommend) {
         $ids = explode(",", $id);
         if (empty($ids)) {
             return false;
@@ -45,6 +45,9 @@ class EnglishMediaModel extends CommonModel {
         foreach ($ret as $media) {
             $data['id'] = intval($media['id']);
             $recommend = intval($media['recommend']);
+            if ($recommend == $target_recommend) {
+                continue;
+            }
             $object_name = $media['object_name'];
             $subject_name = $media['subject_name'];
             if ($recommend == 0) {
@@ -63,6 +66,7 @@ class EnglishMediaModel extends CommonModel {
                             $this->rollback();
                             return false;
                         }
+                        $recommendNameList[$object_name] = $recommend_id_a;
                     }
                     $recommendSort++;
                     array_push($recommend_ids, $recommend_id_a);
@@ -81,6 +85,7 @@ class EnglishMediaModel extends CommonModel {
                             $this->rollback();
                             return false;
                         }
+                        $recommendNameList[$subject_name] = $recommend_id_b;
                     }
                     $recommendSort++;
                     array_push($recommend_ids, $recommend_id_b);

@@ -21,74 +21,95 @@ class IndexAction extends EnglishAction {
         }
         //
         //用户第一次进入的默认情况
-        $user_last_select['voice'] = in_array(intval($user_last_select['voice']), array(1, 2)) ? intval($user_last_select['voice']) : 1;
-        $user_last_select['target'] = in_array(intval($user_last_select['target']), array(1, 2)) ? intval($user_last_select['target']) : 1;
-        $user_last_select['pattern'] = in_array(intval($user_last_select['pattern']), array(1, 2)) ? intval($user_last_select['pattern']) : 1;
-        $user_last_select['viewType'] = in_array(intval($user_last_select['viewType']), array(1, 2, 3)) ? $user_last_select['viewType'] : 1; //查看方式，1科目等级，2专题难度，3推荐
-        $user_last_select['recommend'] = intval($user_last_select['recommend']) > 0 ? intval($user_last_select['recommend']) : 1;
-        //科目列表
-        $object_list = $objectModel->getObjectListToIndex($user_last_select['voice'], $user_last_select['target'], $user_last_select['pattern']);
-        //专题和推荐列表
-        $subject_list = D("EnglishMediaSubject")->getSubjectListToIndex($user_last_select['voice'], $user_last_select['target'], $user_last_select['pattern']);
-        $recommend_list = D("EnglishMediaRecommend")->getRecommendListToIndex($user_last_select['voice'], $user_last_select['target'], $user_last_select['pattern']);
-        //
-        //用户上次选择的专题
-        $subject_id = D("EnglishMediaSubject")->where(array("id" => $user_last_select['subject'], "status" => 1))->getField("id");
-        if (intval($subject_id) == 0) {
-            $user_last_select['subject'] = 1;
-        }
-        //难度列表
-        $subjectDifficultyList = $questionModel->getDifficultyList(2, $user_last_select['subject'], 0, $user_last_select['voice'], $user_last_select['target'], $user_last_select['pattern']);
-        $recommendDifficultyList = $questionModel->getDifficultyList(3, 0, $user_last_select['recommend'], $user_last_select['voice'], $user_last_select['target'], $user_last_select['pattern']);
-        $this->assign("subjectDifficultyList", $subjectDifficultyList);
-        $this->assign("recommendDifficultyList", $recommendDifficultyList);
-        //难度
-        $user_last_select['subjectDifficulty'] = in_array(intval($user_last_select['subjectDifficulty']), array(1, 2, 3)) ? intval($user_last_select['subjectDifficulty']) : 1;
-        $user_last_select['recommendDifficulty'] = in_array(intval($user_last_select['recommendDifficulty']), array(1, 2, 3)) ? intval($user_last_select['recommendDifficulty']) : 1;
-        //
-        //用户上次选择的科目
-        $user_last_select['object'] = intval($user_last_select['object']);
-        $objectInfo = $objectModel->where(array("id" => $user_last_select['object'], "status" => 1))->find();
-        //科目不存在或不可用
-        if (false == $objectInfo && empty($objectInfo)) {
-            $user_last_select['object_info'] = $objectModel->getDefaultObjectInfo($user_last_select['voice'], $user_last_select['target'], $user_last_select['pattern']);
-        } else {
-            $user_last_select['object_info'] = $objectInfo;
-        }
-        $user_last_select['object'] = intval($user_last_select['object_info']['id']) > 0 ? intval($user_last_select['object_info']['id']) : $user_last_select['object'];
-        //
-        //用户上次选择的等级
-        $user_last_select['level'] = intval($user_last_select['level']);
-        $levelInfo = $levelModel->where(array("id" => $user_last_select['level'], "status" => 1))->find();
-        //等级不存在或不可用
-        if (false == $levelInfo && empty($levelInfo)) {
-            $user_last_select['level_info'] = $levelModel->getDefaultLevelInfo($user_last_select['level'], $user_last_select['voice'], $user_last_select ['target'], $user_last_select['pattern']);
-        } else {
-            $user_last_select['level_info'] = $levelInfo;
-        }
-        //默认的等级列表
-        $level_list = $levelModel->getLevelListToIndex($user_last_select['object'], $user_last_select['voice'], $user_last_select['target'], $user_last_select['pattern']);
-
-        //
-        //确保上次选择的等级下拥有题目
-        $ret = array();
-        foreach ($level_list as $value) {
-            $ret[$value['id']] = $value;
-        }
-        if ($ret[$user_last_select['level']]['question_num'] == 0) {
+        $viewType = in_array(intval($user_last_select['viewType']), array(1, 2, 3, 4)) ? intval($user_last_select['viewType']) : 1; //查看方式，1科目等级，2专题难度，3推荐
+        $voice = in_array(intval($user_last_select['voice']), array(1, 2)) ? intval($user_last_select['voice']) : 1;
+        $target = in_array(intval($user_last_select['target']), array(1, 2)) ? intval($user_last_select['target']) : 1;
+        $pattern = in_array(intval($user_last_select['pattern']), array(1, 2)) ? intval($user_last_select['pattern']) : 1;
+        if ($viewType == 4) {
+            $media_id = intval($user_last_select['media_id']);
+            //推荐列表
+            $recommend_list = D("EnglishMediaRecommend")->getRecommendListToIndex($voice, $target, $pattern);
+            $this->assign("recommend_list", $recommend_list);
+            //
+            $recommendDifficultyList = $questionModel->getDifficultyList(3, 0, 0, $voice, $target, $pattern);
+            $this->assign("recommendDifficultyList", $recommendDifficultyList);
+        } else if ($viewType == 3) {
+            $englishMediaRecommendModel = D("EnglishMediaRecommend");
+            //推荐列表
+            $recommend_list = $englishMediaRecommendModel->getRecommendListToIndex($voice, $target, $pattern);
+            $this->assign("recommend_list", $recommend_list);
+            //推荐
+            $recommend = intval($user_last_select['recommend']) > 0 ? intval($user_last_select['recommend']) : $englishMediaRecommendModel->getDefaultRecommendId($voice, $target, $pattern);
+            //
+            $recommendDifficultyList = $questionModel->getDifficultyList(3, 0, $recommend, $voice, $target, $pattern);
+            $recommendDifficulty = in_array(intval($user_last_select['recommendDifficulty']), array(1, 2, 3)) ? intval($user_last_select['recommendDifficulty']) : 1;
+            $this->assign("recommendDifficultyList", $recommendDifficultyList);
+        } else if ($viewType == 2) {
+            $englishMediaSubjectModel = D("EnglishMediaSubject");
+            $subject_list = $englishMediaSubjectModel->getSubjectListToIndex($voice, $target, $pattern);
+            $this->assign("subject_list", $subject_list);
+            //
+            //用户上次选择的专题
+            $subject = intval($user_last_select['subject']);
+            $subject_id = $englishMediaSubjectModel->where(array("id" => $subject, "status" => 1))->getField("id");
+            if (intval($subject_id) == 0) {
+                $subject = $englishMediaSubjectModel->getDefaultSubjectdId($voice, $target, $pattern);
+            }
+            //难度列表
+            $subjectDifficultyList = $questionModel->getDifficultyList(2, $subject, 0, $voice, $target, $pattern);
+            $this->assign("subjectDifficultyList", $subjectDifficultyList);
+            //难度值
+            $subjectDifficulty = in_array(intval($user_last_select['subjectDifficulty']), array(1, 2, 3)) ? intval($user_last_select['subjectDifficulty']) : 1;
+        } else if ($viewType == 1) {
+            //科目列表
+            $object_list = $objectModel->getObjectListToIndex($voice, $target, $pattern);
+            $this->assign("object_list", $object_list);
+            //
+            //用户上次选择的科目
+            $object = intval($user_last_select['object']);
+            $objectInfo = $objectModel->where(array("id" => $object, "status" => 1))->find();
+            //科目不存在或不可用
+            if (false == $objectInfo && empty($objectInfo)) {
+                $objectInfo = $objectModel->getDefaultObjectInfo($voice, $target, $pattern);
+            }
+            if (intval($objectInfo['id']) == 0) {
+                $object = 1;
+            } else {
+                $object = $objectInfo['id'];
+            }
+            //
+            //用户上次选择的等级
+            $level = intval($user_last_select['level']);
+            $levelInfo = $levelModel->where(array("id" => $level, "status" => 1))->find();
+            //等级不存在或不可用
+            if (false == $levelInfo && empty($levelInfo)) {
+                $levelInfo = $levelModel->getDefaultLevelInfo($level, $voice, $target, $pattern);
+            }
+            if (intval($levelInfo['id']) == 0) {
+                $level = 0;
+            }
+            //默认的等级列表
+            $level_list = $levelModel->getLevelListToIndex($object, $voice, $target, $pattern);
+            $this->assign("level_list", $level_list);
+            //
+            //确保上次选择的等级下拥有题目
+            $ret = array();
             foreach ($level_list as $value) {
-                if ($value['question_num'] > 0) {
-                    $user_last_select['level_info'] = $levelModel->getInfoById($value['id']);
-                    break;
+                $ret[$value['id']] = $value;
+            }
+            if ($ret[$level]['question_num'] == 0) {
+                foreach ($level_list as $value) {
+                    if ($value['question_num'] > 0) {
+                        $levelInfo = $levelModel->getInfoById($value['id']);
+                        break;
+                    }
                 }
+                $level = $levelInfo['id'];
             }
         }
-        $user_last_select['level'] = $user_last_select['level_info']['id'];
-        $this->assign("user_last_select", $user_last_select);
-        cookie('english_user_last_select', $user_last_select, 60 * 60 * 24 * 30);
 
         //获取题目
-        $question = $questionModel->getQuestionToIndex($user_last_select['viewType'], $user_last_select['object'], $user_last_select ['level'], $user_last_select['subject'], $user_last_select['recommend'], $user_last_select['difficulty'], $user_last_select ['voice'], $user_last_select['target'], $user_last_select['pattern']);
+        $question = $questionModel->getQuestionToIndex($viewType, $object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern, $media_id);
         //
         //获取用户英语角信息
         $englishUserInfoModel = D("EnglishUserInfo");
@@ -96,35 +117,32 @@ class IndexAction extends EnglishAction {
         $this->assign("english_user_info", $english_user_info);
         //
         //记录浏览题目
-        if ($user_last_select['viewType'] == 2) {
-            D("EnglishViewRecord")->addRecord($question['id'], 0, 0, $question['subject'], 0, $question['difficulty'], $question ['voice'], $question['target'], $question['pattern']);
-        } else if ($user_last_select['viewType'] == 3) {
-            D("EnglishViewRecord")->addRecord($question['id'], 0, 0, 0, $question['recommend'], $question['difficulty'], $question ['voice'], $question['target'], $question['pattern']);
-        } else {
-            D("EnglishViewRecord")->addRecord($question['id'], $question ['level'], $user_last_select['object_info']['id'], 0, 0, 0, $question ['voice'], $question['target'], $question['pattern']);
+        $englishViewRecordModel = D("EnglishViewRecord");
+        if ($viewType == 2) {
+            $englishViewRecordModel->addRecord($ret['question']['id'], 0, 0, $ret['question']['subject'], 0, $ret['question']['difficulty'], $ret['question']['voice'], $ret['question']['target'], $ret['question']['pattern'], $viewType);
+        } else if ($viewType == 3) {
+            $englishViewRecordModel->addRecord($ret['question']['id'], 0, 0, 0, $recommend, $ret['question']['difficulty'], $ret['question']['voice'], $ret['question']['target'], $ret['question']['pattern'], $viewType);
+        } else if ($viewType == 1) {
+            $englishViewRecordModel->addRecord($ret['question']['id'], $ret['question']['level'], $object, 0, 0, 0, $ret['question']['voice'], $ret['question']['target'], $ret['question']['pattern'], $viewType);
+        } else if ($viewType == 4) {
+            $englishViewRecordModel->addRecord($ret['question']['id'], 0, 0, 0, 0, 0, $ret['question']['voice'], $ret['question']['target'], $ret['question']['pattern'], $viewType);
         }
-        /*
-          if ($user_last_select['object_info'] ['name'] == "综合") {
-          D("EnglishViewRecord")->addRecord($question['id'], $question ['level'], $user_last_select['object_info']['id'], $question['subject'], $question['difficulty'], $question ['voice'], $question['target'], $question['pattern']); //记录用户查看题目
-          } else {
-          D("EnglishViewRecord")->addRecord($question['id'], $question ['level'], $question['object'], $question['subject'], $question['difficulty'], $question ['voice'], $question['target'], $question['pattern']); //记录用户查看题目
-          }
-         */
         //
         //获取用户统计信息
         $englishUserCountModel = D("EnglishUserCount");
         $user_count_info = array();
-        if ($user_last_select['viewType'] == 3) {
-            $user_count_info = $englishUserCountModel->getEnglishUserCountInfo(0, 0, 0, $user_last_select['recommend'], $user_last_select['recommendDifficulty'], $user_last_select ['voice'], $user_last_select['target']);
-        } else if ($user_last_select['viewType'] == 2) {
-            $user_count_info = $englishUserCountModel->getEnglishUserCountInfo(0, 0, $user_last_select['subject'], 0, $user_last_select['subjectDifficulty'], $user_last_select ['voice'], $user_last_select['target']);
-        } else {
-            $user_count_info = $englishUserCountModel->getEnglishUserCountInfo($user_last_select['object'], $user_last_select['level'], 0, 0, 0, $user_last_select ['voice'], $user_last_select['target']);
+        if ($viewType == 3) {
+            $user_count_info = $englishUserCountModel->getEnglishUserCountInfo($viewType, 0, 0, 0, $recommend, $recommendDifficulty, $voice, $targe);
+        } else if ($viewType == 2) {
+            $user_count_info = $englishUserCountModel->getEnglishUserCountInfo($viewType, 0, 0, $subject, 0, $subjectDifficulty, $voice, $target);
+        } else if ($viewType == 1) {
+            $user_count_info = $englishUserCountModel->getEnglishUserCountInfo($viewType, $object, $level, 0, 0, 0, $voice, $target);
+        } else if ($viewType == 4) {
+            $user_count_info = $englishUserCountModel->getEnglishUserCountInfo($viewType, 0, 0, 0, 0, 0, $voice, $target);
         }
         $this->assign("user_conut_info", $user_count_info);
 
-        //path为空，则进行视频解析
-        //!$question['media_url'] && !$question['media']
+        //play_code为空，则进行视频解析
         if (!$question['play_code']) {
             //视频解析库
             import("@.ORG.VideoHooks");
@@ -138,7 +156,7 @@ class IndexAction extends EnglishAction {
             $media_thumb_img = $videoInfo['img'];
 
             //解析成功，保存视频解析地址
-            if (!$videoHooks->getError() && $path) {
+            if (!$videoHooks->getError() && $play_code) {
 
                 $play_type = $videoInfo['media_type'];
                 $saveData = array(
@@ -173,6 +191,29 @@ class IndexAction extends EnglishAction {
             }
             $question['play_code'] = preg_replace(array('/width="(.*?)"/is', '/height="(.*?)"/is', '/width=300 height=280/is', '/width=600 height=400/is'), array('width="100%"', 'height="100%"', 'width="100%" height="100%"', 'width="100%" height="100%"'), $question['play_code']);
         }
+        //
+        //保存历史记录
+        $user_last_select['voice'] = $voice;
+        $user_last_select['target'] = $target;
+        $user_last_select['pattern'] = $pattern;
+        $user_last_select['viewType'] = $viewType;
+        if ($viewType == 4) {
+            $user_last_select['media_id'] = intval($media_id);
+        } else if ($viewType == 3) {
+            //推荐
+            $user_last_select['recommend'] = intval($recommend);
+            $user_last_select['recommendDifficulty'] = intval($recommendDifficulty);
+        } else if ($viewType == 2) {
+            $user_last_select['sbject'] = intval($subject);
+            $user_last_select['subjectDifficulty'] = intval($subjectDifficulty);
+        } else if ($viewType == 1) {
+            $user_last_select['object'] = intval($object);
+            $user_last_select['level'] = intval($level);
+            $user_last_select['object_info'] = serialize($objectInfo);
+            $user_last_select['level_info'] = serialize($levelInfo);
+        }
+        $this->assign("user_last_select", $user_last_select);
+        cookie('english_user_last_select', $user_last_select, 60 * 60 * 24 * 30);
 
         //排行榜数据
         $ret = $englishUserInfoModel->getTopUserListByTypeName("object_综合");
@@ -186,10 +227,6 @@ class IndexAction extends EnglishAction {
         $this->assign("special_media_num", count($special_media) - 1);
 
         $this->assign("question", $question);
-        $this->assign("level_list", $level_list);
-        $this->assign("object_list", $object_list);
-        $this->assign("subject_list", $subject_list);
-        $this->assign("recommend_list", $recommend_list);
 
         $this->assign('isAboutVideo', $isAboutVideo);
         $this->display();
@@ -207,40 +244,86 @@ class IndexAction extends EnglishAction {
             $objectModel = D("EnglishObject");
             $questionModel = D("EnglishQuestion");
             //
-            //接收请求数据
-            $viewType = intval($_REQUEST['viewType']); //查看方式，1科目等级，2专题难度，3推荐难度
-            $voice = intval($_REQUEST['voice']) == 0 ? 1 : intval($_REQUEST['voice']); //口语
-            $target = intval($_REQUEST['target']) == 0 ? 1 : intval($_REQUEST['target']); //训练对象
-            $pattern = intval($_REQUEST['pattern']) == 0 ? 1 : intval($_REQUEST['pattern']); //类型
-            $type = empty($_REQUEST['type']) ? "category" : $_REQUEST['type']; //请求类型
-            $now_question_id = intval($_REQUEST['now_question_id']); //当前的题目id
-            //
             //用户点击历史
             $user_last_select = cookie('english_user_last_select');
             if (!is_array($user_last_select)) {
                 $user_last_select = array();
             }
-            //不同的浏览方式获取不同的数据
-            if ($viewType == 3) {
-                //如果是特别推荐图片点击来的
-                if ($type == "special_recommend") {
-                    $media_id = intval($_REQUEST['media_id']);
-                    //$difficulty = intval($user_last_select['difficulty']) > 0 ? intval($user_last_select['difficulty']) : 1;
+            //
+            //接收请求数据
+            $viewType = intval($_REQUEST['viewType']); //查看方式，1科目等级，2专题难度，3推荐难度,4特别推荐
+            if ($viewType == 0) {
+                if (in_array(intval($user_last_select['viewType']), array(1, 2, 3, 4))) {
+                    $viewType = intval($user_last_select['viewType']);
                 } else {
-                    $recommend = intval($_REQUEST['recommend']) > 0 ? intval($_REQUEST['recommend']) : 1; //推荐分类id
-                    $difficulty = intval($_REQUEST['difficulty']) > 0 ? intval($_REQUEST['difficulty']) : 1; //难度值
+                    $viewType = 1;
+                }
+            }
+            $voice = intval($_REQUEST['voice']) == 0 ? 1 : intval($_REQUEST['voice']); //口语
+            $target = intval($_REQUEST['target']) == 0 ? 1 : intval($_REQUEST['target']); //训练对象
+            $pattern = intval($_REQUEST['pattern']) == 0 ? 1 : intval($_REQUEST['pattern']); //类型
+            $type = empty($_REQUEST['type']) ? "category" : $_REQUEST['type']; //请求类型
+            $now_question_id = intval($_REQUEST['now_question_id']); //当前的题目id
+            //不同的浏览方式获取不同的数据
+            //
+            //特别推荐
+            if ($viewType == 4) {
+                $media_id = intval($_REQUEST['media_id']);
+            } else if ($viewType == 3) {
+                $englishMediaRecommendModel = D("EnglishMediaRecommend");
+                //推荐id
+                if (intval($_REQUEST['recommend']) == 0 && intval($user_last_select['recommend']) > 0) {
+                    $recommend = intval($user_last_select['recommend']);
+                } else {
+                    $recommend = $englishMediaRecommendModel->getDefaultRecommendId($voice, $target, $pattern);
+                }
+                //难度id
+                if (intval($_REQUEST['difficulty']) == 0 && intval($user_last_select['recommendDifficulty']) > 0) {
+                    $difficulty = intval($user_last_select['recommendDifficulty']);
+                } else {
+                    $difficulty = 1; //todo应该给默认
                 }
             } else if ($viewType == 2) {
-                $subject = intval($_REQUEST['subject']) > 0 ? intval($_REQUEST['subject']) : 1; //专题id
-                $difficulty = intval($_REQUEST['difficulty']) > 0 ? intval($_REQUEST['difficulty']) : 1; //难度值
+                if (intval($_REQUEST['subject']) == 0 && intval($user_last_select['subject']) > 0) {
+                    $subject = intval($user_last_select['subject']);
+                } else {
+                    $englishMediaSubjectModel = D("EnglishMediaSubject");
+                    $subject = D("EnglishMediaSubject")->getDefaultSubjectdId($voice, $target, $pattern); //todo应该给默认
+                }
+                //难度id
+                if (intval($_REQUEST['difficulty']) == 0 && intval($user_last_select['subjectDifficulty']) > 0) {
+                    $difficulty = intval($user_last_select['subjectDifficulty']);
+                } else {
+                    $difficulty = 1; //todo应该给默认
+                }
             } else {
                 $viewType = 1; //统一为空的浏览方式
-                $object = intval($_REQUEST['object']) == 0 ? $objectModel->getDefaultObjectInfo($voice, $target, $pattern) : intval($_REQUEST['object']); //科目
-                $level = intval($_REQUEST['level']) == 0 ? $levelModel->getDefaultLevelInfo($object, $voice, $target, $pattern) : intval($_REQUEST['level']); //等级
+                //科目
+                $object = intval($_REQUEST['object']);
+                if ($object == 0) {
+                    if (intval($user_last_select['object']) > 0) {
+                        $object = intval($user_last_select['object']);
+                    } else {
+                        $objectInfo = $objectModel->getDefaultObjectInfo($voice, $target, $pattern);
+                        $object = intval($objectInfo['id']) > 0 ? intval($objectInfo['id']) : 1;
+                    }
+                    //$objectInfo = $objectModel->getInfoById($object);
+                }
+                //等级
+                $level = intval($_REQUEST['level']);
+                if ($level == 0) {
+                    if (intval($user_last_select['level']) > 0) {
+                        $level = intval($user_last_select['level']);
+                    } else {
+                        $levelInfo = $levelModel->getDefaultLevelInfo($object, $voice, $target, $pattern);
+                        $level = intval($levelInfo['id']) > 0 ? intval($levelInfo['id']) : 1;
+                    }
+                }
+                //防止等级下没有试题
                 $levelNum = $questionModel->getQuestionNum($object, $level, $voice, $target, $pattern);
                 if ($levelNum == 0) {
-                    $ret['level_info'] = $levelModel->getDefaultLevelInfo($object, $voice, $target, $pattern);
-                    $level = intval($ret['level_info']['id']);
+                    $levelInfo = $levelModel->getDefaultLevelInfo($object, $voice, $target, $pattern);
+                    $level = intval($levelInfo['id']) > 0 ? intval($levelInfo['id']) : 1;
                 }
             }
             //上下题
@@ -248,28 +331,21 @@ class IndexAction extends EnglishAction {
             $con = array();
             $con["question.status"] = 1;
             if ($type == "quick_select_prev") {
-                $last_question_info = D("EnglishViewRecord")->getViewedQuestionRecord($now_question_id, "prev", $object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern);
+                $last_question_info = D("EnglishViewRecord")->getViewedQuestionRecord($now_question_id, "prev", $object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern, $viewType);
                 $con["question.id"] = intval($last_question_info['question_id']);
                 $user_last_question = $questionModel->getQuestionWithOption($con);
             } else if ($type == 'quick_select_next') {
-                $last_question_info = D("EnglishViewRecord")->getViewedQuestionRecord($now_question_id, "next", $object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern);
+                $last_question_info = D("EnglishViewRecord")->getViewedQuestionRecord($now_question_id, "next", $object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern, $viewType);
                 $con["question.id"] = intval($last_question_info['question_id']);
                 $user_last_question = $questionModel->getQuestionWithOption($con);
             } else if ($type == "category") {
-                $viewType = 1; //大类，默认为科目进入，默认其他类别
-                $recommend = 1;
-                $difficulty = 1;
-                $subject = 1;
-                $object = 1;
-                $level = 1;
+                $viewType = 1; //大类，默认为科目进入
+                $object = $objectModel->getDefaultObjectInfo($voice, $target, $pattern);
+                $level = $levelModel->getDefaultLevelInfo($object, $voice, $target, $pattern);
                 $ret['object_info'] = $objectModel->getInfoById($object);
                 $ret['level_info'] = $levelModel->getInfoById($level);
                 $ret['object_list'] = $objectModel->getObjectListToIndex($voice, $target, $pattern);
                 $ret['level_list'] = $levelModel->getLevelListToIndex($object, $voice, $target, $pattern);
-                $ret['recommend_list'] = D("EnglishMediaRecommend")->getRecommendListToIndex($voice, $target, $pattern);
-                $ret['subject_list'] = D("EnglishMediaSubject")->getSubjectListToIndex($voice, $target, $pattern);
-                $ret['recommend_difficulty_list'] = $questionModel->getDifficultyList(3, 0, $recommend, $voice, $target, $pattern);
-                $ret['subject_difficulty_list'] = $questionModel->getDifficultyList(2, $subject, 0, $voice, $target, $pattern);
             }
             if (!empty($user_last_question)) {
                 $user_last_question['object'] = $last_question_info['object'];
@@ -283,27 +359,28 @@ class IndexAction extends EnglishAction {
                 } else if ($viewType == 2) {
                     $subject = $user_last_question['subject'];
                     $difficulty = $user_last_question['difficulty'];
-                } else {
+                } else if ($viewType == 1) {
                     $object = $user_last_question['object'];
                     $level = $user_last_question['level'];
                 }
             }
-
             if ($viewType == 3) {
                 if ($type == "quick_select_prev" || $type == "switch_view_type") {
-                    $ret['recommend_list'] = D("EnglishMediaRecommend")->getRecommendListToIndex($voice, $target, $pattern);
+                    $englishMediaRecommendModel = $englishMediaRecommendModel ? $englishMediaRecommendModel : D("EnglishMediaRecommend");
+                    $ret['recommend_list'] = $englishMediaRecommendModel->getRecommendListToIndex($voice, $target, $pattern);
                     $ret['recommend_difficulty_list'] = $questionModel->getDifficultyList(3, 0, $recommend, $voice, $target, $pattern);
                 } elseif ($type == "recommend") {
                     $ret['recommend_difficulty_list'] = $questionModel->getDifficultyList(3, 0, $recommend, $voice, $target, $pattern);
                 }
             } else if ($viewType == 2) {
                 if ($type == "quick_select_prev" || $type == "switch_view_type") {
-                    $ret['subject_list'] = D("EnglishMediaSubject")->getSubjectListToIndex($voice, $target, $pattern);
+                    $englishMediaSubjectModel = $englishMediaSubjectModel ? $englishMediaSubjectModel : D("EnglishMediaSubject");
+                    $ret['subject_list'] = $englishMediaSubjectModel->getSubjectListToIndex($voice, $target, $pattern);
                     $ret['subject_difficulty_list'] = $questionModel->getDifficultyList(2, $subject, 0, $voice, $target, $pattern);
                 } elseif ($type == "subject") {
                     $ret['subject_difficulty_list'] = $questionModel->getDifficultyList(2, $subject, 0, $voice, $target, $pattern);
                 }
-            } else {
+            } else if ($viewType == 1) {
                 if ($type != "category") {
                     $ret['object_list'] = $objectModel->getObjectListToIndex($voice, $target, $pattern);
                     $ret['level_list'] = $levelModel->getLevelListToIndex($object, $voice, $target, $pattern);
@@ -317,41 +394,52 @@ class IndexAction extends EnglishAction {
                 $ret['question'] = $questionModel->getQuestionToIndex($viewType, $object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern, $media_id);
             }
             $ret['viewType'] = $viewType;
+            if ($viewType == 4) {
+                $englishMediaRecommendModel = $englishMediaRecommendModel ? $englishMediaRecommendModel : D("EnglishMediaRecommend");
+                $ret['recommend_list'] = $englishMediaRecommendModel->getRecommendListToIndex($ret['question']['voice'], $ret['question']['target'], $ret['question']['pattern']);
+                $ret['recommend_difficulty_list'] = $questionModel->getDifficultyList(3, 0, 0, $ret['question']['voice'], $ret['question']['target'], $ret['question']['pattern']);
+            }
             //
             //记录浏览题目
+            $englishViewRecordModel = D("EnglishViewRecord");
             if ($viewType == 2) {
-                D("EnglishViewRecord")->addRecord($ret['question']['id'], 0, 0, $ret['question']['subject'], 0, $ret['question']['difficulty'], $ret['question']['voice'], $ret['question']['target'], $ret['question']['pattern']);
+                $englishViewRecordModel->addRecord($ret['question']['id'], 0, 0, $ret['question']['subject'], 0, $ret['question']['difficulty'], $ret['question']['voice'], $ret['question']['target'], $ret['question']['pattern'], $viewType);
             } else if ($viewType == 3) {
-                D("EnglishViewRecord")->addRecord($ret['question']['id'], 0, 0, 0, $recommend, $ret['question']['difficulty'], $ret['question']['voice'], $ret['question']['target'], $ret['question']['pattern']);
-            } else {
-                D("EnglishViewRecord")->addRecord($ret['question']['id'], $ret['question']['level'], $object, 0, 0, 0, $ret['question']['voice'], $ret['question']['target'], $ret['question']['pattern']);
+                $englishViewRecordModel->addRecord($ret['question']['id'], 0, 0, 0, $recommend, $ret['question']['difficulty'], $ret['question']['voice'], $ret['question']['target'], $ret['question']['pattern'], $viewType);
+            } else if ($viewType == 1) {
+                $englishViewRecordModel->addRecord($ret['question']['id'], $ret['question']['level'], $object, 0, 0, 0, $ret['question']['voice'], $ret['question']['target'], $ret['question']['pattern'], $viewType);
+            } else if ($viewType == 4) {
+                $englishViewRecordModel->addRecord($ret['question']['id'], 0, 0, 0, 0, 0, $ret['question']['voice'], $ret['question']['target'], $ret['question']['pattern'], $viewType);
             }
             $ret['english_user_info'] = D("EnglishUserInfo")->getEnglishUserInfo();
             //获取用户统计信息
             $englishUserCountModel = D("EnglishUserCount");
             $ret['user_count_info'] = array();
-            if ($viewType == 3) {
-                $ret['user_count_info'] = $englishUserCountModel->getEnglishUserCountInfo(0, 0, 0, $recommend, $ret['question']['difficulty'], $voice, $target);
+            if ($viewType == 4) {
+                $ret['user_count_info'] = $englishUserCountModel->getEnglishUserCountInfo($viewType, 0, 0, 0, 0, 0, $voice, $target);
+            } else if ($viewType == 3) {
+                $ret['user_count_info'] = $englishUserCountModel->getEnglishUserCountInfo($viewType, 0, 0, 0, $recommend, $ret['question']['difficulty'], $voice, $target);
             } else if ($viewType == 2) {
-                $ret['user_count_info'] = $englishUserCountModel->getEnglishUserCountInfo(0, 0, $subject, 0, $ret['question']['difficulty'], $voice, $target);
-            } else {
-                $ret['user_count_info'] = $englishUserCountModel->getEnglishUserCountInfo($object, $level, 0, 0, 0, $voice, $target);
+                $ret['user_count_info'] = $englishUserCountModel->getEnglishUserCountInfo($viewType, 0, 0, $subject, 0, $ret['question']['difficulty'], $voice, $target);
+            } else if ($viewType == 1) {
+                $ret['user_count_info'] = $englishUserCountModel->getEnglishUserCountInfo($viewType, $object, $level, 0, 0, 0, $voice, $target);
             }
-//            $ret['user_count_info'] = D("EnglishUserCount")->getEnglishUserCountInfo($voice, $target, $object, $level);
 
+            //
+            //保存历史记录
             $user_last_select['voice'] = $voice;
             $user_last_select['target'] = $target;
             $user_last_select['pattern'] = $pattern;
             $user_last_select['viewType'] = $viewType;
-            if ($viewType == 3) {
-                if ($type != "special_recommend") {
-                    $user_last_select['recommend'] = $ret['question']['recommend'];
-                    $user_last_select['recommendDifficulty'] = $ret['question']['difficulty'];
-                }
+            if ($viewType == 4) {
+                $user_last_select['media_id'] = intval($media_id);
+            } else if ($viewType == 3) {
+                $user_last_select['recommend'] = intval($recommend);
+                $user_last_select['recommendDifficulty'] = intval($ret['question']['difficulty']);
             } else if ($viewType == 2) {
-                $user_last_select['subject'] = $subject;
-                $user_last_select['subjectDifficulty'] = $difficulty;
-            } else {
+                $user_last_select['subject'] = intval($subject);
+                $user_last_select['subjectDifficulty'] = intval($difficulty);
+            } else if ($viewType == 1) {
                 $user_last_select['object'] = $object;
                 $user_last_select['level'] = $level;
             }
@@ -430,9 +518,9 @@ class IndexAction extends EnglishAction {
         //被答题信息
         $question_info = $questionModel->getInfoById($question_id);
         $question_info['real_object'] = $question_info['object']; //题目真实科目
-        $question_info['object'] = intval($_REQUEST['object']); //当前请求的科目
+        $question_info['now_object'] = intval($_REQUEST['object']); //当前请求的科目
         $question_info['real_recommend'] = $question_info['recommend']; //题目的全部推荐
-        $question_info['recommend'] = intval($_REQUEST['recommend']); //当前请求的推荐
+        $question_info['now_recommend'] = intval($_REQUEST['recommend']); //当前请求的推荐
         $is_correct = false;
         if ($select_option === intval($question_info['answer'])) {
             $is_correct = true;
@@ -442,16 +530,18 @@ class IndexAction extends EnglishAction {
         $data = array();
         $data['level_up'] = false; //是否升级
         $englishRecordModel = D("EnglishRecord");
-        $record_info = $englishRecordModel->getQuestionUserRecord($question_id, $viewType, $question_info['object'], $question_info['recommend']);
+        $record_info = $englishRecordModel->getQuestionUserRecord($question_id, $viewType);
         //用户统计信息
         $englishUserCountModel = D("EnglishUserCount");
         $user_count_info = array();
-        if ($viewType == 3) {
-            $user_count_info = $englishUserCountModel->getEnglishUserCountInfo(0, 0, 0, $question_info['recommend'], $question_info['difficulty'], $question_info ['voice'], $question_info['target']);
+        if ($viewType == 4) {
+            $user_count_info = $englishUserCountModel->getEnglishUserCountInfo($viewType, 0, 0, 0, 0, 0, $question_info ['voice'], $question_info['target']);
+        } else if ($viewType == 3) {
+            $user_count_info = $englishUserCountModel->getEnglishUserCountInfo($viewType, 0, 0, 0, $question_info['now_recommend'], $question_info['difficulty'], $question_info ['voice'], $question_info['target']);
         } else if ($viewType == 2) {
-            $user_count_info = $englishUserCountModel->getEnglishUserCountInfo(0, 0, $question_info['subject'], 0, $question_info['difficulty'], $question_info ['voice'], $question_info['target']);
-        } else {
-            $user_count_info = $englishUserCountModel->getEnglishUserCountInfo($question_info['object'], $question_info['level'], 0, 0, 0, $question_info ['voice'], $question_info['target']);
+            $user_count_info = $englishUserCountModel->getEnglishUserCountInfo($viewType, 0, 0, $question_info['subject'], 0, $question_info['difficulty'], $question_info ['voice'], $question_info['target']);
+        } else if ($viewType == 1) {
+            $user_count_info = $englishUserCountModel->getEnglishUserCountInfo($viewType, $question_info['now_object'], $question_info['level'], 0, 0, 0, $question_info ['voice'], $question_info['target']);
         }
         //用户英语角信息
         $englishUserInfoModel = D("EnglishUserInfo");
@@ -520,12 +610,14 @@ class IndexAction extends EnglishAction {
         $data['question_info'] = $question_info;
 
         $data['english_user_record'] = $englishRecordModel->record($question_info, $select_option); //记录用户的答题记录
-        if ($viewType == 3) {
-            $data['question_info']['untested_num'] = $englishRecordModel->getUserUntestedQuestionNum(0, 0, 0, $question_info['recommend'], $question_info['difficulty'], $question_info ['voice'], $question_info['target'], $question_info['pattern']);
+        if ($viewType == 4) {
+            $data['question_info']['untested_num'] = $englishRecordModel->getUserUntestedQuestionNum(0, 0, 0, 0, 0, $question_info ['voice'], $question_info['target'], $question_info['pattern'], 1);
+        } else if ($viewType == 3) {
+            $data['question_info']['untested_num'] = $englishRecordModel->getUserUntestedQuestionNum(0, 0, 0, $question_info['now_recommend'], $question_info['difficulty'], $question_info ['voice'], $question_info['target'], $question_info['pattern']);
         } else if ($viewType == 2) {
             $data['question_info']['untested_num'] = $englishRecordModel->getUserUntestedQuestionNum(0, 0, $question_info['subject'], 0, $question_info['difficulty'], $question_info ['voice'], $question_info['target'], $question_info['pattern']);
-        } else {
-            $data['question_info']['untested_num'] = $englishRecordModel->getUserUntestedQuestionNum($question_info['object'], $question_info['level'], 0, 0, 0, $question_info ['voice'], $question_info['target'], $question_info['pattern']);
+        } else if ($viewType == 1) {
+            $data['question_info']['untested_num'] = $englishRecordModel->getUserUntestedQuestionNum($question_info['now_object'], $question_info['level'], 0, 0, 0, $question_info ['voice'], $question_info['target'], $question_info['pattern']);
         }
         $this->ajaxReturn($data, "请求成功", true);
     }
