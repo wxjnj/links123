@@ -45,7 +45,7 @@ class EnglishMediaModel extends CommonModel {
         foreach ($ret as $media) {
             $data['id'] = intval($media['id']);
             $recommend = intval($media['recommend']);
-            if ($recommend == $target_recommend) {
+            if (isset($target_recommend) && $recommend == $target_recommend) {
                 continue;
             }
             $object_name = $media['object_name'];

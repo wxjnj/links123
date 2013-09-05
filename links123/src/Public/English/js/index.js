@@ -693,7 +693,7 @@ function requestQuestion(type, clickObject, media_id) {
                         } else if (question.play_type == 4) {
                             $('#J_media_div').html('<div id="J_media_swfobject_div" style="height:' + media_height + 'px;width:' + media_width + 'px;"></div>');
 
-                            flowplayer("J_media_swfobject_div", "http://releases.flowplayer.org/swf/flowplayer-3.2.16.swf", {playlist: [question.media_thumb_url, {url: question.play_code, autoPlay: false}]});
+                            flowplayer("J_media_swfobject_div", "http://releases.flowplayer.org/swf/flowplayer-3.2.16.swf", {playlist: [question.media_thumb_img, {url: question.play_code, autoPlay: false}]});
 
                         } else {
 

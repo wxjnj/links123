@@ -175,19 +175,58 @@ class EnglishQuestionModel extends CommonModel {
         return $ret;
     }
 
-    public function getQuestionNum($object, $level, $voice = 1, $target = 1, $pattern = 1, $extend_condition = "") {
-        $object_info = D("EnglishObject")->find($object);
-        if ($object_info['name'] == "综合") {
-            $condition = "status=1 and voice={$voice} and target={$target} and pattern={$pattern} and level={$level} ";
-        } else {
-            $condition = "status=1 and voice={$voice} and target={$target} and pattern={$pattern} and level={$level} and object={$object} ";
+    /**
+     * 获取题目数量
+     * @param int $object
+     * @param int $level
+     * @param int $subject
+     * @param int $recommend
+     * @param int $difficulty
+     * @param int $voice
+     * @param int $target
+     * @param int $pattern
+     * @param int $extend_condition
+     * @return int
+     */
+    public function getQuestionNum($object, $level, $subject, $recommend, $difficulty, $voice = 1, $target = 1, $pattern = 1, $extend_condition = "") {
+
+        $map = array();
+        if ($voice > 0) {
+            $map['media.voice'] = $voice;
         }
+        if ($pattern > 0) {
+            $map['media.pattern'] = $pattern;
+        }
+        if ($target > 0) {
+            $map['question.target'] = $target;
+        }
+        if (intval($object) > 0) {
+            $object_info = D("EnglishObject")->find($object);
+            if ($object_info['name'] != "综合") {
+                $map['media.object'] = $object;
+            }
+        }
+        if (intval($level) > 0) {
+            $map['media.level'] = $level;
+        }
+        if (intval($subject) > 0) {
+            $map['media.subject'] = $subject;
+        }
+        if (intval($recommend) > 0) {
+            $map['_string'] = "FIND_IN_SET('" . $recommend . "',media.recommend)";
+        }
+        if (intval($difficulty) > 0) {
+            $map['media.difficulty'] = $difficulty;
+        }
+
         if (!empty($extend_condition)) {
-            $condition.=" and " . $extend_condition;
+            $map['_string'] .= $extend_condition;
         }
-        $num = $this->where($condition)->count();
+        $num = $this->alias("question")
+                        ->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media on question.media_id=media.id")
+                        ->where($map)->count("question.id");
         if (false === $num) {
-            return 0;
+            $num = 0;
         }
         return intval($num);
     }
@@ -271,6 +310,33 @@ class EnglishQuestionModel extends CommonModel {
             }
         }
         return $difficultyList;
+    }
+
+    public function getDefaultDifficulty($viewType = 2, $subject, $recommend, $voice = 1, $target = 1, $pattern = 1) {
+        $map = array();
+        $map['media.voice'] = $voice;
+        $map['media.pattern'] = $pattern;
+        $map['question.target'] = $target;
+        $map['question.status'] = 1;
+        $map['media.status'] = 1;
+        if ($viewType == 2) {
+            $map['media.subject'] = intval($subject);
+        } else if ($viewType == 3) {
+            $map['_string'] = "FIND_IN_SET('" . $recommend . "',media.recommend)";
+        }
+        $ret = $this->alias("question")
+                ->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media on question.media_id=media.id")
+                ->field("media.difficulty as difficulty")
+                ->where($map)
+                ->group("media.difficulty")
+                ->order("media.difficulty asc")
+                ->find();
+        if (in_array(intval($ret['difficulty']), array(1, 2, 3))) {
+            $difficulty = intval($ret['difficulty']);
+        } else {
+            $difficulty = 1;
+        }
+        return $difficulty;
     }
 
     public function getInfoById($id) {

@@ -286,7 +286,7 @@ class EnglishMediaAction extends CommonAction {
                 if (false !== $ret) {
                     if ($data['special_recommend'] == 1) {
                         if (false == $englishMediaModel->setRecommend($id, 1)) {
-                            $this->ajaxReturn("", "操作失败1", false);
+                            $this->ajaxReturn("", "操作失败", false);
                         }
                     }
                     $englishMediaModel->commit();

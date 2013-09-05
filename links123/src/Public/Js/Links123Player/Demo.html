@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"> 
+    <head>
+        <title>Links123Player测试页面</title>
+        <meta name="google" value="notranslate" />         
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <style type="text/css" media="screen"> 
+            html, body  { height:100%; }
+            body { margin:0; padding:0; overflow:auto; text-align:center; 
+                   background-color: #ffffff; }   
+            object:focus { outline:none; }
+            #flashContent {
+	display:none;
+}
+#con {
+	height: 367px;
+	width: 567px;
+	text-align: center;
+	margin-top: 0px;
+	margin-right: auto;
+	margin-bottom: 0px;
+	margin-left: auto;
+	background-image: url(skins/bg.png);
+	background-repeat: no-repeat;
+	padding-top: 23px;
+}
+        </style>
+<script type="text/javascript" src="swfobject.js"></script>
+        <script type="text/javascript">
+            var swfVersionStr = "10.2.0";
+            var xiSwfUrlStr = "playerProductInstall.swf";
+            var flashvars = {};
+            flashvars.logging=true;
+           	flashvars.url="http://121.199.26.124:8000/English/Video/test2.flv";
+            flashvars.wordhost="http://adamtest.links123.net/English/Index/requestionWordInfo";//"http://127.0.0.1/links123/worddata.json";
+            flashvars.mp3host=encodeURIComponent("http://dict.youdao.com/dictvoice?audio=###&type=1");
+            flashvars.datahost=encodeURIComponent("http://121.199.26.124/English/Index/requestionMediaInfo.html");
+            flashvars.questionId = 1;
+            flashvars.mediaId = 1;
+            flashvars.playerMode=3;//1:为一般播放器 2:为"看"播放器  3:为"说"播放器
+            flashvars.rate = 44;//采样率配置s 
+            flashvars.codec= 1;//模式 1.默认模式  2.speex压缩模式
+            flashvars.autoplay=true;//是否自动播放
+            flashvars.sendDataHost=encodeURIComponent("http://adamtest.links123.net/English/Index/speakScore");//往服务器端传数据的地址,音频数据传输接口
+           //flashvars.data="{\"title\":\"If You Could Change One Thing about Mom\",\"url\":\"http://127.0.0.1/links123/video.mp4\",\"question_id\":\"123\",\"mp3url\":\"http://127.0.0.1/links123/audio.mp3\",\"clips\":[{\"title\":\"clip 1\",\"id\":\"1234\",\"starttime\":4,\"endtime\":6,\"english\":\"I don't like when my mom wears makeup.\",\"chinese\":\"他擅长英语\"},{\"title\":\"clip 2\",\"id\":\"1235\",\"starttime\":7,\"endtime\":9,\"english\":\"I'll change nothing about my mom.\",\"chinese\":\"他擅长英语\"},{\"title\":\"clip 3\",\"id\":\"1236\",\"starttime\":9.5,\"endtime\":10.5,\"english\":\"Her favorite color.\",\"chinese\":\"他擅长英语\"},{\"title\":\"clip 4\",\"id\":\"1237\",\"starttime\":11,\"endtime\":13,\"english\":\"That she would have a girl instead of a boy.\",\"chinese\":\"他擅长英语\"},{\"title\":\"clip 5\",\"id\":\"1238\",\"starttime\":13.5,\"endtime\":15,\"english\":\"That she always gets phones.\",\"chinese\":\"他擅长英语\"},{\"title\":\"clip 6\",\"id\":\"1239\",\"starttime\":15.5,\"endtime\":17,\"english\":\"I'll change nothing about my mom.\",\"chinese\":\"他擅长英语\"},{\"title\":\"clip 7\",\"id\":\"1240\",\"starttime\":17.5,\"endtime\":19,\"english\":\"She like, buys like phones.\",\"chinese\":\"他擅长英语\"},{\"title\":\"clip 8\",\"starttime\":20,\"english\":\"Nothing.\",\"chinese\":\"他擅长英语\"},{\"title\":\"clip 9\",\"id\":\"1241\",\"starttime\":21,\"endtime\":22,\"english\":\"My mom is the best.\",\"chinese\":\"他擅长英语\"},{\"title\":\"clip 10\",\"id\":\"1242\",\"starttime\":22.5,\"endtime\":23.5,\"english\":\"I hate it when my mom yells at me.\",\"chinese\":\"他擅长英语\"},{\"title\":\"clip 11\",\"id\":\"1243\",\"starttime\":24,\"endtime\":25,\"english\":\"Shes just the best.\",\"chinese\":\"他擅长英语\"}]}";
+           // flashvars.googleHost=encodeURIComponent("http://www.google.com/speech-api/v1/recognize?xjerr=1&client=chromium&lang=en-US&maxresults=5");
+            var params = {};
+            params.quality = "high";
+            params.bgcolor = "#ffffff";
+            params.allowscriptaccess = "always";
+            params.allowfullscreen = "true";
+            var attributes = {};
+            attributes.id = "Links123Player";
+            attributes.name = "Links123Player";
+            attributes.align = "middle";
+            swfobject.embedSWF(
+            //518,325
+            //357,224
+            //710,448
+                "Links123Player.swf", "flashContent", 
+                "518", "325", 
+                swfVersionStr, xiSwfUrlStr, 
+                flashvars, params, attributes);
+            swfobject.createCSS("#flashContent", "display:block;text-align:left;");
+            function playerStateChange(state)
+            {
+				//alert(state);            	
+            }
+            
+            //重新播放一个视频地址测试
+     		function clickplaynew()
+     		{
+     			document.getElementById("Links123Player").PlayNew("http://127.0.0.1/a1.flv");
+     		}
+     		//播放与暂停
+     		function playpause()
+     		{
+     			document.getElementById("Links123Player").playPause();
+     		}
+     		//上一句
+     		function prev()
+     		{
+     			document.getElementById("Links123Player").prev();
+     		}
+     		//下一句
+     		function next()
+     		{
+     			document.getElementById("Links123Player").next();
+     		}
+     		//慢放
+     		function slow()
+     		{
+     			document.getElementById("Links123Player").slow();
+     		}
+        </script>
+    </head>
+    <body>
+    <!--<div id="con">-->
+      <div id="flashContent">
+      </div>
+   <!-- </div>-->
+    <input type="button" onclick="playpause();" value="播放/暂停"/>
+    <input type="button" onclick="prev();" value="上一句"/>
+     <input type="button" onclick="next();" value="下一句"/>
+     <input type="button" onclick="slow();" value="慢放"/>
+    <input type="button" onclick="clickplaynew();" value="播放新地址"/>
+   </body>
+</html>
