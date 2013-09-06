@@ -1,0 +1,1 @@
+访问此插件： /chat/index.html

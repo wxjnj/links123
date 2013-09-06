@@ -4,10 +4,10 @@ $(function(){
 		alert('Coming soon...');
 	});
 	$('#J_weather').click(function(){
-		/*$.post("/Weather/index", function(data){
+		$.post("/Weather/index", function(data){
 			$('#J_box_weather').html(data);
 		}); 
-		*/
+		
 		$.fancybox({
 			href: '#J_box_weather',
 			helpers:  {
@@ -15,7 +15,7 @@ $(function(){
 				overlay : null
 			},
 			width: 400,
-			height: 230,
+			height: 240,
 			autoSize: false
 		});
 		

@@ -43,7 +43,7 @@ class DetailAction extends CommonAction
 		
 		$listRows = 12;
 		$p = $this->_get(C('VAR_PAGE'));
-		$pg = $p ? $p : 1;
+		$pg = max($p, 1);
 		$rst = ($pg - 1) * $listRows;
 		
 		$condition['lnk_id'] = $id;
@@ -103,8 +103,6 @@ class DetailAction extends CommonAction
 		
 		$linkNow['isTed'] = strpos($linkNow['link_cn'], 'ted.com') !== FALSE ? 1 : 0;
 		
-		$this->assign('linkNow', $linkNow);
-		
 		//session防垃圾和时间设置 如果提交了评论
 		if (preg_match("#saveComment#i", $_SERVER['HTTP_REFERER'])){
 			//下一次提交评论的最小时间戳(时间戳 +两次评论的最小间隔时间)
@@ -113,6 +111,7 @@ class DetailAction extends CommonAction
 		//随机的评论框名称
 		$this->comment = $_SESSION['comment'] = 'comment'.rand(1000, 9999);
 		
+		$this->assign('linkNow', $linkNow);
 		$this->assign("linkTitle", $linkNow['title']);
 		$this->display();
 	}
@@ -145,12 +144,10 @@ class DetailAction extends CommonAction
 			$_firstTiles3 = $GLOBALS['firstTiles3'][0] . ($GLOBALS['firstTiles3'][1] ? '、' . $GLOBALS['firstTiles3'][1] . ($GLOBALS['firstTiles3'][2] ? '、' . $GLOBALS['firstTiles3'][2] : '') : '');
 			import("@.ORG.Page");
 			$p = new Page();
-			if ($p->getCurrentPage() > 1) {
-				$_title = $title['value_varchar'] . ' - ' . $_SESSION['catNow']['cat_name'] . ' 第' . $p->getCurrentPage() . '页';
-			} else {
-				$_title = $title['value_varchar'] . ' - ' . $_SESSION['catNow']['cat_name'];
-			}
-				
+			
+			$flag = $p->getCurrentPage() > 1 ? ' 第' . $p->getCurrentPage() . '页' : '';
+			$_title = $title['value_varchar'] . ' - ' . $_SESSION['catNow']['cat_name'] . $flag;
+			
 			$Description = $variable->getByVname('Description');
 			$GLOBALS['_description'] = $Description['value_varchar'] . '。本页热门网站有：' . $_firstTiles3;
 		}

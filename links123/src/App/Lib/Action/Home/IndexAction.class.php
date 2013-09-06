@@ -34,7 +34,10 @@ class IndexAction extends CommonAction {
 			$areaList = $myarea->where(array('mid' => $memberAuthKey))->order('sort ASC')->select();
 			session('arealist', $areaList ? $areaList : session('arealist_default'));
 			
-			$skinId = session('skin');
+			$skinId = session('skinId');
+			if (!$skinId) {
+				$skinId = cookie('skinId');
+			}
 		} else {
 			
 			$areaList = $this->_session('arealist');
@@ -79,11 +82,10 @@ class IndexAction extends CommonAction {
 				$result = false;
 			}
 			
-			session('skin', $skinId);
-		} else {
-			
-			cookie('skinId', $skinId, array('expire' => 0));
+			session('skinId', $skinId);
 		}
+			
+		cookie('skinId', $skinId, array('expire' => 0));
 		
 		$this->ajaxReturn($result);
 	}
@@ -124,11 +126,12 @@ class IndexAction extends CommonAction {
 		if (empty($sort)) {
 			$sort = "csort ASC,sort ASC";
 		}
-		$memberAuthKey = intval($this->_session(C('MEMBER_AUTH_KEY')));
+		
+		$mid = intval($this->_session(C('MEMBER_AUTH_KEY')));
 		$paiLie = $this->_session('pailie');
 		
 		if (empty($paiLie)) {
-			$paiLie = empty($memberAuthKey) ? M("Variable")->where("vname='pailie'")->getField("value_int") : M("Member")->where("id = '%s'", $memberAuthKey)->getField('pailie');
+			$paiLie = empty($mid) ? M("Variable")->where("vname='pailie'")->getField("value_int") : M("Member")->where("id = '%s'", $mid)->getField('pailie');
 			session('pailie', $paiLie);
 		}
 		$listRows = $paiLie == 1 ? 20 : 11;
@@ -160,8 +163,8 @@ class IndexAction extends CommonAction {
 		session('arealist_default', $myarea->where('mid = 0')->order('sort ASC')->select());
 		//存在用户登录，获取用户的我的地盘
 		
-		if ($memberAuthKey) {
-			$areaList = $myarea->where("mid = '%d'", $memberAuthKey)->order('sort ASC')->select();
+		if ($mid) {
+			$areaList = $myarea->where("mid = '%d'", $mid)->order('sort ASC')->select();
 			empty($areaList) && $areaList = session('arealist_default');
 			session('arealist', $areaList);
 		} else {
@@ -548,151 +551,49 @@ class IndexAction extends CommonAction {
 	 */
 	public function search() {
 		import("@.ORG.String");
-		$category = M("Category");
+		
+		$mid = intval($this->_session(C('MEMBER_AUTH_KEY')));
+		$paiLie = $this->_session('pailie');
+		$lan = intval($this->_param('lan'));
+		$cid = intval($this->_param('cid'));
+		$keyword = cleanParam($this->_param('q'));
+		$pg = intval($this->_param(C('VAR_PAGE')));
 		
 		$condition['status'] = 1;
-		
-		$memberAuthKey = intval($this->_session(C('MEMBER_AUTH_KEY')));
-		$paiLie = $this->_session('pailie');
 		if (empty($paiLie)) {
-			$paiLie = empty($memberAuthKey) ? M("Variable")->where("vname='pailie'")->getField("value_int") : M("Member")->where("id = '%s'", $memberAuthKey)->getField('pailie');
+			$paiLie = empty($mid) ? M("Variable")->where("vname = 'pailie'")->getField("value_int") : M("Member")->where("id = '%s'", $mid)->getField('pailie');
 			session('pailie', $paiLie);
 		}
 		
-		$lan = intval($this->_param('lan'));
 		if (!empty($lan)) {
 			$condition['language'] = $lan;
 			$this->assign('lan', $lan);
 		}
 		
-		$cid = intval($this->_param('cid'));
 		if (!empty($cid)) {
 			$condition['category'] = $cid;
 			$this->assign('cid', $cid);
 		}
 		
-		$keyword = cleanParam($this->_param('q'));
 		if (!empty($keyword)) {
 			$condition['_string'] = "title like '%" . $keyword . "%' or tags like '%" . $keyword . "%' or link like '%" . $keyword . "%' or intro like '%" . $keyword . "%'";
 		}
-		$this->assign("keyword", $keyword);
 		
+		$category = M("Category");
 		$listRows = $_SESSION['pailie'] == 1 ? 20 : 11;
-		
-		$pg = intval($this->_param(C('VAR_PAGE')));
 		$pg = max(1, $pg);
 		$rst = ($pg - 1) * $listRows;
 		
-		$links = M("Links");
-		$list = $links->where($condition)->select();
+		$links = D("Links");
+		$data = $links->getLinks($condition, $mid, $keyword, $listRows, $rst, $category);
 		
-		$model = new Model();
-		if (isset($_SESSION[C('MEMBER_AUTH_KEY')]) && !empty($_SESSION[C('MEMBER_AUTH_KEY')])) {
-			$sql = "select web_name as title, url as link, 'myarea.jpg' as logo, '我的地盘' as intro, '1' as notlink from lnk_myarea where (mid=0 or mid=" . $_SESSION[C('MEMBER_AUTH_KEY')] . ") and (web_name like '%" . $keyword . "%' or url like '%" . $keyword . "%')";
-		} else {
-			$sql = "select web_name as title, url as link, 'myarea.jpg' as logo, '我的地盘' as intro, '1' as notlink from lnk_myarea where mid=0 and (web_name like '%" . $keyword . "%' or url like '%" . $keyword . "%')";
-		}
-		
-		$dpList = $model->query($sql);
-		if (!empty($dpList)) {
-			$list = array_merge($list, $dpList);
-		}
-		
-		$lybList = $model->query("select '留言板' as title, 'www.links123.cn/Index/suggestion' as link, 'lyb.jpg' as logo, suggest as intro, '1' as notlink from lnk_suggestion where status>=0 and suggest like '%" . $keyword . "%'");
-		if (!empty($lybList)) {
-			$list = array_merge($list, $lybList);
-		}
-		
-		$sayList = $model->query("select '说说' as title, CONCAT('www.links123.cn/Detail/index/id/',lnk_id) as link, 'say.jpg' as logo, comment as intro, '1' as notlink from lnk_comment a inner join lnk_links b on a.lnk_id=b.id where comment like '%" . $keyword . "%'");
-		if (!empty($sayList)) {
-			$list = array_merge($list, $sayList);
-		}
-		
-		$aimList = array();
-		for ($i = 0; $i != $listRows; ++$i) {
-			if (!empty($list[$i + $rst])) {
-				array_push($aimList, $list[$i + $rst]);
-			}
-		}
-		
-		foreach ($aimList as &$value) {
-			if (empty($value['notlink'])) {
-				$value["more"] = 0;
-				if (empty($value["logo"])) {
-					if ($_SESSION['pailie'] == 1) {
-						$value["sintro"] = String::msubstr($value["intro"], 0, 19);
-					} else {
-						$value["sintro"] = String::msubstr($value["intro"], 0, 208);
-						if ($value["sintro"] != $value["intro"]) {
-							$value["sintro"] = String::msubstr($value["intro"], 0, 150);
-							$value["more"] = 1;
-						}
-					}
-				} else {
-					if ($_SESSION['pailie'] == 1) {
-						$value["sintro"] = String::msubstr($value["intro"], 0, 13);
-					} else {
-						$value["sintro"] = String::msubstr($value["intro"], 0, 184);
-						if ($value["sintro"] != $value["intro"]) {
-							$value["sintro"] = String::msubstr($value["intro"], 0, 132);
-							$value["more"] = 1;
-						}
-					}
-				}
-				if ($_SESSION['pailie'] == 2) {
-					$value["sintro"] = nl2br($value["sintro"]);
-					$value["sintro"] = str_replace("<br /><br />", "", $value["sintro"]); // 特意写成这样的
-					$value["sintro"] = str_replace("<br /><br />", "", $value["sintro"]); // 特意写成这样的
-					$tempary = explode("<br />", $value["sintro"]);
-					if (count($tempary) > 4) {
-						$lastline = String::msubstr($tempary[2], 0, 40);
-						if ($lastline == $tempary[2]) {
-							$lastline .= "…";
-						}
-						$value["sintro"] = $tempary[0] . "<br />" . $tempary[1] . "<br />" . $lastline;
-						$value["more"] = 1;
-					}
-					if (count($tempary) == 3 || (count($tempary) == 4 && $value["more"] == 1)) {
-						$lastline = String::msubstr($tempary[2], 0, 40);
-						$value["sintro"] = $tempary[0] . "<br />" . $tempary[1] . "<br />" . $lastline;
-						if (count($tempary) == 4) {
-							$value["sintro"] .= "…";
-						}
-					}
-					if (count($tempary) == 2) {
-						if ($value["more"] == 1) {
-							if (strlen($tempary[1]) < strlen($tempary[0])) {
-								$lastline = String::msubstr($tempary[1], 0, 40);
-								$value["sintro"] = $tempary[0] . "<br />" . $lastline;
-							}
-						} else {
-							$value["sintro"] = $tempary[0] . "<br />" . $tempary[1];
-						}
-					}
-					$value["sintro"] = checkLinkUrl($value["sintro"]);
-				}
-				
-				if (!empty($value['mid'])) {
-					$value['nickname'] = M("Member")->where('id=' . $value['mid'])->getField('nickname');
-				}
-			
-				$cat = $category->getById($value['category']);
-				$root = $category->getById($cat['prt_id']);
-				$value['title'] = $value['title'] . "【" . $root['cat_name'] . "-" . $cat['cat_name'] . "】";
-				
-				//取出prt_id，当prt_id=5即当前结果为TED，连接修改为本地播放
-				$value['prt_id'] = $cat['prt_id'];
-			} else {
-				$value["sintro"] = String::msubstr($value["intro"], 0, 240);
-			}
-		}
-		$this->assign('links', $aimList);
-
-		// 分页
-		$count = count($list);
+		//分页
+		$count = count($data['list']);
 		if ($count == 0) {
 			$this->redirect("Category/index");
+			exit(0);
 		}
+		
 		if ($count > 0) {
 			import("@.ORG.Page");
 			$p = new Page($count, $listRows);
@@ -700,6 +601,8 @@ class IndexAction extends CommonAction {
 			$this->assign("page", $page);
 		}
 		
+		$this->assign("keyword", $keyword);
+		$this->assign('links', $data['aimList']);
 		$this->assign('banner', $this->getAdvs(6, "banner"));
 		$this->assign('thlNow', $this->_param('thl'));
 		$this->assign('tidNow', $this->_param('tid'));

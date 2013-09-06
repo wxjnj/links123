@@ -1,16 +1,17 @@
 <?php
 /**
+ * @desc 广告管理类
  * @name AdvertAction.class.php
  * @package Admin
- * @desc 广告管理
- * @author lawrence UPDATE 2013-08-20
- * @version 0.0.1
+ * @author Frank UPDATE 2013-09-5
+ * @version 1.0
  */
 class AdvertAction extends CommonAction {
 
 	protected function _filter(&$map,&$param) {
-		if (isset($_REQUEST['name'])){
-			$name=$_REQUEST['name'];
+		$requestname=$this->_request("name");
+		if (isset($requestname)){
+			$name=$requestname;
 		}
 		if (!empty($name)) {
 			$map['name']=array('like',"%".$name."%");
@@ -52,14 +53,14 @@ class AdvertAction extends CommonAction {
 	 */
 	public function update() {
 		$model = D( "Advert");
-		$advNow = $model->getById($_POST ['id']);
+		$advNow = $model->getById($this->_post("id"));
 		if (!$model->create()) {
 			$this->error($model->getError());
 		}
-		if (false !== $model->save()) {
+		if (false === $model->save()) {
 			$this->error('编辑失败!');
 		} else {
-			if ($_POST['pic']!=$advNow ['pic']) {
+			if ($this->_post("pic")!=$advNow ['pic']) {
 				$path =realpath('./Public/Uploads/Others/'.$advNow ['pic']);
 				if (!unlink($path)) {
 					Log::write('图片删除失败：'.$path,Log::FILE);
@@ -77,8 +78,9 @@ class AdvertAction extends CommonAction {
 	public function sort() {
 		$model =M("Advert");
 		$map = array();
-		if (!empty($_GET['sortId'])) {
-			$map['id'] = array('in',$_GET['sortId']);
+		$id=intval($this->_get("sortId"));
+		if (!empty($id)) {
+			$map['id'] = array('in',$id);
 		} else {
 			$params = explode("&",$_SESSION[C('SEARCH_PARAMS_KEY')]);
 			foreach ( $params as &$value ) {

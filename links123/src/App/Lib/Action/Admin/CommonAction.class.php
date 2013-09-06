@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * @desc Admin组公共类
+ * @name CommonAction
+ * @version V1。0
+ * @author Frank UPDATE 2013-09-04
+ */
 class CommonAction extends BaseAction {
 
     function _initialize() {

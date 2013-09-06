@@ -15,12 +15,18 @@ class WeatherAction extends CommonAction {
  		$url = 'http://ip.taobao.com/service/getIpInfo.php?ip='.urlencode($ip);
  		$body = getContent($url);
  		$d = json_decode($body, true);
+ 		
  		$city = $d['data']['city'];
- 		$city = str_replace('市', '', $city);
-        //$city = '无锡';
-		$cities = M('cities');
-		$cityId = $cities->where("city = '%s'", $city)->getField('id');
-		
+ 		if(empty($city)) {
+ 			//如何获取不到城市默认是北京
+ 			$cityId = "101010100";
+ 		} else {
+ 			$city = trim(str_replace('市', '', $city));
+ 			//$city = '无锡';
+ 			$cities = M('cities');
+ 			$cityId = $cities->where("city = '%s'", $city)->getField('id');
+ 		}
+ 		
 		//获取6天的天气信息
 		$url = 'http://m.weather.com.cn/data/'.$cityId.'.html';
 		$sixweather = getContent($url);
@@ -32,12 +38,14 @@ class WeatherAction extends CommonAction {
 		$url = 'http://www.weather.com.cn/data/cityinfo/'.$cityId.'.html';
 		$curweather = getContent($url);
 		$curweather = json_decode($curweather, true);
+		$weekarray=array("日","一","二","三","四","五","六");
 		//echo "<br>";
 		//print_r($curweather);
-		$data[] = date("Y-m-d");
-		$data[] = date("Y-m-d",strtotime('+1 day'));
-		$data[] = date("Y-m-d",strtotime('+2 day'));
-		//print_r($data);
+		$data[] = "星期".$weekarray[date("w")%7];
+		$data[] = "星期".$weekarray[(date("w")+1)%7];
+		$data[] = "星期".$weekarray[(date("w")+2)%7];
+		$data[] = "星期".$weekarray[(date("w")+3)%7];
+		$data[] = "星期".$weekarray[(date("w")+4)%7];
 		//http://www.weather.com.cn/data/cityinfo/101010100.html
 		$this->assign('data', $data);
 		$this->assign('sixweather', $sixweather);

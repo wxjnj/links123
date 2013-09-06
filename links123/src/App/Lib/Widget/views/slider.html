@@ -1,0 +1,25 @@
+<style>
+  #myFocus{ width:{$config['width']}px; height:{$config['height']}px;}
+</style>
+<script type="text/javascript" src="__PUBLIC__/Widget/slider/myfocus-2.0.4.min.js"></script>
+
+<div id="myFocus"><!--焦点图盒子-->
+  <div class="loading"></div><!--载入画面(可删除)-->
+  <div class="pic"><!--图片列表-->
+    <ul>
+        <volist name="dataProvider" id="row">
+          <li><a href="{$row['link']}" target="_blank"><img width="{$config['width']}" src="{$row['src']}" alt="{$row['alt']}"/></a></li> 
+        </volist>
+    </ul>
+  </div>
+</div>
+
+
+
+<script type="text/javascript">
+//设置
+myFocus.set({
+  id:'myFocus',//ID
+  pattern:'mF_YSlider'//风格 
+});
+</script>
