@@ -617,11 +617,11 @@ function formRequest($url, $paramArr=array(),$method="post") {
  * @param string $resourcePath css,js等静态资源文件的路径
  * @return string 返回静态资源文件内容的md5值
  */
-function md5Resource($resourcePath) {
+/*function md5Resource($resourcePath) {
     if(file_exists($resourcePath)){
         return md5(file_get_contents($resourcePath));
     }
-}
+}*/
 
 /**
  * @desc 2-20位 数字 字母 下划线
