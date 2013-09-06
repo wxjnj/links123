@@ -75,13 +75,16 @@
 				<input type="hidden" id="js_PUBLIC" value="__PUBLIC__" />
 			</div>
 			<div class="zld J_myarea_div">
+				<form action="{:U('Link/index')}?mod=myarea" id="J_myarea_link_form" target="_blank" method="POST">
+					<input type="hidden" name="url" value="" id="J_myarea_link" />
+				</form>
 				<p class="guide">点击编辑我的自留地</p>
 				<a href="javascript:void(0);" class="tools J_myarea">自留地</a>
 				<span class="close J_myarea_close">关闭编辑</span>
 				<ul id="J_sortable">
 					<volist name="_SESSION['arealist']" id="vo">
 					<if condition="$vo['id'] neq ''">
-						<li id="{$vo.id}"><span url="{:U('Link/index')}?mod=myarea&url={$vo.url}"  class="newWin" data-id="{$vo.id}" data-url="{$vo.url}"><b>{$vo.web_name}</b></span></li>
+						<li id="{$vo.id}"><span url="{:U('Link/index')}?mod=myarea&url={$vo.url}" class="J_myarea_link" data-id="{$vo.id}" data-url="{$vo.url}"><b>{$vo.web_name}</b></span></li>
 					</if>
 					</volist>
 				</ul>
@@ -101,9 +104,8 @@
 			<div class="sider">
 				<div class="video-panel">
 					<div class="video">
-						<!-- where shoaly start from.... -->
-						{:R('Slider/run',array(array("width"=>260,"height"=>178)),'Widget')}
-						<!--  
+						<img src="__PUBLIC__/Index/imgs/meinv.png" alt="" />
+						<!--  where shoaly wants to start from....
 						<div class="flexslider">
 				          <ul class="slides">
 				          	<li>
@@ -287,7 +289,7 @@
 	</div>
 	<include file="Contorls:app" />
 	<script type="text/javascript" src="__PUBLIC__/English/js/jquery-1.7.2.min.js"></script>
-	<script type="text/javascript" src="__PUBLIC__/Index/js/js.js?2013090101"></script>
+	<script type="text/javascript" src="__PUBLIC__/Index/js/js.js?20130090602"></script>
 	<script type="text/javascript" src="__PUBLIC__/skin/js/jquery.cookies.2.2.0.min.js"></script>
 	<script type="text/javascript" src="__PUBLIC__/skin/fancybox/jquery.fancybox.js?v=2.1.4"></script>
 	<script type="text/javascript" src="__PUBLIC__/skin/js/jquery-ui.min.js"></script>

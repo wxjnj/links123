@@ -37,6 +37,12 @@ $(function() {
 		myWinOpen($(this).attr('url'), '', '');
 	});
 
+	//自留地打开
+	$(".J_myarea_link").live('click', function() {
+		$('#J_myarea_link').val($(this).data('url'));
+		$('#J_myarea_link_form').submit();
+	});
+	
 	// 直达框
 	$(document).on('click', function(){
 		$('#direct_text').val($('#direct_text').attr('txt')).removeClass('ipson');
@@ -79,7 +85,7 @@ $(function() {
 	// 编辑自留地
 	$('.J_myarea').click(function() {
 		$('.J_myarea_div').addClass('zld-edit');
-		$('.J_myarea_div ul li span').removeClass('newWin');
+		$('.J_myarea_div ul li span').removeClass('J_myarea_link');
 		
 		$('#J_sortable').sortable({
 			update: function (event, ui) {  
@@ -100,7 +106,7 @@ $(function() {
 	$('.J_myarea_close').click(function() {
 		$('#J_sortable').sortable('disable');
 		$('.J_myarea_div').removeClass('zld-edit');
-		$('.J_myarea_div ul li span').addClass('newWin');
+		$('.J_myarea_div ul li span').addClass('J_myarea_link');
 		$('.J_zld_edit_box').hide();
 	});
 	
