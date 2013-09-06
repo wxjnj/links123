@@ -138,6 +138,11 @@ class EnglishQuestionModel extends CommonModel {
                 //用户题目都做过，视作未做过一题
                 if (empty($ret)) {
                     unset($map['question.id']);
+                    /*
+                      //用户当前类别题目都看过且都做过，则获取历史看过的题目的第一个
+                      if (!empty($user_view_question_ids) && !empty($user_question_ids)) {
+                      $map['question.id'] = $user_question_ids[0];
+                      } */
                     $count = $this->alias("question")->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media ON question.media_id=media.id")->where($map)->count();
                     if ($count > 0) {
                         $limit = rand(0, $count - 1);
@@ -165,7 +170,7 @@ class EnglishQuestionModel extends CommonModel {
             $ret['recommend'] = $recommend;
         }
         $ret['record'] = $englishRecordModel->getQuestionUserRecord($ret['id']);
-        $ret['record']['untested_num'] = $englishRecordModel->getUserUntestedQuestionNum($object, $level, $subject, $difficulty, $voice, $target, $pattern);
+        $ret['record']['untested_num'] = $englishRecordModel->getUserUntestedQuestionNum($object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern);
         $ret['content'] = ftrim($ret['content']);
         //$ret['media_url'] = htmlspecialchars_decode($ret['media_url']);
         $ret['option'] = D("EnglishOptions")->getQuestionOptionList($ret['id']);
@@ -274,9 +279,8 @@ class EnglishQuestionModel extends CommonModel {
      * @return array
      * @author Adam $date2013.09.03$
      */
-    public function getDifficultyList($viewType = 2, $subject, $recommend, $voice = 1, $target = 1, $pattern = 1) {
+    public function getDifficultyList($viewType = 2, $subject, $recommend, $voice = 1, $target = 1, $pattern = 1, $init_num = 0) {
         if (intval($recommend) > 0 || intval($subject) > 0) {
-            $init_question_num = 0;
             $map = array();
             $map['media.voice'] = $voice;
             $map['media.pattern'] = $pattern;
@@ -294,13 +298,11 @@ class EnglishQuestionModel extends CommonModel {
                     ->where($map)
                     ->group("difficulty")
                     ->select();
-        } else {
-            $init_question_num = 1;
         }
         $difficultyList = array(
-            array("id" => 1, "name" => "初级", "question_num" => $init_question_num),
-            array("id" => 2, "name" => "中级", "question_num" => $init_question_num),
-            array("id" => 3, "name" => "高级", "question_num" => $init_question_num)
+            array("id" => 1, "name" => "初级", "question_num" => $init_num),
+            array("id" => 2, "name" => "中级", "question_num" => $init_num),
+            array("id" => 3, "name" => "高级", "question_num" => $init_num)
         );
         if ($ret) {
             foreach ($ret as $value) {

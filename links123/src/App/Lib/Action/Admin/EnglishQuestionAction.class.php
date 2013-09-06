@@ -188,7 +188,7 @@ class EnglishQuestionAction extends CommonAction {
         if ($list !== false) { //保存成功
             if (false === $optionModel->where("id in (" . implode(",", $option_id) . ")")->setField("question_id", $list)) {
                 $model->rollback();
-                $this->error('新增失败2!');
+                $this->error('新增失败!');
             }
             $model->commit();
             $this->success('新增成功!', cookie('_currentUrl_'));
@@ -409,9 +409,12 @@ class EnglishQuestionAction extends CommonAction {
             foreach ($subjects as $key => $value) {
                 $subject_list[$value['name']] = $value['id'];
             }
-            //推荐的最大排序
-            $maxSort = $recommendModel->field("max(`sort`) as max_sort")->find();
-            $recommendSort = intval($maxSort['max_sort']) + 1;
+            //推荐列表备用
+            $recommendList = $recommendModel->field("id,name,`sort`")->where("status=1")->order("`sort` desc")->select();
+            foreach ($recommendList as $value) {
+                $recommendNameList[$value['name']] = intval($value['id']);
+            }
+            $recommendSort = intval($recommendList[0]['sort']) + 1;
             $model->startTrans();
             //
             //循环读取所有表,表迭代器
@@ -465,6 +468,21 @@ class EnglishQuestionAction extends CommonAction {
                     if (empty($data['name']) || $data['name'] == "试题名称") {
                         continue;
                     }
+                    //根据问题内容、视频、科目、等级以及答案内容查询是否有重复
+                    $condition['question.content'] = array("like", $data['content']);
+                    $condition['media.media_source_url'] = array("like", $media_data['media_source_url']);
+                    $condition['media.object'] = $object_list[$media_data['object']];
+                    $condition['media.level'] = $level_list[$media_data['level']];
+                    $condition['english_options.content'] = array("like", $data['option'][$data['answer'] - 1]);
+                    $repeat_ret = $model->alias("question")
+                            ->join(C("DB_PREFIX") . "english_media media on media.id=question.media_id")
+                            ->join(C("DB_PREFIX") . "english_options english_options on question.answer=english_options.id")
+                            ->where($condition)
+                            ->count();
+                    //重复则跳过
+                    if (false != $repeat_ret && $repeat_ret > 0) {
+                        continue;
+                    }
                     $time = time();
                     //
                     //获取媒体的id
@@ -480,12 +498,15 @@ class EnglishQuestionAction extends CommonAction {
                         $media_data['difficulty'] = intval($difficulty_list[$media_data['level']]);
                         $media_data['level'] = intval($level_list[$media_data['level']]);
                         $media_data['subject'] = intval($subject_list[$media_data['subject_name']]);
+                        if ($media_data['special_recommend'] == 1) {
+                            $media_data['recommend'] = 1;
+                        }
                         //是推荐
                         if ($media_data['recommend'] == 1) {
                             $recommend_ids = array();
                             //科目存在
                             if ($media_data['object'] > 0) {
-                                $recommend_id_a = $recommendModel->where(array("name" => $media_data['object_name']))->getField("id");
+                                $recommend_id_a = $recommendNameList[$media_data['object_name']];
                                 //推荐类存在科目名
                                 if (intval($recommend_id_a == 0)) {
                                     $recommend_data['sort'] = $recommendSort;
@@ -497,13 +518,14 @@ class EnglishQuestionAction extends CommonAction {
                                         $model->rollback();
                                         die(json_encode(array("info" => "导入失败", "status" => false)));
                                     }
+                                    $recommendNameList[$media_data['object_name']] = $recommend_id_a;
                                     $recommendSort++;
                                 }
                                 array_push($recommend_ids, $recommend_id_a);
                             }
                             //专题存在
                             if ($media_data['subject'] > 0) {
-                                $recommend_id_b = $recommendModel->where(array("name" => $media_data['subject_name']))->getField("id");
+                                $recommend_id_b = $recommendNameList[$media_data['subject_name']];
                                 //推荐类存在专题名
                                 if (intval($recommend_id_b == 0)) {
                                     $recommend_data['sort'] = $recommendSort;
@@ -515,6 +537,7 @@ class EnglishQuestionAction extends CommonAction {
                                         $model->rollback();
                                         die(json_encode(array("info" => "导入失败", "status" => false)));
                                     }
+                                    $recommendNameList[$media_data['subject_name']] = $recommend_id_b;
                                     $recommendSort++;
                                 }
                                 array_push($recommend_ids, $recommend_id_b);
@@ -527,22 +550,6 @@ class EnglishQuestionAction extends CommonAction {
                     //没有媒体id，题目禁用
                     if ($data['media_id'] == 0) {
                         $data['status'] = 0;
-                    }
-                    //根据问题内容、视频、科目、等级以及答案内容查询是否有重复
-                    $condition['question.content'] = array("like", $data['content']);
-                    $condition['media.media_source_url'] = array("like", $media_data['media_source_url']);
-                    $condition['media.object'] = $object_list[$media_data['object']];
-                    $condition['media.level'] = $level_list[$media_data['level']];
-                    $condition['english_options.content'] = array("like", $data['option'][$data['answer'] - 1]);
-                    $repeat_ret = $model->alias("question")
-                            ->join(C("DB_PREFIX") . "english_media media on media.id=question.media_id")
-                            ->join(C("DB_PREFIX") . "english_options english_options on question.answer=english_options.id")
-                            ->where($condition)
-                            ->count();
-                    //重复则跳过
-                    if (false != $repeat_ret && $repeat_ret > 0) {
-                        continue;
-//                        $optionModel->where("question_id=" . intval($repeat_ret['id']))->delete();
                     }
                     //插入答案
                     $option_id = array();
@@ -648,17 +655,10 @@ class EnglishQuestionAction extends CommonAction {
                     $data['created'] = $time;
                     $data['updated'] = $data['created'];
 
-//                    if ($repeat_ret) {
-//                        $list = $model->where("id=" . intval($repeat_ret['id']))->save($data);
-//                    } else {
                     //保存当前数据对象
                     $list = $model->add($data);
-//                    }
                     if ($list !== false) { //保存成功
                         if (!empty($option_id)) {
-//                            if ($repeat_ret) {
-//                                $list = $repeat_ret['id'];
-//                            }
                             if (false === $optionModel->where("id in (" . implode(",", $option_id) . ")")->setField("question_id", $list)) {
                                 //更新答案对应的题目id
                                 $model->rollback();
@@ -840,37 +840,46 @@ class EnglishQuestionAction extends CommonAction {
             $objPHPExcel->setActiveSheetIndex(0);
             //设置表头
             $objSheet = $objPHPExcel->getActiveSheet();
-            $objSheet->setCellValue("A1", "试题名称");
-            $objSheet->setCellValue("B1", "1表示美音， 2表示英音");
-            $objSheet->setCellValue("C1", "1表示视频， 2表示音频");
-            $objSheet->setCellValue("D1", "1表示听力， 2表示说力");
-            $objSheet->setCellValue("E1", "年级");
-            $objSheet->setCellValue("F1", "学科");
-            $objSheet->setCellValue("G1", "查看文本所在的外链地址页面");
-            $objSheet->setCellValue("H1", "问题");
-            $objSheet->setCellValue("I1", "正确答案序号，1对应A ，2对应B等");
-            $objSheet->setCellValue("J1", "选项A内容");
-            $objSheet->setCellValue("K1", "选项B内容");
-            $objSheet->setCellValue("L1", "选项C内容");
-            $objSheet->setCellValue("M1", "选项D内容");
-            $objSheet->setCellValue("N1", "视频或音频对应的文本");
+            $objSheet->setCellValue("A1", "试题ID");
+            $objSheet->setCellValue("B1", "试题名称");
+            $objSheet->setCellValue("C1", "1表示美音， 2表示英音");
+            $objSheet->setCellValue("D1", "1表示视频， 2表示音频");
+            $objSheet->setCellValue("E1", "1表示听力， 2表示说力");
+            $objSheet->setCellValue("F1", "年级");
+            $objSheet->setCellValue("G1", "学科");
+            $objSheet->setCellValue("H1", "专题");
+            $objSheet->setCellValue("I1", "推荐");
+            $objSheet->setCellValue("J1", "特别推荐");
+            $objSheet->setCellValue("K1", "视频源地址");
+            $objSheet->setCellValue("L1", "问题");
+            $objSheet->setCellValue("M1", "正确答案序号，1对应A ，2对应B等");
+            $objSheet->setCellValue("N1", "选项A内容");
+            $objSheet->setCellValue("O1", "选项B内容");
+            $objSheet->setCellValue("P1", "选项C内容");
+            $objSheet->setCellValue("Q1", "选项D内容");
+            $objSheet->setCellValue("R1", "视频本地地址");
             //存入数据
             foreach ($ret as $k => $v) {
                 $key = $k + 2;
-                $objSheet->setCellValue("A" . $key, $v['name']);
-                $objSheet->setCellValue("B" . $key, $v['voice']);
-                $objSheet->setCellValue("C" . $key, $v['pattern']);
-                $objSheet->setCellValue("D" . $key, $v['target']);
-                $objSheet->setCellValue("E" . $key, $v['level_name']);
-                $objSheet->setCellValue("F" . $key, $v['object_name']);
-                $objSheet->setCellValue("G" . $key, $v['media_text_url']);
-                $objSheet->setCellValue("H" . $key, $v['content']);
-                $objSheet->setCellValue("I" . $key, intval($v['answer_index']));
-                $objSheet->setCellValue("J" . $key, $v['option'][0]);
-                $objSheet->setCellValue("K" . $key, $v['option'][1]);
-                $objSheet->setCellValue("L" . $key, $v['option'][2]);
-                $objSheet->setCellValue("M" . $key, $v['option'][3]);
-                $objSheet->setCellValue("N" . $key, $v['media_text']);
+                $v['local_path'] = date("Ym", $v['media_created']) . "/" . md5($v['media_source_url']);
+                $objSheet->setCellValue("A" . $key, $v['id']);
+                $objSheet->setCellValue("B" . $key, $v['name']);
+                $objSheet->setCellValue("C" . $key, $v['voice']);
+                $objSheet->setCellValue("D" . $key, $v['pattern']);
+                $objSheet->setCellValue("E" . $key, $v['target']);
+                $objSheet->setCellValue("F" . $key, $v['level_name']);
+                $objSheet->setCellValue("G" . $key, $v['object_name']);
+                $objSheet->setCellValue("H" . $key, $v['subject_name']);
+                $objSheet->setCellValue("I" . $key, $v['recommend'] == 0 ? 0 : 1);
+                $objSheet->setCellValue("J" . $key, intval($v['special_recommend']));
+                $objSheet->setCellValue("K" . $key, $v['media_source_url']);
+                $objSheet->setCellValue("L" . $key, $v['content']);
+                $objSheet->setCellValue("M" . $key, intval($v['answer_index']));
+                $objSheet->setCellValue("N" . $key, $v['option'][0]);
+                $objSheet->setCellValue("O" . $key, $v['option'][1]);
+                $objSheet->setCellValue("P" . $key, $v['option'][2]);
+                $objSheet->setCellValue("Q" . $key, $v['option'][3]);
+                $objSheet->setCellValue("R" . $key, $v['local_path']);
             }
             $file_name = uniqid() . '.xls';
             if (!is_dir($path)) {

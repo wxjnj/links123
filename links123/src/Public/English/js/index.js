@@ -635,12 +635,12 @@ function requestQuestion(type, clickObject, media_id) {
                 }
 
                 //是否已经满10题，是则设置下一题自动升级
-                if (data['user_count_info']['right_num'] >= 10) {
+                if (viewType == 1 && data['user_count_info']['right_num'] >= 10) {
                     next_question_lvlup = true;
                 } else {
                     next_question_lvlup = false;
                 }
-                if (next_question_lvlup) {
+                if (viewType == 1 && next_question_lvlup) {
                     //
                     //提示可以升级了
                     var top = $(".videoplay").offset().top - 30;
@@ -820,7 +820,12 @@ function bindOptionClickEvent() {
             'select_option': select_option
         };
         if (viewType == 3) {
-            data.recommend = $(".J_recommend .current").attr("value");
+            if(typeof $(".J_recommend .current").attr("value") == "undefined" && typeof $(".J_recommendDifficulty .current").attr("value") == "undefined"){
+                viewType = 4;
+                data.viewType = viewType;
+            }else{
+                data.recommend = $(".J_recommend .current").attr("value");
+            }
         }
         $.post(URL + "/answer_question", data, function(msg) {
             if (msg.status) {

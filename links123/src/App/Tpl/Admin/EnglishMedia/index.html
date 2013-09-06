@@ -17,18 +17,16 @@
             <html:imageBtn name="edit" click="edit()" style="hMargin fLeft" />
             <html:imageBtn name="forbid" click="forbid()" style="hMargin fLeft" />
             <html:imageBtn name="delete" click="del()" style="hMargin fLeft" />
+            <html:imageBtn name="resume" click="resume()" style="hMargin fLeft" />
             <select id="selectSubjectSource" style='float:left;margin:0 5px;'>
                 <option value='0'>选择专题</option>
                 <volist name="subject_list" id="subject">
                     <option value="{$subject.id}" <eq name="param['subject']" value="$subject['id']">selected="true"</eq>>{$subject.name}</option>
                 </volist>
             </select>&nbsp;&nbsp;
-            <!--            <select id="selectRecommendSource" style='float:left;margin:0 5px 0 0;'>
-                            <option value='0'>选择推荐</option>
-                            <volist name="recommend_list" id="recommend">
-                                <option value="{$recommend.id}" <eq name="param['recommend']" value="$recommend['id']">selected="true"</eq>>{$recommend.name}</option>
-                            </volist>
-                        </select>-->
+            <label style='float: left; margin: 5px 5px 0px 0px;'>推荐:</label>
+            <label style='float: left; margin: 5px 5px 0px 0px;'>是<input style='float: left; margin: 3px 2px 0px 0px;' type='checkbox' value="1" name="recommend"/></label>
+            <label style='float: left; margin: 5px 5px 0px 0px;'>否<input style='float: left; margin: 3px 2px 0px 0px;' type='checkbox' value="0" name="recommend"/></label>
             <label style='float: left; margin: 5px 5px 0px 0px;'>特别推荐:</label>
             <label style='float: left; margin: 5px 5px 0px 0px;'>是<input style='float: left; margin: 3px 2px 0px 0px;' type='checkbox' value="1" name="special_recommend"/></label>
             <label style='float: left; margin: 5px 5px 0px 0px;'>否<input style='float: left; margin: 3px 2px 0px 0px;' type='checkbox' value="0" name="special_recommend"/></label>
@@ -42,7 +40,6 @@
             </div>
             <div class="search cBoth" style="height: 60px;">
                 <div>
-                    格式：
                     <label>
                         <input class="checkbox" type="checkbox" value="1" name="pattern" <eq name="param['pattern']" value="1">checked="checked"</eq>>
                         视频
@@ -50,6 +47,14 @@
                     <label>
                         <input class="checkbox" type="checkbox" value="2" name="pattern" <eq name="param['pattern']" value="2">checked="checked"</eq>>
                         音频
+                    </label>&nbsp;&nbsp;
+                    <label>
+                        <input class="checkbox" type="checkbox" value="1" name="voice" <eq name="param['voice']" value="1">checked="checked"</eq>>
+                        美音
+                    </label>
+                    <label>
+                        <input class="checkbox" type="checkbox" value="2" name="voice" <eq name="param['voice']" value="2">checked="checked"</eq>>
+                        英音
                     </label>&nbsp;&nbsp;
                     科目：
                     <select name="object">
@@ -81,15 +86,7 @@
                     添加时间：
                     <input type="text" id="J_createTime" name="created" value="{$param['created']}" />
                     &nbsp;&nbsp;
-                    状态：
-                    <label>
-                        <input class="checkbox" type="checkbox" value="1" name="status" <if condition="$param['status'] eq 1">checked="checked"</if>>
-                        正常
-                    </label>&nbsp;
-                    <label>
-                        <input class="checkbox" type="checkbox" value="0" name="status" <eq name="param['status']" value="0">checked="checked"</eq>>
-                        禁用
-                    </label>
+                    
                 </div>
                 <div style="margin-top: 10px;">
                     推荐：
@@ -110,6 +107,19 @@
                     <label>
                         <input class="checkbox" type="checkbox" value="0" name="special_recommend" <eq name="param['special_recommend']" value="0">checked="checked"</eq>>
                         否
+                    </label>&nbsp;&nbsp;
+                    状态：
+                    <label>
+                        <input class="checkbox" type="checkbox" value="1" name="status" <if condition="$param['status'] eq 1">checked="checked"</if>>
+                        正常
+                    </label>&nbsp;
+                    <label>
+                        <input class="checkbox" type="checkbox" value="0" name="status" <eq name="param['status']" value="0">checked="checked"</eq>>
+                        禁用
+                    </label>&nbsp;
+                    <label>
+                        <input class="checkbox" type="checkbox" value="-1" name="status" <eq name="param['status']" value="-1">checked="checked"</eq>>
+                        已删除
                     </label>
                 </div>
             </div>
@@ -146,9 +156,24 @@
         $("[name='object'],[name='level'],[name='subject'],[name='difficulty']").change(function() {
             $("[name='search']").click();
         })
-        $("input[name='special_recommend']").click(function() {
-            $("[name='special_recommend']").not("[value='" + $(this).val() + "']").removeAttr("checked");
+        $(".operate input[name='special_recommend']").click(function() {
+            if ($(this).val() == 1) {
+                if (!$(".operate input[name='recommend'][value='1']").attr("checked")) {
+                    $(".operate input[name='recommend']").removeAttr("checked");
+                    $(".operate input[name='recommend'][value='1']").attr("checked", "checked");
+                }
+            }
+            $(".operate [name='special_recommend']").not("[value='" + $(this).val() + "']").removeAttr("checked");
         })
+        $(".operate input[name='recommend']").click(function() {
+            if ($(this).val() == 0) {
+                if ($(".operate input[name='special_recommend'][value='1']").attr("checked")) {
+                    $(".operate input[name='special_recommend'][value='1']").removeAttr("checked");
+                }
+            }
+            $(".operate [name='recommend']").not("[value='" + $(this).val() + "']").removeAttr("checked");
+        })
+
         /* 直达 */
         $(".page input").keydown(function(event) {
             if (event.keyCode == 13) {	// 回车
@@ -166,9 +191,9 @@
         }
         var id = getSelectCheckboxValues();
         var targetSubject = $("#selectSubjectSource").val();
-        var targetRecommend = $("#selectRecommendSource").val();
+        var targetRecommend = $("input[name='recommend']").filter(":checked").val();
         var targetSpecialRecommend = $("input[name='special_recommend']").filter(":checked").val();
-        if (parseInt(targetSubject) == 0 && parseInt(targetRecommend) == 0 && !targetSpecialRecommend) {
+        if (parseInt(targetSubject) == 0 && !targetRecommend && !targetSpecialRecommend) {
             alert("请选择目标！");
             return false;
         }
@@ -228,7 +253,7 @@
                             $("a[href=\"javascript:recommend('" + id + "')\"]").text("否");
                             $("a[href=\"javascript:special_recommend('" + id + "')\"]").text("否");
                         } else {
-                            $("a[href=\"javascript:recommend('" + id +  "')\"]").text("是");
+                            $("a[href=\"javascript:recommend('" + id + "')\"]").text("是");
                         }
                     }
                 }

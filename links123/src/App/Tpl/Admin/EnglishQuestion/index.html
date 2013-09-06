@@ -91,7 +91,7 @@
 
 
         <div class="list" >
-            <html:list id="checkList" name="category" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,name:名称:edit,created|toDateShort:发布时间,voice|getVoiceName:语音,target|getTargetName:训练,pattern|getPatternName:形式,object_name:科目,level_name:等级,status|getStatus:状态" actionlist="edit:编辑" />
+            <html:list id="checkList" name="category" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,name:名称:edit,created|toDateShort:发布时间,voice|getVoiceName:语音,target|getTargetName:训练,pattern|getPatternName:形式,object_name:科目,level_name:等级,subject_name|default=无:专题,difficulty|getMediaDifficultyName:难度,recommend|getMediaRecommendYorN:推荐,special_recommend|getYorN:特别推荐,status|getStatus:状态" actionlist="edit:编辑" />
         </div>
 
         <div class="page">{$page}</div>

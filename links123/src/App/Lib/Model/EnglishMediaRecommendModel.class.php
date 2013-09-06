@@ -40,6 +40,55 @@ class EnglishMediaRecommendModel extends CommonModel {
         return $default_id;
     }
 
+    public function getRecommendIdByObjectAndSubject($object, $subject) {
+        if (empty($object) && empty($subject)) {
+            return true;
+        }
+        if ($object > 0) {
+            $object_name = D("EnglishObject")->where(array("id" => $object))->getField("name");
+        }
+        if ($subject > 0) {
+            $subject_name = D("EnglishMediaSubject")->where(array("id" => $subject))->getField("name");
+        }
+        if ($object_name || $subject_name) {
+            $condition = "`name`='" . $object_name . "' OR `name`='" . $subject_name . "'";
+            $ret = $this->field("id,name")->where($condition)->order("id asc")->select();
+            foreach ($ret as $value) {
+                $recommendList[$value['name']] = intval($value['id']);
+            }
+            if (empty($recommendList) || intval($recommendList[$object_name]) == 0 || intval($recommendList[$subject_name]) == 0) {
+                $max = $this->field("max(`sort`) as maxSort")->find();
+                $max_sort = intval($max['maxSort']) + 1;
+                $time = time();
+                if (intval($recommendList[$object_name]) == 0) {
+                    $data['sort'] = $max_sort;
+                    $data['name'] = $object_name;
+                    $data['created'] = $time;
+                    $data['updated'] = $time;
+                    $recommend_a = $this->add($data);
+                    if (false === $recommend_a) {
+                        return false;
+                    }
+                    $recommendList[$object_name] = $recommend_a;
+                    $max_sort++;
+                }
+                if (intval($recommendList[$subject_name]) == 0) {
+                    $data['sort'] = $max_sort;
+                    $data['name'] = $subject_name;
+                    $data['created'] = $time;
+                    $data['updated'] = $time;
+                    $recommend_b = $this->add($data);
+                    if (false === $recommend_b) {
+                        return false;
+                    }
+                    $recommendList[$subject_name] = $recommend_b;
+                    $max_sort++;
+                }
+            }
+        }
+        return $recommendList;
+    }
+
 }
 
 ?>

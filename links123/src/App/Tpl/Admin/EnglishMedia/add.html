@@ -12,50 +12,48 @@
                     <td class="tLeft" ><input type="text" class="bLeftRequire large" name="name" value='' /></td>
                 </tr>
                 <tr>
+                    <td class="tRight" ></td>
+                    <td class="tLeft" >
+                        <label><input type="radio" name="pattern" value="1" checked="checked"/>视频</label>&nbsp;
+                        <label><input type="radio" name="pattern" value="2" />音频</label>&nbsp;&nbsp;
+                        <label><input type="radio" name="voice" value="1"  checked="checked"/>美音</label>&nbsp;
+                        <label><input type="radio" name="voice" value="2" />英音</label>&nbsp;&nbsp;
+                    </td>
+                </tr>
+                <tr>
                     <td class="tRight" >学科：</td>
                     <td class="tLeft object_td" >
                         <input type="hidden" value="" name="object" />
-                        <volist name="object_list" id="object">
-                            <neq name="object['name']" value="综合">
-                            <label id="object_{$object.id}" class="radio_label object_lable">
-                                {$object.name}
-                            </label>
-                            </neq>
-                        </volist>
-                    </td>
+                <volist name="object_list" id="object">
+                    <neq name="object['name']" value="综合">
+                    <label id="object_{$object.id}" class="radio_label object_lable">
+                        {$object.name}
+                    </label>
+                    </neq>
+                </volist>
+                </td>
                 </tr>
                 <tr>
                     <td class="tRight" >等级：</td>
                     <td class="tLeft level_td" >
                         <input type="hidden" value="" name="level" />
-                        <volist name="level_list" id="level">
-                            <label id="level_{$level.id}" class="radio_label level_label">
-                                {$level.name}
-                            </label>
-                        </volist>
-                    </td>
+                <volist name="level_list" id="level">
+                    <label id="level_{$level.id}" class="radio_label level_label">
+                        {$level.name}
+                    </label>
+                </volist>
+                </td>
                 </tr>
                 <tr>
                     <td class="tRight" >专题：</td>
                     <td class="tLeft subject_td" >
                         <input type="hidden" value="" name="subject" />
-                        <volist name="subject_list" id="subject">
-                            <label id="subject_{$subject.id}" class="radio_label subject_label">
-                                {$subject.name}
-                            </label>
-                        </volist>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="tRight" >推荐分类：</td>
-                    <td class="tLeft recommend_td" >
-                        <input type="hidden" value="" name="recommend" />
-                        <volist name="recommend_list" id="recommend">
-                            <label id="recommend_{$recommend.id}" class="radio_label recommend_label">
-                                {$recommend.name}
-                            </label>
-                        </volist>
-                    </td>
+                <volist name="subject_list" id="subject">
+                    <label id="subject_{$subject.id}" class="radio_label subject_label">
+                        {$subject.name}
+                    </label>
+                </volist>
+                </td>
                 </tr>
                 <tr>
                     <td class="tRight" >媒体播放类型：</td>
@@ -67,13 +65,10 @@
                         <label><input type="radio" name="play_type" value="4" />本地视频播放</label>
                 </tr>
                 <tr>
-                    <td class="tRight" >媒体格式类型：</td>
+                    <td class="tRight" >媒体优先播放：</td>
                     <td class="tLeft" >
-                        <label><input type="radio" name="pattern" value="1" checked="checked"/>视频</label>&nbsp;
-                        <label><input type="radio" name="pattern" value="2" />音频</label>&nbsp;&nbsp;
-                        媒体存储类型：
-                        <label><input type="radio" name="storage_type" value="1"  checked="checked"/>本地</label>&nbsp;
-                        <label><input type="radio" name="storage_type" value="2" />外链</label>&nbsp;&nbsp;
+                        <label><input type="radio" name="priority_type" value="1"  checked="checked"/>外链</label>&nbsp;
+                        <label><input type="radio" name="priority_type" value="2" />本地</label>&nbsp;&nbsp;
                         推荐视频：
                         <label><input type="radio" name="recommend" value="1" />是</label>&nbsp;
                         <label><input type="radio" name="recommend" value="0"  checked="checked"/>否</label>&nbsp;&nbsp;
@@ -87,8 +82,15 @@
                     <td class="tLeft" ><input type="text" class="bLeftRequire large" name="media_source_url" value='' /></td>
                 </tr>
                 <tr>
+                    <td class="tRight" >媒体缩略图地址：</td>
+                    <td class="tLeft">
+                        <textarea style="height: 40px;width: 600px;" name="media_thumb_img"></textarea>
+                        <!--<input name="img" type="file" />-->
+                    </td>
+                </tr>
+                <tr>
                     <td class="tRight" >媒体播放地址：</td>
-                    <td class="tLeft" ><textarea name="path" style="height: 170px;width: 400px;"></textarea></td>
+                    <td class="tLeft" ><textarea name="play_code" style="height: 170px;width: 400px;"></textarea></td>
                 </tr>
                 <tr>
                     <td class="tRight" >字幕：</td>
@@ -102,6 +104,7 @@
                         <select name="status">
                             <option value="1">启用</option>
                             <option value="0">禁用</option>
+                            <option value="-1">已删除</option>
                         </select>	
                     </td>
                 </tr>
@@ -140,16 +143,17 @@
             }
             $("input[name='subject']").val(value);
         })
-        
-        $(".recommend_td").children("label").click(function() {
-            var value = $(this).attr("id").substr($(this).attr("id").indexOf("_") + 1);
-            if ($(this).css("color") == "rgb(255, 0, 0)") {
-                value = 0;
-                $(this).css("color", "#000000")
-            } else {
-                $(this).css("color", "#FF0000").siblings("label").css("color", "#000000");
+
+
+        $("input[name='recommend']").click(function() {
+            if ($(this).val() == 0) {
+                $("input[name='special_recommend'][value='0']").attr("checked","checked");
             }
-            $("input[name='recommend']").val(value);
+        })
+        $("input[name='special_recommend']").click(function() {
+            if ($(this).val() == 1) {
+                $("input[name='recommend'][value='1']").attr("checked","checked");
+            }
         })
     })
 </script>

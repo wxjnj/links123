@@ -9,6 +9,8 @@ class EnglishMediaModel extends CommonModel {
 
     protected $_validate = array(
         array("name", "require", "名称必须"),
+        array("object", "require", "科目必须"),
+        array("level", "require", "等级必须"),
         array("media_source_url", "require", "来源地址必须"),
         array("media_source_url", "unique", "来源地址已存在", 1, "unique", 1),
     );
@@ -20,10 +22,12 @@ class EnglishMediaModel extends CommonModel {
     /**
      * 设置媒体的推荐
      * @param string $id [将要设置的媒体id,多个逗号分隔]
+     * @param int $target_recommend [指定是否推荐]
+     * @param int $target_subject [指定的专题id]
      * @return boolean|string
      * @author Adam $date2013.09.01$
      */
-    public function setRecommend($id, $target_recommend) {
+    public function setRecommend($id, $target_recommend, $target_subject = 0) {
         $ids = explode(",", $id);
         if (empty($ids)) {
             return false;
@@ -41,16 +45,25 @@ class EnglishMediaModel extends CommonModel {
                 ->where(array("media.id" => array('in', $ids)))
                 ->select();
         $time = time();
+        if (intval($target_subject) > 0) {
+            $target_subject_name = D("EnglishMediaSubject")->where(array("id" => $target_subject))->getField("name");
+        }
         $data['updated'] = $time;
         foreach ($ret as $media) {
             $data['id'] = intval($media['id']);
             $recommend = intval($media['recommend']);
-            if (isset($target_recommend) && $recommend == $target_recommend) {
-                continue;
+            if (isset($target_recommend)) {
+                if ($target_recommend == 0 && $recommend == 0) {
+                    continue;
+                }
             }
             $object_name = $media['object_name'];
-            $subject_name = $media['subject_name'];
-            if ($recommend == 0) {
+            if ($target_subject_name) {
+                $subject_name = $target_subject_name;
+            } else {
+                $subject_name = $media['subject_name'];
+            }
+            if ($recommend == 0 || $target_recommend == 1) {
                 $recommend_ids = array();
                 //科目存在
                 if ($object_name) {
@@ -94,6 +107,7 @@ class EnglishMediaModel extends CommonModel {
                     $this->rollback();
                     return false;
                 }
+                sort($recommend_ids);
                 $recommend = implode(",", $recommend_ids);
             } else {
                 $recommend = 0;

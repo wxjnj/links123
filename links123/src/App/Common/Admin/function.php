@@ -48,7 +48,7 @@ function getMediaPlayTypeName($type) {
             $name = "swfobject插件播放";
             break;
         case 4:
-            $name = "本地视频播放";
+            $name = "flash播放器播放";
             break;
         default:
             $name = "未知";

@@ -37,7 +37,7 @@
             flashvars.datahost=encodeURIComponent("http://121.199.26.124/English/Index/requestionMediaInfo.html");
             flashvars.questionId = 1;
             flashvars.mediaId = 1;
-            flashvars.playerMode=3;//1:为一般播放器 2:为"看"播放器  3:为"说"播放器
+            flashvars.playerMode=2;//1:为一般播放器 2:为"看"播放器  3:为"说"播放器
             flashvars.rate = 44;//采样率配置s 
             flashvars.codec= 1;//模式 1.默认模式  2.speex压缩模式
             flashvars.autoplay=true;//是否自动播放
@@ -92,6 +92,16 @@
      		{
      			document.getElementById("Links123Player").slow();
      		}
+     		//切换说播放器
+     		function chooseSpeak()
+     		{
+     			document.getElementById("Links123Player").playerChoose(3);
+     		}
+     		//切换看播放器
+     		function chooseLook()
+     		{
+     			document.getElementById("Links123Player").playerChoose(2);
+     		}
         </script>
     </head>
     <body>
@@ -101,8 +111,10 @@
    <!-- </div>-->
     <input type="button" onclick="playpause();" value="播放/暂停"/>
     <input type="button" onclick="prev();" value="上一句"/>
-     <input type="button" onclick="next();" value="下一句"/>
-     <input type="button" onclick="slow();" value="慢放"/>
+    <input type="button" onclick="next();" value="下一句"/>
+    <input type="button" onclick="slow();" value="慢放"/>
     <input type="button" onclick="clickplaynew();" value="播放新地址"/>
+    <input type="button" onclick="chooseSpeak();" value="切换说播放器"/>
+    <input type="button" onclick="chooseLook();" value="切换看播放器"/>
    </body>
 </html>

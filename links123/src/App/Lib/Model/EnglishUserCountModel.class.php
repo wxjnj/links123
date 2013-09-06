@@ -70,7 +70,7 @@ class EnglishUserCountModel extends CommonModel {
         $user_count_info['continue_right_num'] = intval($user_count_info['continue_right_num']);
         $user_count_info['continue_error_num'] = intval($user_count_info['continue_error_num']);
         $user_count_info['rice'] = intval($user_count_info['rice']);
-        $user_count_info['view_type'] = in_array(intval($user_count_info['view_type']), array(1, 2, 3, 4)) ? intval($user_count_info['view_type']) : 1;
+        $user_count_info['view_type'] = in_array(intval($user_count_info['view_type']), array(1, 2, 3, 4)) ? intval($user_count_info['view_type']) : $view_type;
         $user_count_info['voice'] = intval($user_count_info['voice']) > 0 ? intval($user_count_info['voice']) : $voice;
         $user_count_info['target'] = intval($user_count_info['target']) > 0 ? intval($user_count_info['target']) : $target;
         $user_count_info['object'] = intval($user_count_info['object']) > 0 ? intval($user_count_info['object']) : $object;
