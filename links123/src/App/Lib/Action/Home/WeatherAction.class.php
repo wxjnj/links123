@@ -15,12 +15,18 @@ class WeatherAction extends CommonAction {
  		$url = 'http://ip.taobao.com/service/getIpInfo.php?ip='.urlencode($ip);
  		$body = getContent($url);
  		$d = json_decode($body, true);
+ 		
  		$city = $d['data']['city'];
- 		$city = trim(str_replace('市', '', $city));
-        //$city = '无锡';
-		$cities = M('cities');
-		$cityId = $cities->where("city = '%s'", $city)->getField('id');
-		
+ 		if(empty($city)) {
+ 			//如何获取不到城市默认是北京
+ 			$cityId = "101010100";
+ 		} else {
+ 			$city = trim(str_replace('市', '', $city));
+ 			//$city = '无锡';
+ 			$cities = M('cities');
+ 			$cityId = $cities->where("city = '%s'", $city)->getField('id');
+ 		}
+ 		
 		//获取6天的天气信息
 		$url = 'http://m.weather.com.cn/data/'.$cityId.'.html';
 		$sixweather = getContent($url);
