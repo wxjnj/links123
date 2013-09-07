@@ -721,7 +721,6 @@ function requestQuestion(type, clickObject, media_id) {
                     $('#J_media_div').css({
                         'height': media_height,
                         'width': media_width,
-//                        'margin': media_marin,
                         'visibility': ''
                     });
                 }
@@ -834,7 +833,7 @@ function bindOptionClickEvent() {
                 if (user_count_info == null || user_count_info.right_num == null) {
                     user_count_info.right_num = 0;
                 }
-//                            $("#J_rightNum").text(user_count_info.right_num);
+                //$("#J_rightNum").text(user_count_info.right_num);
                 $("#J_currentRice").text(user_count_info.right_num * 100);
                 $("#J_riceDiv").removeClass().addClass("rice_" + user_count_info.right_num * 100);
                 //
@@ -1268,7 +1267,7 @@ function checkObjectLoaded() {
         $('#J_media_div').css({
             'height': media_height,
             'width': media_width,
-            'visibility': '',
+            'visibility': ''
         });
         layer_div("hide");
     } else {
