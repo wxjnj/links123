@@ -132,8 +132,9 @@ class EnglishMediaModel extends CommonModel {
      * @author Adam $date2013.09.01$
      */
     public function getSpecialRecommendMediaList($limit = 20) {
-        $ret = $this->field("id,name,media_thumb_img")
-                ->where("special_recommend=1 and media_thumb_img!=''")
+        $ret = $this->alias("media")->field("id,name,media_thumb_img")
+                ->join("RIGHT JOIN ".C("DB_PREFIX")."english_question question on question.media_id=media.id")
+                ->where("media.special_recommend=1 and media.media_thumb_img!='' AND media.status=1 AND question.status=1")
 //                ->limit($limit)
                 ->order("difficulty desc")
                 ->select();

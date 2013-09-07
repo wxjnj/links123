@@ -60,9 +60,10 @@ class EnglishMediaAction extends CommonAction {
             $param['created'] = $_REQUEST['created'];
         }
         if (!empty($name)) {
+            $key['englishMedia.id'] = intval($name);
             $key['englishMedia.name'] = array('like', "%" . $name . "%");
             $key['englishMedia.media_source_url'] = array('like', "%" . $name . "%");
-            $key['englishMedia.path'] = array('like', "%" . $name . "%");
+            $key['englishMedia.play_code'] = array('like', "%" . $name . "%");
             $key['_logic'] = 'or';
         }
         if (!empty($key)) {

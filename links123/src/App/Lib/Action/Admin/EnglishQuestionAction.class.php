@@ -41,6 +41,7 @@ class EnglishQuestionAction extends CommonAction {
             $param['created'] = $_REQUEST['created'];
         }
         if (!empty($name)) {
+            $key['englishQuestion.id'] = $name;
             $key['englishQuestion.name'] = array('like', "%" . $name . "%");
             $key['englishQuestion.content'] = array('like', "%" . $name . "%");
             $key['englishMedia.media_source_url'] = array('like', "%" . $name . "%");
@@ -58,6 +59,7 @@ class EnglishQuestionAction extends CommonAction {
         if (!empty($key)) {
             $map['_complex'] = $key;
         }
+        dump($map);
         $this->assign('name', $name);
         $param['name'] = $name;
     }
@@ -551,6 +553,7 @@ class EnglishQuestionAction extends CommonAction {
                     if ($data['media_id'] == 0) {
                         $data['status'] = 0;
                     }
+                    
                     //插入答案
                     $option_id = array();
                     //判断题目是否是判断题

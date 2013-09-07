@@ -36,6 +36,7 @@ class EnglishQuestionModel extends CommonModel {
         $map = array();
         $englishRecordModel = D("EnglishRecord");
         $needField = "question.id as question_id,question.target,question.content,question.answer,question.media_id,media.*";
+        $ret = array();
         //
         //特别推荐图片直接点击获取
         if ($viewType == 4 && (intval($media_id) > 0)) {
@@ -63,6 +64,8 @@ class EnglishQuestionModel extends CommonModel {
             } else if ($viewType == 2) {
                 if (intval($subject) > 0) {
                     $map['media.subject'] = $subject;
+                } else {
+                    return $ret;
                 }
                 if (intval($difficulty) > 0) {
                     $map['media.difficulty'] = $difficulty;
@@ -70,6 +73,8 @@ class EnglishQuestionModel extends CommonModel {
             } else if ($viewType == 3) {
                 if (intval($recommend) > 0) {
                     $map['_string'] = "FIND_IN_SET('" . $recommend . "',media.recommend)";
+                } else {
+                    return $ret;
                 }
                 if (intval($difficulty) > 0) {
                     $map['media.difficulty'] = $difficulty;
