@@ -346,8 +346,12 @@
 
                   <!-- root element for the items -->
                   <div class="items" id="J_specialReommendDiv">
-
-                        <volist name="special_media" id="media" mod="6">
+                      <empty name="special_media">
+                          <div>
+                              <ul></ul>
+                          </div>
+                          <else />
+                          <volist name="special_media" id="media" mod="6">
                             <eq name="mod" value="0">
                                 <div>
                                 <ul>
@@ -358,6 +362,8 @@
                                 </div>
                             </if>
                         </volist>
+                      </empty>
+                        
 
                   </div>
 
