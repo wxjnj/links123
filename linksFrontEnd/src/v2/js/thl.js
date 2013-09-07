@@ -314,12 +314,12 @@ $(function(){
 			}
 		}
 	});
-	$(".show_header").click(function(){
-		thl_hid();
-		parent.document.getElementById('searchFrameSet').rows="130,*";
-		$(".header_top,#head_tools").show(500);
-		$(this).hide();
-	});
+//	$(".show_header").click(function(){
+//		thl_hid();
+//		parent.document.getElementById('searchFrameSet').rows="130,*";
+//		$(".header_top,#head_tools").show(500);
+//		$(this).hide();
+//	});
 
 	$("#search_text").mouseenter(function(){
 		setThlPnt();
