@@ -34,10 +34,12 @@ $(function(){
 			if ($('#J_box_music').is(":hidden")){
 			  $('#J_box_music').show(); 
 			  $('.music_button').show();
+			  $('.music_button_min').show();
 			}
 			else {
 				$('#J_box_music').hide(); 
 				$('.music_button').hide();
+				$('.music_button_min').hide();
 			}
 			return;
 		}
@@ -48,7 +50,14 @@ $(function(){
 	$('.music_button').click(function(){
 			$('#J_music_iframe').attr('src','');
 			$('.music_button').hide();
+			$('.music_button_min').hide();
 			g_music_currentkey = -1;
+	});	
+	$('.music_button_min').click(function(){
+			$('#J_box_music').hide(); 
+		$("#bModal").trigger("click");
+			//$('.music_button').hide();
+			//$('.music_button_min').hide();
 	});
 	
 	function music_box_proc(){
@@ -56,7 +65,7 @@ $(function(){
 		if(-1 == g_music_currentkey) g_music_currentkey = 0;
 	    var musicurl = {1:'http://web.kugou.com/default.html',
 						2:'http://kuang.xiami.com/res/kuang/xiamikuang0709.swf',
-						//2:'http://y.qq.com/player/',
+						3:'http://y.qq.com/player/',
 						0:'http://douban.fm/swf/53053/radioplayer.swf'};
 		
 
@@ -64,41 +73,55 @@ $(function(){
 	   		if (g_music_currentkey == key)  {
 	   			g_music_currentkey++;
 
-	   			g_music_currentkey = g_music_currentkey % 3;
+	   			g_music_currentkey = g_music_currentkey % 4;
 	   		
 	   			return false;
 	   		}
 	   });
-
+    	var myposition=[200,10];
 	   //适配不同播放器
 	   switch(g_music_currentkey)
 	   {
 	   	case 0:{//douban
+	   		
 	   		$('#J_music_iframe').attr('width', 450);
 	   		$('#J_music_iframe').attr('height', 170);
+	   			
+	   		myposition = [$(window).height()-300,$(window).width()-580];
 			break;
 	   		}
 		case 2:{//xiami
+			
 			$('#J_music_iframe').attr('width', 530);
 	   		$('#J_music_iframe').attr('height', 250);
+	   			
+	   		myposition = [$(window).height()-280,$(window).width()-680];
 			break;
 	     	}
  		case 1:{//kugou
+ 			
  			$('#J_music_iframe').attr('width', 320);
 	   		$('#J_music_iframe').attr('height', 150);
+	   		myposition = [$(window).height()-300,$(window).width()-450];
+			break;
+ 		}
+		 case 3:{//qq
+		
+ 			$('#J_music_iframe').attr('width', 360);
+	   		$('#J_music_iframe').attr('height', 380);
+	   		myposition = [$(window).height()-450,$(window).width()-550];
+	   		//myposition = [400,300];
 			break;
      	  }
 	   }
 
-		$('#J_music_iframe').attr('src', musicurl[g_music_currentkey]);
 		$('#J_box_music').bPopup({
-                  	modal : false,
-                  	position :[450,0],
-                  	 closeClass:'b-close',
+                  	position :myposition,
                 }); 
-      	$('#J_box_music').hide();
-                		$('#J_box_music').show();         
+     	$('#J_music_iframe').attr('src', musicurl[g_music_currentkey]);
+
 		$('.music_button').show();
+		$('.music_button_min').show();
 	}
 	
 	
