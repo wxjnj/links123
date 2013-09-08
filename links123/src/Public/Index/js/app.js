@@ -21,10 +21,89 @@ $(function(){
 		
 		return false;
 	});
-	$('.ting').click(function(){
-		alert('Coming soon...');
+	
+    //听音乐 add by tellen 20130906 
+	var g_music_currentkey = -1;
+	$('.ting').dblclick(function(){
+		
+		music_box_proc();
 	});
+	
+	$('.ting').click(function(){
+		if(g_music_currentkey != -1){
+			if ($('#J_box_music').is(":hidden")){
+			  $('#J_box_music').show(); 
+			  $('.music_button').show();
+			}
+			else {
+				$('#J_box_music').hide(); 
+				$('.music_button').hide();
+			}
+			return;
+		}
+		music_box_proc();
+
+	});
+	
+	$('.music_button').click(function(){
+			$('#J_music_iframe').attr('src','');
+			$('.music_button').hide();
+			g_music_currentkey = -1;
+	});
+	
+	function music_box_proc(){
+
+		if(-1 == g_music_currentkey) g_music_currentkey = 0;
+	    var musicurl = {1:'http://web.kugou.com/default.html',
+						2:'http://kuang.xiami.com/res/kuang/xiamikuang0709.swf',
+						//2:'http://y.qq.com/player/',
+						0:'http://douban.fm/swf/53053/radioplayer.swf'};
+		
+
+	   $.each(musicurl, function(key, value){
+	   		if (g_music_currentkey == key)  {
+	   			g_music_currentkey++;
+
+	   			g_music_currentkey = g_music_currentkey % 3;
+	   		
+	   			return false;
+	   		}
+	   });
+
+	   //适配不同播放器
+	   switch(g_music_currentkey)
+	   {
+	   	case 0:{//douban
+	   		$('#J_music_iframe').attr('width', 450);
+	   		$('#J_music_iframe').attr('height', 170);
+			break;
+	   		}
+		case 2:{//xiami
+			$('#J_music_iframe').attr('width', 530);
+	   		$('#J_music_iframe').attr('height', 250);
+			break;
+	     	}
+ 		case 1:{//kugou
+ 			$('#J_music_iframe').attr('width', 320);
+	   		$('#J_music_iframe').attr('height', 150);
+			break;
+     	  }
+	   }
+
+		$('#J_music_iframe').attr('src', musicurl[g_music_currentkey]);
+		$('#J_box_music').bPopup({
+                  	modal : false,
+                  	position :[450,0],
+                  	 closeClass:'b-close',
+                }); 
+      	$('#J_box_music').hide();
+                		$('#J_box_music').show();         
+		$('.music_button').show();
+	}
+	
+	
 	$('.liao').click(function(){
+
 		alert('Coming soon...');
 	});
 

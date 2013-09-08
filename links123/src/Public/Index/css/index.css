@@ -778,3 +778,20 @@ a,a:hover{ text-decoration: none; }
 .skins .skins-all ul li:hover .imgb{
 	display: block;
 }
+
+.music_button {
+border-radius: 7px 7px 7px 7px;
+box-shadow: none;
+font: bold 131% sans-serif;
+padding: 0 6px 2px;
+position: absolute;
+right: -7px;
+top: -7px;
+background-color: #2b91af;
+color: #fff;
+cursor: pointer;
+display: inline-block;
+text-align: center;
+text-decoration: none;
+z-index: 88888;
+}
