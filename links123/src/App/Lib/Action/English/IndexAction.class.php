@@ -773,6 +773,174 @@ class IndexAction extends EnglishAction {
         exit();
     }
 
+    /**
+     * flash请求单词信息方法，测试方法
+     * @todo 测试方法，请勿使用
+     */
+    public function requestionWordInfo() {
+        $word = $this->_request("word"); //获取文字
+        $word_info = array();
+        if (!empty($word)) {
+            $word_info['word'] = $word;
+            $url = str_replace("###", $word, C("ENGLISH_DICT_SEARCH_URL")); //词典地址
+            $html = file_get_contents($url); //获取html内容
+            //
+            //preg获取单词解释
+            preg_match('/<div class="trans-container">\s+<ul>((\s*<li>.*<\/li>\s*)+)<\/ul>/i', $html, $match);
+            $temp_arr = explode("<li>", preg_replace("/^\s+/", "", $match[1]));
+            foreach ($temp_arr as $key => $value) {
+                if (!empty($value)) {
+                    $trans[] = current(explode("</li>", $value));
+                }
+            }
+            $word_info['intro'] = implode(";", $trans);
+            //
+            //单词读音地址
+            $word_info['speekurl'] = str_replace("###", $word, C("ENGLISH_DICT_SPEAK_URL"));
+            $word_info['type'] = "名词"; //@todo 词性，但是一般词性多个无，如何处理
+            //
+            //单词的例句
+            preg_match('/<div id=\"authority\".*\s+<ul.*\s+<li>\s+<p>\s?(.*)/i', $html, $match);
+            $word_info['example'] = strip_tags($match[1]); //去除html标签
+            //
+            //音标
+            preg_match('/<span class="phonetic">\[(.*)\]<\/span>/i', $html, $match);
+            //音标的编码转换
+            import("@.ORG.HtmlEncode");
+            $obj = new HtmlEncode();
+            $phonetic = $obj->encode($match[1]);
+            //使用占位符确定音标的分隔个数
+            $temp_str = preg_replace("/\&\#.*?;/", "#", $phonetic);
+            preg_match_all("/\&\#.*?;/", $phonetic, $encode_match);
+            $index = 0;
+            $word_info['phsyclips'] = array();
+            for ($i = 0; $i < strlen($temp_str); $i++) {
+                $value = substr($temp_str, $i, 1);
+                if ($value == "#") {
+                    $value = html_entity_decode($encode_match[0][$index]);
+                    $index++;
+                }
+                $word_info['phsyclips'][$i]['phsy'] = $value; //单个音标
+                $word_info['phsyclips'][$i]['phsyurl'] = $value; //音标读音url
+            }
+            //
+            echo json_encode($word_info);
+            exit;
+        }
+    }
+
+    /**
+     * @todo 测试方法，请勿使用
+     */
+    public function speakScore() {
+        $record = $this->_post("mp3data");
+        $question_id = $this->_post("questionid");
+        $senetence_id = $this->_post("clipid");
+        //
+        //
+            $record = base64_decode($record);
+        //
+        //保存音频
+        $recordFile = "./Public/Uploads/English/record/" . uniqid() . ".wav";
+//        $recordFile = "./Public/test.wav";
+        $fp = fopen($recordFile, w);
+        fwrite($fp, $record);
+        fclose($fp);
+        //
+        //请求google分数
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:19.0) Gecko/20100101 Firefox/19.0 Chromium/18.0.1025.168 Chrome/18.0.1025.168 Safari/535.19');
+        curl_setopt($ch, CURLOPT_URL, C("ENGLISH_SPEECH_API_URL"));
+        $header = array(
+            "Content-Type:audio/L16;rate=22050"
+        );
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 300);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $record);
+        $str = curl_exec($ch);
+        curl_close($ch);
+        $ret = objectToArray(json_decode($str)); //获取结果为数组
+        $googleRet = array(); //获取需要的数据
+        $senetenceInfo = D("EnglishQuestionSpeakSentence")->find($senetence_id);
+        $senetenceInfo['content'] = preg_replace('/.$/', "", $senetenceInfo['content']);
+        if (!empty($ret['hypotheses'])) {
+            $googleRet['confidence'] = $ret['hypotheses'][0]['confidence'];
+            $googleRet['utterance'] = $ret['hypotheses'][0]['utterance'];
+            $googleRet['flag'] = strtolower(ftrim($googleRet['utterance'])) == strtolower(ftrim($senetenceInfo['content'])) ? 1 : 0;
+        } else {
+            $googleRet['confidence'] = 0;
+            $googleRet['flag'] = 0;
+        }
+        //
+        //生成标准音特征矢量
+        $standard_audio_name = current(explode(".", $senetenceInfo['standard_audio']));
+        $standard_audio_vec = "./Public/Uploads/Video" . $standard_audio_name . ".vec"; //标准音特征矢量文件
+        //不存在特征矢量文件，则先生成
+        if (!file_exists($standard_audio_vec)) {
+            $standard_audio = "./Public/Uploads/Video" . $senetenceInfo['standard_audio']; //标准音
+            ///mnt/oral/python
+            //
+            exec("python /mnt/oral/python/python/compute-vectors.py " . $standard_audio . " " . $standard_audio_vec); //生成特征矢量文件算法
+            //python ./Extend/ryan/python/compute-vectors.py ./Public/Uploads/Video/1.wav ./Public/Uploads/Video/1.vec
+        }
+        //
+        //评分
+        exec("python /mnt/oral/python/oral-evaluation.py " . $standard_audio_vec . " " . $recordFile . ' "' . $senetenceInfo['content'] . '" "' . $googleRet['utterance'] . '" ' . $googleRet['confidence'], $score_ret);
+        //echo "python ./Extend/python/oral-evaluation.py " . $standard_audio_vec . " " . $recordFile . ' "' . $senetenceInfo['content'] . '" "' . $googleRet['utterance'] . '" ' . $googleRet['confidence'];exit;
+        $score = intval($score_ret[0]);
+        if ($score == 4) {
+            $score = 10;
+        } else if ($score == 3) {
+            $score = 50;
+        } else if ($score == 2) {
+            $score = 75;
+        } else if ($score == 1) {
+            $score = 95;
+        }
+        @unlink($recordFile);
+        echo $score;
+        exit;
+    }
+
+    /**
+     * @author Adam $date2013-08-13$
+     * @todo 测试方法，勿用
+     */
+    public function testPython() {
+        header("Content-type: text/html; charset=utf-8");
+//        $audio_path = './Public/Uploads/Video/1.wav';
+        echo "测试Python算法生成特征矢量：";
+        exec("python /home/ryan/python/compute-vectors.py ./Public/Uploads/Video/1.wav ./Public/Uploads/Video/1.vec");
+//        echo "python /home/ryan/python/compute-vectors.py ./Public/Uploads/Video/1.wav ./Public/Uploads/Video/1.vec";
+        $time = time();
+        exec("python /home/ryan/python/oral-evaluation.py ./Public/Uploads/Video/1.vec ./Public/test.wav", $ret);
+
+        echo "<br />time:" . ( time() - $time );
+        dump($ret);
+//        oral-evaluation.py 1jade.vec wav/Adam.wav
+        exit;
+    }
+
+    /**
+     * 获取媒体信息到flash
+     */
+    public function requestionMediaInfo() {
+        header("Content-type: text/html; charset=utf-8");
+        $media_id = $this->_request("mediaId");
+        $question_id = $this->_request("questionId");
+        $englishMediaModel = D("EnglishMedia");
+        $meida_info = $englishMediaModel->getMediaInfo($media_id);
+        $meida_info['sentences'] = D("EnglishQuestionSpeakSentence")->getSpeakQuestionSentenceList($question_id); //说力跟读句子信息
+        $meida_info['question_id'] = $question_id;
+        $ret = $englishMediaModel->formatMediaInfo($meida_info); //给flash的JSON数据封装
+        if (intval($this->_request("playerMode")) == 3) {
+            $ret['clips'] = $ret['sentences'];
+        }
+        die(json_encode($ret));
+    }
+
 }
 
 ?>

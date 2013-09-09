@@ -1,7 +1,22 @@
 var ajaxRequest;
+var playState = "unable";//播放器状态，默认不可用
 var next_question_lvlup = false;
 var time;
 $(function() {
+    $("#J_preSentenceButton img").click(function() {
+        $('#Links123Player')[0].prev();
+    })
+    $("#J_slowPlayButton img").click(function() {
+        $('#Links123Player')[0].slow();
+    })
+    $("#J_pauseButton img").click(function() {
+        $('#Links123Player')[0].playPause();
+    })
+    //
+    bindSpeakListenSwitchEvent();
+    $("#J_nextSentenceButton img").click(function() {
+        $('#Links123Player')[0].next();
+    })
     //
     //easyloader加载主题和插件
     easyloader.theme = "metro";
@@ -334,7 +349,7 @@ $(function() {
             });
             return false;
         }
-        $(this).addClass("current").siblings("li.class2").removeClass("current");
+        //$(this).addClass("current").siblings("li.class2").removeClass("current");
         requestQuestion("category", $(this));
     });
     //
@@ -361,7 +376,7 @@ $(function() {
             });
             return false;
         }
-        $(this).addClass("current").siblings("li.class3").removeClass("current");
+        //$(this).addClass("current").siblings("li.class3").removeClass("current");
         requestQuestion("category", $(this));
     });
 
@@ -529,7 +544,6 @@ function requestQuestion(type, clickObject, media_id) {
     } else if (type == "difficulty") {
         data.difficulty = clickObject.attr("value");
     }
-
     layer_div("show");
     ajaxRequest = $.ajax({
         url: URL + '/ajax_get_question',
@@ -629,6 +643,23 @@ function requestQuestion(type, clickObject, media_id) {
                 $("#J_textButton").attr("media_text_url", question.media_text_url);
                 bindMediaTextClickEvent("disable");//点击选项后才能查看文本
                 updateOption(question.option);
+                //说力听力耳朵切换
+                if (question.target == 2) {
+                    $(".J_listenButtons").hide();
+                    $(".J_speakButtons").show();
+                    $(".playbutton").show();
+                    $(".voice[value='2']").addClass("grey");
+                } else {
+                    $(".playbutton").hide();
+                    $(".J_speakButtons").hide();
+                    $(".J_listenButtons").show();
+                    $(".voice[value='2']").removeClass("grey");
+                }
+                if (question.voice == 2) {
+                    $(".target[value='2']").addClass("grey");
+                } else {
+                    $(".target[value='2']").removeClass("grey");
+                }
                 //
                 if (data['user_count_info'] == null || data['user_count_info']['right_num'] == null) {
                     data['user_count_info']['right_num'] = 0;
@@ -665,7 +696,7 @@ function requestQuestion(type, clickObject, media_id) {
                 var videoStr = '';
                 $('#J_media_div').html(videoStr);
 
-                if (question.play_code) {
+                if (question.play_code || question.media_info) {
 
                     if (question.isAboutVideo != 1) {
                         if (question.play_type == 1) {
@@ -690,11 +721,48 @@ function requestQuestion(type, clickObject, media_id) {
 
                             swfobject.embedSWF(swfUrl, "J_media_swfobject_div", "100%", "100%", version, "/swf/playerProductInstall.swf", question.play_code, params);
 
-                        } else if (question.play_type == 4) {
+                        } else if (question.play_type == 4 && question.target == 1) {
                             $('#J_media_div').html('<div id="J_media_swfobject_div" style="height:' + media_height + 'px;width:' + media_width + 'px;"></div>');
 
                             flowplayer("J_media_swfobject_div", "http://releases.flowplayer.org/swf/flowplayer-3.2.16.swf", {playlist: [question.media_thumb_img, {url: question.play_code, autoPlay: false}]});
 
+                        } else if (question.play_type == 4 && question.target == 2) {
+                            var media_info = question.media_info;
+                            $("#J_mediaId").text(media_info.id);//记录媒体id
+                            $("#J_mediaPath").text(media_info.question_id);//记录媒体地址
+                            $('#J_media_div').html("<div id='flashContent'></div>");
+                            var swfVersionStr = "10.2.0";
+                            var xiSwfUrlStr = PUBLIC + "/Js/Links123Player/playerProductInstall.swf";
+                            var flashvars = {};
+                            flashvars.logging = true;
+                            flashvars.url = media_info.real_path;
+                            flashvars.playerMode = 2;
+                            flashvars.url = $("#J_mediaPath").text();
+                            flashvars.questionId = media_info.question_id;
+                            flashvars.rate = 44;//采样率配置 
+                            flashvars.codec = 1;//模式 1.默认模式  2.speex压缩模式
+                            flashvars.mediaId = media_info.id;
+                            flashvars.datahost = encodeURIComponent(URL + "/requestionMediaInfo");
+                            flashvars.sendDataHost = encodeURIComponent(URL + "/speakScore");
+                            flashvars.mp3host = encodeURIComponent("http://dict.youdao.com/dictvoice?audio=###&type=1");
+                            flashvars.wordhost = URL + "/requestionWordInfo";
+                            var params = {};
+                            params.quality = "high";
+                            params.bgcolor = "#ffffff";
+                            params.allowscriptaccess = "sameDomain";
+                            params.allowfullscreen = "true";
+                            var attributes = {};
+                            attributes.id = "Links123Player";
+                            attributes.name = "Links123Player";
+                            attributes.align = "middle";
+                            swfobject.embedSWF(
+                                    PUBLIC + "/Js/Links123Player/Links123Player.swf", "flashContent",
+                                    media_width, media_height,
+                                    swfVersionStr, xiSwfUrlStr,
+                                    flashvars, params, attributes);
+                            swfobject.createCSS("#flashContent", "display:block;text-align:left;");
+                            $("#J_viewButton").addClass("current");
+                            $("#J_speakButton").removeClass("current");
                         } else {
 
                             videoStr += '<object id="J_media_object" height="100%" width="100%" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">';
@@ -819,10 +887,10 @@ function bindOptionClickEvent() {
             'select_option': select_option
         };
         if (viewType == 3) {
-            if(typeof $(".J_recommend .current").attr("value") == "undefined" && typeof $(".J_recommendDifficulty .current").attr("value") == "undefined"){
+            if (typeof $(".J_recommend .current").attr("value") == "undefined" && typeof $(".J_recommendDifficulty .current").attr("value") == "undefined") {
                 viewType = 4;
                 data.viewType = viewType;
-            }else{
+            } else {
                 data.recommend = $(".J_recommend .current").attr("value");
             }
         }
@@ -1295,4 +1363,63 @@ function fadeTip(content, top, left, time, index) {
     $("body").append(div);
     div.fadeIn(1000);
     time = setTimeout("$('.J_fadeDiv').fadeOut(1000,function(){$('.J_fadeDiv').remove();})", time);
+}
+function bindSpeakListenSwitchEvent() {
+    $(".J_speakButtons").click(function() {
+        if ($(this).hasClass("current")) {
+            return false;
+        }
+        $("#J_media_div").html("<div id='flashContent'></div>");
+        var swfVersionStr = "10.2.0";
+        var xiSwfUrlStr = PUBLIC + "/Js/Links123Player/playerProductInstall.swf";
+        var flashvars = {};
+        if ($(this).attr("id") == "J_speakButton") {
+            flashvars.playerMode = 3;
+        } else {
+            flashvars.playerMode = 2;
+        }
+        flashvars.logging = true;
+        flashvars.url = $("#J_mediaPath").text();
+        flashvars.questionId = $("#J_questionId").text();
+        flashvars.rate = 22;//采样率配置 
+        flashvars.codec = 1;//模式 1.默认模式  2.speex压缩模式
+        flashvars.mediaId = $("#J_mediaId").text();
+        flashvars.datahost = encodeURIComponent(URL + "/requestionMediaInfo");
+        flashvars.sendDataHost = encodeURIComponent(URL + "/speakScore");
+        flashvars.googleHost = google_host;
+        flashvars.mp3host = mp3host;
+        flashvars.wordhost = encodeURIComponent(URL + "/requestionWordInfo");
+        var params = {};
+        params.quality = "high";
+        params.bgcolor = "#ffffff";
+        params.allowscriptaccess = "sameDomain";
+        params.allowfullscreen = "true";
+        var attributes = {};
+        attributes.id = "Links123Player";
+        attributes.name = "Links123Player";
+        attributes.align = "middle";
+        swfobject.embedSWF(
+                PUBLIC + "/Js/Links123Player/Links123Player.swf", "flashContent",
+                media_width, media_height,
+                swfVersionStr, xiSwfUrlStr,
+                flashvars, params, attributes);
+        swfobject.createCSS("#flashContent", "display:block;text-align:left;");
+        $(this).addClass("current").siblings(".J_speakButtons").removeClass("current");
+    })
+}
+/**
+ * 播放器状态改变接口
+ * @param {string} state
+ * @returns {string}
+ * @author Adam $date2013.08.22$
+ */
+function playerStateChange(state) {
+    playState = state;
+//    alert(state);
+    if (state == "playing") {
+        $("#J_pauseButton img").attr("src", PUBLIC + "/English/images/video6.png");
+    } else {
+        $("#J_pauseButton img").attr("src", PUBLIC + "/English/images/video5.png");
+    }
+    return state;
 }

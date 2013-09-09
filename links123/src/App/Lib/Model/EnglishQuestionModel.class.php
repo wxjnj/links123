@@ -46,6 +46,10 @@ class EnglishQuestionModel extends CommonModel {
                     ->where(array("media.id" => $media_id))
                     ->find();
         } else {
+            if ($target == 2) {
+                $ret = D("EnglishQuestionSpeak")->getQuestionToIndex($viewType, $object, $level, $subject, $recommend, $difficulty, $voice, $pattern);
+                return $ret;
+            }
             $order = "`special_recommend` DESC,`recommend` DESC";
             if ($viewType == 1) {
                 //
