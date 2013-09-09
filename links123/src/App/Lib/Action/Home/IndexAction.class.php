@@ -634,7 +634,7 @@ class IndexAction extends CommonAction {
 			echo - 1;
 		}
 		if ($sbmt) {
-			$condition['tip_content'] = array('=', '"' . $stext . '"');
+			$condition['tip_content'] = array('eq', '"' . $stext . '"');
 			$tips = $model->where($condition)->select();
 			if (count($tips) > 0) {
 				$model->__set('tip_weight', 1 + $tips[0]['tip_weight']);

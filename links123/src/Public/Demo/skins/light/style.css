@@ -1,0 +1,20 @@
+/*************************************************************
+** light
+*************************************************************/
+body{ color: #000; }
+a{ color: #000; }
+a:hover{
+	color: #d00316;
+	text-decoration: none;
+}
+#container{
+	background: #3f3a39 url(bg.jpg) top center no-repeat;
+	background-size: cover;
+}
+.box{ color: #000; }
+.box .box-hd{ border-top: 1px solid #000; }
+.schedule li{ border-top: 1px solid #000; }
+.music dl dd li{ border-top: 1px solid #000; }
+.edit, .del{ background: url(sprite.png); }
+.edit{ background-position: -6px -6px; }
+.del{ background-position: -37px -6px; }

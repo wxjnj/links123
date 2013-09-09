@@ -778,3 +778,38 @@ a,a:hover{ text-decoration: none; }
 .skins .skins-all ul li:hover .imgb{
 	display: block;
 }
+
+.music_button {
+border-radius: 7px 7px 7px 7px;
+box-shadow: none;
+font: bold 131% sans-serif;
+padding: 0 6px 2px;
+position: absolute;
+right: 0px;
+top: -17px;
+background-color: #2b91af;
+color: #fff;
+cursor: pointer;
+display: inline-block;
+text-align: center;
+text-decoration: none;
+z-index: 88888;
+vertical-align:baseline;
+}
+.music_button_min {
+border-radius: 7px 7px 7px 7px;
+box-shadow: none;
+font: bold 131% sans-serif;
+padding: 0 6px 2px;
+position: absolute;
+right: 22px;
+top: -17px;
+background-color: #2b91af;
+color: #fff;
+cursor: pointer;
+display: inline-block;
+text-align: center;
+text-decoration: none;
+z-index: 88888;
+vertical-align:baseline;
+}
