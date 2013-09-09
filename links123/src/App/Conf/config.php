@@ -35,5 +35,6 @@ return array(
 	),
 	'TMPL_PARSE_STRING'         =>array(
 		'__STATIC__'            => 'http://a.links123.net', // 更改默认的/Public 替换规则
-	)
+	),
+    "VIDEO_UPLOAD_PATH" =>  "/English/Video" //英语角视频存储路径
 );
