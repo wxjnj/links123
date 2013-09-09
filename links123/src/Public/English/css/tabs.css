@@ -1,9 +1,9 @@
 
 UL.tabs LI {
-	PADDING-BOTTOM: 0px; TEXT-INDENT: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FLOAT: left; LIST-STYLE-IMAGE: none !important; PADDING-TOP: 0px;margin-right:10px;
+	PADDING-BOTTOM: 0px; TEXT-INDENT: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FLOAT: left; LIST-STYLE-IMAGE: none !important; PADDING-TOP: 0px;margin-right:30px;
 }
 UL.tabs A {
-	POSITION: relative; TEXT-ALIGN: center; PADDING-BOTTOM: 0px; LINE-HEIGHT: 30px; MARGIN: 0px; PADDING-LEFT: 0px; WIDTH: 110px; PADDING-RIGHT: 0px; DISPLAY: block; HEIGHT: 30px; COLOR: #fff; FONT-SIZE: 14px; TOP: 1px; TEXT-DECORATION: none; PADDING-TOP: 0px;font-weight:bold; COLOR: #fff;
+	POSITION: relative; TEXT-ALIGN: center; PADDING-BOTTOM: 0px; LINE-HEIGHT: 30px; MARGIN: 0px; PADDING-LEFT: 0px; WIDTH: 81px; PADDING-RIGHT: 0px; DISPLAY: block; HEIGHT: 30px; COLOR: #fff; FONT-SIZE: 14px; TOP: 1px; TEXT-DECORATION: none; PADDING-TOP: 0px;font-weight:bold; COLOR: #fff;
 }
 UL.tabs A:active {
 	background:url(../images/currentbg2.png) no-repeat; COLOR: #fff;

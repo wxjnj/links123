@@ -1,0 +1,116 @@
+{
+    "title": "speak english",
+    "duration": 40,
+    "url": "http://127.0.0.1/a.flv",
+    "clips": [
+        　　{
+            "cliptitle": "clip one",
+            "starttime": 15,
+            "endtime": 60,
+            "english": "he english is good!",
+            "chinese": "他擅长英语",
+            "wordclips": [
+                {
+                    "word": "he",
+                    "speekurl": "http://127.0.0.1/he.mp3",
+                    "intro": "他",
+					"type":"名词",
+					"example":"I found a talent for role in this movie",
+					"phsyclips":
+					[
+						{
+							"phsy":"h",
+							"phsyurl":"http://127.0.0.1/h.mp3"
+						},
+						{
+							"phsy":"e",
+							"phsyurl":"http://127.0.0.1/e.mp3"
+						}
+					]
+                },
+		{
+                    "word": "english",
+                    "speekurl": "http://127.0.0.1/english.mp3",
+                    "intro": "英语",
+					"type":"名词",
+					"example":"I found a talent for role in this movie",
+					"phsyclips":
+					[
+						{
+							"phsy":"e",
+							"phsyurl":"http://127.0.0.1/e.mp3"
+						},
+						{
+							"phsy":"n",
+							"phsyurl":"http://127.0.0.1/n.mp3"
+						},
+						{
+							"phsy":"g",
+							"phsyurl":"http://127.0.0.1/g.mp3"
+						},
+						{
+							"phsy":"l",
+							"phsyurl":"http://127.0.0.1/l.mp3"
+						},
+						{
+							"phsy":"i",
+							"phsyurl":"http://127.0.0.1/i.mp3"
+						},
+						{
+							"phsy":"s",
+							"phsyurl":"http://127.0.0.1/s.mp3"
+						},
+						{
+							"phsy":"h",
+							"phsyurl":"http://127.0.0.1/h.mp3"
+						}
+					]
+                },
+                {	
+                    "word": "is",
+                    "speekurl": "http://127.0.0.1/is.mp3",
+                    "intro": "是",
+					"type":"名词",
+					"example":"I found a talent for role in this movie",
+					"phsyclips":
+					[
+						{
+							"phsy":"i",
+							"phsyurl":"http://127.0.0.1/i.mp3"
+						},
+						{
+							"phsy":"s",
+							"phsyurl":"http://127.0.0.1/s.mp3"
+						}
+					]
+                },
+                {
+                    "word": "good",
+                    "speekurl": "http://127.0.0.1/good.mp3",
+                    "intro": "好的",
+					"type":"名词",
+					"example":"I found a talent for role in this movie",
+					"phsyclips":
+					[
+						{
+							"phsy":"g",
+							"phsyurl":"http://127.0.0.1/g.mp3"
+						},
+						{
+							"phsy":"o",
+							"phsyurl":"http://127.0.0.1/o.mp3"
+						},
+						{
+							"phsy":"o",
+							"phsyurl":"http://127.0.0.1/o.mp3"
+						},
+						{
+							"phsy":"d",
+							"phsyurl":"http://127.0.0.1/d.mp3"
+						}
+					]
+                }
+            ]
+        }
+    ]
+}

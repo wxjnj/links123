@@ -716,4 +716,19 @@ function getContent($url) {
 	curl_close($curl);
 	return $body;
 }
+/**
+ * 对象转为数组
+ * @param object $object [对象]
+ * @return array
+ */
+function objectToArray($object) {
+    $object = (array) $object;
+    foreach ($object as $k => $v) {
+        if (gettype($v) == 'resource')
+            return;
+        if (gettype($v) == 'object' || gettype($v) == 'array')
+            $object[$k] = (array) objectToArray($v);
+    }
+    return $object;
+}
 ?>

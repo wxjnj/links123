@@ -14,6 +14,8 @@
             var media_marin = '18px 0 0 20px';
             var level_margin_index = -5;
             var user_last_view_type = "{$user_last_select['viewType']|default=1}";
+            var google_host = encodeURIComponent("{:C('ENGLISH_SPEECH_API_URL')}");
+            var mp3host = encodeURIComponent("{:C('ENGLISH_DICT_SPEAK_URL')}");
             if (window.navigator.userAgent.indexOf("MSIE")>=1){
                 var IE1024="style_small.css";
                 var IEother="style.css";
@@ -54,7 +56,7 @@
         <load href="__PUBLIC__/skin/easyui/easyloader.js" />
         <SCRIPT src="__PUBLIC__/English/js/select.js?2013081701"></SCRIPT>
         <script type="text/javascript" src="__PUBLIC__/Js/Links123Player/swfobject.js"></script>
-        <SCRIPT src="__PUBLIC__/English/js/index.js?2013090601"></SCRIPT>
+        <SCRIPT src="__PUBLIC__/English/js/index.js?2013090901"></SCRIPT>
         
         <script type="text/javascript" src="__PUBLIC__/Js/flowplayer/flowplayer-3.2.12.min.js"></script>
 		
@@ -69,14 +71,18 @@
                         <li <eq name="user_last_select['voice']" value="1">class="voice current class1"<else/>class="voice class1"</eq> value="1">
                             <img src="__PUBLIC__/English/images/icon6.png" width="20" height="15" /> <span>美 音</span>
                         </li>
-                        <li <eq name="user_last_select['voice']" value="2">class="voice current class1"<else/>class="voice class1"</eq> value="2">
+                        <li <if condition="$user_last_select['target'] eq 2">class="voice grey class2"
+                            <elseif condition="($user_last_select['target'] eq 1)AND($user_last_select['voice'] eq 2)" />class="current voice class2"<else/>class="voice class2"</if>
+                        value="2">
                             <img src="__PUBLIC__/English/images/icon7.png" width="20" height="15" /> <span>英 音</span>
                         </li>
                         <li <eq name="user_last_select['target']" value="1">class="target current class2"<else/>class="target class2"</eq> value="1">
                             <img src="__PUBLIC__/English/images/icon8.png" width="21" height="22" /> <span>听 力</span>
                         </li>
-                        <li <eq name="user_last_select['target']" value="2">class="target current class2"<else/>class="grey target class2"</eq> value="2">
-                            <img src="__PUBLIC__/English/images/icon10.png" width="14" height="21" /><span class="grey speak_span">&nbsp;说 力</span>
+                        <li <if condition="$user_last_select['voice'] eq 2">class="target grey class2"
+                            <elseif condition="($user_last_select['voice'] eq 1)AND($user_last_select['target'] eq 2)" />class="current target class2"<else/>class="target class2"</if>
+                        value="2">
+                            <img src="__PUBLIC__/English/images/icon10.png" width="14" height="21" /><span <if condition="$user_last_select['voice'] eq 1">class="speak_span"<else />class="grey speak_span"</if>>&nbsp;说 力</span>
                         </li>
                         <li <eq name="user_last_select['pattern']" value="1">class="pattern current class3"<else/>class="pattern class3"</eq> value="1">
                             <img src="__PUBLIC__/English/images/icon11.png" width="21" height="21" /> <span>视 频</span>
@@ -160,6 +166,8 @@
                 <div class="contentcenter">
                     <div class="ricewan"><div id="J_riceDiv" class="rice_{$user_conut_info['right_num']*100}"></div></div>
                     <label id="J_questionId" style="display: none">{$question['id']}</label>
+                    <label id="J_mediaId" style="display: none">{$question['media_info']['id']|default=0}</label>
+                    <label id="J_mediaPath" style="display: none">{$question['media_info']['real_path']}</label>
                     <div class="videoplay">
                         <!-- $Flash视频播放 视频非本地化方法 -->
                         <div class="video_div">
@@ -180,47 +188,84 @@
                                     class="media_div"  style="visibility: hidden;" data_media_url="{$question['play_code']}" 
                                 </if> 
                                      data_isAboutVideo="{$isAboutVideo}">
-                                <if condition="$isAboutVideo neq '1'">
-                                    <if condition="$question['play_type'] eq '1'">
-                                        {$question['play_code']}
-                                    <elseif condition="$question['play_type'] eq '2'"/>
-                                        <iframe class="media_iframe" src="{$question['play_code']}" scrolling="no" frameborder="0"></iframe>
-                                    <elseif condition="$question['play_type'] eq '3'"/>
-                                    	<div id="J_media_swfobject_div"></div>
-                                        <script type="text/javascript">
-                                            var swfUrl = 'http://www.kizphonics.com/wp-content/uploads/jw-player-plugin-for-wordpress/player/player.swf';
-                                            var version = '10.2.0';
-                                            var params  = {
-                                                quality: "high",
-                                                wmode: "opaque",
-                                                scale: "noscale",
-                                                align: "left",
-                                                allowFullScreen: "true",
-                                                allowScriptAccess: "always",
-                                                bgColor: "#000000"
-                                            };
+                                <if condition="!empty($question['media_info'])">
+                                   <div id='flashContent'></div>
+                                   <script type="text/javascript">
+                                       var swfVersionStr = "10.2.0";
+                                       var xiSwfUrlStr = "__PUBLIC__/Js/Links123Player/playerProductInstall.swf";
+                                       var flashvars = {};
+                                       flashvars.logging = true;
+                                       flashvars.playerMode = 2;//播放器播放类型，1一般看，2说力看，3说力说模式
+                                       flashvars.questionId = "{$question.id}";//试题id
+                                       flashvars.mediaId = "{$question.media_info.id}";
+                                       flashvars.sendDataHost = encodeURIComponent("{:U('English/Index/speakScore')}");//往服务器端传数据的地址,音频数据传输接口
+                                       flashvars.googleHost = google_host;
+                                       flashvars.url = "{$question['media_info']['real_path']}";
+                                       flashvars.datahost = encodeURIComponent("{:U('English/Index/requestionMediaInfo')}");
+                                       flashvars.mp3host = mp3host;
+                                       flashvars.wordhost = "{:U('English/Index/requestionWordInfo')}";
+                                       var params = {};
+                                       params.quality = "high";
+                                       params.bgcolor = "#ffffff";
+                                       params.allowscriptaccess = "sameDomain";
+                                       params.allowfullscreen = "true";
+                                       var attributes = {};
+                                       attributes.id = "Links123Player";
+                                       attributes.name = "Links123Player";
+                                       attributes.align = "middle";
+                                       swfobject.embedSWF(
+                                               "__PUBLIC__/Js/Links123Player/Links123Player.swf", "flashContent",
+                                               media_width, media_height,
+                                               swfVersionStr, xiSwfUrlStr,
+                                               flashvars, params, attributes);
+                                       swfobject.createCSS("#flashContent", "display:block;text-align:left;");
+                                   </script>
+                               <else />
+                                    <if condition="$isAboutVideo neq '1'">
+                                        <switch name="question['play_type']">
+                                        <case value="1">{$question['play_code']}</case>
+                                        <case value="2">
+                                            <iframe class="media_iframe" src="{$question['play_code']}" scrolling="no" frameborder="0"></iframe>
+                                        </case>
+                                        <case value="3">
+                                            <div id="J_media_swfobject_div"></div>
+                                            <script type="text/javascript">
+                                                var swfUrl = 'http://www.kizphonics.com/wp-content/uploads/jw-player-plugin-for-wordpress/player/player.swf';
+                                                var version = '10.2.0';
+                                                var params  = {
+                                                    quality: "high",
+                                                    wmode: "opaque",
+                                                    scale: "noscale",
+                                                    align: "left",
+                                                    allowFullScreen: "true",
+                                                    allowScriptAccess: "always",
+                                                    bgColor: "#000000"
+                                                };
 
-                                            swfobject.embedSWF(swfUrl, "J_media_swfobject_div", "100%", "100%", version, "/swf/playerProductInstall.swf", {$question['play_code']}, params );
+                                                swfobject.embedSWF(swfUrl, "J_media_swfobject_div", "100%", "100%", version, "/swf/playerProductInstall.swf", {$question['play_code']}, params );
 
-                                        </script>
-                                    <elseif condition="$question['play_type'] eq '4'"/>
-                                    	<div id="J_media_swfobject_div"></div>
-	                                    <script type="text/javascript">
-	                                    $('#J_media_swfobject_div').css({
-	                                        'height': media_height,
-	                                        'width': media_width
-	                                    });
-	                                    var media_thumb_img = "{$question['media_thumb_img']}";
-	                                    var media_url = "{$question['play_code']}";
-	                                    flowplayer("J_media_swfobject_div", "http://releases.flowplayer.org/swf/flowplayer-3.2.16.swf", {playlist:[media_thumb_img,{url: media_url,autoPlay: false}]});
-	                                    </script>
-                                    <else />
-                                        <object id="J_media_object" height="100%" width="100%" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">
-                                            <param name="wmode" value="transparent">
-                                            <param name="movie" value="{$question['play_code']}">
-                                            <embed name="swf" swliveconnect="true" height="100%" width="100%" type="application/x-shockwave-flash"
-                                                allowfullscreen="true" wmode="transparent" src="{$question['play_code']}" play="false">
-                                        </object>
+                                            </script>
+                                        </case>
+                                        <case value="4">
+                                            <div id="J_media_swfobject_div"></div>
+                                            <script type="text/javascript">
+                                            $('#J_media_swfobject_div').css({
+                                                'height': media_height,
+                                                'width': media_width
+                                            });
+                                            var media_thumb_img = "{$question['media_thumb_img']}";
+                                            var media_url = "{$question['play_code']}";
+                                            flowplayer("J_media_swfobject_div", "http://releases.flowplayer.org/swf/flowplayer-3.2.16.swf", {playlist:[media_thumb_img,{url: media_url,autoPlay: false}]});
+                                            </script>
+                                        </case>
+                                        <default />
+                                            <object id="J_media_object" height="100%" width="100%" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">
+                                                <param name="wmode" value="transparent">
+                                                <param name="movie" value="{$question['play_code']}">
+                                                <embed name="swf" swliveconnect="true" height="100%" width="100%" type="application/x-shockwave-flash"
+                                                    allowfullscreen="true" wmode="transparent" src="{$question['play_code']}" play="false">
+                                            </object>
+                                        </switch>
                                     </if>
                                 </if>
                             </div>
@@ -264,8 +309,10 @@
                         <ul>
 <!--                            <li class="current"><img src="__PUBLIC__/English/images/lookicon.png" width="25" height="15" /> 看</li>
                             <li><img src="__PUBLIC__/English/images/sayicon.png" width="23" height="16" /> 说</li>-->
-                            <li id="J_answerButton"> 　答  题</li>
-                            <li id="J_textButton" media_text_url="{$question['media_text_url']}"> 　文  本</li>
+                            <li id="J_answerButton" class='J_listenButtons' <eq name="user_last_select['target']" value="2">style='display:none;'</eq>> 　答  题</li>
+                            <li id="J_textButton" class='J_listenButtons' media_text_url="{$question['media_text_url']}" <eq name="user_last_select['target']" value="2">style='display:none;'</eq>> 　文  本</li>
+                            <li id="J_viewButton" class='current J_speakButtons' <eq name="user_last_select['target']" value="1">style='display:none;'</eq>> 　&nbsp;&nbsp;看 </li>
+                            <li id="J_speakButton" class='J_speakButtons' <eq name="user_last_select['target']" value="1">style='display:none;'</eq>> 　&nbsp;&nbsp;说 </li>
                             <li id="J_levelUpButton"><img src="__PUBLIC__/English/images/up.png" width="14" height="21" /> 升  级</li>
                             <li id="J_levelDownButton"><img src="__PUBLIC__/English/images/down.png" width="14" height="21" /> 降  级</li>
                             <li id="J_prevQuestion"><img src="__PUBLIC__/English/images/up.png" width="14" height="21" /> 上一题</li>
@@ -277,15 +324,15 @@
                         <span class="kafei">登陆可以保留记录和复习</span></div>
                     <div class="videobutton">
                         <!--<div class="pre"> <img src="__PUBLIC__/English/images/pre.png" width="94" height="38" /></div>-->
-<!--                        <div class="playbutton">
+                        <div class="playbutton" <eq name="user_last_select['target']" value="1">style='display:none;'</eq>>
                             <ul>
-                                <li> <img src="__PUBLIC__/English/images/video1.png" width="40" height="40" /></li>
-                                <li> <img src="__PUBLIC__/English/images/video2.png" width="40" height="40" /></li>
-                                <li> <img src="__PUBLIC__/English/images/video3.png" width="40" height="40" /></li>
-                                <li> <img src="__PUBLIC__/English/images/video5.png" width="40" height="40" /></li>
-                                <li> <img src="__PUBLIC__/English/images/video4.png" width="40" height="40" /></li>
+                                <li id="J_preSentenceButton"> <img src="__PUBLIC__/English/images/video1.png" width="55" height="55" /></li>
+                                <!--<li id="J_replaySentenceButton"> <img src="__PUBLIC__/English/images/video2.png" width="40" height="40" /></li>-->
+                                <li id="J_slowPlayButton"> <img src="__PUBLIC__/English/images/video3.png" width="40" height="40" /></li>
+                                <li id="J_pauseButton"> <img src="__PUBLIC__/English/images/video5.png" width="40" height="40" /></li>
+                                <li id="J_nextSentenceButton"> <img src="__PUBLIC__/English/images/video4.png" width="40" height="40" /></li>
                             </ul>
-                        </div>-->
+                        </div>
                         <!--<div class="next"> <img src="__PUBLIC__/English/images/next.png" width="94" height="38" /></div>-->
                     </div>
                 </div>

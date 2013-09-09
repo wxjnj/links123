@@ -18,15 +18,19 @@ class EnglishLevelModel extends CommonModel {
      * @author Adam $date2013.5$
      */
     public function getDefaultLevelInfo($object, $voice = 1, $target = 1, $pattern = 1) {
+        $question_table_name = "english_question";
+        if ($target == 2) {
+            $question_table_name = "english_question_speak";
+        }
         $object_name = D("EnglishObject")->where(array("id" => $object))->getField("name");
         if ($object_name == "综合") {
-            $condition = "(select count(question.id) from " . C("DB_PREFIX") . "english_question question 
+            $condition = "(select count(question.id) from " . C("DB_PREFIX") . $question_table_name . " question 
                     right join " . C("DB_PREFIX") . "english_media media on question.media_id=media.id where media.level=level.id and media.voice={$voice} 
-                    and question.target={$target} and media.pattern={$pattern} and media.status=1 and question.status=1)>0";
+                    and media.pattern={$pattern} and media.status=1 and question.status=1)>0";
         } else {
-            $condition = "(select count(question.id) from " . C("DB_PREFIX") . "english_question question 
+            $condition = "(select count(question.id) from " . C("DB_PREFIX") . $question_table_name . " question 
                     right join " . C("DB_PREFIX") . "english_media media on question.media_id=media.id where media.level=level.id  and media.voice={$voice} 
-                    and media.object={$object} and question.target={$target} and media.pattern={$pattern} and media.status=1 and question.status=1)>0";
+                    and media.object={$object} and media.pattern={$pattern} and media.status=1 and question.status=1)>0";
         }
         $default_ret = $this->alias("level")->where("level.default=1 and {$condition}")->find();
         if (false === $default_ret || empty($default_ret)) {
@@ -45,17 +49,21 @@ class EnglishLevelModel extends CommonModel {
      * @author Adam $date2013.5$
      */
     public function getLevelListToIndex($object_id, $voice = 1, $target = 1, $pattern = 1) {
+        $question_table_name = "english_question";
+        if ($target == 2) {
+            $question_table_name = "english_question_speak";
+        }
         $object_name = D("EnglishObject")->where("id={$object_id}")->getField("name");
         if ($object_name == "综合") {
-            $condition = "question.voice={$voice} and question.target={$target} and question.pattern={$pattern}
-                and question.level=level.id and question.status=1 and media.status=1";
+            $condition = "media.voice={$voice} and media.pattern={$pattern}
+                and media.level=level.id and question.status=1 and media.status=1";
         } else {
-            $condition = "question.voice={$voice} and question.target={$target} and question.pattern={$pattern} 
-                and question.level=level.id and question.status=1 and media.status=1  and question.object=" . intval($object_id);
+            $condition = "media.voice={$voice} and media.pattern={$pattern} 
+                and media.level=level.id and question.status=1 and media.status=1  and media.object=" . intval($object_id);
         }
         $ret = $this->alias("level")
                 ->field("level.*,(SELECT COUNT(question.id) from " .
-                        C("DB_PREFIX") . "english_question question 
+                        C("DB_PREFIX") . $question_table_name . " question 
                         right join " . C("DB_PREFIX") . "english_media media on question.media_id=media.id 
                         where " . $condition . ") as question_num")
                 ->where("level.status=1")
