@@ -498,6 +498,7 @@ input:focus{ outline: 0; }
 	background: #fff;
 	color: #727171;
 	font-size: 12px;
+	display: none;
 }
 .lk-dialog .lkd-hd{
 	padding: 20px 30px 0;
