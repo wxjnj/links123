@@ -226,7 +226,14 @@ $(function() {
     //特别推荐点击
     $("#J_specialReommendDiv img").live('click', function() {
         var media_id = $(this).attr("media_id");
-        requestQuestion("special_recommend", $(this), media_id);
+        if (media_id > 0) {
+            requestQuestion("special_recommend", $(this), media_id);
+        }else{
+            var top = $(this).offset().top - 20;
+            var left = $(this).offset().left + 10;
+            fadeTip("<span  class='messager_span'>Coming soon...</span>", top, left);
+            return false;
+        }
     })
 
     //升级事件
