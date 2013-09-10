@@ -27,7 +27,7 @@ class EnglishMediaModel extends CommonModel {
      * @return boolean|string
      * @author Adam $date2013.09.01$
      */
-    public function setRecommend($id, $target_recommend, $target_subject = 0) {
+    public function setRecommend($id, $target_recommend, $target_subject = 0, $target_object = 0) {
         $ids = explode(",", $id);
         if (empty($ids)) {
             return false;
@@ -48,6 +48,9 @@ class EnglishMediaModel extends CommonModel {
         if (intval($target_subject) > 0) {
             $target_subject_name = D("EnglishMediaSubject")->where(array("id" => $target_subject))->getField("name");
         }
+        if (intval($target_object) > 0) {
+            $target_object_name = D("EnglishObject")->where(array("id" => $target_object))->getField("name");
+        }
         $data['updated'] = $time;
         foreach ($ret as $media) {
             $data['id'] = intval($media['id']);
@@ -57,58 +60,64 @@ class EnglishMediaModel extends CommonModel {
                     continue;
                 }
             }
-            $object_name = $media['object_name'];
-            if ($target_subject_name) {
-                $subject_name = $target_subject_name;
+            if ($target_object_name) {
+                $object_name = $target_object_name;
             } else {
-                $subject_name = $media['subject_name'];
+                $object_name = $media['object_name'];
+            }
+            if ($target_subject > -1) {
+                if ($target_subject_name) {
+                    $subject_name = $target_subject_name;
+                } else {
+                    $subject_name = $media['subject_name'];
+                }
             }
             if ($recommend == 0 || $target_recommend == 1) {
-                $recommend_ids = array();
-                //科目存在
-                if ($object_name) {
-                    $recommend_id_a = $recommendNameList[$object_name];
-                    //推荐类存在科目名
-                    if (intval($recommend_id_a) == 0) {
-                        $recommend_data['sort'] = $recommendSort;
-                        $recommend_data['name'] = $object_name;
-                        $recommend_data['created'] = $time;
-                        $recommend_data['updated'] = $time;
-                        $recommend_id_a = $recommendModel->add($recommend_data);
-                        if (false === $recommend_id_a) {
-                            $this->rollback();
-                            return false;
-                        }
-                        $recommendNameList[$object_name] = $recommend_id_a;
-                    }
-                    $recommendSort++;
-                    array_push($recommend_ids, $recommend_id_a);
-                }
+                $recommend_id = 0;
                 //专题存在
                 if ($subject_name) {
-                    $recommend_id_b = $recommendNameList[$subject_name];
+                    $recommend_id_subject = $recommendNameList[$subject_name];
                     //推荐类存在专题名
-                    if (intval($recommend_id_b) == 0) {
+                    if (intval($recommend_id_subject) == 0) {
                         $recommend_data['sort'] = $recommendSort;
                         $recommend_data['name'] = $subject_name;
                         $recommend_data['created'] = $time;
                         $recommend_data['updated'] = $time;
-                        $recommend_id_b = $recommendModel->add($recommend_data);
-                        if (false === $recommend_id_b) {
+                        $recommend_id_subject = $recommendModel->add($recommend_data);
+                        if (false === $recommend_id_subject) {
                             $this->rollback();
                             return false;
                         }
-                        $recommendNameList[$subject_name] = $recommend_id_b;
+                        $recommendNameList[$subject_name] = $recommend_id_subject;
                     }
+                    $recommend_id = $recommend_id_subject;
                     $recommendSort++;
-                    array_push($recommend_ids, $recommend_id_b);
+                } else {
+                    //科目存在
+                    if ($object_name) {
+                        $recommend_id_object = $recommendNameList[$object_name];
+                        //推荐类存在科目名
+                        if (intval($recommend_id_object) == 0) {
+                            $recommend_data['sort'] = $recommendSort;
+                            $recommend_data['name'] = $object_name;
+                            $recommend_data['created'] = $time;
+                            $recommend_data['updated'] = $time;
+                            $recommend_id_object = $recommendModel->add($recommend_data);
+                            if (false === $recommend_id_object) {
+                                $this->rollback();
+                                return false;
+                            }
+                            $recommendNameList[$object_name] = $recommend_id_object;
+                        }
+                        $recommend_id = $recommend_id_object;
+                        $recommendSort++;
+                    }
                 }
-                if (empty($recommend_ids)) {
+                if ($recommend_id == 0) {
                     $this->rollback();
                     return false;
                 }
-                sort($recommend_ids);
-                $recommend = implode(",", $recommend_ids);
+                $recommend = $recommend_id;
             } else {
                 $recommend = 0;
                 $data['special_recommend'] = 0;
@@ -132,11 +141,11 @@ class EnglishMediaModel extends CommonModel {
      * @author Adam $date2013.09.01$
      */
     public function getSpecialRecommendMediaList($limit = 20) {
-        $ret = $this->alias("media")->field("id,name,media_thumb_img")
+        $ret = $this->alias("media")->field("media.id,media.name,media.media_thumb_img")
                 ->join("RIGHT JOIN " . C("DB_PREFIX") . "english_question question on question.media_id=media.id")
                 ->where("media.special_recommend=1 and media.media_thumb_img!='' AND media.status=1 AND question.status=1")
 //                ->limit($limit)
-                ->order("difficulty desc")
+                ->order("media.difficulty desc")
                 ->select();
         return $ret;
     }
@@ -330,4 +339,5 @@ class EnglishMediaModel extends CommonModel {
     }
 
 }
+
 ?>
