@@ -52,6 +52,56 @@
 </div>
 <!-- 登录$ -->
 
+<!-- $找回密码 -->
+<div class="lk-dialog lk-dialog-fpass">
+	<div class="lkd-hd">
+		<a class="close" href="#">X</a>
+	</div>
+	<div class="lkd-bd">
+		<div class="tabs">
+			<a class="on" href="#">通过电子邮件</a><a href="#">通过绑定手机</a><a href="#">通过其他方式</a>
+		</div>
+		<div class="ct">
+			<form action="">
+			<ul>
+				<li><input class="ipt" type="text" name="" id="" placeholder="请输入登录邮箱" /></li>
+				<li class="vcode">
+					<input class="ipt" type="text" name="" id="" placeholder="验证码" /><img src="http://www.links123.cn/Verify?1378649111088" alt="" />
+				</li>
+			</ul>
+			</form>
+		</div>
+	</div>
+	<div class="lkd-ft">
+		<a class="lkd-btn" href="#">发送验证邮件</a>
+	</div>
+</div>
+
+<div class="lk-dialog lk-dialog-fpass">
+	<div class="lkd-hd">
+		<a class="close" href="#">X</a>
+	</div>
+	<div class="lkd-bd">
+		<div class="tabs">
+			<a href="#">通过电子邮件</a><a class="on" href="#">通过绑定手机</a><a href="#">通过其他方式</a>
+		</div>
+		<div class="ct">
+			<form action="">
+			<ul>
+				<li><input class="ipt" type="text" name="" id="" placeholder="请输入手机号码" /></li>
+				<li class="vcode">
+					<input class="ipt" type="text" name="" id="" placeholder="验证码" /><img src="http://www.links123.cn/Verify?1378649111088" alt="" />
+				</li>
+			</ul>
+			</form>
+		</div>
+	</div>
+	<div class="lkd-ft">
+		<a class="lkd-btn" href="#">发送验证短信</a>
+	</div>
+</div>
+<!-- 找回密码$ -->
+
 <!-- $自留地编辑 -->
 <div class="lk-dialog lk-dialog-zld">
 	<div class="lkd-hd">
@@ -117,17 +167,6 @@
 			</div>
 			<div class="settings-content">
 				<div class="bg-ttl">
-					<div class="pg">
-						<ul>
-							<li class="prev"><a href="#">上一页</a></li>
-							<li class="on"><a href="#">1</a></li>
-							<li><a href="#">2</a></li>
-							<li><a href="#">3</a></li>
-							<li><a href="#">4</a></li>
-							<li><a href="#">5</a></li>
-							<li class="next"><a href="#">下一页</a></li>
-						</ul>
-					</div>
 					<div class="bg-style bg-on">
 						炫彩光晕
 						<ul>
@@ -137,16 +176,31 @@
 					</div><a class="bg-custom" href="#">自定义</a>
 				</div>
 				<div class="bg-list">
-					<ul>
-						<li class="on"><img src="skins/dark/screenshot.jpg" alt="" /></li>
-						<li><img src="skins/dark/screenshot.jpg" alt="" /></li>
-						<li><img src="skins/dark/screenshot.jpg" alt="" /></li>
-						<li><img src="skins/dark/screenshot.jpg" alt="" /></li>
-						<li><img src="skins/dark/screenshot.jpg" alt="" /></li>
-						<li><img src="skins/dark/screenshot.jpg" alt="" /></li>
-						<li><img src="skins/dark/screenshot.jpg" alt="" /></li>
-						<li><img src="skins/dark/screenshot.jpg" alt="" /></li>
-					</ul>
+					<div class="upload-panel">
+						<div class="upload-demo">
+							<div class="upload-demo-box">
+								<img src="imgs/imgdemo.jpg" alt="" style="width:190px;" />
+							</div>
+						</div>
+						<div class="upload-ct">
+							<div class="row1">
+								<input class="txtimg" readonly="readonly" type="text" name="" id="upfile" /><a onclick="path.click();return false;" class="btnimg" href="#">选择图片</a>
+								<input type="file" id="path" style="display:none" onchange="upfile.value=this.value" />
+							</div>
+							<div class="row2">
+								<div class="bg-style">
+									<em>居中对齐</em>
+									<ul>
+										<li><a href="#">居中对齐</a></li>
+									</ul>
+								</div>
+								<label for=""><input type="checkbox" name="" id=""> 平铺</label>
+								<label for=""><input type="checkbox" name="" id=""> 锁定</label>
+								背景配色 <a href="javascript:;" class="color"></a>
+							</div>
+						</div>
+					</div>
+					<div class="upload-ctls"><a href="#">点击上传</a></div>
 				</div>
 			</div>
 		</div>

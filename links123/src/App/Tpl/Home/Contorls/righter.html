@@ -7,13 +7,13 @@
 
 		<div <eq name="lan" value="2">class="sider_cont none"<else/>class="sider_cont"</eq> id="sider_cont01">
 			<volist name="leftMenuCn" id="vo">
-				<a id="sider_{$vo.id}" href="__URL__/index/lan/1/cid/{$vo.id}" title="{$vo.cat_name}" class="tip <if condition="($lan eq 1) and ($cid eq $vo['id'])">on</if>" >{$vo.cat_name}</a>
+				<a id="sider_{$vo.id}" href="__URL__/nav/lan/1/cid/{$vo.id}" title="{$vo.cat_name}" class="tip <if condition="($lan eq 1) and ($cid eq $vo['id'])">on</if>" >{$vo.cat_name}</a>
 			</volist>
 		</div>
 
 		<div <eq name="lan" value="1">class="sider_cont none"<else/>class="sider_cont"</eq> id="sider_cont02">
 			<volist name="leftMenuEn" id="vo">
-				<a id="sider_{$vo.id}" href="__URL__/index/lan/2/cid/{$vo.id}" title="{$vo.cat_name}" class="tip <if condition="($lan eq 2) and ($cid eq $vo['id'])">on</if>" >{$vo.cat_name}</a>
+				<a id="sider_{$vo.id}" href="__URL__/nav/lan/2/cid/{$vo.id}" title="{$vo.cat_name}" class="tip <if condition="($lan eq 2) and ($cid eq $vo['id'])">on</if>" >{$vo.cat_name}</a>
 			</volist>
 		</div>
 

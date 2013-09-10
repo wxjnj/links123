@@ -46,6 +46,7 @@ class SuggestionAction extends CommonAction
 			$this->assign("page", $page);
 		}
 		
+		$this->assign("title", '留言板');		
 		$this->assign("mbrNow", $mbrNow);
 		$this->assign('mysugs', $mysugs);
 		$this->assign("funcNow", "mySuggestion");
