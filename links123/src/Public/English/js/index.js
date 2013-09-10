@@ -43,6 +43,11 @@ $(function() {
             fadeTip("<span  class='messager_span'>Coming soon...</span>", top, left);
             return false;
         }
+        if ($(this).attr("value") != 1) {
+            var top = $(this).offset().top - 15;
+            var left = $(this).offset().left + 10;
+            fadeTip("<span  class='messager_span'>施工中...</span>", top, left);
+        }
         requestQuestion("switch_view_type", $(this));
     })
     if ($("#J_currentRice").text() == 1000) {
