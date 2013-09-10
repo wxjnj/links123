@@ -1,6 +1,6 @@
 body{
 	font-family: '\5FAE\8F6F\96C5\9ED1','Hiragino Sans GB','Hiragino Sans GB W3';
-	font-size: 14px;
+	font-size: 12px;
 }
 input:focus{ outline: 0; }
 #header{
@@ -11,7 +11,7 @@ input:focus{ outline: 0; }
 }
 #footer{
 	background: #2e2a28;
-	color: #4f4d4c;
+	color: #514f4e;
 	height: 46px;
 	line-height: 46px;
 	bottom: 0;
@@ -20,7 +20,7 @@ input:focus{ outline: 0; }
 }
 #footer a,
 #footer a:hover{
-	color: #4f4d4c;
+	color: #514f4e;
 }
 #container{
 	position: relative;
@@ -111,13 +111,14 @@ input:focus{ outline: 0; }
 /*nav*/
 .nav{
 	float: left;
+	font-size: 14px;
 }
 .nav li{
 	float: left;
 }
 .nav li a{
 	display: block;
-	color: #727171;
+	color: #888889;
 	height: 50px;
 	line-height: 50px;
 	padding: 0 20px;
@@ -126,7 +127,7 @@ input:focus{ outline: 0; }
 	background: #362f2b;
 }
 .nav li.on a{
-	background: #238b3a;
+	background: #362F2B;
 	color: #fff;
 }
 /*uc*/
@@ -148,16 +149,16 @@ input:focus{ outline: 0; }
 	color: #fff;
 }
 .join:hover{
-	background: #dcdcdd;
-	color: #666;
+	background: #60ad6b;
+	color: #fff;
 }
 .login{
 	background: #fff;
 	color: #666;
 }
 .login:hover{
-	background: #60ad6b;
-	color: #fff;
+	background: #dcdcdd;
+	color: #666;
 }
 /*logo*/
 .logo{
@@ -218,6 +219,9 @@ input:focus{ outline: 0; }
 	position: absolute;
 	top: 3px;
 	left: 50px;
+}
+.thl a:hover{
+	color: #fff;
 }
 /*zld*/
 .zld{}
@@ -295,8 +299,7 @@ input:focus{ outline: 0; }
 }
 .box{} /* TODO skins */
 .box h2{
-	font-weight: normal;
-	font-size: 16px;
+	font-size: 14px;
 }
 .box .box-hd{
 	padding-top: 10px;
@@ -393,7 +396,7 @@ input:focus{ outline: 0; }
 .extra{
 	*zoom: 1;
 	margin-top: 45px;
-	padding-bottom: 50px;
+	padding-bottom: 110px;
 }
 .extra:after{
 	content: '\0020';
@@ -469,28 +472,40 @@ input:focus{ outline: 0; }
 .pics img{ vertical-align: middle; }
 .pics .pg{
 	height: 5px;
-	padding-top: 10px;
+	padding-top: 15px;
 	overflow: hidden;
 }
 .pics .pg ul{
 	display: inline-block;
-	*display:inline;*zoom:1;
+	*display: inline;
+	*zoom: 1;
 	vertical-align: top;
 }
 .pics .pg li{
 	background: #e1e0e2;
 	cursor: pointer;
 	display: inline-block;
-	*display:inline;*zoom:1;
+	*display: inline;
+	*zoom: 1;
 	float: left;
 	height: 5px;
-	margin: 0 3px;
+	margin: 0 5px;
 	overflow: hidden;
 	vertical-align: middle;
 	width: 5px;
 	-moz-border-radius: 3px;
 	-webkit-border-radius: 3px;
 	border-radius: 3px;
+	filter:alpha(opacity=30);
+	-moz-opacity: 0.3;
+	-khtml-opacity: 0.3;
+	opacity: 0.3;
+}
+.pics .pg li.on{
+	filter:alpha(opacity=100);
+	-moz-opacity: 1;
+	-khtml-opacity: 1;
+	opacity: 1;
 }
 
 /*lk-dialog*/
@@ -538,7 +553,8 @@ input:focus{ outline: 0; }
 }
 .lkd-reg,
 .lkd-login,
-.lkd-add{
+.lkd-add,
+.lkd-btn{
 	display: block;
 	float: left;
 	height: 42px;
@@ -546,22 +562,24 @@ input:focus{ outline: 0; }
 	text-align: center;
 }
 .lkd-reg,
-.lkd-reg:hover,
 .lkd-add,
-.lkd-add:hover{
+.lkd-btn{
 	background: #238b3a;
 	color: #fff;
 	text-decoration: none;
 	margin-right: 10px;
-	width: 120px;
+	width: 156px;
 }
-.lkd-login,
-.lkd-login:hover{
+.lkd-login{
 	background: #fff;
 	color: #666;
 	text-decoration: none;
-	width: 192px;
+	width: 156px;
 }
+.lkd-reg:hover,
+.lkd-add:hover,
+.lkd-btn:hover{ background: #60ad6b; }
+.lkd-login:hover{ background: #dcdcdd; }
 .lk-dialog ul li{
 	padding-top: 8px;
 }
@@ -571,8 +589,12 @@ input:focus{ outline: 0; }
 .lk-dialog-zld{
 	width: 384px;
 }
+.lk-dialog-fpass{
+	width: 390px;
+}
 .lk-dialog-login .lkd-reg,
-.lk-dialog-zld .lkd-add{
+.lk-dialog-zld .lkd-add,
+.lk-dialog-fpass .lkd-btn{
 	width: 322px;
 }
 .lk-dialog-login .rpass{}
@@ -768,17 +790,21 @@ input:focus{ outline: 0; }
 	border-radius: 8px;
 	float: left;
 	margin-right: 5px;
+	vertical-align: middle;
 }
 .bg-on{
 	background: #238b3a;
 	color: #fff;
 }
-.bg-style{ width: 110px; }
+.bg-style{
+	background: url(../imgs/down.png) 90px 10px no-repeat;
+	width: 90px;
+}
 .bg-custom{ width: 50px; }
 .bg-style:hover,
 .bg-custom:hover{ text-decoration: none; }
 .bg-list{
-	padding-bottom: 15px;
+	padding-bottom: 20px;
 }
 .bg-list ul{
 	*zoom: 1;
@@ -806,6 +832,42 @@ input:focus{ outline: 0; }
 .bg-list li.on img{
 	border: 1px solid #238b3a;
 }
+/*lk-dialog-fpass*/
+.lk-dialog-fpass .lkd-bd{
+	padding: 0;
+	margin-top: -30px;
+}
+.lk-dialog-fpass .lkd-bd ul{
+	padding: 0 25px 15px;
+}
+.lk-dialog-fpass .ipt{
+	width: 322px;
+}
+.lk-dialog-fpass .tabs{
+	border-bottom: 1px solid #eceded;
+	height: 27px;
+	padding: 0 25px;
+}
+.lk-dialog-fpass .tabs a{
+	border: 1px solid #eceded;
+	border-width: 1px 1px 0 1px;
+	color: #727171;
+	display: block;
+	float: left;
+	height: 26px;
+	line-height: 26px;
+	margin-right: 5px;
+	text-align: center;
+	width: 106px;
+	text-decoration: none;
+}
+.lk-dialog-fpass .tabs a.on{
+	background: #238b3a;
+	border: 1px solid #59a86b;
+	border-width: 1px 1px 0 1px;
+	color: #fff;
+	text-decoration: none;
+}
 /*process*/
 .process,
 .process .process-inner{
@@ -823,6 +885,93 @@ input:focus{ outline: 0; }
 	background-position: right -10px;
 	cursor: pointer;
 	width: 50%;
+}
+/*upload-panel*/
+.upload-panel{
+	height: 75px;
+	padding: 10px 30px 0 25px;
+}
+.upload-panel .upload-demo{
+	border: 1px solid #e5e6e6;
+	float: left;
+	height: 73px;
+	overflow: hidden;
+	width: 109px;
+}
+.upload-panel .upload-demo-box{
+	display: table-cell;
+	height: 73px;
+	text-align: center;
+	vertical-align: middle;
+	width: 109px;
+	*display: block;
+	*font-family: Arial;
+	*font-size: 63px;
+}
+.upload-panel .upload-demo img{
+	vertical-align: middle;
+}
+.upload-panel .upload-ct{
+	padding-left: 120px;
+}
+.upload-panel .upload-ct label input{
+	vertical-align: text-bottom;
+	margin-bottom: 2px;
+	*margin-bottom: -2px;
+}
+.upload-panel .txtimg,
+.upload-panel .btnimg{
+	border: 1px solid #e8e8e8;
+	display: inline-block;
+	color: #b9baba;
+	height: 18px;
+	line-height: 18px;
+	padding: 10px 5px;
+	width: 195px;
+	vertical-align: middle;
+	margin-bottom: 8px;
+}
+.upload-panel .btnimg{
+	background: #fff;
+	color: #858484;
+	text-align: center;
+	margin-left: 7px;
+	width: 100px;
+}
+.upload-panel .color{
+	border: 1px solid #e2e2e3;
+	display: inline-block;
+	height: 16px;
+	margin-left: 10px;
+	vertical-align: middle;
+	width: 34px;
+}
+.upload-panel .row2{
+	line-height: 28px;
+}
+.upload-panel .row2 label{
+	padding-right: 5px;
+}
+.upload-panel .bg-style{
+	float: right;
+	margin-right: 0;
+}
+.upload-ctls{
+	padding: 12px 0 0 25px;
+	height: 42px;
+}
+.upload-ctls a{
+	background: #238b3a;
+	color: #fff;
+	display: block;
+	height: 42px;
+	line-height: 42px;
+	text-align: center;
+	text-decoration: none;
+	width: 447px;
+}
+.upload-ctls a:hover{
+	background: #60ad6b;
 }
 /*respond*/
 /*@media screen and (min-width: 1200px){

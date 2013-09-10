@@ -3,10 +3,7 @@
 *************************************************************/
 body{ color: #e1e0e2; }
 a{ color: #e1e0e2; }
-a:hover{
-	color: #d00316;
-	text-decoration: none;
-}
+a:hover{ text-decoration: none; }
 #container{
 	background: #3f3a39 url(bg.jpg) top center no-repeat;
 	background-size: cover;
