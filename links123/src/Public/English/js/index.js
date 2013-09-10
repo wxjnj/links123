@@ -228,7 +228,7 @@ $(function() {
         var media_id = $(this).attr("media_id");
         if (media_id > 0) {
             requestQuestion("special_recommend", $(this), media_id);
-        }else{
+        } else {
             var top = $(this).offset().top - 25;
             var left = $(this).offset().left + 10;
             fadeTip("<span  class='messager_span'>Coming soon...</span>", top, left);
@@ -593,20 +593,27 @@ function requestQuestion(type, clickObject, media_id) {
                     return false;
                 }
 
-                if (data.question && data.question.tested) {
-                    var top = $(".videoplay").offset().top - 30;
-                    var left = $(".videoplay").offset().left + $(".videoplay").width() / 2 - 80;
-                    $.messager.show({
-                        msg: "<span class='messager_span'>暂无新题，升级吧!</span>",
-                        showType: 'fade',
-                        width: 150,
-                        height: 45,
-                        timeout: 2000,
-                        style: {
-                            left: left,
-                            top: top
-                        }
-                    });
+                if (data.question) {
+                    if (data.question.tested) {
+                        var content = "做过了？换个类别吧！";
+                    } else if (data.question.viewed) {
+                        var content = "看过了？换个题目吧！";
+                    }
+                    if (content) {
+                        var top = $(".videoplay").offset().top - 30;
+                        var left = $(".videoplay").offset().left + $(".videoplay").width() / 2 - 90;
+                        $.messager.show({
+                            msg: "<span class='messager_span'>" + content + "</span>",
+                            showType: 'fade',
+                            width: 185,
+                            height: 45,
+                            timeout: 2000,
+                            style: {
+                                left: left,
+                                top: top
+                            }
+                        });
+                    }
                 }
                 if (type == "category") {
                     //

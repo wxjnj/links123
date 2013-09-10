@@ -168,8 +168,11 @@ class EnglishQuestionModel extends CommonModel {
                             ->select();
                     if (!empty($ret)) {
                         $ret = $ret[0];
-                        if (!empty($user_view_question_ids) && empty($question_ids)) {
-                            $ret['tested'] = true;
+                        if (!empty($user_view_question_ids)) {
+                            //$ret['viewed'] = true;
+                            if (empty($question_ids)) {
+                                $ret['tested'] = true;
+                            }
                         }
                     }
                 }
@@ -372,4 +375,5 @@ class EnglishQuestionModel extends CommonModel {
     }
 
 }
+
 ?>

@@ -121,6 +121,19 @@ class EnglishViewRecordModel extends CommonModel {
         $map = array();
         $map['user_id'] = $user_id;
         $map['view_type'] = $view_type;
+        if ($view_type == 3) {
+            $map['recommend'] = intval($recommend);
+            $map['difficulty'] = intval($difficulty);
+        } else if ($view_type == 2) {
+            $map['subject'] = intval($subject);
+            $map['difficulty'] = intval($difficulty);
+        } else if ($view_type == 1) {
+            $map['object'] = intval($object);
+            $map['level'] = intval($level);
+        }
+        $map['voice'] = intval($voice);
+        $map['target'] = intval($target);
+        $map['pattern'] = intval($pattern);
         if ($type == "next") {
             if ($view_type == 3) {
                 $map['recommend'] = intval($recommend);
