@@ -258,7 +258,7 @@ ul.kecheng.J_recommend li {
     width: 518px;
     height: 325px;
 }
-.media_iframe{width: 518px; height: 329px;}
+.media_iframe{width: 518px; height: 325px;}
 .rightbutton{ position:absolute;right:51px;top:40px;z-index:0;}
 .rightbutton ul{ list-style:none;}
 .rightbutton ul li{ cursor:pointer; height:40px; margin-bottom:15px; background:url(../images/rightbuttonbg_small.png) no-repeat;width:66px;color:#ffe3d4;font-weight:bold;font-size:1em;line-height:40px;padding-left:8px;}

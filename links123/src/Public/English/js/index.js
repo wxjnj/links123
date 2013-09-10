@@ -229,7 +229,7 @@ $(function() {
         if (media_id > 0) {
             requestQuestion("special_recommend", $(this), media_id);
         }else{
-            var top = $(this).offset().top - 20;
+            var top = $(this).offset().top - 25;
             var left = $(this).offset().left + 10;
             fadeTip("<span  class='messager_span'>Coming soon...</span>", top, left);
             return false;
