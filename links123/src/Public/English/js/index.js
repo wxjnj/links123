@@ -1,7 +1,7 @@
 var ajaxRequest;
 var playState = "unable";//播放器状态，默认不可用
 var next_question_lvlup = false;
-var time;
+var timer;
 $(function() {
     $("#J_preSentenceButton img").click(function() {
         $('#Links123Player')[0].prev();
@@ -36,6 +36,11 @@ $(function() {
                     top: top
                 }
             });
+            return false;
+        } else if ($(this).hasClass("grey")) {
+            var top = $(this).offset().top - 15;
+            var left = $(this).offset().left + 10;
+            fadeTip("<span  class='messager_span'>Coming soon...</span>", top, left);
             return false;
         }
         requestQuestion("switch_view_type", $(this));
@@ -299,7 +304,7 @@ $(function() {
 
     //
     //英音美音点击事件
-    $(".menuleft ul li.class1").click(function() {
+    $(".menuleft .voice").click(function() {
         if ($(this).hasClass("grey")) {
             var top = $(this).offset().top - 15;
             var left = $(this).offset().left;
@@ -326,12 +331,11 @@ $(function() {
     });
     //
     //说力听力点击事件
-    $(".menuleft ul li.class2").click(function() {
+    $(".menuleft .target").click(function() {
         if ($(this).hasClass("grey")) {
             var top = $(this).offset().top - 15;
             var left = $(this).offset().left;
             fadeTip("<span  class='messager_span'>Coming soon...</span>", top, left);
-            return false;
             return false;
         } else if ($(this).hasClass("current")) {
             var top = $(".menuleft").offset().top - 50;
@@ -349,12 +353,17 @@ $(function() {
             });
             return false;
         }
+        if ($(this).attr("value") == 2) {
+            var top = $(this).offset().top - 15;
+            var left = $(this).offset().left;
+            fadeTip("<span  class='messager_span'>施工中...</span>", top, left);
+        }
         //$(this).addClass("current").siblings("li.class2").removeClass("current");
         requestQuestion("category", $(this));
     });
     //
     //视频音频点击事件
-    $(".menuleft ul li.class3").click(function() {
+    $(".menuleft .pattern").click(function() {
         if ($(this).hasClass("grey")) {
             var top = $(this).offset().top - 15;
             var left = $(this).offset().left;
@@ -588,7 +597,19 @@ function requestQuestion(type, clickObject, media_id) {
                     });
                 }
                 if (type == "category") {
-                    rewriteObjectAndLevelList(data.object_list, 1, data.level_list, 1);
+                    //
+                    //科目为空
+                    if (data['object_info'] == null) {
+                        data['object_info'] = new Array();
+                        data['object_info']['id'] = 1;
+                    }
+                    //
+                    //等级为空
+                    if (data['level_info'] == null) {
+                        data['level_info'] = new Array();
+                        data['level_info']['id'] = 1;
+                    }
+                    rewriteObjectAndLevelList(data.object_list, data['object_info']['id'], data.level_list, data['level_info']['id']);
                     rewriteReommendAndDifficultyList(data.recommend_list, data.question.recommend, data.recommend_difficulty_list, data.question.difficulty);
                     rewriteSubjectAndDifficultyList(data.subject_list, data.question.subject, data.subject_difficulty_list, data.question.difficulty);
                 }
@@ -648,17 +669,17 @@ function requestQuestion(type, clickObject, media_id) {
                     $(".J_listenButtons").hide();
                     $(".J_speakButtons").show();
                     $(".playbutton").show();
-                    $(".voice[value='2']").addClass("grey");
+                    $(".voice[value='2']").addClass("grey").children("span").addClass("grey");
                 } else {
                     $(".playbutton").hide();
                     $(".J_speakButtons").hide();
                     $(".J_listenButtons").show();
-                    $(".voice[value='2']").removeClass("grey");
+                    $(".voice[value='2']").removeClass("grey").children("span").removeClass("grey");
                 }
                 if (question.voice == 2) {
-                    $(".target[value='2']").addClass("grey");
+                    $(".target[value='2']").addClass("grey").children("span").addClass("grey");
                 } else {
-                    $(".target[value='2']").removeClass("grey");
+                    $(".target[value='2']").removeClass("grey").children("span").removeClass("grey");
                 }
                 //
                 if (data['user_count_info'] == null || data['user_count_info']['right_num'] == null) {
@@ -840,7 +861,16 @@ function requestQuestion(type, clickObject, media_id) {
                     $(".J_tabs a[value='3']").addClass("current").parent("li").siblings("li").children("a").removeClass("current");
                     $(".panes > div:eq(2)").show().siblings().hide();
                 }
-
+                if (data.recommedsQuestionNum > 0) {
+                    $(".J_tabs a[value='3']").removeClass("grey");
+                } else {
+                    $(".J_tabs a[value='3']").addClass("grey");
+                }
+                if (data.subjectsQuestionNum > 0) {
+                    $(".J_tabs a[value='2']").removeClass("grey");
+                } else {
+                    $(".J_tabs a[value='2']").addClass("grey");
+                }
                 ajaxRequest = undefined;
                 return true;
             } else {
@@ -1354,15 +1384,29 @@ function checkObjectLoaded() {
  * @author Adam $date2013.08.29$
  */
 function fadeTip(content, top, left, time, index) {
-    clearTimeout(time);
+    clearTimeout(timer);
     var time = arguments[4] ? arguments[4] : 2000;
     var index = arguments[5] ? arguments[5] : 99;
     $('.J_fadeDiv').remove();
+
     var div = $("<div class='J_fadeDiv' style='color:#ffffff;display:none;position:absolute;z-index:" + index + ";top:" + top + "px;left:" + left + "px;'></div>");
+    $("body").append(div);
     div.html(content);
+    div.fadeIn(1000);
+    timer = setTimeout("$('.J_fadeDiv').fadeOut(1000,function(){$('.J_fadeDiv').remove();})", time);
+}
+
+function showMsg(content, top, left, time, index) {
+    var time = arguments[4] ? arguments[4] : 2000;
+    var index = arguments[5] ? arguments[5] : 99;
+    $('.J_fadeDiv').remove();
+
+    //var div = $("<div class='J_fadeDiv' style='color:#ffffff;display:none;position:absolute;z-index:" + index + ";top:" + top + "px;left:" + left + "px;'></div>");
+    var div = $("<div class=\"autobox autobox-hits J_fadeDiv\" style='display:none;position:absolute;z-index:" + index + ";top:" + top + "px;left:" + left +
+            "px;'><div class=\"autobox-layer\"><span class=\"autobox-arr\"></span><b>" + content + "</b><span class=\"autobox-end\"></span></div></div>");
     $("body").append(div);
     div.fadeIn(1000);
-    time = setTimeout("$('.J_fadeDiv').fadeOut(1000,function(){$('.J_fadeDiv').remove();})", time);
+    setTimeout("$('.J_fadeDiv').fadeOut(1000,function(){$('.J_fadeDiv').remove();})", time);
 }
 function bindSpeakListenSwitchEvent() {
     $(".J_speakButtons").click(function() {

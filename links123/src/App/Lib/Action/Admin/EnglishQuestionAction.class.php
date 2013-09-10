@@ -59,7 +59,6 @@ class EnglishQuestionAction extends CommonAction {
         if (!empty($key)) {
             $map['_complex'] = $key;
         }
-        dump($map);
         $this->assign('name', $name);
         $param['name'] = $name;
     }
@@ -80,7 +79,7 @@ class EnglishQuestionAction extends CommonAction {
         $object_list = D("EnglishObject")->getList("status=1");
         $this->assign("object_list", $object_list);
         //科目列表
-        $level_list = D("EnglishLevel")->getList("status=1");
+        $level_list = D("EnglishLevel")->getList("status=1","`sort` ASC");
         $num = intval(D("Variable")->getVariable("english_click_num"));
         $this->assign("english_click_num", $num);
         $this->assign("level_list", $level_list);

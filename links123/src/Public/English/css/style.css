@@ -677,3 +677,52 @@ a.disabled {
 .rl-speak .coming-tip{
 font-size: 13px;margin-left: 45px;margin-top: 10px;
 }
+
+/*提示框*/
+.autobox-layer,
+.autobox-hits .autobox-arr,
+.autobox .autobox-end{
+    background-image: url(../images/alertbg.png);
+    background-repeat: no-repeat;
+    color: #fff;
+    font-family: \5FAE\8F6F\96C5\9ED1;
+    font-size: 14px;
+    font-weight: bold;
+    height: 80px;
+    line-height: 80px;
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+}
+.autobox{
+    _height: 80px;
+    left: 0;
+    overflow: hidden;
+    position: fixed;
+    _position: absolute;
+    text-align: center;
+    top: 46%;
+    width: 100%;
+    z-index: 65533;
+}
+.autobox-layer{
+    background-position: 0 -85px;
+    background-repeat: repeat-x;
+    margin: 0 auto;
+    padding: 0 18px 0 0;
+    position: relative;
+}
+.autobox .autobox-end{
+    background-position: 0 -4px;
+    position: absolute;
+    right: -17px;
+    top: 0;
+    width: 17px;
+}
+.autobox-hits .autobox-arr{
+    background-position: -22px -4px;
+    left: -66px;
+    position: absolute;
+    top: 0;
+    width: 66px;
+}

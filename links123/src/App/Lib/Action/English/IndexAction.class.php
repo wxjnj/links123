@@ -14,6 +14,8 @@ class IndexAction extends EnglishAction {
         $objectModel = D("EnglishObject");
         $levelModel = D("EnglishLevel");
         $questionModel = D("EnglishQuestion");
+        $englishMediaModel = D("EnglishMedia");
+        $this->initUserHistorySelect();
         //记录用户上次选择的数组
         $user_last_select = cookie('english_user_last_select');
         if (!is_array($user_last_select)) {
@@ -25,6 +27,10 @@ class IndexAction extends EnglishAction {
         $voice = in_array(intval($user_last_select['voice']), array(1, 2)) ? intval($user_last_select['voice']) : 1;
         $target = in_array(intval($user_last_select['target']), array(1, 2)) ? intval($user_last_select['target']) : 1;
         $pattern = in_array(intval($user_last_select['pattern']), array(1, 2)) ? intval($user_last_select['pattern']) : 1;
+        $recommedsQuestionNum = $englishMediaModel->getRecommendQuestionNum($target, $voice, $pattern);
+        $subjectsQuestionNum = $englishMediaModel->getSubjectQuestionNum($target, $voice, $pattern);
+        $this->assign("recommedsQuestionNum", $recommedsQuestionNum);
+        $this->assign("subjectsQuestionNum", $subjectsQuestionNum);
         if ($viewType == 4) {
             $media_id = intval($user_last_select['media_id']);
             //推荐列表
@@ -43,6 +49,11 @@ class IndexAction extends EnglishAction {
             //
             if ($recommend == 0) {
                 $recommend = $englishMediaRecommendModel->getDefaultRecommendId($voice, $target, $pattern);
+            } else {
+                $num = $questionModel->getQuestionNum(0, 0, 0, $recommend, 0, $voice, $target, $pattern);
+                if ($num == 0) {
+                    $recommend = $englishMediaRecommendModel->getDefaultRecommendId($voice, $target, $pattern);
+                }
             }
             if (in_array(intval($user_last_select['recommendDifficulty']), array(1, 2, 3))) {
                 $difficulty = intval($user_last_select['recommendDifficulty']);
@@ -152,9 +163,9 @@ class IndexAction extends EnglishAction {
         $englishUserCountModel = D("EnglishUserCount");
         $user_count_info = array();
         if ($viewType == 3) {
-            $user_count_info = $englishUserCountModel->getEnglishUserCountInfo($viewType, 0, 0, 0, $recommend, $recommendDifficulty, $voice, $targe);
+            $user_count_info = $englishUserCountModel->getEnglishUserCountInfo($viewType, 0, 0, 0, $recommend, $difficulty, $voice, $targe);
         } else if ($viewType == 2) {
-            $user_count_info = $englishUserCountModel->getEnglishUserCountInfo($viewType, 0, 0, $subject, 0, $subjectDifficulty, $voice, $target);
+            $user_count_info = $englishUserCountModel->getEnglishUserCountInfo($viewType, 0, 0, $subject, 0, $difficulty, $voice, $target);
         } else if ($viewType == 1) {
             $user_count_info = $englishUserCountModel->getEnglishUserCountInfo($viewType, $object, $level, 0, 0, 0, $voice, $target);
         } else if ($viewType == 4) {
@@ -221,14 +232,19 @@ class IndexAction extends EnglishAction {
             $user_last_select['media_id'] = intval($media_id);
         } else if ($viewType == 3) {
             //推荐
-            $user_last_select['recommend'] = intval($recommend);
-            $user_last_select['recommendDifficulty'] = intval($recommendDifficulty);
+            if (false != strpos($question['recommend'], $recommend)) {
+                $user_last_select['recommend'] = intval($recommend);
+            } else {
+                $recommend = current(explode(",", $question['recommend']));
+            }
+            $user_last_select['recommend'] = $recommend;
+            $user_last_select['recommendDifficulty'] = intval($question['difficulty']);
         } else if ($viewType == 2) {
-            $user_last_select['sbject'] = intval($subject);
-            $user_last_select['subjectDifficulty'] = intval($subjectDifficulty);
+            $user_last_select['sbject'] = intval($question['subject']);
+            $user_last_select['subjectDifficulty'] = intval($question['difficulty']);
         } else if ($viewType == 1) {
             $user_last_select['object'] = intval($object);
-            $user_last_select['level'] = intval($level);
+            $user_last_select['level'] = intval($question['level']);
             $user_last_select['object_info'] = serialize($objectInfo);
             $user_last_select['level_info'] = serialize($levelInfo);
         }
@@ -296,7 +312,13 @@ class IndexAction extends EnglishAction {
                 if ($recommend == 0) {
                     if (intval($user_last_select['recommend']) > 0) {
                         $recommend = intval($user_last_select['recommend']);
-                    } else {
+                    }
+                }
+                if ($recommend == 0) {
+                    $recommend = $englishMediaRecommendModel->getDefaultRecommendId($voice, $target, $pattern);
+                } else {
+                    $questionNum = $questionModel->getQuestionNum(0, 0, 0, $recommend, 0, $voice, $target, $pattern);
+                    if ($questionNum == 0) {
                         $recommend = $englishMediaRecommendModel->getDefaultRecommendId($voice, $target, $pattern);
                     }
                 }
@@ -404,6 +426,7 @@ class IndexAction extends EnglishAction {
                     $level = $user_last_question['level'];
                 }
             }
+//            dump($recommend);exit;
             if ($viewType == 3) {
                 if ($type == "quick_select_prev" || $type == "switch_view_type") {
                     $englishMediaRecommendModel = $englishMediaRecommendModel ? $englishMediaRecommendModel : D("EnglishMediaRecommend");
@@ -439,6 +462,9 @@ class IndexAction extends EnglishAction {
                 $ret['recommend_list'] = $englishMediaRecommendModel->getRecommendListToIndex($ret['question']['voice'], $ret['question']['target'], $ret['question']['pattern']);
                 $ret['recommend_difficulty_list'] = $questionModel->getDifficultyList(3, 0, 0, $ret['question']['voice'], $ret['question']['target'], $ret['question']['pattern'], 0);
             }
+            $englishMediaModel = D("EnglishMedia");
+            $ret['recommedsQuestionNum'] = $englishMediaModel->getRecommendQuestionNum($target, $voice, $pattern);
+            $ret['subjectsQuestionNum'] = $englishMediaModel->getSubjectQuestionNum($target, $voice, $pattern);
             //
             //记录浏览题目
             $englishViewRecordModel = D("EnglishViewRecord");
@@ -478,7 +504,7 @@ class IndexAction extends EnglishAction {
                 $user_last_select['recommendDifficulty'] = intval($ret['question']['difficulty']);
             } else if ($viewType == 2) {
                 $user_last_select['subject'] = intval($subject);
-                $user_last_select['subjectDifficulty'] = intval($difficulty);
+                $user_last_select['subjectDifficulty'] = intval($ret['question']['difficulty']);
             } else if ($viewType == 1) {
                 $user_last_select['object'] = $object;
                 $user_last_select['level'] = $level;
@@ -508,7 +534,7 @@ class IndexAction extends EnglishAction {
                         'play_type' => $play_type
                     );
 
-                    D("EnglishMedia")->save($saveData);
+                    $englishMediaModel->save($saveData);
 //                    $questionModel->where('id=' . $ret['question']['id'])->save($saveData);
                 }
 
@@ -939,6 +965,40 @@ class IndexAction extends EnglishAction {
             $ret['clips'] = $ret['sentences'];
         }
         die(json_encode($ret));
+    }
+
+    /**
+     * 初始化用户的历史选择，防止用户上次选择的不存在题目
+     * @autor Adam $date2013.09.10$
+     */
+    protected function initUserHistorySelect() {
+        $user_last_select = cookie('english_user_last_select');
+        $num = 0;
+        $englishMediaModel = D("EnglishMedia");
+        $viewType = in_array(intval($user_last_select['viewType']), array(1, 2, 3, 4)) ? intval($user_last_select['viewType']) : 1; //查看方式，1科目等级，2专题难度，3推荐
+        if ($viewType == 4) {
+            $map = array();
+            $map['media.status'] = 1;
+            $map['question.status'] = 1;
+            $map['media_id'] = intval($user_last_select['media_id']);
+            $num = $englishMediaModel->alias("media")->join(C("DB_PREFIX") . "english_question question on question.media_id=media.id")->where($map)->count("questiong.id");
+        } else {
+            $voice = in_array(intval($user_last_select['voice']), array(1, 2)) ? intval($user_last_select['voice']) : 1;
+            $target = in_array(intval($user_last_select['target']), array(1, 2)) ? intval($user_last_select['target']) : 1;
+            $pattern = in_array(intval($user_last_select['pattern']), array(1, 2)) ? intval($user_last_select['pattern']) : 1;
+            if ($viewType == 3) {
+                $num = $englishMediaModel->getRecommendQuestionNum($target, $voice, $pattern);
+            } else if ($viewType == 2) {
+                $num = $englishMediaModel->getSubjectQuestionNum($target, $voice, $pattern);
+            }
+        }
+        if (intval($num) == 0) {
+            $user_last_select['viewType'] = 1;
+            if ($viewType == 4) {
+                $user_last_select['media_id'] = 0;
+            }
+        }
+        cookie('english_user_last_select', $user_last_select, 60 * 60 * 24 * 30);
     }
 
 }

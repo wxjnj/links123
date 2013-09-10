@@ -38,7 +38,7 @@ class EnglishViewRecordModel extends CommonModel {
         $map['target'] = intval($target);
         $map['pattern'] = intval($pattern);
         $map['question_id'] = $question_id;
-        $map['view_type'] = $view_type > 0 ? $view_type : 1;
+        $map['view_type'] = in_array($view_type, array(1, 2, 3, 4)) ? $view_type : 1;
         if ($view_type == 3) {
             $map['recommend'] = intval($recommend);
             $map['difficulty'] = intval($difficulty);
@@ -204,10 +204,12 @@ class EnglishViewRecordModel extends CommonModel {
             $map['record.user_id'] = intval(cookie("english_tourist_id")) > 0 ? -intval(cookie("english_tourist_id")) : 0;
         }
         $ret = $this->alias("record")
-                        ->field("record.question_id")
-                        ->join(C("DB_PREFIX") . "english_question question on record.question_id=question.id")
-                        ->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media on question.media_id=media.id")
-                        ->where($map)->select();
+                ->field("record.question_id")
+                ->join(C("DB_PREFIX") . "english_question question on record.question_id=question.id")
+                ->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media on question.media_id=media.id")
+                ->where($map)
+                ->order("record.sort")
+                ->select();
         if (false !== $ret && !empty($ret)) {
             foreach ($ret as $key => $value) {
                 $question_ids[] = intval($value['question_id']);
