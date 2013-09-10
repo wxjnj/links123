@@ -521,6 +521,7 @@ class EnglishQuestionAction extends CommonAction {
                                     $recommend_id_a = $recommendModel->add($recommend_data);
                                     if (false === $recommend_id_a) {
                                         $model->rollback();
+                                        @unlink($dest);
                                         die(json_encode(array("info" => "导入失败", "status" => false)));
                                     }
                                     $recommendNameList[$media_data['object_name']] = $recommend_id_a;
@@ -540,6 +541,7 @@ class EnglishQuestionAction extends CommonAction {
                                     $recommend_id_b = $recommendModel->add($recommend_data);
                                     if (false === $recommend_id_b) {
                                         $model->rollback();
+                                        @unlink($dest);
                                         die(json_encode(array("info" => "导入失败", "status" => false)));
                                     }
                                     $recommendNameList[$media_data['subject_name']] = $recommend_id_b;
@@ -599,6 +601,7 @@ class EnglishQuestionAction extends CommonAction {
                             $ret = $optionModel->add($option_data);
                             if (false === $ret) {
                                 $model->rollback();
+                                @unlink($dest);
                                 die(json_encode(array("info" => "导入失败", "status" => false)));
                             }
                             array_push($option_id, $ret); //保存增加的id数组，用于更新选项对应的问题id
@@ -668,17 +671,20 @@ class EnglishQuestionAction extends CommonAction {
                             if (false === $optionModel->where("id in (" . implode(",", $option_id) . ")")->setField("question_id", $list)) {
                                 //更新答案对应的题目id
                                 $model->rollback();
+                                @unlink($dest);
                                 die(json_encode(array("info" => "导入失败", "status" => false)));
                             }
                         }
                     } else {
                         $model->rollback();
+                        @unlink($dest);
                         //失败提示
                         die(json_encode(array("info" => "导入失败", "status" => false)));
                     }
                 }
             }
             $model->commit();
+            @unlink($dest);
             die(json_encode(array("info" => "导入成功", "status" => true)));
         }
     }
