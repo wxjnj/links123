@@ -310,6 +310,9 @@ function bindLinksDingCaiEvent() {
 		if (getCookie("dmz" + obj.attr('lnk_id')) == "1") {
 			alert("您已顶过!");
 			return false;
+		}else if(getCookie("dmz" + obj.attr('lnk_id')) == "2") {
+			alert("您已踩过!");
+			return false;
 		}
 		//
 		$.post(URL + "/ding", {
@@ -331,6 +334,9 @@ function bindLinksDingCaiEvent() {
 		var obj = $(this);
 		//
 		if (getCookie("dmz" + obj.attr('lnk_id')) == "1") {
+			alert("您已顶过!");
+			return false;
+		} else if(getCookie("dmz" + obj.attr('lnk_id')) == "2") {
 			alert("您已踩过!");
 			return false;
 		}
@@ -341,7 +347,7 @@ function bindLinksDingCaiEvent() {
 		function(data) {
 			if (data.indexOf("caiOK") >= 0) {
 				obj.text(parseInt(obj.text()) + 1);
-				setCookie("dmz" + obj.attr('lnk_id'), "1");
+				setCookie("dmz" + obj.attr('lnk_id'), "2");
 			}
 			else {
 				alert(data);
