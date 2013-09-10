@@ -83,6 +83,10 @@ class EnglishQuestionAction extends CommonAction {
         $num = intval(D("Variable")->getVariable("english_click_num"));
         $this->assign("english_click_num", $num);
         $this->assign("level_list", $level_list);
+        //专题列表
+        $subject_list = D("EnglishMediaSubject")->getList("status=1", "`sort` ASC");
+        $this->assign("subject_list", $subject_list);
+        
         $this->assign("param", $param);
         foreach ($param as $key => $value) {
             $param_str.=$key . "=" . $value . "&";

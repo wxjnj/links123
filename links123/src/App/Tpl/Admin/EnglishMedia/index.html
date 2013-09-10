@@ -19,7 +19,8 @@
             <html:imageBtn name="delete" click="del()" style="hMargin fLeft" />
             <html:imageBtn name="resume" click="resume()" style="hMargin fLeft" />
             <select id="selectSubjectSource" style='float:left;margin:0 5px;'>
-                <option value='0'>选择专题</option>
+                <option value='-1'>选择专题</option>
+                <option value='0'>无专题</option>
                 <volist name="subject_list" id="subject">
                     <option value="{$subject.id}" <eq name="param['subject']" value="$subject['id']">selected="true"</eq>>{$subject.name}</option>
                 </volist>
@@ -313,7 +314,7 @@
         //
         //绑定事件
         $(".subjectSelect").change(function() {
-            if (parseInt($(this).val()) == 0) {
+            if (parseInt($(this).val()) == -1) {
                 return false;
             }
             var select = $(this);
