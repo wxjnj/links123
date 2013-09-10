@@ -210,6 +210,8 @@ class EnglishQuestionModel extends CommonModel {
     public function getQuestionNum($object, $level, $subject, $recommend, $difficulty, $voice = 1, $target = 1, $pattern = 1, $extend_condition = "") {
 
         $map = array();
+        $map['media.status'] = 1;
+        $map['question.status'] = 1;
         if ($voice > 0) {
             $map['media.voice'] = $voice;
         }
