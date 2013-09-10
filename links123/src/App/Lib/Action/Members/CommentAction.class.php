@@ -56,6 +56,8 @@ class CommentAction extends CommonAction
 		}
 		
 		$this->getRootCats();
+		
+		$this->assign("title", '我的说说');
 		$this->assign('mycmts', $mycmts);
 		$this->assign("mbrNow", $mbrNow);
 		$this->assign("funcNow", "myComment");
