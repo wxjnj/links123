@@ -71,8 +71,8 @@
                         <li <eq name="user_last_select['voice']" value="1">class="voice current class1"<else/>class="voice class1"</eq> value="1">
                             <img src="__PUBLIC__/English/images/icon6.png" width="20" height="15" /> <span>美 音</span>
                         </li>
-                        <li <if condition="$user_last_select['target'] eq 2">class="voice grey class2"
-                            <elseif condition="($user_last_select['target'] eq 1)AND($user_last_select['voice'] eq 2)" />class="current voice class2"<else/>class="voice class2"</if>
+                        <li <if condition="$user_last_select['target'] eq 2">class="voice grey class1"
+                            <elseif condition="($user_last_select['target'] eq 1)AND($user_last_select['voice'] eq 2)" />class="current voice class1"<else/>class="voice class1"</if>
                         value="2">
                             <img src="__PUBLIC__/English/images/icon7.png" width="20" height="15" /> <span>英 音</span>
                         </li>
@@ -95,8 +95,18 @@
                 <div class="menuright">
                     <ul class="tabs J_tabs">
                         <li><a href="javascript:;" value="1" <eq name="user_last_select['viewType']" value='1'>class="current"</eq>>选择课程</a></li>
-                        <li><a href="javascript:;" value="2" <eq name="user_last_select['viewType']" value='2'>class="current"</eq>>选择专题</a></li>
-                        <li><a href="javascript:;" value="3" <if condition="($user_last_select['viewType'] eq 3)OR($user_last_select['viewType'] eq 4)">class="current"</if>>选择推荐</a></li>
+                        <li>
+                            <a href="javascript:;" value="2" <if condition="$user_last_select['viewType'] eq 2">class="current"
+                                    <elseif condition="$subjectsQuestionNum eq 0" />class="grey"</if> >
+                                选择专题
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:;" value="3" <if condition="($user_last_select['viewType'] eq 3)OR($user_last_select['viewType'] eq 4)">class="current"
+                                    <elseif condition="$recommedsQuestionNum eq 0" />class="grey"</if> >
+                                选择推荐
+                            </a>
+                        </li>
                     </ul>
                     <div class="panes">
                         <div class="box1" <neq name="user_last_select['viewType']" value='1'>style="display:none"</neq>>
@@ -313,10 +323,10 @@
                             <li id="J_textButton" class='J_listenButtons' media_text_url="{$question['media_text_url']}" <eq name="user_last_select['target']" value="2">style='display:none;'</eq>> 　文  本</li>
                             <li id="J_viewButton" class='current J_speakButtons' <eq name="user_last_select['target']" value="1">style='display:none;'</eq>> 　&nbsp;&nbsp;看 </li>
                             <li id="J_speakButton" class='J_speakButtons' <eq name="user_last_select['target']" value="1">style='display:none;'</eq>> 　&nbsp;&nbsp;说 </li>
-                            <li id="J_levelUpButton"><img src="__PUBLIC__/English/images/up.png" width="14" height="21" /> 升  级</li>
-                            <li id="J_levelDownButton"><img src="__PUBLIC__/English/images/down.png" width="14" height="21" /> 降  级</li>
                             <li id="J_prevQuestion"><img src="__PUBLIC__/English/images/up.png" width="14" height="21" /> 上一题</li>
                             <li id="J_nextQuestion"><img src="__PUBLIC__/English/images/down.png" width="14" height="21" /> 下一题</li>
+                            <li id="J_levelUpButton"><img src="__PUBLIC__/English/images/up.png" width="14" height="21" /> &nbsp;升  级</li>
+                            <li id="J_levelDownButton"><img src="__PUBLIC__/English/images/down.png" width="14" height="21" /> &nbsp;降  级</li>
                         </ul>
                     </div>
                     <div class="leveltext"><label id="J_currentRiceNameLabel">本级：</label><span id="J_currentRice" class="red">{$user_conut_info['right_num']*100}</span>粒<br />

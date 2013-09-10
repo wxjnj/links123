@@ -283,6 +283,51 @@ class EnglishMediaModel extends CommonModel {
         return $time;
     }
 
-}
+    public function getRecommendQuestionNum($target = 1, $voice = 1, $pattern = 1, $recommend = -1) {
+        $english_question_table_name = "english_question";
+        if ($target == 2) {
+            $english_question_table_name = "english_question_speak";
+        }
+        $condition = array();
+        $condition['question.status'] = 1;
+        $condition['media.status'] = 1;
+        $condition['media.voice'] = $voice;
+        $condition['media.pattern'] = $pattern;
+        if ($recommend == 0) {
+            $condition['media.special_recommend'] = 1;
+        } else if ($recommend == -1) {
+            $condition['media.recommend'] = array("neq", 0);
+        } else {
+            $condition['_string'] = "FIND_IN_SET(" . $recommend . ",media.recommend)";
+        }
+        $num = $this->alias("media")
+                ->join(C("DB_PREFIX") . $english_question_table_name . " question on question.media_id=media.id")
+                ->where($condition)
+                ->count("question.id");
+        return intval($num);
+    }
 
+    public function getSubjectQuestionNum($target = 1, $voice = 1, $pattern = 1, $subject = 0) {
+        $english_question_table_name = "english_question";
+        if ($target == 2) {
+            $english_question_table_name = "english_question_speak";
+        }
+        $condition = array();
+        $condition['question.status'] = 1;
+        $condition['media.status'] = 1;
+        $condition['media.voice'] = $voice;
+        $condition['media.pattern'] = $pattern;
+        if ($subject == 0) {
+            $condition['media.subject'] = array("neq", 0);
+        } else {
+            $condition['media.subject'] = $subject;
+        }
+        $num = $this->alias("media")
+                ->join(C("DB_PREFIX") . $english_question_table_name . " question on question.media_id=media.id")
+                ->where($condition)
+                ->count("question.id");
+        return intval($num);
+    }
+
+}
 ?>
