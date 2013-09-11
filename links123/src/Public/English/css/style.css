@@ -244,12 +244,13 @@ ul.grade li.current {
 .red{color:#9d1300;}
 .kafei{color:#885d36;}
 /*播放器图片.listenstyle{display:none;}*/
-.focus_player {background: none repeat scroll 0 0 #999999;height: 448px;position: relative;width: 710px;margin:24px 0 0 28px}
+.focus_player {background: none repeat scroll 0 0 #999999;height: 448px;position: relative;width: 710px;}
 .focus_player_link a {background: url("http://static.youku.com/index/img/sprite.gif") repeat scroll 0 0 transparent;display: block;height: 448px;left: 0;position: absolute;top: 0;width: 710px;z-index: 3;}
 .focus_player_play {background: url("http://res.mfs.ykimg.com/051000005087AA646714C05F5D09B2EC") no-repeat scroll 0 0 transparent;height: 58px;left: 10px;position: absolute;top: 380px;width: 58px;z-index: 2;}
 .focus_player_picture img {display: block;height: 448px;left: 0;position: absolute;top: 0;width: 710px;z-index: 1;}
+.video_div{margin: 24px 0 0 28px;}
 .normal_media_div{
-	margin: 24px 0 0 28px;
+	/*margin: 24px 0 0 28px;*/
 	width: 710px;
 	height: 448px;
 }
@@ -265,13 +266,14 @@ ul.grade li.current {
 .listentop{margin-top:20px;}/*TODO*/
 .smalllisten{display:none;}/*TODO*/
 
-.videobutton{margin-left:255px;float:left;margin-top:10px;width:750px;}
+.videobutton{margin-left:350px;float:left;margin-top:10px;width:750px;}
 .videobutton_listen{margin-left:255px;float:left;margin-top:10px;width:750px;}
 .pre{float:left;cursor:pointer;margin-left:10px;}
 .next2{float:right;cursor:pointer;margin-right:0px;}
-.playbutton{float:left;margin-left:80px;}
+.playbutton{float:left;margin-left:142px;}
 .playbutton img{cursor:pointer; margin-left:30px;}
 .playbutton ul li{float:left;height:91px;}
+.videobutton .playbutton img{width: 55px;height: 55px}
 
 .order{
 	width:360px;
@@ -358,12 +360,15 @@ ul.grade li.current {
 	margin: 55px 10px 0 45px;
 	line-height:35px;
 	font-size:14px;
-	cursor:pointer;
+	/*cursor:pointer;*/
 }
 .answertitle{
 	font-weight:bold;
 	font-size:18px;
 	margin-bottom: 20px; /*大分辨率下答案标题空行*/
+}
+.J_option{
+    cursor: pointer;
 }
 .answercontent p:hover{
 	background:#b5814d;
@@ -419,25 +424,25 @@ ul li span.grey{ color:#ccc;font-weight:bold; cursor:default;}
 
 /*tabs*/
 UL.tabs {
-	BORDER-BOTTOM: none; PADDING-BOTTOM: 0px; LIST-STYLE-TYPE: none; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; HEIGHT: 30px; LIST-STYLE-IMAGE: none; PADDING-TOP: 0px; clear:both;margin-top:15px;margin-left:10px;
+	cursor: pointer;BORDER-BOTTOM: none; PADDING-BOTTOM: 0px; LIST-STYLE-TYPE: none; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; HEIGHT: 30px; LIST-STYLE-IMAGE: none; PADDING-TOP: 0px; clear:both;margin-top:15px;margin-left:10px;
 }
 UL.tabs A {
-	POSITION: relative; TEXT-ALIGN: center; PADDING-BOTTOM: 0px; LINE-HEIGHT: 30px; MARGIN: 0px; PADDING-LEFT: 0px; WIDTH: 110px; PADDING-RIGHT: 0px; DISPLAY: block; HEIGHT: 30px; COLOR: #fff; FONT-SIZE: 14px; TOP: 1px; TEXT-DECORATION: none; PADDING-TOP: 0px;font-weight:bold; COLOR: #fff;
+	cursor: pointer;POSITION: relative; TEXT-ALIGN: center; PADDING-BOTTOM: 0px; LINE-HEIGHT: 30px; MARGIN: 0px; PADDING-LEFT: 0px; WIDTH: 110px; PADDING-RIGHT: 0px; DISPLAY: block; HEIGHT: 30px; COLOR: #fff; FONT-SIZE: 14px; TOP: 1px; TEXT-DECORATION: none; PADDING-TOP: 0px;font-weight:bold; COLOR: #fff;
 }
 UL.tabs A:active {
-	background:url(../images/currentbg2.png) no-repeat; COLOR: #fff;
+	cursor: pointer;background:url(../images/currentbg2.png) no-repeat; COLOR: #fff;
 }
 UL.tabs A:hover {
-	background:url(../images/currentbg2.png) no-repeat; COLOR: #fff;
+	cursor: pointer;background:url(../images/currentbg2.png) no-repeat; COLOR: #fff;
 }
 UL.tabs A.current {
-	 background:url(../images/currentbg2.png) no-repeat; COLOR: #fff !important; CURSOR: default !important; text-decoration:none;
+	 cursor: pointer;background:url(../images/currentbg2.png) no-repeat; COLOR: #fff !important; text-decoration:none;
 }
 UL.tabs A.current:hover {
-	background:url(../images/currentbg2.png) no-repeat; COLOR: #fff !important; CURSOR: default !important; text-decoration:none;
+	cursor: pointer;background:url(../images/currentbg2.png) no-repeat; COLOR: #fff !important; text-decoration:none;
 }
 UL.tabs LI.current {
-	background:url(../images/currentbg2.png) no-repeat; COLOR: #fff !important; CURSOR: default !important
+	cursor: pointer;background:url(../images/currentbg2.png) no-repeat; COLOR: #fff !important; 
 }
 
 /*scrollable 本身存在尺寸不同*/
@@ -474,7 +479,7 @@ UL.tabs LI.current {
 }
 .items div {
 	float:left;
-	width:668px;margin-top:40px;margin-left:-35px; 
+	width:auto;margin-top:40px;margin-left:-33px; 
 }
 
 .scrollable .active {
@@ -645,7 +650,9 @@ a.disabled {
 .ranklist .idx{ width: 40px; text-align: center; }
 .ranklist .idx img{ vertical-align: middle; }
 .ranklist .nm{
-	width: 70px;
+	margin-right: 28px;
+    overflow: hidden;
+    width: 42px;
 }
 .ranklist .sum{
 	background-position: 52px -34px;
@@ -672,4 +679,53 @@ a.disabled {
 
 .rl-speak .coming-tip{
 font-size: 13px;margin-left: 45px;margin-top: 10px;
+}
+
+/*提示框*/
+.autobox-layer,
+.autobox-hits .autobox-arr,
+.autobox .autobox-end{
+    background-image: url(../images/alertbg.png);
+    background-repeat: no-repeat;
+    color: #fff;
+    font-family: \5FAE\8F6F\96C5\9ED1;
+    font-size: 18px;
+    font-weight: bold;
+    height: 80px;
+    line-height: 80px;
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+}
+.autobox{
+    _height: 80px;
+    left: 0;
+    overflow: hidden;
+    position: fixed;
+    _position: absolute;
+    text-align: center;
+    top: 46%;
+    width: 100%;
+    z-index: 65533;
+}
+.autobox-layer{
+    background-position: 0 -85px;
+    background-repeat: repeat-x;
+    margin: 0 auto;
+    padding: 0 18px 0 0;
+    position: relative;
+}
+.autobox .autobox-end{
+    background-position: 0 -4px;
+    position: absolute;
+    right: -17px;
+    top: 0;
+    width: 17px;
+}
+.autobox-hits .autobox-arr{
+    background-position: -22px -4px;
+    left: -66px;
+    position: absolute;
+    top: 0;
+    width: 66px;
 }

@@ -16,19 +16,31 @@
             <html:imageBtn name="add" click="add()" style="hMargin fLeft" />
             <html:imageBtn name="edit" click="edit()" style="hMargin fLeft" />
             <html:imageBtn name="forbid" click="forbid()" style="hMargin fLeft" />
-            <html:imageBtn name="delete" click="foreverdel()" style="hMargin fLeft" />
-            <html:imageBtn name="subject" click="subject()" style="hMargin fLeft" />
-            <html:imageBtn name="difficulty" click="difficulty()" style="hMargin fLeft" />
+            <html:imageBtn name="delete" click="del()" style="hMargin fLeft" />
+            <html:imageBtn name="resume" click="resume()" style="hMargin fLeft" />
+            <select id="selectSubjectSource" style='float:left;margin:0 5px;'>
+                <option value='-1'>选择专题</option>
+                <option value='0'>无专题</option>
+                <volist name="subject_list" id="subject">
+                    <option value="{$subject.id}" <eq name="param['subject']" value="$subject['id']">selected="true"</eq>>{$subject.name}</option>
+                </volist>
+            </select>&nbsp;&nbsp;
+            <label style='float: left; margin: 5px 5px 0px 0px;'>推荐:</label>
+            <label style='float: left; margin: 5px 5px 0px 0px;'>是<input style='float: left; margin: 3px 2px 0px 0px;' type='checkbox' value="1" name="recommend"/></label>
+            <label style='float: left; margin: 5px 5px 0px 0px;'>否<input style='float: left; margin: 3px 2px 0px 0px;' type='checkbox' value="0" name="recommend"/></label>
+            <label style='float: left; margin: 5px 5px 0px 0px;'>特别推荐:</label>
+            <label style='float: left; margin: 5px 5px 0px 0px;'>是<input style='float: left; margin: 3px 2px 0px 0px;' type='checkbox' value="1" name="special_recommend"/></label>
+            <label style='float: left; margin: 5px 5px 0px 0px;'>否<input style='float: left; margin: 3px 2px 0px 0px;' type='checkbox' value="0" name="special_recommend"/></label>
+            <html:imageBtn name="groupAct" click="groupAct()" style="hMargin fLeft" />
         </div>
 
         <form method='post' action="__URL__">
-            <div class="rSearch">
-                <div class="fLeft">媒体查询：<span id="key"><input type="text" name="name" value="{$name}" class="medium" /></span></div>
+            <div class="rSearch" style="margin: 8px 7px">
+                <div class="fLeft">媒体查询：<span id="key"><input type="text" autocomplete="off" name="name" value="{$name}" class="medium" /></span></div>
                 <html:imageBtn type="submit" name="search" style="hMargin fLeft" />
             </div>
             <div class="search cBoth" style="height: 60px;">
                 <div>
-                    格式：
                     <label>
                         <input class="checkbox" type="checkbox" value="1" name="pattern" <eq name="param['pattern']" value="1">checked="checked"</eq>>
                         视频
@@ -36,6 +48,14 @@
                     <label>
                         <input class="checkbox" type="checkbox" value="2" name="pattern" <eq name="param['pattern']" value="2">checked="checked"</eq>>
                         音频
+                    </label>&nbsp;&nbsp;
+                    <label>
+                        <input class="checkbox" type="checkbox" value="1" name="voice" <eq name="param['voice']" value="1">checked="checked"</eq>>
+                        美音
+                    </label>
+                    <label>
+                        <input class="checkbox" type="checkbox" value="2" name="voice" <eq name="param['voice']" value="2">checked="checked"</eq>>
+                        英音
                     </label>&nbsp;&nbsp;
                     科目：
                     <select name="object">
@@ -67,15 +87,7 @@
                     添加时间：
                     <input type="text" id="J_createTime" name="created" value="{$param['created']}" />
                     &nbsp;&nbsp;
-                    状态：
-                    <label>
-                        <input class="checkbox" type="checkbox" value="1" name="status" <if condition="$param['status'] eq 1">checked="checked"</if>>
-                        正常
-                    </label>&nbsp;
-                    <label>
-                        <input class="checkbox" type="checkbox" value="0" name="status" <eq name="param['status']" value="0">checked="checked"</eq>>
-                        禁用
-                    </label>
+                    
                 </div>
                 <div style="margin-top: 10px;">
                     推荐：
@@ -96,13 +108,26 @@
                     <label>
                         <input class="checkbox" type="checkbox" value="0" name="special_recommend" <eq name="param['special_recommend']" value="0">checked="checked"</eq>>
                         否
+                    </label>&nbsp;&nbsp;
+                    状态：
+                    <label>
+                        <input class="checkbox" type="checkbox" value="1" name="status" <if condition="$param['status'] eq 1">checked="checked"</if>>
+                        正常
+                    </label>&nbsp;
+                    <label>
+                        <input class="checkbox" type="checkbox" value="0" name="status" <eq name="param['status']" value="0">checked="checked"</eq>>
+                        禁用
+                    </label>&nbsp;
+                    <label>
+                        <input class="checkbox" type="checkbox" value="-1" name="status" <eq name="param['status']" value="-1">checked="checked"</eq>>
+                        已删除
                     </label>
                 </div>
             </div>
         </form>
 
         <div class="list" >
-            <html:list id="checkList" name="category" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,name:名称:edit,object_name:科目,level_name:等级,subject_name:专题,difficulty|getMediaDifficultyName:难度,voice|getVoiceName:语音,pattern|getMediaPatternName:格式类型,play_type|getMediaPlayTypeName:播放类型,storage_type|getStorageTypeName:存储类型,media_source_url|getLinkToHref:来源地址,recommend|getYorN:推荐,special_recommend|getYorN:特别推荐,created|toDate:发布时间,status|getStatus:状态" actionlist="edit:编辑" />
+            <html:list id="checkList" name="category" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,name:名称:edit,object_name:科目,level_name:等级,subject_name|default=无:专题:selectSubject,difficulty|getMediaDifficultyName:难度,recommend|getMediaRecommendYorN:推荐:recommend,special_recommend|getYorN:特别推荐:special_recommend,voice|getVoiceName:语音,pattern|getMediaPatternName:格式类型,play_type|getMediaPlayTypeName:播放类型,priority_type|getMediaPriorityTypeName:优先播放:setMediaPriorityType,media_source_url|getLinkToHrefWithOutHttp:来源地址,created|toDate:发布时间,status|getStatus:状态" actionlist="edit:编辑" />
         </div>
 
         <div class="page">{$page}</div>
@@ -112,34 +137,6 @@
 </div>
 <div id="load_dialog" class="easyui-dialog" style="width:225px;height:auto;" data-options="title:'正在处理',shadow:false,modal:true,closed:true,closable:false">
     <img style="" src="__PUBLIC__/Images/loading.gif" />
-</div>
-<div id="point_subject_dialog" class="easyui-dialog" style="width:250px;height:auto;" data-options="title:'确认操作',shadow:false,modal:true,closed:true,closable:true">
-    <h2>请选择需要指定的专题：</h2>
-    <div style='margin:10px 0 0 10px;'>
-        <select id="J_pointSubjectSelect">
-            <volist name="subject_list" id="subject">
-                <option value="{$subject.id}">{$subject.name}</option>
-            </volist>
-        </select>
-    </div>
-    <div style="margin: 20px 0 10px 0;">
-        <input type="button" id='J_pointSubjectBtn' style='margin: 0 30px' value="确 认" class="small submit" />&nbsp;
-        <input type="button" id='J_pointSubjectCancelBtn' value="取消" class="small submit" />&nbsp;
-    </div>
-</div>
-<div id="point_difficulty_dialog" class="easyui-dialog" style="width:250px;height:auto;" data-options="title:'确认操作',shadow:false,modal:true,closed:true,closable:true">
-    <h2>请选择需要指定的等级：</h2>
-    <div style='margin:10px 0 0 10px;'>
-        <select id="J_pointDifficultySelect">
-            <option value="1">初级</option>
-            <option value="2">中级</option>
-            <option value="3">高级</option>
-        </select>
-    </div>
-    <div style="margin: 20px 0 10px 0;">
-        <input type="button" id='J_pointDifficultyBtn' style='margin: 0 30px' value="确 认" class="small submit" />&nbsp;
-        <input type="button" id='J_pointDifficultyCancelBtn' value="取消" class="small submit" />&nbsp;
-    </div>
 </div>
 </body>
 <script type="text/javascript">
@@ -160,58 +157,182 @@
         $("[name='object'],[name='level'],[name='subject'],[name='difficulty']").change(function() {
             $("[name='search']").click();
         })
-        //
-        //指定专题
-        $("#J_pointSubjectBtn").click(function() {
-            $("#load_dialog").window("open");
-            $("#point_subject_dialog").window("close");
-            var id = getSelectCheckboxValues();
-            var targetSubject = $("#J_pointSubjectSelect").val();
-            $.post("__URL__/pointSubject", {id: id, targetSubject: targetSubject}, function(msg) {
-                if (msg) {
-                    alert(msg.info);
+        $(".operate input[name='special_recommend']").click(function() {
+            if ($(this).val() == 1) {
+                if (!$(".operate input[name='recommend'][value='1']").attr("checked")) {
+                    $(".operate input[name='recommend']").removeAttr("checked");
+                    $(".operate input[name='recommend'][value='1']").attr("checked", "checked");
                 }
-                $("#load_dialog").window("close");
-                window.location.reload();
-            }, "json");
+            }
+            $(".operate [name='special_recommend']").not("[value='" + $(this).val() + "']").removeAttr("checked");
         })
-        $("#J_pointSubjectCancelBtn").click(function() {
-            $("#point_subject_dialog").window("close");
-        })
-        //
-        //指定难度
-        $("#J_pointDifficultyBtn").click(function() {
-            $("#load_dialog").window("open");
-            $("#point_difficulty_dialog").window("close");
-            var id = getSelectCheckboxValues();
-            var targetDifficulty = $("#J_pointDifficultySelect").val();
-            $.post("__URL__/pointDifficulty", {id: id, targetDifficulty: targetDifficulty}, function(msg) {
-                if (msg) {
-                    alert(msg.info);
+        $(".operate input[name='recommend']").click(function() {
+            if ($(this).val() == 0) {
+                if ($(".operate input[name='special_recommend'][value='1']").attr("checked")) {
+                    $(".operate input[name='special_recommend'][value='1']").removeAttr("checked");
                 }
-                $("#load_dialog").window("close");
-                window.location.reload();
-            }, "json");
+            }
+            $(".operate [name='recommend']").not("[value='" + $(this).val() + "']").removeAttr("checked");
         })
-        $("#J_pointDifficultyCancelBtn").click(function() {
-            $("#point_difficulty_dialog").window("close");
-        })
+
+        /* 直达 */
+        $(".page input").keydown(function(event) {
+            if (event.keyCode == 13) {	// 回车
+                if ($(this).val() != '' && !isNaN($(this).val())) {
+                    window.location.href = $(this).attr("url") + "&p=" + $(this).val();
+                }
+            }
+        });
     })
-    function subject() {
+    function groupAct() {
         var id = getSelectCheckboxValues();
         if (!id) {
             alert('请选择操作项！');
             return false;
         }
-        $("#point_subject_dialog").window("open");
+        var id = getSelectCheckboxValues();
+        var targetSubject = $("#selectSubjectSource").val();
+        var targetRecommend = $("input[name='recommend']").filter(":checked").val();
+        var targetSpecialRecommend = $("input[name='special_recommend']").filter(":checked").val();
+        if (parseInt(targetSubject) == 0 && !targetRecommend && !targetSpecialRecommend) {
+            alert("请选择目标！");
+            return false;
+        }
+        if (confirm("注意！确认对所选项进行批量操作？")) {
+            $("#load_dialog").window("open");
+            $.post("__URL__/groupSet", {id: id, targetSubject: targetSubject, targetRecommend: targetRecommend, targetSpecialRecommend: targetSpecialRecommend},
+            function(msg) {
+                if (msg) {
+                    alert(msg.info);
+                    if (msg.status) {
+                        window.location.reload();
+                    }
+                }
+                $("#load_dialog").window("close");
+            }, "json");
+        }
     }
-    function difficulty() {
-        var id = getSelectCheckboxValues();
-        if (!id) {
-            alert('请选择操作项！');
-            return false;
+    /**
+     * 特别推荐
+     * @param {int} id 操作对象id
+     * @returns {void}
+     */
+    function special_recommend(id) {
+        if (id > 0) {
+            $("#load_dialog").window("open");
+            $.post("__URL__/setSpecialRecommend", {id: id}, function(msg) {
+                if (msg) {
+                    if (msg.status) {
+                        if (msg.data.special_recommend == 0) {
+                            $("a[href=\"javascript:special_recommend('" + id + "')\"]").text("否");
+                        } else {
+                            if (msg.data.recommend) {
+                                $("a[href^=\"javascript:recommend('" + id + "'\"]").text("是");
+                            }
+                            $("a[href=\"javascript:special_recommend('" + id + "')\"]").text("是");
+                        }
+                    }
+                }
+                $("#load_dialog").window("close");
+            }, "json");
+        } else {
+            alert("非法操作！");
         }
-        $("#point_difficulty_dialog").window("open");
+    }
+    /**
+     * 推荐
+     * @param {int} id 操作对象id
+     * @returns {void}
+     */
+    function recommend(id) {
+        if (id > 0) {
+            $("#load_dialog").window("open");
+            $.post("__URL__/setRecommend", {id: id}, function(msg) {
+                if (msg) {
+                    if (msg.status) {
+                        if (msg.data == 0) {
+                            $("a[href=\"javascript:recommend('" + id + "')\"]").text("否");
+                            $("a[href=\"javascript:special_recommend('" + id + "')\"]").text("否");
+                        } else {
+                            $("a[href=\"javascript:recommend('" + id + "')\"]").text("是");
+                        }
+                    }
+                }
+                $("#load_dialog").window("close");
+            }, "json");
+        } else {
+            alert("非法操作！");
+        }
+    }
+    /**
+     * 设置媒体优先播放类型
+     * @param {int} id
+     * @returns {undefined}
+     */
+    function setMediaPriorityType(id) {
+        if (id > 0) {
+            $("#load_dialog").window("open");
+            $.post("__URL__/setPriorityType", {id: id}, function(msg) {
+                if (msg) {
+                    if (msg.status) {
+                        if (msg.data == 1) {
+                            $("a[href=\"javascript:setMediaPriorityType('" + id + "')\"]").text("外链");
+                        } else {
+                            $("a[href=\"javascript:setMediaPriorityType('" + id + "')\"]").text("本地");
+                        }
+                    }
+                }
+                $("#load_dialog").window("close");
+            }, "json");
+        } else {
+            alert("非法操作！");
+        }
+    }
+    /**
+     * 选择专题
+     * @param {int} id
+     * @returns {void}     
+     * @author Adam $date2013.08.30$
+     */
+    function selectSubject(id) {
+        $(".subjectSelect").unbind();
+        //现有的select
+        var old_select_id = $(".subjectSelect").attr("id");
+        //现有的select移除，还原链接
+        if (old_select_id) {
+            var old_id = old_select_id.substr(old_select_id.indexOf("_") + 1);
+            $("#subjectSelect_" + old_id).remove();
+            $("a[href=\"javascript:selectSubject('" + old_id + "')\"]").show();
+        }
+        //显示当前选中的
+        var td = $("a[href=\"javascript:selectSubject('" + id + "')\"]").parent("td");
+        $("a[href=\"javascript:selectSubject('" + id + "')\"]").hide();
+        var now_text = $("a[href=\"javascript:selectSubject('" + id + "')\"]").text();
+        td.append("<select class='subjectSelect' id='subjectSelect_" + id + "'></select>");
+        $("#subjectSelect_" + id).html($("#selectSubjectSource").html());
+        $("#subjectSelect_" + id + " option:contains('" + now_text + "')").attr("selected", "selected");
+        //
+        //绑定事件
+        $(".subjectSelect").change(function() {
+            if (parseInt($(this).val()) == -1) {
+                return false;
+            }
+            var select = $(this);
+            var id = $(this).attr("id").substr($(this).attr("id").indexOf("_") + 1);
+            var target = $(this).val();
+            var targetName = $(".subjectSelect option[value='" + target + "']").text();
+            $("#load_dialog").window("open");
+            $.post("__URL__/pointSubject", {id: id, target: target}, function(msg) {
+                if (msg) {
+                    if (msg.status) {
+                        $("a[href=\"javascript:selectSubject('" + id + "')\"]").text(targetName);
+                        select.remove();
+                        $("a[href=\"javascript:selectSubject('" + id + "')\"]").show();
+                    }
+                }
+                $("#load_dialog").window("close");
+            }, "json")
+        })
     }
 </script>
 </html>

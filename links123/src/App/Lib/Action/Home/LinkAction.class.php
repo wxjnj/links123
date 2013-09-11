@@ -32,6 +32,8 @@ class LinkAction extends CommonAction {
 			$flag = $linkModel->where("link = '%s'", $url)->setInc("click_num");
 		}
 		
+		$url = str_replace('&amp;', '&', $url);
+		
 		echo '<style type="text/css">a{display:none}</style>
 				<script src="http://s96.cnzz.com/stat.php?id=4907803&web_id=4907803" language="JavaScript"></script>
 				<script type="text/javascript">window.location.href="' . (strpos ($url, 'http://')===FALSE && strpos ($url, 'https://')===FALSE ? 'http://' . $url : $url) . '";</script>';

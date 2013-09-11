@@ -5,11 +5,20 @@
 <div id="main" class="main" >
     <div class="content">
         <div class="title">编辑英语角媒体[ <a href="__URL__">返回列表</a> ]</div>
-        <form method='post' id="form1" action="__URL__/update/" >
+        <form method='post' id="form1" action="__URL__/update/" enctype="multipart/form-data" >
             <table cellpadding=3 cellspacing=3>
                 <tr>
                     <td class="tRight" >媒体名称：</td>
                     <td class="tLeft" ><input type="text" class="bLeftRequire large" name="name" value='{$vo.name}' /></td>
+                </tr>
+                <tr>
+                    <td class="tRight" ></td>
+                    <td class="tLeft" >
+                        <label><input type="radio" name="pattern" value="1" <eq name='vo["pattern"]' value='1'>checked="checked"</eq> />视频</label>&nbsp;
+                        <label><input type="radio" name="pattern" value="2" <eq name='vo["pattern"]' value='2'>checked="checked"</eq> />音频</label>&nbsp;&nbsp;
+                        <label><input type="radio" name="voice" value="1"  <eq name='vo["pattern"]' value='1'>checked="checked"</eq>/>美音</label>&nbsp;
+                        <label><input type="radio" name="voice" value="2" <eq name='vo["pattern"]' value='2'>checked="checked"</eq> />英音</label>&nbsp;&nbsp;
+                    </td>
                 </tr>
                 <tr>
                     <td class="tRight" >学科：</td>
@@ -45,15 +54,6 @@
                     </label>
                 </volist>
                 </td>
-                </tr>
-                <tr>
-                    <td class="tRight" >难度：</td>
-                    <td class="tLeft" >
-                        <label><input type="radio" name="difficulty" value="1" <eq name='vo["difficulty"]' value='1'>checked="checked"</eq> />初级</label>&nbsp;&nbsp;
-                        <label><input type="radio" name="difficulty" value="2" <eq name='vo["difficulty"]' value='2'>checked="checked"</eq> />中级</label>&nbsp;&nbsp;
-                        <label><input type="radio" name="difficulty" value="3" <eq name='vo["difficulty"]' value='3'>checked="checked"</eq> />高级</label>
-                    </td>
-                </tr>
                 <tr>
                     <td class="tRight" >媒体播放类型：</td>
                     <td class="tLeft" >
@@ -64,15 +64,12 @@
                         <label><input type="radio" name="play_type" value="4" <eq name='vo["play_type"]' value='4'>checked="checked"</eq> />本地视频播放</label>
                 </tr>
                 <tr>
-                    <td class="tRight" >媒体格式类型：</td>
+                    <td class="tRight" >媒体优先播放：</td>
                     <td class="tLeft" >
-                        <label><input type="radio" name="pattern" value="1" <eq name='vo["pattern"]' value='1'>checked="checked"</eq> />视频</label>&nbsp;
-                        <label><input type="radio" name="pattern" value="2" <eq name='vo["pattern"]' value='2'>checked="checked"</eq> />音频</label>&nbsp;&nbsp;
-                        媒体存储类型：
-                        <label><input type="radio" name="storage_type" value="1" <eq name='vo["storage_type"]' value='1'>checked="checked"</eq> />本地</label>&nbsp;
-                        <label><input type="radio" name="storage_type" value="2" <eq name='vo["storage_type"]' value='2'>checked="checked"</eq> />外链</label>&nbsp;&nbsp;
+                        <label><input type="radio" name="priority_type" value="1" <eq name='vo["priority_type"]' value='1'>checked="checked"</eq> />外链</label>&nbsp;
+                        <label><input type="radio" name="priority_type" value="2" <eq name='vo["priority_type"]' value='2'>checked="checked"</eq> />本地</label>&nbsp;&nbsp;
                         推荐视频：
-                        <label><input type="radio" name="recommend" value="1" <eq name='vo["recommend"]' value='1'>checked="checked"</eq> />是</label>&nbsp;
+                        <label><input type="radio" name="recommend" value="1" <neq name='vo["recommend"]' value='0'>checked="checked"</neq> />是</label>&nbsp;
                         <label><input type="radio" name="recommend" value="0" <eq name='vo["recommend"]' value='0'>checked="checked"</eq> />否</label>&nbsp;&nbsp;
                         特别推荐：
                         <label><input type="radio" name="special_recommend" value="1" <eq name='vo["special_recommend"]' value='1'>checked="checked"</eq> />是</label>&nbsp;&nbsp;
@@ -82,6 +79,15 @@
                 <tr>
                     <td class="tRight" >媒体来源地址：</td>
                     <td class="tLeft" ><input type="text" class="bLeftRequire large" name="media_source_url" value='{$vo.media_source_url}' /></td>
+                </tr>
+                <tr>
+                    <td class="tRight" >媒体缩略图地址：</td>
+                    <td class="tLeft">
+                        <textarea style="height: 40px;width: 600px;" name="media_thumb_img">{$vo.media_thumb_img}</textarea>
+                        <a id="media_thumb_btn" href="javascript:;">查看</a>
+                        <img id="thumb_img" style="width: 320px; height: 240px; display: none; position: absolute; right: 20px;" src="{$vo.media_thumb_img}" />
+                        <!--<input name="img" type="file" />-->
+                    </td>
                 </tr>
                 <tr>
                     <td class="tRight" >媒体播放地址：</td>
@@ -99,6 +105,7 @@
                         <select name="status">
                             <option value="1" <eq name="vo['status']" value='1'>selected="true"</eq> >启用</option>
                             <option value="0" <eq name="vo['status']" value='0'>selected="true"</eq> >禁用</option>
+                            <option value="-1" <eq name="vo['status']" value='-1'>selected="true"</eq> >已删除</option>
                         </select>	
                     </td>
                 </tr>
@@ -117,12 +124,23 @@
 
 <script type="text/javascript">
     $(function() {
+        $("#media_thumb_btn").click(function(){
+            if($("#thumb_img").is(":visible")){
+                $("#thumb_img").css("display","none");
+                $(this).text("查看");
+            }else{
+                $("#thumb_img").css("display","block");
+                $(this).text("隐藏");
+            }
+        })
         var object = $("input[name='object']").val();
         $("#object_" + object).css("color", "#FF0000").siblings("label").css("color", "#000000");
         var level = $("input[name='level']").val();
         $("#level_" + level).css("color", "#FF0000").siblings("label").css("color", "#000000");
         var subject = $("input[name='subject']").val();
         $("#subject_" + subject).css("color", "#FF0000").siblings("label").css("color", "#000000");
+        var recommend = $("input[name='recommend']").val();
+        $("#recommend_" + recommend).css("color", "#FF0000").siblings("label").css("color", "#000000");
 
         $(".object_td").children("label").click(function() {
             $(this).css("color", "#FF0000").siblings("label").css("color", "#000000");
@@ -143,6 +161,16 @@
                 $(this).css("color", "#FF0000").siblings("label").css("color", "#000000");
             }
             $("input[name='subject']").val(value);
+        })
+        $("input[name='recommend']").click(function() {
+            if ($(this).val() == 0) {
+                $("input[name='special_recommend'][value='0']").attr("checked", "checked");
+            }
+        })
+        $("input[name='special_recommend']").click(function() {
+            if ($(this).val() == 1) {
+                $("input[name='recommend'][value='1']").attr("checked", "checked");
+            }
         })
     })
 </script>

@@ -1,9 +1,14 @@
 <?php
-// 公告模型
+/**
+ * @desc 公告管理模型
+ * @name AdvertModel.class.php
+ * @package Admin
+ * @author Frank UPDATE 2013-09-5
+ * @version 1.0
+ */
 class AnnouncementModel extends CommonModel {
 	public $_validate =	array(
 		array('title', 'require', '标题必须'),
-		//array('content', 'require', '内容必须'),
 	);
 	
 	public $_auto =	array(

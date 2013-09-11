@@ -47,6 +47,8 @@ class CollectionAction extends CommonAction
 		}
 		
 		$this->getRootCats();
+		
+		$this->assign("title", '我的收藏');
 		$this->assign("mbrNow", $mbrNow);
 		$this->assign('collList', $list);
 		$this->assign("funcNow", "myCollection");

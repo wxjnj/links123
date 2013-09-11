@@ -223,12 +223,12 @@ $(function(){
 	/* 搜索 */ 
 
 	$("#btn_search").click(function() {
-		if(parent.document.getElementById('searchFrameSet')){
-			parent.document.getElementById('searchFrameSet').rows="71,*";
-			$(".header_top,#head_tools").hide(500);
-			$(".show_header").show();
-			$("#J_thl_div").css("top", "1000px");
-		}
+//		if(parent.document.getElementById('searchFrameSet')){
+//			parent.document.getElementById('searchFrameSet').rows="71,*";
+//			$(".header_top,#head_tools").hide(500);
+//			$(".show_header").show();
+//			$("#J_thl_div").css("top", "1000px");
+//		}
 		$("#search_text").select();
 		$.cookies.set( 'keyword', $("#search_text").val() );
 		var keyword  = $.trim($("#search_text").val());
@@ -314,12 +314,12 @@ $(function(){
 			}
 		}
 	});
-	$(".show_header").click(function(){
-		thl_hid();
-		parent.document.getElementById('searchFrameSet').rows="130,*";
-		$(".header_top,#head_tools").show(500);
-		$(this).hide();
-	});
+//	$(".show_header").click(function(){
+//		thl_hid();
+//		parent.document.getElementById('searchFrameSet').rows="130,*";
+//		$(".header_top,#head_tools").show(500);
+//		$(this).hide();
+//	});
 
 	$("#search_text").mouseenter(function(){
 		setThlPnt();

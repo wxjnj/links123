@@ -4,8 +4,8 @@
  * @name PublicAction.class.php
  * @package Admin
  * @desc 公共模块
- * @author lawrence UPDATE 2013-08-20
- * @version 0.0.1
+ * @author Frank UPDATE 2013-09-09
+ * @version 1.0
  */
 class PublicAction extends BaseAction {
 
@@ -23,6 +23,7 @@ class PublicAction extends BaseAction {
     protected function checkUser() {
         if(!isset($_SESSION[C('USER_AUTH_KEY')])) {
             $this->error('没有登录','Public/login');
+            exit(0);
         }
     }
 
@@ -33,11 +34,10 @@ class PublicAction extends BaseAction {
     public function top() {
         C('SHOW_RUN_TIME',false);
         C('SHOW_PAGE_TRACE',false);
-        $model=M("Group");
-        $list=$model->where('status=1')->getField('id,title');
-        $this->assign('nodeGroupList',$list);
+        $model = M("Group");
+        $list = $model->where('status = 1')->getField('id, title');
+        $this->assign('nodeGroupList', $list);
         $this->menu();
-        $this->display();
         return;
     }
 
@@ -65,37 +65,39 @@ class PublicAction extends BaseAction {
 	 */
     public function menu() {
         $this->checkUser();
+        
         if(isset($_SESSION[C('USER_AUTH_KEY')])) {
-            $menu  = array();
-                if(isset($_SESSION['_ACCESS_LIST'])) {
-                    $accessList = $_SESSION['_ACCESS_LIST'];
-                }else{
-                    import('@.ORG.RBAC');
-                    $accessList = RBAC::getAccessList($_SESSION[C('USER_AUTH_KEY')]);
-                }
-                //读取分组
-                $groupModel = D("Group");
-                $group = $groupModel->where("`status`=1 and `show`=1")->select();
-                //读取数据库模块列表生成菜单项
-                $node=M("Node");
-                foreach($group as $k=>$value){
-                    $where['level']=2;
-                    $where['status'] = 1;
-                    $where['group_id'] = $value['id'];
-                    $group[$k]['menu'] = $node->where($where)->field('id,name,group_id,title')->order('sort asc')->select();
-                    foreach ($group[$k]['menu'] as $key => $module) {
-                        if (isset($accessList[strtoupper(GROUP_NAME)][strtoupper($module['name'])]) || isset($_SESSION[C('ADMIN_AUTH_KEY')])) {
-                            $group[$k]['menu'][$key]['access']=1;
-                        }
-                    }
-                }
-                $_SESSION['menu'.$_SESSION[C('USER_AUTH_KEY')]]	= $group;
-            if(!empty($_GET['tag'])){
-                $this->assign('menuTag',$_GET['tag']);
-            }
-            else {
-            	$this->assign('menuTag', 1);
-            }
+        	
+        	if(isset($_SESSION['_ACCESS_LIST'])) {
+        		$accessList = $_SESSION['_ACCESS_LIST'];
+        	}else{
+        		import('@.ORG.RBAC');
+        		$accessList = RBAC::getAccessList($_SESSION[C('USER_AUTH_KEY')]);
+        	}
+        	//读取分组
+        	$groupModel = D("Group");
+        	$group = $groupModel->where("`status` = 1 and `show` = 1")->select();
+        	//读取数据库模块列表生成菜单项
+        	$node=M("Node");
+        	foreach($group as $k=>$value) {
+        		$where['level'] = 2;
+        		$where['status'] = 1;
+        		$where['group_id'] = $value['id'];
+        		
+        		$group[$k]['menu'] = $node->where($where)->field('id, name, group_id, title')->order('sort ASC')->select();
+        		
+        		foreach ($group[$k]['menu'] as $key => $module) {
+        			if (isset($accessList[strtoupper(GROUP_NAME)][strtoupper($module['name'])]) || isset($_SESSION[C('ADMIN_AUTH_KEY')])) {
+        				$group[$k]['menu'][$key]['access'] = 1;
+        			}
+        		}
+        	}
+        	
+        	$_SESSION['menu'.$_SESSION[C('USER_AUTH_KEY')]]	= $group;
+        	$tag = $this->_get('tag');
+        	$menuTag = !empty($tag) ? $tag : 1;
+        	
+            $this->assign('menuTag', $menuTag);
             $this->assign('menu',$group);
         }
         C('SHOW_RUN_TIME',false);
@@ -137,7 +139,7 @@ class PublicAction extends BaseAction {
         if(!isset($_SESSION[C('USER_AUTH_KEY')])) {
             $this->display();
             return;
-        }else{
+        } else {
             $this->redirect('Index/index');
         }
     }
@@ -174,55 +176,62 @@ class PublicAction extends BaseAction {
 	 * @see PublicAction::checkLogin()
 	 */
     public function checkLogin() {
-        if(empty($_POST['account'])) {
-            $this->error('帐号错误！');
-        }elseif (empty($_POST['password'])){
-            $this->error('密码必须！');
-        }elseif (empty($_POST['verify'])){
-            $this->error('验证码必须！');
-        }
-        //生成认证条件
-        $map=array();
-        // 支持使用绑定帐号登录
-        $map['account']=$_POST['account'];
-        $map["status"]=array('gt',0);
-        if(session('verify')!= md5(strtoupper($_POST['verify']))) {
-            $this->error('验证码错误！');
-        }
-        import('@.ORG.RBAC');
-        $authInfo = RBAC::authenticate($map);
-        //使用用户名、密码和状态的方式进行认证
-        if(false === $authInfo) {
-            $this->error('帐号不存在或已禁用！');
-        }else {
-            if($authInfo['password'] != md5($_POST['password'])) {
-                $this->error('密码错误！');
-            }
-            $_SESSION[C('USER_AUTH_KEY')]=$authInfo['id'];
-            $_SESSION['email']=	$authInfo['email'];
-            $_SESSION['loginUserName']=	$authInfo['nickname'];
-            $_SESSION['lastLoginTime']=	$authInfo['last_login_time'];
-            $_SESSION['login_count']=$authInfo['login_count'];
-            if($authInfo['account']=='admin') {
-                $_SESSION[C('ADMIN_AUTH_KEY')] = true;
-            }
-            //使用cookie过期时间来控制后台登陆的过期时间
-            $admin_session_expire = D("Variable")->getVariable("admin_session_expire");
-            cookie(md5("manament_login_time"),time(),$admin_session_expire);
-            //保存登录信息
-            $User=M('User');
-            $ip=get_client_ip();
-            $time=time();
-            $data=array();
-            $data['id']=$authInfo['id'];
-            $data['last_login_time']=$time;
-            $data['login_count']=array('exp','login_count+1');
-            $data['last_login_ip']=$ip;
-            $User->save($data);
-            // 缓存访问权限
-            RBAC::saveAccessList();
-            $this->success('登录成功！',__GROUP__.'/Index/index');
-        }
+    	if($this->isAjax()) {
+	        if(empty($_POST['account'])) {
+	            $this->error('帐号必须！');
+	            exit(0);
+	        }
+	        if (empty($_POST['password'])){
+	            $this->error('密码必须！');
+	            exit(0);
+	        }
+	        if (empty($_POST['verify'])){
+	            $this->error('验证码必须！');
+	            exit(0);
+	        }
+	        
+	        if(session('verify') != md5(strtoupper($_POST['verify']))) {
+	        	$this->error('验证码错误！');
+	        }
+	        
+	        // 支持使用绑定帐号登录
+	        $map['account'] = $_POST['account'];
+	        $map["status"] = array('gt',0);
+	        
+	        import('@.ORG.RBAC');
+	        $authInfo = RBAC::authenticate($map);
+	        //使用用户名、密码和状态的方式进行认证
+	        
+	        if(false === $authInfo) {
+	            $this->error('帐号不存在或已禁用！');
+	        }else {
+	            if($authInfo['password'] != md5($_POST['password'])) {
+	                $this->error('密码错误！');
+	            }
+	            $_SESSION[C('USER_AUTH_KEY')] = $authInfo['id'];
+	            $_SESSION['email'] = $authInfo['email'];
+	            $_SESSION['loginUserName'] = $authInfo['nickname'];
+	            $_SESSION['lastLoginTime'] = $authInfo['last_login_time'];
+	            $_SESSION['login_count'] = $authInfo['login_count'];
+	            if($authInfo['account'] == 'admin') {
+	                $_SESSION[C('ADMIN_AUTH_KEY')] = true;
+	            }
+	            //使用cookie过期时间来控制后台登陆的过期时间
+	            $admin_session_expire = D("Variable")->getVariable("admin_session_expire");
+	            cookie(md5("manament_login_time"),time(),$admin_session_expire);
+	            //保存登录信息
+	            $data['id'] = $authInfo['id'];
+	            $data['last_login_time'] = time();
+	            $data['login_count'] = array('exp','login_count+1');
+	            $data['last_login_ip'] = get_client_ip();
+	            
+	            $User = M('User');
+	            $User->save($data);
+	            // 缓存访问权限
+	            RBAC::saveAccessList();
+	            $this->success('登录成功！', __GROUP__.'/Index/index');
+	        }
+    	}
     }
     
 	/**
@@ -232,25 +241,36 @@ class PublicAction extends BaseAction {
     public function changePwd() {
         $this->checkUser();
         //对表单提交处理进行处理或者增加非表单数据
-        if(md5($_POST['verify'])!=$_SESSION['verify']) {
-            $this->error('验证码错误！');
+        $verify = $this->_post('verify');
+        $accout = $this->_post('account');
+        $oldpassword = $this->_post('oldpassword');
+        $password = $this->_post('password');
+        $repassword = $this->_post('repassword');
+        if($password != $repassword) {
+        	$this->error('两次密码输入不正确！');
+        	exit(0);
         }
-        $map=array();
-        $map['password']= pwdHash($_POST['oldpassword']);
-        if(isset($_POST['account'])) {
-            $map['account']=$_POST['account'];
-        }elseif(isset($_SESSION[C('USER_AUTH_KEY')])) {
-            $map['id']=$_SESSION[C('USER_AUTH_KEY')];
+        
+        if(md5(strtoupper($verify)) != session('verify')) {
+            $this->error('验证码错误！');
+            exit(0);
+        }
+        
+        $map['password'] = pwdHash($oldpassword); 
+        if(isset($accout)) {
+            $map['account'] = $accout;
+        } elseif(isset($_SESSION[C('USER_AUTH_KEY')])) {
+            $map['id'] = $_SESSION[C('USER_AUTH_KEY')];
         }
         //检查用户
-        $User=M("User");
+        $User = M("User");
         if(!$User->where($map)->field('id')->find()) {
             $this->error('旧密码不符或者用户名错误！');
         }else {
-            $User->password	=pwdHash($_POST['password']);
+            $User->password	= pwdHash($password);
             $User->save();
             $this->success('密码修改成功！');
-         }
+        }
     }
 
 	/**
@@ -271,7 +291,8 @@ class PublicAction extends BaseAction {
      * @author Lee UPDATE 2013-08-27
 	 */           
     public function verify() {
-    	$type = isset($_GET['type']) ? $_GET['type'] : 'gif';
+    	$type = $this->_get('type');
+    	$type = isset($type) ? $type : 'gif';
     	import("@.ORG.Image");
     	Image::buildImageVerify(3, 5, $type, 36);
     }
@@ -282,15 +303,14 @@ class PublicAction extends BaseAction {
 	 */
     public function change() {
         $this->checkUser();
-        $User=D("User");
+        $User = D("User");
         if(!$User->create()) {
             $this->error($User->getError());
         }
-        $result=$User->save();
+        $result = $User->save();
         if(false !== $result) {
             $this->success('资料修改成功！');
-        }
-        else {
+        }else {
             $this->error('资料修改失败!');
         }
     }

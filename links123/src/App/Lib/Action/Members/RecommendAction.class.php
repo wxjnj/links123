@@ -46,6 +46,8 @@ class RecommendAction extends CommonAction
 		}
 		
 		$this->getRootCats();
+		
+		$this->assign("title", '我的推荐');
 		$this->assign("mbrNow", $mbrNow);
 		$this->assign('recList', $list);
 		$this->assign("funcNow", "myRecommend");

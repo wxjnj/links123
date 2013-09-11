@@ -16,6 +16,7 @@ class IndexAction extends CommonAction {
     public function index() {
     	if(!isset($_SESSION[C('USER_AUTH_KEY')])) {
     		redirect(PHP_FILE .C('USER_AUTH_GATEWAY'));
+    		exit(0);
     	}
         C('SHOW_RUN_TIME',false);
         C('SHOW_PAGE_TRACE',false);

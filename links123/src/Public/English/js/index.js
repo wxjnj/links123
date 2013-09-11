@@ -1,12 +1,57 @@
 var ajaxRequest;
+var playState = "unable";//播放器状态，默认不可用
 var next_question_lvlup = false;
-var time;
+var timer;
 $(function() {
+    //提示施工中...
+    showMsg("施工中 . . .", $(".J_tabs").offset().top - 20, 370, 5000, 99,18);
+    $("#J_preSentenceButton img").click(function() {
+        $('#Links123Player')[0].prev();
+    })
+    $("#J_slowPlayButton img").click(function() {
+        $('#Links123Player')[0].slow();
+    })
+    $("#J_pauseButton img").click(function() {
+        $('#Links123Player')[0].playPause();
+    })
+    //
+    bindSpeakListenSwitchEvent();
+    $("#J_nextSentenceButton img").click(function() {
+        $('#Links123Player')[0].next();
+    })
     //
     //easyloader加载主题和插件
     easyloader.theme = "metro";
     easyloader.load('messager');
-    $("ul.tabs").tabs("div.panes > div");
+    $(".J_tabs a").click(function() {
+        if ($(this).hasClass("current")) {
+            var top = $(this).offset().top - 50;
+            var left = $(this).offset().left - 10;
+            $.messager.show({
+                msg: "<span  class='messager_span'>您已在: " + $(this).text() + "</span>",
+                showType: 'fade',
+                width: 175,
+                height: 45,
+                timeout: 2000,
+                style: {
+                    left: left,
+                    top: top
+                }
+            });
+            return false;
+        } else if ($(this).hasClass("grey")) {
+            var top = $(this).offset().top - 15;
+            var left = $(this).offset().left + 10;
+            fadeTip("<span  class='messager_span'>Coming soon...</span>", top, left);
+            return false;
+        }
+        if ($(this).attr("value") != 1) {
+            var top = $(this).offset().top - 15;
+            var left = $(this).offset().left + 10;
+            fadeTip("<span  class='messager_span'>施工中...</span>", top, left);
+        }
+        requestQuestion("switch_view_type", $(this));
+    })
     if ($("#J_currentRice").text() == 1000) {
         next_question_lvlup = true;
     }
@@ -20,38 +65,40 @@ $(function() {
         if ($(".answer").is(":visible")) {
             $("#J_answerButton").removeClass("current");
             $(".answer").slideUp("slow", function() { //这里收起后显示
-                if ($("#J_media_div").attr("media_type") == 1 || $("#J_media_div").attr("media_type") == 2) {
+                if ($("#J_media_div").attr("play_type") == 1 || $("#J_media_div").attr("play_type") == 2) {
                     $("#J_media_div").css({'display': '', 'position': '', 'left': ''}).show();
-                } else if ($("#J_media_div").attr("media_type") == 4) {
+                } else if ($("#J_media_div").attr("play_type") == 4) {
                     $("#J_media_swfobject_div").show();
                 } else if ($("#J_media_div").attr("data_isaboutvideo") == 1) {
                     $(".J_player").show();
                 }
             });
+
+            $(this).text(' 　答  题');
         } else { //这里先隐藏后展开
             $("#J_answerButton").addClass("current");
-            if ($("#J_media_div").attr("media_type") == 1 || $("#J_media_div").attr("media_type") == 2) {
+            if ($("#J_media_div").attr("play_type") == 1 || $("#J_media_div").attr("play_type") == 2) {
                 $("#J_media_div").css({'display': 'block', 'position': 'absolute', 'left': '-9999px'}).hide();
-            } else if ($("#J_media_div").attr("media_type") == 4) {
+            } else if ($("#J_media_div").attr("play_type") == 4) {
                 $("#J_media_swfobject_div").hide();
             } else if ($("#J_media_div").attr("data_isaboutvideo") == 1) {
                 $(".J_player").hide();
                 $('#J_media_div').html('');
             }
             $(".answer").slideDown("slow");
+
+            $(this).text(' 　视  频');
         }
     });
 
     //科目点击事件
-    // bindObjectClickEvent();
-    $('.kecheng li').live('click', function() {
+    $('.J_object li').live('click', function() {
         if ($(this).hasClass("grey")) {
             var top = $(this).offset().top - 15;
             var left = $(this).offset().left + 10;
             fadeTip("<span  class='messager_span'>Coming soon...</span>", top, left);
             return false;
         } else if ($(this).hasClass("current")) {
-
             var top = $(this).offset().top - 50;
             var left = $(this).offset().left - 10;
             $.messager.show({
@@ -72,8 +119,7 @@ $(function() {
 
     });
     //等级点击事件
-    //bindLevelClickEvent();
-    $(".grade li").live('click', function() {
+    $(".J_level li").live('click', function() {
         if ($(this).hasClass("grey")) {
             var top = $(this).offset().top - 10;
             var left = $(this).offset().left + 5;
@@ -99,12 +145,108 @@ $(function() {
 
         requestQuestion("level", $(this));
 
-        //$(this).addClass("current").siblings("li").removeClass("current");
+    });
+    //专题点击事件
+    $('.J_subject li').live('click', function() {
+        if ($(this).hasClass("grey")) {
+            var top = $(this).offset().top - 15;
+            var left = $(this).offset().left + 10;
+            fadeTip("<span  class='messager_span'>Coming soon...</span>", top, left);
+            return false;
+        } else if ($(this).hasClass("current")) {
+
+            var top = $(this).offset().top - 50;
+            var left = $(this).offset().left - 10;
+            $.messager.show({
+                msg: "<span  class='messager_span'>您已在专题: " + $(this).text() + "</span>",
+                showType: 'fade',
+                width: 175,
+                height: 45,
+                timeout: 2000,
+                style: {
+                    left: left,
+                    top: top
+                }
+            });
+            return false;
+        }
+        requestQuestion("subject", $(this));
+
+    });
+    //推荐点击事件
+    $('.J_recommend li').live('click', function() {
+        if ($(this).hasClass("grey")) {
+            var top = $(this).offset().top - 15;
+            var left = $(this).offset().left + 10;
+            fadeTip("<span  class='messager_span'>Coming soon...</span>", top, left);
+            return false;
+        } else if ($(this).hasClass("current")) {
+
+            var top = $(this).offset().top - 50;
+            var left = $(this).offset().left - 10;
+            $.messager.show({
+                msg: "<span  class='messager_span'>您已在: " + $(this).text() + "</span>",
+                showType: 'fade',
+                width: 175,
+                height: 45,
+                timeout: 2000,
+                style: {
+                    left: left,
+                    top: top
+                }
+            });
+            return false;
+        }
+        requestQuestion("recommend", $(this));
+
+    });
+    //难度点击事件
+    $('.J_subjectDifficulty li,.J_recommendDifficulty li').live('click', function() {
+        if ($(this).hasClass("grey")) {
+            var top = $(this).offset().top - 15;
+            var left = $(this).offset().left + 10;
+            fadeTip("<span  class='messager_span'>Coming soon...</span>", top, left);
+            return false;
+        } else if ($(this).hasClass("current")) {
+
+            var top = $(this).offset().top - 50;
+            var left = $(this).offset().left - 10;
+            $.messager.show({
+                msg: "<span  class='messager_span'>您已在难度: " + $(this).text() + "</span>",
+                showType: 'fade',
+                width: 175,
+                height: 45,
+                timeout: 2000,
+                style: {
+                    left: left,
+                    top: top
+                }
+            });
+            return false;
+        }
+        requestQuestion("difficulty", $(this));
+
     });
 
+    //
+    //特别推荐点击
+    $("#J_specialReommendDiv img").live('click', function() {
+        var media_id = $(this).attr("media_id");
+        if (media_id > 0) {
+            requestQuestion("special_recommend", $(this), media_id);
+        } else {
+            var top = $(this).offset().top - 25;
+            var left = $(this).offset().left + 10;
+            fadeTip("<span  class='messager_span'>Coming soon...</span>", top, left);
+            return false;
+        }
+    })
+
     //升级事件
-    //bindLevelUpEvent();
     $("#J_levelUpButton").live('click', function() {
+        if ($(".J_tabs a.current").attr("value") != 1) {
+            return false;
+        }
         var next_level_li;
         //已是最高级
         if (($(".grade .current").index() + 1) == $(".grade li").size()) {
@@ -150,6 +292,9 @@ $(function() {
     //降级事件
     //bindLevelDownEvent();
     $("#J_levelDownButton").live('click', function() {
+        if ($(".J_tabs a.current").attr("value") != 1) {
+            return false;
+        }
         var prev_level_li;
         $(".grade .current").prevAll("li").each(function() {
             if (!$(this).hasClass("not_allowed") && typeof prev_level_li == "undefined") {
@@ -177,7 +322,7 @@ $(function() {
 
     //
     //英音美音点击事件
-    $(".menuleft ul li.class1").click(function() {
+    $(".menuleft .voice").click(function() {
         if ($(this).hasClass("grey")) {
             var top = $(this).offset().top - 15;
             var left = $(this).offset().left;
@@ -204,12 +349,11 @@ $(function() {
     });
     //
     //说力听力点击事件
-    $(".menuleft ul li.class2").click(function() {
+    $(".menuleft .target").click(function() {
         if ($(this).hasClass("grey")) {
             var top = $(this).offset().top - 15;
             var left = $(this).offset().left;
             fadeTip("<span  class='messager_span'>Coming soon...</span>", top, left);
-            return false;
             return false;
         } else if ($(this).hasClass("current")) {
             var top = $(".menuleft").offset().top - 50;
@@ -227,12 +371,17 @@ $(function() {
             });
             return false;
         }
-        $(this).addClass("current").siblings("li.class2").removeClass("current");
+        if ($(this).attr("value") == 2) {
+            var top = $(this).offset().top - 15;
+            var left = $(this).offset().left;
+            fadeTip("<span  class='messager_span'>施工中...</span>", top, left);
+        }
+        //$(this).addClass("current").siblings("li.class2").removeClass("current");
         requestQuestion("category", $(this));
     });
     //
     //视频音频点击事件
-    $(".menuleft ul li.class3").click(function() {
+    $(".menuleft .pattern").click(function() {
         if ($(this).hasClass("grey")) {
             var top = $(this).offset().top - 15;
             var left = $(this).offset().left;
@@ -254,7 +403,7 @@ $(function() {
             });
             return false;
         }
-        $(this).addClass("current").siblings("li.class3").removeClass("current");
+        //$(this).addClass("current").siblings("li.class3").removeClass("current");
         requestQuestion("category", $(this));
     });
 
@@ -339,11 +488,11 @@ $(function() {
 /**
  * 请求题目
  * 响应分类、科目、等级以及上下题的点击，最终目的为请求题目。
- * @param {string} type [请求类型，大类为category，科目为object，等级为level,上一题下一题为quick_select_prev和quick_select_next
+ * @param {string} type [请求类型，大类为category，科目为object，等级为level,专题为subject，推荐为recommend，难度为difficulty,特别推荐为special_recommend,上一题下一题为quick_select_prev和quick_select_next
  * @returns {void}
  * @author Adam $date2013-07-26$
  */
-function requestQuestion(type, clickObject) {
+function requestQuestion(type, clickObject, media_id) {
     //如果有题目正在请求，中断此次请求并提示（修改为abort ajax）
     if (typeof ajaxRequest != "undefined") {
         var top = $(".videoplay").offset().top - 30;
@@ -362,44 +511,78 @@ function requestQuestion(type, clickObject) {
         //return false;
         ajaxRequest.abort();
     }
-
-    var voice = $(".voice.current").attr("value");
-    var target = $(".target.current").attr("value");
-    var pattern = $(".pattern.current").attr("value");
-    var object = $(".kecheng .current").attr("value");
-    var level = $(".grade .current").attr("value");
-
-
-    if (type == 'level') {
-        level = clickObject.attr("value");
-    } else if (type == 'category') {
-        if (clickObject.hasClass("target")) {
-            target = clickObject.attr("value");
-        } else if (clickObject.hasClass("pattern")) {
-            pattern = clickObject.attr("value");
-        } else {
-            voice = clickObject.attr("value");
-        }
-    } else if (type == 'object') {
-        object = clickObject.attr("value");
+    //查看类型
+    var viewType = $(".J_tabs li a.current").attr("value");
+    if (type == "switch_view_type") {
+        viewType = clickObject.attr("value");
     }
 
     var now_question_id = $("#J_questionId").text();
     if ($(".answer").is(":visible")) {
         $("#J_answerButton").click();
     }
+    //特别推荐的类型
+    if (type == "special_recommend") {
+        viewType = 4;
+    }
+    //特别推荐下的上下题
+    if (viewType == 3 && typeof $(".J_recommend .current").attr("value") == "undefined" && typeof $(".J_recommendDifficulty .current").attr("value") == "undefined") {
+        if (type == "quick_select_prev" || type == "quick_select_next") {
+            viewType = 4;
+        }
+    }
+    var data = {
+        'viewType': viewType,
+        'voice': $(".voice.current").attr("value"),
+        'target': $(".target.current").attr("value"),
+        'pattern': $(".pattern.current").attr("value"),
+        'type': type,
+        'now_question_id': now_question_id
+    };
+    
+    var postUrl = '/ajax_get_question';
+    if (viewType == 4) {
+        data.media_id = media_id;
+    } else if (viewType == 3) {
+        data.recommend = $(".J_recommend .current").attr("value");
+        data.difficulty = $(".J_recommendDifficulty .current").attr("value");
+    } else if (viewType == 2) {
+        data.subject = $(".J_subject .current").attr("value");
+        data.difficulty = $(".J_subjectDifficulty .current").attr("value");
+    } else {
+        data.object = $(".kecheng .current").attr("value");
+        data.level = $(".grade .current").attr("value");
+        postUrl = '/get_question';
+    }
+    //根据点击的对象，获取最新请求的条件
+    if (type == "category") {
+        if (clickObject.hasClass("target")) {
+            data.target = clickObject.attr("value");
+        } else if (clickObject.hasClass("pattern")) {
+            data.pattern = clickObject.attr("value");
+        } else if (clickObject.hasClass("voice")) {
+            data.voice = clickObject.attr("value");
+        }
+    } else if (type == 'level') {
+        data.level = clickObject.attr("value");
+    } else if (type == 'object') {
+        data.object = clickObject.attr("value");
+    } else if (type == "subject") {
+        data.subject = clickObject.attr("value");
+    } else if (type == "recommend") {
+        data.recommend = clickObject.attr("value");
+    } else if (type == "difficulty") {
+        data.difficulty = clickObject.attr("value");
+    }
+    
+    if (data.target == 2) {
+    	postUrl = '/ajax_get_question';
+    }
+    
     layer_div("show");
     ajaxRequest = $.ajax({
-        url: URL + '/ajax_get_question',
-        data: {
-            'voice': voice,
-            'target': target,
-            'pattern': pattern,
-            'object': object,
-            'level': level,
-            'type': type,
-            'now_question_id': now_question_id
-        },
+        url: URL + postUrl,
+        data: data,
         type: 'POST',
         dataType: 'json',
         cache: false,
@@ -408,7 +591,6 @@ function requestQuestion(type, clickObject) {
             if (msg) {
                 var data = msg.data;
                 if (data == null) {
-
                     $.messager.show({
                         msg: "<span  class='messager_span'>该题目不存在，请重试...</span>",
                         showType: 'fade',
@@ -425,73 +607,87 @@ function requestQuestion(type, clickObject) {
                     return false;
                 }
 
-                if (data.question && data.question.tested) {
-                    var top = $(".videoplay").offset().top - 30;
-                    var left = $(".videoplay").offset().left + $(".videoplay").width() / 2 - 80;
-                    $.messager.show({
-                        msg: "<span class='messager_span'>暂无新题，升级吧!</span>",
-                        showType: 'fade',
-                        width: 150,
-                        height: 45,
-                        timeout: 2000,
-                        style: {
-                            left: left,
-                            top: top
-                        }
-                    });
-                }
-                //
-                //科目为空
-                if (data['object_info'] == null) {
-                    data['object_info'] = new Array();
-                    data['object_info']['id'] = 0;
-                }
-                //更新科目列表
-                var object_list = data.object_list;
-                if (object_list != null) {
-                    var str = '';
-                    for (var i = 0; i < object_list.length; i++) {
-                        str += '<li value="' + object_list[i]['id'] + '"';
-                        if (data['object_info']['id'] == object_list[i]['id']) {
-                            str += ' class="current" ';
-                        } else {
-                            if (object_list[i]['question_num'] == 0) {
-                                str += ' class="grey not_allowed" ';
+                if (data.question) {
+                    if (data.question.tested) {
+                        var content = "做过了？换个类别吧！";
+                    } else if (data.question.viewed) {
+                        var content = "看过了？换个题目吧！";
+                    }
+                    if (data.question.max) {
+                        var content = "已经最后一题了，升级吧！";
+                    } else if (data.question.min) {
+                        var content = "已经第一题了，降级吧！";
+                    }
+                    if (content) {
+                        var top = $(".videoplay").offset().top - 30;
+                        var left = $(".videoplay").offset().left + $(".videoplay").width() / 2 - 90;
+                        $.messager.show({
+                            msg: "<span class='messager_span'>" + content + "</span>",
+                            showType: 'fade',
+                            width: 185,
+                            height: 45,
+                            timeout: 2000,
+                            style: {
+                                left: left,
+                                top: top
                             }
-                        }
-                        str += '><span>' + object_list[i]['name'] + '</span></li>';
+                        });
                     }
-                    $(".kecheng").html(str);
-                    if ($(".kecheng .current").size() < 1) {
-                        $(".kecheng li").not(".grey").first().addClass("current");
+                    
+                    if (!data.question.id) {
+                    	layer_div();
+                    	return false;
                     }
                 }
-                //
-                //等级为空
-                if (data['level_info'] == null) {
-                    data['level_info'] = new Array();
-                    data['level_info']['id'] = 0;
+                if (type == "category") {
+                    //
+                    //科目为空
+                    if (data['object_info'] == null) {
+                        data['object_info'] = new Array();
+                        data['object_info']['id'] = 1;
+                    }
+                    //
+                    //等级为空
+                    if (data['level_info'] == null) {
+                        data['level_info'] = new Array();
+                        data['level_info']['id'] = 1;
+                    }
+                    rewriteObjectAndLevelList(data.object_list, data['object_info']['id'], data.level_list, data['level_info']['id']);
+                    rewriteReommendAndDifficultyList(data.recommend_list, data.question.recommend, data.recommend_difficulty_list, data.question.difficulty);
+                    rewriteSubjectAndDifficultyList(data.subject_list, data.question.subject, data.subject_difficulty_list, data.question.difficulty);
                 }
-                //更新等级列表
-                var level_list = data.level_list;
-                if (level_list != null) {
-                    var str = '';
-                    for (var i = 0; i < level_list.length; i++) {
-                        str += '<li value="' + level_list[i]['id'] + '"';
-                        if (data['level_info']['id'] == level_list[i]['id']) {
-                            str += ' class="current" ';
-                        } else {
-                            if (level_list[i]['question_num'] == 0) {
-                                str += ' class="grey not_allowed" ';
-                            }
+                if (viewType == 4) {
+                    rewriteReommendAndDifficultyList(data.recommend_list, 0, data.recommend_difficulty_list, 0);
+                    $(".J_recommend li.current").removeClass("current");
+                    $(".J_recommendDifficulty li.current").removeClass("current");
+                } else if (viewType == 3) {
+                    if (type == "recommend") {
+                        rewriteReommendAndDifficultyList(null, 0, data.recommend_difficulty_list, data.question.difficulty);
+                    } else if (type == "quick_select_prev" || type == "switch_view_type") {
+                        rewriteReommendAndDifficultyList(data.recommend_list, data.question.recommend, data.recommend_difficulty_list, data.question.difficulty);
+                    }
+                } else if (viewType == 2) {
+                    if (type == "subject") {
+                        rewriteSubjectAndDifficultyList(null, 0, data.subject_difficulty_list, data.question.difficulty);
+                    } else if (type == "quick_select_prev" || type == "switch_view_type") {
+                        rewriteSubjectAndDifficultyList(data.subject_list, data.question.subject, data.subject_difficulty_list, data.question.difficulty);
+                    }
+                } else {
+                    if (type != "category") {
+                        //
+                        //科目为空
+                        if (data['object_info'] == null) {
+                            data['object_info'] = new Array();
+                            data['object_info']['id'] = 0;
                         }
-                        str += '><span>' + level_list[i]['name'] + '</span></li>';
+                        //
+                        //等级为空
+                        if (data['level_info'] == null) {
+                            data['level_info'] = new Array();
+                            data['level_info']['id'] = 0;
+                        }
+                        rewriteObjectAndLevelList(data.object_list, data['object_info']['id'], data.level_list, data['level_info']['id']);
                     }
-                    $(".grade").html(str);
-                    if ($(".grade .current").size() < 1) {
-                        $(".grade li").not(".grey").first().addClass("current");
-                    }
-                    $(".grade li:eq(13)").css("margin-left", level_margin_index + "px");
                 }
                 //
                 //更新题目
@@ -511,18 +707,35 @@ function requestQuestion(type, clickObject) {
                 $("#J_textButton").attr("media_text_url", question.media_text_url);
                 bindMediaTextClickEvent("disable");//点击选项后才能查看文本
                 updateOption(question.option);
+                //说力听力耳朵切换
+                if (question.target == 2) {
+                    $(".J_listenButtons").hide();
+                    $(".J_speakButtons").show();
+                    $(".playbutton").show();
+                    $(".voice[value='2']").addClass("grey").children("span").addClass("grey");
+                } else {
+                    $(".playbutton").hide();
+                    $(".J_speakButtons").hide();
+                    $(".J_listenButtons").show();
+                    $(".voice[value='2']").removeClass("grey").children("span").removeClass("grey");
+                }
+                if (question.voice == 2) {
+                    $(".target[value='2']").addClass("grey").children("span").addClass("grey");
+                } else {
+                    $(".target[value='2']").removeClass("grey").children("span").removeClass("grey");
+                }
                 //
                 if (data['user_count_info'] == null || data['user_count_info']['right_num'] == null) {
                     data['user_count_info']['right_num'] = 0;
                 }
 
                 //是否已经满10题，是则设置下一题自动升级
-                if (data['user_count_info']['right_num'] >= 10) {
+                if (viewType == 1 && data['user_count_info']['right_num'] >= 10) {
                     next_question_lvlup = true;
                 } else {
                     next_question_lvlup = false;
                 }
-                if (next_question_lvlup) {
+                if (viewType == 1 && next_question_lvlup) {
                     //
                     //提示可以升级了
                     var top = $(".videoplay").offset().top - 30;
@@ -547,14 +760,14 @@ function requestQuestion(type, clickObject) {
                 var videoStr = '';
                 $('#J_media_div').html(videoStr);
 
-                if (question.media || question.media_url) {
+                if (question.play_code || question.media_info) {
 
                     if (question.isAboutVideo != 1) {
-                        if (question.media_type == 1) {
-                            videoStr = question.media;
-                        } else if (question.media_type == 2) {
-                            videoStr = '<iframe class="media_iframe" src="' + question.media + '" width="100%" height="100%" scrolling="no" frameborder="0">';
-                        } else if (question.media_type == 3) {
+                        if (question.play_type == 1) {
+                            videoStr = question.play_code;
+                        } else if (question.play_type == 2) {
+                            videoStr = '<iframe class="media_iframe" src="' + question.play_code + '" width="100%" height="100%" scrolling="no" frameborder="0">';
+                        } else if (question.play_type == 3) {
 
                             $('#J_media_div').html('<div id="J_media_swfobject_div"></div>');
 
@@ -570,19 +783,56 @@ function requestQuestion(type, clickObject) {
                                 bgColor: "#000000"
                             };
 
-                            swfobject.embedSWF(swfUrl, "J_media_swfobject_div", "100%", "100%", version, "/swf/playerProductInstall.swf", question.media, params);
+                            swfobject.embedSWF(swfUrl, "J_media_swfobject_div", "100%", "100%", version, "/swf/playerProductInstall.swf", question.play_code, params);
 
-                        } else if (question.media_type == 4) {
+                        } else if (question.play_type == 4 && question.target == 1) {
                             $('#J_media_div').html('<div id="J_media_swfobject_div" style="height:' + media_height + 'px;width:' + media_width + 'px;"></div>');
 
-                            flowplayer("J_media_swfobject_div", "http://releases.flowplayer.org/swf/flowplayer-3.2.16.swf", {playlist: [question.media_img_url, {url: question.media, autoPlay: false}]});
+                            flowplayer("J_media_swfobject_div", "http://releases.flowplayer.org/swf/flowplayer-3.2.16.swf", {playlist: [question.media_thumb_img, {url: question.play_code, autoPlay: false}]});
 
+                        } else if (question.play_type == 4 && question.target == 2) {
+                            var media_info = question.media_info;
+                            $("#J_mediaId").text(media_info.id);//记录媒体id
+                            $("#J_mediaPath").text(media_info.question_id);//记录媒体地址
+                            $('#J_media_div').html("<div id='flashContent'></div>");
+                            var swfVersionStr = "10.2.0";
+                            var xiSwfUrlStr = PUBLIC + "/Js/Links123Player/playerProductInstall.swf";
+                            var flashvars = {};
+                            flashvars.logging = true;
+                            flashvars.url = media_info.real_path;
+                            flashvars.playerMode = 2;
+                            flashvars.url = $("#J_mediaPath").text();
+                            flashvars.questionId = media_info.question_id;
+                            flashvars.rate = 44;//采样率配置 
+                            flashvars.codec = 1;//模式 1.默认模式  2.speex压缩模式
+                            flashvars.mediaId = media_info.id;
+                            flashvars.datahost = encodeURIComponent(URL + "/requestionMediaInfo");
+                            flashvars.sendDataHost = encodeURIComponent(URL + "/speakScore");
+                            flashvars.mp3host = encodeURIComponent("http://dict.youdao.com/dictvoice?audio=###&type=1");
+                            flashvars.wordhost = URL + "/requestionWordInfo";
+                            var params = {};
+                            params.quality = "high";
+                            params.bgcolor = "#ffffff";
+                            params.allowscriptaccess = "sameDomain";
+                            params.allowfullscreen = "true";
+                            var attributes = {};
+                            attributes.id = "Links123Player";
+                            attributes.name = "Links123Player";
+                            attributes.align = "middle";
+                            swfobject.embedSWF(
+                                    PUBLIC + "/Js/Links123Player/Links123Player.swf", "flashContent",
+                                    media_width, media_height,
+                                    swfVersionStr, xiSwfUrlStr,
+                                    flashvars, params, attributes);
+                            swfobject.createCSS("#flashContent", "display:block;text-align:left;");
+                            $("#J_viewButton").addClass("current");
+                            $("#J_speakButton").removeClass("current");
                         } else {
 
                             videoStr += '<object id="J_media_object" height="100%" width="100%" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">';
                             videoStr += '<param name="wmode" value="transparent">';
-                            videoStr += '<param name="movie" value="' + question.media_url + '">';
-                            videoStr += '<embed name="swf" menu="true" height="100%" width="100%" play="false" type="application/x-shockwave-flash" allowfullscreen="true" wmode="transparent" src="' + question.media_url + '">';
+                            videoStr += '<param name="movie" value="' + question.play_code + '">';
+                            videoStr += '<embed name="swf" menu="true" height="100%" width="100%" play="false" type="application/x-shockwave-flash" allowfullscreen="true" wmode="transparent" src="' + question.play_code + '">';
                             videoStr += '</object>';
                         }
                     }
@@ -592,7 +842,7 @@ function requestQuestion(type, clickObject) {
                 }
 
                 if (question.isAboutVideo) {
-                    $('#J_media_img').attr('src', question.media_img_url);
+                    $('#J_media_img').attr('src', question.media_thumb_url);
                     $('#J_media_div').css('visibility', 'hidden');
 
                     $('.J_player').css('display', 'block');
@@ -603,7 +853,6 @@ function requestQuestion(type, clickObject) {
                     $('#J_media_div').css({
                         'height': media_height,
                         'width': media_width,
-                        'margin': media_marin,
                         'visibility': ''
                     });
                 }
@@ -613,11 +862,11 @@ function requestQuestion(type, clickObject) {
                 }
 
                 if (question.isAboutVideo == 1) {
-                    $('#J_media_div').attr('data_media_url', question.media_url);
+                    $('#J_media_div').attr('data_media_url', question.play_code);
                 } else {
                     $('#J_media_div').attr('data_media_url', '');
                 }
-                $('#J_media_div').attr('media_type', question.media_type);
+                $('#J_media_div').attr('play_type', question.play_type);
 
                 $('#J_media_div').attr('data_isAboutVideo', question.isAboutVideo);
 
@@ -629,18 +878,42 @@ function requestQuestion(type, clickObject) {
                 trimWhiteSpace();
                 layer_div("hide");
 
-                if (type == 'level' || type == 'object') {
-                    clickObject.addClass("current").siblings("li").removeClass("current");
-                } else if (type == 'category') {
+                if (type == 'category') {
                     if (clickObject.hasClass("target")) {
                         clickObject.addClass("current").siblings("li.target").removeClass("current");
                     } else if (clickObject.hasClass("pattern")) {
                         clickObject.addClass("current").siblings("li.pattern").removeClass("current");
-                    } else {
+                    } else if (clickObject.hasClass("voice")) {
                         clickObject.addClass("current").siblings("li.voice").removeClass("current");
                     }
+                    $(".J_tabs a[value='" + data.viewType + "']").addClass("current").parent("li").siblings("li").children("a").removeClass("current");
+                    $(".panes > div:eq(" + (data.viewType - 1) + ")").show().siblings().hide();
+                } else if (type == "object" || type == "level" || type == "subject" || type == "recommend" || type == "difficulty") {
+                    clickObject.addClass("current").siblings("li").removeClass("current");
+                } else if (type == "switch_view_type") {
+                    var index = clickObject.parent("li").index();
+                    if (viewType == 1) {
+                        $("#J_currentRiceNameLabel").text("本级：");
+                    } else {
+                        $("#J_currentRiceNameLabel").text("本类：");
+                    }
+                    clickObject.addClass("current");
+                    clickObject.parent("li").siblings().children("a").removeClass("current");
+                    $(".panes > div:eq(" + index + ")").show().siblings().hide();
+                } else if (type == "special_recommend") {
+                    $(".J_tabs a[value='3']").addClass("current").parent("li").siblings("li").children("a").removeClass("current");
+                    $(".panes > div:eq(2)").show().siblings().hide();
                 }
-
+                if (data.recommedsQuestionNum > 0) {
+                    $(".J_tabs a[value='3']").removeClass("grey");
+                } else {
+                    $(".J_tabs a[value='3']").addClass("grey");
+                }
+                if (data.subjectsQuestionNum > 0) {
+                    $(".J_tabs a[value='2']").removeClass("grey");
+                } else {
+                    $(".J_tabs a[value='2']").addClass("grey");
+                }
                 ajaxRequest = undefined;
                 return true;
             } else {
@@ -679,18 +952,29 @@ function bindOptionClickEvent() {
         var target = $(this);
         var select_option = $(this).attr("value");
         var object = $(".kecheng .current").attr("value");
-        $.post(URL + "/answer_question", {
-            question_id: $("#J_questionId").text(),
-            object: object,
-            select_option: select_option
-        }, function(msg) {
+        var viewType = $(".J_tabs a.current").attr("value");
+        var data = {
+            'question_id': $("#J_questionId").text(),
+            'viewType': viewType,
+            'object': object,
+            'select_option': select_option
+        };
+        if (viewType == 3) {
+            if (typeof $(".J_recommend .current").attr("value") == "undefined" && typeof $(".J_recommendDifficulty .current").attr("value") == "undefined") {
+                viewType = 4;
+                data.viewType = viewType;
+            } else {
+                data.recommend = $(".J_recommend .current").attr("value");
+            }
+        }
+        $.post(URL + "/answer_question", data, function(msg) {
             if (msg.status) {
                 var data = msg.data;
                 var user_count_info = data.user_count_info
                 if (user_count_info == null || user_count_info.right_num == null) {
                     user_count_info.right_num = 0;
                 }
-//                            $("#J_rightNum").text(user_count_info.right_num);
+                //$("#J_rightNum").text(user_count_info.right_num);
                 $("#J_currentRice").text(user_count_info.right_num * 100);
                 $("#J_riceDiv").removeClass().addClass("rice_" + user_count_info.right_num * 100);
                 //
@@ -781,12 +1065,166 @@ function bindOptionClickEvent() {
                     });
                 }
             }
+            bindMediaTextClickEvent();
+            $(".J_option").unbind();
+            $(".J_option").css("cursor", "default");
         }, "json");
-        bindMediaTextClickEvent();
-        $(".J_option").unbind();
     })
 }
-
+/**
+ * 重写科目和等级列表
+ * @param {object} object_list [科目列表]
+ * @param {int} object [当前科目id]
+ * @param {object} level_list [等级列表]
+ * @param {int} level [当前等级id]
+ * @returns {void}
+ * @author Adam $date2013.08.31$
+ */
+function rewriteObjectAndLevelList(object_list, object, level_list, level) {
+    //
+    //更新科目列表
+    if (object_list != null) {
+        var str = '';
+        for (var i = 0; i < object_list.length; i++) {
+            str += '<li value="' + object_list[i]['id'] + '"';
+            if (object == object_list[i]['id']) {
+                str += ' class="current" ';
+            } else {
+                if (object_list[i]['question_num'] == 0) {
+                    str += ' class="grey not_allowed" ';
+                }
+            }
+            str += '><span>' + object_list[i]['name'] + '</span></li>';
+        }
+        $(".J_object").html(str);
+        if ($(".J_object .current").size() < 1) {
+            $(".J_object li").not(".grey").first().addClass("current");
+        }
+    }
+    //
+    //更新等级列表
+    if (level_list != null) {
+        var str = '';
+        for (var i = 0; i < level_list.length; i++) {
+            str += '<li value="' + level_list[i]['id'] + '"';
+            if (level == level_list[i]['id']) {
+                str += ' class="current" ';
+            } else {
+                if (level_list[i]['question_num'] == 0) {
+                    str += ' class="grey not_allowed" ';
+                }
+            }
+            str += '><span>' + level_list[i]['name'] + '</span></li>';
+        }
+        $(".J_level").html(str);
+        if ($(".J_level .current").size() < 1) {
+            $(".J_level li").not(".grey").first().addClass("current");
+        }
+        $(".J_level li:eq(13)").css("margin-left", level_margin_index + "px");
+    }
+}
+/**
+ * 重写专题和难度列表
+ * @param {object} subject_list [专题列表]
+ * @param {int} subject [当前专题id]
+ * @param {object} difficulty_list [难度列表]
+ * @param {int} difficulty [当前难度id]
+ * @returns {void}
+ * @author Adam $date2013.09.03$
+ */
+function rewriteSubjectAndDifficultyList(subject_list, subject, difficulty_list, difficulty) {
+    //
+    //更新专题列表
+    if (subject_list != null) {
+        var str = '';
+        for (var i = 0; i < subject_list.length; i++) {
+            str += '<li value="' + subject_list[i]['id'] + '"';
+            if (subject == subject_list[i]['id']) {
+                str += ' class="current" ';
+            } else {
+                if (subject_list[i]['question_num'] == 0) {
+                    str += ' class="grey not_allowed" ';
+                }
+            }
+            str += '><span>' + subject_list[i]['name'] + '</span></li>';
+        }
+        $(".J_subject").html(str);
+        if ($(".J_subject .current").size() < 1) {
+            $(".J_subject li").not(".grey").first().addClass("current");
+        }
+    }
+    //
+    //更新等级列表
+    if (difficulty_list != null) {
+        var str = '';
+        for (var i = 0; i < difficulty_list.length; i++) {
+            str += '<li value="' + difficulty_list[i]['id'] + '"';
+            if (difficulty == difficulty_list[i]['id']) {
+                str += ' class="current" ';
+            } else {
+                if (difficulty_list[i]['question_num'] == 0) {
+                    str += ' class="grey not_allowed" ';
+                }
+            }
+            str += '><span>' + difficulty_list[i]['name'] + '</span></li>';
+        }
+        $(".J_subjectDifficulty").html(str);
+        if ($(".J_subjectDifficulty .current").size() < 1) {
+            $(".J_subjectDifficulty li").not(".grey").first().addClass("current");
+        }
+    }
+}
+/**
+ * 重写推荐和难度列表
+ * @param {object} recommend_list [推荐列表]
+ * @param {int} recommend [当前推荐id]
+ * @param {object} difficulty_list [难度列表]
+ * @param {int} difficulty [当前难度id]
+ * @returns {void}
+ * @author Adam $date2013.09.03$
+ */
+function rewriteReommendAndDifficultyList(recommend_list, recommend, difficulty_list, difficulty) {
+    //
+    //更新专题列表
+    if (recommend_list != null) {
+        var str = '';
+        for (var i = 0; i < recommend_list.length; i++) {
+            str += '<li value="' + recommend_list[i]['id'] + '"';
+            if (recommend == recommend_list[i]['id']) {
+                str += ' class="current" ';
+            } else {
+                if (recommend_list[i]['question_num'] == 0) {
+                    str += ' class="grey not_allowed" ';
+                }
+            }
+            str += '><span>' + recommend_list[i]['name'] + '</span></li>';
+        }
+        $(".J_recommend").html(str);
+        if ($(".J_recommend .current").size() < 1) {
+            $(".J_recommend li").not(".grey").first().addClass("current");
+        }
+    }
+    //
+    //更新等级列表
+    if (difficulty_list != null) {
+        var str = '';
+        for (var i = 0; i < difficulty_list.length; i++) {
+            str += '<li value="' + difficulty_list[i]['id'] + '"';
+            if (difficulty == difficulty_list[i]['id']) {
+                str += ' class="current" ';
+            } else {
+                if (difficulty_list[i]['question_num'] == 0) {
+                    str += ' class="grey not_allowed" ';
+                }
+            }
+            str += '><span>' + difficulty_list[i]['name'] + '</span></li>';
+        }
+        $(".J_recommendDifficulty").html(str);
+        if ($(".J_recommendDifficulty .current").size() < 1) {
+            $(".J_recommendDifficulty li").not(".grey").first().addClass("current");
+        }
+    }
+}
 /**
  * 更新选项
  * @param {array} option [选项数组]
@@ -795,7 +1233,7 @@ function bindOptionClickEvent() {
  */
 function updateOption(option) {
     var str = "";
-
+    $(".J_option").css("cursor", "pointer");
     $('.answer').hide();
 
     if (option != null) {
@@ -971,8 +1409,7 @@ function checkObjectLoaded() {
         $('#J_media_div').css({
             'height': media_height,
             'width': media_width,
-            'visibility': '',
-            'margin': media_marin
+            'visibility': ''
         });
         layer_div("hide");
     } else {
@@ -991,13 +1428,84 @@ function checkObjectLoaded() {
  * @author Adam $date2013.08.29$
  */
 function fadeTip(content, top, left, time, index) {
-    clearTimeout(time);
+    clearTimeout(timer);
     var time = arguments[4] ? arguments[4] : 2000;
     var index = arguments[5] ? arguments[5] : 99;
     $('.J_fadeDiv').remove();
+
     var div = $("<div class='J_fadeDiv' style='color:#ffffff;display:none;position:absolute;z-index:" + index + ";top:" + top + "px;left:" + left + "px;'></div>");
+    $("body").append(div);
     div.html(content);
+    div.fadeIn(1000);
+    timer = setTimeout("$('.J_fadeDiv').fadeOut(1000,function(){$('.J_fadeDiv').remove();})", time);
+}
+
+function showMsg(content, top, left, time, index, font_size) {
+    $('.J_fadeDiv').remove();
+
+    //var div = $("<div class='J_fadeDiv' style='color:#ffffff;display:none;position:absolute;z-index:" + index + ";top:" + top + "px;left:" + left + "px;'></div>");
+    var div = $("<div class=\"autobox autobox-hits J_fadeDiv\" style='display:none;position:absolute;z-index:" + index + ";top:" + top + "px;left:" + left +
+            "px;font-size:" + font_size + "px;'><div class=\"autobox-layer\"><span class=\"autobox-arr\"></span><b>" + content + "</b><span class=\"autobox-end\"></span></div></div>");
     $("body").append(div);
     div.fadeIn(1000);
-    time = setTimeout("$('.J_fadeDiv').fadeOut(1000,function(){$('.J_fadeDiv').remove();})", time);
+    setTimeout("$('.J_fadeDiv').fadeOut(1000,function(){$('.J_fadeDiv').remove();})", time);
+}
+function bindSpeakListenSwitchEvent() {
+    $(".J_speakButtons").click(function() {
+        if ($(this).hasClass("current")) {
+            return false;
+        }
+        $("#J_media_div").html("<div id='flashContent'></div>");
+        var swfVersionStr = "10.2.0";
+        var xiSwfUrlStr = PUBLIC + "/Js/Links123Player/playerProductInstall.swf";
+        var flashvars = {};
+        if ($(this).attr("id") == "J_speakButton") {
+            flashvars.playerMode = 3;
+        } else {
+            flashvars.playerMode = 2;
+        }
+        flashvars.logging = true;
+        flashvars.url = $("#J_mediaPath").text();
+        flashvars.questionId = $("#J_questionId").text();
+        flashvars.rate = 22;//采样率配置 
+        flashvars.codec = 1;//模式 1.默认模式  2.speex压缩模式
+        flashvars.mediaId = $("#J_mediaId").text();
+        flashvars.datahost = encodeURIComponent(URL + "/requestionMediaInfo");
+        flashvars.sendDataHost = encodeURIComponent(URL + "/speakScore");
+        flashvars.googleHost = google_host;
+        flashvars.mp3host = mp3host;
+        flashvars.wordhost = encodeURIComponent(URL + "/requestionWordInfo");
+        var params = {};
+        params.quality = "high";
+        params.bgcolor = "#ffffff";
+        params.allowscriptaccess = "sameDomain";
+        params.allowfullscreen = "true";
+        var attributes = {};
+        attributes.id = "Links123Player";
+        attributes.name = "Links123Player";
+        attributes.align = "middle";
+        swfobject.embedSWF(
+                PUBLIC + "/Js/Links123Player/Links123Player.swf", "flashContent",
+                media_width, media_height,
+                swfVersionStr, xiSwfUrlStr,
+                flashvars, params, attributes);
+        swfobject.createCSS("#flashContent", "display:block;text-align:left;");
+        $(this).addClass("current").siblings(".J_speakButtons").removeClass("current");
+    })
+}
+/**
+ * 播放器状态改变接口
+ * @param {string} state
+ * @returns {string}
+ * @author Adam $date2013.08.22$
+ */
+function playerStateChange(state) {
+    playState = state;
+//    alert(state);
+    if (state == "playing") {
+        $("#J_pauseButton img").attr("src", PUBLIC + "/English/images/video6.png");
+    } else {
+        $("#J_pauseButton img").attr("src", PUBLIC + "/English/images/video5.png");
+    }
+    return state;
 }

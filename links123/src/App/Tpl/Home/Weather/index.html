@@ -10,72 +10,163 @@
  d打头的是反白的图标，29*20像素，
  n打头的是夜间反白图标，29*20像素，注意这里的文件名是两位数字！
  -->
-<div id="ArtList">
-<table width="560" border='1' align="center">
-<tbody><tr>
-<td align="left"><strong>{$sixweather.weatherinfo.date_y}&nbsp;{$sixweather.weatherinfo.week}&nbsp;{$sixweather.weatherinfo.city}</strong></td>
-</tr></tbody>
-</table>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<style type="text/css">
+a, a:hover, a:visited {color:#000000;}
+body, p, li, input, h1, h2, h3, td, select, textarea, div
+{
+	font-family: Tahoma;
+	font-size: 12px;
+}
 
-<table width="560" border="1" align="center">
-<tbody>
-<tr>
-<td align="left" colspan="3"><strong>当前天气</strong></td>
-</tr>
+body
+{
+	text-align: center;
+	padding: 0;
+	margin: 0;
+}
 
-<tr>
-<td width="208" height="80">
-<img src="http://m.weather.com.cn/img/b{$sixweather.weatherinfo.img1}.gif">
-</td>
-<td width="165">{$sixweather.weatherinfo.weather1}<br>{$sixweather.weatherinfo.temp1}</td>
-<td width="183">·风力：{$sixweather.weatherinfo.fl1}<br>·紫外线强度：{$sixweather.weatherinfo.index_uv}</td>
-</tr>
-</tbody>
-</table>
+#tp-weather-widget #changeCity 
+{
+    vertical-align: middle;
+    margin: 0 3px;
+    font-weight: normal;
+    cursor: pointer;
+    color: #999;
+}
 
-<table width="560" height="110"  border="1" align="center">
-<tbody>
-<tr>
-<td colspan='3'><strong>72小时天气预报</strong></td>
-</tr>
+/* Clear Fix */
 
-<tr>
+.clearfix:after
+{
+content:".";
+display:block;
+height:0;
+clear:both;
+visibility:hidden;
+}
+.clearfix
+{
+display:inline-block;
+}
+/* Hide from IE Mac */
+.clearfix {display:block;}
+/* End hide from IE Mac */
+/* end of clearfix */
 
-<td align="center">
-<table width="175" cellspacing="0" cellpadding="0" border="0" align="center">
-<tbody>
-<tr><td height="23" align="center">{$data.0}</td></tr>
-<tr><td height="60" align="center"><img src="http://m.weather.com.cn/img/b{$sixweather.weatherinfo.img1}.gif"></td></tr>
-<tr><td height="57" align="center">{$sixweather.weatherinfo.weather1}<br>{$sixweather.weatherinfo.temp1}
-<br>{$sixweather.weatherinfo.wind1}</td></tr>
-</tbody>
-</table>
-</td>
+.weatherIcon { _behavior: url(/js/iepngfix/iepngfix.htc) }
 
-<td align="center">
-<table width="175" cellspacing="0" cellpadding="0" border="0" align="center">
-<tbody>
-<tr><td height="23" align="center">{$data.1}</td></tr>
-<tr><td height="60" align="center"><img src="http://m.weather.com.cn/img/b{$sixweather.weatherinfo.img3}.gif"></td></tr>
-<tr><td height="57" align="center">{$sixweather.weatherinfo.weather2}<br>{$sixweather.weatherinfo.temp2}
-<br>{$sixweather.weatherinfo.wind2}</td></tr>
-</tbody>
-</table>
-</td>
+.icon
+{
+    background: url('/weather/images/icons.gif');
+    background-repeat: no-repeat;
+}
 
-<td align="center">
-<table width="175" cellspacing="0" cellpadding="0" border="0" align="center">
-<tbody>
-<tr><td height="23" align="center">{$data.2}</td></tr>
-<tr><td height="60" align="center"><img src="http://m.weather.com.cn/img/b{$sixweather.weatherinfo.img5}.gif"></td></tr>
-<tr><td height="57" align="center">{$sixweather.weatherinfo.weather3}<br>{$sixweather.weatherinfo.temp3}
-<br>{$sixweather.weatherinfo.wind3}</td></tr>
-</tbody>
-</table>
-</td>
+.icon_search
+{
+	width: 15px;
+	height: 15px;
+	background-position: left 0;
+}
 
-</tr>
-</tbody>
+.icon_more
+{
+	width: 12px;
+	height: 12px;
+	background-position: left -20px;
+}
 
-</table>
+.icon_info
+{
+	width: 16px;
+	height: 16px;
+	background-position: left -40px;
+	margin: -2px 0;
+}
+
+.corner-all { -moz-border-radius: 3px/*{cornerRadius}*/; -webkit-border-radius: 3px/*{cornerRadius}*/; border-radius: 3px/*{cornerRadius}*/; }
+.corner-tl { -moz-border-radius-topleft: 3px/*{cornerRadius}*/; -webkit-border-top-left-radius: 3px/*{cornerRadius}*/; border-top-left-radius: 3px/*{cornerRadius}*/; }
+.corner-tr { -moz-border-radius-topright: 3px/*{cornerRadius}*/; -webkit-border-top-right-radius: 3px/*{cornerRadius}*/; border-top-right-radius: 3px/*{cornerRadius}*/; }
+.corner-bl { -moz-border-radius-bottomleft: 3px/*{cornerRadius}*/; -webkit-border-bottom-left-radius: 3px/*{cornerRadius}*/; border-bottom-left-radius: 3px/*{cornerRadius}*/; }
+.corner-br { -moz-border-radius-bottomright: 3px/*{cornerRadius}*/; -webkit-border-bottom-right-radius: 3px/*{cornerRadius}*/; border-bottom-right-radius: 3px/*{cornerRadius}*/; }
+.corner-top { -moz-border-radius-topleft: 3px/*{cornerRadius}*/; -webkit-border-top-left-radius: 3px/*{cornerRadius}*/; border-top-left-radius: 3px/*{cornerRadius}*/; -moz-border-radius-topright: 3px/*{cornerRadius}*/; -webkit-border-top-right-radius: 3px/*{cornerRadius}*/; border-top-right-radius: 3px/*{cornerRadius}*/; }
+.corner-bottom { -moz-border-radius-bottomleft: 3px/*{cornerRadius}*/; -webkit-border-bottom-left-radius: 3px/*{cornerRadius}*/; border-bottom-left-radius: 3px/*{cornerRadius}*/; -moz-border-radius-bottomright: 3px/*{cornerRadius}*/; -webkit-border-bottom-right-radius: 3px/*{cornerRadius}*/; border-bottom-right-radius: 3px/*{cornerRadius}*/; }
+.corner-right {  -moz-border-radius-topright: 3px/*{cornerRadius}*/; -webkit-border-top-right-radius: 3px/*{cornerRadius}*/; border-top-right-radius: 3px/*{cornerRadius}*/; -moz-border-radius-bottomright: 3px/*{cornerRadius}*/; -webkit-border-bottom-right-radius: 3px/*{cornerRadius}*/; border-bottom-right-radius: 3px/*{cornerRadius}*/; }
+.corner-left { -moz-border-radius-topleft: 3px/*{cornerRadius}*/; -webkit-border-top-left-radius: 3px/*{cornerRadius}*/; border-top-left-radius: 3px/*{cornerRadius}*/; -moz-border-radius-bottomleft: 3px/*{cornerRadius}*/; -webkit-border-bottom-left-radius: 3px/*{cornerRadius}*/; border-bottom-left-radius: 3px/*{cornerRadius}*/; }
+
+.zfix 
+{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index:-1;
+    left:0;
+    top:0;
+    border:none;
+}
+</style>
+<title>另客-天气预报</title>
+<body>
+<div id="divHeader" class="header">
+    <strong>天气预报</strong>
 </div>
+    
+<div style="padding: 5px 0px; border-bottom: 1px dotted rgb(153, 153, 153); cursor: pointer;" class="clearfix linkBody" id="divCurrentWeather">
+    <div style="width:50%; float:left; text-align:center;">
+        <span class="cityName" id="ltlCity">{$sixweather.weatherinfo.city}</span>
+        <br>
+        <br>
+        <img alt="" title="" src="http://m.weather.com.cn/img/b{$sixweather.weatherinfo.img1}.gif" class="weatherIcon currentIcon">
+        <br>
+        <span id="ltlText">{$sixweather.weatherinfo.weather1}</span>
+    </div>
+    <div style="float:left; line-height: 20px; text-align: left; margin-left:5px;">
+        <span id="ltlTemperature">气温: {$sixweather.weatherinfo.temp1}</span><br>
+        <span id="ltlSpeed">风力: {$sixweather.weatherinfo.fl1}</span><br>
+        <span id="ltlHumidity">紫外线强度: {$sixweather.weatherinfo.index_uv}</span><br>
+        <span id="ltlHumidity">舒适指数: {$sixweather.weatherinfo.index_co}</span><br>
+        <span id="ltlHumidity">晾晒: {$sixweather.weatherinfo.index_ls}</span>
+    </div>
+</div>
+<div style="padding: 5px 0px; border-bottom: 1px dotted rgb(153, 153, 153); cursor: pointer;" class="clearfix linkBody" id="divForecastWeather">
+    <table width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-left: auto; margin-right: auto;">
+        <tbody><tr>
+            <td style="text-align: center;" class="forecast">
+                <div class="forecastDay">{$data.0}</div>
+                <img title="{$sixweather.weatherinfo.weather1}" src="http://m.weather.com.cn/img/b{$sixweather.weatherinfo.img1}.gif" />
+                <div title="" class="forecastTemp"><span class="temp">{$sixweather.weatherinfo.temp1}</span></div>
+            </td>
+            <td style="text-align: center;" class="forecast">
+            	<div class="forecastDay">{$data.1}</div>
+                <img title="{$sixweather.weatherinfo.weather2}" src="http://m.weather.com.cn/img/b{$sixweather.weatherinfo.img3}.gif" />
+                <div title="" class="forecastTemp"><span class="temp">{$sixweather.weatherinfo.temp2}</span></div>
+            </td>
+            <td style="text-align: center;" class="forecast">
+            	<div class="forecastDay">{$data.2}</div>
+                <img title="{$sixweather.weatherinfo.weather3}" src="http://m.weather.com.cn/img/b{$sixweather.weatherinfo.img5}.gif" />
+                <div title="" class="forecastTemp"><span class="temp">{$sixweather.weatherinfo.temp3}</span></div>	
+            </td>
+            <td style="text-align: center;" class="forecast">
+            	<div class="forecastDay">{$data.3}</div>
+                <img title="{$sixweather.weatherinfo.weather4}" src="http://m.weather.com.cn/img/b{$sixweather.weatherinfo.img7}.gif" />
+                <div title="" class="forecastTemp"><span class="temp">{$sixweather.weatherinfo.temp4}</span></div>	
+            </td>
+            <td style="text-align: center;" class="forecast">
+            	<div class="forecastDay">{$data.4}</div>
+                <img title="{$sixweather.weatherinfo.weather5}" src="http://m.weather.com.cn/img/b{$sixweather.weatherinfo.img9}.gif" />
+                <div title="" class="forecastTemp"><span class="temp">{$sixweather.weatherinfo.temp5}</span></div>	
+            </td>
+            
+        </tr>
+    </tbody></table>
+</div>
+    
+<div id="divInfo" class="info">
+
+<span id="spanDate">更新于<span id="ltlTime">{$curweather.weatherinfo.ptime}</span></span>
+
+</div>
+  
+</body>
+</html>

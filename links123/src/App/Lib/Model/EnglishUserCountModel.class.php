@@ -8,6 +8,7 @@ class EnglishUserCountModel extends CommonModel {
 
     /**
      * 获取用户英语角统计信息
+     * @param int $view_type [查看方式，1科目等级，2专题难度，3推荐难度,4特别推荐]
      * @param int $voice [美音/英音：1/2]
      * @param int $target [听力/说力：1/2]
      * @param int $object [科目id]
@@ -16,19 +17,39 @@ class EnglishUserCountModel extends CommonModel {
      * @throws
      * @author Adam $date2013.8.18$ 
      */
-    public function getEnglishUserCountInfo($voice, $target, $object, $level) {
+    public function getEnglishUserCountInfo($view_type = 1, $object, $level, $subject, $recommend, $difficulty, $voice = 1, $target = 1) {
         $user_count_info = array();
-        if ($voice > 0) {
+        $map['view_type'] = $view_type;
+        if (intval($voice) > 0) {
             $map['voice'] = $voice;
         }
-        if ($target > 0) {
+        if (intval($target) > 0) {
             $map['target'] = $target;
         }
-        if ($object > 0) {
-            $map['object'] = $object;
-        }
-        if ($level > 0) {
-            $map['level'] = $level;
+        if ($view_type == 1) {
+            if (intval($level) > 0) {
+                $map['level'] = $level;
+            }
+            if (intval($object) > 0) {
+                $map['object'] = $object;
+            }
+        } else if ($view_type == 2) {
+            if (intval($subject) > 0) {
+                $map['subject'] = $subject;
+            }
+            if (intval($difficulty) > 0) {
+                $map['difficulty'] = $difficulty;
+            }
+        } else if ($view_type == 3) {
+            if (intval($recommend) > 0) {
+                $map['recommend'] = $recommend;
+            }
+            if (intval($difficulty) > 0) {
+                $map['difficulty'] = $difficulty;
+            }
+        } else if ($view_type == 4) {
+            $map['recommend'] = 0;
+            $map['difficulty'] = 0;
         }
         //
         //游客对应游客信息统计表english_tourist_count
@@ -49,10 +70,14 @@ class EnglishUserCountModel extends CommonModel {
         $user_count_info['continue_right_num'] = intval($user_count_info['continue_right_num']);
         $user_count_info['continue_error_num'] = intval($user_count_info['continue_error_num']);
         $user_count_info['rice'] = intval($user_count_info['rice']);
+        $user_count_info['view_type'] = in_array(intval($user_count_info['view_type']), array(1, 2, 3, 4)) ? intval($user_count_info['view_type']) : $view_type;
         $user_count_info['voice'] = intval($user_count_info['voice']) > 0 ? intval($user_count_info['voice']) : $voice;
         $user_count_info['target'] = intval($user_count_info['target']) > 0 ? intval($user_count_info['target']) : $target;
         $user_count_info['object'] = intval($user_count_info['object']) > 0 ? intval($user_count_info['object']) : $object;
         $user_count_info['level'] = intval($user_count_info['level']) > 0 ? intval($user_count_info['level']) : $level;
+        $user_count_info['subject'] = intval($user_count_info['subject']) > 0 ? intval($user_count_info['subject']) : $subject;
+        $user_count_info['recommend'] = intval($user_count_info['recommend']) > 0 ? intval($user_count_info['recommend']) : $recommend;
+        $user_count_info['difficulty'] = intval($user_count_info['difficulty']) > 0 ? intval($user_count_info['difficulty']) : $difficulty;
 
         return $user_count_info;
     }
@@ -67,10 +92,14 @@ class EnglishUserCountModel extends CommonModel {
     public function saveEnglishUserCountInfo($user_count_info) {
         $map = array();
         $user_count_info['updated'] = time();
-        $map['voice'] = $user_count_info['voice'];
-        $map['target'] = $user_count_info['target'];
-        $map['object'] = $user_count_info['object'];
-        $map['level'] = $user_count_info['level'];
+        $map['view_type'] = intval($user_count_info['view_type']);
+        $map['voice'] = intval($user_count_info['voice']);
+        $map['target'] = intval($user_count_info['target']);
+        $map['object'] = intval($user_count_info['object']);
+        $map['level'] = intval($user_count_info['level']);
+        $map['subject'] = intval($user_count_info['subject']);
+        $map['recommend'] = intval($user_count_info['recommend']);
+        $map['difficulty'] = intval($user_count_info['difficulty']);
         //
         //游客对应游客信息统计表english_tourist_count
         if (intval($_SESSION[C('MEMBER_AUTH_KEY')]) <= 0) {

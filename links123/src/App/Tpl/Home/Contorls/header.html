@@ -8,19 +8,21 @@
 				</div>
 				<div class="top_right">
 					<ul>
-						<li><a target="_blank" href="__APP__/">首页</a></li>
-						<empty name="_SESSION[C('MEMBER_AUTH_KEY')]">
-							<li><a href="__APP__/Members/Login">登陆</a></li>
-							<li><a href="__APP__/Members/Register">注册</a></li>
-						<else />
-							<li><a href="__APP__/Members/Index">{$Think.session.nickname}</a></li>
-							<li><a href="__APP__/Members/Index">个人中心</a></li>
-							<li><a href="__APP__/Members/Logout">退出</a></li>
-						</empty>
-						<li><a <eq name="newSuggestion" value="1">style='color:#FF0000'</eq> href="__APP__/Suggestion">留言板</a></li>
-						<li><a href="__APP__/Recommend">推荐链接</a></li>
 						<li id="li_today">{$today}</li>
-						<li><iframe id="sinaWeatherToolIframe"  name="sinaWeatherTool" src="about:blank" width="160" height="20" marginwidth="0" marginheight="0" hspace="0" vspace="0" frameborder="0" scrolling="no"></iframe></li>
+						<li><script type="text/javascript" src="http://ext.weather.com.cn/46989.js"></script></li>
+						
+						<li><a href="__APP__/Index/nav" class="J_thl_href" >另客导航</a></li>
+						<empty name="_SESSION[C('MEMBER_AUTH_KEY')]">
+							<li><a href="__APP__/Members/Login" class="J_thl_href">登陆</a></li>
+							<li><a href="__APP__/Members/Register" class="J_thl_href">注册</a></li>
+						<else />
+							<li><a href="__APP__/Members/Index" class="J_thl_href">{$Think.session.nickname}</a></li>
+							<li><a href="__APP__/Members/Index" class="J_thl_href">个人中心</a></li>
+							<li><a href="__APP__/Members/Logout" target="_blank">退出</a></li>
+						</empty>
+						<li><a <eq name="newSuggestion" value="1">style='color:#FF0000'</eq> href="__APP__/Suggestion" class="J_thl_href">留言板</a></li>
+						<li><a href="__APP__/Recommend" class="J_thl_href">推荐链接</a></li>
+						
 					</ul>
 				</div>
 			</div>
@@ -28,12 +30,12 @@
 		<div id="head_tools"></div>
 		<div id="J_logonav">
 			<div class="logonav">
-				<h1 class="logo"><a href="__APP__/">另客网--英语迷，桌面控</a></h1>
+				<h1 class="logo"><a href="__APP__/Index/nav">另客网--英语迷，桌面控</a></h1>
 				<include file="Home:Contorls:richsearch" />
 				<div class="clr"></div>
 			</div>
 		</div>
-		<div id="div_blank">
+		<div id="div_blank" style="width:100%">
 			<input type="hidden" id="js_APP" value="__APP__/" />
 			<input type="hidden" id="js_URL" value="__URL__" />
 			<input type="hidden" id="js_PUBLIC" value="__PUBLIC__" />

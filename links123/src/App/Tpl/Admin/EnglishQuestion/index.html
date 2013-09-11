@@ -19,13 +19,20 @@
             <html:imageBtn name="resume" click="resume()" style="hMargin fLeft" />
             <html:imageBtn name="myimport" click="import_excel()" style="hMargin fLeft" />
             <html:imageBtn name="myexport" click="export_to_excel()" style="hMargin fLeft" />
+            <select id="selectSubjectSource" style='display: none;float:left;margin:0 5px;'>
+                <option value='-1'>选择专题</option>
+                <option value='0'>无专题</option>
+                <volist name="subject_list" id="subject">
+                    <option value="{$subject.id}" <eq name="param['subject']" value="$subject['id']">selected="true"</eq>>{$subject.name}</option>
+                </volist>
+            </select>
             <div class="hMargin fLeft">
                 <label>英语角点击次数：</label><label>{$english_click_num|default=0}</label>
             </div>
         </div>
         <form method='post' action="__URL__">
             <div class="rSearch">
-                <div class="fLeft">试题查询：<span id="key"><input type="text" name="name" value="{$name}" class="medium" /></span></div>
+                <div class="fLeft">试题查询：<span id="key"><input autocomplete="off" type="text" name="name" value="{$name}" class="medium" /></span></div>
                 <html:imageBtn type="submit" name="search" style="hMargin fLeft" />
             </div>
             <div class="search cBoth">
@@ -91,7 +98,7 @@
 
 
         <div class="list" >
-            <html:list id="checkList" name="category" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,name:名称:edit,created|toDateShort:发布时间,voice|getVoiceName:语音,target|getTargetName:训练,pattern|getPatternName:形式,object_name:科目,level_name:等级,status|getStatus:状态" actionlist="edit:编辑" />
+            <html:list id="checkList" name="category" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,name:名称:edit,created|toDateShort:发布时间,voice|getVoiceName:语音,target|getTargetName:训练,pattern|getPatternName:形式,object_name:科目,level_name:等级,subject_name|default=无:专题:selectSubject|media_id,difficulty|getMediaDifficultyName:难度,recommend|getMediaRecommendYorN:推荐:recommend|media_id,special_recommend|getYorN:特别推荐:special_recommend|media_id,status|getStatus:状态" actionlist="edit:编辑" />
         </div>
 
         <div class="page">{$page}</div>
@@ -156,6 +163,15 @@
         $("#J_exportBtn").click(function(){
             export_action();
         })
+        
+        /* 直达 */
+        $(".page input").keydown(function(event) {
+            if (event.keyCode == 13) {	// 回车
+                if ($(this).val() != '' && !isNaN($(this).val())) {
+                    window.location.href = $(this).attr("url") + "&p=" + $(this).val();
+                }
+            }
+        });
     })
     function showRequest(formData, jqForm, options) {
         $("#dialog").window({title: "导入视频中"});
@@ -214,6 +230,104 @@
     function sortBy(field, sort, param) {
         param = "{$param_str}";
         location.href = "?" + param + "&_order=" + field + "&_sort=" + sort;
+    }
+    /**
+     * 特别推荐
+     * @param {int} id 操作对象id
+     * @returns {void}
+     */
+    function special_recommend(id) {
+        if (id > 0) {
+            $("#load_dialog").window("open");
+            $.post("{:U('Admin/EnglishMedia/setSpecialRecommend')}", {id: id}, function(msg) {
+                if (msg) {
+                    if (msg.status) {
+                        if (msg.data.special_recommend == 0) {
+                            $("a[href=\"javascript:special_recommend('" + id + "')\"]").text("否");
+                        } else {
+                            if (msg.data.recommend) {
+                                $("a[href^=\"javascript:recommend('" + id + "'\"]").text("是");
+                            }
+                            $("a[href=\"javascript:special_recommend('" + id + "')\"]").text("是");
+                        }
+                    }
+                }
+                $("#load_dialog").window("close");
+            }, "json");
+        } else {
+            alert("非法操作！");
+        }
+    }
+    /**
+     * 推荐
+     * @param {int} id 操作对象id
+     * @returns {void}
+     */
+    function recommend(id) {
+        if (id > 0) {
+            $("#load_dialog").window("open");
+            $.post("{:U('Admin/EnglishMedia/setRecommend')}", {id: id}, function(msg) {
+                if (msg) {
+                    if (msg.status) {
+                        if (msg.data == 0) {
+                            $("a[href=\"javascript:recommend('" + id + "')\"]").text("否");
+                            $("a[href=\"javascript:special_recommend('" + id + "')\"]").text("否");
+                        } else {
+                            $("a[href=\"javascript:recommend('" + id + "')\"]").text("是");
+                        }
+                    }
+                }
+                $("#load_dialog").window("close");
+            }, "json");
+        } else {
+            alert("非法操作！");
+        }
+    }
+    /**
+     * 选择专题
+     * @param {int} id
+     * @returns {void}     
+     * @author Adam $date2013.08.30$
+     */
+    function selectSubject(id) {
+        $(".subjectSelect").unbind();
+        //现有的select
+        var old_select_id = $(".subjectSelect").attr("id");
+        //现有的select移除，还原链接
+        if (old_select_id) {
+            var old_id = old_select_id.substr(old_select_id.indexOf("_") + 1);
+            $("#subjectSelect_" + old_id).remove();
+            $("a[href=\"javascript:selectSubject('" + old_id + "')\"]").show();
+        }
+        //显示当前选中的
+        var td = $("a[href=\"javascript:selectSubject('" + id + "')\"]").parent("td");
+        $("a[href=\"javascript:selectSubject('" + id + "')\"]").hide();
+        var now_text = $("a[href=\"javascript:selectSubject('" + id + "')\"]").text();
+        td.append("<select class='subjectSelect' id='subjectSelect_" + id + "'></select>");
+        $("#subjectSelect_" + id).html($("#selectSubjectSource").html());
+        $("#subjectSelect_" + id + " option:contains('" + now_text + "')").attr("selected", "selected");
+        //
+        //绑定事件
+        $(".subjectSelect").change(function() {
+            if (parseInt($(this).val()) == -1) {
+                return false;
+            }
+            var select = $(this);
+            var id = $(this).attr("id").substr($(this).attr("id").indexOf("_") + 1);
+            var target = $(this).val();
+            var targetName = $(".subjectSelect option[value='" + target + "']").text();
+            $("#load_dialog").window("open");
+            $.post("{:U('Admin/EnglishMedia/pointSubject')}", {id: id, target: target}, function(msg) {
+                if (msg) {
+                    if (msg.status) {
+                        $("a[href=\"javascript:selectSubject('" + id + "')\"]").text(targetName);
+                        select.remove();
+                        $("a[href=\"javascript:selectSubject('" + id + "')\"]").show();
+                    }
+                }
+                $("#load_dialog").window("close");
+            }, "json")
+        })
     }
 </script>
 </body>

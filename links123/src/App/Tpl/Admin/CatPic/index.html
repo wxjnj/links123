@@ -1,20 +1,6 @@
 <tagLib name="html" />
 <include file="Public:header" />
-
-<load href="__PUBLIC__/Js/jquery.js" />
-<script language="javascript">
-	$(function(){
-		/* 直达 */
-		$(".page input").keydown(function(event){
-			if (event.keyCode == 13) {	// 回车
-				if ( $(this).val()!='' && !isNaN($(this).val()) ) {
-					window.location.href = $(this).attr("url") + "&p=" + $(this).val();
-				}
-			}
-		});
-	});
-</script>
-
+<load href="__PUBLIC__/Js/Jquery/jquery.js" />
 <div id="main" class="main" >
 	<div class="content" >
 		<div class="title">目录图片列表</div>
@@ -59,7 +45,18 @@
 	</div>
 
 </div>
-
+<script type="text/javascript">
+    $(function() {
+        /* 直达 */
+        $(".page input").keydown(function(event) {
+            if (event.keyCode == 13) {	// 回车
+                if ($(this).val() != '' && !isNaN($(this).val())) {
+                    window.location.href = $(this).attr("url") + "&p=" + $(this).val();
+                }
+            }
+        });
+    })
+</script>
 </body>
 </html>
 
