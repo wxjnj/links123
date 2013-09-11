@@ -1020,6 +1020,7 @@ class IndexAction extends EnglishAction {
     		$levelModel = D("EnglishLevel");
     		$objectModel = D("EnglishObject");
     		$questionModel = D("EnglishQuestion");
+    		$englishViewRecordModel = D("EnglishViewRecord");
     		
     		$user_id = intval($_SESSION[C("MEMBER_AUTH_KEY")]);
     		if (!$user_id) {
@@ -1184,8 +1185,8 @@ class IndexAction extends EnglishAction {
     			
     			$questionInfo = $questionModel->getSpecialRecommend($media_id);
     		} else {
-    			
-    			$questionInfo = $questionModel->getSubjectQuestion($object, $level, $voice, $target, $pattern, $type, 0, $now_question_id);
+    			$question_id = $englishViewRecordModel->getUserViewQuestionLastId($object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern);
+    			$questionInfo = $questionModel->getSubjectQuestion($object, $level, $voice, $target, $pattern, $type, $question_id, $now_question_id);
     		}
     		
     		$ret['question'] = $questionInfo;
@@ -1201,7 +1202,6 @@ class IndexAction extends EnglishAction {
     		$ret['subjectsQuestionNum'] = $englishMediaModel->getSubjectQuestionNum($target, $voice, $pattern);
     		//
     		//记录浏览题目
-    		$englishViewRecordModel = D("EnglishViewRecord");
     		if ($viewType == 2) {
     			$englishViewRecordModel->addRecord($ret['question']['id'], 0, 0, $ret['question']['subject'], 0, $ret['question']['difficulty'], $ret['question']['voice'], $ret['question']['target'], $ret['question']['pattern'], $viewType);
     		} else if ($viewType == 3) {

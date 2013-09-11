@@ -252,6 +252,68 @@ class EnglishViewRecordModel extends CommonModel {
         return $ret;
     }
 
+    /**
+     * 获取最后查看ID
+     * 
+     * @author slate date:2013-09-11
+     */
+    public function getUserViewQuestionLastId($object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern, $extend_condition = "") {
+    	//试题id数组初始化
+    	$question_ids = array();
+    	if (intval($object)) {
+    		if (D("EnglishObject")->where("id=" . intval($object))->getField("name") == "综合") {
+    			$object = 0;
+    		}
+    	}
+    	if (intval($object) > 0) {
+    		$map['media.object'] = intval($object);
+    	}
+    	if (intval($level) > 0) {
+    		$map['media.level'] = intval($level);
+    	}
+    	if (intval($subject) > 0) {
+    		$map['media.subject'] = intval($subject);
+    	}
+    	if (intval($recommend) > 0) {
+    		$map['_string'] = "FIND_IN_SET('" + $recommend + "',media.recomend)";
+    		//$map['media.recommend'] = intval($recommend);
+    	}
+    	if (intval($difficulty) > 0) {
+    		$map['media.difficulty'] = intval($difficulty);
+    	}
+    	if (intval($voice) > 0) {
+    		$map['media.voice'] = intval($voice);
+    	}
+    	if (intval($target) > 0) {
+    		$map['question.target'] = intval($target);
+    	}
+    	if (intval($pattern) > 0) {
+    		$map['media.pattern'] = intval($pattern);
+    	}
+    	if (!empty($extend_condition)) {
+    		$map['_string'] .= $extend_condition;
+    	}
+    	if (isset($_SESSION[C('MEMBER_AUTH_KEY')]) && intval($_SESSION[C('MEMBER_AUTH_KEY')]) > 0) {
+    		$map['record.user_id'] = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+    	} else {
+    		$map['record.user_id'] = intval(cookie("english_tourist_id")) > 0 ? -intval(cookie("english_tourist_id")) : 0;
+    	}
+    	$ret = $this->alias("record")
+    	->field("record.question_id")
+    	->join(C("DB_PREFIX") . "english_question question on record.question_id=question.id")
+    	->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media on question.media_id=media.id")
+    	->where($map)
+    	->order("record.sort DESC")
+    	->limit(1)
+    	->select();
+    	
+    	$question_id = 0;
+    	if ($ret[0]) {
+    		$question_id = $ret[0]['question_id'];
+    	}
+    	
+    	return $question_id;
+    }
 }
 
 ?>

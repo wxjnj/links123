@@ -627,6 +627,7 @@ function requestQuestion(type, clickObject, media_id) {
                     }
                     
                     if (!data.question.id) {
+                    	layer_div();
                     	return false;
                     }
                 }
