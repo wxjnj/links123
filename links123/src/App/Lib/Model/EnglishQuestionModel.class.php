@@ -380,124 +380,174 @@ class EnglishQuestionModel extends CommonModel {
      * @author slate date:2013-09-11
      */
     public function getSubjectQuestion($object, $level, $voice = 1, $target = 1, $pattern = 1, $type, $questionid = 0, $nowQuestionId = 0) {
-    	$map = array();
-    	$englishRecordModel = D("EnglishRecord");
-    	$needField = "question.id as question_id,question.target,question.content,question.answer,question.media_id,media.*";
-    	$ret = array();
-    	
-    	$order = "`special_recommend` DESC,`recommend` DESC";
+        $map = array();
+        $englishRecordModel = D("EnglishRecord");
+        $needField = "question.id as question_id,question.target,question.content,question.answer,question.media_id,media.*";
+        $ret = array();
 
-    	//获取科目条件
-    	if ($object > 0) {
-    		//检测科目是否为综合
-    		$object_name = D("EnglishObject")->where(array("id" => $object, "status" => 1))->getField("name");
-    		//科目名不为综合
-    		if ($object_name != "综合") {
-    			$map['media.object'] = $object;
-    		}
-    	}
-    	if ($level > 0) {
-    		$map['media.level'] = $level;
-    	}
-    	 
-    	if ($voice > 0) {
-    		$map['media.voice'] = $voice;
-    	}
-    	if ($pattern > 0) {
-    		$map['media.pattern'] = $pattern;
-    	}
-    	if ($target > 0) {
-    		$map['question.target'] = $target;
-    	}
-    	
-    	if ($type == "quick_select_prev") {
-    		
-    		$map['question.id']  = array('lt', $nowQuestionId);
-    		$order = "question.id DESC";
-    	} elseif ($type == 'quick_select_next') {
-    		
-    		$map['question.id']  = array('gt', $nowQuestionId);
-    		$order = "question.id ASC";
-    	} else {
-    		
-    		if($questionid) {
-    			$map['question.id'] = $questionid;
-    		}
-    		$order = "question.id ASC";
-    	}
-    	
-    	$map['media.status'] = 1;
-    	$map['question.status'] = 1;
-    	
-    	$result = $this->alias("question")->field($needField)
-    	->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media ON question.media_id=media.id")
-    	->where($map)->order($order)->limit(1)->select();
-    	
-    	$ret = $result[0];
-    	if ($ret) {
-    		
+        $order = "`special_recommend` DESC,`recommend` DESC";
+
+        //获取科目条件
+        if ($object > 0) {
+            //检测科目是否为综合
+            $object_name = D("EnglishObject")->where(array("id" => $object, "status" => 1))->getField("name");
+            //科目名不为综合
+            if ($object_name != "综合") {
+                $map['media.object'] = $object;
+            }
+        }
+        if ($level > 0) {
+            $map['media.level'] = $level;
+        }
+
+        if ($voice > 0) {
+            $map['media.voice'] = $voice;
+        }
+        if ($pattern > 0) {
+            $map['media.pattern'] = $pattern;
+        }
+        if ($target > 0) {
+            $map['question.target'] = $target;
+        }
+
+        if ($type == "quick_select_prev") {
+
+            $map['question.id'] = array('lt', $nowQuestionId);
+            $order = "question.id DESC";
+        } elseif ($type == 'quick_select_next') {
+
+            $map['question.id'] = array('gt', $nowQuestionId);
+            $order = "question.id ASC";
+        } else {
+
+            if ($questionid) {
+                $map['question.id'] = $questionid;
+            }
+            $order = "question.id ASC";
+        }
+
+        $map['media.status'] = 1;
+        $map['question.status'] = 1;
+
+        $result = $this->alias("question")->field($needField)
+                        ->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media ON question.media_id=media.id")
+                        ->where($map)->order($order)->limit(1)->select();
+
+        $ret = $result[0];
+        if ($ret) {
+
 //     		$user_view_question_ids = D("EnglishViewRecord")->getUserViewQuestionIdList($object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern);
-    		
 //     		if (!empty($user_view_question_ids)) {
 //     			//$ret['viewed'] = true;
 //     			if (empty($question_ids)) {
 //     				$ret['tested'] = true;
 //     			}
 //     		}
-    	} else {
-    		
-    		$ret['max'] = $ret['min'] = 0;
-    		
-    		if ($type == "quick_select_prev") {
-    		
-    			$ret['min'] = 1;
-    		} elseif ($type == 'quick_select_next') {
-    		
-    			$ret['max'] = 1;
-    		}
-    		return $ret;
-    	}
+        } else {
 
-    	$ret['id'] = $ret['question_id'];
-    
-    	$ret['record'] = $englishRecordModel->getQuestionUserRecord($ret['id']);
-    	$ret['record']['untested_num'] = $englishRecordModel->getUserUntestedQuestionNum($object, $level, '', '', '', $voice, $target, $pattern);
-    	$ret['content'] = ftrim($ret['content']);
-    	
-    	$ret['option'] = D("EnglishOptions")->getQuestionOptionList($ret['id']);
-    	foreach ($ret['option'] as $key => $value) {
-    		$ret['option'][$key]['content'] = ftrim($value['content']);
-    	}
-    	return $ret;
+            $ret['max'] = $ret['min'] = 0;
+
+            if ($type == "quick_select_prev") {
+
+                $ret['min'] = 1;
+            } elseif ($type == 'quick_select_next') {
+
+                $ret['max'] = 1;
+            }
+            return $ret;
+        }
+
+        $ret['id'] = $ret['question_id'];
+
+        $ret['record'] = $englishRecordModel->getQuestionUserRecord($ret['id']);
+        $ret['record']['untested_num'] = $englishRecordModel->getUserUntestedQuestionNum($object, $level, '', '', '', $voice, $target, $pattern);
+        $ret['content'] = ftrim($ret['content']);
+
+        $ret['option'] = D("EnglishOptions")->getQuestionOptionList($ret['id']);
+        foreach ($ret['option'] as $key => $value) {
+            $ret['option'][$key]['content'] = ftrim($value['content']);
+        }
+        return $ret;
     }
-    
+
     /**
      * 获取专题题目
      */
     public function getSpecialSubjectQuestion() {
-    	
+        
     }
-    
+
     /**
      * 获取推荐题目
      */
     public function getRecommendQuestion() {
-    	
+        
     }
-    
+
     /**
      * 获取特别推荐视频
      */
-    public function getSpecialRecommendQuestion($media_id) {
-    	
+    public function getSpecialRecommendQuestion($media_id = 0, $nowQuestionId = 0, $type) {
+        $ret = array();
+        $englishRecordModel = D("EnglishRecord");
+        $needField = "question.id as question_id,question.target,question.content,question.answer,question.media_id,media.*";
+        //不指定媒体ID，则根据推荐试题的id按顺序获取
+        if ($type == "quick_select_prev") {
+
+            $map['question.id'] = array('lt', $nowQuestionId);
+            $order = "question.id DESC";
+        } elseif ($type == 'quick_select_next') {
+
+            $map['question.id'] = array('gt', $nowQuestionId);
+            $order = "question.id ASC";
+        } else {
+            if ($media_id) {
+                $map['media.id'] = $media_id;
+            }
+            $order = "question.id ASC";
+        }
+        $map['media.status'] = 1;
+        $map['question.status'] = 1;
+
+        $result = $this->alias("question")->field($needField)
+                        ->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media ON question.media_id=media.id")
+                        ->where($map)->order($order)->limit(1)->select();
+
+        $ret = $result[0];
+
+        if (empty($ret)) {
+            $ret['max'] = $ret['min'] = 0;
+
+            if ($type == "quick_select_prev") {
+
+                $ret['min'] = 1;
+            } elseif ($type == 'quick_select_next') {
+
+                $ret['max'] = 1;
+            }
+            return $ret;
+        }
+
+        $ret['id'] = $ret['question_id'];
+
+        $ret['record'] = $englishRecordModel->getQuestionUserRecord($ret['id']);
+        $ret['record']['untested_num'] = $englishRecordModel->getUserUntestedQuestionNum($object, $level, '', '', '', $voice, $target, $pattern);
+        $ret['content'] = ftrim($ret['content']);
+
+        $ret['option'] = D("EnglishOptions")->getQuestionOptionList($ret['id']);
+        foreach ($ret['option'] as $key => $value) {
+            $ret['option'][$key]['content'] = ftrim($value['content']);
+        }
+        return $ret;
     }
-    
+
     /**
      * 获取说力题目
      */
     public function getSpeakQuestion($viewType, $object, $level, $subject, $recommend, $difficulty, $voice, $pattern) {
-    	
+        
     }
+
 }
 
 ?>
