@@ -574,6 +574,11 @@ function requestQuestion(type, clickObject, media_id) {
     } else if (type == "difficulty") {
         data.difficulty = clickObject.attr("value");
     }
+    
+    if (data.target == 2) {
+    	postUrl = '/ajax_get_question';
+    }
+    
     layer_div("show");
     ajaxRequest = $.ajax({
         url: URL + postUrl,
