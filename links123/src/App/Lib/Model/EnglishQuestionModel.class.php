@@ -450,10 +450,10 @@ class EnglishQuestionModel extends CommonModel {
     		
     		if ($type == "quick_select_prev") {
     		
-    			$ret['max'] = 1;
+    			$ret['min'] = 1;
     		} elseif ($type == 'quick_select_next') {
     		
-    			$ret['min'] = 1;
+    			$ret['max'] = 1;
     		}
     		return $ret;
     	}
