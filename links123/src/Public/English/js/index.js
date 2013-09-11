@@ -573,7 +573,7 @@ function requestQuestion(type, clickObject, media_id) {
     }
     layer_div("show");
     ajaxRequest = $.ajax({
-        url: URL + '/ajax_get_question',
+        url: URL + '/get_question',
         data: data,
         type: 'POST',
         dataType: 'json',
@@ -605,6 +605,11 @@ function requestQuestion(type, clickObject, media_id) {
                     } else if (data.question.viewed) {
                         var content = "看过了？换个题目吧！";
                     }
+                    if (data.question.max) {
+                        var content = "已经最后一题了，升级吧！";
+                    } else if (data.question.min) {
+                        var content = "已经第一题了，降级吧！";
+                    }
                     if (content) {
                         var top = $(".videoplay").offset().top - 30;
                         var left = $(".videoplay").offset().left + $(".videoplay").width() / 2 - 90;
@@ -619,6 +624,10 @@ function requestQuestion(type, clickObject, media_id) {
                                 top: top
                             }
                         });
+                    }
+                    
+                    if (!data.question.id) {
+                    	return false;
                     }
                 }
                 if (type == "category") {
