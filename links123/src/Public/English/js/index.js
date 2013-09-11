@@ -71,6 +71,8 @@ $(function() {
                     $(".J_player").show();
                 }
             });
+            
+            $(this).text(' 　答  题');
         } else { //这里先隐藏后展开
             $("#J_answerButton").addClass("current");
             if ($("#J_media_div").attr("media_type") == 1 || $("#J_media_div").attr("media_type") == 2) {
@@ -82,6 +84,8 @@ $(function() {
                 $('#J_media_div').html('');
             }
             $(".answer").slideDown("slow");
+            
+            $(this).text(' 　视  频');
         }
     });
 
