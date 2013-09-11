@@ -4,7 +4,7 @@ var next_question_lvlup = false;
 var timer;
 $(function() {
     //提示施工中...
-    showMsg("施工中 . . .", $(".J_tabs").offset().top - 20, 370, 3000, 99,18);
+    showMsg("施工中 . . .", $(".J_tabs").offset().top - 20, 370, 5000, 99,18);
     $("#J_preSentenceButton img").click(function() {
         $('#Links123Player')[0].prev();
     })
@@ -1423,8 +1423,6 @@ function fadeTip(content, top, left, time, index) {
 }
 
 function showMsg(content, top, left, time, index, font_size) {
-    var time = arguments[4] ? arguments[4] : 2000;
-    var index = arguments[5] ? arguments[5] : 99;
     $('.J_fadeDiv').remove();
 
     //var div = $("<div class='J_fadeDiv' style='color:#ffffff;display:none;position:absolute;z-index:" + index + ";top:" + top + "px;left:" + left + "px;'></div>");
@@ -1432,7 +1430,7 @@ function showMsg(content, top, left, time, index, font_size) {
             "px;font-size:" + font_size + "px;'><div class=\"autobox-layer\"><span class=\"autobox-arr\"></span><b>" + content + "</b><span class=\"autobox-end\"></span></div></div>");
     $("body").append(div);
     div.fadeIn(1000);
-//    setTimeout("$('.J_fadeDiv').fadeOut(1000,function(){$('.J_fadeDiv').remove();})", time);
+    setTimeout("$('.J_fadeDiv').fadeOut(1000,function(){$('.J_fadeDiv').remove();})", time);
 }
 function bindSpeakListenSwitchEvent() {
     $(".J_speakButtons").click(function() {
