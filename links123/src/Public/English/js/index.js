@@ -539,6 +539,8 @@ function requestQuestion(type, clickObject, media_id) {
         'type': type,
         'now_question_id': now_question_id
     };
+    
+    var postUrl = '/ajax_get_question';
     if (viewType == 4) {
         data.media_id = media_id;
     } else if (viewType == 3) {
@@ -550,6 +552,7 @@ function requestQuestion(type, clickObject, media_id) {
     } else {
         data.object = $(".kecheng .current").attr("value");
         data.level = $(".grade .current").attr("value");
+        postUrl = '/get_question';
     }
     //根据点击的对象，获取最新请求的条件
     if (type == "category") {
@@ -573,7 +576,7 @@ function requestQuestion(type, clickObject, media_id) {
     }
     layer_div("show");
     ajaxRequest = $.ajax({
-        url: URL + '/get_question',
+        url: URL + postUrl,
         data: data,
         type: 'POST',
         dataType: 'json',
