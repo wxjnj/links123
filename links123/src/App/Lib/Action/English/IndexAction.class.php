@@ -1172,7 +1172,7 @@ class IndexAction extends EnglishAction {
     			}
     		}
     		
-    	    if ($target == 2) {
+    	    if ($viewType!=1 && $target == 2) {
     			
     			$questionInfo = $questionModel->getSpeak($viewType, $object, $level, $subject, $recommend, $difficulty, $voice, $pattern);
     		} elseif ($viewType == 2) {
