@@ -1047,7 +1047,7 @@ function bindOptionClickEvent() {
             }
             bindMediaTextClickEvent();
             $(".J_option").unbind();
-            $(".answercontent").css("cursor","default");
+            $(".J_option").css("cursor","default");
         }, "json");
     })
 }
@@ -1213,7 +1213,7 @@ function rewriteReommendAndDifficultyList(recommend_list, recommend, difficulty_
  */
 function updateOption(option) {
     var str = "";
-
+    $(".J_option").css("cursor","pointer");
     $('.answer').hide();
 
     if (option != null) {

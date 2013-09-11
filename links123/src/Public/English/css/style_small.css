@@ -364,7 +364,10 @@ ul.kecheng.J_recommend li {
     margin: 20px 10px 0 25px;
     line-height:38px;
     font-size:14px;
-    cursor:pointer;
+    /*cursor:pointer;*/
+}
+.J_option{
+    cursor: pointer;
 }
 .answertitle{
     font-weight:bold;

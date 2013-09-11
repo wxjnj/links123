@@ -360,12 +360,15 @@ ul.grade li.current {
 	margin: 55px 10px 0 45px;
 	line-height:35px;
 	font-size:14px;
-	cursor:pointer;
+	/*cursor:pointer;*/
 }
 .answertitle{
 	font-weight:bold;
 	font-size:18px;
 	margin-bottom: 20px; /*大分辨率下答案标题空行*/
+}
+.J_option{
+    cursor: pointer;
 }
 .answercontent p:hover{
 	background:#b5814d;

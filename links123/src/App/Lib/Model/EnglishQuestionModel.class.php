@@ -127,34 +127,35 @@ class EnglishQuestionModel extends CommonModel {
                 //
                 //优先获取用户没做过的题目
                 $user_question_ids = $englishRecordModel->getUserTestQuestionIdList($object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern, $map['media.special_recommend']); //用户做过的题目id数组
-                //$map['question.id'] = array("not in", $user_question_ids);
-                $question_ids = array_diff($user_view_question_ids, $user_question_ids); //剔除看过的题目里面做过的题目
-                /* $count = $this->alias("question")->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media ON question.media_id=media.id")->where($map)->count();
-                  if ($count > 0) {
-                  $limit = rand(0, $count - 1);
-                  //去除用户看过的题目
-                  $ret = $this->alias("question")
-                  ->field($needField)
-                  ->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media ON question.media_id=media.id")
-                  ->where($map)
-                  ->order($order)
-                  ->limit("{$limit},1")
-                  ->select();
-                  if (!empty($ret)) {
-                  $ret = $ret[0];
-                  } */
+                $map['question.id'] = array("not in", $user_question_ids);
+                //$question_ids = array_diff($user_view_question_ids, $user_question_ids); //剔除看过的题目里面做过的题目
+                $count = $this->alias("question")->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media ON question.media_id=media.id")->where($map)->count();
+                if ($count > 0) {
+                    $limit = rand(0, $count - 1);
+                    //去除用户看过的题目
+                    $ret = $this->alias("question")
+                            ->field($needField)
+                            ->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media ON question.media_id=media.id")
+                            ->where($map)
+                            ->order($order)
+                            ->limit("{$limit},1")
+                            ->select();
+                    if (!empty($ret)) {
+                        $ret = $ret[0];
+                    }
+                }
             }
             //
             //用户题目都做过，视作未做过一题
             if (empty($ret)) {
                 unset($map['question.id']);
-
-                //用户当前类别题目都看过,获取没做过的第一个
-                if (!empty($question_ids) && intval($question_ids[0]) > 0) {
-                    $map['question.id'] = intval($question_ids[0]);
-                } else if (!empty($user_view_question_ids) && intval($user_view_question_ids[0]) > 0) {
-                    $map['question.id'] = intval($user_view_question_ids[0]); //用户当前都看过且都做过，获取看过的第一个
-                }
+                /*
+                  //用户当前类别题目都看过,获取没做过的第一个
+                  if (!empty($question_ids) && intval($question_ids[0]) > 0) {
+                  $map['question.id'] = intval($question_ids[0]);
+                  } else if (!empty($user_view_question_ids) && intval($user_view_question_ids[0]) > 0) {
+                  $map['question.id'] = intval($user_view_question_ids[0]); //用户当前都看过且都做过，获取看过的第一个
+                  } */
                 //
                 $count = $this->alias("question")->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media ON question.media_id=media.id")->where($map)->count();
                 if ($count > 0) {
