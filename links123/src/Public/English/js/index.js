@@ -1045,9 +1045,10 @@ function bindOptionClickEvent() {
                     });
                 }
             }
+            bindMediaTextClickEvent();
+            $(".J_option").unbind();
+            $(".answercontent").css("cursor","default");
         }, "json");
-        bindMediaTextClickEvent();
-        $(".J_option").unbind();
     })
 }
 /**
