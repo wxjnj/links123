@@ -63,9 +63,9 @@ $(function() {
         if ($(".answer").is(":visible")) {
             $("#J_answerButton").removeClass("current");
             $(".answer").slideUp("slow", function() { //这里收起后显示
-                if ($("#J_media_div").attr("media_type") == 1 || $("#J_media_div").attr("media_type") == 2) {
+                if ($("#J_media_div").attr("play_type") == 1 || $("#J_media_div").attr("play_type") == 2) {
                     $("#J_media_div").css({'display': '', 'position': '', 'left': ''}).show();
-                } else if ($("#J_media_div").attr("media_type") == 4) {
+                } else if ($("#J_media_div").attr("play_type") == 4) {
                     $("#J_media_swfobject_div").show();
                 } else if ($("#J_media_div").attr("data_isaboutvideo") == 1) {
                     $(".J_player").show();
@@ -75,9 +75,9 @@ $(function() {
             $(this).text(' 　答  题');
         } else { //这里先隐藏后展开
             $("#J_answerButton").addClass("current");
-            if ($("#J_media_div").attr("media_type") == 1 || $("#J_media_div").attr("media_type") == 2) {
+            if ($("#J_media_div").attr("play_type") == 1 || $("#J_media_div").attr("play_type") == 2) {
                 $("#J_media_div").css({'display': 'block', 'position': 'absolute', 'left': '-9999px'}).hide();
-            } else if ($("#J_media_div").attr("media_type") == 4) {
+            } else if ($("#J_media_div").attr("play_type") == 4) {
                 $("#J_media_swfobject_div").hide();
             } else if ($("#J_media_div").attr("data_isaboutvideo") == 1) {
                 $(".J_player").hide();
