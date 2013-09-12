@@ -25,11 +25,12 @@ $(function(){
     //听音乐 add by tellen 20130906 
 	var g_music_currentkey = -1;
 	$('.ting').dblclick(function(){
-		
+		;
 		music_box_proc();
 	});
 	
 	$('.ting').click(function(){
+		
 		if(g_music_currentkey != -1){
 			if ($('#J_box_music').is(":hidden")){
 			  $('#J_box_music').show(); 
@@ -804,13 +805,12 @@ $(function(){
 					if (dictSubArr) {
 						
 						if (dictType) {
-							dictStr += '<span lang="zh-CN" class="short_text" id="result_box">';
+							dictStr += '<span lang="zh-CN" id="result_box">';
 							for (var i = 0; i < dictSubArr.length; i++) {
 								
 								var bafArr = dictSubArr[i];
 								
 								//dictStr += '<tr><td colspan="4"><div class="gt-baf-cell gt-baf-pos">' + bafArr[0] + '</div></td></tr>';
-								console.log(bafArr[0]);
 								dictStr += '<span>' + bafArr[0].replace('\n','</br>')+ '</span>';
 							}
 							dictStr += '</span>';
