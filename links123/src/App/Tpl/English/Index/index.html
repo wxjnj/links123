@@ -203,23 +203,25 @@
                                    <script type="text/javascript">
                                        var swfVersionStr = "10.2.0";
                                        var xiSwfUrlStr = "__PUBLIC__/Js/Links123Player/playerProductInstall.swf";
-                                       var flashvars = {};
+                                       var flashvars = new Object();
                                        flashvars.logging = true;
                                        flashvars.playerMode = 2;//播放器播放类型，1一般看，2说力看，3说力说模式
-                                       flashvars.questionId = "{$question.id}";//试题id
+                                       flashvars.questionId =  "{$question.id}";//试题id
                                        flashvars.mediaId = "{$question.media_info.id}";
+                                       flashvars.rate = 22;//采样率配置 
+                                       flashvars.codec = 1;//模式 1.默认模式  2.speex压缩模式
                                        flashvars.sendDataHost = encodeURIComponent("{:U('English/Index/speakScore')}");//往服务器端传数据的地址,音频数据传输接口
                                        flashvars.googleHost = google_host;
                                        flashvars.url = "{$question['media_info']['real_path']}";
                                        flashvars.datahost = encodeURIComponent("{:U('English/Index/requestionMediaInfo')}");
                                        flashvars.mp3host = mp3host;
                                        flashvars.wordhost = "{:U('English/Index/requestionWordInfo')}";
-                                       var params = {};
+                                       var params = new Object();
                                        params.quality = "high";
                                        params.bgcolor = "#ffffff";
                                        params.allowscriptaccess = "sameDomain";
                                        params.allowfullscreen = "true";
-                                       var attributes = {};
+                                       var attributes = new Object();
                                        attributes.id = "Links123Player";
                                        attributes.name = "Links123Player";
                                        attributes.align = "middle";
@@ -337,8 +339,8 @@
                         <div class="playbutton" <eq name="user_last_select['target']" value="1">style='display:none;'</eq>>
                             <ul>
                                 <li id="J_preSentenceButton"> <img src="__PUBLIC__/English/images/video1.png" width="55" height="55" /></li>
-                                <!--<li id="J_replaySentenceButton"> <img src="__PUBLIC__/English/images/video2.png" width="40" height="40" /></li>-->
-                                <!--<li id="J_slowPlayButton"> <img src="__PUBLIC__/English/images/video3.png" width="40" height="40" /></li>-->
+                                <li id="J_replaySentenceButton"> <img src="__PUBLIC__/English/images/video2.png" width="40" height="40" /></li>
+                                <li id="J_slowPlayButton"> <img src="__PUBLIC__/English/images/video3.png" width="40" height="40" /></li>
                                 <li id="J_pauseButton"> <img src="__PUBLIC__/English/images/video5.png" width="40" height="40" /></li>
                                 <li id="J_nextSentenceButton"> <img src="__PUBLIC__/English/images/video4.png" width="40" height="40" /></li>
                             </ul>

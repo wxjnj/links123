@@ -1,24 +1,32 @@
 var ajaxRequest;
 var playState = "unable";//播放器状态，默认不可用
+var sign = false;
 var next_question_lvlup = false;
 var timer;
 $(function() {
     //提示施工中...
     showMsg("施工中 . . .", $(".J_tabs").offset().top - 20, 370, 5000, 99,18);
+    //说力，上一句事件
     $("#J_preSentenceButton img").click(function() {
         $('#Links123Player')[0].prev();
     })
+    //说力，慢放事件
     $("#J_slowPlayButton img").click(function() {
         $('#Links123Player')[0].slow();
     })
+    //说力，暂停播放事件
     $("#J_pauseButton img").click(function() {
         $('#Links123Player')[0].playPause();
     })
-    //
-    bindSpeakListenSwitchEvent();
+    //说力，回放本句事件
+    $("#J_replaySentenceButton img").click(function() {
+        $('#Links123Player')[0].replay();
+    })
+    //说力，下一句事件
     $("#J_nextSentenceButton img").click(function() {
         $('#Links123Player')[0].next();
     })
+    bindSpeakListenSwitchEvent();
     //
     //easyloader加载主题和插件
     easyloader.theme = "metro";
@@ -1466,6 +1474,16 @@ function bindSpeakListenSwitchEvent() {
         if ($(this).hasClass("current")) {
             return false;
         }
+        var playerMode = 2;
+        sign = false;
+		if ($(this).attr("id") == "J_speakButton") {
+            playerMode = 3;
+            sign = true;
+        }
+		$("#Links123Player")[0].playerChoose(playerMode);
+		$(this).addClass("current").siblings(".J_speakButtons").removeClass("current");
+		return false;
+        //旧的切换
         $("#J_media_div").html("<div id='flashContent'></div>");
         var swfVersionStr = "10.2.0";
         var xiSwfUrlStr = PUBLIC + "/Js/Links123Player/playerProductInstall.swf";
@@ -1518,5 +1536,17 @@ function playerStateChange(state) {
     } else {
         $("#J_pauseButton img").attr("src", PUBLIC + "/English/images/video5.png");
     }
+    if(state == "completed")
+	{
+		//测试由看切换到说
+		if(sign == false)
+		{
+			$("#Links123Player")[0].playerChoose(3);
+            $("#J_speakButton").addClass("current");
+            $("#J_viewButton").removeClass("current");
+			$("#Links123Player")[0].playPause();
+			sign = true;
+		}
+	}
     return state;
 }

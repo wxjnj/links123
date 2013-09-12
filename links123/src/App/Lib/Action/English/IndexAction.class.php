@@ -917,11 +917,11 @@ class IndexAction extends EnglishAction {
         //echo "python ./Extend/python/oral-evaluation.py " . $standard_audio_vec . " " . $recordFile . ' "' . $senetenceInfo['content'] . '" "' . $googleRet['utterance'] . '" ' . $googleRet['confidence'];exit;
         $score = intval($score_ret[0]);
         if ($score == 4) {
-            $score = 10;
+            $score = 20;
         } else if ($score == 3) {
-            $score = 50;
+            $score = 70;
         } else if ($score == 2) {
-            $score = 75;
+            $score = 85;
         } else if ($score == 1) {
             $score = 95;
         }
