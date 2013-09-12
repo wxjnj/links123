@@ -293,8 +293,13 @@ ul.grade li.current span{
 .next2{float:right;cursor:pointer;margin-right:0px;}
 .playbutton{float:left;margin-left:142px;}
 .playbutton img{cursor:pointer; margin-left:30px;}
-.playbutton ul li{float:left;height:91px;}
-.videobutton .playbutton img{width: 55px;height: 55px}
+.playbutton ul li{
+	float:left;
+	height:91px;
+	line-height: 91px;
+}
+.videobutton .playbutton img{vertical-align: middle; width: 55px;height: 55px; }
+#J_pauseButton img{ width: 91px; height: 91px; }
 
 .order{
 	width:360px;
