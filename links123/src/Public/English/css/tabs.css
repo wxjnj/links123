@@ -1,51 +1,51 @@
 
 UL.tabs LI {
-	PADDING-BOTTOM: 0px; TEXT-INDENT: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FLOAT: left; LIST-STYLE-IMAGE: none !important; PADDING-TOP: 0px;margin-right:30px;
+	cursor: pointer;PADDING-BOTTOM: 0px; TEXT-INDENT: 0px; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; FLOAT: left; LIST-STYLE-IMAGE: none !important; PADDING-TOP: 0px;margin-right:30px;
 }
 UL.tabs A {
-	POSITION: relative; TEXT-ALIGN: center; PADDING-BOTTOM: 0px; LINE-HEIGHT: 30px; MARGIN: 0px; PADDING-LEFT: 0px; WIDTH: 81px; PADDING-RIGHT: 0px; DISPLAY: block; HEIGHT: 30px; COLOR: #fff; FONT-SIZE: 14px; TOP: 1px; TEXT-DECORATION: none; PADDING-TOP: 0px;font-weight:bold; COLOR: #fff;
+	cursor: pointer;POSITION: relative; TEXT-ALIGN: center; PADDING-BOTTOM: 0px; LINE-HEIGHT: 30px; MARGIN: 0px; PADDING-LEFT: 0px; WIDTH: 81px; PADDING-RIGHT: 0px; DISPLAY: block; HEIGHT: 30px; COLOR: #fff; FONT-SIZE: 14px; TOP: 1px; TEXT-DECORATION: none; PADDING-TOP: 0px;font-weight:bold; COLOR: #fff;
 }
 UL.tabs A:active {
-	background:url(../images/currentbg2.png) no-repeat; COLOR: #fff;
+	cursor: pointer;background:url(../images/currentbg2.png) no-repeat; COLOR: #fff;
 }
 UL.tabs A:hover {
-	background:url(../images/currentbg2.png) no-repeat; COLOR: #fff;
+	cursor: pointer;background:url(../images/currentbg2.png) no-repeat; COLOR: #fff;
 }
 UL.tabs A.current {
-	 background:url(../images/currentbg2.png) no-repeat; COLOR: #fff !important; CURSOR: default !important; text-decoration:none;
+	 cursor: pointer;background:url(../images/currentbg2.png) no-repeat; COLOR: #fff !important;  text-decoration:none;
 }
 UL.tabs A.current:hover {
-	background:url(../images/currentbg2.png) no-repeat; COLOR: #fff !important; CURSOR: default !important; text-decoration:none;
+	cursor: pointer;background:url(../images/currentbg2.png) no-repeat; COLOR: #fff !important; text-decoration:none;
 }
 UL.tabs LI.current {
-	background:url(../images/currentbg2.png) no-repeat; COLOR: #fff !important; CURSOR: default !important
+	cursor: pointer;background:url(../images/currentbg2.png) no-repeat; COLOR: #fff !important;
 }
 UL.tabs A.s {
-	WIDTH: 81px; BACKGROUND-POSITION: -553px 0px
+	cursor: pointer;WIDTH: 81px; BACKGROUND-POSITION: -553px 0px
 }
 UL.tabs A.s:hover {
-	BACKGROUND-POSITION: -553px -31px
+	cursor: pointer;BACKGROUND-POSITION: -553px -31px
 }
 UL.tabs A.current.s {
-	BACKGROUND-POSITION: -553px -62px
+	cursor: pointer;BACKGROUND-POSITION: -553px -62px
 }
 UL.tabs A.l {
-	WIDTH: 174px; BACKGROUND-POSITION: -248px 0px
+	cursor: pointer;WIDTH: 174px; BACKGROUND-POSITION: -248px 0px
 }
 UL.tabs A.l:hover {
-	BACKGROUND-POSITION: -248px -31px
+	cursor: pointer;BACKGROUND-POSITION: -248px -31px
 }
 UL.tabs A.current.l {
-	BACKGROUND-POSITION: -248px -62px
+	cursor: pointer;BACKGROUND-POSITION: -248px -62px
 }
 UL.tabs A.xl {
-	WIDTH: 248px; BACKGROUND-POSITION: 0px 0px
+	cursor: pointer;WIDTH: 248px; BACKGROUND-POSITION: 0px 0px
 }
 UL.tabs A.xl:hover {
-	BACKGROUND-POSITION: 0px -31px
+	cursor: pointer;BACKGROUND-POSITION: 0px -31px
 }
 UL.tabs A.current.xl {
-	BACKGROUND-POSITION: 0px -62px
+	cursor: pointer;BACKGROUND-POSITION: 0px -62px
 }
 .panes .pane {
 	DISPLAY: none

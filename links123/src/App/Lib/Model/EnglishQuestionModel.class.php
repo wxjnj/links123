@@ -127,34 +127,35 @@ class EnglishQuestionModel extends CommonModel {
                 //
                 //优先获取用户没做过的题目
                 $user_question_ids = $englishRecordModel->getUserTestQuestionIdList($object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern, $map['media.special_recommend']); //用户做过的题目id数组
-                //$map['question.id'] = array("not in", $user_question_ids);
-                $question_ids = array_diff($user_view_question_ids, $user_question_ids); //剔除看过的题目里面做过的题目
-                /* $count = $this->alias("question")->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media ON question.media_id=media.id")->where($map)->count();
-                  if ($count > 0) {
-                  $limit = rand(0, $count - 1);
-                  //去除用户看过的题目
-                  $ret = $this->alias("question")
-                  ->field($needField)
-                  ->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media ON question.media_id=media.id")
-                  ->where($map)
-                  ->order($order)
-                  ->limit("{$limit},1")
-                  ->select();
-                  if (!empty($ret)) {
-                  $ret = $ret[0];
-                  } */
+                $map['question.id'] = array("not in", $user_question_ids);
+                //$question_ids = array_diff($user_view_question_ids, $user_question_ids); //剔除看过的题目里面做过的题目
+                $count = $this->alias("question")->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media ON question.media_id=media.id")->where($map)->count();
+                if ($count > 0) {
+                    $limit = rand(0, $count - 1);
+                    //去除用户看过的题目
+                    $ret = $this->alias("question")
+                            ->field($needField)
+                            ->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media ON question.media_id=media.id")
+                            ->where($map)
+                            ->order($order)
+                            ->limit("{$limit},1")
+                            ->select();
+                    if (!empty($ret)) {
+                        $ret = $ret[0];
+                    }
+                }
             }
             //
             //用户题目都做过，视作未做过一题
             if (empty($ret)) {
                 unset($map['question.id']);
-
-                //用户当前类别题目都看过,获取没做过的第一个
-                if (!empty($question_ids) && intval($question_ids[0]) > 0) {
-                    $map['question.id'] = intval($question_ids[0]);
-                } else if (!empty($user_view_question_ids) && intval($user_view_question_ids[0]) > 0) {
-                    $map['question.id'] = intval($user_view_question_ids[0]); //用户当前都看过且都做过，获取看过的第一个
-                }
+                /*
+                  //用户当前类别题目都看过,获取没做过的第一个
+                  if (!empty($question_ids) && intval($question_ids[0]) > 0) {
+                  $map['question.id'] = intval($question_ids[0]);
+                  } else if (!empty($user_view_question_ids) && intval($user_view_question_ids[0]) > 0) {
+                  $map['question.id'] = intval($user_view_question_ids[0]); //用户当前都看过且都做过，获取看过的第一个
+                  } */
                 //
                 $count = $this->alias("question")->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media ON question.media_id=media.id")->where($map)->count();
                 if ($count > 0) {
@@ -168,8 +169,11 @@ class EnglishQuestionModel extends CommonModel {
                             ->select();
                     if (!empty($ret)) {
                         $ret = $ret[0];
-                        if (!empty($user_view_question_ids) && empty($question_ids)) {
-                            $ret['tested'] = true;
+                        if (!empty($user_view_question_ids)) {
+                            //$ret['viewed'] = true;
+                            if (empty($question_ids)) {
+                                $ret['tested'] = true;
+                            }
                         }
                     }
                 }
@@ -210,6 +214,8 @@ class EnglishQuestionModel extends CommonModel {
     public function getQuestionNum($object, $level, $subject, $recommend, $difficulty, $voice = 1, $target = 1, $pattern = 1, $extend_condition = "") {
 
         $map = array();
+        $map['media.status'] = 1;
+        $map['question.status'] = 1;
         if ($voice > 0) {
             $map['media.voice'] = $voice;
         }
@@ -369,5 +375,224 @@ class EnglishQuestionModel extends CommonModel {
         return $ret;
     }
 
+    /**
+     * 
+     * @author slate date:2013-09-11
+     */
+    public function getSubjectQuestion($object, $level, $voice = 1, $target = 1, $pattern = 1, $type, $questionid = 0, $nowQuestionId = 0) {
+    	$map = array();
+    	$englishRecordModel = D("EnglishRecord");
+    	$needField = "question.id as question_id,question.target,question.content,question.answer,question.media_id,media.*";
+    	$ret = array();
+    	
+    	$order = "`special_recommend` DESC,`recommend` DESC";
+
+    	//获取科目条件
+    	if ($object > 0) {
+    		//检测科目是否为综合
+    		$object_name = D("EnglishObject")->where(array("id" => $object, "status" => 1))->getField("name");
+    		//科目名不为综合
+    		if ($object_name != "综合") {
+    			$map['media.object'] = $object;
+    		}
+    	}
+    	if ($level > 0) {
+    		$map['media.level'] = $level;
+    	}
+    	 
+    	if ($voice > 0) {
+    		$map['media.voice'] = $voice;
+    	}
+    	if ($pattern > 0) {
+    		$map['media.pattern'] = $pattern;
+    	}
+    	if ($target > 0) {
+    		$map['question.target'] = $target;
+    	}
+    	
+    	if ($type == "quick_select_prev") {
+    		
+    		$map['question.id']  = array('lt', $nowQuestionId);
+    		$order = "question.id DESC";
+    	} elseif ($type == 'quick_select_next') {
+    		
+    		$map['question.id']  = array('gt', $nowQuestionId);
+    		$order = "question.id ASC";
+    	} else {
+    		
+    		if($questionid) {
+    			$map['question.id'] = $questionid;
+    		}
+    		$order = "question.id ASC";
+    	}
+    	
+    	$map['media.status'] = 1;
+    	$map['question.status'] = 1;
+    	
+    	$result = $this->alias("question")->field($needField)
+    	->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media ON question.media_id=media.id")
+    	->where($map)->order($order)->limit(1)->select();
+    	
+    	$ret = $result[0];
+    	if ($ret) {
+    		
+//     		$user_view_question_ids = D("EnglishViewRecord")->getUserViewQuestionIdList($object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern);
+    		
+//     		if (!empty($user_view_question_ids)) {
+//     			//$ret['viewed'] = true;
+//     			if (empty($question_ids)) {
+//     				$ret['tested'] = true;
+//     			}
+//     		}
+    	} else {
+    		
+    		$ret['max'] = $ret['min'] = 0;
+    		
+    		if ($type == "quick_select_prev") {
+    		
+    			$ret['min'] = 1;
+    		} elseif ($type == 'quick_select_next') {
+    		
+    			$ret['max'] = 1;
+    		}
+    		return $ret;
+    	}
+
+    	$ret['id'] = $ret['question_id'];
+    
+    	$ret['record'] = $englishRecordModel->getQuestionUserRecord($ret['id']);
+    	$ret['record']['untested_num'] = $englishRecordModel->getUserUntestedQuestionNum($object, $level, '', '', '', $voice, $target, $pattern);
+    	$ret['content'] = ftrim($ret['content']);
+    	
+    	$ret['option'] = D("EnglishOptions")->getQuestionOptionList($ret['id']);
+    	foreach ($ret['option'] as $key => $value) {
+    		$ret['option'][$key]['content'] = ftrim($value['content']);
+    	}
+    	return $ret;
+    }
+    
+    /**
+     * 获取专题题目
+     * 
+     * @author slate date:2013-09-11
+     */
+    public function getSpecialSubjectQuestion() {
+    	
+    	$map = array();
+    	$englishRecordModel = D("EnglishRecord");
+    	$needField = "question.id as question_id,question.target,question.content,question.answer,question.media_id,media.*";
+    	$ret = array();
+    	 
+    	$order = "`special_recommend` DESC,`recommend` DESC";
+    	
+    	if ($subject > 0) {
+    		$map['media.subject'] = $subject;
+    	} else {
+    		return $ret;
+    	}
+    	if ($difficulty > 0) {
+    		$map['media.difficulty'] = $difficulty;
+    	}
+    	 
+    	if ($type == "quick_select_prev") {
+    	
+    		$map['question.id']  = array('lt', $nowQuestionId);
+    		$order = "question.id DESC";
+    	} elseif ($type == 'quick_select_next') {
+    	
+    		$map['question.id']  = array('gt', $nowQuestionId);
+    		$order = "question.id ASC";
+    	} else {
+    	
+    		if($questionid) {
+    			$map['question.id'] = $questionid;
+    		}
+    		$order = "question.id ASC";
+    	}
+    	 
+    	$map['media.status'] = 1;
+    	$map['question.status'] = 1;
+    	 
+    	$result = $this->alias("question")->field($needField)
+    	->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media ON question.media_id=media.id")
+    	->where($map)->order($order)->limit(1)->select();
+    	 
+    	$ret = $result[0];
+    	if ($ret) {
+    	
+    	} else {
+    	
+    		$ret['max'] = $ret['min'] = 0;
+    	
+    		if ($type == "quick_select_prev") {
+    	
+    			$ret['min'] = 1;
+    		} elseif ($type == 'quick_select_next') {
+    	
+    			$ret['max'] = 1;
+    		}
+    		return $ret;
+    	}
+    	
+    	$ret['id'] = $ret['question_id'];
+    	
+    	$ret['record'] = $englishRecordModel->getQuestionUserRecord($ret['id']);
+    	$ret['record']['untested_num'] = $englishRecordModel->getUserUntestedQuestionNum($object, $level, '', '', '', $voice, $target, $pattern);
+    	$ret['content'] = ftrim($ret['content']);
+    	 
+    	$ret['option'] = D("EnglishOptions")->getQuestionOptionList($ret['id']);
+    	foreach ($ret['option'] as $key => $value) {
+    		$ret['option'][$key]['content'] = ftrim($value['content']);
+    	}
+    	return $ret;
+    	
+    }
+    
+    /**
+     * 获取推荐题目
+     */
+    public function getRecommendQuestion() {
+    	
+
+    	if ($recommend > 0) {
+    		$map['_string'] = "FIND_IN_SET('" . $recommend . "',media.recommend)";
+    	} else {
+    		return $ret;
+    	}
+    	if ($difficulty > 0) {
+    		$map['media.difficulty'] = $difficulty;
+    	}
+    	 
+    	$ret['recommend'] = $recommend;
+    }
+    
+    /**
+     * 获取特别推荐视频
+     */
+    public function getSpecialRecommendQuestion($media_id) {
+    	
+    	$map = array();
+    	$englishRecordModel = D("EnglishRecord");
+    	$needField = "question.id as question_id,question.target,question.content,question.answer,question.media_id,media.*";
+    	$ret = array();
+    	
+    	$ret = $this->alias("question")
+    	->field($needField)
+    	->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media ON question.media_id=media.id")
+    	->where(array("media.id" => $media_id))
+    	->find();
+    	
+    	$map['media.special_recommend'] = 1;
+    }
+    
+    /**
+     * 获取说力题目
+     */
+    public function getSpeakQuestion($viewType, $object, $level, $subject, $recommend, $difficulty, $voice, $pattern) {
+    	
+    	$ret = D("EnglishQuestionSpeak")->getQuestionToIndex($viewType, $object, $level, $subject, $recommend, $difficulty, $voice, $pattern);
+    	return $ret;
+    }
 }
+
 ?>

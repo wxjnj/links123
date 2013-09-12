@@ -281,15 +281,33 @@ class EnglishMediaAction extends CommonAction {
     public function pointSubject() {
         if ($this->isAjax()) {
             $id = $_REQUEST['id'];
-            $tartget = $_REQUEST['target'];
-            if (intval($tartget) > 0) {
+            $tartget = intval($_REQUEST['target']);
+            if ($tartget >= 0) {
                 $map['id'] = array("in", $id);
+                $model = D("EnglishMedia");
+                $model->startTrans();
+                $info = $model->field("recommend,object")->where($map)->find();
+                if ($info['recommend'] > 0) {
+                    if ($tartget == 0) {
+                        if (false === $model->setRecommend($id, 1, -1, intval($info['object']))) {
+                            $model->rollback();
+                            $this->ajaxReturn("", "操作失败", false);
+                        }
+                    } else {
+                        if (false === $model->setRecommend($id, 1, intval($tartget))) {
+                            $model->rollback();
+                            $this->ajaxReturn("", "操作失败", false);
+                        }
+                    }
+                }
                 $data['subject'] = intval($tartget);
-                $ret = D("EnglishMedia")->where($map)->save($data);
+                $ret = $model->where($map)->save($data);
                 if (false !== $ret) {
+                    $model->commit();
                     $this->ajaxReturn($tartget, "操作成功", true);
                 }
             }
+            $model->rollback();
             $this->ajaxReturn("", "操作失败", false);
         }
     }
@@ -343,6 +361,7 @@ class EnglishMediaAction extends CommonAction {
                     $this->ajaxReturn("", "操作失败", false);
                 }
             }
+
             if (false !== $ret || $recommend == 1) {
                 if ($recommend == 1 || $data['special_recommend'] == 1) {
                     if (false == $englishMediaModel->setRecommend($id, 1, intval($_REQUEST['targetSubject']))) {

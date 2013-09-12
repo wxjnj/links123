@@ -258,7 +258,7 @@ ul.kecheng.J_recommend li {
     width: 518px;
     height: 325px;
 }
-.media_iframe{width: 518px; height: 329px;}
+.media_iframe{width: 518px; height: 325px;}
 .rightbutton{ position:absolute;right:51px;top:40px;z-index:0;}
 .rightbutton ul{ list-style:none;}
 .rightbutton ul li{ cursor:pointer; height:40px; margin-bottom:15px; background:url(../images/rightbuttonbg_small.png) no-repeat;width:66px;color:#ffe3d4;font-weight:bold;font-size:1em;line-height:40px;padding-left:8px;}
@@ -274,7 +274,7 @@ ul.kecheng.J_recommend li {
 .videobutton_listen{margin-left:255px;float:left;margin-top:0px;width:596px; display:none;}
 .pre{float:left;cursor:pointer;}
 .next2{float:right;cursor:pointer;margin-right:40px;}
-.playbutton{float:left;margin-left:75px;}
+.playbutton{float:left;margin-left:95px;}
 .playbutton img{cursor:pointer; margin-left:20px;}
 .playbutton ul li{float:left;}
 .videobutton .playbutton img{width: 40px;height: 40px}
@@ -364,7 +364,10 @@ ul.kecheng.J_recommend li {
     margin: 20px 10px 0 25px;
     line-height:38px;
     font-size:14px;
-    cursor:pointer;
+    /*cursor:pointer;*/
+}
+.J_option{
+    cursor: pointer;
 }
 .answertitle{
     font-weight:bold;
@@ -428,22 +431,22 @@ UL.tabs {
     BORDER-BOTTOM: none; PADDING-BOTTOM: 0px; LIST-STYLE-TYPE: none; MARGIN: 0px; PADDING-LEFT: 0px; PADDING-RIGHT: 0px; HEIGHT: 30px; LIST-STYLE-IMAGE: none; PADDING-TOP: 0px; clear:both;margin-top:10px;margin-left:10px;
 }
 UL.tabs A {
-    POSITION: relative; TEXT-ALIGN: center; PADDING-BOTTOM: 0px; LINE-HEIGHT: 30px; MARGIN: 0px; PADDING-LEFT: 0px; WIDTH: 110px; PADDING-RIGHT: 0px; DISPLAY: block; HEIGHT: 30px; COLOR: #fff; FONT-SIZE: 12px; TOP: 1px; TEXT-DECORATION: none; PADDING-TOP: 0px;font-weight:bold; COLOR: #fff;
+    cursor: pointer;POSITION: relative; TEXT-ALIGN: center; PADDING-BOTTOM: 0px; LINE-HEIGHT: 30px; MARGIN: 0px; PADDING-LEFT: 0px; WIDTH: 110px; PADDING-RIGHT: 0px; DISPLAY: block; HEIGHT: 30px; COLOR: #fff; FONT-SIZE: 12px; TOP: 1px; TEXT-DECORATION: none; PADDING-TOP: 0px;font-weight:bold; COLOR: #fff;
 }
 UL.tabs A:active {
-    background:url(../images/currentbg2_small.png) no-repeat; COLOR: #fff;
+    cursor: pointer;background:url(../images/currentbg2_small.png) no-repeat; COLOR: #fff;
 }
 UL.tabs A:hover {
-    background:url(../images/currentbg2_small.png) no-repeat; COLOR: #fff;
+    cursor: pointer;background:url(../images/currentbg2_small.png) no-repeat; COLOR: #fff;
 }
 UL.tabs A.current {
-    background:url(../images/currentbg2_small.png) no-repeat; COLOR: #fff !important; CURSOR: default !important; text-decoration:none;
+    cursor: pointer;background:url(../images/currentbg2_small.png) no-repeat; COLOR: #fff !important; text-decoration:none;
 }
 UL.tabs A.current:hover {
-    background:url(../images/currentbg2_small.png) no-repeat; COLOR: #fff !important; CURSOR: default !important; text-decoration:none;
+    cursor: pointer;background:url(../images/currentbg2_small.png) no-repeat; COLOR: #fff !important;  text-decoration:none;
 }
 UL.tabs LI.current {
-    background:url(../images/currentbg2_small.png) no-repeat; COLOR: #fff !important; CURSOR: default !important
+    cursor: pointer;background:url(../images/currentbg2_small.png) no-repeat; COLOR: #fff !important;
 }
 
 /*scrollable*/
@@ -690,7 +693,7 @@ a.disabled {
     background-repeat: no-repeat;
     color: #fff;
     font-family: \5FAE\8F6F\96C5\9ED1;
-    font-size: 14px;
+    font-size: 18px;
     font-weight: bold;
     height: 80px;
     line-height: 80px;

@@ -3,6 +3,8 @@ var playState = "unable";//播放器状态，默认不可用
 var next_question_lvlup = false;
 var timer;
 $(function() {
+    //提示施工中...
+    showMsg("施工中 . . .", $(".J_tabs").offset().top - 20, 370, 5000, 99,18);
     $("#J_preSentenceButton img").click(function() {
         $('#Links123Player')[0].prev();
     })
@@ -63,25 +65,40 @@ $(function() {
         if ($(".answer").is(":visible")) {
             $("#J_answerButton").removeClass("current");
             $(".answer").slideUp("slow", function() { //这里收起后显示
-                if ($("#J_media_div").attr("media_type") == 1 || $("#J_media_div").attr("media_type") == 2) {
+                if ($("#J_media_div").attr("play_type") == 1 || $("#J_media_div").attr("play_type") == 2) {
                     $("#J_media_div").css({'display': '', 'position': '', 'left': ''}).show();
-                } else if ($("#J_media_div").attr("media_type") == 4) {
+                } else if ($("#J_media_div").attr("play_type") == 4) {
                     $("#J_media_swfobject_div").show();
                 } else if ($("#J_media_div").attr("data_isaboutvideo") == 1) {
                     $(".J_player").show();
                 }
             });
+
+            $(this).text(' 　答  题');
         } else { //这里先隐藏后展开
+
+            //播放的视频停止
+            play_code = $("#J_media_object embed").attr("src");
+            videoStr = '';
+            videoStr += '<object id="J_media_object" height="100%" width="100%" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">';
+            videoStr += '<param name="wmode" value="transparent">';
+            videoStr += '<param name="movie" value="' + play_code + '">';
+            videoStr += '<embed name="swf" menu="true" height="100%" width="100%" play="false" type="application/x-shockwave-flash" allowfullscreen="true" wmode="transparent" src="' + play_code + '">';
+            videoStr += '</object>';
+            $('#J_media_div').html(videoStr);
+
             $("#J_answerButton").addClass("current");
-            if ($("#J_media_div").attr("media_type") == 1 || $("#J_media_div").attr("media_type") == 2) {
+            if ($("#J_media_div").attr("play_type") == 1 || $("#J_media_div").attr("play_type") == 2) {
                 $("#J_media_div").css({'display': 'block', 'position': 'absolute', 'left': '-9999px'}).hide();
-            } else if ($("#J_media_div").attr("media_type") == 4) {
+            } else if ($("#J_media_div").attr("play_type") == 4) {
                 $("#J_media_swfobject_div").hide();
             } else if ($("#J_media_div").attr("data_isaboutvideo") == 1) {
                 $(".J_player").hide();
                 $('#J_media_div').html('');
             }
             $(".answer").slideDown("slow");
+
+            $(this).text(' 　视  频');
         }
     });
 
@@ -226,7 +243,14 @@ $(function() {
     //特别推荐点击
     $("#J_specialReommendDiv img").live('click', function() {
         var media_id = $(this).attr("media_id");
-        requestQuestion("special_recommend", $(this), media_id);
+        if (media_id > 0) {
+            requestQuestion("special_recommend", $(this), media_id);
+        } else {
+            var top = $(this).offset().top - 25;
+            var left = $(this).offset().left + 10;
+            fadeTip("<span  class='messager_span'>Coming soon...</span>", top, left);
+            return false;
+        }
     })
 
     //升级事件
@@ -526,6 +550,8 @@ function requestQuestion(type, clickObject, media_id) {
         'type': type,
         'now_question_id': now_question_id
     };
+    
+    var postUrl = '/ajax_get_question';
     if (viewType == 4) {
         data.media_id = media_id;
     } else if (viewType == 3) {
@@ -537,6 +563,7 @@ function requestQuestion(type, clickObject, media_id) {
     } else {
         data.object = $(".kecheng .current").attr("value");
         data.level = $(".grade .current").attr("value");
+        postUrl = '/get_question';
     }
     //根据点击的对象，获取最新请求的条件
     if (type == "category") {
@@ -558,9 +585,14 @@ function requestQuestion(type, clickObject, media_id) {
     } else if (type == "difficulty") {
         data.difficulty = clickObject.attr("value");
     }
+    
+    if (data.target == 2) {
+    	postUrl = '/ajax_get_question';
+    }
+    
     layer_div("show");
     ajaxRequest = $.ajax({
-        url: URL + '/ajax_get_question',
+        url: URL + postUrl,
         data: data,
         type: 'POST',
         dataType: 'json',
@@ -586,20 +618,37 @@ function requestQuestion(type, clickObject, media_id) {
                     return false;
                 }
 
-                if (data.question && data.question.tested) {
-                    var top = $(".videoplay").offset().top - 30;
-                    var left = $(".videoplay").offset().left + $(".videoplay").width() / 2 - 80;
-                    $.messager.show({
-                        msg: "<span class='messager_span'>暂无新题，升级吧!</span>",
-                        showType: 'fade',
-                        width: 150,
-                        height: 45,
-                        timeout: 2000,
-                        style: {
-                            left: left,
-                            top: top
-                        }
-                    });
+                if (data.question) {
+                    if (data.question.tested) {
+                        var content = "做过了？换个类别吧！";
+                    } else if (data.question.viewed) {
+                        var content = "看过了？换个题目吧！";
+                    }
+                    if (data.question.max) {
+                        var content = "已经最后一题了，升级吧！";
+                    } else if (data.question.min) {
+                        var content = "已经第一题了，降级吧！";
+                    }
+                    if (content) {
+                        var top = $(".videoplay").offset().top - 30;
+                        var left = $(".videoplay").offset().left + $(".videoplay").width() / 2 - 90;
+                        $.messager.show({
+                            msg: "<span class='messager_span'>" + content + "</span>",
+                            showType: 'fade',
+                            width: 185,
+                            height: 45,
+                            timeout: 2000,
+                            style: {
+                                left: left,
+                                top: top
+                            }
+                        });
+                    }
+                    
+                    if (!data.question.id) {
+                    	layer_div();
+                    	return false;
+                    }
                 }
                 if (type == "category") {
                     //
@@ -1027,9 +1076,10 @@ function bindOptionClickEvent() {
                     });
                 }
             }
+            bindMediaTextClickEvent();
+            $(".J_option").unbind();
+            $(".J_option").css("cursor", "default");
         }, "json");
-        bindMediaTextClickEvent();
-        $(".J_option").unbind();
     })
 }
 /**
@@ -1194,7 +1244,7 @@ function rewriteReommendAndDifficultyList(recommend_list, recommend, difficulty_
  */
 function updateOption(option) {
     var str = "";
-
+    $(".J_option").css("cursor", "pointer");
     $('.answer').hide();
 
     if (option != null) {
@@ -1401,14 +1451,12 @@ function fadeTip(content, top, left, time, index) {
     timer = setTimeout("$('.J_fadeDiv').fadeOut(1000,function(){$('.J_fadeDiv').remove();})", time);
 }
 
-function showMsg(content, top, left, time, index) {
-    var time = arguments[4] ? arguments[4] : 2000;
-    var index = arguments[5] ? arguments[5] : 99;
+function showMsg(content, top, left, time, index, font_size) {
     $('.J_fadeDiv').remove();
 
     //var div = $("<div class='J_fadeDiv' style='color:#ffffff;display:none;position:absolute;z-index:" + index + ";top:" + top + "px;left:" + left + "px;'></div>");
     var div = $("<div class=\"autobox autobox-hits J_fadeDiv\" style='display:none;position:absolute;z-index:" + index + ";top:" + top + "px;left:" + left +
-            "px;'><div class=\"autobox-layer\"><span class=\"autobox-arr\"></span><b>" + content + "</b><span class=\"autobox-end\"></span></div></div>");
+            "px;font-size:" + font_size + "px;'><div class=\"autobox-layer\"><span class=\"autobox-arr\"></span><b>" + content + "</b><span class=\"autobox-end\"></span></div></div>");
     $("body").append(div);
     div.fadeIn(1000);
     setTimeout("$('.J_fadeDiv').fadeOut(1000,function(){$('.J_fadeDiv').remove();})", time);
