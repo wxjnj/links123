@@ -144,24 +144,30 @@ a:hover, a:active, a:focus {
 }
 .menuright ul {
 	list-style:none;
-	margin: 18px 0 0 20px;
-	height: 20px;
+	margin: 10px 0 0 10px;
+	*zoom: 1;
 }
-
+.menuright ul:after{
+	content: '\0020';
+	display: block;
+	height: 0;
+	clear: both;
+}
 .kechenggrade {
 	clear:both;
 	float:left;
 }
 ul.kecheng li {
 	float:left;
-	margin:0 10px 0 -7px;
-	width:48px;
 	line-height:26px;
 	height:26px;
+	vertical-align: middle;
+	margin-right: 10px;
+	padding-left: 4px;
 }
 ul.kecheng li span {
 	display:block;
-	width:48px;
+	*zoom: 1;
 	text-align:center;
 	line-height:26px;
 	cursor:pointer;
@@ -171,16 +177,21 @@ ul.kecheng li span {
 	text-shadow: black 0 1px 0;
 	FILTER:Shadow(Color=#333333, Direction=139, Strength=1);
 	font-family: "微软雅黑", Helvetica, Arial, Sans;
+	padding: 0 8px 0 5px;
+	margin-right: -4px;
+	white-space: nowrap;
 }
 ul.grade li {
 	float:left;
-	width:59px;
 	line-height:26px;
 	height:26px;
+	vertical-align: middle;
+	margin-right: 10px;
+	padding-left: 4px;
 }
 ul.grade li span {
 	display:block;
-	width:48px;
+	*zoom: 1;
 	text-align:center;
 	line-height:26px;
 	cursor:pointer;
@@ -190,6 +201,9 @@ ul.grade li span {
 	text-shadow: black 0 1px 0;
 	FILTER:Shadow(Color=#333333, Direction=139, Strength=1);
 	font-family: "微软雅黑", Helvetica, Arial, Sans;
+	padding: 0 8px 0 5px;
+	margin-right: -4px;
+	white-space: nowrap;
 }
 ul.kecheng li span:hover {
 	cursor:pointer;
@@ -200,6 +214,9 @@ ul.kecheng li.current {
 	color:#ffe3d4;
 	background:url(../images/currentbg1.png) no-repeat;
 }
+ul.kecheng li.current span{
+	background:url(../images/currentbg1.png) right 0 no-repeat;
+}
 ul.grade li span:hover {
 	cursor:pointer;
 	color:#ffe3d4;
@@ -209,6 +226,10 @@ ul.grade li.current {
 	color:#ffe3d4;
 	background:url(../images/currentbg1.png) no-repeat;
 }
+ul.grade li.current span{
+	background:url(../images/currentbg1.png) right 0 no-repeat;
+}
+
 
 
 .ricewan{

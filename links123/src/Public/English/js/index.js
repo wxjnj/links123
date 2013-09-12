@@ -64,7 +64,7 @@ $(function() {
         next_question_lvlup = true;
     }
     $(".scrollable").scrollable({circular: true});
-    $(".grade li:eq(13)").css("margin-left", level_margin_index + "px");
+    //$(".grade li:eq(13)").css("margin-left", level_margin_index + "px");
 
     //答题按钮点击事件
     $("#J_answerButton").click(function() {
@@ -1148,7 +1148,7 @@ function rewriteObjectAndLevelList(object_list, object, level_list, level) {
         if ($(".J_level .current").size() < 1) {
             $(".J_level li").not(".grey").first().addClass("current");
         }
-        $(".J_level li:eq(13)").css("margin-left", level_margin_index + "px");
+        //$(".J_level li:eq(13)").css("margin-left", level_margin_index + "px");
     }
 }
 /**
