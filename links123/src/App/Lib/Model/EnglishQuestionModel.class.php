@@ -465,9 +465,7 @@ class EnglishQuestionModel extends CommonModel {
     	$ret['content'] = ftrim($ret['content']);
     	
     	$ret['option'] = D("EnglishOptions")->getQuestionOptionList($ret['id']);
-    	foreach ($ret['option'] as $key => $value) {
-    		$ret['option'][$key]['content'] = ftrim($value['content']);
-    	}
+        
     	return $ret;
     }
     
@@ -547,9 +545,7 @@ class EnglishQuestionModel extends CommonModel {
     	$ret['content'] = ftrim($ret['content']);
     	 
     	$ret['option'] = D("EnglishOptions")->getQuestionOptionList($ret['id']);
-    	foreach ($ret['option'] as $key => $value) {
-    		$ret['option'][$key]['content'] = ftrim($value['content']);
-    	}
+        
     	return $ret;
     	
     }
