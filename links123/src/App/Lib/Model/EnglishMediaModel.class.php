@@ -145,7 +145,7 @@ class EnglishMediaModel extends CommonModel {
                 ->join("RIGHT JOIN " . C("DB_PREFIX") . "english_question question on question.media_id=media.id")
                 ->where("media.special_recommend=1 and media.media_thumb_img!='' AND media.status=1 AND question.status=1")
 //                ->limit($limit)
-                ->order("media.difficulty desc")
+                ->order("question.id asc")
                 ->select();
         return $ret;
     }

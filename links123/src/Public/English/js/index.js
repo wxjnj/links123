@@ -562,12 +562,15 @@ function requestQuestion(type, clickObject, media_id) {
     var postUrl = '/ajax_get_question';
     if (viewType == 4) {
         data.media_id = media_id;
+        postUrl = '/get_question';
     } else if (viewType == 3) {
         data.recommend = $(".J_recommend .current").attr("value");
         data.difficulty = $(".J_recommendDifficulty .current").attr("value");
+        postUrl = '/get_question';
     } else if (viewType == 2) {
         data.subject = $(".J_subject .current").attr("value");
         data.difficulty = $(".J_subjectDifficulty .current").attr("value");
+        postUrl = '/get_question';
     } else {
         data.object = $(".kecheng .current").attr("value");
         data.level = $(".grade .current").attr("value");
@@ -634,8 +637,14 @@ function requestQuestion(type, clickObject, media_id) {
                     }
                     if (data.question.max) {
                         var content = "已经最后一题了，升级吧！";
+                        if(viewType==4){
+                            content = "已经最后一个了，往前看看吧！";
+                        }
                     } else if (data.question.min) {
                         var content = "已经第一题了，降级吧！";
+                        if(viewType==4){
+                            content = "已经第一个了，往后看看吧！";
+                        }
                     }
                     if (content) {
                         var top = $(".videoplay").offset().top - 30;
@@ -643,7 +652,7 @@ function requestQuestion(type, clickObject, media_id) {
                         $.messager.show({
                             msg: "<span class='messager_span'>" + content + "</span>",
                             showType: 'fade',
-                            width: 185,
+                            width: 200,
                             height: 45,
                             timeout: 2000,
                             style: {

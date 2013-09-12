@@ -1092,7 +1092,7 @@ class IndexAction extends EnglishAction {
     					$subject = intval($user_last_select['subject']);
     				} else {
     					$englishMediaSubjectModel = D("EnglishMediaSubject");
-    					$subject = D("EnglishMediaSubject")->getDefaultSubjectdId($voice, $target, $pattern);
+    					$subject = $englishMediaSubjectModel->getDefaultSubjectdId($voice, $target, $pattern);
     				}
     			}
     			//难度id
@@ -1176,14 +1176,13 @@ class IndexAction extends EnglishAction {
     			
     			$questionInfo = $questionModel->getSpeak($viewType, $object, $level, $subject, $recommend, $difficulty, $voice, $pattern);
     		} elseif ($viewType == 2) {
-    			
-    			$questionInfo = $questionModel->getSpecialSubjectQuestion();
+    			$question_id = $englishViewRecordModel->getUserViewQuestionLastId('', '', $subject, '', $difficulty, $voice, $target, $pattern);
+    			$questionInfo = $questionModel->getSpecialSubjectQuestion($subject, $difficulty, $voice, $target, $pattern,  $type, $question_id, $now_question_id);
     		}elseif ($viewType == 3) {
-    			
-    			$questionInfo = $questionModel->getRecommendQuestion();
+    			$question_id = $englishViewRecordModel->getUserViewQuestionLastId('', '', '', $recommend, $difficulty, $voice, $target, $pattern);
+    			$questionInfo = $questionModel->getRecommendQuestion($recommend, $difficulty, $voice, $target, $pattern,  $type, $question_id, $now_question_id);
     		} elseif ($viewType == 4) {
-    			
-    			$questionInfo = $questionModel->getSpecialRecommend($media_id);
+    			$questionInfo = $questionModel->getSpecialRecommend($media_id , $type,$now_question_id);
     		} else {
     			$question_id = $englishViewRecordModel->getUserViewQuestionLastId($object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern);
     			$questionInfo = $questionModel->getSubjectQuestion($object, $level, $voice, $target, $pattern, $type, $question_id, $now_question_id);
