@@ -417,7 +417,7 @@ a.xuanz{color:#FF0000; text-decoration:underline;}
 .div_faces ul li img { width:120px; }
 
 /**/
-#file_face { position:absolute; width:90px; top:0px; left:0px; height:28px; filter:alpha(opacity:0);opacity:0; cursor:pointer; cursor: pointer; }
+#file_face { position:absolute; width:90px; top:0px; left:0px; height:28px; filter:alpha(opacity:0); opacity:0; cursor:help; }
 
 /**/
 #editarea { display:none; position:absolute; width:580px; height:80px; padding:5px; font:14px 微软雅黑; color:#666; }
