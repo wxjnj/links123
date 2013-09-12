@@ -182,7 +182,7 @@ class EnglishQuestionModel extends CommonModel {
                 return array();
             }
         }
-        //echo $this->getLastSql();exit;
+        //echo $this->getLastSql();
         $ret['id'] = $ret['question_id'];
         if ($viewType == 3) {
             $ret['recommend'] = $recommend;
