@@ -76,6 +76,17 @@ $(function() {
 
             $(this).text(' 　答  题');
         } else { //这里先隐藏后展开
+
+            //播放的视频停止
+            play_code = $("#J_media_object embed").attr("src");
+            videoStr = '';
+            videoStr += '<object id="J_media_object" height="100%" width="100%" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">';
+            videoStr += '<param name="wmode" value="transparent">';
+            videoStr += '<param name="movie" value="' + play_code + '">';
+            videoStr += '<embed name="swf" menu="true" height="100%" width="100%" play="false" type="application/x-shockwave-flash" allowfullscreen="true" wmode="transparent" src="' + play_code + '">';
+            videoStr += '</object>';
+            $('#J_media_div').html(videoStr);
+
             $("#J_answerButton").addClass("current");
             if ($("#J_media_div").attr("play_type") == 1 || $("#J_media_div").attr("play_type") == 2) {
                 $("#J_media_div").css({'display': 'block', 'position': 'absolute', 'left': '-9999px'}).hide();
