@@ -5,7 +5,13 @@ var next_question_lvlup = false;
 var timer;
 $(function() {
     //提示施工中...
-    showMsg("施工中 . . .", $(".J_tabs").offset().top - 20, 370, 5000, 99,18);
+    var style={
+        'top':$(".J_tabs").offset().top - 20,
+        'left':$(".J_tabs").offset().left + 500,
+        'font-size':"18px",
+        'width':'125px'
+    };
+    showMsg("施工中 . . .",style , 5000);
     //说力，上一句事件
     $("#J_preSentenceButton img").click(function() {
         $('#Links123Player')[0].prev();
@@ -1468,13 +1474,23 @@ function fadeTip(content, top, left, time, index) {
     timer = setTimeout("$('.J_fadeDiv').fadeOut(1000,function(){$('.J_fadeDiv').remove();})", time);
 }
 
-function showMsg(content, top, left, time, index, font_size) {
+function showMsg(content, style,time,is_alert) {
     $('.J_fadeDiv').remove();
-
-    //var div = $("<div class='J_fadeDiv' style='color:#ffffff;display:none;position:absolute;z-index:" + index + ";top:" + top + "px;left:" + left + "px;'></div>");
-    var div = $("<div class=\"autobox autobox-hits J_fadeDiv\" style='display:none;position:absolute;z-index:" + index + ";top:" + top + "px;left:" + left +
-            "px;font-size:" + font_size + "px;'><div class=\"autobox-layer\"><span class=\"autobox-arr\"></span><b>" + content + "</b><span class=\"autobox-end\"></span></div></div>");
+    style = arguments[1] ? arguments[1] : {top:0,right:0,index:99,witdh:"auto"};
+    time = arguments[2] ? arguments[2] : 2000;
+    is_alert = arguments[3] ? arguments[3] : false;
+    
+    var div = $("<div class=\"autobox autobox-text J_fadeDiv\" style='display:none;position:absolute;'><div class=\"autobox-layer\"><span class=\"autobox-arr\"></span>"+
+			"<div class=\"autobox-ct\">"+content+"</div><span class=\"autobox-end\"></span></div></div>");
+    div.css(style);
     $("body").append(div);
+    if(is_alert){
+        div.addClass("autobox-hits").removeClass("autobox-text");
+        div.css("padding-left:65px;");
+    }else{
+        div.find(".autobox-ct").css("padding","0 20px");
+    }
+    div.find(".autobox-ct").css("width",div.width()-34);
     div.fadeIn(1000);
     setTimeout("$('.J_fadeDiv').fadeOut(1000,function(){$('.J_fadeDiv').remove();})", time);
 }

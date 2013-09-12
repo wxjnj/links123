@@ -146,6 +146,9 @@ a:hover, a:active, a:focus {
     margin: 10px 0 15px 20px;
     height: 20px;
 }
+.menuleft ul.J_subject{
+    height: 40px;
+}
 
 .kechenggrade {
     clear:both;
@@ -687,13 +690,14 @@ a.disabled {
 
 /*提示框*/
 .autobox-layer,
+.autobox-text .autobox-arr,
 .autobox-hits .autobox-arr,
 .autobox .autobox-end{
     background-image: url(../images/alertbg.png);
     background-repeat: no-repeat;
     color: #fff;
     font-family: \5FAE\8F6F\96C5\9ED1;
-    font-size: 18px;
+    /*font-size: 14px;*/
     font-weight: bold;
     height: 80px;
     line-height: 80px;
@@ -709,14 +713,16 @@ a.disabled {
     _position: absolute;
     text-align: center;
     top: 46%;
-    width: 100%;
+    width: auto;
+    padding:0 20px;
+    font-size: 14px;
     z-index: 65533;
 }
 .autobox-layer{
     background-position: 0 -85px;
     background-repeat: repeat-x;
     margin: 0 auto;
-    padding: 0 18px 0 0;
+    padding: 0;
     position: relative;
 }
 .autobox .autobox-end{
@@ -732,4 +738,14 @@ a.disabled {
     position: absolute;
     top: 0;
     width: 66px;
+}
+.autobox-hits .autobox-ct{
+    padding-right: 18px;
+}
+.autobox-text .autobox-arr{
+    background-position: -22px -4px;
+    left: -17px;
+    position: absolute;
+    top: 0;
+    width: 17px;
 }
