@@ -194,8 +194,8 @@
         var targetSubject = $("#selectSubjectSource").val();
         var targetRecommend = $("input[name='recommend']").filter(":checked").val();
         var targetSpecialRecommend = $("input[name='special_recommend']").filter(":checked").val();
-        if (parseInt(targetSubject) == 0 && !targetRecommend && !targetSpecialRecommend) {
-            alert("请选择目标！");
+        if (parseInt(targetSubject) == -1 && typeof targetRecommend=="undefined" && typeof targetSpecialRecommend=="undefined") {
+            alert("请选择需要设置成的参数！");
             return false;
         }
         if (confirm("注意！确认对所选项进行批量操作？")) {

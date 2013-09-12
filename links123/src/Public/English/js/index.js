@@ -1,24 +1,32 @@
 var ajaxRequest;
 var playState = "unable";//播放器状态，默认不可用
+var sign = false;
 var next_question_lvlup = false;
 var timer;
 $(function() {
     //提示施工中...
     showMsg("施工中 . . .", $(".J_tabs").offset().top - 20, 370, 5000, 99,18);
+    //说力，上一句事件
     $("#J_preSentenceButton img").click(function() {
         $('#Links123Player')[0].prev();
     })
+    //说力，慢放事件
     $("#J_slowPlayButton img").click(function() {
         $('#Links123Player')[0].slow();
     })
+    //说力，暂停播放事件
     $("#J_pauseButton img").click(function() {
         $('#Links123Player')[0].playPause();
     })
-    //
-    bindSpeakListenSwitchEvent();
+    //说力，回放本句事件
+    $("#J_replaySentenceButton img").click(function() {
+        $('#Links123Player')[0].replay();
+    })
+    //说力，下一句事件
     $("#J_nextSentenceButton img").click(function() {
         $('#Links123Player')[0].next();
     })
+    bindSpeakListenSwitchEvent();
     //
     //easyloader加载主题和插件
     easyloader.theme = "metro";
@@ -554,12 +562,15 @@ function requestQuestion(type, clickObject, media_id) {
     var postUrl = '/ajax_get_question';
     if (viewType == 4) {
         data.media_id = media_id;
+        postUrl = '/get_question';
     } else if (viewType == 3) {
         data.recommend = $(".J_recommend .current").attr("value");
         data.difficulty = $(".J_recommendDifficulty .current").attr("value");
+        postUrl = '/get_question';
     } else if (viewType == 2) {
         data.subject = $(".J_subject .current").attr("value");
         data.difficulty = $(".J_subjectDifficulty .current").attr("value");
+        postUrl = '/get_question';
     } else {
         data.object = $(".kecheng .current").attr("value");
         data.level = $(".grade .current").attr("value");
@@ -626,8 +637,14 @@ function requestQuestion(type, clickObject, media_id) {
                     }
                     if (data.question.max) {
                         var content = "已经最后一题了，升级吧！";
+                        if(viewType==4){
+                            content = "已经最后一个了，往前看看吧！";
+                        }
                     } else if (data.question.min) {
                         var content = "已经第一题了，降级吧！";
+                        if(viewType==4){
+                            content = "已经第一个了，往后看看吧！";
+                        }
                     }
                     if (content) {
                         var top = $(".videoplay").offset().top - 30;
@@ -635,7 +652,7 @@ function requestQuestion(type, clickObject, media_id) {
                         $.messager.show({
                             msg: "<span class='messager_span'>" + content + "</span>",
                             showType: 'fade',
-                            width: 185,
+                            width: 200,
                             height: 45,
                             timeout: 2000,
                             style: {
@@ -1466,6 +1483,16 @@ function bindSpeakListenSwitchEvent() {
         if ($(this).hasClass("current")) {
             return false;
         }
+        var playerMode = 2;
+        sign = false;
+		if ($(this).attr("id") == "J_speakButton") {
+            playerMode = 3;
+            sign = true;
+        }
+		$("#Links123Player")[0].playerChoose(playerMode);
+		$(this).addClass("current").siblings(".J_speakButtons").removeClass("current");
+		return false;
+        //旧的切换
         $("#J_media_div").html("<div id='flashContent'></div>");
         var swfVersionStr = "10.2.0";
         var xiSwfUrlStr = PUBLIC + "/Js/Links123Player/playerProductInstall.swf";
@@ -1518,5 +1545,17 @@ function playerStateChange(state) {
     } else {
         $("#J_pauseButton img").attr("src", PUBLIC + "/English/images/video5.png");
     }
+    if(state == "completed")
+	{
+		//测试由看切换到说
+		if(sign == false)
+		{
+			$("#Links123Player")[0].playerChoose(3);
+            $("#J_speakButton").addClass("current");
+            $("#J_viewButton").removeClass("current");
+			$("#Links123Player")[0].playPause();
+			sign = true;
+		}
+	}
     return state;
 }
