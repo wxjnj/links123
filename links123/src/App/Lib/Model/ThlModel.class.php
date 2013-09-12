@@ -21,7 +21,9 @@ class ThlModel extends CommonModel {
      */
     public function getThlListWithThlz() {
         $thl_list = S("thl_list");
-        if (empty($thl_list)) {
+        
+        //修改糖葫芦未能从缓存中取得，判断无效问题 @author slate date:2013-09-12
+        if (!$thl_list['thl']) {
             $variable = M("Variable");
             $ret = $variable->getByVname('thl');
             $thl = explode(",", $ret['value_varchar']);
