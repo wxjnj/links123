@@ -408,6 +408,10 @@
 #result_box.short_text {
 	font-size: 24px;
 }
+#result_box {
+    color: #222222;
+    font-size: 16px;
+}
 #gt-res-dict {
 	overflow: hidden;
 	width: 100%;
