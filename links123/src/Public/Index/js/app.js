@@ -771,6 +771,9 @@ $(function(){
 		var tl = $('#gt-tl').val();
 		var q = $('.J_translate_source').val();
 		
+		$('#gt-res-dict').html('<tr><td colspan="4"><div class="gt-baf-cell gt-baf-pos">翻译中...</div></td></tr>');
+		$('#result_box').html('');
+		
 		$.ajax({
 			type : 'POST',
 			url : APP + 'Index/google_translate',
@@ -789,49 +792,74 @@ $(function(){
 					var dictStr = '';
 					dictStr += '<table class="gt-baf-table"><tbody>';
 					
+					var dictSubArr = '';
+					var dictType = 0;	//0为词语，1为句子
 					if (typeof dictArr[1] != "undefined") {
-						for (var i = 0; i < dictArr[1].length; i++) {
-							
-							var bafArr = dictArr[1][i];
-							
-							dictStr += '<tr><td colspan="4"><div class="gt-baf-cell gt-baf-pos">' + bafArr[0] + '</div></td></tr>';
+						dictSubArr = dictArr[1];
+					} else if (typeof dictArr[0] != "undefined") {
+						dictSubArr = dictArr[0];
+						dictType = 1;
+					}
+					
+					if (dictSubArr) {
 						
+						if (dictType) {
+							dictStr += '<span lang="zh-CN" class="short_text" id="result_box">';
+							for (var i = 0; i < dictSubArr.length; i++) {
+								
+								var bafArr = dictSubArr[i];
+								
+								//dictStr += '<tr><td colspan="4"><div class="gt-baf-cell gt-baf-pos">' + bafArr[0] + '</div></td></tr>';
+								console.log(bafArr[0]);
+								dictStr += '<span>' + bafArr[0].replace('\n','</br>')+ '</span>';
+							}
+							dictStr += '</span>';
+						} else {
 						
-							for (var j = 0; j < bafArr[2].length; j++) {
-								dictStr += '<tr>';
-								var wordArr = bafArr[2][j];
+							for (var i = 0; i < dictSubArr.length; i++) {
 								
-								dictStr += '<td>';
-								var cts_width = 24;
-								if (wordArr[3] < 0.01) {
-									cts_width = 8;
-								} else if (wordArr[3] < 0.1) {
-									cts_width = 16;
-								}
-								dictStr += '<div class="gt-baf-cell gt-baf-marker-container"><div class="gt-baf-cts" style="width:' + cts_width + 'px;"></div></div>'; 
+								var bafArr = dictSubArr[i];
 								
-								dictStr += '</td>';
-								
-								dictStr += '<td><div class="gt-baf-cell gt-baf-bar"></div></td>';
-								
-								dictStr += '<td>';
-								dictStr += '<div class="gt-baf-cell gt-baf-word-clickable" style="text-align: left; direction: ltr;">' + wordArr[0] + '</div>';
-								dictStr += '</td>';
-								
-								dictStr += '<td style="width: 100%;">';
-								dictStr += '<div class="gt-baf-cell gt-baf-translations" style="direction: ltr;">';
-								
-								for (var k = 0; k < wordArr[1].length; k++) {
-									dictStr += '<span class="gt-baf-back">' + wordArr[1][k];
-									if (k != wordArr[1].length - 1) {
-										dictStr += ', '
+								dictStr += '<tr><td colspan="4"><div class="gt-baf-cell gt-baf-pos">' + bafArr[0] + '</div></td></tr>';
+							
+								if (bafArr[2] instanceof Array) {
+									for (var j = 0; j < bafArr[2].length; j++) {
+										dictStr += '<tr>';
+										var wordArr = bafArr[2][j];
+										
+										dictStr += '<td>';
+										var cts_width = 24;
+										if (wordArr[3] < 0.01) {
+											cts_width = 8;
+										} else if (wordArr[3] < 0.1) {
+											cts_width = 16;
+										}
+										dictStr += '<div class="gt-baf-cell gt-baf-marker-container"><div class="gt-baf-cts" style="width:' + cts_width + 'px;"></div></div>'; 
+										
+										dictStr += '</td>';
+										
+										dictStr += '<td><div class="gt-baf-cell gt-baf-bar"></div></td>';
+										
+										dictStr += '<td>';
+										dictStr += '<div class="gt-baf-cell gt-baf-word-clickable" style="text-align: left; direction: ltr;">' + wordArr[0] + '</div>';
+										dictStr += '</td>';
+										
+										dictStr += '<td style="width: 100%;">';
+										dictStr += '<div class="gt-baf-cell gt-baf-translations" style="direction: ltr;">';
+										
+										for (var k = 0; k < wordArr[1].length; k++) {
+											dictStr += '<span class="gt-baf-back">' + wordArr[1][k];
+											if (k != wordArr[1].length - 1) {
+												dictStr += ', '
+											}
+											dictStr += '</span>'
+										}
+										
+										dictStr += '</div>';
+										dictStr += '</td>';
+										dictStr += '</tr>';
 									}
-									dictStr += '</span>'
 								}
-								
-								dictStr += '</div>';
-								dictStr += '</td>';
-								dictStr += '</tr>';
 							}
 						}
 						dictStr += '</tbody></table>';
@@ -841,7 +869,9 @@ $(function(){
 						$('#gt-res-dict').html('');
 					}
 					
-					$('#result_box').html(dictArr[0][0][0]);
+					if (!dictType) {
+						$('#result_box').html(dictArr[0][0][0]);
+					}
 					
 				} else {
 					$('#result_box').html('<span style="font-size:14px; color: red;">亲，未找到你所查询的结果，再试下吧!</span>');
