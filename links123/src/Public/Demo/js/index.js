@@ -1,12 +1,6 @@
-/**
-* Index 3.0 
-*
-* @author slate date: 2013-09-09
-*/ 
-
-var APP = $('#J_APP').val();
-var URL = $('#J_URL').val();
-var PUBLIC = $('#J_PUBLIC').val();
+var APP = $CONFIG['APP'];
+var URL = $CONFIG['URL'];
+var PUBLIC = $CONFIG['PUBLIC'];
 
 $(function() {
 
@@ -23,26 +17,26 @@ $(function() {
 	
 	// 直达框
 	$(document).on('click', function(){
-		$('#direct_text').val($('#direct_text').attr('txt')).removeClass('ipson');
+		$('#direct_text').val($('#direct_text').attr('txt')).removeClass('ipton');
 	});
-	$(".J_header_top").on('mouseenter', function(){
+	$("#header").on('mouseenter', function(){
 		var tag = $.trim($('#direct_text').val());
 		if(tag == $('#direct_text').attr('txt')){
-			$("#direct_text").select().addClass('ipson');
+			$("#direct_text").select().addClass('ipton');
 		}else{
-			$("#direct_text").addClass('ipson');
+			$("#direct_text").addClass('ipton');
 		}
 	}).on('mouseleave', function(){
 		var tag = $.trim($('#direct_text').val());
 		if(tag == '' || tag == $('#direct_text').attr('txt')){
 			$('#search_text').select();
-			$('#direct_text').removeClass('ipson');
+			$('#direct_text').removeClass('ipton');
 		}
 	});
 	$("#direct_text").on('click', function(){
 		var tag = $.trim($('#direct_text').val());
 		if (tag == $('#direct_text').attr('txt')){
-			$('#direct_text').val('').addClass('ipson');
+			$('#direct_text').val('').addClass('ipton');
 		}
 		return false;
 	});
@@ -129,8 +123,7 @@ $(function() {
 	
 	$('#J_signin_form').dialog({
 		autoOpen: false,
-		height: 478,
-		width: 587,
+		width: 384,
 		modal: true,
 		resizable: false,
 		open: function(){
@@ -140,8 +133,7 @@ $(function() {
 	
 	$('#J_signup_form').dialog({
 		autoOpen: false,
-		height: 478,
-		width: 587,
+		width: 384,
 		modal: true,
 		resizable: false,
 		open: function(){
