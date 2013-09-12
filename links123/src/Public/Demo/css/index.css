@@ -344,6 +344,9 @@ input:focus{ outline: 0; }
 .apps ul li:hover{
 	color: #d00316;
 }
+.apps ul li:hover a{
+	color: #d00316;
+}
 .apps ul li img{
 	vertical-align: middle;
 }

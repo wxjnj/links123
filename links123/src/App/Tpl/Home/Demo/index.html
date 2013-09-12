@@ -6,23 +6,28 @@
 	<link rel="stylesheet" href="__PUBLIC__/Demo/css/base.css" />
 	<link rel="stylesheet" href="__PUBLIC__/Demo/css/index.css" />
 	<link rel="stylesheet" href="__PUBLIC__/Demo/skins/dark/style.css" />
+	
+	<link rel="stylesheet" type="text/css" href="__PUBLIC__/skin/fancybox/jquery.fancybox.css?v=2.1.4" media="screen" />
+	<link href="__PUBLIC__/Index/css/jquery-ui.css" rel="stylesheet" type="text/css"/>
+	<link href="__PUBLIC__/Index/css/app.css?2013091201" rel="stylesheet" type="text/css" />
+	
 	<link rel="stylesheet" href="about:blank" id="J_Skins" />
 	<!-- <link rel="stylesheet" href="skins/light/style.css" /> -->
 	<!-- <script src="js/respond.min.js"></script> -->
 </head>
 <body>
 
-	<div id="header">
+	<div id="header" class="J_header_top">
 		<div class="header-inner">
 			<div class="zdl">
-				<form action="">
-					<input class="ipt ipton" type="text" name="" id="" value="输入：sina，或新浪或 xinlang，拍回车键" />
-					<input class="btn" type="submit" value="提交" />
+				<form id="frm_drct" method="post" action="__APP__/Link/direct/" target="_blank">
+					<input class="ipt ipton" type="text" name="tag" id="direct_text" value="{$directTip}"  txt="{$directTip}" autocomplete="on" />
+					<input class="btn J_direct_submit" type="submit" value="提交" />
 				</form>
 			</div>
 			<ul class="nav">
-				<li class="on"><a href="#">首页</a></li>
-				<li><a href="#">另客英语</a></li>
+				<li class="on"><a href="{:U('Index')}">首页</a></li>
+				<li><a href="{:U('English/Index/index')}" target="_blank">另客英语</a></li>
 				<li><a href="#">我的抽屉</a></li>
 				<li><a href="#">寻觅好友</a></li>
 			</ul>
@@ -70,40 +75,43 @@
 			<div class="ci-hd">
 				<h1><a class="logo" href="/" rel="home">另客网</a></h1>
 				<div class="thl">
-					<form action="">
-					<div class="cate"><a class="on" href="#">搜</a>&nbsp;-&nbsp;<a href="#">查</a>&nbsp;-&nbsp;<a href="#">学</a>&nbsp;-&nbsp;<a href="#">考</a>&nbsp;-&nbsp;<a href="#">听</a>&nbsp;-&nbsp;<a href="#">看</a>&nbsp;-&nbsp;<a href="#">读</a>&nbsp;-&nbsp;<a href="#">唱</a>&nbsp;-&nbsp;<a href="#">聊</a>&nbsp;-&nbsp;<a href="#">乐</a>&nbsp;-&nbsp;<a href="#">付</a>&nbsp;-&nbsp;<a href="#">问</a></div>					
-					<div class="subcate">
-						<dl>
-							<dd><a class="on" href="#">百度</a> - <a href="#">360</a> - <a href="#">谷歌</a> - <a href="#">必应</a> - <a href="#">雅虎</a> - <a href="#">有道</a> - <a href="#">搜狗</a> - <a href="#">云云</a> - <a href="#">即刻</a> - <a href="#">另客</a></dd>
-							<dd style="display:none;"><a href="#">百度</a> - <a href="#">360</a> - <a href="#">谷歌</a> - <a href="#">必应</a> - <a href="#">雅虎</a> - <a href="#">有道</a> - <a href="#">搜狗</a> - <a href="#">云云</a> - <a href="#">即刻</a> - <a href="#">另客</a></dd>
-							<dd style="display:none;"><a href="#">百度</a> - <a href="#">360</a> - <a href="#">谷歌</a> - <a href="#">必应</a> - <a href="#">雅虎</a> - <a href="#">有道</a> - <a href="#">搜狗</a> - <a href="#">云云</a> - <a href="#">即刻</a> - <a href="#">另客</a></dd>
-							<dd style="display:none;"><a href="#">百度</a> - <a href="#">360</a> - <a href="#">谷歌</a> - <a href="#">必应</a> - <a href="#">雅虎</a> - <a href="#">有道</a> - <a href="#">搜狗</a> - <a href="#">云云</a> - <a href="#">即刻</a> - <a href="#">另客</a></dd>
-							<dd style="display:none;"><a href="#">百度</a> - <a href="#">360</a> - <a href="#">谷歌</a> - <a href="#">必应</a> - <a href="#">雅虎</a> - <a href="#">有道</a> - <a href="#">搜狗</a> - <a href="#">云云</a> - <a href="#">即刻</a> - <a href="#">另客</a></dd>
-						</dl>
-					</div>
-					<div class="ctls">
-						<input class="ipt" type="text" x-webkit-speech />
-						<input class="btn" type="submit" value="搜索" />
-					</div>
+					<form action="" id="searchForm">
+						<input name="thl" id="J_thl" type="hidden" value="">
+						<input name="tid" id="J_tid" type="hidden" value="">
+						<input name="q" id="J_q" type="hidden" value="">
+						<input type="text" value="" style="display:none;" />
+						
+						<input type="hidden" id="tidNow" value="{$tidNow}" />
+		
+						<div class="cate" id="J_thl_div" >
+							<volist name="thl_list" id="vo" key="m"><a <eq name="thlNow" value="$vo['thl']">class="on"</eq> href="#">{$vo['thl']}</a><if condition='$m neq 12'>&nbsp;-&nbsp;</if></volist>
+						</div>					
+						<div class="subcate">
+							<dl>
+								<volist name="thl_list" id="vo" key="i">
+									<dd class="J_thlz" <neq name="vo['thl']" value="$thlNow">style="display:none;"</neq> >
+										<volist name="vo['thlz']" id="thlz" key="j"><a <if condition='$thlz["id"] eq $tidNow'>class="on"</if> href="#" title="{$thlz['tip']}" ndk="{$thlz['needkey']}" url="{$thlz['url']}" tid="{$thlz['id']}" tag_name="{$thlz['url_tag_name']}">{$thlz['name']}</a><neq name="vo['thlz_len']" value="$j">&nbsp;-&nbsp;</neq></volist>
+									</dd>
+								</volist>
+							</dl>
+						</div>
+						<div class="ctls" id="rch_sch">
+							<input type="text" id="search_text" class="ipt" x-webkit-speech lang="zh-CN" value="{$_COOKIE['keyword']}" autocomplete="on" />
+							<input type="hidden" id="search_text_o" />
+							<input class="btn" type="submit" value="" id="btn_search" />
+							<ul id="tips"></ul>
+						</div>
 					</form>
 				</div>
 			</div>
 			<div class="ci-bd">
 				<div class="zld">
 					<ul>
-						<li><span class="nm"><i class="mask"></i><b>中华网</b></span><span class="ctl"><i class="mask"></i></span></li>
-						<li><span class="nm"><i class="mask"></i><b>在家上学</b></span><span class="ctl"><i class="mask"></i></span></li>
-						<li><span class="nm"><i class="mask"></i><b>Adobe PhotoShop CS6</b></span><span class="ctl"><i class="mask"></i></span></li>
-						<li><span class="nm"><i class="mask"></i><b>搜狐网</b></span><span class="ctl"><i class="mask"></i></span></li>
-						<li><span class="nm"><i class="mask"></i><b>TED</b></span><span class="ctl"><i class="mask"></i></span></li>
-						<li><span class="nm"><i class="mask"></i><b>马云演讲</b></span><span class="ctl"><i class="mask"></i></span></li>
-						<li><span class="nm"><i class="mask"></i><b>CSDN</b></span><span class="ctl"><i class="mask"></i></span></li>
-						<li><span class="nm"><i class="mask"></i><b>诺亚网</b></span><span class="ctl"><i class="mask"></i></span></li>
-						<li><span class="nm"><i class="mask"></i><b>优酷网</b></span><span class="ctl"><i class="mask"></i></span></li>
-						<li><span class="nm"><i class="mask"></i><b>啪啪</b></span><span class="ctl"><i class="mask"></i></span></li>
-						<li><span class="nm"><i class="mask"></i><b>鲨客网</b></span><span class="ctl"><i class="mask"></i></span></li>
-						<li><span class="nm"><i class="mask"></i><b>百度</b></span><span class="ctl"><i class="mask"></i></span></li>
-						<li><span class="nm"><i class="mask"></i><b>世界地址杂志</b></span><span class="ctl"><i class="mask"></i></span></li>
+						<volist name="_SESSION['arealist']" id="vo">
+						<if condition="$vo['id'] neq ''">
+							<li id="{$vo.id}"><span class="nm J_myarea_link" url="{:U('Link/index')}?mod=myarea&url={$vo.url}" data-id="{$vo.id}" data-url="{$vo.url}"><i class="mask"></i><b>{$vo.web_name}</b></span><span class="ctl"><i class="mask"></i></span></li>
+						</if>
+						</volist>
 						<li><span class="ctl add"><i class="mask"></i></span></li>
 					</ul>
 				</div><!--.zld end-->
@@ -116,37 +124,37 @@
 						<div class="apps">
 							<ul>
 								<li>
-									<p class="av"><img src="__PUBLIC__/Demo/imgs/app/app001.png" /></p>
-									<p class="nm">另客英语</p>
+									<p class="av newWin" url="{:U('English/Index/index')}"><img src="__PUBLIC__/Demo/imgs/app/app001.png" /></p>
+									<p class="nm"><a href="{:U('English/Index/index')}" target="_blank">另客英语</a></p>
 								</li>
 								<li>
-									<p class="av"><img src="__PUBLIC__/Demo/imgs/app/app002.png" /></p>
-									<p class="nm">另客导航</p>
+									<p class="av newWin" url="{:U('Home/Index/nav')}"><img src="__PUBLIC__/Demo/imgs/app/app002.png" /></p>
+									<p class="nm"><a href="{:U('Home/Index/nav')}" target="_blank">另客导航</a></p>
 								</li>
-								<li>
+								<li id="J_stikynot">
 									<p class="av"><img src="__PUBLIC__/Demo/imgs/app/app005.png" /></p>
 									<p class="nm">便签</p>
 								</li>
-								<li>
+								<li id="J_calc">
 									<p class="av"><img src="__PUBLIC__/Demo/imgs/app/app004.png" /></p>
 									<p class="nm">计算器</p>
 								</li>
-								<li>
+								<li id="J_weather">
 									<p class="av"><img src="__PUBLIC__/Demo/imgs/app/app-weather.png" /></p>
 									<p class="nm">天气</p>
 								</li>
-								<li class="today">
+								<li class="today" id="J_calendar">
 									<p class="ct">
-										<b>星期六</b>
-										<i>7</i>
+										<b>{:date('D')}</b>
+										<i>{:date('d')}</i>
 									</p>
 									<p class="nm">日历</p>
 								</li>
-								<li>
+								<li id="J_mail">
 									<p class="av"><img src="__PUBLIC__/Demo/imgs/app/app006.png" /></p>
 									<p class="nm">邮箱</p>
 								</li>
-								<li>
+								<li id="J_translate">
 									<p class="av"><img src="__PUBLIC__/Demo/imgs/app/app003.png" /></p>
 									<p class="nm">翻译</p>
 								</li>
@@ -280,16 +288,10 @@
 		<div class="footer-inner">
 			<div class="subnav">
 				<ul>
-					<li><a href="#">关于</a></li>
-					<li><a href="#">帮助</a></li>
-					<li><a href="#">博客</a></li>
-					<li><a href="#">状态</a></li>
-					<li><a href="#">广告</a></li>
-					<li><a href="#">企业</a></li>
-					<li><a href="#">媒体</a></li>
-					<li><a href="#">开发者</a></li>
-					<li><a href="#">资源</a></li>
-					<li><a href="#">目录</a></li>
+					<li><a target="_blank" href="{:U('Home/Index/about')}">关于我们</a></li>
+					<li><a target="_blank" href="{:U('Home/Suggestion')}">留言板</a></li>
+					<li><a target="_blank" href="{:U('Home/Blogroll')}">友情链接</a></li>
+					<li><a target="_blank" href="{:U('Home/Recommend')}">推荐链接</a></li>
 				</ul>
 			</div>
 			<div class="copyright">
@@ -299,6 +301,8 @@
 	</div><!--#footer end-->
 
 	<include file="Demo:dialog" />
+	
+	<include file="Contorls:app" />
 
 	<input type="hidden" id="J_APP" value="__APP__/" />
 	<input type="hidden" id="J_URL" value="__URL__" />
@@ -312,6 +316,7 @@
 	<script type="text/javascript" src="__PUBLIC__/skin/js/json2.js"></script>
 	
 	<script type="text/javascript" src="__PUBLIC__/Demo/js/index.js"></script>
+	<script type="text/javascript" src="__PUBLIC__/Index/js/app.js?2013091201"></script>
 	
 </body>
 </html>
