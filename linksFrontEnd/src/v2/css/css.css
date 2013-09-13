@@ -416,8 +416,14 @@ a.xuanz{color:#FF0000; text-decoration:underline;}
 .div_faces ul li { float:left; margin:5px; list-style:none; border:1px solid #DDD; cursor:pointer; }
 .div_faces ul li img { width:120px; }
 
-/**/
-#file_face { position:absolute; width:90px; top:0px; left:0px; height:28px; filter:alpha(opacity:0); opacity:0; cursor:help; }
+/*
+#file_face { position:absolute; cursor:pointer; filter:alpha(opacity:1); opacity:1; 
+             width:90px; height:28px; top:0px; left:0px; }
+*/
+#file_face_container            { position:absolute; overflow:hidden; cursor:pointer; display:inline-block; 
+                                  filter:alpha(opacity:0); opacity:0; 
+                                  width:100px; height:28px; top:0px; left:0px; background-color:#f00;  }
+#file_face           { position:relative; display:inline-block; cursor:pointer; border: solid 1px red; }
 
 /**/
 #editarea { display:none; position:absolute; width:580px; height:80px; padding:5px; font:14px 微软雅黑; color:#666; }
