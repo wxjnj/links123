@@ -738,7 +738,7 @@ function requestQuestion(type, clickObject, media_id) {
                     $(".answertitle").text(question.content);
                 }
                 $("#J_questionId").text(question.id);
-                $("#J_textButton").attr("media_text_url", question.media_text_url);
+                $("#J_textButton").attr("media_text_url", question.media_source_url);
                 bindMediaTextClickEvent("disable");//点击选项后才能查看文本
                 updateOption(question.option);
                 //说力听力耳朵切换
