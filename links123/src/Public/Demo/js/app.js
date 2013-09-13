@@ -5,11 +5,11 @@ $(function(){
 var User = {
 	Init: function(){
 		var self = this;
-		$('#J_SignUp').on('click', function(){
+		$('.J_SignUp').on('click', function(){
 			self.Reg();
 			return false;
 		});
-		$('#J_SignIn').on('click', function(){
+		$('.J_SignIn').on('click', function(){
 			self.Login();
 			return false;
 		});
@@ -38,8 +38,8 @@ var User = {
 			hl = hl + '		</form>';
 			hl = hl + '	</div>';
 			hl = hl + '	<div class="lkd-ft">';
-			hl = hl + '		<a class="lkd-reg" href="#">注册</a>';
-			hl = hl + '		<a class="lkd-login J_signin" href="#">已有帐号！登录！</a>';
+			hl = hl + '		<a class="lkd-reg J_SignUp" href="#">注册</a>';
+			hl = hl + '		<a class="lkd-login J_SignIn" href="#">已有帐号！登录！</a>';
 			hl = hl + '	</div>';
 			hl = hl + '</div>';
 			$('body').append(hl);

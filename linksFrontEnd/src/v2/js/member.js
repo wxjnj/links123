@@ -1,4 +1,4 @@
-$(function() {
+$(function () {
 	/**/
     $(".page_go").click(function(){
     	$("#frm_js input[name='p']").val($(this).attr("p"));

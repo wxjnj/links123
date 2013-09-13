@@ -2,10 +2,11 @@
 <html>
 <head>
 	<include file="Home:Contorls:headlinks" />
+    
 </head>
 
 <body>
-
+    
 	<form><input type="hidden" name="thetitle" value="{$Think.session.nickname}" /></form>
 	<script language="javascript">
 		document.title=document.forms[0].thetitle.value+ '，欢迎你回来！';
@@ -62,7 +63,9 @@
 	</div>
 	
 	<form method='post' class="file_frm" action="__URL__/uploadPic/" enctype="multipart/form-data">
-		<input name="image" id="file_face" type="file" />
+        <div id="file_face_container">
+            <input name="image" id="file_face" type="file" />
+		</div>
 		<input type="hidden" name="folder" value="Faces" />
 		<input type="hidden" name="width" value="120" />
 		<input type="hidden" name="height" value="120" />
