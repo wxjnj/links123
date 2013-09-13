@@ -4,6 +4,19 @@ var PUBLIC = $CONFIG['PUBLIC'];
 
 $(function() {
 
+	$('.uc-menu').hover(
+		function(){
+			$(this).find('ul').toggle();
+		}
+	);
+
+	$('#J_sortable').sortable({
+		update: function(event, ui){
+			alert('coming soon');
+		}  
+	});
+	$('#J_sortable').sortable('enable');
+
 	$('.skins').on('click', function(){
 		$('#J_Skins').attr('href', '__PUBLIC__/Demo/skins/light/style.css');
 	});
