@@ -58,12 +58,12 @@
                         英音
                     </label>&nbsp;&nbsp;
                     科目：
-                    <select name="object">
+                    <select name="object" id="opeartObjectSelect">
                         <volist name="object_list" id="object">
                             <option value="{$object.id}"  <eq name="param['object']" value="$object['id']">selected="true"</eq>>{$object.name}</option>
                         </volist>
                     </select>&nbsp;&nbsp;
-                    <select name="level">
+                    <select name="level" id="opeartLevelSelect">
                         <option value="0">全部</option>
                         <volist name="level_list" id="level">
                             <option value="{$level.id}" <eq name="param['level']" value="$level['id']">selected="true"</eq>>{$level.name}</option>
@@ -121,13 +121,22 @@
                     <label>
                         <input class="checkbox" type="checkbox" value="-1" name="status" <eq name="param['status']" value="-1">checked="checked"</eq>>
                         已删除
+                    </label>&nbsp;&nbsp;
+                    缩略图：
+                    <label>
+                        <input class="checkbox" type="checkbox" value="1" name="thumb" <eq name="param['thumb']" value="1">checked="checked"</eq>>
+                        有
+                    </label>&nbsp;
+                    <label>
+                        <input class="checkbox" type="checkbox" value="0" name="thumb" <eq name="param['thumb']" value="0">checked="checked"</eq>>
+                        无
                     </label>
                 </div>
             </div>
         </form>
 
         <div class="list" >
-            <html:list id="checkList" name="category" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,name:名称:edit,object_name:科目,level_name:等级,subject_name|default=无:专题:selectSubject,difficulty|getMediaDifficultyName:难度,recommend|getMediaRecommendYorN:推荐:recommend,special_recommend|getYorN:特别推荐:special_recommend,voice|getVoiceName:语音,pattern|getMediaPatternName:格式类型,play_type|getMediaPlayTypeName:播放类型,priority_type|getMediaPriorityTypeName:优先播放:setMediaPriorityType,media_source_url|getLinkToHrefWithOutHttp:来源地址,created|toDate:发布时间,status|getStatus:状态" actionlist="edit:编辑" />
+            <html:list id="checkList" name="category" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,name:名称:edit,object_name|default=无:科目:selectObject,level_name|default=无:等级:selectLevel,subject_name|default=无:专题:selectSubject,difficulty|getMediaDifficultyName:难度,recommend|getMediaRecommendYorN:推荐:recommend,special_recommend|getYorN:特别推荐:special_recommend,voice|getVoiceName:语音,pattern|getMediaPatternName:格式类型,play_type|getMediaPlayTypeName:播放类型,priority_type|getMediaPriorityTypeName:优先播放:setMediaPriorityType,media_source_url|getLinkToHrefWithOutHttp:来源地址,created|toDate:发布时间,status|getStatus:状态" actionlist="edit:编辑" />
         </div>
 
         <div class="page">{$page}</div>
@@ -328,6 +337,124 @@
                         $("a[href=\"javascript:selectSubject('" + id + "')\"]").text(targetName);
                         select.remove();
                         $("a[href=\"javascript:selectSubject('" + id + "')\"]").show();
+                    }
+                }
+                $("#load_dialog").window("close");
+            }, "json")
+        })
+    }
+    
+    
+    /**
+     * 选择科目
+     * @param {int} id
+     * @returns {void}     
+     * @author Adam $date2013.08.30$
+     */
+    function selectObject(id) {
+        $(".objectSelect").unbind();
+        //现有的select
+        var old_select_id = $(".objectSelect").attr("id");
+        //现有的select移除，还原链接
+        if (old_select_id) {
+            var old_id = old_select_id.substr(old_select_id.indexOf("_") + 1);
+            $("#selectObject_" + old_id).remove();
+            $("a[href=\"javascript:selectObject('" + old_id + "')\"]").show();
+        }
+        //显示当前选中的
+        var td = $("a[href=\"javascript:selectObject('" + id + "')\"]").parent("td");
+        $("a[href=\"javascript:selectObject('" + id + "')\"]").hide();
+        var now_text = $("a[href=\"javascript:selectObject('" + id + "')\"]").text();
+        td.append("<select class='objectSelect' id='selectObject_" + id + "'></select>");
+        $("#selectObject_" + id).html($("#opeartObjectSelect").html());
+        $("#selectObject_" + id + " option:contains('综合')").remove();
+        $("#selectObject_" + id + " option:contains('" + now_text + "')").attr("selected", "selected");
+        //
+        //绑定事件
+        $(".objectSelect").change(function() {
+            if (parseInt($(this).val()) == -1) {
+                return false;
+            }
+            var select = $(this);
+            var id = $(this).attr("id").substr($(this).attr("id").indexOf("_") + 1);
+            var target = $(this).val();
+            var targetName = $(".objectSelect option[value='" + target + "']").text();
+            $("#load_dialog").window("open");
+            $.post("__URL__/pointObject", {id: id, target: target}, function(msg) {
+                if (msg) {
+                    if (msg.status) {
+                        $("a[href=\"javascript:selectObject('" + id + "')\"]").text(targetName);
+                        select.remove();
+                        $("a[href=\"javascript:selectObject('" + id + "')\"]").show();
+                    }
+                }
+                $("#load_dialog").window("close");
+            }, "json")
+        })
+    }
+    
+    
+     /**
+     * 选择科等级
+     * @param {int} id
+     * @returns {void}     
+     * @author Adam $date2013.08.30$
+     */
+    function selectLevel(id) {
+        $(".levelSelect").unbind();
+        //现有的select
+        var old_select_id = $(".levelSelect").attr("id");
+        //现有的select移除，还原链接
+        if (old_select_id) {
+            var old_id = old_select_id.substr(old_select_id.indexOf("_") + 1);
+            $("#selectLevel_" + old_id).remove();
+            $("a[href=\"javascript:selectObject('" + old_id + "')\"]").show();
+        }
+        //显示当前选中的
+        var td = $("a[href=\"javascript:selectLevel('" + id + "')\"]").parent("td");
+        $("a[href=\"javascript:selectLevel('" + id + "')\"]").hide();
+        var now_text = $("a[href=\"javascript:selectLevel('" + id + "')\"]").text();
+        td.append("<select class='levelSelect' id='selectLevel_" + id + "'></select>");
+        $("#selectLevel_" + id).html($("#opeartLevelSelect").html());
+        $("#selectLevel_" + id+" option[value='0']").text("无");
+        $("#selectLevel_" + id + " option:contains('" + now_text + "')").attr("selected", "selected");
+        //
+        //绑定事件
+        $(".levelSelect").change(function() {
+            if (parseInt($(this).val()) == -1) {
+                return false;
+            }
+            var select = $(this);
+            var id = $(this).attr("id").substr($(this).attr("id").indexOf("_") + 1);
+            var target = $(this).val();
+            var targetName = $(".levelSelect option[value='" + target + "']").text();
+            $("#load_dialog").window("open");
+            $.post("__URL__/pointLevel", {id: id, target: target}, function(msg) {
+                if (msg) {
+                    if (msg.status) {
+                        $("a[href=\"javascript:selectLevel('" + id + "')\"]").text(targetName);
+                        var difficultyObj = $("a[href=\"javascript:selectLevel('" + id + "')\"]").parent("td").siblings("td").find(".difficulty");
+                        switch(msg.data){
+                            case 0:
+                                difficultyObj.text("无");
+                                break;
+                            case 1:
+                                difficultyObj.text("初级");
+                                break;
+                            case 2:
+                                difficultyObj.text("中级");
+                                break;
+                            case 3:
+                                difficultyObj.text("高级");
+                                break;
+                            default:
+                                break;
+                        }
+                        if(msg.data==0){
+                            $("a[href=\"javascript:selectLevel('" + id + "')\"]").parent("td").siblings("td").find(".difficulty").text("无");
+                        }
+                        select.remove();
+                        $("a[href=\"javascript:selectLevel('" + id + "')\"]").show();
                     }
                 }
                 $("#load_dialog").window("close");

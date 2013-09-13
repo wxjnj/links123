@@ -6,18 +6,22 @@ class EnglishQuestionAction extends CommonAction {
         if (isset($_REQUEST['name'])) {
             $name = ftrim($_REQUEST['name']);
         }
+        //媒体口音
         if (intval($_REQUEST['voice']) > 0) {
-            $map['englishQuestion.voice'] = intval($_REQUEST['voice']);
+            $map['englishMedia.voice'] = intval($_REQUEST['voice']);
             $param['voice'] = intval($_REQUEST['voice']);
         }
+        //试题目标
         if (intval($_REQUEST['target']) > 0) {
             $map['englishQuestion.target'] = intval($_REQUEST['target']);
             $param['target'] = intval($_REQUEST['target']);
         }
+        //视频类型
         if (intval($_REQUEST['pattern']) > 0) {
             $map['englishMedia.pattern'] = intval($_REQUEST['pattern']);
             $param['pattern'] = intval($_REQUEST['pattern']);
         }
+        //视频科目
         if (intval($_REQUEST['object']) > 0) {
             $map['englishMedia.object'] = intval($_REQUEST['object']);
             $object_info = D("EnglishObject")->find($map['englishMedia.object']);
@@ -26,9 +30,34 @@ class EnglishQuestionAction extends CommonAction {
             }
             $param['object'] = intval($_REQUEST['object']);
         }
+        //视频等级
         if (intval($_REQUEST['level']) > 0) {
             $map['englishMedia.level'] = intval($_REQUEST['level']);
             $param['level'] = intval($_REQUEST['level']);
+        }
+        //视频专题
+        if (intval($_REQUEST['subject']) > 0) {
+            $map['englishMedia.subject'] = intval($_REQUEST['subject']);
+            $param['subject'] = intval($_REQUEST['subject']);
+        }
+        //视频难度值
+        if (intval($_REQUEST['difficulty']) > 0) {
+            $map['englishMedia.difficulty'] = intval($_REQUEST['difficulty']);
+            $param['difficulty'] = intval($_REQUEST['difficulty']);
+        }
+        //视频推荐
+        if (isset($_REQUEST['recommend'])) {
+            if (intval($_REQUEST['recommend']) == 0) {
+                $map['englishMedia.recommend'] = 0;
+            } else {
+                $map['englishMedia.recommend'] = array("neq", 0);
+            }
+            $param['recommend'] = intval($_REQUEST['recommend']);
+        }
+        //视频特别推荐
+        if (isset($_REQUEST['special_recommend'])) {
+            $map['englishMedia.special_recommend'] = intval($_REQUEST['special_recommend']);
+            $param['special_recommend'] = intval($_REQUEST['special_recommend']);
         }
         if (isset($_REQUEST['status'])) {
             if ($_REQUEST['status'] != -2) {
@@ -36,9 +65,19 @@ class EnglishQuestionAction extends CommonAction {
             }
             $param['status'] = intval($_REQUEST['status']);
         }
+        //试题创建时间
         if (isset($_REQUEST['created']) && strtotime($_REQUEST['created'])) {
             $map['_string'] = "DATE_FORMAT(FROM_UNIXTIME(englishQuestion.`created`),'%Y-%m-%d')='" . $_REQUEST['created'] . "'";
             $param['created'] = $_REQUEST['created'];
+        }
+        //媒体缩略图
+        if (isset($_REQUEST['thumb'])) {
+            if (intval($_REQUEST['thumb']) == 1) {
+                $map['englishMedia.media_thumb_img'] = array("neq", "");
+            } else {
+                $map['englishMedia.media_thumb_img'] = array("eq", "");
+            }
+            $param['thumb'] = intval($_REQUEST['thumb']);
         }
         if (!empty($name)) {
             $key['englishQuestion.id'] = $name;

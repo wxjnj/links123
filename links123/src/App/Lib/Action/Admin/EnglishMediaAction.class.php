@@ -11,14 +11,17 @@ class EnglishMediaAction extends CommonAction {
         if (isset($_REQUEST['name'])) {
             $name = ftrim($_REQUEST['name']);
         }
+        //视频类型
         if (intval($_REQUEST['pattern']) > 0) {
             $map['englishMedia.pattern'] = intval($_REQUEST['pattern']);
             $param['pattern'] = intval($_REQUEST['pattern']);
         }
+        //视频口音
         if (intval($_REQUEST['voice']) > 0) {
             $map['englishMedia.voice'] = intval($_REQUEST['voice']);
             $param['voice'] = intval($_REQUEST['voice']);
         }
+        //媒体科目
         if (intval($_REQUEST['object']) > 0) {
             $map['englishMedia.object'] = intval($_REQUEST['object']);
             $object_info = D("EnglishObject")->find($map['englishMedia.object']);
@@ -27,22 +30,27 @@ class EnglishMediaAction extends CommonAction {
             }
             $param['object'] = intval($_REQUEST['object']);
         }
+        //媒体专题
         if (intval($_REQUEST['subject']) > 0) {
             $map['englishMedia.subject'] = intval($_REQUEST['subject']);
             $param['subject'] = intval($_REQUEST['subject']);
         }
+        //媒体难度
         if (intval($_REQUEST['difficulty']) > 0) {
             $map['englishMedia.difficulty'] = intval($_REQUEST['difficulty']);
             $param['difficulty'] = intval($_REQUEST['difficulty']);
         }
+        //媒体年级
         if (intval($_REQUEST['level']) > 0) {
             $map['englishMedia.level'] = intval($_REQUEST['level']);
             $param['level'] = intval($_REQUEST['level']);
         }
+        //媒体状态
         if (isset($_REQUEST['status'])) {
             $map['englishMedia.status'] = intval($_REQUEST['status']);
             $param['status'] = intval($_REQUEST['status']);
         }
+        //媒体推荐
         if (isset($_REQUEST['recommend'])) {
             if (intval($_REQUEST['recommend']) == 0) {
                 $map['englishMedia.recommend'] = 0;
@@ -51,10 +59,21 @@ class EnglishMediaAction extends CommonAction {
             }
             $param['recommend'] = intval($_REQUEST['recommend']);
         }
+        //媒体特别推荐
         if (isset($_REQUEST['special_recommend'])) {
             $map['englishMedia.special_recommend'] = intval($_REQUEST['special_recommend']);
             $param['special_recommend'] = intval($_REQUEST['special_recommend']);
         }
+        //媒体缩略图
+        if (isset($_REQUEST['thumb'])) {
+            if (intval($_REQUEST['thumb']) == 1) {
+                $map['englishMedia.media_thumb_img'] = array("neq", "");
+            } else {
+                $map['englishMedia.media_thumb_img'] = array("eq", "");
+            }
+            $param['thumb'] = intval($_REQUEST['thumb']);
+        }
+        //媒体添加时间
         if (isset($_REQUEST['created']) && strtotime($_REQUEST['created'])) {
             $map['_string'] = "DATE_FORMAT(FROM_UNIXTIME(englishMedia.created),'%Y-%m-%d')='" . $_REQUEST['created'] . "'";
             $param['created'] = $_REQUEST['created'];
@@ -163,7 +182,7 @@ class EnglishMediaAction extends CommonAction {
             $this->error($model->getError());
         }
         $levels = D("EnglishLevel")->order("`sort` ASC")->select();
-        foreach ($levels as $key => $value) {
+        foreach ($levels as $value) {
             $level_list[$value['id']] = $value;
             $level_name_list_info[$value['name']] = $value;
         }
@@ -281,26 +300,86 @@ class EnglishMediaAction extends CommonAction {
     public function pointSubject() {
         if ($this->isAjax()) {
             $id = $_REQUEST['id'];
-            $tartget = intval($_REQUEST['target']);
-            if ($tartget >= 0) {
+            $target = intval($_REQUEST['target']);
+            if ($target >= 0) {
                 $map['id'] = array("in", $id);
                 $model = D("EnglishMedia");
                 $model->startTrans();
                 $info = $model->field("recommend,object,subject")->where($map)->find();
                 if ($info['recommend'] > 0) {
-                    $recommendId = D("EnglishMediaRecommend")->getRecommendIdByObjectOrSubject($info['object'], $tartget);
+                    $recommendId = D("EnglishMediaRecommend")->getRecommendIdByObjectOrSubject($info['object'], $target);
                     if (intval($recommendId) > 0) {
                         $data['recommend'] = intval($recommendId);
                     }
                 }
-                $data['subject'] = intval($tartget);
+                $data['subject'] = $target;
                 $ret = $model->where($map)->save($data);
                 if (false !== $ret) {
                     $model->commit();
-                    $this->ajaxReturn($tartget, "操作成功", true);
+                    $this->ajaxReturn($target, "操作成功", true);
                 }
             }
             $model->rollback();
+            $this->ajaxReturn("", "操作失败", false);
+        }
+    }
+
+    public function pointObject() {
+        if ($this->isAjax()) {
+            $id = $_REQUEST['id'];
+            $target = intval($_REQUEST['target']);
+            if ($target >= 0) {
+                $map['id'] = array("in", $id);
+                $model = D("EnglishMedia");
+                $model->startTrans();
+                $info = $model->field("recommend,object,subject")->where($map)->find();
+                if ($info['recommend'] > 0) {
+                    $recommendId = D("EnglishMediaRecommend")->getRecommendIdByObjectOrSubject($target, $info['subject']);
+                    if (intval($recommendId) > 0) {
+                        $data['recommend'] = intval($recommendId);
+                    }
+                }
+                $data['object'] = $target;
+                $ret = $model->where($map)->save($data);
+                if (false !== $ret) {
+                    $model->commit();
+                    $this->ajaxReturn($target, "操作成功", true);
+                }
+            }
+            $model->rollback();
+            $this->ajaxReturn("", "操作失败", false);
+        }
+    }
+
+    public function pointLevel() {
+        if ($this->isAjax()) {
+            $target = intval($_REQUEST['target']);
+            if ($target >= 0) {
+                $model = D("EnglishMedia");
+                $data = array();
+                $data['id'] = $_REQUEST['id'];
+                $data['level'] = $target;
+                $levels = D("EnglishLevel")->order("`sort` ASC")->select();
+                foreach ($levels as $value) {
+                    $level_list[$value['id']] = $value;
+                    $level_name_list_info[$value['name']] = $value;
+                }
+                if ($data['level'] == 0) {
+                    $data['difficulty'] = 0;
+                } else {
+                    if ($level_list[intval($data['level'])]['sort'] <= $level_name_list_info['小六']['sort']) {
+                        $data['difficulty'] = 1;
+                    } else if ($level_list[intval($data['level'])]['sort'] >= $level_name_list_info['大一']['sort']) {
+                        $data['difficulty'] = 3;
+                    } else {
+                        $data['difficulty'] = 2;
+                    }
+                }
+                $ret = $model->save($data);
+                if (false !== $ret) {
+                    $this->ajaxReturn($data['difficulty'], "操作成功", true);
+                }
+            }
             $this->ajaxReturn("", "操作失败", false);
         }
     }
@@ -427,13 +506,13 @@ class EnglishMediaAction extends CommonAction {
             $data = array();
             $data['id'] = $_REQUEST['id'];
             $info = $model->field("special_recommend,recommend,subject,object")->find($data['id']);
-            
+
             if (empty($info)) {
                 $this->ajaxReturn("", "操作记录不存在", false);
             }
             if (intval($info['recommend']) == 0) {
                 $data['recommend'] = D("EnglishMediaRecommend")->getRecommendIdByObjectOrSubject($info['object'], $info['subject']);
-            }else{
+            } else {
                 $data['special_recommend'] = 0;
                 $data['recommend'] = 0;
             }
