@@ -37,6 +37,7 @@ input:focus{ outline: 0; }
 	z-index: 2;
 }
 .skins .skins-style{
+	display: none;
 	position: absolute;
 	top: 15px;
 	left: -230px;
@@ -47,6 +48,7 @@ input:focus{ outline: 0; }
 	margin-left: 7px;
 }
 .skins .skins-all{
+	display: none;
 	position: absolute;
 	top: 30px;
 	padding-top: 10px;
@@ -164,11 +166,11 @@ input:focus{ outline: 0; }
 .logo{
 	background: url(../imgs/logo.png) 0 0 no-repeat;
 	float: left;
-	height: 48px;
+	height: 55px;
 	margin-top: 10px;
 	overflow: hidden;
 	text-indent: -999px;
-	width: 201px;
+	width: 264px;
 }
 /*thl*/
 .thl{
@@ -296,6 +298,10 @@ input:focus{ outline: 0; }
 .del{} /* TODO skins */
 .close{
 	background: url(../imgs/sprite.png) -125px -6px no-repeat;
+}
+.close:focus{ outline: 0; }
+.close:hover{
+	background-position: -245px -6px;
 }
 .box{} /* TODO skins */
 .box h2{
@@ -513,7 +519,6 @@ input:focus{ outline: 0; }
 	background: #fff;
 	color: #727171;
 	font-size: 12px;
-	display: none;
 }
 .lk-dialog .lkd-hd{
 	padding: 20px 30px 0;
@@ -606,15 +611,20 @@ input:focus{ outline: 0; }
 	margin-bottom: 2px;
 	*margin-bottom: -2px;
 }
-.rpass a,
-.rpass a:hover{
+.rpass a{
 	color: #727171;
 	text-decoration: underline;
 	margin-left: 10px;
 }
-.rpass span a,
-.rpass span a:hover{
+.rpass a:hover{
+	color: #b4b5b5;
+	text-decoration: underline;
+}
+.rpass span a{
 	color: #329347;
+}
+.rpass span a:hover{
+	color: #60ad6b;
 }
 .lk-dialog-zld ul{
 	margin-top: -30px;
@@ -979,13 +989,15 @@ input:focus{ outline: 0; }
 }*/
 #header,
 #container,
-#footer{
+#footer,
+#frame-wrap{
 	min-width: 1175px;
 	width: 100%;
 }
 .header-inner,
 .container-inner,
-.footer-inner{
+.footer-inner,
+#frame-wrap{
 	width: 1175px;
 	margin: 0 auto;
 }
