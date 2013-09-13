@@ -6,18 +6,22 @@ class EnglishQuestionAction extends CommonAction {
         if (isset($_REQUEST['name'])) {
             $name = ftrim($_REQUEST['name']);
         }
+        //媒体口音
         if (intval($_REQUEST['voice']) > 0) {
-            $map['englishQuestion.voice'] = intval($_REQUEST['voice']);
+            $map['englishMedia.voice'] = intval($_REQUEST['voice']);
             $param['voice'] = intval($_REQUEST['voice']);
         }
+        //试题目标
         if (intval($_REQUEST['target']) > 0) {
             $map['englishQuestion.target'] = intval($_REQUEST['target']);
             $param['target'] = intval($_REQUEST['target']);
         }
+        //视频类型
         if (intval($_REQUEST['pattern']) > 0) {
             $map['englishMedia.pattern'] = intval($_REQUEST['pattern']);
             $param['pattern'] = intval($_REQUEST['pattern']);
         }
+        //视频科目
         if (intval($_REQUEST['object']) > 0) {
             $map['englishMedia.object'] = intval($_REQUEST['object']);
             $object_info = D("EnglishObject")->find($map['englishMedia.object']);
@@ -26,9 +30,34 @@ class EnglishQuestionAction extends CommonAction {
             }
             $param['object'] = intval($_REQUEST['object']);
         }
+        //视频等级
         if (intval($_REQUEST['level']) > 0) {
             $map['englishMedia.level'] = intval($_REQUEST['level']);
             $param['level'] = intval($_REQUEST['level']);
+        }
+        //视频专题
+        if (intval($_REQUEST['subject']) > 0) {
+            $map['englishMedia.subject'] = intval($_REQUEST['subject']);
+            $param['subject'] = intval($_REQUEST['subject']);
+        }
+        //视频难度值
+        if (intval($_REQUEST['difficulty']) > 0) {
+            $map['englishMedia.difficulty'] = intval($_REQUEST['difficulty']);
+            $param['difficulty'] = intval($_REQUEST['difficulty']);
+        }
+        //视频推荐
+        if (isset($_REQUEST['recommend'])) {
+            if (intval($_REQUEST['recommend']) == 0) {
+                $map['englishMedia.recommend'] = 0;
+            } else {
+                $map['englishMedia.recommend'] = array("neq", 0);
+            }
+            $param['recommend'] = intval($_REQUEST['recommend']);
+        }
+        //视频特别推荐
+        if (isset($_REQUEST['special_recommend'])) {
+            $map['englishMedia.special_recommend'] = intval($_REQUEST['special_recommend']);
+            $param['special_recommend'] = intval($_REQUEST['special_recommend']);
         }
         if (isset($_REQUEST['status'])) {
             if ($_REQUEST['status'] != -2) {
@@ -36,9 +65,19 @@ class EnglishQuestionAction extends CommonAction {
             }
             $param['status'] = intval($_REQUEST['status']);
         }
+        //试题创建时间
         if (isset($_REQUEST['created']) && strtotime($_REQUEST['created'])) {
             $map['_string'] = "DATE_FORMAT(FROM_UNIXTIME(englishQuestion.`created`),'%Y-%m-%d')='" . $_REQUEST['created'] . "'";
             $param['created'] = $_REQUEST['created'];
+        }
+        //媒体缩略图
+        if (isset($_REQUEST['thumb'])) {
+            if (intval($_REQUEST['thumb']) == 1) {
+                $map['englishMedia.media_thumb_img'] = array("neq", "");
+            } else {
+                $map['englishMedia.media_thumb_img'] = array("eq", "");
+            }
+            $param['thumb'] = intval($_REQUEST['thumb']);
         }
         if (!empty($name)) {
             $key['englishQuestion.id'] = $name;
@@ -79,14 +118,14 @@ class EnglishQuestionAction extends CommonAction {
         $object_list = D("EnglishObject")->getList("status=1");
         $this->assign("object_list", $object_list);
         //科目列表
-        $level_list = D("EnglishLevel")->getList("status=1","`sort` ASC");
+        $level_list = D("EnglishLevel")->getList("status=1", "`sort` ASC");
         $num = intval(D("Variable")->getVariable("english_click_num"));
         $this->assign("english_click_num", $num);
         $this->assign("level_list", $level_list);
         //专题列表
         $subject_list = D("EnglishMediaSubject")->getList("status=1", "`sort` ASC");
         $this->assign("subject_list", $subject_list);
-        
+
         $this->assign("param", $param);
         foreach ($param as $key => $value) {
             $param_str.=$key . "=" . $value . "&";
@@ -127,24 +166,24 @@ class EnglishQuestionAction extends CommonAction {
         $option_id = array();
         //依次存入选项，不知道问题id
         $option_data['created'] = time();
-        $index = 1;
+        $index = array(1,2,3,4);
         foreach ($_POST['option'] as $key => $value) {
             if (!empty($value)) {
-                $d_1 = preg_match("/all\sof\sthe\sabove.?/i", $value);
-                $d_2 = preg_match("/none\sof\sthe\sabove.?/i", $value);
-                $d_3 = preg_match("/either\sB\sor\sC.?/i", $value);
-                $d_4 = preg_match("/(both\s)?B\sand\sC.?/i", $value);
-                $c_1 = preg_match("/(both\sA)?\sand\sB.?/i", $value);
-                $c_2 = preg_match("/either\sA\sor\sB.?/i", $value);
+                $d_1 = preg_match("/all(\s)+of(\s)+the(\s+)above.?/i", $value);
+                $d_2 = preg_match("/none(\s)+of(\s)+the(\s)+above.?/i", $value);
+                $d_3 = preg_match("/either(\s)+B(\s)+or(\s)+C.?/i", $value);
+                $d_4 = preg_match("/(both(\s)+)?B(\s)+and(\s)+C.?/i", $value);
+                $c_1 = preg_match("/(both(\s)+A)?(\s)+and(\s)+B.?/i", $value);
+                $c_2 = preg_match("/either(\s)+A(\s)+or(\s)+B.?/i", $value);
                 $option_data['content'] = $value;
+                $option_data['sort'] = current($index);
                 if ($d_1 || $d_2 || $d_3 || $d_4) {
                     $option_data['sort'] = 4; //D
                 } else if ($c_1 || $c_2) {
                     $option_data['sort'] = 3; //C
-                } else {
-                    $option_data['sort'] = $index; //除去特殊项目，其他自动顶上
-                    $index++;
                 }
+                 unset($index[array_search($option_data['sort'], $index)]);//已排序的序号删除
+                
                 $ret = $optionModel->add($option_data);
                 if (false === $ret) {
                     $model->rollback();
@@ -251,24 +290,25 @@ class EnglishQuestionAction extends CommonAction {
         $option_data['question_id'] = $id;
         $option_data['created'] = time();
         $answer_id = 0;
-        $index = 1;
+        $index = array(1,2,3,4);
         foreach ($_POST['option'] as $key => $value) {
             if (!empty($value)) {
-                $d_1 = preg_match("/all\sof\sthe\sabove.?/i", $value);
-                $d_2 = preg_match("/none\sof\sthe\sabove.?/i", $value);
-                $d_3 = preg_match("/either\sB\sor\sC.?/i", $value);
-                $d_4 = preg_match("/(both\s)?B\sand\sC.?/i", $value);
-                $c_1 = preg_match("/(both\s)?A\sand\sB.?/i", $value);
-                $c_2 = preg_match("/either\sA\sor\sB.?/i", $value);
+                $d_1 = preg_match("/all(\s)+of(\s)+the(\s+)above.?/i", $value);
+                $d_2 = preg_match("/none(\s)+of(\s)+the(\s)+above.?/i", $value);
+                $d_3 = preg_match("/either(\s)+B(\s)+or(\s)+C.?/i", $value);
+                $d_4 = preg_match("/(both(\s)+)?B(\s)+and(\s)+C.?/i", $value);
+                $c_1 = preg_match("/(both(\s)+A)?(\s)+and(\s)+B.?/i", $value);
+                $c_2 = preg_match("/either(\s)+A(\s)+or(\s)+B.?/i", $value);
                 $option_data['content'] = $value;
+                $option_data['sort']=current($index);//获取最前面的序号
                 if ($d_1 || $d_2 || $d_3 || $d_4) {
                     $option_data['sort'] = 4; //D
                 } else if ($c_1 || $c_2) {
                     $option_data['sort'] = 3; //C
-                } else {
-                    $option_data['sort'] = $index; //除去特殊项目，其他自动顶上
-                    $index++;
-                }
+                } 
+                
+                 unset($index[array_search($option_data['sort'], $index)]);//已排序的序号删除
+                
                 $ret = $optionModel->add($option_data);
                 if (false === $ret) {
                     $optionModel->rollback();
@@ -508,48 +548,47 @@ class EnglishQuestionAction extends CommonAction {
                         }
                         //是推荐
                         if ($media_data['recommend'] == 1) {
-                            $recommend_ids = array();
+                            $recommend_id = 0;
                             //科目存在
                             if ($media_data['object'] > 0) {
-                                $recommend_id_a = $recommendNameList[$media_data['object_name']];
+                                $recommend_id = $recommendNameList[$media_data['object_name']];
                                 //推荐类存在科目名
-                                if (intval($recommend_id_a == 0)) {
+                                if (intval($recommend_id == 0)) {
                                     $recommend_data['sort'] = $recommendSort;
                                     $recommend_data['name'] = $media_data['object_name'];
                                     $recommend_data['created'] = $time;
                                     $recommend_data['updated'] = $time;
-                                    $recommend_id_a = $recommendModel->add($recommend_data);
-                                    if (false === $recommend_id_a) {
+                                    $recommend_id = $recommendModel->add($recommend_data);
+                                    if (false === $recommend_id) {
                                         $model->rollback();
                                         @unlink($dest);
-                                        die(json_encode(array("info" => "导入失败", "status" => false)));
+                                        die(json_encode(array("info" => "导入失败1", "status" => false)));
                                     }
-                                    $recommendNameList[$media_data['object_name']] = $recommend_id_a;
+                                    $recommendNameList[$media_data['object_name']] = $recommend_id;
                                     $recommendSort++;
                                 }
-                                array_push($recommend_ids, $recommend_id_a);
-                            }
-                            //专题存在
-                            if ($media_data['subject'] > 0) {
-                                $recommend_id_b = $recommendNameList[$media_data['subject_name']];
-                                //推荐类存在专题名
-                                if (intval($recommend_id_b == 0)) {
-                                    $recommend_data['sort'] = $recommendSort;
-                                    $recommend_data['name'] = $media_data['subject_name'];
-                                    $recommend_data['created'] = $time;
-                                    $recommend_data['updated'] = $time;
-                                    $recommend_id_b = $recommendModel->add($recommend_data);
-                                    if (false === $recommend_id_b) {
-                                        $model->rollback();
-                                        @unlink($dest);
-                                        die(json_encode(array("info" => "导入失败", "status" => false)));
+                            } else {
+                                //专题存在
+                                if ($media_data['subject'] > 0) {
+                                    $recommend_id = $recommendNameList[$media_data['subject_name']];
+                                    //推荐类存在专题名
+                                    if (intval($recommend_id == 0)) {
+                                        $recommend_data['sort'] = $recommendSort;
+                                        $recommend_data['name'] = $media_data['subject_name'];
+                                        $recommend_data['created'] = $time;
+                                        $recommend_data['updated'] = $time;
+                                        $recommend_id = $recommendModel->add($recommend_data);
+                                        if (false === $recommend_id) {
+                                            $model->rollback();
+                                            @unlink($dest);
+                                            die(json_encode(array("info" => "导入失败2", "status" => false)));
+                                        }
+                                        $recommendNameList[$media_data['subject_name']] = $recommend_id;
+                                        $recommendSort++;
                                     }
-                                    $recommendNameList[$media_data['subject_name']] = $recommend_id_b;
-                                    $recommendSort++;
                                 }
-                                array_push($recommend_ids, $recommend_id_b);
                             }
-                            $media_data['recommend'] = implode(",", $recommend_ids);
+                            $media_data['recommend'] = $recommend_id;
                         }
                         $mediaId = $mediaModel->add($media_data);
                     }
@@ -558,7 +597,7 @@ class EnglishQuestionAction extends CommonAction {
                     if ($data['media_id'] == 0) {
                         $data['status'] = 0;
                     }
-                    
+
                     //插入答案
                     $option_id = array();
                     //判断题目是否是判断题
@@ -579,30 +618,29 @@ class EnglishQuestionAction extends CommonAction {
                     //
                     //依次存入选项，不知道问题id
                     $option_data['created'] = $time;
-                    $index = 1;
+                    $index = array(1, 2, 3, 4);//选择序号数组
                     foreach ($data['option'] as $key => $value) {
                         if (!empty($value)) {
-                            $d_1 = preg_match("/all\sof\sthe\sabove.?/i", $value);
-                            $d_2 = preg_match("/none\sof\sthe\sabove.?/i", $value);
-                            $d_3 = preg_match("/either\sB\sor\sC.?/i", $value);
-                            $d_4 = preg_match("/(both\s)?B\sand\sC.?/i", $value);
-                            $c_1 = preg_match("/(both\s)?A\sand\sB.?/i", $value);
-                            $c_2 = preg_match("/either\sA\sor\sB.?/i", $value);
+                            $d_1 = preg_match("/all(\s)+of(\s)+the(\s+)above.?/i", $value);
+                            $d_2 = preg_match("/none(\s)+of(\s)+the(\s)+above.?/i", $value);
+                            $d_3 = preg_match("/either(\s)+B(\s)+or(\s)+C.?/i", $value);
+                            $d_4 = preg_match("/(both(\s)+)?B(\s)+and(\s)+C.?/i", $value);
+                            $c_1 = preg_match("/(both(\s)+A)?(\s)+and(\s)+B.?/i", $value);
+                            $c_2 = preg_match("/either(\s)+A(\s)+or(\s)+B.?/i", $value);
                             $option_data['content'] = $value;
+                            $option_data['sort'] = current($index);//选项排序等于当前最前面序号
                             if ($d_1 || $d_2 || $d_3 || $d_4) {
                                 $option_data['sort'] = 4; //D
                             } else if ($c_1 || $c_2) {
                                 $option_data['sort'] = 3; //C
-                            } else {
-                                $option_data['sort'] = $index; //除去特殊项目，其他自动顶上
-                                $index++;
                             }
+                            unset($index[array_search($option_data['sort'], $index)]);//已排序的序号删除
 
                             $ret = $optionModel->add($option_data);
                             if (false === $ret) {
                                 $model->rollback();
                                 @unlink($dest);
-                                die(json_encode(array("info" => "导入失败", "status" => false)));
+                                die(json_encode(array("info" => "导入失败3", "status" => false)));
                             }
                             array_push($option_id, $ret); //保存增加的id数组，用于更新选项对应的问题id
                         }
@@ -672,14 +710,14 @@ class EnglishQuestionAction extends CommonAction {
                                 //更新答案对应的题目id
                                 $model->rollback();
                                 @unlink($dest);
-                                die(json_encode(array("info" => "导入失败", "status" => false)));
+                                die(json_encode(array("info" => "导入失败4", "status" => false)));
                             }
                         }
                     } else {
                         $model->rollback();
                         @unlink($dest);
                         //失败提示
-                        die(json_encode(array("info" => "导入失败", "status" => false)));
+                        die(json_encode(array("info" => "导入失败5", "status" => false)));
                     }
                 }
             }

@@ -134,7 +134,7 @@ class EnglishRecordModel extends CommonModel {
             $map['subject'] = intval($subject);
         }
         if (intval($recommend) > 0) {
-            $map['_string'] = "FIND_IN_SET('" . $recommend . "',media.recommend)";
+            $map['media.recommend'] = $recommend;
         }
         if (intval($difficulty) > 0) {
             $map['difficulty'] = intval($difficulty);
@@ -231,7 +231,7 @@ class EnglishRecordModel extends CommonModel {
             $map['subject'] = intval($subject);
         }
         if (intval($recommend) > 0) {
-            $map['_string'] = "FIND_IN_SET('" . $recommend . "',media.recommend)";
+            $map['media.recommend'] = $recommend;
         }
         if (intval($difficulty) > 0) {
             $map['difficulty'] = intval($difficulty);

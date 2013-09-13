@@ -9,10 +9,7 @@
 class AdvertAction extends CommonAction {
 
 	protected function _filter(&$map,&$param) {
-		$requestname=$this->_request("name");
-		if (isset($requestname)){
-			$name=$requestname;
-		}
+		$name = $this->_request("name");
 		if (!empty($name)) {
 			$map['name']=array('like',"%".$name."%");
 		}

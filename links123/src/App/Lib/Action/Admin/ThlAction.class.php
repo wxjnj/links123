@@ -10,24 +10,26 @@
 class ThlAction extends CommonAction {
 
 	protected function _filter(&$map, &$param){
-		if (isset($_REQUEST['name'])) {
-			$name = $_REQUEST['name'];
-		}
+
+		$name = $this->_param('name');
+		$thl = $this->_param('thl');
+		$needkey = $this->_param('needkey');
 		if (!empty($name)) {
 			$map['name'] = array('like',"%".$name."%");
 		}
+		
 		$this->assign('name',$name);
 		$param['name'] = $name;
-		if (isset($_REQUEST['thl'])) {
-			$thl = $_REQUEST['thl'];
-		}
+		
 		if (!empty($thl)) {
 			$map['thl'] = $thl;
 		}
+		
 		$this->assign('thl',$thl);
 		$param['thl'] = $thl;
-		if (isset($_REQUEST['needkey']) && $_REQUEST['needkey']!='') {
-			$map['needkey'] = $_REQUEST['needkey'];
+		
+		if (!empty($needkey)) {
+			$map['needkey'] = $needkey;
 		}
 		$this->assign('needkey', $map['needkey']);
 		$param['needkey'] = $map['needkey'];
@@ -81,22 +83,27 @@ class ThlAction extends CommonAction {
 	 * @see ThlAction::insert()
 	 */
 	public function insert() {
+		$url = $this->_param('url');
 		$this->checkPost();
 		// 创建数据对象
 		$model = D("Thl");
-		if ( $model->where("url='".$_POST['url']."'")->find()) {
+		if ( $model->where("url = %s", $url)->find()) {
 			$this->error('该链接已存在！');
+			exit(0);
 		}
 		if ( false === $model->create()) {
 			$this->error( $model->getError());
+			exit(0);
 		}
 		// 写入数据
 		if ( false !== $model->add()) {
 			$this->success('糖葫芦籽添加成功！');
+			exit(0);
 		} 
 		else {
 			Log::write('糖葫芦籽添加失败：'.$model->getLastSql(), Log::SQL);
 			$this->error('糖葫芦籽添加失败！');
+			exit(0);
 		}
 	}
 	
@@ -115,8 +122,9 @@ class ThlAction extends CommonAction {
 	 * @see ThlAction::edit()
 	 */
 	function edit() {
+		$id = $this->_param('id');
 		$model = M("Thl");
-		$vo = $model->getById($_REQUEST['id'] );
+		$vo = $model->getById($id);
 		$this->assign('vo', $vo);
 		$this->getThl();
 		$this->display();
@@ -128,21 +136,27 @@ class ThlAction extends CommonAction {
 	 * @see ThlAction::update()
 	 */
 	public function update() {
+		$url = $this->_param('url');
+		$id = $this->_param('id');
+		
         $this->checkPost();
         $model = D("Thl");
-        if ($model->where("url='".$_POST['url']."' and id!=".$_POST['id'])->find()) {
+        if ($model->where("url = '%s' and id != '%d'", $url, $id)->find()) {
         	$this->error('该链接已存在！');
+        	exit(0);
         }
 		if ( false === $model->create()) {
 			$this->error($model->getError());
+			exit(0);
 		}
 		if ( false !== $model->save()) {
 			$this->assign('jumpUrl', cookie('_currentUrl_'));
 			$this->success('糖葫芦籽编辑成功!');
-		} 
-		else {
+			exit(0);
+		} else {
 			Log::write('糖葫芦籽编辑失败：'.$model->getLastSql(),Log::SQL);
 			$this->error('糖葫芦籽编辑失败!');
+			exit(0);
 		}
 	}
 	
@@ -152,10 +166,10 @@ class ThlAction extends CommonAction {
 	 */
 	public function sort(){
 		$model = M("Thl");
-		$map = array();
 		$map['status'] = 1;
-		if (!empty($_GET['sortId'])) {
-			$map['id'] = array('in',$_GET['sortId']);
+		$sortId = $this->_param('sortId');
+		if (!empty($sortId)) {
+			$map['id'] = array('in', $sortId);
 		}
 		else {
 			$params = explode("&",$_SESSION[C('SEARCH_PARAMS_KEY')]);
@@ -166,7 +180,7 @@ class ThlAction extends CommonAction {
 				}
 			}
 		}
-		$sortList = $model->where($map)->order('sort asc,create_time asc')->select();
+		$sortList = $model->where($map)->order('sort ASC,create_time ASC')->select();
 		foreach ($sortList as &$value) {
 			$value['txt_show'] = $value['name']."　　　　　";
 		}

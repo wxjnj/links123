@@ -76,7 +76,7 @@ class EnglishQuestionModel extends CommonModel {
                 }
             } else if ($viewType == 3) {
                 if (intval($recommend) > 0) {
-                    $map['_string'] = "FIND_IN_SET('" . $recommend . "',media.recommend)";
+                    $map['media.recommend'] = $recommend;
                 } else {
                     return $ret;
                 }
@@ -182,7 +182,7 @@ class EnglishQuestionModel extends CommonModel {
                 return array();
             }
         }
-        //echo $this->getLastSql();exit;
+        //echo $this->getLastSql();
         $ret['id'] = $ret['question_id'];
         if ($viewType == 3) {
             $ret['recommend'] = $recommend;
@@ -238,7 +238,7 @@ class EnglishQuestionModel extends CommonModel {
             $map['media.subject'] = $subject;
         }
         if (intval($recommend) > 0) {
-            $map['_string'] = "FIND_IN_SET('" . $recommend . "',media.recommend)";
+            $map['media.recommend'] = $recommend;
         }
         if (intval($difficulty) > 0) {
             $map['media.difficulty'] = $difficulty;
@@ -310,7 +310,7 @@ class EnglishQuestionModel extends CommonModel {
             if ($viewType == 2) {
                 $map['media.subject'] = intval($subject) > 0 ? intval($subject) : 1;
             } else if ($viewType == 3) {
-                $map['_string'] = "FIND_IN_SET('" . $recommend . "',media.recommend)";
+                $map['media.recommend'] = $recommend;
             }
             $ret = $this->alias("question")
                     ->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media on question.media_id=media.id")
@@ -344,7 +344,7 @@ class EnglishQuestionModel extends CommonModel {
         if ($viewType == 2) {
             $map['media.subject'] = intval($subject);
         } else if ($viewType == 3) {
-            $map['_string'] = "FIND_IN_SET('" . $recommend . "',media.recommend)";
+            $map['media.recommend'] = $recommend;
         }
         $ret = $this->alias("question")
                 ->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media on question.media_id=media.id")
@@ -465,9 +465,7 @@ class EnglishQuestionModel extends CommonModel {
     	$ret['content'] = ftrim($ret['content']);
     	
     	$ret['option'] = D("EnglishOptions")->getQuestionOptionList($ret['id']);
-    	foreach ($ret['option'] as $key => $value) {
-    		$ret['option'][$key]['content'] = ftrim($value['content']);
-    	}
+        
     	return $ret;
     }
     
@@ -476,7 +474,7 @@ class EnglishQuestionModel extends CommonModel {
      * 
      * @author slate date:2013-09-11
      */
-    public function getSpecialSubjectQuestion() {
+    public function getSpecialSubjectQuestion($subject, $difficulty, $voice = 1, $target=1, $pattern = 1, $type, $questionid = 0, $nowQuestionId = 0) {
     	
     	$map = array();
     	$englishRecordModel = D("EnglishRecord");
@@ -484,7 +482,13 @@ class EnglishQuestionModel extends CommonModel {
     	$ret = array();
     	 
     	$order = "`special_recommend` DESC,`recommend` DESC";
-    	
+        
+        if ($voice > 0) {
+    		$map['media.voice'] = $voice;
+    	}
+    	if ($pattern > 0) {
+    		$map['media.pattern'] = $pattern;
+    	}
     	if ($subject > 0) {
     		$map['media.subject'] = $subject;
     	} else {
@@ -512,8 +516,8 @@ class EnglishQuestionModel extends CommonModel {
     	 
     	$map['media.status'] = 1;
     	$map['question.status'] = 1;
-    	 
-    	$result = $this->alias("question")->field($needField)
+
+        $result = $this->alias("question")->field($needField)
     	->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media ON question.media_id=media.id")
     	->where($map)->order($order)->limit(1)->select();
     	 
@@ -537,13 +541,11 @@ class EnglishQuestionModel extends CommonModel {
     	$ret['id'] = $ret['question_id'];
     	
     	$ret['record'] = $englishRecordModel->getQuestionUserRecord($ret['id']);
-    	$ret['record']['untested_num'] = $englishRecordModel->getUserUntestedQuestionNum($object, $level, '', '', '', $voice, $target, $pattern);
+    	$ret['record']['untested_num'] = $englishRecordModel->getUserUntestedQuestionNum('', '', $subject, '', $difficulty, $voice, $target, $pattern);
     	$ret['content'] = ftrim($ret['content']);
     	 
     	$ret['option'] = D("EnglishOptions")->getQuestionOptionList($ret['id']);
-    	foreach ($ret['option'] as $key => $value) {
-    		$ret['option'][$key]['content'] = ftrim($value['content']);
-    	}
+        
     	return $ret;
     	
     }
@@ -551,11 +553,23 @@ class EnglishQuestionModel extends CommonModel {
     /**
      * 获取推荐题目
      */
-    public function getRecommendQuestion() {
+    public function getRecommendQuestion($recommend, $difficulty, $voice = 1, $target=1, $pattern = 1, $type, $questionid = 0, $nowQuestionId = 0) {
     	
-
+        $map = array();
+    	$englishRecordModel = D("EnglishRecord");
+    	$needField = "question.id as question_id,question.target,question.content,question.answer,question.media_id,media.*";
+    	$ret = array();
+    	 
+    	$order = "`special_recommend` DESC,`recommend` DESC";
+        
+        if ($voice > 0) {
+    		$map['media.voice'] = $voice;
+    	}
+    	if ($pattern > 0) {
+    		$map['media.pattern'] = $pattern;
+    	}
     	if ($recommend > 0) {
-    		$map['_string'] = "FIND_IN_SET('" . $recommend . "',media.recommend)";
+    		$map['media.recommend'] = $recommend;
     	} else {
     		return $ret;
     	}
@@ -563,26 +577,117 @@ class EnglishQuestionModel extends CommonModel {
     		$map['media.difficulty'] = $difficulty;
     	}
     	 
-    	$ret['recommend'] = $recommend;
+    	if ($type == "quick_select_prev") {
+    	
+    		$map['question.id']  = array('lt', $nowQuestionId);
+    		$order = "question.id DESC";
+    	} elseif ($type == 'quick_select_next') {
+    	
+    		$map['question.id']  = array('gt', $nowQuestionId);
+    		$order = "question.id ASC";
+    	} else {
+    	
+    		if($questionid) {
+    			$map['question.id'] = $questionid;
+    		}
+    		$order = "question.id ASC";
+    	}
+    	 
+    	$map['media.status'] = 1;
+    	$map['question.status'] = 1;
+
+        $result = $this->alias("question")->field($needField)
+    	->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media ON question.media_id=media.id")
+    	->where($map)->order($order)->limit(1)->select();
+        
+    	$ret = $result[0];
+    	if ($ret) {
+    	
+    	} else {
+    	
+    		$ret['max'] = $ret['min'] = 0;
+    	
+    		if ($type == "quick_select_prev") {
+    	
+    			$ret['min'] = 1;
+    		} elseif ($type == 'quick_select_next') {
+    	
+    			$ret['max'] = 1;
+    		}
+    		return $ret;
+    	}
+    	
+    	$ret['id'] = $ret['question_id'];
+    	
+    	$ret['record'] = $englishRecordModel->getQuestionUserRecord($ret['id']);
+    	$ret['record']['untested_num'] = $englishRecordModel->getUserUntestedQuestionNum('', '', '', $recommend, $difficulty, $voice, $target, $pattern);
+    	$ret['content'] = ftrim($ret['content']);
+    	 
+    	$ret['option'] = D("EnglishOptions")->getQuestionOptionList($ret['id']);
+    	foreach ($ret['option'] as $key => $value) {
+    		$ret['option'][$key]['content'] = ftrim($value['content']);
+    	}
+    	return $ret;
     }
     
     /**
      * 获取特别推荐视频
      */
-    public function getSpecialRecommendQuestion($media_id) {
+    public function getSpecialRecommend($media_id = 0 , $type ,$nowQuestionId) {
     	
     	$map = array();
     	$englishRecordModel = D("EnglishRecord");
     	$needField = "question.id as question_id,question.target,question.content,question.answer,question.media_id,media.*";
     	$ret = array();
+        $map['media.special_recommend'] = 1;
+        $map['media.status'] = 1;
+        $map['question.status'] = 1;
+    	if ($type == "quick_select_prev") {
     	
-    	$ret = $this->alias("question")
+    		$map['question.id']  = array('lt', $nowQuestionId);
+    		$order = "question.id DESC";
+    	} elseif ($type == 'quick_select_next') {
+    	
+    		$map['question.id']  = array('gt', $nowQuestionId);
+    		$order = "question.id ASC";
+    	} else {
+    	
+    		if($media_id) {
+    			$map['media.id'] = $media_id;
+    		}
+    		$order = "question.id ASC";
+    	}
+    	$result = $this->alias("question")
     	->field($needField)
     	->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media ON question.media_id=media.id")
-    	->where(array("media.id" => $media_id))
-    	->find();
+    	->where($map)
+    	->order($order)->limit(1)->select();
+    	$ret = $result[0];
+    	if (empty($ret)) {
     	
-    	$map['media.special_recommend'] = 1;
+    		$ret['max'] = $ret['min'] = 0;
+    	
+    		if ($type == "quick_select_prev") {
+    	
+    			$ret['min'] = 1;
+    		} elseif ($type == 'quick_select_next') {
+    	
+    			$ret['max'] = 1;
+    		}
+    		return $ret;
+    	}
+    	
+    	$ret['id'] = $ret['question_id'];
+    	
+    	$ret['record'] = $englishRecordModel->getQuestionUserRecord($ret['id']);
+    	$ret['record']['untested_num'] = $englishRecordModel->getUserUntestedQuestionNum( '', '' , '', '', '',$ret['voice'], $ret['target'],$ret['pattern'],1);
+    	$ret['content'] = ftrim($ret['content']);
+    	 
+    	$ret['option'] = D("EnglishOptions")->getQuestionOptionList($ret['id']);
+    	foreach ($ret['option'] as $key => $value) {
+    		$ret['option'][$key]['content'] = ftrim($value['content']);
+    	}
+        return $ret;
     }
     
     /**
