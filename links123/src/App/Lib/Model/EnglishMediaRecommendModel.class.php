@@ -22,7 +22,7 @@ class EnglishMediaRecommendModel extends CommonModel {
                 ->where("recommend.status=1 AND (SELECT COUNT(question.id) from " .
                         C("DB_PREFIX") . "english_question question 
                         RIGHT JOIN " . C("DB_PREFIX") . "english_media media on question.media_id=media.id 
-                        where media.voice={$voice} and question.target={$target} and media.pattern={$pattern} and FIND_IN_SET(recommend.id,media.recommend) and media.status=1 
+                        where media.voice={$voice} and question.target={$target} and media.pattern={$pattern} and recommend.id=media.recommend and media.status=1 
                         and question.status=1)>0")
                 ->order("recommend.sort asc")
                 ->select();
@@ -34,7 +34,7 @@ class EnglishMediaRecommendModel extends CommonModel {
 
     public function getDefaultRecommendId($voice = 1, $target = 1, $pattern = 1) {
         $condition = "(select count(question.id) from " . C("DB_PREFIX") . "english_question question 
-                    right join " . C("DB_PREFIX") . "english_media media on question.media_id=media.id where FIND_IN_SET(recommend.id,media.recommend) 
+                    right join " . C("DB_PREFIX") . "english_media media on question.media_id=media.id where recommend.id=media.recommend 
                     and media.voice={$voice} and question.target={$target} and media.pattern={$pattern} and media.status=1 and question.status=1)>0";
         $default_id = $this->alias("recommend")->where("{$condition}")->getField("id");
         return $default_id;

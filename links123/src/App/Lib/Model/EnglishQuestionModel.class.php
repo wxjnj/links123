@@ -76,7 +76,7 @@ class EnglishQuestionModel extends CommonModel {
                 }
             } else if ($viewType == 3) {
                 if (intval($recommend) > 0) {
-                    $map['_string'] = "FIND_IN_SET('" . $recommend . "',media.recommend)";
+                    $map['media.recommend'] = $recommend;
                 } else {
                     return $ret;
                 }
@@ -238,7 +238,7 @@ class EnglishQuestionModel extends CommonModel {
             $map['media.subject'] = $subject;
         }
         if (intval($recommend) > 0) {
-            $map['_string'] = "FIND_IN_SET('" . $recommend . "',media.recommend)";
+            $map['media.recommend'] = $recommend;
         }
         if (intval($difficulty) > 0) {
             $map['media.difficulty'] = $difficulty;
@@ -310,7 +310,7 @@ class EnglishQuestionModel extends CommonModel {
             if ($viewType == 2) {
                 $map['media.subject'] = intval($subject) > 0 ? intval($subject) : 1;
             } else if ($viewType == 3) {
-                $map['_string'] = "FIND_IN_SET('" . $recommend . "',media.recommend)";
+                $map['media.recommend'] = $recommend;
             }
             $ret = $this->alias("question")
                     ->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media on question.media_id=media.id")
@@ -344,7 +344,7 @@ class EnglishQuestionModel extends CommonModel {
         if ($viewType == 2) {
             $map['media.subject'] = intval($subject);
         } else if ($viewType == 3) {
-            $map['_string'] = "FIND_IN_SET('" . $recommend . "',media.recommend)";
+            $map['media.recommend'] = $recommend;
         }
         $ret = $this->alias("question")
                 ->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media on question.media_id=media.id")
@@ -569,7 +569,7 @@ class EnglishQuestionModel extends CommonModel {
     		$map['media.pattern'] = $pattern;
     	}
     	if ($recommend > 0) {
-    		$map['_string'] = "FIND_IN_SET('" . $recommend . "',media.recommend)";
+    		$map['media.recommend'] = $recommend;
     	} else {
     		return $ret;
     	}

@@ -307,7 +307,7 @@ class EnglishMediaModel extends CommonModel {
         } else if ($recommend == -1) {
             $condition['media.recommend'] = array("neq", 0);
         } else {
-            $condition['_string'] = "FIND_IN_SET(" . $recommend . ",media.recommend)";
+            $condition['recommend'] = $recommend;
         }
         $num = $this->alias("media")
                 ->join(C("DB_PREFIX") . $english_question_table_name . " question on question.media_id=media.id")

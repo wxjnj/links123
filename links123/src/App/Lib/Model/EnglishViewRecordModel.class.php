@@ -193,7 +193,7 @@ class EnglishViewRecordModel extends CommonModel {
             $map['media.subject'] = intval($subject);
         }
         if (intval($recommend) > 0) {
-            $map['_string'] = "FIND_IN_SET('" + $recommend + "',media.recomend)";
+            $map['media.recommend'] = $recommend;
             //$map['media.recommend'] = intval($recommend);
         }
         if (intval($difficulty) > 0) {
@@ -275,7 +275,7 @@ class EnglishViewRecordModel extends CommonModel {
     		$map['media.subject'] = intval($subject);
     	}
     	if (intval($recommend) > 0) {
-    		$map['_string'] = "FIND_IN_SET('" . $recommend . "',media.recommend)";
+    		$map['media.recommend'] = $recommend;
     		//$map['media.recommend'] = intval($recommend);
     	}
     	if (intval($difficulty) > 0) {

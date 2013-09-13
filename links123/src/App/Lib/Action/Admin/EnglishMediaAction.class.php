@@ -181,11 +181,13 @@ class EnglishMediaAction extends CommonAction {
         if (false === $model->create()) {
             $this->error($model->getError());
         }
+        //为设置难度准备
         $levels = D("EnglishLevel")->order("`sort` ASC")->select();
         foreach ($levels as $value) {
             $level_list[$value['id']] = $value;
             $level_name_list_info[$value['name']] = $value;
         }
+        //在指定范围内的指定对应的难度值
         if ($level_list[intval($_REQUEST['level'])]['sort'] <= $level_name_list_info['小六']['sort']) {
             $model->difficulty = 1;
         } else if ($level_list[intval($_REQUEST['level'])]['sort'] >= $level_name_list_info['大一']['sort']) {
