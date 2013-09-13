@@ -788,7 +788,13 @@ function requestQuestion(type, clickObject, media_id) {
                 }
 
                 $("#J_currentRice").text(data['user_count_info']['right_num'] * 100);
-                $("#J_riceDiv").removeClass().addClass("rice_" + data['user_count_info']['right_num'] * 100);
+                if(data['user_count_info']['right_num']==0){
+                    $("#J_riceDiv").hide();
+                }else{
+                    $("#J_riceDiv").attr("src",PUBLIC+"/English/images/rice"+data['user_count_info']['right_num'] * 100+".png");
+                    $("#J_riceDiv").show();
+                }
+                //$("#J_riceDiv").removeClass().addClass("rice_" + data['user_count_info']['right_num'] * 100);
                 //
                 /** $视频播放 **/
                 var videoStr = '';
@@ -1010,7 +1016,13 @@ function bindOptionClickEvent() {
                 }
                 //$("#J_rightNum").text(user_count_info.right_num);
                 $("#J_currentRice").text(user_count_info.right_num * 100);
-                $("#J_riceDiv").removeClass().addClass("rice_" + user_count_info.right_num * 100);
+                if(data['user_count_info']['right_num']==0){
+                    $("#J_riceDiv").hide();
+                }else{
+                    $("#J_riceDiv").attr("src",PUBLIC+"/English/images/rice"+data['user_count_info']['right_num'] * 100+".png");
+                    $("#J_riceDiv").show();
+                }
+                //$("#J_riceDiv").removeClass().addClass("rice_" + user_count_info.right_num * 100);
                 //
                 var english_user_info = data.english_user_info;
                 if (english_user_info == null) {

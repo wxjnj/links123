@@ -174,7 +174,11 @@
                     </div>
                 </div>
                 <div class="contentcenter">
-                    <div class="ricewan"><div id="J_riceDiv" class="rice_{$user_conut_info['right_num']*100}"></div></div>
+                    <div class="ricewan">
+                        <!--<div id="J_riceDiv" class="rice_{$user_conut_info['right_num']*100}"></div>-->
+                        <img id="J_riceDiv" <if condition="$user_conut_info['right_num'] gt 0">src="__PUBLIC__/English/images/rice{$user_conut_info['right_num']*100}.png"
+                            <else /> style="display:none"</if> />
+                    </div>
                     <label id="J_questionId" style="display: none">{$question['id']}</label>
                     <label id="J_mediaId" style="display: none">{$question['media_info']['id']|default=0}</label>
                     <label id="J_mediaPath" style="display: none">{$question['media_info']['real_path']}</label>
