@@ -1271,7 +1271,6 @@ function updateOption(option) {
     $('.answer').hide();
 
     if (option != null) {
-        option.sort(function(a,b){return a.sort-b.sort});
         for(var i in option){
             str += '<p class="J_option" id="J_option_' + option[i]['id'] + '" value="' + option[i]['id'] + '"><span class="gc"></span>' + '<span class="ricenumber">';
             if (i == 0) {

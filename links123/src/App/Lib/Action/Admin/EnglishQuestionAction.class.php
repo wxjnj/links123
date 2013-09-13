@@ -127,24 +127,24 @@ class EnglishQuestionAction extends CommonAction {
         $option_id = array();
         //依次存入选项，不知道问题id
         $option_data['created'] = time();
-        $index = 1;
+        $index = array(1,2,3,4);
         foreach ($_POST['option'] as $key => $value) {
             if (!empty($value)) {
-                $d_1 = preg_match("/all\sof\sthe\sabove.?/i", $value);
-                $d_2 = preg_match("/none\sof\sthe\sabove.?/i", $value);
-                $d_3 = preg_match("/either\sB\sor\sC.?/i", $value);
-                $d_4 = preg_match("/(both\s)?B\sand\sC.?/i", $value);
-                $c_1 = preg_match("/(both\sA)?\sand\sB.?/i", $value);
-                $c_2 = preg_match("/either\sA\sor\sB.?/i", $value);
+                $d_1 = preg_match("/all(\s)+of(\s)+the(\s+)above.?/i", $value);
+                $d_2 = preg_match("/none(\s)+of(\s)+the(\s)+above.?/i", $value);
+                $d_3 = preg_match("/either(\s)+B(\s)+or(\s)+C.?/i", $value);
+                $d_4 = preg_match("/(both(\s)+)?B(\s)+and(\s)+C.?/i", $value);
+                $c_1 = preg_match("/(both(\s)+A)?(\s)+and(\s)+B.?/i", $value);
+                $c_2 = preg_match("/either(\s)+A(\s)+or(\s)+B.?/i", $value);
                 $option_data['content'] = $value;
+                $option_data['sort'] = current($index);
                 if ($d_1 || $d_2 || $d_3 || $d_4) {
                     $option_data['sort'] = 4; //D
                 } else if ($c_1 || $c_2) {
                     $option_data['sort'] = 3; //C
-                } else {
-                    $option_data['sort'] = $index; //除去特殊项目，其他自动顶上
-                    $index++;
                 }
+                 unset($index[array_search($option_data['sort'], $index)]);//已排序的序号删除
+                
                 $ret = $optionModel->add($option_data);
                 if (false === $ret) {
                     $model->rollback();
@@ -251,24 +251,25 @@ class EnglishQuestionAction extends CommonAction {
         $option_data['question_id'] = $id;
         $option_data['created'] = time();
         $answer_id = 0;
-        $index = 1;
+        $index = array(1,2,3,4);
         foreach ($_POST['option'] as $key => $value) {
             if (!empty($value)) {
-                $d_1 = preg_match("/all\sof\sthe\sabove.?/i", $value);
-                $d_2 = preg_match("/none\sof\sthe\sabove.?/i", $value);
-                $d_3 = preg_match("/either\sB\sor\sC.?/i", $value);
-                $d_4 = preg_match("/(both\s)?B\sand\sC.?/i", $value);
-                $c_1 = preg_match("/(both\s)?A\sand\sB.?/i", $value);
-                $c_2 = preg_match("/either\sA\sor\sB.?/i", $value);
+                $d_1 = preg_match("/all(\s)+of(\s)+the(\s+)above.?/i", $value);
+                $d_2 = preg_match("/none(\s)+of(\s)+the(\s)+above.?/i", $value);
+                $d_3 = preg_match("/either(\s)+B(\s)+or(\s)+C.?/i", $value);
+                $d_4 = preg_match("/(both(\s)+)?B(\s)+and(\s)+C.?/i", $value);
+                $c_1 = preg_match("/(both(\s)+A)?(\s)+and(\s)+B.?/i", $value);
+                $c_2 = preg_match("/either(\s)+A(\s)+or(\s)+B.?/i", $value);
                 $option_data['content'] = $value;
+                $option_data['sort']=current($index);//获取最前面的序号
                 if ($d_1 || $d_2 || $d_3 || $d_4) {
                     $option_data['sort'] = 4; //D
                 } else if ($c_1 || $c_2) {
                     $option_data['sort'] = 3; //C
-                } else {
-                    $option_data['sort'] = $index; //除去特殊项目，其他自动顶上
-                    $index++;
-                }
+                } 
+                
+                 unset($index[array_search($option_data['sort'], $index)]);//已排序的序号删除
+                
                 $ret = $optionModel->add($option_data);
                 if (false === $ret) {
                     $optionModel->rollback();
@@ -578,24 +579,23 @@ class EnglishQuestionAction extends CommonAction {
                     //
                     //依次存入选项，不知道问题id
                     $option_data['created'] = $time;
-                    $index = 1;
+                    $index = array(1, 2, 3, 4);//选择序号数组
                     foreach ($data['option'] as $key => $value) {
                         if (!empty($value)) {
-                            $d_1 = preg_match("/all\sof\sthe\sabove.?/i", $value);
-                            $d_2 = preg_match("/none\sof\sthe\sabove.?/i", $value);
-                            $d_3 = preg_match("/either\sB\sor\sC.?/i", $value);
-                            $d_4 = preg_match("/(both\s)?B\sand\sC.?/i", $value);
-                            $c_1 = preg_match("/(both\s)?A\sand\sB.?/i", $value);
-                            $c_2 = preg_match("/either\sA\sor\sB.?/i", $value);
+                            $d_1 = preg_match("/all(\s)+of(\s)+the(\s+)above.?/i", $value);
+                            $d_2 = preg_match("/none(\s)+of(\s)+the(\s)+above.?/i", $value);
+                            $d_3 = preg_match("/either(\s)+B(\s)+or(\s)+C.?/i", $value);
+                            $d_4 = preg_match("/(both(\s)+)?B(\s)+and(\s)+C.?/i", $value);
+                            $c_1 = preg_match("/(both(\s)+A)?(\s)+and(\s)+B.?/i", $value);
+                            $c_2 = preg_match("/either(\s)+A(\s)+or(\s)+B.?/i", $value);
                             $option_data['content'] = $value;
+                            $option_data['sort'] = current($index);//选项排序等于当前最前面序号
                             if ($d_1 || $d_2 || $d_3 || $d_4) {
                                 $option_data['sort'] = 4; //D
                             } else if ($c_1 || $c_2) {
                                 $option_data['sort'] = 3; //C
-                            } else {
-                                $option_data['sort'] = $index; //除去特殊项目，其他自动顶上
-                                $index++;
                             }
+                            unset($index[array_search($option_data['sort'], $index)]);//已排序的序号删除
 
                             $ret = $optionModel->add($option_data);
                             if (false === $ret) {

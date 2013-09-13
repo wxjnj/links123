@@ -262,7 +262,7 @@ class IndexAction extends EnglishAction {
         $special_media = $englishMediaModel->getSpecialRecommendMediaList();
         $this->assign("special_media", $special_media);
         $this->assign("special_media_num", count($special_media) - 1);
-
+        
         $this->assign("question", $question);
 
         $this->assign('isAboutVideo', $isAboutVideo);

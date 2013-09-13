@@ -20,12 +20,12 @@ class EnglishOptionsModel extends CommonModel {
         $i = array(1, 2, 3, 4);
         foreach ($ret as $key => $value) {
             //不能随机打乱的判断
-            $d_1 = preg_match("/all\sof\sthe\sabove.?/i", $value['content']);
-            $d_2 = preg_match("/none\sof\sthe\sabove.?/i", $value['content']);
-            $d_3 = preg_match("/either\sB\sor\sC.?/i", $value['content']);
-            $d_4 = preg_match("/(both\s)?B\sand\sC.?/i", $value['content']);
-            $c_1 = preg_match("/(both\s)?A\sand\sB.?/i", $value['content']);
-            $c_2 = preg_match("/either\sA\sor\sB.?/i", $value['content']);
+            $d_1 = preg_match("/all(\s)+of(\s)+the(\s+)above.?/i", $value['content']);
+            $d_2 = preg_match("/none(\s)+of(\s)+the(\s)+above.?/i", $value['content']);
+            $d_3 = preg_match("/either(\s)+B(\s)+or(\s)+C.?/i", $value['content']);
+            $d_4 = preg_match("/(both(\s)+)?B(\s)+and(\s)+C.?/i", $value['content']);
+            $c_1 = preg_match("/(both(\s)+A)?(\s)+and(\s)+B.?/i", $value['content']);
+            $c_2 = preg_match("/either(\s)+A(\s)+or(\s)+B.?/i", $value['content']);
             if (preg_match("/True/i", $value['content'])) {
                 $is_double_true = true;
             }
@@ -48,8 +48,7 @@ class EnglishOptionsModel extends CommonModel {
         if ($is_rand) {
             shuffle($ret);
         } else {
-            $new_array = array_sort($ret, "sort","asc");
-            return $new_array;
+            $ret = array_sort($ret, "sort","asc");
         }
         
         return $ret;
