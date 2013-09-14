@@ -126,7 +126,7 @@ class DemoAction extends CommonAction {
 				$id = $myarea->where(array('mid' => $user_id))->add($saveData);
 				if ($id) {
 				
-					$result = 1;
+					$result = $id;
 				} 
 			} else {
 				if (false !== $myarea->where(array('id' => $id, 'mid' => $user_id))->save($saveData)) {
