@@ -18,6 +18,17 @@ $(function() {
 	$(".newWin").on('click', function() {
 		window.open($(this).attr('url'));
 	});
+
+	// 幻灯
+	$('#J_ScrollBox').switchable({
+		putTriggers: 'appendTo',
+		triggersWrapCls: 'pg',
+		panels: '.items li',
+		effect: 'scrollLeft',
+		interval: 2,
+		loop: true,
+		autoplay: true
+	});
 	
 });
 
@@ -126,16 +137,20 @@ var Zld = { // 自留地
 
 			var o = $('#J_Zld');
 
+			var objname = o.find('input[name="name"]');
+			var objurl = o.find('input[name="url"]');
 			var id = o.find('input[name="id"]').val();
-			var name = o.find('input[name="name"]').val();
-			var url = o.find('input[name="url"]').val();
+			var name = objname.val();
+			var url = objurl.val();
 
 			if (!name) {
 				alert("请输入网站名称");
+				objname[0].focus();
 				return false;
 			}
 			if (!url) {
 				alert("请输入网址");
+				objurl[0].focus();
 				return false;
 			}
 			
@@ -235,7 +250,7 @@ var Zld = { // 自留地
 			hl = hl + '	<div class="lkd-ft">';
 			hl = hl + '		<input type="hidden" name="id" value="" />';
 			hl = hl + '		<span class="editp" style="display:none;"><a class="lkd-edit" href="javascript:;">确认编辑</a>';
-			hl = hl + '		<a class="lkd-del" href="javascript:;">删除</a></span>';
+			hl = hl + '		<a class="lkd-del" href="javascript:;">删除网址</a></span>';
 			hl = hl + '		<span class="addp"><a class="lkd-add" href="javascript:;">确认添加</a></span>';
 			hl = hl + '	</div>';
 			hl = hl + '</div>';

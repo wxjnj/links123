@@ -256,7 +256,7 @@ var User = {
 			var obj = $('#J_Login');
 			obj.find('input[name="user"]').val('');
 			obj.find('input[name="password"]').val('');
-			obj.find('input[name="autologin"]').attr('checked', false);
+			obj.find('input[name="autologin"]').attr('checked', true);
 			if(msg){
 				obj.find('.msg').html(msg);
 			}else{
