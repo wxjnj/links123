@@ -287,6 +287,19 @@ input:focus{ outline: 0; }
 	margin: 5px 5px 0 0;
 	white-space: nowrap;
 }
+.zld ul li:hover .nm,
+.zld ul li:hover span{
+	filter:alpha(opacity=60);
+	-moz-opacity: 0.6;
+	-khtml-opacity: 0.6;
+	opacity: 0.6;
+}
+.zld ul li:hover .mask{
+	filter:alpha(opacity=20);
+	-moz-opacity: 0.2;
+	-khtml-opacity: 0.2;
+	opacity: 0.2;
+}
 .zld ul li b{
 	font-weight: normal;
 }
@@ -391,7 +404,9 @@ input:focus{ outline: 0; }
 	height: 100px;
 	text-align: center;
 }
-.apps ul li:hover{
+.apps ul li:hover,
+.apps ul li:hover a,
+.apps ul li:hover a:hover{
 	color: #d00316;
 }
 .apps ul li img{
@@ -589,6 +604,7 @@ input:focus{ outline: 0; }
 .lk-dialog .ipt{
 	background: #eeefef;
 	border: 1px solid #e0e1e1;
+	color: #717071;
 	height: 16px;
 	line-height: 16px;
 	padding: 12px 5px;

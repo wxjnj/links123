@@ -73,6 +73,12 @@ var User = {
 				}
 			});
 
+			obj.find('input[type="text"], input[type="password"').on('focus', function(){
+				$(this).css('background', '#fff');
+			}).on('blur', function(){
+				$(this).css('background', '#eeefef');
+			});
+
 			var _loading = false;
 
 			obj.find('.lkd-reg').on('click', function(){
@@ -165,7 +171,7 @@ var User = {
 				modal: true,
 				resizable: false,
 				open: function(){
-					setTimeout(function(){$('#J_signin_user').select();}, 20);
+					setTimeout(function(){obj.find('input[name="user"]').select();}, 20);
 				}
 			});
 
@@ -180,6 +186,13 @@ var User = {
 				obj.dialog('close');
 				self.Reg();
 			});
+
+			obj.find('input[type="text"], input[type="password"').on('focus', function(){
+				$(this).css('background', '#fff');
+			}).on('blur', function(){
+				$(this).css('background', '#eeefef');
+			});
+
 			obj.find('.lkd-reg').on('click', function(){
 				var username = obj.find('input[name="user"]').val();
 				var password = obj.find('input[name="password"]').val();
@@ -232,9 +245,9 @@ var User = {
 			hl = hl + '		<div class="ct">';
 			hl = hl + '			<form action="">';
 			hl = hl + '			<ul>';
-			hl = hl + '				<li><input class="ipt" type="text" name="" id="J_forgetpass_email" placeholder="请输入登录邮箱" /></li>';
+			hl = hl + '				<li><input class="ipt" type="text" name="email" placeholder="请输入登录邮箱" /></li>';
 			hl = hl + '				<li class="vcode">';
-			hl = hl + '					<input class="ipt" type="text" name="" id="" placeholder="验证码" /><img src="/Verify" alt="验证码" class="J_VerifyImg" title="点击刷新" />';
+			hl = hl + '					<input class="ipt" type="text" name="vcode" id="" placeholder="验证码" /><img src="/Verify" alt="验证码" class="J_VerifyImg" title="点击刷新" />';
 			hl = hl + '				</li>';
 			hl = hl + '			</ul>';
 			hl = hl + '			</form>';
@@ -246,18 +259,26 @@ var User = {
 			hl = hl + '</div>';
 			$('body').append(hl);
 
-			$('#J_FindPass').dialog({
+			var obj = $('#J_FindPass');
+
+			obj.dialog({
 				autoOpen: true,
 				width: 390,
 				modal: true,
 				resizable: false,
 				open: function(){
-					setTimeout(function(){$('#J_signin_user').select();}, 20);
+					setTimeout(function(){obj.find('input[name="email"]').select();}, 20);
 				}
 			});
 
-			$('#J_FindPass').find('.close').on('click', function(){
+			obj.find('.close').on('click', function(){
 				$('#J_FindPass').dialog('close');
+			});
+
+			obj.find('input[type="text"], input[type="password"').on('focus', function(){
+				$(this).css('background', '#fff');
+			}).on('blur', function(){
+				$(this).css('background', '#eeefef');
 			});
 
 		}else{
