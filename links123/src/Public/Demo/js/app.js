@@ -68,7 +68,7 @@ var User = {
 				return false;
 			});
 
-			obj.find('.vcode').on('keydown', function(){
+			obj.find('.vcode').on('keydown', function(event){
 				if (event.keyCode == 13) {
 					obj.find('.lkd-reg').trigger('click');
 				}
@@ -194,7 +194,7 @@ var User = {
 				self.Reg();
 			});
 
-			obj.find('input[type="password"').on('keydown', function(){
+			obj.find('input[type="password"').on('keydown', function(event){
 				if (event.keyCode == 13) {
 					obj.find('.lkd-reg').trigger('click');
 				}
@@ -296,7 +296,7 @@ var User = {
 				return false;
 			});
 
-			obj.find('.vcode').on('keydown', function(){
+			obj.find('.vcode').on('keydown', function(event){
 				if (event.keyCode == 13) {
 					obj.find('.lkd-btn').trigger('click');
 				}
@@ -431,16 +431,48 @@ var Zld = {
 						li.attr('url', '/Link/index.html?mod=myarea&amp;url=' + url);
 						li.data('url', url);
 						li.find('b').html(name);
-						o.dialog('close');
 					}else if(data > 1){ //新加成功
 						var li = obj.find('.add').closest('li');
 						li.before(self.CreateItem(data, name, url));
-						o.dialog('close');
 					}else if(data == -1){
 						User.Login('请先登录');
 					}else{
 						alert('操作失败');
 					}
+					o.dialog('close');
+				}
+			);
+			return false;
+		});
+		
+		$(document).on('click', '#J_Zld .lkd-del', function(){
+
+			var o = $('#J_Zld');
+			var id = o.find('input[name="id"]').val();
+			
+			$.post(
+				URL + '/delArea', 
+				{ 'web_id': id },
+				function(data) {
+					var licur = function(){
+						var li = null;
+						obj.find('ul>li').each(function(){
+							if($(this).data('id') == id){
+								li = $(this);
+								return;
+							}
+						});
+						return li;
+					}
+					if(data == 1){
+						var li = licur();
+						li.remove();
+					}else if(data == -1){
+						User.Login('请先登录');
+					}else{
+						alert('操作失败');
+					}
+					o.dialog('close');
 				}
 			);
 			return false;
@@ -505,7 +537,7 @@ var Zld = {
 				$(this).css('background', '#eeefef');
 			});
 
-			obj.find('input[name="name"],input[name="url"]').on('keydown', function(){
+			obj.find('input[name="name"],input[name="url"]').on('keydown', function(event){
 				if (event.keyCode == 13) {
 					if(obj.find('.editp').is(":visible")){
 						obj.find('.lkd-edit').trigger('click');	
