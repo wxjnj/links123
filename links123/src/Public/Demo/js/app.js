@@ -65,6 +65,7 @@ var User = {
 
 			obj.find('.close').on('click', function(){
 				obj.dialog('close');
+				return false;
 			});
 
 			obj.find('.vcode').on('keydown', function(){
@@ -136,13 +137,14 @@ var User = {
 			obj.dialog('open');
 		}
 	},
-	Login: function(){
+	Login: function(msg){
 		var self = this;
 		if(!$('#J_Login').size()){
 			var hl = '';
 			hl = hl + '<div class="lk-dialog lk-dialog-login" id="J_Login">';
 			hl = hl + '	<div class="lkd-hd">';
 			hl = hl + '		<em>登录</em>';
+			hl = hl + '		<span class="msg"></span>';
 			hl = hl + '		<a class="close" href="javascript:;">X</a>';
 			hl = hl + '	</div>';
 			hl = hl + '	<div class="lkd-bd">';
@@ -165,6 +167,10 @@ var User = {
 
 			var obj = $('#J_Login');
 
+			if(msg){
+				obj.find('.msg').html(msg);
+			}
+
 			obj.dialog({
 				autoOpen: true,
 				width: 384,
@@ -177,6 +183,7 @@ var User = {
 
 			obj.find('.close').on('click', function(){
 				obj.dialog('close');
+				return false;
 			});
 			obj.find('.fgpass').on('click', function(){
 				obj.dialog('close');
@@ -185,6 +192,12 @@ var User = {
 			obj.find('.reg').on('click', function(){
 				obj.dialog('close');
 				self.Reg();
+			});
+
+			obj.find('input[type="password"').on('keydown', function(){
+				if (event.keyCode == 13) {
+					obj.find('.lkd-reg').trigger('click');
+				}
 			});
 
 			obj.find('input[type="text"], input[type="password"').on('focus', function(){
@@ -221,13 +234,20 @@ var User = {
 							alert(data);
 						}
 					}
-				); 
+				);
+
+				return false;
 			});
 		}else{
 			var obj = $('#J_Login');
 			obj.find('input[name="user"]').val('');
 			obj.find('input[name="password"]').val('');
 			obj.find('input[name="autologin"]').attr('checked', false);
+			if(msg){
+				obj.find('.msg').html(msg);
+			}else{
+				obj.find('.msg').html('');
+			}
 			$('#J_Login').dialog('open');
 		}
 	},
@@ -254,7 +274,7 @@ var User = {
 			hl = hl + '		</div>';
 			hl = hl + '	</div>';
 			hl = hl + '	<div class="lkd-ft">';
-			hl = hl + '		<a class="lkd-btn" href="#">发送验证邮件</a>';
+			hl = hl + '		<a class="lkd-btn" href="javascript:;">发送验证邮件</a>';
 			hl = hl + '	</div>';
 			hl = hl + '</div>';
 			$('body').append(hl);
@@ -273,6 +293,13 @@ var User = {
 
 			obj.find('.close').on('click', function(){
 				$('#J_FindPass').dialog('close');
+				return false;
+			});
+
+			obj.find('.vcode').on('keydown', function(){
+				if (event.keyCode == 13) {
+					obj.find('.lkd-btn').trigger('click');
+				}
 			});
 
 			obj.find('input[type="text"], input[type="password"').on('focus', function(){
@@ -281,34 +308,71 @@ var User = {
 				$(this).css('background', '#eeefef');
 			});
 
+			var _loading = false;
+
+			obj.find('.lkd-btn').on('click', function(){
+				var email = obj.find('input[name="email').val();
+				var verify = obj.find('input[name="vcode"]').val();
+
+				if (!email) {
+					alert("请输入邮箱");
+					return false;
+				}
+				var result = email.match(/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/);
+				if (result == null) {
+					alert("请正确输入邮箱");
+					return false;
+				}
+
+				if (!verify) {
+					alert('验证码不能为空');
+					return false;
+				}
+				
+				$.post(APP + 'Members/Login/missPwd', {
+					email: email,
+					verify: verify
+					}, 
+					function(data){
+						if ( data.indexOf("sendOK") >= 0 ) {
+							var mailserver = data.split('|');
+							alert("请进入您的账户邮箱获取新密码");
+							window.open("http://" + mailserver[1]);
+						}else {
+							alert(data);
+						}
+					}
+				);
+			});
+
 		}else{
 			$('#J_FindPass').dialog('open');
 		}
 	}
 };
 var Zld = {
-	IsSortable: false,	//是否为拖拽点击，true则不打开自留地网址
+	IsSortable: false, //是否为拖拽点击，true则不打开自留地网址
 	Init: function(){
 		var self = this;
 		var obj = $('#J_ZldList');
-		obj.find('.add').on('click', function(){
-			
-			//TODO如果用户未登录提示用户登录
-			
-			self.Add();
+
+		$(document).on('click', '#J_ZldList .add', function(){
+			if(self.CheckLogin()){
+				self.Create();
+			}
 		});
-		obj.find('.ctl').on('click', function(){
-			
-			//TODO如果用户未登录提示用户登录
-			
-			var o = $(this).closest('li');
-			var id = o.data('id');
-			var nm = o.find('b').html();
-			var url = o.data('url');
-			self.Edit(id, nm, url);
+		$(document).on('click',  '#J_ZldList .ctl', function(){
+			if(self.CheckLogin()){
+				if($(this).hasClass('add')){ return false; }
+				var o = $(this).closest('li');
+				var id = o.data('id');
+				var nm = o.find('b').html();
+				var url = o.data('url');
+				self.Create(id, nm, url);
+				return false;
+			}
 		});
-		obj.find('.nm').on('click', function(){
-			
+		$(document).on('click', '#J_ZldList .nm', function(){
 			if (!Zld.IsSortable) {
 				var o = $(this).closest('li');
 				var url = o.data('url');
@@ -316,28 +380,78 @@ var Zld = {
 			} else {
 				Zld.IsSortable = false;
 			}
+			return false;
 		});
-		
-		$('.J_myarea_submit').on('click', function() {
-			
-			var web_id = $('#J_myarea_id').val();
-			var web_name = $('#J_myarea_web_name').val();
-			var web_url = $('#J_myarea_web_url').val();
-			
-			$.post(
-					URL + '/updateArea', 
-					{'web_id' : web_id, 'web_url' : web_url, 'web_name' : web_name},
+
+		$('#J_sortable').sortable({
+			update: function(event, ui){
+				Zld.IsSortable = true;
+				
+				$.post(
+					URL + '/sortArealist', 
+					{'area' : $(this).sortable('toArray')},
 					function(data) {
 						if (data == 1) {
 							//成功
-						} else if (data == -1){
-							//请登录
+						} else if (data == 0){
+							//失败
 						} else {
 							//失败
 						}
 					}
-			);
+				);
+			}  
 		});
+		$('#J_sortable').sortable('enable');
+		
+		$(document).on('click', '#J_Zld .lkd-add, #J_Zld .lkd-edit', function(){
+
+			var o = $('#J_Zld');
+
+			var id = o.find('input[name="id"]').val();
+			var name = o.find('input[name="name"]').val();
+			var url = o.find('input[name="url"]').val();
+			
+			$.post(
+				URL + '/updateArea', 
+				{ 'web_id': id, 'web_url': url, 'web_name': name },
+				function(data) {
+					var licur = function(){
+						var li = null;
+						obj.find('ul>li').each(function(){
+							if($(this).data('id') == id){
+								li = $(this);
+								return;
+							}
+						});
+						return li;
+					}
+					if(data == 1){ //更新成功
+						var li = licur();
+						li.attr('url', '/Link/index.html?mod=myarea&amp;url=' + url);
+						li.data('url', url);
+						li.find('b').html(name);
+						o.dialog('close');
+					}else if(data > 1){ //新加成功
+						var li = obj.find('.add').closest('li');
+						li.before(self.CreateItem(data, name, url));
+						o.dialog('close');
+					}else if(data == -1){
+						User.Login('请先登录');
+					}else{
+						alert('操作失败');
+					}
+				}
+			);
+			return false;
+		});
+	},
+	CheckLogin: function(){
+		if($CONFIG.IsLogin){
+			User.Login('请先登录');
+			return false;
+		}
+		return true;
 	},
 	Go: function(url){
 		var obj = $('#J_MyAreaForm');
@@ -354,48 +468,77 @@ var Zld = {
 			hl = hl + '	<div class="lkd-bd">';
 			hl = hl + '		<form action="">';
 			hl = hl + '			<ul>';
-			hl = hl + '				<li><input class="ipt" type="text" name="" id="J_myarea_web_name" placeholder="网站名称" /></li>';
-			hl = hl + '				<li><input class="ipt" type="text" name="" id="J_myarea_web_url" placeholder="网址" /></li>';
+			hl = hl + '				<li><input class="ipt" type="text" name="name" placeholder="网站名称" /></li>';
+			hl = hl + '				<li><input class="ipt" type="text" name="url" placeholder="网址" /></li>';
 			hl = hl + '			</ul>';
 			hl = hl + '		</form>';
 			hl = hl + '	</div>';
 			hl = hl + '	<div class="lkd-ft">';
-			hl = hl + '		<input type="hidden" name="" id="J_myarea_id" value="" />';
-			hl = hl + '		<a class="lkd-add J_myarea_submit" href="javascript:;">确认添加</a>';
+			hl = hl + '		<input type="hidden" name="id" value="" />';
+			hl = hl + '		<span class="editp" style="display:none;"><a class="lkd-edit" href="javascript:;">确认编辑</a>';
+			hl = hl + '		<a class="lkd-del" href="javascript:;">删除</a></span>';
+			hl = hl + '		<span class="addp"><a class="lkd-add" href="javascript:;">确认添加</a></span>';
 			hl = hl + '	</div>';
 			hl = hl + '</div>';
 			$('body').append(hl);
 
-			$('#J_Zld').dialog({
+			var obj = $('#J_Zld');
+
+			obj.dialog({
 				autoOpen: false,
 				width: 384,
 				modal: true,
 				resizable: false,
 				open: function(){
-					setTimeout(function(){$('#J_myarea_web_name').select();}, 20);
+					setTimeout(function(){obj.find('input[name="name"]').select();}, 20);
 				}
 			});
 
-			$('#J_Zld').find('.close').on('click', function(){
-				$('#J_Zld').dialog('close');
+			obj.find('.close').on('click', function(){
+				obj.dialog('close');
+				return false;
+			});
+
+			obj.find('input[type="text"]').on('focus', function(){
+				$(this).css('background', '#fff');
+			}).on('blur', function(){
+				$(this).css('background', '#eeefef');
+			});
+
+			obj.find('input[name="name"],input[name="url"]').on('keydown', function(){
+				if (event.keyCode == 13) {
+					if(obj.find('.editp').is(":visible")){
+						obj.find('.lkd-edit').trigger('click');	
+					}else{
+						obj.find('.lkd-add').trigger('click');
+					}
+				}
 			});
 		}
-		$('#J_Zld').dialog('open');
-			$('#J_myarea_id').val('');
-			$('#J_myarea_web_name').val('');
-			$('#J_myarea_web_url').val('');
+
+		var obj = $('#J_Zld');		
 		if(id){
-			$('#J_myarea_id').val(id);
-			$('#J_myarea_web_name').val(nm);
-			$('#J_myarea_web_url').val(url);
+			obj.find('input[name="id"]').val(id);
+			obj.find('input[name="name"]').val(nm);
+			obj.find('input[name="url"]').val(url);
+			obj.find('.editp').show();
+			obj.find('.addp').hide();
+		}else{
+			obj.find('input[name="id"]').val('');
+			obj.find('input[name="name"]').val('');
+			obj.find('input[name="url"]').val('');
+			obj.find('.editp').hide();
+			obj.find('.addp').show();
 		}
+
+		obj.dialog('open');
 	},
-	Add: function(){
-		var self = this;
-		self.Create();
-	},
-	Edit: function(id, nm, url){
-		this.Create(id, nm, url);
+	CreateItem: function(id, nm, url){
+		var hl = '<li id="'+ id +'" url="/Link/index.html?mod=myarea&amp;url='+ url +'" data-id="'+ id +'" data-url="'+ url +'">';
+		hl = hl + '<span class="nm"><i class="mask"></i><b>'+ nm +'</b></span>';
+		hl = hl + '<span class="ctl"><i class="mask"></i></span>';
+		hl = hl + '</li>';
+		return hl;
 	}
 };
 var THL = {

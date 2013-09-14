@@ -10,27 +10,6 @@ $(function() {
 		}
 	);
 
-	$('#J_sortable').sortable({
-		update: function(event, ui){
-			Zld.IsSortable = true;
-			
-			$.post(
-					URL + '/sortArealist', 
-					{'area' : $(this).sortable('toArray')},
-					function(data) {
-						if (data == 1) {
-							//成功
-						} else if (data == 0){
-							//失败
-						} else {
-							//失败
-						}
-					}
-			);
-		}  
-	});
-	$('#J_sortable').sortable('enable');
-
 	$('.skins').on('click', function(){
 		$('#J_Skins').attr('href', '__PUBLIC__/Demo/skins/light/style.css');
 	});

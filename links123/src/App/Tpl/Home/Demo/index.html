@@ -11,9 +11,10 @@
 	<link rel="stylesheet" href="about:blank" id="J_Skins" />
 	<script>
 		var $CONFIG = {
-				'APP' : '__APP__/',
-				'URL' : '__URL__',
-				'PUBLIC' : '__PUBLIC__'
+			'APP' : '__APP__/',
+			'URL' : '__URL__',
+			'PUBLIC' : '__PUBLIC__',
+			'IsLogin' : <empty name="_SESSION[C('MEMBER_AUTH_KEY')]">1<else />0</empty>
 		};
 	</script>
 </head>
@@ -144,6 +145,10 @@
 								<li>
 									<p class="av newWin" url="{:U('Home/Index/nav')}"><img src="__PUBLIC__/Demo/imgs/app/app002.png" /></p>
 									<p class="nm"><a href="{:U('Home/Index/nav')}" target="_blank">另客导航</a></p>
+								</li>
+								<li id="J_music">
+									<p class="av"><img src="__PUBLIC__/Demo/imgs/app/app007.png" /></p>
+									<p class="nm">音乐盒</p>
 								</li>
 								<li id="J_stikynot">
 									<p class="av"><img src="__PUBLIC__/Demo/imgs/app/app005.png" /></p>

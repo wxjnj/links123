@@ -588,6 +588,11 @@ input:focus{ outline: 0; }
 	font-size: 20px;
 	position: relative;
 }
+.lk-dialog .lkd-hd .msg{
+	color: #f00;
+	font-size: 12px;
+	padding-left: 20px;
+}
 .lk-dialog .lkd-bd{
 	padding: 0 30px 15px;
 }
@@ -622,7 +627,9 @@ input:focus{ outline: 0; }
 .lkd-reg,
 .lkd-login,
 .lkd-add,
-.lkd-btn{
+.lkd-btn,
+.lkd-edit,
+.lkd-del{
 	display: block;
 	float: left;
 	height: 42px;
@@ -631,7 +638,9 @@ input:focus{ outline: 0; }
 }
 .lkd-reg,
 .lkd-add,
-.lkd-btn{
+.lkd-btn,
+.lkd-edit,
+.lkd-del{
 	background: #238b3a;
 	color: #fff;
 	text-decoration: none;
@@ -646,8 +655,15 @@ input:focus{ outline: 0; }
 }
 .lkd-reg:hover,
 .lkd-add:hover,
+.lkd-edit:hover,
 .lkd-btn:hover{ background: #60ad6b; }
 .lkd-login:hover{ background: #dcdcdd; }
+.lkd-del{
+	background: #c8151e;
+}
+.lkd-del:hover{
+	background: #d26e7f;
+}
 .lk-dialog ul li{
 	padding-top: 8px;
 }
