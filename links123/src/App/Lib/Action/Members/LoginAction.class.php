@@ -100,6 +100,13 @@ class LoginAction extends CommonAction
 			echo "邮箱丢失！";
 			return false;
 		}
+		
+		$verify = trim($this->_param('verify'));
+		if ($_SESSION['verify'] != md5(strtoupper($verify))) {
+			echo "验证码错误";
+			return false;
+		}
+		
 		$mbr = M("Member");
 		$mbrNow = $mbr->getByEmail($email);
 		

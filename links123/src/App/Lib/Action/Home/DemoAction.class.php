@@ -45,6 +45,54 @@ class DemoAction extends CommonAction {
 		$this->display();
 	}
 	
+	public function addSchedule() {
+		
+	}
+	
+	public function delSchedule() {
+		
+	}
+	
+	/**
+	 * @name delArea
+	 * @desc 删除自留地
+	 * @param string web_id
+	 * @return 成功:0; 失败:1; 未登录或登录已失效: -1
+	 * @author slate date:2013-09-14
+	 */
+	public function delArea() {
+
+		$id = $this->_param('web_id');
+		
+		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+		
+		$result = 0;
+		
+		if ($id) {
+			if ($user_id) {
+				
+				$memberModel = M("Member");
+				
+				$myarea = M("Myarea");
+			
+				if (false !== $myarea->where(array('id' => $id, 'mid' => $user_id))->delete()) {
+						
+					$result = 1;
+					
+					unset($_SESSION['myarea_sort'][array_search($id, $_SESSION['myarea_sort'])]);
+					$memberModel->save(array('myarea_sort' => implode(',', $_SESSION['myarea_sort'])), array('id' => $user_id));
+				}
+		
+			} else {
+					
+				$result = -1;
+			}
+		}
+		
+		echo $result;
+		
+	}
+	
 	/**
 	 * @name updateArea
 	 * @desc 更新我的地盘
@@ -126,10 +174,7 @@ class DemoAction extends CommonAction {
 			
 			if ($user_id) {
 	
-				$myarea = M("Myarea");
-				$list = $myarea->where("mid = '%d'", $user_id)->select();
-				
-				$memberModel->save(array('sort' => implode(',', $area_list)), array('id' => $user_id));
+				$memberModel->save(array('myarea_sort' => implode(',', $area_list)), array('id' => $user_id));
 			
 			}
 			
