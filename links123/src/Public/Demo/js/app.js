@@ -411,6 +411,15 @@ var Zld = {
 			var id = o.find('input[name="id"]').val();
 			var name = o.find('input[name="name"]').val();
 			var url = o.find('input[name="url"]').val();
+
+			if (!name) {
+				alert("请输入网站名称");
+				return false;
+			}
+			if (!url) {
+				alert("请输入网址");
+				return false;
+			}
 			
 			$.post(
 				URL + '/updateArea', 
