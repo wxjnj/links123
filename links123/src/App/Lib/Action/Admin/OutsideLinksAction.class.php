@@ -1,20 +1,18 @@
 <?php
-
 /**
  * @name OutsideLinksAction.class.php
  * @package Admin
  * @desc 友情链接
- * @author lawrence UPDATE 2013-08-20
- * @version 0.0.1
+ * @author lawrence UPDATE 2013-09-14
+ * @version 1.0
  */
 class OutsideLinksAction extends CommonAction {
 
 	protected function _filter(&$map, &$param){
-		if (isset($_REQUEST['title']) ) {
-			$title = $_REQUEST['title'];
-		}
+		$title = $this->_param('title');
+		
 		if (!empty($title)) {
-			$map['title'] = array('like',"%".$title."%");
+			$map['title'] = array('like', "%".$title."%");
 		}
 		$this->assign('title',$title);
 		$param['title'] = $title;
@@ -32,7 +30,7 @@ class OutsideLinksAction extends CommonAction {
 		}
 		$model = M("OutsideLinks");
 		if (!empty($model)) {
-			$this->_list($model,$map,$param,'sort',true);
+			$this->_list($model, $map, $param, 'sort', true);
 		}
 		$this->display();
 		return;
@@ -57,12 +55,12 @@ class OutsideLinksAction extends CommonAction {
 		$model = D("OutsideLinks");
 		if( false === $model->create()) {
 			$this->error($model->getError());
+			exit(0);
 		}
 		// 写入数据
 		if( false !== $model->add()) {
 			$this->success('友情链接添加成功！');
-		} 
-		else {
+		}else {
 			Log::write('友情链接添加失败：'.$model->getLastSql(), Log::SQL);
 			$this->error('友情链接添加失败！');
 		}
@@ -83,8 +81,9 @@ class OutsideLinksAction extends CommonAction {
 	 * @see OutsideLinksAction::edit()
 	 */
 	function edit() {
+		$id = $this->_param('id');
 		$model = M("OutsideLinks");
-		$vo = $model->getById($_REQUEST['id']);
+		$vo = $model->getById($id);
 		$this->assign('vo',$vo);
 		$this->display();
 		return;
@@ -95,9 +94,10 @@ class OutsideLinksAction extends CommonAction {
 	 * @see OutsideLinksAction::update()
 	 */
 	public function update() {
+		$id = $this->_param('id');
         $this->checkPost();
         $model = D("OutsideLinks");
-        $OutsideLinksNow = $model->getById($_POST['id']);
+        $OutsideLinksNow = $model->getById($id);
 		if (false === $model->create()) {
 			$this->error($model->getError());
 		}
@@ -110,8 +110,7 @@ class OutsideLinksAction extends CommonAction {
 			}
 			$this->assign('jumpUrl', cookie('_currentUrl_'));
 			$this->success('友情链接编辑成功!');
-		} 
-		else {
+		} else {
 			Log::write('友情链接编辑失败：'.$model->getLastSql(), Log::SQL);
 			$this->error('友情链接编辑失败!');
 		}
@@ -124,10 +123,10 @@ class OutsideLinksAction extends CommonAction {
 	public function foreverdelete() {
 		$model = D("OutsideLinks");
 		if (!empty($model)) {
-			$id = $_REQUEST['id'];
+			$id = $this->_param('id');
 			if (isset($id)) {
 				$condition = array();
-				$condition['id'] = array('in',explode(',', $id ));
+				$condition['id'] = array('in', explode(',', $id ));
 				$rcds = $model->field('pic')->where($condition)->select();
 				$pics = array();
 				foreach ($rcds as &$value) {
@@ -141,13 +140,11 @@ class OutsideLinksAction extends CommonAction {
 						}
 					}
 					$this->success('删除友情链接成功！',cookie('_currentUrl_'));
-				}
-				else {
+				} else {
 					Log::write('删除友情链接失败：'.$model->getLastSql(), Log::SQL);
 					$this->error('删除友情链接失败！');
 				}
-			}
-			else {
+			} else {
 				$this->error('非法操作');
 			}
 		}
@@ -158,23 +155,23 @@ class OutsideLinksAction extends CommonAction {
 	 * @see OutsideLinksAction::sort()
 	 */
 	public function sort(){
+		$sortId = $this->_param('sortId');
 		$model = M("OutsideLinks");
 		$map = array();
-		if (!empty($_GET['sortId'])) {
-			$map['id'] = array('in',$_GET['sortId']);
-		}
-		else {
+		if (!empty($sortId)) {
+			$map['id'] = array('in', $sortId);
+		} else {
 			$params =explode("&",$_SESSION[C('SEARCH_PARAMS_KEY')]);
 			foreach($params as &$value) {
 				$temp=explode("=",$value);
-				if (!empty($temp[1])&&$temp[0]!= 'sort'&&$temp[0]!='order') {
-					$map[$temp[0]]=$temp[1];
+				if (!empty($temp[1]) && $temp[0] != 'sort' && $temp[0] != 'order') {
+					$map[$temp[0]] = $temp[1];
 				}
 			}
 		}
-		$sortList = $model->where($map)->order('sort asc')->select();
+		$sortList = $model->where($map)->order('sort ASC')->select();
 		foreach ($sortList as &$value) {
-			$value['txt_show']=$value['title'];
+			$value['txt_show'] = $value['title'];
 		}
 		$this->assign("sortList",$sortList);
 		$this->display("../Public/sort");

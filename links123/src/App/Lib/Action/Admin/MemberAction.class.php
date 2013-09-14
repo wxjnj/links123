@@ -10,15 +10,17 @@
 class MemberAction extends CommonAction {
 
 	protected function _filter(&$map, &$param){
-		if ( isset($_REQUEST['nickname']) && !empty($_REQUEST['nickname']) ) {
-			$map['nickname'] = array('like',"%".$_REQUEST['nickname']."%");
-			$this->assign('nickname', $_REQUEST['nickname']);
-			$param['nickname'] = $_REQUEST['nickname'];
+		
+		$nickname = $this->_param('nickname');
+		$status = $this->_param('status');
+		if ( !empty($nickname) ) {
+			$map['nickname'] = array('like', '%'.$nickname.'%');
+			$this->assign('nickname', $nickname);
+			$param['nickname'] = $nickname;
 		}
-		if (isset($_REQUEST['status']) && $_REQUEST['status']!='') {
-			$map['status'] = $_REQUEST['status'];
-		}
-		else {
+		if (!empty($status)) {
+			$map['status'] = $status;
+		}else {
 			$map['status'] = 1;
 		}
 		$this->assign('status', $map['status']);
@@ -33,11 +35,11 @@ class MemberAction extends CommonAction {
 		$map=array();
 		$param=array();
 		if (method_exists($this,'_filter')) {
-			$this->_filter($map,$param);
+			$this->_filter($map, $param);
 		}
 		$model = M("Member");
 		if (!empty($model)) {
-			$this->_list($model,$map,$param,'id',false);
+			$this->_list($model, $map, $param, 'id', false);
 		}
 		$this->display();
 	}
@@ -79,9 +81,10 @@ class MemberAction extends CommonAction {
 	 * @see MemberAction::edit()
 	 */
 	function edit() {
+		$id = $this->_param('id');
 		$model = M("Member");
-		$vo = $model->getById($_REQUEST['id']);
-		$this->assign('vo',$vo);
+		$vo = $model->getById($id);
+		$this->assign('vo', $vo);
 		$this->display();
 	}
     
@@ -94,6 +97,7 @@ class MemberAction extends CommonAction {
         $this->checkPost();
 		if (false === $model->create()) {
 			$this->error($model->getError());
+			exit(0);
 		}
 		if (false !== $model->save()) {
 			$this->assign('jumpUrl', __URL__.'/index?'.$_SESSION[C('SEARCH_PARAMS_KEY')]);
@@ -108,9 +112,10 @@ class MemberAction extends CommonAction {
 	 * @see MemberAction::resume()
 	 */
 	function resume() {
+		$id = $this->_param('id');
 		$model = D("Member");
-		$condition = array('id' =>array('in',$_REQUEST['id']));
-		if (false !== $model->where($condition)->setField('status',1)) {
+		$condition = array('id' =>array('in',$id));
+		if (false !== $model->where($condition)->setField('status', 1)) {
 			$this->success('状态恢复成功！',cookie('_currentUrl_'));
 		} else {
 			$this->error('状态恢复失败！');
