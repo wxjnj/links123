@@ -3,6 +3,7 @@ body{
 	font-size: 12px;
 }
 input:focus{ outline: 0; }
+.placeholder{ color: #ccc; }
 #header{
 	background: #2e2a28;
 	height: 50px;
@@ -29,11 +30,11 @@ input:focus{ outline: 0; }
 .skins{
 	background: url(../imgs/skins.png) 0 0 no-repeat;
 	cursor: pointer;
-	height: 55px;
+	height: 49px;
 	position: absolute;
 	right: 0;
 	top: 50px;
-	width: 55px;
+	width: 49px;
 	z-index: 2;
 }
 .skins .skins-style{
@@ -76,6 +77,8 @@ input:focus{ outline: 0; }
 }
 .ci-hd{
 	padding-top: 35px;
+	height: 120px;
+	position: relative;
 }
 .ci-bd{
 	padding-top: 40px;
@@ -165,16 +168,50 @@ input:focus{ outline: 0; }
 /*logo*/
 .logo{
 	background: url(../imgs/logo.png) 0 0 no-repeat;
-	float: left;
+	position: absolute;
+	left: 0;
+	top: 50px;
 	height: 55px;
-	margin-top: 10px;
 	overflow: hidden;
 	text-indent: -999px;
 	width: 264px;
 }
+/*uc-menu*/
+.uc-menu{
+	background: #fff;
+	color: #2e2a28;
+	padding: 0 20px;
+	position: relative;
+}
+.uc-menu p{
+	background: url(../imgs/down.png) right 14px no-repeat;
+	cursor: pointer;
+	height: 34px;
+	line-height: 34px;
+	padding-right: 20px;
+	margin-top: 8px;
+}
+.uc-menu ul{
+	background: #fff;
+	display: none;
+	padding: 5px 0;
+	position: absolute;
+	right: 0;
+	top: 34px;
+	width: 120px;
+}
+.uc-menu ul li{
+	padding: 5px 0;
+	text-align: center;
+}
+.uc-menu ul li a{
+	color: #2e2a28;
+}
+.uc-menu ul li a:hover{
+	text-decoration: underline;
+}
 /*thl*/
 .thl{
-	font-size: 12px;
 	width: 460px;
 	height: 60px;
 	padding-top: 25px;
@@ -214,17 +251,24 @@ input:focus{ outline: 0; }
 }
 .thl .cate{
 	position: absolute;
-	top: 68px;
+	top: 36px;
 	left: 85px;
+}
+.thl .cate-in{ color: #727171; }
+.thl .cate-in a,
+.thl .cate-in a:hover{
+	color: #727171;
+}
+.thl .cate-in a.on,
+.thl .cate-in a.on:hover{
+	color: #d00316;
 }
 .thl .subcate{
 	position: absolute;
 	top: 3px;
 	left: 50px;
 }
-.thl a:hover{
-	color: #fff;
-}
+
 /*zld*/
 .zld{}
 .zld ul{
@@ -242,6 +286,19 @@ input:focus{ outline: 0; }
 	float: left;
 	margin: 5px 5px 0 0;
 	white-space: nowrap;
+}
+.zld ul li:hover .nm,
+.zld ul li:hover span{
+	filter:alpha(opacity=60);
+	-moz-opacity: 0.6;
+	-khtml-opacity: 0.6;
+	opacity: 0.6;
+}
+.zld ul li:hover .mask{
+	filter:alpha(opacity=20);
+	-moz-opacity: 0.2;
+	-khtml-opacity: 0.2;
+	opacity: 0.2;
 }
 .zld ul li b{
 	font-weight: normal;
@@ -347,7 +404,9 @@ input:focus{ outline: 0; }
 	height: 100px;
 	text-align: center;
 }
-.apps ul li:hover{
+.apps ul li:hover,
+.apps ul li:hover a,
+.apps ul li:hover a:hover{
 	color: #d00316;
 }
 .apps ul li img{
@@ -468,6 +527,9 @@ input:focus{ outline: 0; }
 	line-height: 25px;
 	overflow: hidden;
 }
+.music dl dd li:hover{
+	text-decoration: underline;
+}
 .music dl dd li.first{
 	border: 0;
 }
@@ -542,6 +604,7 @@ input:focus{ outline: 0; }
 .lk-dialog .ipt{
 	background: #eeefef;
 	border: 1px solid #e0e1e1;
+	color: #717071;
 	height: 16px;
 	line-height: 16px;
 	padding: 12px 5px;

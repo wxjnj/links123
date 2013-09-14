@@ -1,6 +1,30 @@
 Shadowbox.init();
 
-$(function() {
+$(function () {
+
+    /*上传自己的头像兼容代码*/
+    var $fileFaceConainer = $('#file_face_container');
+    var containerPositionSetting = function () {
+        var btnSubFaceOffset = $('#btn_sub_face').offset();
+        $fileFaceConainer.css({ left: btnSubFaceOffset.left, top: btnSubFaceOffset.top });
+    }
+    containerPositionSetting();
+    $(window).on('resize', function () {
+        containerPositionSetting();
+    });
+    $fileFaceConainer.on('mousemove', function (e) {
+        var $this = $(this);
+        var offset = $this.offset();
+        var inputFileWidth = $this.find("input").width()
+        var left = offset.left, top = offset.top;
+        $(this).find("input").css({
+            left: e.pageX - left - inputFileWidth+3,
+            top: e.pageY - top - 10
+        })
+    });
+    /*上传自己的头像兼容代码 结束*/
+
+
 	//
 	$("input[type='text']").each(function(index,domEle){
 		$(domEle).attr("defaultvalue", $(domEle).val());
@@ -160,7 +184,7 @@ $(function() {
 	//
 	$("#file_face").change(function(){
     	if ( $(this).val() != '' ) {
-    		$(this).parent(".file_frm").submit();
+    		$(this).parent().parent(".file_frm").submit();
     	}
     });
 	//

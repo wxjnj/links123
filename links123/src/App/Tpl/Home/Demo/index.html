@@ -9,12 +9,12 @@
 	<link rel="stylesheet" href="__PUBLIC__/skin/fancybox/jquery.fancybox.css" />
 	<link rel="stylesheet" href="__PUBLIC__/Demo/css/app.css" />
 	<link rel="stylesheet" href="about:blank" id="J_Skins" />
-	<!-- <script src="js/respond.min.js"></script> -->
 	<script>
-		var $CONFIG = {};
-		$CONFIG['APP'] = '__APP__/';
-		$CONFIG['URL'] = '__URL__';
-		$CONFIG['PUBLIC'] = '__PUBLIC__';
+		var $CONFIG = {
+				'APP' : '__APP__/',
+				'URL' : '__URL__',
+				'PUBLIC' : '__PUBLIC__'
+		};
 	</script>
 </head>
 <body>
@@ -23,7 +23,7 @@
 		<div class="header-inner">
 			<div class="zdl">
 				<form id="frm_drct" method="post" action="__APP__/Link/direct/" target="_blank">
-					<input class="ipt ipton" type="text" name="tag" id="direct_text" value="{$directTip}"  txt="{$directTip}" autocomplete="on" />
+					<input class="ipt ipton" type="text" name="tag" id="direct_text" txt="{$directTip}" value="{$directTip}" autocomplete="on" />
 					<input class="btn J_direct_submit" type="submit" value="提交" />
 				</form>
 			</div>
@@ -34,7 +34,21 @@
 				<li><a href="#">寻觅好友</a></li>
 			</ul>
 			<div class="uc">
-				<a class="join" id="J_SignUp" href="javascript:;">加入另客</a><a class="login" id="J_SignIn" href="javascript:;">登录</a>
+				<empty name="_SESSION[C('MEMBER_AUTH_KEY')]">
+					<a class="join J_SignUp" href="javascript:;">加入另客</a><a class="login J_SignIn" href="javascript:;">登录</a>
+				<else />
+					<div class="uc-menu">
+						<p>Hello，{$Think.session.nickname}</p>
+						<ul>
+							<li><a target="_blank" href="/Members/Index">个人中心</a></li>
+							<li><a target="_blank" href="/Members/Collection">我的收藏</a></li>
+							<li><a target="_blank" href="/Members/Recommend">我的推荐</a></li>
+							<li><a target="_blank" href="/Members/Comment">我的说说</a></li>
+							<li><a target="_blank" href="/Members/Suggestion">留言板</a></li>
+							<li><a target="_blank" href="/Members/Logout">退出</a></li>
+						</ul>
+					</div>
+				</empty>
 			</div>
 		</div>
 	</div><!--#header end-->
@@ -82,10 +96,8 @@
 						<input name="tid" id="J_tid" type="hidden" value="">
 						<input name="q" id="J_q" type="hidden" value="">
 						<input type="text" value="" style="display:none;" />
-						
 						<input type="hidden" id="tidNow" value="{$tidNow}" />
-		
-						<div class="cate" id="J_thl_div" >
+						<div class="cate cate-in" id="J_thl_div" >
 							<volist name="thl_list" id="vo" key="m"><a <eq name="thlNow" value="$vo['thl']">class="on"</eq> href="#">{$vo['thl']}</a><if condition='$m neq 12'>&nbsp;-&nbsp;</if></volist>
 						</div>					
 						<div class="subcate">
@@ -97,22 +109,21 @@
 								</volist>
 							</dl>
 						</div>
-						<div class="ctls" id="rch_sch">
-							<input type="text" id="search_text" class="ipt" x-webkit-speech lang="zh-CN" value="{$_COOKIE['keyword']}" autocomplete="on" />
+						<div class="ctls">
+							<input type="text" id="search_text" class="ipt" x-webkit-speech lang="zh-CN" value="{$_COOKIE['keyword']}" autocomplete="off" />
 							<input type="hidden" id="search_text_o" />
 							<input class="btn" type="submit" value="" id="btn_search" />
-							<ul id="tips"></ul>
 						</div>
 					</form>
 				</div>
 			</div>
 			<div class="ci-bd">
 				<div class="zld" id="J_ZldList">
-					<form action="/link/index?mod=myarea" id="J_MyAreaForm" target="_blank" method="post"><input type="hidden" name="url" value="" /></form>
-					<ul>
-						<volist name="_SESSION['arealist']" id="vo">
-						<if condition="$vo['id'] neq ''">
-							<li url="{:U('Link/index')}?mod=myarea&url={$vo.url}" data-id="{$vo.id}" data-url="{$vo.url}"><span class="nm" ><i class="mask"></i><b>{$vo.web_name}</b></span><span class="ctl"><i class="mask"></i></span></li>
+					<form action="{:U('Link/index')}?mod=myarea" id="J_MyAreaForm" target="_blank" method="post"><input type="hidden" name="url" value="" /></form>
+					<ul id="J_sortable">
+					<volist name="_SESSION['myarea_sort']" id="areaid">
+						<if condition="$_SESSION['arealist'][$areaid]['id'] neq ''">
+							<li id="{$_SESSION['arealist'][$areaid].id}" url="{:U('Link/index')}?mod=myarea&url={$_SESSION['arealist'][$areaid].url}" data-id="{$_SESSION['arealist'][$areaid].id}" data-url="{$_SESSION['arealist'][$areaid].url}"><span class="nm" ><i class="mask"></i><b>{$_SESSION['arealist'][$areaid]['web_name']}</b></span><span class="ctl"><i class="mask"></i></span></li>
 						</if>
 						</volist>
 						<li><span class="ctl add"><i class="mask"></i></span></li>
@@ -303,7 +314,8 @@
 		</div>
 	</div><!--#footer end-->
 				
-	<script src="__PUBLIC__/English/js/jquery-1.7.2.min.js"></script>
+	<script src="__PUBLIC__/skin/js/jquery-1.7.1.min.js"></script>
+	<script src="__PUBLIC__/Demo/js/jquery.placeholder.js"></script>
 	<script src="__PUBLIC__/skin/js/jquery.cookies.2.2.0.min.js"></script>
 	<script src="__PUBLIC__/skin/fancybox/jquery.fancybox.js"></script>
 	<script src="__PUBLIC__/skin/js/jquery-ui.min.js"></script>

@@ -338,30 +338,6 @@ class EnglishMediaModel extends CommonModel {
         return intval($num);
     }
 
-    public function getMediaLocalPathByTimeAndSource($time, $media_source_url) {
-        $local_path = "";
-        if (empty($time) || empty($media_source_url)) {
-            return $local_path;
-        }
-        $dir = date("Ym", $time);
-        $media_file_name = md5($media_source_url);
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:19.0) Gecko/20100101 Firefox/19.0 Chromium/18.0.1025.168 Chrome/18.0.1025.168 Safari/535.19');
-        curl_setopt($ch, CURLOPT_URL, C("WEB_HOST_URL") . "/index.php");
-        curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 0);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        $post_data = array (
-            "dir" => "test",
-            "name" => 1
-        );
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
-        $str =curl_exec($ch);
-        curl_close($ch);
-        dump($str);
-    }
-
 }
 
 ?>

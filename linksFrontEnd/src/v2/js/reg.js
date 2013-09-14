@@ -32,6 +32,14 @@ $(function() {
 				$(this).parent("td").next("td").children(".must").css("display", 'none');
 			}
 		})
+		$("#frm_reg input[name='email']").blur(function(){
+			if ($.trim($(this).val()) == "") {
+				$(this).parent("td").next("td").children(".must").css("display", 'inline-block');
+			}
+			else {
+				$(this).parent("td").next("td").children(".must").css("display", 'none');
+			}
+		})
 		$("#frm_reg input[name='password']").blur(function(){
 			if ($.trim($(this).val()) == "") {
 				$(this).parent("td").next("td").children(".must").css("display", 'inline-block');
@@ -65,7 +73,7 @@ $(function() {
 		/* 注册 */
 		$("#btn_reg_sub").click(function(){
 			//
-			var data = {"nickname":"","password":"","verify":""};
+			var data = {"nickname":"","email":"","password":"","verify":""};
 			//
 			var obj = $("#frm_reg input[name='nickname']");
 			if ($.trim(obj.val()) == "") {
@@ -74,6 +82,14 @@ $(function() {
 				return false;
 			}
 			data.nickname = obj.val();
+			
+			var obj = $("#frm_reg input[name='email']");
+			if ($.trim(obj.val()) == "") {
+				obj.parent("td").next("td").children(".must").css("display", 'inline-block');
+				obj.focus();
+				return false;
+			}
+			data.email = obj.val();
 			//
 			obj = $("#frm_reg input[name='password']");
 			if (obj.val() == "") {
