@@ -27,9 +27,17 @@ class DemoAction extends CommonAction {
 		$scheduleModel = M("Schedule");
 		
 		$user_id = intval($this->_session(C('MEMBER_AUTH_KEY')));
-		
-		if (!$_SESSION['arealist']) {	
+		if ($user_id) {
+			$memberModel = M("Member");
+			$mbrNow = $memberModel->where(array('id' => $user_id))->find();
+			$_SESSION['myarea_sort'] = $mbrNow['myarea_sort'] ? explode(',', $mbrNow['myarea_sort']) : '';
+		}
+		if ($user_id || !$_SESSION['arealist']) {	
 			$areaList = $myareaModel->where(array('mid' => $user_id))->select();
+			
+			if ($areaList) {
+				$_SESSION['arealist'] = array();
+			}
 			
 			foreach ($areaList as $value) {
 				$_SESSION['arealist'][$value['id']] = $value;
@@ -39,7 +47,9 @@ class DemoAction extends CommonAction {
 			
 			$_SESSION['myarea_sort'] = array_keys($_SESSION['arealist']);
 		}
-		
+	
+// 		var_dump($_SESSION['myarea_sort']);
+// 		var_dump($_SESSION['arealist']);
 		//日程表
 		if ($user_id) {
 			
@@ -179,7 +189,7 @@ class DemoAction extends CommonAction {
 				
 				$scheduleModel = M("Schedule");
 				
-				if (false === $scheduleModel->save(array('status' => 1), array('mid' => $user_id))) {
+				if (false === $scheduleModel->where(array('mid' => $user_id))->save(array('status' => 1))) {
 						
 					$result = 0;
 				}
@@ -222,7 +232,7 @@ class DemoAction extends CommonAction {
 					$result = 1;
 					
 					unset($_SESSION['myarea_sort'][array_search($id, $_SESSION['myarea_sort'])]);
-					$memberModel->save(array('myarea_sort' => implode(',', $_SESSION['myarea_sort'])), array('id' => $user_id));
+					$memberModel->where(array('id' => $user_id))->save(array('myarea_sort' => implode(',', $_SESSION['myarea_sort'])));
 				}
 		
 			} else {
@@ -255,6 +265,7 @@ class DemoAction extends CommonAction {
 	
 		if ($user_id) {
 			$myarea = M("Myarea");
+			$memberModel =  M("Member");
 				
 			$now = time();
 		
@@ -269,7 +280,11 @@ class DemoAction extends CommonAction {
 				$id = $myarea->add($saveData);
 				if ($id) {
 				
-					$result = $id;
+					$saveData['id'] = $result = $id;
+					
+					$_SESSION['arealist'][$id] = $saveData;
+					array_push($_SESSION['myarea_sort'], $id);
+					$memberModel->where(array('id' => $user_id))->save(array('myarea_sort' => implode(',', $_SESSION['myarea_sort'])));
 				} 
 			} else {
 				if (false !== $myarea->where(array('id' => $id, 'mid' => $user_id))->save($saveData)) {
@@ -318,7 +333,7 @@ class DemoAction extends CommonAction {
 			
 			if ($user_id) {
 	
-				$memberModel->save(array('myarea_sort' => implode(',', $area_list)), array('id' => $user_id));
+				$memberModel->where(array('id' => $user_id))->save(array('myarea_sort' => implode(',', $area_list)));
 			
 			}
 			
