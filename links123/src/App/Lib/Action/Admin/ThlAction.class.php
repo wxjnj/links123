@@ -5,7 +5,7 @@
  * @package Admin
  * @desc 糖葫芦籽
  * @author lawrence UPDATE 2013-08-20
- * @version 0.0.1
+ * @version 1.0
  */
 class ThlAction extends CommonAction {
 

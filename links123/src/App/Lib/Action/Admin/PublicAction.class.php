@@ -42,8 +42,8 @@ class PublicAction extends BaseAction {
     }
 
     public function drag(){
-        C('SHOW_PAGE_TRACE',false);
-        C('SHOW_RUN_TIME',false);
+        C('SHOW_PAGE_TRACE', false);
+        C('SHOW_RUN_TIME', false);
         $this->display();
         return;
     }
@@ -53,8 +53,8 @@ class PublicAction extends BaseAction {
 	 * @see PublicAction::footer()
 	 */
     public function footer() {
-        C('SHOW_RUN_TIME',false);
-        C('SHOW_PAGE_TRACE',false);
+        C('SHOW_RUN_TIME', false);
+        C('SHOW_PAGE_TRACE', false);
         $this->display();
         return;
     }
@@ -65,14 +65,13 @@ class PublicAction extends BaseAction {
 	 */
     public function menu() {
         $this->checkUser();
-        
-        if(isset($_SESSION[C('USER_AUTH_KEY')])) {
-        	
-        	if(isset($_SESSION['_ACCESS_LIST'])) {
-        		$accessList = $_SESSION['_ACCESS_LIST'];
+        $uid = $_SESSION[C('USER_AUTH_KEY')];
+        if(isset($uid)) {
+        	if(isset($uid)) {
+        		$accessList = $uid;
         	}else{
         		import('@.ORG.RBAC');
-        		$accessList = RBAC::getAccessList($_SESSION[C('USER_AUTH_KEY')]);
+        		$accessList = RBAC::getAccessList($uid);
         	}
         	//读取分组
         	$groupModel = D("Group");
@@ -87,21 +86,21 @@ class PublicAction extends BaseAction {
         		$group[$k]['menu'] = $node->where($where)->field('id, name, group_id, title')->order('sort ASC')->select();
         		
         		foreach ($group[$k]['menu'] as $key => $module) {
-        			if (isset($accessList[strtoupper(GROUP_NAME)][strtoupper($module['name'])]) || isset($_SESSION[C('ADMIN_AUTH_KEY')])) {
+        			if (isset($accessList[strtoupper(GROUP_NAME)][strtoupper($module['name'])]) || isset($uid)) {
         				$group[$k]['menu'][$key]['access'] = 1;
         			}
         		}
         	}
         	
-        	$_SESSION['menu'.$_SESSION[C('USER_AUTH_KEY')]]	= $group;
+        	$_SESSION['menu'.$uid]	= $group;
         	$tag = $this->_get('tag');
         	$menuTag = !empty($tag) ? $tag : 1;
         	
             $this->assign('menuTag', $menuTag);
-            $this->assign('menu',$group);
+            $this->assign('menu', $group);
         }
-        C('SHOW_RUN_TIME',false);
-        C('SHOW_PAGE_TRACE',false);
+        C('SHOW_RUN_TIME', false);
+        C('SHOW_PAGE_TRACE', false);
         $this->display();
         return;
     }
@@ -177,25 +176,29 @@ class PublicAction extends BaseAction {
 	 */
     public function checkLogin() {
     	if($this->isAjax()) {
-	        if(empty($_POST['account'])) {
+    		$account = $this->_post('account');
+    		$password = $this->_post('password');
+    		$verify = $this->_post('verify');
+    		
+	        if(empty($account)) {
 	            $this->error('帐号必须！');
 	            exit(0);
 	        }
-	        if (empty($_POST['password'])){
+	        if (empty($password)){
 	            $this->error('密码必须！');
 	            exit(0);
 	        }
-	        if (empty($_POST['verify'])){
+	        if (empty($verify)){
 	            $this->error('验证码必须！');
 	            exit(0);
 	        }
 	        
-	        if(session('verify') != md5(strtoupper($_POST['verify']))) {
+	        if(session('verify') != md5(strtoupper($verify))) {
 	        	$this->error('验证码错误！');
 	        }
 	        
 	        // 支持使用绑定帐号登录
-	        $map['account'] = $_POST['account'];
+	        $map['account'] = $account;
 	        $map["status"] = array('gt',0);
 	        
 	        import('@.ORG.RBAC');
@@ -205,7 +208,7 @@ class PublicAction extends BaseAction {
 	        if(false === $authInfo) {
 	            $this->error('帐号不存在或已禁用！');
 	        }else {
-	            if($authInfo['password'] != md5($_POST['password'])) {
+	            if($authInfo['password'] != md5($password)) {
 	                $this->error('密码错误！');
 	            }
 	            $_SESSION[C('USER_AUTH_KEY')] = $authInfo['id'];
@@ -320,15 +323,17 @@ class PublicAction extends BaseAction {
 	 * @see PublicAction::uploadPic()
 	 */
     public function uploadPic() {
+    	$folder = $this->_param('folder');
+    	
     	import("@.ORG.UploadFile");
     	$upload = new UploadFile();
     	//设置上传文件大小
     	$upload->maxSize = 3292200;
     	//设置上传文件类型
-    	$upload->allowExts = explode(',', 'jpg,gif,png,jpeg');
+    	$upload->allowExts = explode(',', 'jpg, gif, png, jpeg');
     	//设置附件上传目录
     	$path = realpath('./Public/Uploads/uploads.txt');
-    	$upload->savePath = str_replace('uploads.txt', $_REQUEST["folder"], $path).'/';
+    	$upload->savePath = str_replace('uploads.txt', $folder, $path).'/';
     	//设置需要生成缩略图，仅对图像文件有效
     	$upload->thumb = false;
     	//设置上传文件规则
@@ -339,7 +344,7 @@ class PublicAction extends BaseAction {
     	} else {
     		//取得成功上传的文件信息
     		$uploadList = $upload->getUploadFileInfo();
-    		$idNow = $_REQUEST["id"];
+    		$idNow = $this->_param('id');
     		if ( empty($idNow) ) {
     			$idNow = "pic";
     		}
@@ -352,6 +357,7 @@ class PublicAction extends BaseAction {
 	 * @see PublicAction::uploadAtt()
 	 */
     public function uploadAtt() {
+    	$folder = $this->_param('folder');
     	import("@.ORG.UploadFile");
     	$upload = new UploadFile();
     	//设置上传文件大小
@@ -360,7 +366,7 @@ class PublicAction extends BaseAction {
     	$upload->allowExts = explode(',', 'pdf,doc,docx,zip,rar,xlsx');
     	//设置附件上传目录
     	$path = realpath('./Public/Uploads/uploads.txt');
-    	$upload->savePath = str_replace('uploads.txt', $_REQUEST["folder"],$path).'/';
+    	$upload->savePath = str_replace('uploads.txt', $folder, $path).'/';
     	//设置需要生成缩略图，仅对图像文件有效
     	$upload->thumb = false;
     	//设置上传文件规则
@@ -371,7 +377,7 @@ class PublicAction extends BaseAction {
     	} else {
     		//取得成功上传的文件信息
     		$uploadList = $upload->getUploadFileInfo();
-    		$idNow = $_REQUEST["id"];
+    		$idNow = $this->_param('id');
     		if ( empty($idNow) ) {
     			$idNow = "att";
     		}
