@@ -89,8 +89,10 @@ class DemoAction extends CommonAction {
 				
 			if ($result) {
 				
-				$_SESSION['arealist'][$id]['url'] = $url;
-				$_SESSION['arealist'][$id]['web_name'] = $webname;
+				if ($id) {
+					$_SESSION['arealist'][$id]['url'] = $url;
+					$_SESSION['arealist'][$id]['web_name'] = $webname;
+				}
 			}
 		} else {
 			
