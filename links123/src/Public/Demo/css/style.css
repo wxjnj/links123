@@ -351,8 +351,8 @@ input:focus{ outline: 0; }
 	float: right;
 	margin-left: 5px;
 }
-.edit{} /* TODO skins */
-.del{} /* TODO skins */
+.edit{ display: none; } /* TODO skins */
+.del{ display: none; } /* TODO skins */
 .close{
 	background: url(../imgs/sprite.png) -125px -6px no-repeat;
 }
