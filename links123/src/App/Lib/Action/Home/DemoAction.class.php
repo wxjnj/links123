@@ -22,36 +22,50 @@ class DemoAction extends CommonAction {
 	 */
 	public function index() {
 		
-		// 我的地盘
-		$myarea = M("Myarea");
+		//自留地
+		$myareaModel = M("Myarea");
+		$scheduleModel = M("Schedule");
 		
-		//存在用户登录，获取用户的我的地盘
-		$memberAuthKey = intval($this->_session(C('MEMBER_AUTH_KEY')));
+		$user_id = intval($this->_session(C('MEMBER_AUTH_KEY')));
 		
 		if (!$_SESSION['arealist']) {	
-			$areaList = $myarea->where(array('mid' => $memberAuthKey))->select();
+			$areaList = $myareaModel->where(array('mid' => $user_id))->select();
 			
 			foreach ($areaList as $value) {
 				$_SESSION['arealist'][$value['id']] = $value;
 			}
 		}
-		
 		if (!$_SESSION['myarea_sort']) {
 			
 			$_SESSION['myarea_sort'] = array_keys($_SESSION['arealist']);
 		}
 		
+		//日程表
+		if ($user_id) {
+			
+			$schedule_list = $scheduleModel->where(array('mid' => $user_id))->select();
+		} else {
+			$schedule_list = cookie(md5('schedule_list'));
+			if (!$schedule_list) {
+				$schedule_list = $scheduleModel->where(array('mid' => 0))->select();
+			}
+		}
+		cookie(md5('schedule_list'), $schedule_list);
+		
 		$this->getHeaderInfo();
 		$this->display();
 	}
 	
+	/**
+	 * @name addSchedule
+	 * @desc 添加日程
+	 * @param string content
+	 * @param string datetime
+	 * @return 成功:1; 失败:0; 未登录或登录已失效: -1
+	 * @author slate date:2013-09-14
+	 */
 	public function addSchedule() {
-		
-	}
 	
-	public function updateSchedule() {
-	
-		$id = $this->_param('id');
 		$content = $this->_param('content');
 		$datetime = $this->_param('datetime');
 		
@@ -63,26 +77,26 @@ class DemoAction extends CommonAction {
 			$scheduleModel = M("Schedule");
 				
 			$now = time();
+			
+			$datetime = $datetime ? strtotime($datetime) : $now;
 		
 			$saveData = array(
+					'mid' => $user_id,
 					'content' => $content,
 					'datetime' => $datetime,
 					'status' => 0,
-					//'create_time' => $now,
+					'create_time' => $now,
 					'update_time' => $now
 			);
 
-			if (!$id) {
-				$id = $scheduleModel->where(array('mid' => $user_id))->add($saveData);
-				if ($id) {
+			$id = $scheduleModel->add($saveData);
+			
+			if ($id) {
 				
-					$result = $id;
-				} 
-			} else {
-				if (false !== $scheduleModel->where(array('id' => $id, 'mid' => $user_id))->save($saveData)) {
-					
-					$result = 1;
-				}
+				$saveData['id'] = $result = $id;
+				$schedule_list = cookie(md5('schedule_list'));
+				$schedule_list[$id] = $saveData;
+				cookie(md5('schedule_list'), $schedule_list);
 			}
 		} else {
 			
@@ -92,7 +106,92 @@ class DemoAction extends CommonAction {
 		echo $result;
 	}
 	
+	/**
+	 * @name updateSchedule
+	 * @desc 更新日程表
+	 * @param int id
+	 * @param String content
+	 * @param String datetime
+	 * @return 成功:1; 失败:0;
+	 * @author slate date:2013-09-14
+	 */
+	public function updateSchedule() {
+	
+		$id = $this->_param('id');
+		$content = $this->_param('content');
+		$datetime = $this->_param('datetime');
+		
+		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+	
+		$result = 0;
+	
+		if ($id) {
+			
+			$now = time();
+			
+			$datetime = $datetime ? strtotime($datetime) : $now;
+				
+			$saveData = array(
+					'content' => $content,
+					'datetime' => $datetime,
+					'update_time' => $now
+			);
+			
+			$result = 1;
+			
+			if ($user_id) {
+				$scheduleModel = M("Schedule");
+					
+				if (false === $scheduleModel->where(array('id' => $id, 'mid' => $user_id))->save($saveData)) {
+					
+					$result = 0;
+				}
+			}
+			
+			$schedule_list = cookie(md5('schedule_list'));
+			$schedule_list[$id] = array_merge($schedule_list[$id], $saveData);
+			cookie(md5('schedule_list'), $schedule_list);
+		} 
+			
+		echo $result;
+	}
+	
+	/**
+	 * @name delSchedule
+	 * @desc 删除日程表
+	 * @param int id
+	 * @return 成功:1; 失败:0;
+	 * @author slate date:2013-09-14
+	 */
 	public function delSchedule() {
+
+		$id = $this->_param('id');
+		
+		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+		
+		$result = 0;
+		
+		if ($id) {
+			
+			$result = 1;
+			
+			if ($user_id) {
+				
+				$scheduleModel = M("Schedule");
+				
+				if (false === $scheduleModel->save(array('status' => 1), array('mid' => $user_id))) {
+						
+					$result = 0;
+				}
+		
+			} 
+			
+			$schedule_list = cookie(md5('schedule_list'));
+			unset($schedule_list[array_search($id, $schedule_list)]);
+			cookie(md5('schedule_list'), $schedule_list);
+		}
+		
+		echo $result;
 		
 	}
 	
@@ -100,7 +199,7 @@ class DemoAction extends CommonAction {
 	 * @name delArea
 	 * @desc 删除自留地
 	 * @param string web_id
-	 * @return 成功:0; 失败:1; 未登录或登录已失效: -1
+	 * @return 成功:1; 失败:0; 未登录或登录已失效: -1
 	 * @author slate date:2013-09-14
 	 */
 	public function delArea() {
@@ -141,7 +240,7 @@ class DemoAction extends CommonAction {
 	 * @desc 更新我的地盘
 	 * @param string web_url
 	 * @param string web_name
-	 * @return 成功:0; 失败:1; 未登录或登录已失效: -1
+	 * @return 成功:1; 失败:0; 未登录或登录已失效: -1
 	 * @author slate date:2013-09-14
 	 */
 	public function updateArea() {
@@ -197,6 +296,7 @@ class DemoAction extends CommonAction {
 	 * @name sortArealist
 	 * @desc 拖动我的地盘进行排序
 	 * @param Array area
+	 * @return 成功:1; 失败:0;
 	 * @author slate date:2013-09-14
 	 */
 	public function sortArealist() {
