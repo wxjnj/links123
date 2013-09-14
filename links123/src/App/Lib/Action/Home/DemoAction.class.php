@@ -49,6 +49,49 @@ class DemoAction extends CommonAction {
 		
 	}
 	
+	public function updateSchedule() {
+	
+		$id = $this->_param('id');
+		$content = $this->_param('content');
+		$datetime = $this->_param('datetime');
+		
+		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+	
+		$result = 0;
+	
+		if ($user_id) {
+			$scheduleModel = M("Schedule");
+				
+			$now = time();
+		
+			$saveData = array(
+					'content' => $content,
+					'datetime' => $datetime,
+					'status' => 0,
+					//'create_time' => $now,
+					'update_time' => $now
+			);
+
+			if (!$id) {
+				$id = $scheduleModel->where(array('mid' => $user_id))->add($saveData);
+				if ($id) {
+				
+					$result = $id;
+				} 
+			} else {
+				if (false !== $scheduleModel->where(array('id' => $id, 'mid' => $user_id))->save($saveData)) {
+					
+					$result = 1;
+				}
+			}
+		} else {
+			
+			$result = -1;
+		}
+	
+		echo $result;
+	}
+	
 	public function delSchedule() {
 		
 	}
@@ -123,7 +166,8 @@ class DemoAction extends CommonAction {
 			);
 
 			if (!$id) {
-				$id = $myarea->where(array('mid' => $user_id))->add($saveData);
+				$saveData['mid'] = $user_id;
+				$id = $myarea->add($saveData);
 				if ($id) {
 				
 					$result = $id;
