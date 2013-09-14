@@ -119,7 +119,7 @@
 			</div>
 			<div class="ci-bd">
 				<div class="zld" id="J_ZldList">
-					<form action="/link/index?mod=myarea" id="J_MyAreaForm" target="_blank" method="post"><input type="hidden" name="url" value="" /></form>
+					<form action="{:U('Link/index')}?mod=myarea" id="J_MyAreaForm" target="_blank" method="post"><input type="hidden" name="url" value="" /></form>
 					<ul id="J_sortable">
 					<volist name="_SESSION['myarea_sort']" id="areaid">
 						<if condition="$_SESSION['arealist'][$areaid]['id'] neq ''">
