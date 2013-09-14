@@ -266,13 +266,20 @@ var User = {
 	}
 };
 var Zld = {
+	IsSortable: false,	//是否为拖拽点击，true则不打开自留地网址
 	Init: function(){
 		var self = this;
 		var obj = $('#J_ZldList');
 		obj.find('.add').on('click', function(){
+			
+			//TODO如果用户未登录提示用户登录
+			
 			self.Add();
 		});
 		obj.find('.ctl').on('click', function(){
+			
+			//TODO如果用户未登录提示用户登录
+			
 			var o = $(this).closest('li');
 			var id = o.data('id');
 			var nm = o.find('b').html();
@@ -280,11 +287,36 @@ var Zld = {
 			self.Edit(id, nm, url);
 		});
 		obj.find('.nm').on('click', function(){
-			var o = $(this).closest('li');
-			var url = o.data('url');
-			self.Go(url);
+			
+			if (!Zld.IsSortable) {
+				var o = $(this).closest('li');
+				var url = o.data('url');
+				self.Go(url);
+			} else {
+				Zld.IsSortable = false;
+			}
 		});
 		
+		$('.J_myarea_submit').on('click', function() {
+			
+			var web_id = $('#J_myarea_id').val();
+			var web_name = $('#J_myarea_web_name').val();
+			var web_url = $('#J_myarea_web_url').val();
+			
+			$.post(
+					URL + '/updateArea', 
+					{'web_id' : web_id, 'web_url' : web_url, 'web_name' : web_name},
+					function(data) {
+						if (data == 1) {
+							//成功
+						} else if (data == -1){
+							//请登录
+						} else {
+							//失败
+						}
+					}
+			);
+		});
 	},
 	Go: function(url){
 		var obj = $('#J_MyAreaForm');
@@ -308,7 +340,7 @@ var Zld = {
 			hl = hl + '	</div>';
 			hl = hl + '	<div class="lkd-ft">';
 			hl = hl + '		<input type="hidden" name="" id="J_myarea_id" value="" />';
-			hl = hl + '		<a class="lkd-add" href="javascript:;">确认添加</a>';
+			hl = hl + '		<a class="lkd-add J_myarea_submit" href="javascript:;">确认添加</a>';
 			hl = hl + '	</div>';
 			hl = hl + '</div>';
 			$('body').append(hl);

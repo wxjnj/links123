@@ -45,6 +45,7 @@
 							<li><a target="_blank" href="/Members/Recommend">我的推荐</a></li>
 							<li><a target="_blank" href="/Members/Comment">我的说说</a></li>
 							<li><a target="_blank" href="/Members/Suggestion">留言板</a></li>
+							<li><a target="_blank" href="/Members/Logout">退出</a></li>
 						</ul>
 					</div>
 				</empty>
@@ -120,9 +121,9 @@
 				<div class="zld" id="J_ZldList">
 					<form action="/link/index?mod=myarea" id="J_MyAreaForm" target="_blank" method="post"><input type="hidden" name="url" value="" /></form>
 					<ul id="J_sortable">
-						<volist name="_SESSION['arealist']" id="vo">
-						<if condition="$vo['id'] neq ''">
-							<li url="{:U('Link/index')}?mod=myarea&url={$vo.url}" data-id="{$vo.id}" data-url="{$vo.url}"><span class="nm" ><i class="mask"></i><b>{$vo.web_name}</b></span><span class="ctl"><i class="mask"></i></span></li>
+					<volist name="_SESSION['myarea_sort']" id="areaid">
+						<if condition="$_SESSION['arealist'][$areaid]['id'] neq ''">
+							<li id="{$_SESSION['arealist'][$areaid].id}" url="{:U('Link/index')}?mod=myarea&url={$_SESSION['arealist'][$areaid].url}" data-id="{$_SESSION['arealist'][$areaid].id}" data-url="{$_SESSION['arealist'][$areaid].url}"><span class="nm" ><i class="mask"></i><b>{$_SESSION['arealist'][$areaid]['web_name']}</b></span><span class="ctl"><i class="mask"></i></span></li>
 						</if>
 						</volist>
 						<li><span class="ctl add"><i class="mask"></i></span></li>

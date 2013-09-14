@@ -12,7 +12,21 @@ $(function() {
 
 	$('#J_sortable').sortable({
 		update: function(event, ui){
-			alert('coming soon');
+			Zld.IsSortable = true;
+			
+			$.post(
+					URL + '/sortArealist', 
+					{'area' : $(this).sortable('toArray')},
+					function(data) {
+						if (data == 1) {
+							//成功
+						} else if (data == 0){
+							//失败
+						} else {
+							//失败
+						}
+					}
+			);
 		}  
 	});
 	$('#J_sortable').sortable('enable');
