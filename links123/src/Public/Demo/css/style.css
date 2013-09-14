@@ -77,11 +77,11 @@ input:focus{ outline: 0; }
 }
 .ci-hd{
 	padding-top: 35px;
-	height: 85px;
+	height: 115px;
 	position: relative;
 }
 .ci-bd{
-	padding-top: 40px;
+	padding-top: 10px;
 }
 /*zdl*/
 .zdl{

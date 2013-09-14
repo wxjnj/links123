@@ -409,8 +409,8 @@
 	font-size: 24px;
 }
 #result_box {
-    color: #222222;
-    font-size: 16px;
+	color: #222222;
+	font-size: 16px;
 }
 #gt-res-dict {
 	overflow: hidden;
@@ -692,7 +692,14 @@ div.gt-baf-translations {
 	border: 0;
 	width: 350px;
 	padding: 10px;
+	border: 0 none;
 	resize: none;
+	vertical-align: middle;
+	overflow-x: none;
+}
+
+.J_box_stikynot{
+	background: transparent;
 }
 
 .box_stikynot_save {
@@ -885,9 +892,49 @@ div.gt-baf-translations {
 	top: -14px;
 	right: -14px;
 }
+.ui-front{ z-index: 9999; }
 .ui-draggable .ui-dialog-titlebar{
 	border-bottom-right-radius: 0;
 	border-bottom-left-radius: 0;
 	display: none;
 }
-.ui-front{ z-index: 9999; }
+.ui-stikynot .ui-dialog-titlebar{
+	display: block;
+}
+
+
+.music_button {
+	border-radius: 7px 7px 7px 7px;
+	box-shadow: none;
+	font: bold 131% sans-serif;
+	padding: 0 6px 2px;
+	position: absolute;
+	right: 0px;
+	top: -17px;
+	background-color: #2b91af;
+	color: #fff;
+	cursor: pointer;
+	display: inline-block;
+	text-align: center;
+	text-decoration: none;
+	z-index: 88888;
+	vertical-align: baseline;
+}
+
+.music_button_min {
+	border-radius: 7px 7px 7px 7px;
+	box-shadow: none;
+	font: bold 131% sans-serif;
+	padding: 0 6px 2px;
+	position: absolute;
+	right: 22px;
+	top: -17px;
+	background-color: #2b91af;
+	color: #fff;
+	cursor: pointer;
+	display: inline-block;
+	text-align: center;
+	text-decoration: none;
+	z-index: 88888;
+	vertical-align: baseline;
+}

@@ -6,6 +6,7 @@ $(function() {
 
 	Zld.Init();
 	ZhiDaLan.Init();
+	HelpMouse.init();
 
 	// 用户菜单
 	$('.uc-menu').hover(
@@ -313,5 +314,59 @@ var Zld = { // 自留地
 		hl = hl + '<span class="ctl"><i class="mask"></i></span>';
 		hl = hl + '</li>';
 		return hl;
+	}
+};
+
+var HelpMouse = {
+	init: function(){
+		var self = this;
+		var isSearchTxtSelected = false;
+
+		$(document).on('mousemove', function(ev){
+			var isNeedHelp = 1;
+			$('.ui-dialog').each(function(){
+				if($(this).is(":visible")){
+					isNeedHelp ? isNeedHelp = 0 : '';
+				}
+			});
+			$('.fancybox-wrap').each(function(){
+				if($(this).is(":visible")){
+					isNeedHelp ? isNeedHelp = 0 : '';
+				}
+			});
+			if(!isNeedHelp){ return false; }
+			var mousePos = self.getcoords(ev);
+			if(mousePos.y < 70){
+				if($('#direct_text').val() == $('#direct_text').attr('txt')){
+					$('#direct_text').select().addClass('ipson');
+					isSearchTxtSelected = false;
+					if($.trim($('#search_text').val()) ==""){
+						$('#J_thl_div').hide();
+					}
+				}
+			}
+			if(mousePos.y > 110 && mousePos.y < 220){
+				$('#direct_text').val($('#direct_text').attr('txt')).removeClass('ipson');
+				if(!isSearchTxtSelected){
+					$('#search_text').select().trigger('mouseenter');
+					isSearchTxtSelected = true;
+				}
+			}
+			if(mousePos.y > 300){
+				if($.trim($('#search_text').val()) ==""){
+					$('#search_text').select().trigger('mouseleave');
+					isSearchTxtSelected = false;
+				}
+			}
+		});
+	},
+	getcoords: function(ev){
+		if(ev.pageX || ev.pageY){ 
+			return { x: ev.pageX, y: ev.pageY }; 
+		} 
+		return{ 
+			x: ev.clientX + document.body.scrollLeft - document.body.clientLeft, 
+			y: ev.clientY + document.body.scrollTop - document.body.clientTop 
+		}; 
 	}
 };
