@@ -32,7 +32,7 @@ var User = {
 			hl = hl + '			<li><input class="ipt" type="text" name="email" placeholder="邮箱" /></li>';
 			hl = hl + '			<li><input class="ipt" type="password" name="password" placeholder="密码" /></li>';
 			hl = hl + '			<li class="vcode">';
-			hl = hl + '				<input class="ipt" type="text" name="vcode" placeholder="验证码" /><img src="/Verify" alt="验证码" class="J_VerifyImg" title="点击刷新" />';
+			hl = hl + '				<input class="ipt" type="text" name="vcode" placeholder="验证码" value="" /><img src="/Verify" alt="验证码" class="J_VerifyImg" title="点击刷新" />';
 			hl = hl + '			</li>';
 			hl = hl + '		</ul>';
 			hl = hl + '	</div>';
@@ -67,9 +67,10 @@ var User = {
 				return false;
 			});
 
-			obj.find('.vcode').on('keydown', function(event){
+			obj.find('input[name="vcode"]').on('keydown', function(event){
 				if (event.keyCode == 13) {
 					obj.find('.lkd-reg').trigger('click');
+					return false;
 				}
 			});
 
@@ -84,28 +85,37 @@ var User = {
 			obj.find('.lkd-reg').on('click', function(){
 				if(_loading){ return false; }
 
-				var username = obj.find('input[name="user"]').val();
-				var password = obj.find('input[name="password"]').val();
-				var email = obj.find('input[name="email"]').val();
-				var verify = obj.find('input[name="vcode"]').val();
+				var objusername = obj.find('input[name="user"]');
+				var objpassword = obj.find('input[name="password"]');
+				var objemail = obj.find('input[name="email"]');
+				var objverify = obj.find('input[name="vcode"]');
+
+				var username = objusername.val();
+				var password = objpassword.val();
+				var email = objemail.val();
+				var verify = objverify.val();
 				
 				if (!username || username == '昵称') {
 					alert('昵称不能为空');
+					objusername[0].focus();
 					return false;
 				}
 
 				if(!/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*$/.test(email)){
 					alert('email格式不正确');
+					objemail[0].focus();
 					return false;
 				}
 				
 				if (!password) {
 					alert('密码不能为空');
+					objpassword[0].focus();
 					return false;
 				}
 				
 				if (!verify) {
 					alert('验证码不能为空');
+					objverify[0].focus();
 					return false;
 				}
 				
@@ -153,13 +163,13 @@ var User = {
 			hl = hl + '				<li><input class="ipt" type="password" name="password" placeholder="密码" /></li>';
 			hl = hl + '				<li class="rpass">';
 			hl = hl + '					<span>还不是会员？<a class="reg" href="javascript:;">注册</a></span>';
-			hl = hl + '					<label for=""><input type="checkbox" name="autologin" id=""> 记住密码</label> <a class="fgpass" href="javascript:;">忘记密码？</a>';
+			hl = hl + '					<label for=""><input type="checkbox" name="autologin" checked="checked" id=""> 记住密码</label> <a class="fgpass" href="javascript:;">忘记密码？</a>';
 			hl = hl + '				</li>';
 			hl = hl + '			</ul>';
 			hl = hl + '		</form>';
 			hl = hl + '	</div>';
 			hl = hl + '	<div class="lkd-ft">';
-			hl = hl + '		<a class="lkd-reg" href="#">登录</a>';
+			hl = hl + '		<a class="lkd-reg" href="javascript:;">登录</a>';
 			hl = hl + '	</div>';
 			hl = hl + '</div>';
 			$('body').append(hl);
@@ -193,9 +203,10 @@ var User = {
 				self.Reg();
 			});
 
-			obj.find('input[type="password"').on('keydown', function(event){
+			obj.find('input[name="password"]').on('keydown', function(event){
 				if (event.keyCode == 13) {
 					obj.find('.lkd-reg').trigger('click');
+					return false;
 				}
 			});
 
@@ -206,17 +217,21 @@ var User = {
 			});
 
 			obj.find('.lkd-reg').on('click', function(){
-				var username = obj.find('input[name="user"]').val();
-				var password = obj.find('input[name="password"]').val();
+				var objusername = obj.find('input[name="user"]');
+				var objpassword = obj.find('input[name="password"]');
+				var username = objusername.val();
+				var password = objpassword.val();
 				var auto_login = obj.find('input[name="autologin"]').attr('checked');
 				
 				if (!username || username == '帐号') {
 					alert('帐号不能为空');
+					objusername[0].focus();
 					return false;
 				}
 				
 				if (!password) {
 					alert('密码不能为空');
+					objpassword[0].focus();
 					return false;
 				}
 				
@@ -295,9 +310,10 @@ var User = {
 				return false;
 			});
 
-			obj.find('.vcode').on('keydown', function(event){
+			obj.find('input[name="vcode"]').on('keydown', function(event){
 				if (event.keyCode == 13) {
 					obj.find('.lkd-btn').trigger('click');
+					return false;
 				}
 			});
 
@@ -310,21 +326,26 @@ var User = {
 			var _loading = false;
 
 			obj.find('.lkd-btn').on('click', function(){
-				var email = obj.find('input[name="email').val();
-				var verify = obj.find('input[name="vcode"]').val();
+				var objemail = obj.find('input[name="email"]');
+				var objverify = obj.find('input[name="vcode"]');
+				var email = objemail.val();
+				var verify = objverify.val();
 
 				if (!email) {
 					alert("请输入邮箱");
+					objemail[0].focus();
 					return false;
 				}
 				var result = email.match(/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/);
 				if (result == null) {
 					alert("请正确输入邮箱");
+					objemail[0].focus();
 					return false;
 				}
 
 				if (!verify) {
 					alert('验证码不能为空');
+					objverify[0].focus();
 					return false;
 				}
 				
@@ -345,6 +366,9 @@ var User = {
 			});
 
 		}else{
+			var obj = $('#J_FindPass');
+			obj.find('input[name="email"]').val('');
+			obj.find('input[name="vcode"]').val('');
 			$('#J_FindPass').dialog('open');
 		}
 	}
