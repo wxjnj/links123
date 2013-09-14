@@ -24,6 +24,7 @@ var User = {
 			hl = hl + '<div class="lk-dialog lk-dialog-reg" id="J_Reg">';
 			hl = hl + '	<div class="lkd-hd">';
 			hl = hl + '		<em>快速注册</em>';
+			hl = hl + '		<span class="msg"></span>';
 			hl = hl + '		<a class="close" href="javascript:;">X</a>';
 			hl = hl + '	</div>';
 			hl = hl + '	<div class="lkd-bd">';
@@ -89,6 +90,7 @@ var User = {
 				var objpassword = obj.find('input[name="password"]');
 				var objemail = obj.find('input[name="email"]');
 				var objverify = obj.find('input[name="vcode"]');
+				var objmsg = obj.find('.msg');
 
 				var username = objusername.val();
 				var password = objpassword.val();
@@ -96,29 +98,30 @@ var User = {
 				var verify = objverify.val();
 				
 				if (!username || username == '昵称') {
-					alert('昵称不能为空');
+					objmsg.html('昵称不能为空');
 					objusername[0].focus();
 					return false;
 				}
 
 				if(!/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*$/.test(email)){
-					alert('email格式不正确');
+					objmsg.html('email格式不正确');
 					objemail[0].focus();
 					return false;
 				}
 				
 				if (!password) {
-					alert('密码不能为空');
+					objmsg.html('密码不能为空');
 					objpassword[0].focus();
 					return false;
 				}
 				
 				if (!verify) {
-					alert('验证码不能为空');
+					objmsg.html('验证码不能为空');
 					objverify[0].focus();
 					return false;
 				}
 				
+				objmsg.html('');
 				_loading = true;
 
 				var data = { "nickname": username, "email": email, "password": password, "verify": verify };
@@ -128,7 +131,7 @@ var User = {
 						if ( data.indexOf("regOK") >= 0 ) {
 							window.location.href = APP+"Members/Index/";
 						} else {
-							alert(data);
+							objmsg.html(data);
 						}
 						_loading = false;
 					}
@@ -143,6 +146,7 @@ var User = {
 			obj.find('input[name="password"]').val('');
 			obj.find('input[name="email"]').val('');
 			obj.find('input[name="vcode"]').val('');
+			obj.find('.msg').html('');
 			obj.dialog('open');
 		}
 	},
@@ -175,10 +179,9 @@ var User = {
 			$('body').append(hl);
 
 			var obj = $('#J_Login');
+			var objmsg = obj.find('.msg');
 
-			if(msg){
-				obj.find('.msg').html(msg);
-			}
+			if(msg){ objmsg.html(msg); }
 
 			obj.dialog({
 				autoOpen: true,
@@ -224,13 +227,13 @@ var User = {
 				var auto_login = obj.find('input[name="autologin"]').attr('checked');
 				
 				if (!username || username == '帐号') {
-					alert('帐号不能为空');
+					objmsg.html('帐号不能为空');
 					objusername[0].focus();
 					return false;
 				}
 				
 				if (!password) {
-					alert('密码不能为空');
+					objmsg.html('密码不能为空');
 					objpassword[0].focus();
 					return false;
 				}
@@ -245,7 +248,7 @@ var User = {
 							}
 							window.location.href = APP+"Index";
 						}else{
-							alert(data);
+							objmsg.html(data);
 						}
 					}
 				);
@@ -256,6 +259,7 @@ var User = {
 			var obj = $('#J_Login');
 			obj.find('input[name="user"]').val('');
 			obj.find('input[name="password"]').val('');
+			obj.find('.msg').html('');
 			obj.find('input[name="autologin"]').attr('checked', true);
 			if(msg){
 				obj.find('.msg').html(msg);
