@@ -1,3 +1,4 @@
+//temp info.
 $(function() {
 	// 注册
 	if ( $("#frm_reg")[0] ) {
@@ -225,10 +226,17 @@ $(function() {
 		//
 		$(document).on('click', '.div_btn .btn_sub_email', function(){
 			//
-			var obj = $(this).parent(".div_btn").siblings(".email");
+			var container = $(this).parent(".div_btn").parent();
+			var obj = container.find(".email");
+			var validateCode = container.find(".yzm");
 			if (obj.val() == "") {
 				alert("请输入邮箱.");
 				obj.focus();
+				return false;
+			}
+			if (validateCode.val() == "") {
+				alert("请输入验证码.");
+				validateCode.focus();
 				return false;
 			}
 			var result = obj.val().match(/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/);
@@ -242,7 +250,8 @@ $(function() {
 			shellnow.html("<img src='"+PUBLIC+"/skin/images/jdt.gif' style='padding:35px 0 0 180px;' />");
 			//
 			$.post(URL+"/missPwd", {
-				email: obj.val()
+				email: obj.val(), 
+				verify:validateCode.val()
 			}, 
 			function(data){
 				if ( data.indexOf("sendOK") >= 0 ) {

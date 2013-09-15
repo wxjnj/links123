@@ -53,12 +53,32 @@
 
 	<include file="Home:Contorls:footer" />
 	
+	<style type="text/css">
+		#pop_box		{ padding:0px; }
+		.div_email				{ margin:0px; padding:30px 0px 0px 70px; }
+		.div_email .item			{ width:100%; height:40px; }
+		.div_email .item label	{ float:left; display:inline-block; text-align:right; width:150px; height:40px; }
+		.div_email .item .email	{  float:left; width:150px; }
+		.div_email .item .yzm	{ float:left; border:1px solid #ccc; width:60px; height:25px; }
+		.div_email .item img	{ margin-left:3px; }
+		.div_email .div_btn		{ text-align:center; margin:0px; width:100%; height:30px; }
+		.div_email .div_btn input	{ width:70px; height:30px; }
+		.div_email .div_btn .btn_cancel		{ margin-left:10px; }
+		
+		.box_f0f0f0             { border:1px solid #999; border-radius:3px; padding:4px 7px; 
+                          background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fefefe ), color-stop(1, #e5e5e5)); }
+	</style>
 	<div id="pop_box">
 		<div class="div_email">
-			请输入您的注册邮箱：<input type="text" class="email" /><br /><br />
+			<div class="item">
+				<label>请输入您的注册邮箱：</label><input type="text" class="email" />
+			</div>
+			<div class="item">
+				<label>请输入验证码：</label><input type="text" id="validateCode" name="verify" class="yzm"><img src="/Verify" />
+			</div>
 			<div class="div_btn">
-				<input type="button" class="btn_sub_email" value=" 确 定 " />&nbsp;
-				<input type="button" class="btn_cancel" value=" 取 消 " />
+				<input type="button" class="box_f0f0f0 btn_sub_email" value=" 确 定 " />
+				<input type="button" class="box_f0f0f0 btn_cancel" value=" 取 消 " />
 			</div>
 			<br />&nbsp;
 		</div>
