@@ -62,6 +62,19 @@ class DemoAction extends CommonAction {
 		}
 		cookie(md5('schedule_list'), $schedule_list);
 		
+		//热门音乐
+		
+		$songList = $this->getDayhotMusic();
+		shuffle($songList['top']);
+		shuffle($songList['fair']);
+		$songTopList = array_chunk($songList['top'], 2, true);
+		$songTopList = $songTopList[0];
+		$songFairList = array_chunk($songList['fair'], 20, true);
+		$songFairList = $songFairList[0];
+		
+		$this->assign('songTopList', $songTopList);
+		$this->assign('songFairList', $songFairList);
+		
 		$this->getHeaderInfo();
 		$this->display();
 	}

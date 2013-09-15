@@ -123,7 +123,7 @@
 				<div class="zld" id="J_ZldList">
 					<form action="{:U('Link/index')}?mod=myarea" id="J_MyAreaForm" target="_blank" method="post"><input type="hidden" name="url" value="" /></form>
 					<ul id="J_sortable">
-					<volist name="_SESSION['myarea_sort']" id="areaid">
+						<volist name="_SESSION['myarea_sort']" id="areaid">
 						<if condition="$_SESSION['arealist'][$areaid]['id'] neq ''">
 							<li id="{$_SESSION['arealist'][$areaid].id}" url="{:U('Link/index')}?mod=myarea&url={$_SESSION['arealist'][$areaid].url}" data-id="{$_SESSION['arealist'][$areaid].id}" data-url="{$_SESSION['arealist'][$areaid].url}"><span class="nm" ><i class="mask"></i><b>{$_SESSION['arealist'][$areaid]['web_name']}</b></span><span class="ctl"><i class="mask"></i></span></li>
 						</if>
@@ -235,26 +235,25 @@
 							<div class="box-hd">
 								<span class="del"></span>
 								<span class="edit"></span>
-								<h2>每周音乐专辑推荐</h2>
+								<h2>热门音乐推荐</h2>
 							</div>
 							<div class="box-bd">
 								<div class="music">
 									<div class="top-mv">
 										<ul>
+										<volist name="songTopList" id="song">
 											<li class="first">
-												<p class="img"><img src="__PUBLIC__/Demo/upload/01.jpg" alt="" /></p>
-												<p class="nm"><a href="#">你比从前快乐你比从前快乐</a></p>
+												<p class="img"><img src="{$song.img}" alt="" /></p>
+												<p class="nm"><a href="#" data-url="{$song.url}" title="{$song.sname}">{$song.author} - {$song.sname}</a></p>
 											</li>
-											<li>
-												<p class="img"><img src="__PUBLIC__/Demo/upload/01.jpg" alt="" /></p>
-												<p class="nm"><a href="#">你比从前快乐你比从前快乐</a></p>
-											</li>
+										</volist>
 										</ul>
 									</div>
 									<div class="hot-music">
 										<ul>
-											<li><a href="#">容祖儿 - 快乐最快</a></li>
-											<li class="odd"><a href="#">何洁 - 那一天【老公的春天片尾曲】</a></li>
+										<volist name="songFairList" id="song">
+											<li><a href="#" data-url="{$song.url}" title="{$song.sname}">{$song.author} - {$song.sname}</a></li>
+										</volist>
 										</ul>
 									</div>
 								</div><!--.music end-->
