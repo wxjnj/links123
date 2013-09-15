@@ -57,36 +57,24 @@
 	<div id="container">
 		<div class="skins">
 			<ul class="skins-style">
-				<li data-id="1">
-					<p><img src="http://www.links123.cn/Public/Index/imgs/skins/wood/wood.png" alt="" /></p>
-				</li>
-				<li data-id="2">
-					<p><img src="http://www.links123.cn/Public/Index/imgs/skins/wood/wood.png" alt="" /></p>
-				</li>
-				<li data-id="3">
-					<p><img src="http://www.links123.cn/Public/Index/imgs/skins/wood/wood.png" alt="" /></p>
-				</li>
+				<volist name="skinCategory" id="vo">
+					<li data-id="{$vo.categoryId}"><p><img src="{$vo.categoryImg}" alt="" /></p></li>
+				</volist>
 			</ul>
 			<dl class="skins-all">
-				<dd class="sa1">
-					<ul>
-						<li data-bg="" data-id="1">
-							<p><img src="http://www.links123.cn/Public/Index/imgs/skins/wood/icon-skin001.png" alt="" /></p>
-						</li>
-						<li data-bg="" data-id="2">
-							<p><img src="http://www.links123.cn/Public/Index/imgs/skins/wood/icon-skin001.png" alt="" /></p>
-						</li>
-						<li data-bg="" data-id="3">
-							<p><img src="http://www.links123.cn/Public/Index/imgs/skins/wood/icon-skin001.png" alt="" /></p>
-						</li>
-						<li data-bg="" data-id="4">
-							<p><img src="http://www.links123.cn/Public/Index/imgs/skins/wood/icon-skin001.png" alt="" /></p>
-						</li>
-						<li data-bg="" data-id="5">
-							<p><img src="http://www.links123.cn/Public/Index/imgs/skins/wood/icon-skin001.png" alt="" /></p>
-						</li>
-					</ul>
-				</dd>
+				<volist name="skinList" id="vo" key="k">
+					<dd class="sa{$k}">
+						<ul>
+							<volist name="vo" id="skin">
+								<li data-bg="{$skin.skin}" data-id="{$skin.skinId}" <if condition="$skin.skinId eq $skinId">class="added"</if>>
+									<p><img src="{$skin.smallSkin}" alt="" /></p>
+									<s></s>
+									<p class="imgb"><img class="imgb" src="{$skin.middleSkin}" /></p>
+								</li>
+							</volist>
+						</ul>
+					</dd>
+				</volist>
 			</dl>
 		</div>
 		<div class="container-inner">
@@ -196,7 +184,7 @@
 									<ul>
 									<volist name="schedule_list" key="i" id="schedule">
 									<li class='<if condition="$i eq 1">first</if> task{$schedule.id}' data-id="{$schedule.id}">
-											<span class="sp">取消日程</span>
+											<if condition="$i eq 1 AND $schedule.mid eq 0"><else /><span class="sp">取消日程</span></if>
 											<div class="info">
 												<span data-d='{$schedule.datetime|date="m月d日",###}' class="d"><input type="text" value='{$schedule.datetime|date="m月d日",###}' /></span>
 												<span class="s"> - </span>
@@ -278,10 +266,12 @@
 								<div class="pics" id="J_ScrollBox">
 									<ul class="items">
 										<li><img src="__PUBLIC__/Demo/upload/02.jpg" alt="" width="300" /></li>
-										<li><img src="__PUBLIC__/Demo/upload/02.jpg" alt="" width="300" /></li>
-										<li><img src="__PUBLIC__/Demo/upload/02.jpg" alt="" width="300" /></li>
-										<li><img src="__PUBLIC__/Demo/upload/02.jpg" alt="" width="300" /></li>
-										<li><img src="__PUBLIC__/Demo/upload/02.jpg" alt="" width="300" /></li>
+										<li><img src="__PUBLIC__/Demo/upload/03.jpg" alt="" width="300" /></li>
+										<li><img src="__PUBLIC__/Demo/upload/04.jpg" alt="" width="300" /></li>
+										<li><img src="__PUBLIC__/Demo/upload/05.jpg" alt="" width="300" /></li>
+										<li><img src="__PUBLIC__/Demo/upload/06.jpg" alt="" width="300" /></li>
+										<li><img src="__PUBLIC__/Demo/upload/07.jpg" alt="" width="300" /></li>
+										<li><img src="__PUBLIC__/Demo/upload/08.jpg" alt="" width="300" /></li>
 									</ul>
 								</div><!--.pics end-->
 							</div>
