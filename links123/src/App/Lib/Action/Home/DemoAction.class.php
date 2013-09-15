@@ -31,7 +31,25 @@ class DemoAction extends CommonAction {
 			$memberModel = M("Member");
 			$mbrNow = $memberModel->where(array('id' => $user_id))->find();
 			$_SESSION['myarea_sort'] = $mbrNow['myarea_sort'] ? explode(',', $mbrNow['myarea_sort']) : '';
+			
+			$skinId = session('skinId');
+			if (!$skinId) {
+				$skinId = cookie('skinId');
+			}
+		} else {
+			
+			$skinId = cookie('skinId');
 		}
+		
+		//快捷皮肤
+		
+		$skins = $this->getSkins();
+		
+		$this->assign("skinId", $skinId);
+		$this->assign("skin", $skins['skin'][$skinId]);
+		$this->assign("skinList", $skins['list']);
+		$this->assign("skinCategory", $skins['category']);
+		
 		if ($user_id || !$_SESSION['arealist']) {	
 			$areaList = $myareaModel->where(array('mid' => $user_id))->select();
 			
@@ -235,7 +253,7 @@ class DemoAction extends CommonAction {
 				
 				$scheduleModel = M("Schedule");
 				
-				if (false === $scheduleModel->where(array('mid' => $user_id))->save(array('status' => 1))) {
+				if (false === $scheduleModel->where(array('mid' => $user_id, 'id' => $id))->save(array('status' => 1))) {
 						
 					$result = 0;
 				}
