@@ -48,19 +48,19 @@ class DemoAction extends CommonAction {
 			$_SESSION['myarea_sort'] = array_keys($_SESSION['arealist']);
 		}
 	
-// 		var_dump($_SESSION['myarea_sort']);
-// 		var_dump($_SESSION['arealist']);
 		//日程表
 		if ($user_id) {
 			
 			$schedule_list = $scheduleModel->where(array('mid' => $user_id))->select();
 		} else {
+			
 			$schedule_list = cookie(md5('schedule_list'));
-			if (!$schedule_list) {
+			if (!$schedule_list[0]) {
 				$schedule_list = $scheduleModel->where(array('mid' => 0))->select();
 			}
 		}
 		cookie(md5('schedule_list'), $schedule_list);
+		$this->assign('schedule_list', $schedule_list);
 		
 		//热门音乐
 		
@@ -74,6 +74,25 @@ class DemoAction extends CommonAction {
 		
 		$this->assign('songTopList', $songTopList);
 		$this->assign('songFairList', $songFairList);
+		
+		//TED 发现
+		$ted_list = S('ted_list');
+		if (!$ted_list) {
+			
+			$linksModel = M("Links");
+			$ted_ids = '124,143,144,155,158,166,171';	//TODO 放到后台管理
+			$result = $linksModel->where('id in ('.$ted_ids.')')->limit(5)->select();
+			
+			$ted_list = array();
+			foreach ($result as $value) {
+				
+				$ted_list[$value['id']] = array('id' => $value['id'], 'title' => $value['title'], 'link_cn_img' => $value['link_cn_img']);
+			}
+			S('ted_list', $ted_list);
+		}
+		$this->assign('ted_list', $ted_list);
+		
+		//图片精选
 		
 		$this->getHeaderInfo();
 		$this->display();

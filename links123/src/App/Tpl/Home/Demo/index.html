@@ -194,22 +194,16 @@
 							<div class="box-bd">
 								<div class="schedule">
 									<ul>
-										<li class="first task1" class="first" data-id="1">
+									<volist name="schedule_list" key="i" id="schedule">
+									<li class='<if condition="$i eq 1">first</if> task{$schedule.id}' data-id="{$schedule.id}">
 											<span class="sp">取消日程</span>
 											<div class="info">
-												<span data-d="2013-8-30" class="d"><input type="text" value="2013年8月30日" /></span>
+												<span data-d="{$schedule.datetime}" class="d"><input type="text" value="{$schedule.datetime}" /></span>
 												<span class="s"> - </span>
-												<span class="t"><input type="text" value="与客户见面与客户见面与客户见面与客户见面" /></span>
+												<span class="t"><input type="text" value="{$schedule.content}" /></span>
 											</div>
 										</li>
-										<li class="task2" data-id="2">
-											<span class="sp">取消日程</span>
-											<div class="info">
-												<span data-d="2013-8-30" class="d"><input type="text" value="2013年8月30日" /></span>
-												<span class="s"> - </span>
-												<span class="t"><input type="text" value="与客户见面与客户见面与客户见面与客户见面" /></span>
-											</div>
-										</li>
+									</volist>
 									</ul>
 								</div><!--.schedule end-->
 							</div>
