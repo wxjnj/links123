@@ -545,7 +545,7 @@ input:focus{ outline: 0; }
 	padding: 3px 0;
 	vertical-align: middle;
 }
-.schedule li .d input{ width: 90px; }
+.schedule li .d input{ width: 70px; }
 .schedule li .t input{
 	width: 340px;
 	padding: 3px 5px;

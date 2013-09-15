@@ -344,7 +344,7 @@ var Schedule = {
 		dayNamesMin: ['日', '一', '二', '三', '四', '五', '六'],
 		dayStatus: '设置 DD 为一周起始',
 		dateStatus: '选择 m月 d日, DD',
-		dateFormat: 'yy年mm月dd日',
+		dateFormat: 'mm月dd日',
 		firstDay: 1,
 		initStatus: '请选择日期',
 		isRTL: false
@@ -363,17 +363,27 @@ var Schedule = {
 			$(this).removeClass('on');
 			self.Save(this);
 		});
-		obj.find('.sp').on('click', function(){
+		$(document).on('click', '#J_Schedule li .sp', function(){
 			self.Del(this);
 		});
 		obj.find('.new').on('click', function(){
 			if(User.CheckLogin()){
 				var hl = self.Create();
-				obj.find('ul').prepend(hl);
+				var ul = obj.find('ul');
+				ul.find('li').removeClass('first');
+				ul.prepend(hl);
 				self.BindDatePicker();
 				$('.task0').find('.t input')[0].focus(); //hl能取到值但无法选中
 			}
 			return false;
+		});
+		$(document).on('keydown', '#J_Schedule .t input', function(event){
+			if (event.keyCode == 13) {
+				$(this).blur();
+			}
+		});
+		obj.find('input[name="name"],input[name="url"]').on('keydown', function(event){
+			
 		});
 	},
 	BindDatePicker: function(){
@@ -407,7 +417,7 @@ var Schedule = {
 		return str;
 	},
 	Create: function(){
-		var now = this.GetDateFormat(new Date(), 'YYYY年MM月DD日');
+		var now = this.GetDateFormat(new Date(), 'MM月DD日');
 		var hl = '';
 		hl = hl + '<li class="first task0" class="first" data-id="0">';
 		hl = hl + '	<span class="sp">取消日程</span>';
@@ -418,9 +428,6 @@ var Schedule = {
 		hl = hl + '	</div>';
 		hl = hl + '</li>';
 		return hl;
-	},
-	Add: function(){
-
 	},
 	Save: function(el){
 		var obj = $(el).closest('li');
