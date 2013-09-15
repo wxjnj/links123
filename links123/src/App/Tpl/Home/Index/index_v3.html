@@ -21,7 +21,7 @@
 		};
 	</script>
 </head>
-<body <if condition="$skin">style="background-image:url({$skin})"</if>>
+<body>
 
 	<div id="header">
 		<div class="header-inner">
@@ -56,7 +56,7 @@
 			</div>
 		</div>
 	</div><!--#header end-->
-	<div id="container">
+	<div id="container" <if condition="$skin">style="background-image:url({$skin})"</if>>
 		<div class="skins">
 			<ul class="skins-style">
 				<volist name="skinCategory" id="vo">
