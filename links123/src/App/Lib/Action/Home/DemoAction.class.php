@@ -77,6 +77,12 @@ class DemoAction extends CommonAction {
 				$schedule_list = $scheduleModel->where(array('mid' => 0, 'status' => 0))->select();
 			}
 		}
+		
+		if (!$schedule_list[0]['datetime']) {
+			$schedule_list[0]['datetime'] = time();
+			$schedule_list[0]['content'] = '快来创建第一个日程';
+		}
+		
 		cookie(md5('schedule_list'), $schedule_list);
 		$this->assign('schedule_list', $schedule_list);
 		

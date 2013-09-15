@@ -184,7 +184,7 @@
 									<ul>
 									<volist name="schedule_list" key="i" id="schedule">
 									<li class='<if condition="$i eq 1">first</if> task{$schedule.id}' data-id="{$schedule.id}">
-											<span class="sp">取消日程</span>
+											<if condition="$i eq 1 AND $schedule.mid eq 0"><else /><span class="sp">取消日程</span></if>
 											<div class="info">
 												<span data-d='{$schedule.datetime|date="m月d日",###}' class="d"><input type="text" value='{$schedule.datetime|date="m月d日",###}' /></span>
 												<span class="s"> - </span>
