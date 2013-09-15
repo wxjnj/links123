@@ -82,20 +82,20 @@ class PublicAction extends BaseAction {
         		$where['level'] = 2;
         		$where['status'] = 1;
         		$where['group_id'] = $value['id'];
-        		
+
         		$group[$k]['menu'] = $node->where($where)->field('id, name, group_id, title')->order('sort ASC')->select();
-        		
+
         		foreach ($group[$k]['menu'] as $key => $module) {
         			if (isset($accessList[strtoupper(GROUP_NAME)][strtoupper($module['name'])]) || isset($uid)) {
         				$group[$k]['menu'][$key]['access'] = 1;
         			}
         		}
         	}
-        	
+
         	$_SESSION['menu'.$uid]	= $group;
         	$tag = $this->_get('tag');
         	$menuTag = !empty($tag) ? $tag : 1;
-        	
+
             $this->assign('menuTag', $menuTag);
             $this->assign('menu', $group);
         }
@@ -142,7 +142,7 @@ class PublicAction extends BaseAction {
             $this->redirect('Index/index');
         }
     }
-	
+
 	/**
 	 * @desc 首页,如果通过认证跳转到首页
 	 * @see PublicAction::index()
@@ -179,7 +179,7 @@ class PublicAction extends BaseAction {
     		$account = $this->_post('account');
     		$password = $this->_post('password');
     		$verify = $this->_post('verify');
-    		
+
 	        if(empty($account)) {
 	            $this->error('帐号必须！');
 	            exit(0);
@@ -192,19 +192,19 @@ class PublicAction extends BaseAction {
 	            $this->error('验证码必须！');
 	            exit(0);
 	        }
-	        
+
 	        if(session('verify') != md5(strtoupper($verify))) {
 	        	$this->error('验证码错误！');
 	        }
-	        
+
 	        // 支持使用绑定帐号登录
 	        $map['account'] = $account;
 	        $map["status"] = array('gt',0);
-	        
+
 	        import('@.ORG.RBAC');
 	        $authInfo = RBAC::authenticate($map);
 	        //使用用户名、密码和状态的方式进行认证
-	        
+
 	        if(false === $authInfo) {
 	            $this->error('帐号不存在或已禁用！');
 	        }else {
@@ -216,7 +216,7 @@ class PublicAction extends BaseAction {
 	            $_SESSION['loginUserName'] = $authInfo['nickname'];
 	            $_SESSION['lastLoginTime'] = $authInfo['last_login_time'];
 	            $_SESSION['login_count'] = $authInfo['login_count'];
-	            if($authInfo['account'] == 'admin') {
+	            if($authInfo['account'] == 'geekhome') {
 	                $_SESSION[C('ADMIN_AUTH_KEY')] = true;
 	            }
 	            //使用cookie过期时间来控制后台登陆的过期时间
@@ -227,7 +227,7 @@ class PublicAction extends BaseAction {
 	            $data['last_login_time'] = time();
 	            $data['login_count'] = array('exp','login_count+1');
 	            $data['last_login_ip'] = get_client_ip();
-	            
+
 	            $User = M('User');
 	            $User->save($data);
 	            // 缓存访问权限
@@ -236,7 +236,7 @@ class PublicAction extends BaseAction {
 	        }
     	}
     }
-    
+
 	/**
 	 * @desc 修改密码
 	 * @see PublicAction::changePwd()
@@ -253,13 +253,13 @@ class PublicAction extends BaseAction {
         	$this->error('两次密码输入不正确！');
         	exit(0);
         }
-        
+
         if(md5(strtoupper($verify)) != session('verify')) {
             $this->error('验证码错误！');
             exit(0);
         }
-        
-        $map['password'] = pwdHash($oldpassword); 
+
+        $map['password'] = pwdHash($oldpassword);
         if(isset($accout)) {
             $map['account'] = $accout;
         } elseif(isset($_SESSION[C('USER_AUTH_KEY')])) {
@@ -288,11 +288,11 @@ class PublicAction extends BaseAction {
     	$this->display();
     	return;
     }
-     
+
 	/**
 	 * @desc 验证码
      * @author Lee UPDATE 2013-08-27
-	 */           
+	 */
     public function verify() {
     	$type = $this->_get('type');
     	$type = isset($type) ? $type : 'gif';
@@ -317,14 +317,14 @@ class PublicAction extends BaseAction {
             $this->error('资料修改失败!');
         }
     }
-    
+
 	/**
 	 * @desc 上传图片
 	 * @see PublicAction::uploadPic()
 	 */
     public function uploadPic() {
     	$folder = $this->_param('folder');
-    	
+
     	import("@.ORG.UploadFile");
     	$upload = new UploadFile();
     	//设置上传文件大小
@@ -351,7 +351,7 @@ class PublicAction extends BaseAction {
     		echo $idNow.'|'.$uploadList[0]['savename'];
     	}
     }
-    
+
 	/**
 	 * @desc 上传附件
 	 * @see PublicAction::uploadAtt()
@@ -391,7 +391,7 @@ class PublicAction extends BaseAction {
     		echo $idNow.'|'.$uploadList[0]['savename'].'|'.$size;
     	}
     }
-    
+
 	/**
 	 * @desc 备份
 	 * @see PublicAction::data2sql()
@@ -423,7 +423,7 @@ class PublicAction extends BaseAction {
     	$tabledump .= "\n";
     	return $tabledump;
     }
-    
+
 	/**
 	 * @desc 自动备份
 	 * @see PublicAction::autobackup()
@@ -450,7 +450,7 @@ class PublicAction extends BaseAction {
     		"-- 备份时间: ".date('Y年m月d日 H:i')."\n".
     		"--\n\n\n".
     		$sqldump;
-    			
+
     		// 保存到服务器
     		if($filename != "") {
     			@$fp = fopen($filename, "w+");
@@ -476,7 +476,7 @@ class PublicAction extends BaseAction {
     		echo "数据表没有任何内容";
     	}
     }
-    
+
 	/**
 	 * @desc 清空缓存
 	 * @see PublicAction::clearCache()
@@ -514,7 +514,7 @@ class PublicAction extends BaseAction {
     		echo "<span style='color:blue'>dir</span>&nbsp;&nbsp;".$path." <span style='color:red'>clear faild!</span><br />";
     	}
     }
-    
+
 	/**
 	 * @desc 读取excel
 	 * @see PublicAction::read_excel()
@@ -598,7 +598,7 @@ class PublicAction extends BaseAction {
     	}
     	echo "excel文件导入已完成";
     }
-    
+
     // 直达标签分类
     /*
     public function apartTag(){
@@ -608,7 +608,7 @@ class PublicAction extends BaseAction {
     	$list = $model->where('id>=400000')->order('id')->limit(100000)->select();
     	$cnt = 0;
     	foreach ($list as &$value) {
-			if ( preg_match($pattern, $value['tag']) ) { 
+			if ( preg_match($pattern, $value['tag']) ) {
 				$model->where('id='.$value['id'])->setField('cn_tag', 1);
 				$cnt++;
 			}
