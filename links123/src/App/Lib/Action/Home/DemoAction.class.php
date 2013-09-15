@@ -120,7 +120,14 @@ class DemoAction extends CommonAction {
 				
 			$now = time();
 			
-			$datetime = $datetime ? strtotime($datetime) : $now;
+			if ($datetime) {
+				
+				$datetime = str_replace(array('月','日'), '-', $datetime);
+				
+				$datetime = strtotime('2013-' . $datetime);
+				
+				$datetime = $datetime ? $datetime : $now;
+			}
 		
 			$saveData = array(
 					'mid' => $user_id,
