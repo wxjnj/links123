@@ -510,28 +510,55 @@ input:focus{ outline: 0; }
 	height: 0;
 	clear: both;
 }
-.music dl{
+.music .top-mv{}
+.music .top-mv ul{
+	*zoom: 1;
+}
+.music .top-mv ul:after{
+	content: '\0020';
+	display: block;
+	height: 0;
+	clear: both;
+}
+.music .top-mv ul li{
+	display: inline;
 	float: left;
-	width: 110px;
+	width: 140px;
+	margin-left: 20px;
 }
-.music dl dt{
-	margin-bottom: 15px;
+.music .top-mv ul li.first{
+	margin-left: 0;
 }
-.music dl dt img{
-	width: 100%;
+.music .top-mv ul li img{
+	width: 140px;
 }
-.music dl dd li{
-	cursor: pointer;
-	padding: 2px 0;
-	height: 25px;
-	line-height: 25px;
+.music .hot-music{
+	margin-top: 20px;
+}
+.music .hot-music ul{
+	*zoom: 1;
+}
+.music .hot-music ul:after{
+	content: '\0020';
+	display: block;
+	height: 0;
+	clear: both;
+}
+.music .hot-music li{
+	border-bottom: 1px solid #e1e0e2;
+	float: left;
+	width: 140px;
+	padding: 5px 0 5px 0;
+	height: 22px;
 	overflow: hidden;
+	line-height: 22px;
 }
-.music dl dd li:hover{
+.music .hot-music li.odd{
+	margin-left: 20px;
+}
+.music .top-mv .nm a:hover,
+.music .hot-music li a:hover{
 	text-decoration: underline;
-}
-.music dl dd li.first{
-	border: 0;
 }
 /*pics*/
 .pics{
@@ -1102,9 +1129,3 @@ input:focus{ outline: 0; }
 .extra .extra-col1{ width: 525px; }
 .extra .extra-col2{ width: 300px; }
 .extra .extra-col3{ width: 300px; }
-.music dl.music-col1{
-	margin-right: 20px;
-}
-.music dl{
-	width: 140px;
-}
