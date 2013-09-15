@@ -560,9 +560,87 @@ input:focus{ outline: 0; }
 }
 .schedule .info{}
 /*find*/
-.find{
+.find{}
+.find ul{
+	*zoom: 1;
+	margin-left: -9px;
+}
+.find ul:after{
+	content: '\0020';
+	display: block;
+	height: 0;
+	clear: both;
+}
+.find li{
+	display: inline;
+	float: left;
+	height: 132px;
+	position: relative;
+	margin: 0 0 9px 9px;
+	width: 169px;
+	overflow: hidden;
+}
+.find li img{
+	height: 132px;
+	width: 169px;
+}
+.find li.more a{
+	display: block;
+	border: 1px dotted #b9c2c4;
+	height: 130px;
+	text-align: center;
+	line-height: 131px;
+	width: 167px;
+	filter:alpha(opacity=60);
+	-moz-opacity: 0.6;
+	-khtml-opacity: 0.6;
+	opacity: 0.6;
+}
+.find li.more a:hover{
+	text-decoration: none;
+	filter:alpha(opacity=100);
+	-moz-opacity: 1;
+	-khtml-opacity: 1;
+	opacity: 1;
+}
+.find li .mask,
+.find li .info,
+.find li .go{
+	height: 132px;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 170px;
+	display: none;
+}
+.find li .go{
+	display: block;
+	text-indent: -999px;
+	overflow: hidden;
+}
+.find li.hover .mask{
 	background: #000;
-	height: 280px;
+	display: block;
+	filter:alpha(opacity=75);
+	-moz-opacity: 0.75;
+	-khtml-opacity: 0.75;
+	opacity: 0.75;
+}
+.find li.hover .info{
+	display: block;
+	padding: 30px 20px 0 30px;
+	width: 120px;
+	height: 102px;
+}
+.find li.hover .info .p1{
+	color: #fff;
+	font-size: 16px;
+	font-weight: bold;
+}
+.find li.hover .info .p2{
+	font-size: 14px;
+	color: #dfdfdf;
+	font-weight: bold;
 }
 /*music*/
 .music{

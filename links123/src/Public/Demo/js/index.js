@@ -31,6 +31,11 @@ $(function() {
 		loop: true,
 		autoplay: true
 	});
+
+	// 发现
+	$('#J_Find .find li').on('hover', function(){
+		$(this).toggleClass('hover');
+	});
 	
 });
 
