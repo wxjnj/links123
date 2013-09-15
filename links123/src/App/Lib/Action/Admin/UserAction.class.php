@@ -64,7 +64,7 @@ class UserAction extends CommonAction {
                 //添加权限
                 $this->addRole($result);
                 $this->success('用户添加成功！');
-            }else{
+            } else {
                 $this->error('用户添加失败！');
             }
         }
@@ -98,7 +98,7 @@ class UserAction extends CommonAction {
         $User->password	= md5($password);
         $User->id =	$id;
         $result	= $User->save();
-        false !== $result ? $this->success("密码修改为$password") : $this->error('重置密码失败！');
+        false !== $result ? $this->success("密码修改为  $password") : $this->error('重置密码失败！');
         exit(0);
     }
 }
