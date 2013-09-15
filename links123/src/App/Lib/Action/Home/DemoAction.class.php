@@ -51,12 +51,12 @@ class DemoAction extends CommonAction {
 		//日程表
 		if ($user_id) {
 			
-			$schedule_list = $scheduleModel->where(array('mid' => $user_id))->select();
+			$schedule_list = $scheduleModel->where(array('mid' => $user_id, 'status' => 0))->select();
 		} else {
 			
 			$schedule_list = cookie(md5('schedule_list'));
 			if (!$schedule_list[0]) {
-				$schedule_list = $scheduleModel->where(array('mid' => 0))->select();
+				$schedule_list = $scheduleModel->where(array('mid' => 0, 'status' => 0))->select();
 			}
 		}
 		cookie(md5('schedule_list'), $schedule_list);
