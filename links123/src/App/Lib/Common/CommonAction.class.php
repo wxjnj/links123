@@ -353,8 +353,11 @@ class CommonAction extends Action {
     	$songItemList = S('songItemList');
     	
     	if (!$songItemList) {
+    		
 	    	$playUrl = 'http://play.baidu.com/?__methodName=mboxCtrl.playSong&__argsValue=';
 	    	$url = 'http://music.baidu.com/top/dayhot';
+	    	$imgUploadsPath = realpath('./Public/Uploads/Others/');
+	    	$imgUrlHost = '/Public/Uploads/Others/';
 	    	
 	    	$str = file_get_contents($url);
 	    	
@@ -367,8 +370,19 @@ class CommonAction extends Action {
 	    		$data_songitem = str_replace('&quot;', '', $this->tp_match('/data-songitem = \'(.*?)\'/is', $value, 1));
 	    		$data_songitem = $this->tp_match('/{songItem:{sid:(.*?),author:(.*?),sname:(.*?)}}/is', $data_songitem, -1);
 	    	
-	    		$songItem['img'] = $this->tp_match('/<img(.*?)src="(.*?)"(.*?)\/>/is', $value, 2);
 	    		$songItem['sid'] = $data_songitem[1];
+	    		$songItem['img'] = '';
+	    		
+	    		$img = $this->tp_match('/<img(.*?)src="(.*?)"(.*?)\/>/is', $value, 2);
+	    		if ($img) {
+		    		$imgFile =$songItem['sid'] . '.' . end(explode('.', $img));
+		    		
+		    		if (!file_exists($imgUploadsPath . '/' . $imgFile)) {
+		    			file_put_contents($imgUploadsPath . '/' . $imgFile, file_get_contents($img));
+		    		}
+		    		
+		    		$songItem['img'] = $imgUrlHost . $imgFile;
+	    		}
 	    		$songItem['url'] = $playUrl . $songItem['sid'];
 	    		
 	    		$songInfo = json_decode('{"author":"'.$data_songitem[2].'","sname":"'.$data_songitem[3].'"}', true);
