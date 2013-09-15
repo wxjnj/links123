@@ -7,6 +7,7 @@ $(function() {
 	Zld.Init();
 	ZhiDaLan.Init();
 	Schedule.Init();
+	MusicPlayer.Init();
 	HelpMouse.init();
 
 	// 用户菜单
@@ -483,6 +484,27 @@ var Schedule = {
 			}
 		);
 		return false;
+	}
+};
+
+var MusicPlayer = {
+	Init: function(){
+		var self = this;
+		$('#J_Music').find('.top-mv a').on('click', function(){
+			self.Play($(this).data('url'));
+			return false;
+		});
+		$('#J_Music').find('.hot-music a').on('click', function(){
+			self.Play($(this).data('url'));
+			return false;	
+		})
+	},
+	Play: function(url){
+		if(!$('#J_MusicPlayer').size()){
+			$('body').append('<iframe id="J_MusicPlayer" style="display:none;" src='+url+'></iframe>');
+		}else{
+			$('#J_MusicPlayer').attr('src', url);
+		}
 	}
 };
 

@@ -238,7 +238,7 @@
 						</div>
 					</div><!--.extra-col1 end-->
 					<div class="extra-col2">
-						<div class="box box-music">
+						<div class="box box-music" id="J_Music">
 							<div class="box-hd">
 								<span class="del"></span>
 								<span class="edit"></span>
@@ -251,7 +251,7 @@
 										<volist name="songTopList" key="i" id="song">
 											<li <if condition="$i%2 eq 1">class="first"</if>>
 												<p class="img"><img src="{$song.img}" alt="" /></p>
-												<p class="nm"><a href="#" data-url="{$song.url}" title="{$song.sname}">{$song.author} - {$song.sname}</a></p>
+												<p class="nm"><a href="javascript:;" data-url="{$song.url}" title="{$song.sname}">{$song.author} - {$song.sname}</a></p>
 											</li>
 										</volist>
 										</ul>
@@ -259,7 +259,7 @@
 									<div class="hot-music">
 										<ul>
 										<volist name="songFairList" key="i" id="song">
-											<li <if condition="$i%2 neq 1">class="odd"</if>><a href="#" data-url="{$song.url}" title="{$song.sname}">{$song.author} - {$song.sname}</a></li>
+											<li <if condition="$i%2 neq 1">class="odd"</if>><a href="javascript:;" data-url="{$song.url}" title="{$song.sname}">{$song.author} - {$song.sname}</a></li>
 										</volist>
 										</ul>
 									</div>
