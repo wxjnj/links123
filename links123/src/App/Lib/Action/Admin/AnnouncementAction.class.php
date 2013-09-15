@@ -10,13 +10,13 @@
 class AnnouncementAction extends CommonAction {
 
 	protected function _filter(&$map, &$param){
-		$requesttitle=$this->_request("title");
-		$requeststatus=$this->_request("status");
+		$requesttitle = $this->_request("title");
+		$requeststatus = $this->_request("status");
 		if (isset($requesttitle)) {
 			$title = $requesttitle;
 		}
 		if (!empty($title)) {
-			$map['title']=array('like',"%".$title."%");
+			$map['title'] = array('like', "%".$title."%");
 		}
 		$this->assign('title',$title);
 		$param['title'] = $title;
@@ -38,11 +38,11 @@ class AnnouncementAction extends CommonAction {
 		$map = array();
 		$param = array();
 		if (method_exists($this,'_filter')) {
-			$this->_filter($map,$param);
+			$this->_filter($map, $param);
 		}
 		$model = D("AnnouncementView");
 		if (!empty($model)) {
-			$this->_list($model,$map,$param,'id',false);
+			$this->_list($model, $map, $param, 'id', false);
 		}
 		$this->display();
 		return;
@@ -82,8 +82,8 @@ class AnnouncementAction extends CommonAction {
 	 * @see AnnouncementAction::checkPost()
 	 */
 	protected function checkPost() {
-        $_POST['title']=stripslashes(trim($_POST['title']));
-		$_POST['content']=stripslashes(trim($_POST['content']));
+        $_POST['title'] = stripslashes(trim($_POST['title']));
+		$_POST['content'] = stripslashes(trim($_POST['content']));
 	}
 	
 	/**
@@ -91,7 +91,7 @@ class AnnouncementAction extends CommonAction {
 	 * @see AnnouncementAction::edit()
 	 */
 	function edit() {
-		$model =M("Announcement");
+		$model = M("Announcement");
 		$vo =$model->getById($this->_request("id"));
 		$this->assign('vo',$vo);
 		$this->display();
@@ -126,8 +126,9 @@ class AnnouncementAction extends CommonAction {
 	public function delete() {
 		$model = D("Announcement");
 		if (!empty($model)) {
-			if (isset($_REQUEST['id'])) {
-				$condition = array('id' => array('in',explode(',',$this->_request("id"))));
+			$id = $this->_param('id');
+			if (isset($id)) {
+				$condition = array('id' => array('in',explode(',', $id)));
 				$list = $model->where($condition)->setField('status', - 1);
 				if ($list !== false) {
 					$this->success('删除成功！',cookie('_currentUrl_'));
@@ -147,7 +148,7 @@ class AnnouncementAction extends CommonAction {
 	public function foreverdelete() {
 		$model = D("Announcement");
 		if (!empty($model)) {
-			$id = $this->_request("id");
+			$id = $this->_param("id");
 			if (isset($id)) {
 				$condition = array();
 				$condition['id'] = array('in',explode(',', $id ));
@@ -173,7 +174,7 @@ class AnnouncementAction extends CommonAction {
 		$model = M("Announcement");
 		$map = array();
 		$map['status'] = 1;
-		$sortId=$this->_get("sortId");
+		$sortId = $this->_get("sortId");
 		if (!empty($sortId)) {
 			$map['id'] = array('in', $sortId);
 		}
@@ -186,7 +187,7 @@ class AnnouncementAction extends CommonAction {
 				}
 			}
 		}
-		$sortList = $model->where($map)->field('content',true)->order('sort asc,create_time desc')->select();
+		$sortList = $model->where($map)->field('content', true)->order('sort ASC,create_time DESC')->select();
 		foreach ($sortList as &$value) {
 			$value['txt_show'] = $value['title'];
 		}

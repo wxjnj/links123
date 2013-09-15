@@ -4,7 +4,7 @@
  * @package Admin
  * @desc 后台管理-留言板
  * @author Lee UPDATE 2013-08-20
- * @version 0.0.1
+ * @version 1.0
  */
 
 class SuggestionAction extends CommonAction {
@@ -17,21 +17,25 @@ class SuggestionAction extends CommonAction {
 	 * @return array    
 	 */    
 	protected function _filter(&$map, &$param){
-		if (isset($_REQUEST['suggest']) && !empty($_REQUEST['suggest'])) {
-			$map['suggest'] = array('like', "%".$_REQUEST['suggest']."%");
-			$this->assign("suggest", $_REQUEST['suggest']);
-			$param['suggest'] = $_REQUEST['suggest'];
+		$suggest = $this->_param('suggest');
+		$type = $this->_param('type');
+		$status = $this->_param('status');
+		
+		if (!empty($suggest)) {
+			$map['suggest'] = array('like', "%".$suggest."%");
+			$this->assign("suggest", $suggest);
+			$param['suggest'] = $suggest;
 		}
         
-		if (isset($_REQUEST['type']) && $_REQUEST['type']!='') {
-			$map['type'] = $_REQUEST['type'];
-			$this->assign('type', $_REQUEST['type']);
-			$param['type'] = $_REQUEST['type'];
+		if (!empty($type)) {
+			$map['type'] = $type;
+			$this->assign('type', $type);
+			$param['type'] = $type;
 		}
         
         $map['status'] = array('egt', 0);
-		if (isset($_REQUEST['status']) && $_REQUEST['status']!='') {
-			$map['status'] = $_REQUEST['status'];
+		if (!empty($status)) {
+			$map['status'] = $status;
 			$this->assign('status', $map['status']);
 			$param['status'] = $map['status'];
 		}
@@ -61,15 +65,18 @@ class SuggestionAction extends CommonAction {
      * @author Lee UPDATE 2013-08-20  
 	 */
 	function edit() {
+		$id = $this->_param('id');
 		$model = M("Suggestion");
               
-        if (empty($_REQUEST["id"])) {
-           $this->error('参数不能为空!'); 
+        if (empty($id)) {
+           $this->error('参数不能为空!');
+           exit(0); 
         }
 
-		$vo = $model->getById($_REQUEST["id"]);
+		$vo = $model->getById($id);
         if (empty($vo)) {
-            $this->error('参数错误!'); 
+            $this->error('参数错误!');
+            exit(0);
         }
         
 		$vo["create_time"] = date('Y-m-d H:i:s', $vo["create_time"]);
@@ -83,15 +90,18 @@ class SuggestionAction extends CommonAction {
      * @author Lee UPDATE 2013-08-26 
 	 */
 	function update() {        
+		$status = $this->_param('status');
+		$pid = $this->_param('pid');
+		$suggest = $this->_param('suggest');
+		
         $model = D("Suggestion");
-
-        $data['status'] = !empty($_REQUEST['status']) ? $_REQUEST['status'] : 0;
+        $data['status'] = !empty($status) ? $status : 0;
         
         if (false === $model->create()) {
             $this->error($model->getError());
         }
-        if (false !== $model->where('id='.$_REQUEST['pid'])->save($data)) {
-            if (!empty($_REQUEST['suggest'])) {
+        if (false !== $model->where('id = '.$pid)->save($data)) {
+            if (!empty($suggest)) {
                 $model->__set('is_reply', 1);
                 $model->__set('status', 0);
                 $model->__set('create_time', time());
@@ -102,10 +112,10 @@ class SuggestionAction extends CommonAction {
                     $this->assign('jumpUrl',cookie('_currentUrl_'));
                     $this->success('回复成功!');
                 } else {
-                $this->error('回复失败!');
+                	$this->error('回复失败!');
                 }             
             } else {
-            $this->error('回复失败!');
+            	$this->error('回复失败!');
             }   
         } else {
             $this->error('回复失败!');
@@ -117,9 +127,9 @@ class SuggestionAction extends CommonAction {
      * @author Lee UPDATE 2013-08-26 
 	 */     
 	function resume() {
+		$id = $this->_param('id');
 		$model = D("Suggestion");
-        
-		if (false !== $model->where('id='.$_REQUEST['id'])->setField('status', 1)) {
+		if (false !== $model->where('id = '.$id)->setField('status', 1)) {
 			$this->success('状态恢复成功！', cookie('_currentUrl_'));
 		} else {
 			$this->error('状态恢复失败！');
