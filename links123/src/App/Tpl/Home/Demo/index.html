@@ -241,8 +241,8 @@
 								<div class="music">
 									<div class="top-mv">
 										<ul>
-										<volist name="songTopList" id="song">
-											<li class="first">
+										<volist name="songTopList" key="i" id="song">
+											<li <if condition="$i%2 eq 1">class="first"</if>>
 												<p class="img"><img src="{$song.img}" alt="" /></p>
 												<p class="nm"><a href="#" data-url="{$song.url}" title="{$song.sname}">{$song.author} - {$song.sname}</a></p>
 											</li>
@@ -251,8 +251,8 @@
 									</div>
 									<div class="hot-music">
 										<ul>
-										<volist name="songFairList" id="song">
-											<li><a href="#" data-url="{$song.url}" title="{$song.sname}">{$song.author} - {$song.sname}</a></li>
+										<volist name="songFairList" key="i" id="song">
+											<li <if condition="$i%2 neq 1">class="odd"</if>><a href="#" data-url="{$song.url}" title="{$song.sname}">{$song.author} - {$song.sname}</a></li>
 										</volist>
 										</ul>
 									</div>
