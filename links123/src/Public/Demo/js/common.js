@@ -17,6 +17,14 @@ var User = {
 			$(this).attr("src", APP+'Verify?'+(+new Date()));
 		});
 	},
+	CheckLogin: function(){
+		var self = this;
+		if($CONFIG.IsLogin){
+			self.Login('请先登录');
+			return false;
+		}
+		return true;
+	},
 	Reg: function(){
 		var self = this;
 		if(!$('#J_Reg').size()){
@@ -451,6 +459,7 @@ var THL = {
 				|| document.activeElement.tagName == "TEXTAREA" 
 				|| document.activeElement.tagName == "IFRAME"
 				|| document.activeElement.id == "direct_text"
+				|| document.activeElement.id == "search_text"
 				|| document.activeElement.id == "search_text"
 			) {
 				return;

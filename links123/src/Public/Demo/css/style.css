@@ -218,12 +218,6 @@ input:focus{ outline: 0; }
 	margin: 0 auto;
 	position: relative;
 }
-.thl a.on,
-.thl a.on:hover{ color: #d00316; }
-.thl a:hover{
-	color: #fff;
-	text-decoration: underline;
-}
 .thl .ctls{
 	background: #fff;
 	height: 38px;
@@ -249,24 +243,56 @@ input:focus{ outline: 0; }
 	overflow: hidden;
 	border: 0 none;
 }
+.thl .subcate{
+	position: absolute;
+	top: 3px;
+	left: 50px;
+}
 .thl .cate{
 	position: absolute;
 	top: 36px;
 	left: 85px;
 }
+.thl .subcate a:hover{
+	color: #fff;
+	filter:alpha(opacity=60);
+	-moz-opacity: 0.6;
+	-khtml-opacity: 0.6;
+	opacity: 0.6;
+	text-decoration: underline;
+}
+.thl .cate a:hover{
+	filter:alpha(opacity=60);
+	-moz-opacity: 0.6;
+	-khtml-opacity: 0.6;
+	opacity: 0.6;
+	text-decoration: underline;
+}
 .thl .cate-in{ color: #727171; }
-.thl .cate-in a,
-.thl .cate-in a:hover{
+.thl .cate-in a{
 	color: #727171;
 }
-.thl .cate-in a.on,
-.thl .cate-in a.on:hover{
-	color: #d00316;
+.thl .cate-in a:hover{
+	filter:alpha(opacity=60);
+	-moz-opacity: 0.6;
+	-khtml-opacity: 0.6;
+	opacity: 0.6;
 }
-.thl .subcate{
-	position: absolute;
-	top: 3px;
-	left: 50px;
+.thl .cate a.on,
+.thl .cate a.on:hover{
+	color: #d00316;
+	filter:alpha(opacity=100);
+	-moz-opacity: 1;
+	-khtml-opacity: 1;
+	opacity: 1;
+}
+.thl .subcate a.on,
+.thl .subcate a.on:hover{
+	color: #d00316;
+	filter:alpha(opacity=100);
+	-moz-opacity: 1;
+	-khtml-opacity: 1;
+	opacity: 1;
 }
 
 /*zld*/
@@ -341,7 +367,8 @@ input:focus{ outline: 0; }
 /*box*/
 .edit,
 .del,
-.close{
+.close,
+.new{
 	display: block;
 	cursor: pointer;
 	height: 18px;
@@ -353,6 +380,7 @@ input:focus{ outline: 0; }
 }
 .edit{ display: none; } /* TODO skins */
 .del{ display: none; } /* TODO skins */
+.new{}  /* TODO skins */
 .close{
 	background: url(../imgs/sprite.png) -125px -6px no-repeat;
 }
@@ -487,8 +515,44 @@ input:focus{ outline: 0; }
 .schedule li{
 	padding: 5px 0;
 	height: 24px;
-	line-height: 25px;
-	overflow: hidden;
+	line-height: 24px;
+}
+.schedule li .sp,
+.schedule li .d,
+.schedule li .t{
+	cursor: pointer;
+}
+.schedule li .s{
+	padding-right: 5px;
+}
+.schedule li .sp:hover,
+.schedule li .d:hover{
+	text-decoration: underline;
+	filter:alpha(opacity=30);
+	-moz-opacity: 0.3;
+	-khtml-opacity: 0.3;
+	opacity: 0.3;
+}
+.schedule li .d:hover input{
+	text-decoration: underline;
+}
+.schedule li input{
+	background: none;
+	border: 0 none;
+	color: #e1e0e2;
+	height: 18px;
+	line-height: 18px;
+	padding: 3px 0;
+	vertical-align: middle;
+}
+.schedule li .d input{ width: 90px; }
+.schedule li .t input{
+	width: 340px;
+	padding: 3px 5px;
+}
+.schedule li input.on{
+	color: #888889;
+	background: #fff;
 }
 .schedule .sp{
 	float: right;

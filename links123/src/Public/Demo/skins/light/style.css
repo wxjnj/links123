@@ -12,6 +12,7 @@ a:hover{ text-decoration: none; }
 .box .box-hd{ border-top: 1px solid #000; }
 .schedule li{ border-top: 1px solid #000; }
 .music dl dd li{ border-top: 1px solid #000; }
-.edit, .del{ background: url(sprite.png); }
+.edit, .del, .new{ background: url(sprite.png); }
 .edit{ background-position: -6px -6px; }
 .del{ background-position: -37px -6px; }
+.new{ background-position: -66px -6px; }
