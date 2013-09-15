@@ -6,7 +6,13 @@ class EnglishOptionsModel extends CommonModel {
         array("created", "time", 3, "function")
     );
 
-    public function getQuestionOptionList($question_id) {
+    /**
+     * 获取题目选项
+     * @param int $question_id [试题id]
+     * @param boolean $need_rand [是否需要随机打乱选项,默认需要]
+     * @return array [题目选项数组]
+     */
+    public function getQuestionOptionList($question_id, $need_rand = true) {
         $map['question_id'] = $question_id;
         $map['status'] = 1;
         $ret = $this->where($map)->order("`sort`")->select();
@@ -45,12 +51,12 @@ class EnglishOptionsModel extends CommonModel {
             }
             $ret[$key]['content'] = ftrim($value['content']);
         }
-        if ($is_rand) {
+        if ($need_rand && $is_rand) {
             shuffle($ret);
         } else {
-            $ret = array_sort($ret, "sort","asc");
+            $ret = array_sort($ret, "sort", "asc");
         }
-        
+
         return $ret;
     }
 
