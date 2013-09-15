@@ -4,9 +4,9 @@ $(function(){
 		alert('Coming soon...');
 	});
 	$('#J_weather').click(function(){
-//		$.post("/Weather/index", function(data){
-//			$('#J_box_weather').html(data);
-//		}); 
+//      $.post("/Weather/index", function(data){
+//          $('#J_box_weather').html(data);
+//      }); 
 		
 		$.fancybox({
 			href: '#J_box_weather',
@@ -22,7 +22,7 @@ $(function(){
 		return false;
 	});
 	
-    //听音乐 add by tellen 20130906 
+	//听音乐 add by tellen 20130906 
 	var g_music_currentkey = -1;
 	$('#J_music').dblclick(function(){
 		music_box_proc();
@@ -52,7 +52,7 @@ $(function(){
 			$('.music_button').hide();
 			$('.music_button_min').hide();
 			g_music_currentkey = -1;
-	});	
+	}); 
 	$('.music_button_min').click(function(){
 			$('#J_box_music').hide(); 
 		$("#bModal").trigger("click");
@@ -61,75 +61,66 @@ $(function(){
 	});
 	
 	function music_box_proc(){
+		if(-1 == g_music_currentkey){
+			g_music_currentkey = 0;
+		}
+		var musicurl = {
+			1:'http://web.kugou.com/default.html',
+			2:'http://kuang.xiami.com/res/kuang/xiamikuang0709.swf',
+			3:'http://y.qq.com/player/',
+			0:'http://douban.fm/swf/53053/radioplayer.swf'
+		};
+		$.each(musicurl, function(key, value){
+			if (g_music_currentkey == key)  {
+				g_music_currentkey++;
 
-		if(-1 == g_music_currentkey) g_music_currentkey = 0;
-	    var musicurl = {1:'http://web.kugou.com/default.html',
-						2:'http://kuang.xiami.com/res/kuang/xiamikuang0709.swf',
-						3:'http://y.qq.com/player/',
-						0:'http://douban.fm/swf/53053/radioplayer.swf'};
-		
-
-	   $.each(musicurl, function(key, value){
-	   		if (g_music_currentkey == key)  {
-	   			g_music_currentkey++;
-
-	   			g_music_currentkey = g_music_currentkey % 4;
-	   		
-	   			return false;
-	   		}
-	   });
-    	var myposition=[200,10];
-	   //适配不同播放器
-	   switch(g_music_currentkey)
-	   {
-	   	case 0:{//douban
-	   		
-	   		$('#J_music_iframe').attr('width', 450);
-	   		$('#J_music_iframe').attr('height', 170);
-	   			
-	   		myposition = [$(window).height()-300,$(window).width()-580];
-			break;
-	   		}
-		case 2:{//xiami
+				g_music_currentkey = g_music_currentkey % 4;
 			
-			$('#J_music_iframe').attr('width', 530);
-	   		$('#J_music_iframe').attr('height', 250);
-	   			
-	   		myposition = [$(window).height()-280,$(window).width()-680];
-			break;
-	     	}
- 		case 1:{//kugou
- 			
- 			$('#J_music_iframe').attr('width', 320);
-	   		$('#J_music_iframe').attr('height', 150);
-	   		myposition = [$(window).height()-300,$(window).width()-450];
-			break;
- 		}
-		 case 3:{//qq
-		
- 			$('#J_music_iframe').attr('width', 360);
-	   		$('#J_music_iframe').attr('height', 380);
-	   		myposition = [$(window).height()-450,$(window).width()-550];
-	   		//myposition = [400,300];
-			break;
-     	  }
-	   }
+				return false;
+			}
+		});
+		var myposition=[200,10];
+		//适配不同播放器
+		switch(g_music_currentkey){
+			case 0:{//douban
+				$('#J_music_iframe').attr('width', 450);
+				$('#J_music_iframe').attr('height', 170);
+					
+				myposition = [$(window).height()-300,$(window).width()-580];
+				break;
+			}
+			case 2:{//xiami
+				$('#J_music_iframe').attr('width', 530);
+				$('#J_music_iframe').attr('height', 250);
+					
+				myposition = [$(window).height()-280,$(window).width()-680];
+				break;
+			}
+			case 1:{//kugou
+				$('#J_music_iframe').attr('width', 320);
+				$('#J_music_iframe').attr('height', 150);
+				myposition = [$(window).height()-300,$(window).width()-450];
+				break;
+			}
+			case 3:{//qq
+				$('#J_music_iframe').attr('width', 360);
+				$('#J_music_iframe').attr('height', 380);
+				myposition = [$(window).height()-450,$(window).width()-550];
+				//myposition = [400,300];
+				break;
+			}
+		}
 
 		$('#J_box_music').bPopup({
-                  	position :myposition,
-                }); 
-     	$('#J_music_iframe').attr('src', musicurl[g_music_currentkey]);
+			position :myposition,
+			modal : false
+		}); 
+		$('#J_music_iframe').attr('src', musicurl[g_music_currentkey]);
 
 		$('.music_button').show();
 		$('.music_button_min').show();
 	}
 	
-	
-	$('.liao').click(function(){
-
-		alert('Coming soon...');
-	});
-
 	//fancybox esc
 	$(document).on('keyup', function(ev){
 		if(ev.keyCode == 27){
@@ -795,7 +786,7 @@ $(function(){
 					dictStr += '<table class="gt-baf-table"><tbody>';
 					
 					var dictSubArr = '';
-					var dictType = 0;	//0为词语，1为句子
+					var dictType = 0;   //0为词语，1为句子
 					if (typeof dictArr[1] != "undefined") {
 						dictSubArr = dictArr[1];
 					} else if (typeof dictArr[0] != "undefined") {

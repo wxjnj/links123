@@ -286,7 +286,7 @@ var User = {
 			hl = hl + '	</div>';
 			hl = hl + '	<div class="lkd-bd">';
 			hl = hl + '		<div class="tabs">';
-			hl = hl + '			<a class="on" href="javascript:;">通过电子邮件</a><a href="javascript:;">通过其他方式</a>';
+			hl = hl + '			<a class="on" href="javascript:;">通过电子邮件</a><a style="display:none;" href="javascript:;">通过其他方式</a>';
 			hl = hl + '		</div>';
 			hl = hl + '		<div class="ct">';
 			hl = hl + '			<form action="">';
