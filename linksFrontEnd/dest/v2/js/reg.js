@@ -240,6 +240,10 @@ $(function() {
 			  }
 		});
 		//
+		$(document).on('click', '.div_email .verifyImg', function(){
+			var timeNow = new Date().getTime();
+			$(this).attr('src', '/Verify?' + timeNow);
+		});
 		$(document).on('click', '.div_btn .btn_sub_email', function(){
 			//
 			var container = $(this).parent(".div_btn").parent();
