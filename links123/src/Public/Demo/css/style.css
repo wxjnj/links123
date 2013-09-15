@@ -133,7 +133,7 @@ input:focus{ outline: 0; }
 	height: 18px;
 	line-height: 18px;
 	padding: 5px;
-	width: 260px;
+	width: 290px;
 }
 .zdl .ipton{ color: #999; }
 .zdl .btn{
@@ -148,7 +148,7 @@ input:focus{ outline: 0; }
 	width: 20px;
 	position: absolute;
 	top: 14px;
-	left: 243px;
+	left: 273px;
 }
 /*nav*/
 .nav{
