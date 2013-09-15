@@ -3,10 +3,10 @@ return array(
     'URL_MODEL'                 =>  2,										// 如果你的环境不支持PATHINFO 请设置为3
     
     'DB_TYPE'                   =>  'mysqli',
-	'DB_HOST'                   =>  '112.124.15.96',
+	'DB_HOST'                   =>  '127.0.0.1',
 	'DB_NAME'                   =>  'linkstest',
-	'DB_USER'                   =>  'root',
-	'DB_PWD'                    =>  'linksWsX7066',	
+	'DB_USER'                   =>  'linkstest',
+	'DB_PWD'                    =>  'linkstest7066',	
     'DB_PORT'                   =>  '3306',
     'DB_PREFIX'                 =>  'lnk_',
 
@@ -34,7 +34,7 @@ return array(
 		'/^homepage\/search\/(.*)$/' 					=>	'Homepage/Search/index?search_type=:1',
 	),
 	'TMPL_PARSE_STRING'         =>array(
-		'__STATIC__'            => 'http://a.links123.loc:8080', // 更改默认的/Public 替换规则
+		'__STATIC__'            => 'http://a.links123.net', // 更改默认的/Public 替换规则
 	),
     "VIDEO_UPLOAD_PATH" =>  "/English/Video" //英语角视频存储路径
 );
