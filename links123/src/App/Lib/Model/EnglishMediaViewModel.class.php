@@ -8,7 +8,7 @@
 class EnglishMediaViewModel extends ViewModel {
 
     public $viewFields = array(
-        'englishMedia' => array('id', 'name', 'voice', 'pattern','recommend','object','subject', 'difficulty', 'play_type', 'priority_type', 'play_code', 'media_source_url', 'media_thumb_img', 'special_recommend', 'created', 'updated', 'status', '_type' => 'LEFT'),
+        'englishMedia' => array('id', 'name', 'voice', 'pattern','recommend','ted','object','subject', 'difficulty', 'play_type', 'priority_type', 'play_code', 'media_source_url', 'media_thumb_img', 'special_recommend', 'created', 'updated', 'status', '_type' => 'LEFT'),
         'englishObject' => array('name' => "object_name", '_on' => 'englishMedia.object=englishObject.id', '_type' => 'LEFT'),
         'englishLevel' => array('name' => "level_name", '_on' => 'englishMedia.level=englishLevel.id', '_type' => 'LEFT'),
         'englishMediaSubject' => array('name' => "subject_name", '_on' => 'englishMedia.subject=englishMediaSubject.id', '_type' => 'LEFT'),

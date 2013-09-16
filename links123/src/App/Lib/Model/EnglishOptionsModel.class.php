@@ -3,7 +3,8 @@
 class EnglishOptionsModel extends CommonModel {
 
     protected $_auto = array(
-        array("created", "time", 3, "function")
+        array("created", "time", 1, "function"),
+        array("updated", "time", 3, "function")
     );
 
     /**

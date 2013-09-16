@@ -16,7 +16,7 @@ class EnglishMediaModel extends CommonModel {
     );
     protected $_auto = array(
         array("updated", "time", 3, "function"),
-        array("created", "time", 3, "function")
+        array("created", "time", 1, "function")
     );
 
     /**

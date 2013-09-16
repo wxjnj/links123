@@ -11,6 +11,7 @@
 	<link rel="stylesheet" href="__PUBLIC__/IndexV3/skins/dark/style.css" />
 	<link rel="stylesheet" href="__PUBLIC__/skin/fancybox/jquery.fancybox.css" />
 	<link rel="stylesheet" href="__PUBLIC__/IndexV3/css/app.css" />
+	<link rel="stylesheet" href="__PUBLIC__/IndexV3/css/jquery.autocomplete.css" />
 	<link rel="stylesheet" href="about:blank" id="J_Skins" />
 	<script>
 		var $CONFIG = {
@@ -27,7 +28,7 @@
 		<div class="header-inner">
 			<div class="zdl">
 				<form id="frm_drct" method="post" action="__APP__/Link/direct/" target="_blank">
-					<input class="ipt ipton" type="text" name="tag" id="direct_text" txt="{$directTip}" value="{$directTip}" autocomplete="on" />
+					<input class="ipt ipton" type="text" name="tag" id="direct_text" txt="{$directTip}" value="{$directTip}" autocomplete="off" />
 					<input class="btn J_direct_submit" type="submit" value="提交" />
 				</form>
 			</div>
@@ -307,6 +308,34 @@
 	<script src="__PUBLIC__/IndexV3/js/index.js?2013091601"></script>
 	<script src="__PUBLIC__/IndexV3/js/common.js"></script>
 	<script src="__PUBLIC__/IndexV3/js/widget.js"></script>
+	<script src="__PUBLIC__/IndexV3/js/jquery.autocomplete.js"></script>
+	
+	<script language="javascript">
+	$(function() {
+		$("#direct_text").focus(function(){
+			if($(this).val() == '输入新浪或sina，或xinlang，试试看！') {
+				$(this).val('');
+			}
+		}).blur(function(){
+			if($(this).val() == '') {
+				$(this).val('输入新浪或sina，或xinlang，试试看！');
+			}
+		});
+		
+		$("#direct_text").autocomplete({
+			url: "{:U('Home/Index/tag')}",
+			showResult: function(value, data) {
+				return '<span style="color:black">' + value + '</span>';
+			},
+			onItemSelect: function(item) {
+			    if (item.data.length) {
+			        text = item.data.join(', ');
+			    }
+			    //$("#hidden_id").val(text);
+			}
+		});
+	});
+	</script>
 	
 </body>
 </html>

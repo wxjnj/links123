@@ -73,12 +73,19 @@
                         <label><input type="radio" name="recommend" value="0" <eq name='vo["recommend"]' value='0'>checked="checked"</eq> />否</label>&nbsp;&nbsp;
                         特别推荐：
                         <label><input type="radio" name="special_recommend" value="1" <eq name='vo["special_recommend"]' value='1'>checked="checked"</eq> />是</label>&nbsp;&nbsp;
-                        <label><input type="radio" name="special_recommend" value="0" <eq name='vo["special_recommend"]' value='0'>checked="checked"</eq> />否</label>
+                        <label><input type="radio" name="special_recommend" value="0" <eq name='vo["special_recommend"]' value='0'>checked="checked"</eq> />否</label>&nbsp;&nbsp;
+                        TED：
+                        <label><input type="radio" name="ted" value="1" <neq name='vo["ted"]' value='0'>checked="checked"</neq> />是</label>&nbsp;&nbsp;
+                        <label><input type="radio" name="ted" value="0" <eq name='vo["ted"]' value='0'>checked="checked"</eq> />否</label>
                     </td>
                 </tr>
                 <tr>
                     <td class="tRight" >媒体来源地址：</td>
                     <td class="tLeft" ><input type="text" class="bLeftRequire large" name="media_source_url" value='{$vo.media_source_url}' /></td>
+                </tr>
+                <tr>
+                    <td class="tRight" >媒体本地地址：</td>
+                    <td class="tLeft" ><lable>{:C("VIDEO_UPLOAD_PATH")}</lable><input type="text" class="xhuge" name="local_path" value='{$vo.local_path}' /></td>
                 </tr>
                 <tr>
                     <td class="tRight" >媒体缩略图地址：</td>

@@ -113,6 +113,15 @@
                         <input class="checkbox" type="checkbox" value="0" name="special_recommend" <eq name="param['special_recommend']" value="0">checked="checked"</eq>>
                         否
                     </label>&nbsp;&nbsp;
+                    TED：
+                    <label>
+                        <input class="checkbox" type="checkbox" value="1" name="ted" <eq name="param['ted']" value="1">checked="checked"</eq>>
+                        是
+                    </label>&nbsp;
+                    <label>
+                        <input class="checkbox" type="checkbox" value="0" name="ted" <eq name="param['ted']" value="0">checked="checked"</eq>>
+                        否
+                    </label>&nbsp;&nbsp;
                     状态：
                     <label>
                         <input class="checkbox" type="checkbox" value="1" name="status" <if condition="$param['status'] eq 1">checked="checked"</if>>
@@ -134,6 +143,15 @@
                     <label>
                         <input class="checkbox" type="checkbox" value="0" name="thumb" <eq name="param['thumb']" value="0">checked="checked"</eq>>
                         无
+                    </label>&nbsp;&nbsp;
+                    本地视频：
+                    <label>
+                        <input class="checkbox" type="checkbox" value="1" name="has_local_path" <eq name="param['has_local_path']" value="1">checked="checked"</eq>>
+                        有
+                    </label>&nbsp;
+                    <label>
+                        <input class="checkbox" type="checkbox" value="0" name="has_local_path" <eq name="param['has_local_path']" value="0">checked="checked"</eq>>
+                        无
                     </label>
                 </div>
             </div>
@@ -141,7 +159,7 @@
 
 
         <div class="list" >
-            <html:list id="checkList" name="category" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,name:名称:edit,created|toDateShort:发布时间,voice|getVoiceName:语音,target|getTargetName:训练,pattern|getPatternName:形式,object_name|default=无:科目:selectObject|media_id,level_name|default=无:等级:selectLevel|media_id,subject_name|default=无:专题:selectSubject|media_id,difficulty|getMediaDifficultyName:难度,recommend|getMediaRecommendYorN:推荐:recommend|media_id,special_recommend|getYorN:特别推荐:special_recommend|media_id,status|getStatus:状态" actionlist="edit:编辑" />
+            <html:list id="checkList" name="category" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,name:名称:edit,created|toDateShort:发布时间,voice|getVoiceName:语音,target|getTargetName:训练,pattern|getPatternName:形式,object_name|default=无:科目:selectObject|media_id,level_name|default=无:等级:selectLevel|media_id,subject_name|default=无:专题:selectSubject|media_id,difficulty|getMediaDifficultyName:难度,recommend|getMediaRecommendYorN:推荐:recommend|media_id,special_recommend|getYorN:特别推荐:special_recommend|media_id,ted|getMediaRecommendYorN:TED:ted|media_id,status|getStatus:状态" actionlist="edit:编辑" />
         </div>
 
         <div class="page">{$page}</div>
@@ -217,6 +235,7 @@
             }
             $(".operate [name='recommend']").not("[value='" + $(this).val() + "']").removeAttr("checked");
         })
+        
         $("#J_exportCancelBtn").click(function(){
             $("#export_dialog").window("close");
         })
@@ -334,6 +353,32 @@
                             $("a[href=\"javascript:special_recommend('" + id + "')\"]").text("否");
                         } else {
                             $("a[href=\"javascript:recommend('" + id + "')\"]").text("是");
+                        }
+                    }
+                }
+                $("#load_dialog").window("close");
+            }, "json");
+        } else {
+            alert("非法操作！");
+        }
+    }
+     /**
+    * 
+
+     * @param {type} id
+     * @returns {void}    
+     */
+    
+    function ted(id){
+        if (id > 0) {
+            $("#load_dialog").window("open");
+            $.post("{:U('Admin/EnglishMedia/setTed')}", {id: id}, function(msg) {
+                if (msg) {
+                    if (msg.status) {
+                        if (msg.data == 0) {
+                            $("a[href=\"javascript:ted('" + id + "')\"]").text("否");
+                        } else {
+                            $("a[href=\"javascript:ted('" + id + "')\"]").text("是");
                         }
                     }
                 }
