@@ -31,6 +31,9 @@
             <label style='float: left; margin: 5px 5px 0px 0px;'>特别推荐:</label>
             <label style='float: left; margin: 5px 5px 0px 0px;'>是<input style='float: left; margin: 3px 2px 0px 0px;' type='checkbox' value="1" name="special_recommend"/></label>
             <label style='float: left; margin: 5px 5px 0px 0px;'>否<input style='float: left; margin: 3px 2px 0px 0px;' type='checkbox' value="0" name="special_recommend"/></label>
+            <label style='float: left; margin: 5px 5px 0px 0px;'>TED:</label>
+            <label style='float: left; margin: 5px 5px 0px 0px;'>是<input style='float: left; margin: 3px 2px 0px 0px;' type='checkbox' value="1" name="ted"/></label>
+            <label style='float: left; margin: 5px 5px 0px 0px;'>否<input style='float: left; margin: 3px 2px 0px 0px;' type='checkbox' value="0" name="ted"/></label>
             <html:imageBtn name="groupAct" click="groupAct()" style="hMargin fLeft" />
         </div>
 
@@ -109,6 +112,15 @@
                         <input class="checkbox" type="checkbox" value="0" name="special_recommend" <eq name="param['special_recommend']" value="0">checked="checked"</eq>>
                         否
                     </label>&nbsp;&nbsp;
+                    TED：
+                    <label>
+                        <input class="checkbox" type="checkbox" value="1" name="ted" <eq name="param['ted']" value="1">checked="checked"</eq>>
+                        是
+                    </label>&nbsp;
+                    <label>
+                        <input class="checkbox" type="checkbox" value="0" name="ted" <eq name="param['ted']" value="0">checked="checked"</eq>>
+                        否
+                    </label>&nbsp;&nbsp;
                     状态：
                     <label>
                         <input class="checkbox" type="checkbox" value="1" name="status" <if condition="$param['status'] eq 1">checked="checked"</if>>
@@ -130,13 +142,22 @@
                     <label>
                         <input class="checkbox" type="checkbox" value="0" name="thumb" <eq name="param['thumb']" value="0">checked="checked"</eq>>
                         无
+                    </label>&nbsp;&nbsp;
+                    本地视频：
+                    <label>
+                        <input class="checkbox" type="checkbox" value="1" name="has_local_path" <eq name="param['has_local_path']" value="1">checked="checked"</eq>>
+                        有
+                    </label>&nbsp;
+                    <label>
+                        <input class="checkbox" type="checkbox" value="0" name="has_local_path" <eq name="param['has_local_path']" value="0">checked="checked"</eq>>
+                        无
                     </label>
                 </div>
             </div>
         </form>
 
         <div class="list" >
-            <html:list id="checkList" name="category" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,name:名称:edit,object_name|default=无:科目:selectObject,level_name|default=无:等级:selectLevel,subject_name|default=无:专题:selectSubject,difficulty|getMediaDifficultyName:难度,recommend|getMediaRecommendYorN:推荐:recommend,special_recommend|getYorN:特别推荐:special_recommend,voice|getVoiceName:语音,pattern|getMediaPatternName:格式类型,play_type|getMediaPlayTypeName:播放类型,priority_type|getMediaPriorityTypeName:优先播放:setMediaPriorityType,media_source_url|getLinkToHrefWithOutHttp:来源地址,created|toDate:发布时间,status|getStatus:状态" actionlist="edit:编辑" />
+            <html:list id="checkList" name="category" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,name:名称:edit,object_name|default=无:科目:selectObject,level_name|default=无:等级:selectLevel,subject_name|default=无:专题:selectSubject,difficulty|getMediaDifficultyName:难度,recommend|getMediaRecommendYorN:推荐:recommend,special_recommend|getYorN:特别推荐:special_recommend,ted|getMediaRecommendYorN:TED:ted,voice|getVoiceName:语音,pattern|getMediaPatternName:格式类型,play_type|getMediaPlayTypeName:播放类型,priority_type|getMediaPriorityTypeName:优先播放:setMediaPriorityType,media_source_url|getLinkToHrefWithOutHttp:来源地址,created|toDate:发布时间,status|getStatus:状态" actionlist="edit:编辑" />
         </div>
 
         <div class="page">{$page}</div>
@@ -183,6 +204,9 @@
             }
             $(".operate [name='recommend']").not("[value='" + $(this).val() + "']").removeAttr("checked");
         })
+        $(".operate input[name='ted']").click(function() {
+            $(".operate [name='ted']").not("[value='" + $(this).val() + "']").removeAttr("checked");
+        })
 
         /* 直达 */
         $(".page input").keydown(function(event) {
@@ -203,13 +227,14 @@
         var targetSubject = $("#selectSubjectSource").val();
         var targetRecommend = $("input[name='recommend']").filter(":checked").val();
         var targetSpecialRecommend = $("input[name='special_recommend']").filter(":checked").val();
-        if (parseInt(targetSubject) == -1 && typeof targetRecommend=="undefined" && typeof targetSpecialRecommend=="undefined") {
+         var targetTed = $("input[name='ted']").filter(":checked").val();
+        if (parseInt(targetSubject) == -1 && typeof targetRecommend=="undefined" && typeof targetSpecialRecommend=="undefined"&& typeof targetTed=="undefined") {
             alert("请选择需要设置成的参数！");
             return false;
         }
         if (confirm("注意！确认对所选项进行批量操作？")) {
             $("#load_dialog").window("open");
-            $.post("__URL__/groupSet", {id: id, targetSubject: targetSubject, targetRecommend: targetRecommend, targetSpecialRecommend: targetSpecialRecommend},
+            $.post("__URL__/groupSet", {id: id, targetSubject: targetSubject, targetRecommend: targetRecommend, targetSpecialRecommend: targetSpecialRecommend,targetTed:targetTed},
             function(msg) {
                 if (msg) {
                     alert(msg.info);
@@ -264,6 +289,32 @@
                             $("a[href=\"javascript:special_recommend('" + id + "')\"]").text("否");
                         } else {
                             $("a[href=\"javascript:recommend('" + id + "')\"]").text("是");
+                        }
+                    }
+                }
+                $("#load_dialog").window("close");
+            }, "json");
+        } else {
+            alert("非法操作！");
+        }
+    }
+    /**
+    * 
+
+     * @param {type} id
+     * @returns {void}    
+     */
+    
+    function ted(id){
+        if (id > 0) {
+            $("#load_dialog").window("open");
+            $.post("__URL__/setTed", {id: id}, function(msg) {
+                if (msg) {
+                    if (msg.status) {
+                        if (msg.data == 0) {
+                            $("a[href=\"javascript:ted('" + id + "')\"]").text("否");
+                        } else {
+                            $("a[href=\"javascript:ted('" + id + "')\"]").text("是");
                         }
                     }
                 }

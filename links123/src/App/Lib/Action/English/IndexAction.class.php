@@ -210,7 +210,7 @@ class IndexAction extends EnglishAction {
 
         //判断是否为about.com视频
         $isAboutVideo = 0;
-        if (strpos($question['media_source_url'], 'http://video.about.com') !== FALSE) {
+        if (strpos($question['media_source_url'], 'http://video.about.com') !== FALSE && $question['target'] == 1) {
             $isAboutVideo = 1;
 
             //about.com视频修改自动播放为false
@@ -546,7 +546,7 @@ class IndexAction extends EnglishAction {
 
             //判断是否为about.com视频
             $isAboutVideo = 0;
-            if (strpos($ret['question']['media_source_url'], 'http://video.about.com') !== FALSE) {
+            if (strpos($ret['question']['media_source_url'], 'http://video.about.com') !== FALSE && $ret['question']['target']==1) {
                 $isAboutVideo = 1;
 
                 //about.com视频修改自动播放为false
@@ -1278,7 +1278,7 @@ class IndexAction extends EnglishAction {
 
             //判断是否为about.com视频
             $isAboutVideo = 0;
-            if (strpos($ret['question']['media_source_url'], 'http://video.about.com') !== FALSE) {
+            if (strpos($ret['question']['media_source_url'], 'http://video.about.com') !== FALSE && $ret['question']['target'] == 1) {
                 $isAboutVideo = 1;
             }
 
