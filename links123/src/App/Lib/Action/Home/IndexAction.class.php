@@ -953,8 +953,8 @@ class IndexAction extends CommonAction {
 		if ($this->isAjax() && $area_list) {
 				
 			//去除排序中最后一位的空值
-			unset($area_list[count($area_list)-1]);
-				
+			unset($area_list[array_search('', $area_list)]);
+			
 			$_SESSION['myarea_sort'] = $area_list;
 				
 			$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);

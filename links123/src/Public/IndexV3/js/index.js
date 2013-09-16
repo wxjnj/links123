@@ -28,7 +28,7 @@ $(function() {
 		triggersWrapCls: 'pg',
 		panels: '.items li',
 		effect: 'scrollLeft',
-		interval: 2,
+		interval: 8,
 		loop: true,
 		autoplay: true
 	});
