@@ -953,8 +953,8 @@ class IndexAction extends CommonAction {
 		if ($this->isAjax() && $area_list) {
 				
 			//去除排序中最后一位的空值
-			unset($area_list[count($area_list)-1]);
-				
+			unset($area_list[array_search('', $area_list)]);
+			
 			$_SESSION['myarea_sort'] = $area_list;
 				
 			$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
@@ -973,5 +973,18 @@ class IndexAction extends CommonAction {
 		}
 	
 		echo $result;
+	}
+	
+	public function tag() {
+		$key = $this->_param('q');
+		$dl = M('directLinks');
+		$condition['tag'] = array('like', '%' . $key . '%');
+		$data = $dl->where($condition)->select();
+		$val = '';
+		foreach ($data as $row) {
+			$val .= $row['tag'].'|'.$row['id']."\n";
+		}
+		echo $val;
+		exit;
 	}
 }
