@@ -12,6 +12,9 @@ $(function() {
         'width':'125px'
     };
     showMsg("施工中 . . .",style , 5000);
+    $("#J_mediaLocalPlayButton").click(function(){
+        
+    })
     //说力，上一句事件
     $("#J_preSentenceButton img").click(function() {
         $('#Links123Player')[0].prev();

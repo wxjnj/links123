@@ -187,6 +187,9 @@ class EnglishQuestionModel extends CommonModel {
         if ($viewType == 3) {
             $ret['recommend'] = $recommend;
         }
+        if($ret['locahl_path']){
+            $ret['media_local_path'] = C("VIDEO_UPLOAD_PATH").$ret['local_path'];
+        }
         $ret['record'] = $englishRecordModel->getQuestionUserRecord($ret['id']);
         $ret['record']['untested_num'] = $englishRecordModel->getUserUntestedQuestionNum($object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern);
         $ret['content'] = ftrim($ret['content']);
@@ -459,6 +462,9 @@ class EnglishQuestionModel extends CommonModel {
     	}
 
     	$ret['id'] = $ret['question_id'];
+        if($ret['locahl_path']){
+            $ret['media_local_path'] = C("VIDEO_UPLOAD_PATH").$ret['local_path'];
+        }
     
     	$ret['record'] = $englishRecordModel->getQuestionUserRecord($ret['id']);
     	$ret['record']['untested_num'] = $englishRecordModel->getUserUntestedQuestionNum($object, $level, '', '', '', $voice, $target, $pattern);

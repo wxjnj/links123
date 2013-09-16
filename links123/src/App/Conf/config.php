@@ -1,12 +1,12 @@
 <?php
 return array(
-    'URL_MODEL'                 =>  2,										// 如果你的环境不支持PATHINFO 请设置为3
+    'URL_MODEL'                 =>  1,										// 如果你的环境不支持PATHINFO 请设置为3
     
     'DB_TYPE'                   =>  'mysqli',
 	'DB_HOST'                   =>  '127.0.0.1',
-	'DB_NAME'                   =>  'linkstest',
-	'DB_USER'                   =>  'linkstest',
-	'DB_PWD'                    =>  'linkstest7066',	
+	'DB_NAME'                   =>  'links123',
+	'DB_USER'                   =>  'root',
+	'DB_PWD'                    =>  '',	
     'DB_PORT'                   =>  '3306',
     'DB_PREFIX'                 =>  'lnk_',
 
@@ -36,5 +36,5 @@ return array(
 	'TMPL_PARSE_STRING'         =>array(
 		'__STATIC__'            => 'http://a.links123.net', // 更改默认的/Public 替换规则
 	),
-    "VIDEO_UPLOAD_PATH" =>  "/English/Video" //英语角视频存储路径
+    "VIDEO_UPLOAD_PATH" =>  "http://121.199.26.124:8081/" //英语角视频存储路径
 );
