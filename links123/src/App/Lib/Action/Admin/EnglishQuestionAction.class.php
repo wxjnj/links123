@@ -54,6 +54,15 @@ class EnglishQuestionAction extends CommonAction {
             }
             $param['recommend'] = intval($_REQUEST['recommend']);
         }
+        //是否TED
+        if (isset($_REQUEST['ted'])) {
+            if (intval($_REQUEST['ted']) == 0) {
+                $map['englishMedia.ted'] = 0;
+            } else {
+                $map['englishMedia.ted'] = array("neq", 0);
+            }
+            $param['ted'] = intval($_REQUEST['ted']);
+        }
         //视频特别推荐
         if (isset($_REQUEST['special_recommend'])) {
             $map['englishMedia.special_recommend'] = intval($_REQUEST['special_recommend']);
@@ -64,6 +73,15 @@ class EnglishQuestionAction extends CommonAction {
                 $map['englishQuestion.status'] = intval($_REQUEST['status']);
             }
             $param['status'] = intval($_REQUEST['status']);
+        }
+        //是否存在本地视频文件
+        if (isset($_REQUEST['has_local_path'])) {
+            if (intval($_REQUEST['has_local_path']) == 0) {
+                $map['englishMedia.local_path'] = array("eq", "");
+            } else {
+                $map['englishMedia.local_path'] = array("neq", "");
+            }
+            $param['has_local_path'] = intval($_REQUEST['has_local_path']);
         }
         //试题创建时间
         if (isset($_REQUEST['created']) && strtotime($_REQUEST['created'])) {
@@ -460,6 +478,14 @@ class EnglishQuestionAction extends CommonAction {
                 $recommendNameList[$value['name']] = intval($value['id']);
             }
             $recommendSort = intval($recommendList[0]['sort']) + 1;
+
+            //TED列表备用
+            $tedModel=D("EnglishMediaTed");
+            $tedList = $tedModel->field("id,name,`sort`")->order("`sort` desc")->select();
+            foreach ($tedList as $value) {
+                $tedNameList[$value['name']] = intval($value['id']);
+            }
+            $tedSort = intval($recommendList[0]['sort']) + 1;
             $model->startTrans();
             //
             //循环读取所有表,表迭代器
@@ -494,18 +520,20 @@ class EnglishQuestionAction extends CommonAction {
                             } else if ($cell->getColumn() == "I") {
                                 $media_data['special_recommend'] = intval($cell->getCalculatedValue()); //是否特别推荐
                             } else if ($cell->getColumn() == "J") {
-                                $data['media_text_url'] = $media_data['media_source_url'] = ftrim($cell->getCalculatedValue()); //媒体内容地址
+                                $media_data['ted'] = intval($cell->getCalculatedValue()); //是否特别推荐
                             } else if ($cell->getColumn() == "K") {
-                                $data['content'] = ftrim($cell->getCalculatedValue()); //题目内容
+                                $data['media_text_url'] = $media_data['media_source_url'] = ftrim($cell->getCalculatedValue()); //媒体内容地址
                             } else if ($cell->getColumn() == "L") {
-                                $data['answer'] = intval($cell->getCalculatedValue()); //题目答案
+                                $data['content'] = ftrim($cell->getCalculatedValue()); //题目内容
                             } else if ($cell->getColumn() == "M") {
-                                $data['option'][0] = ftrim($cell->getCalculatedValue()); //题目选项一
+                                $data['answer'] = intval($cell->getCalculatedValue()); //题目答案
                             } else if ($cell->getColumn() == "N") {
-                                $data['option'][1] = ftrim($cell->getCalculatedValue()); //题目选项二
+                                $data['option'][0] = ftrim($cell->getCalculatedValue()); //题目选项一
                             } else if ($cell->getColumn() == "O") {
-                                $data['option'][2] = ftrim($cell->getCalculatedValue()); //题目选项三
+                                $data['option'][1] = ftrim($cell->getCalculatedValue()); //题目选项二
                             } else if ($cell->getColumn() == "P") {
+                                $data['option'][2] = ftrim($cell->getCalculatedValue()); //题目选项三
+                            } else if ($cell->getColumn() == "Q") {
                                 $data['option'][3] = ftrim($cell->getCalculatedValue()); //题目选项四
                             }
                         }
@@ -546,6 +574,51 @@ class EnglishQuestionAction extends CommonAction {
                         if ($media_data['special_recommend'] == 1) {
                             $media_data['recommend'] = 1;
                         }
+                        //是推荐
+                        if ($media_data['ted'] == 1) {
+                            $ted_id = 0;
+                            //专题存在
+                            if ($media_data['subject'] > 0) {
+                                $ted_id = $tedNameList[$media_data['subject_name']];
+                                //推荐类存在专题名
+                                if (intval($ted_id) == 0) {
+                                    $ted_data['sort'] = $tedSort;
+                                    $ted_data['name'] = $media_data['subject_name'];
+                                    $ted_data['created'] = $time;
+                                    $ted_data['updated'] = $time;
+                                    $ted_id = $tedModel->add($ted_data);
+                                    if (false === $ted_id) {
+                                        $model->rollback();
+                                        @unlink($dest);
+                                        die(json_encode(array("info" => "导入失败，添加专题名到TED失败！", "status" => false)));
+                                    }
+                                    $tedNameList[$media_data['subject_name']] = $ted_id;
+                                    $tedSort++;
+                                }
+                            } else {
+                                //科目存在
+                                if ($media_data['object'] > 0) {
+                                    $ted_id = $tedNameList[$media_data['object_name']];
+                                    //推荐类存在科目名
+                                    if (intval($ted_id) == 0) {
+                                        $ted_data['sort'] = $tedSort;
+                                        $ted_data['name'] = $media_data['object_name'];
+                                        $ted_data['created'] = $time;
+                                        $ted_data['updated'] = $time;
+                                        $ted_id = $tedModel->add($ted_data);
+                                        if (false === $ted_id) {
+                                            $model->rollback();
+                                            @unlink($dest);
+                                            die(json_encode(array("info" => "导入失败，添加科目名到TED失败！", "status" => false)));
+                                        }
+                                        $tedNameList[$media_data['object_name']] = $ted_id;
+                                        $tedSort++;
+                                    }
+                                }
+                            }
+                            $media_data['ted'] = $ted_id;
+                        }
+                        
                         //是推荐
                         if ($media_data['recommend'] == 1) {
                             $recommend_id = 0;
@@ -590,6 +663,7 @@ class EnglishQuestionAction extends CommonAction {
                             }
                             $media_data['recommend'] = $recommend_id;
                         }
+                        
                         $mediaId = $mediaModel->add($media_data);
                         if (false === $recommend_id) {
                             $model->rollback();

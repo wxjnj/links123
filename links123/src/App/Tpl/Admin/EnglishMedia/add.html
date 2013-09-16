@@ -74,12 +74,19 @@
                         <label><input type="radio" name="recommend" value="0"  checked="checked"/>否</label>&nbsp;&nbsp;
                         特别推荐：
                         <label><input type="radio" name="special_recommend" value="1" />是</label>&nbsp;
-                        <label><input type="radio" name="special_recommend" value="0"  checked="checked"/>否</label>
+                        <label><input type="radio" name="special_recommend" value="0"  checked="checked"/>否</label>&nbsp;&nbsp;
+                        TED：
+                        <label><input type="radio" name="ted" value="1" />是</label>&nbsp;
+                        <label><input type="radio" name="ted" value="0"  checked="checked"/>否</label>
                     </td>
                 </tr>
                 <tr>
                     <td class="tRight" >媒体来源地址：</td>
                     <td class="tLeft" ><input type="text" class="bLeftRequire large" name="media_source_url" value='' /></td>
+                </tr>
+                <tr>
+                    <td class="tRight" >媒体本地地址：</td>
+                    <td class="tLeft" ><lable>{:C("VIDEO_UPLOAD_PATH")}</lable><input type="text" class="xhuge" name="local_path" value='' /></td>
                 </tr>
                 <tr>
                     <td class="tRight" >媒体缩略图地址：</td>
