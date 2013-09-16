@@ -259,7 +259,7 @@ ul.grade li.current span{
 	height:495px;
 	background:url(../images/videobg.png);
 	float:left;
-	margin-top:35px;
+	margin-top:75px;
 	margin-left:30px;
 }
 .red{color:#9d1300;}
@@ -276,7 +276,7 @@ ul.grade li.current span{
 	height: 448px;
 }
 .media_iframe{width: 710px; height: 448px;}
-.rightbutton{ position:absolute;right:0px;top:80px;z-index:0;}
+.rightbutton{ position:absolute;right:0px;top:120px;z-index:0;}
 .rightbutton ul{ list-style:none;}
 .rightbutton ul li{ cursor:pointer; height:50px; margin-bottom:20px; background:url(../images/rightbuttonbg.png) no-repeat;width:75px;color:#ffe3d4;font-weight:bold;font-size:1.25em;line-height:50px;padding-left:8px;}
 .rightbutton ul li:hover{ background:url(../images/rightbuttonbg2.png) no-repeat; }
@@ -477,7 +477,7 @@ UL.tabs LI.current {
 	overflow:hidden;
 	width: 957px;
 	height:150px;
-  -moz-border-radius:8px;
+  	-moz-border-radius:8px;
 	-webkit-border-radius:8px;
 	left:23px;
 	margin: 0 0;
@@ -558,213 +558,29 @@ a.disabled {
     text-align: center;
 }
 
-/* ranklist added by jeanun 2013.08.06 */
-.ranklist{
-	width: 289px;
+.videottl{
+	background: url(../images/videottl.png) 0 0 no-repeat;
+	height: 42px;
+	line-height: 40px;
 	position: absolute;
-	left: -273px;
-	top: 200px;
-	z-index: 999;
-}
-.ranklist .ranklist-hd{}
-.ranklist .ranklist-hd .all,
-.ranklist .ranklist-bd h3,
-.ranklist .sum,
-.ranklist .rl-close,
-.ranklist .rl-open{
-	background: url(../images/ranklist-bg.png) 1000px 1000px no-repeat;
-}
-.ranklist .ranklist-hd{
-	position: relative;
-	height: 21px;
-	width: 273px;
-}
-.ranklist .ranklist-hd a.all{
-	background-position: 0 -59px;
-	background-repeat: no-repeat;
-	display: block;
-	color: #fff;
-	height: 21px;
-	width: 253px;
-	letter-spacing: 0.5em;
-	line-height: 21px;
-	text-decoration: none;
-	padding-left: 24px;
-	font-family: \5FAE\8F6F\96C5\9ED1;
+	width: 766px;
+	top: 33px;
+	font-size: 14px;
 	font-weight: bold;
-}
-.ranklist .ranklist-hd a.all em{ font-style: normal; margin-right: 50px; }
-.ranklist .ranklist-hd a.on{
-	background-position: 0 -85px;
-}
-.ranklist .ranklist-hd ul{
-	border: 2px solid #bf9668;
-	border-width: 0 2px 2px;
-	background: #fff;
-	position: absolute;
-	top: 21px;
-	left: 0;
-	width: 269px;
-	z-index: 2;
-	display: none;
-}
-.ranklist .ranklist-hd ul li a{
-	background: none;
-	color: #333;
-	display: block;
 	text-align: center;
-	padding: 3px 0;
-	text-decoration: none;
+	right: 82px;
 }
-.ranklist .ranklist-hd ul li a.hv{
-	color: #fff;
-	background: #d8c8b8;
+.videottl em{
+	color: #4b2500;
+	font-style: normal;
 }
-.ranklist .ranklist-hd ul li a.cur{
-	color: #fff;
-	background: #b08860;
-}
-.ranklist .ranklist-bd{
-	background: #f7f6f5;
-	border: 2px solid #bf9668;
-	border-width: 0 2px 2px;
-	width: 269px;
-	position: relative;
-}
-.ranklist .ranklist-bd h3{
-	height: 24px;
-	width: 42px;
-	margin: 0;
-	margin-bottom: 5px;
-	padding: 0;
+.videottl a{
+	width: 130px;
+	height: 23px;
+	background: url(../images/videoquickload.png) 0 0 no-repeat;
 	text-indent: -999px;
 	overflow: hidden;
-}
-.ranklist .ranklist-bd .rl-listen{
-	border-bottom: 1px solid #bf9668;
-}
-.ranklist .ranklist-bd .rl-listen,
-.ranklist .ranklist-bd .rl-speak{
-	color: #242424;
-	padding: 15px 9px 15px 15px;
-	height: 150px;
-	overflow: hidden;
-}
-.ranklist .ranklist-bd .rl-listen h3{
-	background-position: 0 0;
-}
-.ranklist .ranklist-bd .rl-speak h3{
-	background-position: -47px 0;
-}
-.ranklist .ranklist-bd ul li{
-	padding: 6px 0;
-	*zoom: 1;
-}
-.ranklist .ranklist-bd ul li:after{
-	content: '\0020';
-	display: block;
-	height: 0;
-	clear: both;
-}
-.ranklist p{
-	font-family: \5FAE\8F6F\96C5\9ED1;
-	font-weight: bold;
-	padding: 0;
-	margin: 0;
-	float: left;
-}
-.ranklist .idx{ width: 40px; text-align: center; }
-.ranklist .idx img{ vertical-align: middle; }
-.ranklist .nm{
-	margin-right: 28px;
-    overflow: hidden;
-    width: 42px;
-}
-.ranklist .sum{
-	background-position: 52px -34px;
-	text-align: right;
-	padding-right: 25px;
-	width: 45px;
-}
-.ranklist .ln{
-	width: 60px;
-	text-align: center;
-}
-.ranklist .rl-close,
-.ranklist .rl-open{
 	position: absolute;
-	width: 16px;
-	height: 54px;
-	text-indent: -999px;
-	overflow: hidden;
-	right: -16px;
-	top: 153px;
-}
-.ranklist .rl-close{ background-position: -241px 0; }
-.ranklist .rl-open{ background-position: right top; }
-
-.rl-speak .coming-tip{
-font-size: 13px;margin-left: 45px;margin-top: 10px;
-}
-
-/*提示框*/
-.autobox-layer,
-.autobox-text .autobox-arr,
-.autobox-hits .autobox-arr,
-.autobox .autobox-end{
-    background-image: url(../images/alertbg.png);
-    background-repeat: no-repeat;
-    color: #fff;
-    font-family: \5FAE\8F6F\96C5\9ED1;
-    /*font-size: 14px;*/
-    font-weight: bold;
-    height: 80px;
-    line-height: 80px;
-    display: inline-block;
-    *display: inline;
-    *zoom: 1;
-}
-.autobox{
-    _height: 80px;
-    left: 0;
-    overflow: hidden;
-    position: fixed;
-    _position: absolute;
-    text-align: center;
-    top: 46%;
-    width: auto;
-    padding:0 20px;
-    font-size: 14px;
-    z-index: 65533;
-}
-.autobox-layer{
-    background-position: 0 -85px;
-    background-repeat: repeat-x;
-    margin: 0 auto;
-    padding: 0;
-    position: relative;
-}
-.autobox .autobox-end{
-    background-position: 0 -4px;
-    position: absolute;
-    right: -17px;
-    top: 0;
-    width: 17px;
-}
-.autobox-hits .autobox-arr{
-    background-position: -22px -4px;
-    left: -66px;
-    position: absolute;
-    top: 0;
-    width: 66px;
-}
-.autobox-hits .autobox-ct{
-    padding-right: 18px;
-}
-.autobox-text .autobox-arr{
-    background-position: -22px -4px;
-    left: -17px;
-    position: absolute;
-    top: 0;
-    width: 17px;
+	right: 10px;
+	top: 6px;
 }
