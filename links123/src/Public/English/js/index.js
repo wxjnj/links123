@@ -3,6 +3,7 @@ var playState = "unable";//播放器状态，默认不可用
 var sign = false;
 var next_question_lvlup = false;
 var timer;
+var is_local_play = false;//是否播放本地地址
 $(function() {
     //提示施工中...
     var style={
@@ -13,7 +14,11 @@ $(function() {
     };
     showMsg("施工中 . . .",style , 5000);
     $("#J_mediaLocalPlayButton").click(function(){
-        
+        var local_path = $("#J_mediaLocalPath").text();
+        if(local_path){
+            playLocalMedia(local_path);
+        }
+        $(this).hide();
     })
     //说力，上一句事件
     $("#J_preSentenceButton img").click(function() {
@@ -82,37 +87,47 @@ $(function() {
         if ($(".answer").is(":visible")) {
             $("#J_answerButton").removeClass("current");
             $(".answer").slideUp("slow", function() { //这里收起后显示
-                if ($("#J_media_div").attr("play_type") == 1 || $("#J_media_div").attr("play_type") == 2) {
-                    $("#J_media_div").css({'display': '', 'position': '', 'left': ''}).show();
-                } else if ($("#J_media_div").attr("play_type") == 4) {
-                    $("#J_media_swfobject_div").show();
-                } else if ($("#J_media_div").attr("data_isaboutvideo") == 1) {
-                    $(".J_player").show();
+                if(is_local_play==false){
+                    if ($("#J_media_div").attr("play_type") == 1 || $("#J_media_div").attr("play_type") == 2) {
+                        $("#J_media_div").css({'display': '', 'position': '', 'left': ''}).show();
+                    } else if ($("#J_media_div").attr("play_type") == 4) {
+                        $("#J_media_swfobject_div").show();
+                    } else if ($("#J_media_div").attr("data_isaboutvideo") == 1) {
+                        $(".J_player").show();
+                    }
+                }else{
+                    $("#Links123Player")[0].playPause();
                 }
             });
 
             $(this).text(' 　答  题');
         } else { //这里先隐藏后展开
-
-            //播放的视频停止
-            play_code = $("#J_media_object embed").attr("src");
-            videoStr = '';
-            videoStr += '<object id="J_media_object" height="100%" width="100%" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">';
-            videoStr += '<param name="wmode" value="transparent">';
-            videoStr += '<param name="movie" value="' + play_code + '">';
-            videoStr += '<embed name="swf" menu="true" height="100%" width="100%" play="false" type="application/x-shockwave-flash" allowfullscreen="true" wmode="transparent" src="' + play_code + '">';
-            videoStr += '</object>';
-            $('#J_media_div').html(videoStr);
-
-            $("#J_answerButton").addClass("current");
-            if ($("#J_media_div").attr("play_type") == 1 || $("#J_media_div").attr("play_type") == 2) {
-                $("#J_media_div").css({'display': 'block', 'position': 'absolute', 'left': '-9999px'}).hide();
-            } else if ($("#J_media_div").attr("play_type") == 4) {
-                $("#J_media_swfobject_div").hide();
-            } else if ($("#J_media_div").attr("data_isaboutvideo") == 1) {
-                $(".J_player").hide();
-                $('#J_media_div').html('');
+            if(is_local_play==false){
+                //播放的视频停止
+                play_code = $("#J_media_object embed").attr("src");
+                videoStr = '';
+                videoStr += '<object id="J_media_object" height="100%" width="100%" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">';
+                videoStr += '<param name="wmode" value="transparent">';
+                videoStr += '<param name="movie" value="' + play_code + '">';
+                videoStr += '<embed name="swf" menu="true" height="100%" width="100%" play="false" type="application/x-shockwave-flash" allowfullscreen="true" wmode="transparent" src="' + play_code + '">';
+                videoStr += '</object>';
+                $('#J_media_div').html(videoStr);
+                
+                if ($("#J_media_div").attr("play_type") == 1 || $("#J_media_div").attr("play_type") == 2) {
+                    $("#J_media_div").css({'display': 'block', 'position': 'absolute', 'left': '-9999px'}).hide();
+                } else if ($("#J_media_div").attr("play_type") == 4) {
+                    $("#J_media_swfobject_div").hide();
+                } else if ($("#J_media_div").attr("data_isaboutvideo") == 1) {
+                    $(".J_player").hide();
+                    $('#J_media_div').html('');
+                }
+            }else{
+                if(playState == "playing"){
+                    $("#Links123Player")[0].playPause();
+                }
             }
+            
+            $("#J_answerButton").addClass("current");
             $(".answer").slideDown("slow");
 
             $(this).text(' 　视  频');
@@ -742,6 +757,14 @@ function requestQuestion(type, clickObject, media_id) {
                 }
                 $("#J_questionId").text(question.id);
                 $("#J_textButton").attr("media_text_url", question.media_source_url);
+                is_local_play = false;
+                if(question.media_local_path){
+                    $("#J_mediaLocalPath").text(question.media_local_path);
+                    $("#J_mediaLocalPlayButton").show();
+                }else{
+                    $("#J_mediaLocalPath").text("");
+                    $("#J_mediaLocalPlayButton").hide();
+                }
                 bindMediaTextClickEvent("disable");//点击选项后才能查看文本
                 updateOption(question.option);
                 //说力听力耳朵切换
@@ -806,34 +829,7 @@ function requestQuestion(type, clickObject, media_id) {
                 if (question.play_code || question.media_info) {
 
                     if (question.isAboutVideo != 1) {
-                        if (question.play_type == 1) {
-                            videoStr = question.play_code;
-                        } else if (question.play_type == 2) {
-                            videoStr = '<iframe class="media_iframe" src="' + question.play_code + '" width="100%" height="100%" scrolling="no" frameborder="0">';
-                        } else if (question.play_type == 3) {
-
-                            $('#J_media_div').html('<div id="J_media_swfobject_div"></div>');
-
-                            var swfUrl = 'http://www.kizphonics.com/wp-content/uploads/jw-player-plugin-for-wordpress/player/player.swf';
-                            var version = '10.2.0';
-                            var params = {
-                                quality: "high",
-                                wmode: "opaque",
-                                scale: "noscale",
-                                align: "left",
-                                allowFullScreen: "true",
-                                allowScriptAccess: "always",
-                                bgColor: "#000000"
-                            };
-
-                            swfobject.embedSWF(swfUrl, "J_media_swfobject_div", "100%", "100%", version, "/swf/playerProductInstall.swf", question.play_code, params);
-
-                        } else if (question.play_type == 4 && question.target == 1) {
-                            $('#J_media_div').html('<div id="J_media_swfobject_div" style="height:' + media_height + 'px;width:' + media_width + 'px;"></div>');
-
-                            flowplayer("J_media_swfobject_div", "http://releases.flowplayer.org/swf/flowplayer-3.2.16.swf", {playlist: [question.media_thumb_img, {url: question.play_code, autoPlay: false}]});
-
-                        } else if (question.play_type == 4 && question.target == 2) {
+                        if(question.target == 2){
                             var media_info = question.media_info;
                             $("#J_mediaId").text(media_info.id);//记录媒体id
                             $("#J_mediaPath").text(media_info.question_id);//记录媒体地址
@@ -870,6 +866,33 @@ function requestQuestion(type, clickObject, media_id) {
                             swfobject.createCSS("#flashContent", "display:block;text-align:left;");
                             $("#J_viewButton").addClass("current");
                             $("#J_speakButton").removeClass("current");
+                        }else if (question.play_type == 1) {
+                            videoStr = question.play_code;
+                        } else if (question.play_type == 2) {
+                            videoStr = '<iframe class="media_iframe" src="' + question.play_code + '" width="100%" height="100%" scrolling="no" frameborder="0">';
+                        } else if (question.play_type == 3) {
+
+                            $('#J_media_div').html('<div id="J_media_swfobject_div"></div>');
+
+                            var swfUrl = 'http://www.kizphonics.com/wp-content/uploads/jw-player-plugin-for-wordpress/player/player.swf';
+                            var version = '10.2.0';
+                            var params = {
+                                quality: "high",
+                                wmode: "opaque",
+                                scale: "noscale",
+                                align: "left",
+                                allowFullScreen: "true",
+                                allowScriptAccess: "always",
+                                bgColor: "#000000"
+                            };
+
+                            swfobject.embedSWF(swfUrl, "J_media_swfobject_div", "100%", "100%", version, "/swf/playerProductInstall.swf", question.play_code, params);
+
+                        } else if (question.play_type == 4 && question.target == 1) {
+                            $('#J_media_div').html('<div id="J_media_swfobject_div" style="height:' + media_height + 'px;width:' + media_width + 'px;"></div>');
+
+                            flowplayer("J_media_swfobject_div", "http://releases.flowplayer.org/swf/flowplayer-3.2.16.swf", {playlist: [question.media_thumb_img, {url: question.play_code, autoPlay: false}]});
+
                         } else {
 
                             videoStr += '<object id="J_media_object" height="100%" width="100%" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">';
@@ -1571,22 +1594,55 @@ function bindSpeakListenSwitchEvent() {
 function playerStateChange(state) {
     playState = state;
 //    alert(state);
-    if (state == "playing") {
-        $("#J_pauseButton img").attr("src", PUBLIC + "/English/images/video6.png");
-    } else {
-        $("#J_pauseButton img").attr("src", PUBLIC + "/English/images/video5.png");
+    if($(".target.current").attr("value")==2){
+        if (state == "playing") {
+            $("#J_pauseButton img").attr("src", PUBLIC + "/English/images/video6.png");
+        } else {
+            $("#J_pauseButton img").attr("src", PUBLIC + "/English/images/video5.png");
+        }
+        if(state == "completed")
+        {
+            //测试由看切换到说
+            if(sign == false)
+            {
+                $("#Links123Player")[0].playerChoose(3);
+                $("#J_speakButton").addClass("current");
+                $("#J_viewButton").removeClass("current");
+                $("#Links123Player")[0].playPause();
+                sign = true;
+            }
+        }
     }
-    if(state == "completed")
-	{
-		//测试由看切换到说
-		if(sign == false)
-		{
-			$("#Links123Player")[0].playerChoose(3);
-            $("#J_speakButton").addClass("current");
-            $("#J_viewButton").removeClass("current");
-			$("#Links123Player")[0].playPause();
-			sign = true;
-		}
-	}
     return state;
+}
+
+function playLocalMedia(local_path){
+    if($(".focus_player")){
+        $(".focus_player").hide();
+    }
+    is_local_play = true;
+    $("#J_media_div").html("");
+    $("#J_media_div").css("visibility","");
+    $("#J_media_div").html("<div id='flashContent'></div>");
+    var swfVersionStr = "10.2.0";
+    var xiSwfUrlStr = PUBLIC+"/Js/Links123Player/playerProductInstall.swf";
+    var flashvars = new Object();
+    flashvars.logging = true;
+    flashvars.playerMode = 1;//播放器播放类型，1一般看，2说力看，3说力说模式
+    flashvars.url = local_path;
+    var params = new Object();
+    params.quality = "high";
+    params.bgcolor = "#ffffff";
+    params.allowscriptaccess = "sameDomain";
+    params.allowfullscreen = "true";
+    var attributes = new Object();
+    attributes.id = "Links123Player";
+    attributes.name = "Links123Player";
+    attributes.align = "middle";
+    swfobject.embedSWF(
+            PUBLIC + "/Js/Links123Player/Links123Player.swf", "flashContent",
+            media_width, media_height,
+            swfVersionStr, xiSwfUrlStr,
+            flashvars, params, attributes);
+    swfobject.createCSS("#flashContent", "display:block;text-align:left;");
 }

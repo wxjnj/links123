@@ -187,7 +187,7 @@ class EnglishQuestionModel extends CommonModel {
         if ($viewType == 3) {
             $ret['recommend'] = $recommend;
         }
-        if($ret['locahl_path']){
+        if($ret['local_path']){
             $ret['media_local_path'] = C("VIDEO_UPLOAD_PATH").$ret['local_path'];
         }
         $ret['record'] = $englishRecordModel->getQuestionUserRecord($ret['id']);
@@ -462,7 +462,7 @@ class EnglishQuestionModel extends CommonModel {
     	}
 
     	$ret['id'] = $ret['question_id'];
-        if($ret['locahl_path']){
+        if($ret['local_path']){
             $ret['media_local_path'] = C("VIDEO_UPLOAD_PATH").$ret['local_path'];
         }
     
@@ -545,6 +545,9 @@ class EnglishQuestionModel extends CommonModel {
     	}
     	
     	$ret['id'] = $ret['question_id'];
+        if($ret['local_path']){
+            $ret['media_local_path'] = C("VIDEO_UPLOAD_PATH").$ret['local_path'];
+        }
     	
     	$ret['record'] = $englishRecordModel->getQuestionUserRecord($ret['id']);
     	$ret['record']['untested_num'] = $englishRecordModel->getUserUntestedQuestionNum('', '', $subject, '', $difficulty, $voice, $target, $pattern);
@@ -633,6 +636,9 @@ class EnglishQuestionModel extends CommonModel {
     	foreach ($ret['option'] as $key => $value) {
     		$ret['option'][$key]['content'] = ftrim($value['content']);
     	}
+        if($ret['local_path']){
+            $ret['media_local_path'] = C("VIDEO_UPLOAD_PATH").$ret['local_path'];
+        }
     	return $ret;
     }
     
@@ -693,6 +699,9 @@ class EnglishQuestionModel extends CommonModel {
     	foreach ($ret['option'] as $key => $value) {
     		$ret['option'][$key]['content'] = ftrim($value['content']);
     	}
+        if($ret['local_path']){
+            $ret['media_local_path'] = C("VIDEO_UPLOAD_PATH").$ret['local_path'];
+        }
         return $ret;
     }
     

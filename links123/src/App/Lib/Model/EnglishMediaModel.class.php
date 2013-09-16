@@ -167,7 +167,7 @@ class EnglishMediaModel extends CommonModel {
         if (!empty($media_info)) {
             $data['title'] = $media_info['name'];
             $data['question_id'] = $media_info['question_id'];
-            $data['url'] = C("VIDEO_UPLOAD_PATH") . $media_info['real_path'];
+            $data['url'] =  $media_info['real_path'];
             $data['mp3url'] = C("VIDEO_UPLOAD_PATH") . $media_info['slow_audio']; //慢放的mp3
             $data['clips'] = array();
             foreach ($media_info['captions'] as $key => $value) {
@@ -200,7 +200,7 @@ class EnglishMediaModel extends CommonModel {
         if (!empty($media_info)) {
             $data['title'] = $media_info['name'];
             $data['question_id'] = $media_info['question_id'];
-            $data['url'] =  C("VIDEO_UPLOAD_PATH") . $media_info['real_path'];
+            $data['url'] = $media_info['real_path'];
             $data['mp3url'] =  C("VIDEO_UPLOAD_PATH") . $media_info['slow_audio']; //慢放的mp3
             $data['clips'] = array();
             foreach ($media_info['captions'] as $key => $value) {
