@@ -98,7 +98,7 @@ class IndexAction extends CommonAction {
 		if (!$ted_list) {
 			
 			$linksModel = M("Links");
-			$ted_ids = '124,143,144,155,158,166,171';	//TODO 放到后台管理
+			$ted_ids = '134,158,166,246,176';	//TODO 放到后台管理
 			$result = $linksModel->where('id in ('.$ted_ids.')')->limit(5)->select();
 			
 			$ted_list = array();
