@@ -974,4 +974,17 @@ class IndexAction extends CommonAction {
 	
 		echo $result;
 	}
+	
+	public function tag() {
+		$key = $this->_param('q');
+		$dl = M('directLinks');
+		$condition['tag'] = array('like', '%' . $key . '%');
+		$data = $dl->where($condition)->select();
+		$val = '';
+		foreach ($data as $row) {
+			$val .= $row['tag'].'|'.$row['id']."\n";
+		}
+		echo $val;
+		exit;
+	}
 }
