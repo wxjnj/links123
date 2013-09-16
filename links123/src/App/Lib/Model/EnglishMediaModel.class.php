@@ -167,7 +167,7 @@ class EnglishMediaModel extends CommonModel {
         if (!empty($media_info)) {
             $data['title'] = $media_info['name'];
             $data['question_id'] = $media_info['question_id'];
-            $data['url'] =  $media_info['real_path'];
+            $data['url'] = $media_info['real_path'];
             $data['mp3url'] = C("VIDEO_UPLOAD_PATH") . $media_info['slow_audio']; //慢放的mp3
             $data['clips'] = array();
             foreach ($media_info['captions'] as $key => $value) {
@@ -201,7 +201,7 @@ class EnglishMediaModel extends CommonModel {
             $data['title'] = $media_info['name'];
             $data['question_id'] = $media_info['question_id'];
             $data['url'] = $media_info['real_path'];
-            $data['mp3url'] =  C("VIDEO_UPLOAD_PATH") . $media_info['slow_audio']; //慢放的mp3
+            $data['mp3url'] = C("VIDEO_UPLOAD_PATH") . $media_info['slow_audio']; //慢放的mp3
             $data['clips'] = array();
             foreach ($media_info['captions'] as $key => $value) {
                 $data['clips'][$key]['title'] = "clip " . $key;
@@ -330,6 +330,28 @@ class EnglishMediaModel extends CommonModel {
             $condition['media.subject'] = array("neq", 0);
         } else {
             $condition['media.subject'] = $subject;
+        }
+        $num = $this->alias("media")
+                ->join(C("DB_PREFIX") . $english_question_table_name . " question on question.media_id=media.id")
+                ->where($condition)
+                ->count("question.id");
+        return intval($num);
+    }
+
+    public function getTedQuestionNum($target = 1, $voice = 1, $pattern = 1, $ted = 0) {
+        $english_question_table_name = "english_question";
+        if ($target == 2) {
+            $english_question_table_name = "english_question_speak";
+        }
+        $condition = array();
+        $condition['question.status'] = 1;
+        $condition['media.status'] = 1;
+        $condition['media.voice'] = $voice;
+        $condition['media.pattern'] = $pattern;
+        if ($ted == 0) {
+            $condition['media.ted'] = array("neq", 0);
+        } else {
+            $condition['media.ted'] = $ted;
         }
         $num = $this->alias("media")
                 ->join(C("DB_PREFIX") . $english_question_table_name . " question on question.media_id=media.id")

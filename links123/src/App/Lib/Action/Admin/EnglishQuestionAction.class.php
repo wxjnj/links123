@@ -559,7 +559,8 @@ class EnglishQuestionAction extends CommonAction {
                     $time = time();
                     //
                     //获取媒体的id
-                    $mediaId = intval($mediaModel->where(array("media_source_url" => array("like", $media_data['media_source_url'])))->getField("id"));
+                    $media_info = $mediaModel->field("id,local_path")->where(array("media_source_url" => array("like", $media_data['media_source_url'])))->find();
+                    $mediaId = intval($media_info['id']);
                     //
                     //来源地址未匹配到媒体，则添加媒体
                     if ($mediaId == 0) {

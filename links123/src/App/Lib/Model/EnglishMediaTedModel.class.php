@@ -57,6 +57,30 @@ class EnglishMediaTedModel extends CommonModel {
         return intval($ted_id);
     }
 
+    public function getTedListToIndex($voice = 1, $target = 1, $pattern = 1) {
+        $ret = $this->alias("ted")
+                ->field("ted.*,(SELECT COUNT(question.id) from " .
+                        C("DB_PREFIX") . "english_question question 
+                        right join " . C("DB_PREFIX") . "english_media media on question.media_id=media.id 
+                        where media.voice={$voice} and question.target={$target} and media.pattern={$pattern} and media.ted=ted.id and media.status=1 
+                        and question.status=1) as question_num")
+                ->where("ted.status=1")
+                ->order("ted.sort asc")
+                ->select();
+        if (false === $ret) {
+            return array();
+        }
+        return $ret;
+    }
+
+    public function getDefaultTedId($voice = 1, $target = 1, $pattern = 1) {
+        $condition = "(select count(question.id) from " . C("DB_PREFIX") . "english_question question 
+                    right join " . C("DB_PREFIX") . "english_media media on question.media_id=media.id where media.ted=ted.id 
+                    and media.voice={$voice} and question.target={$target} and media.pattern={$pattern} and media.status=1 and question.status=1)>0";
+        $default_id = $this->alias("ted")->where("{$condition}")->getField("id");
+        return $default_id;
+    }
+
 }
 
 ?>

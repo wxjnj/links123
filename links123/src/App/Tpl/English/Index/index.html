@@ -107,6 +107,12 @@
                                 选择推荐
                             </a>
                         </li>
+                        <li>
+                            <a href="javascript:;" value="5" <if condition="$user_last_select['viewType'] eq 5">class="current"
+                                    <elseif condition="$tedsQuestionNum eq 0" />class="grey"</if> >
+                                选择TED
+                            </a>
+                        </li>
                     </ul>
                     <div class="panes">
                         <div class="box1" <neq name="user_last_select['viewType']" value='1'>style="display:none"</neq>>
@@ -164,6 +170,25 @@
                                     <volist name="recommendDifficultyList" id="difficulty">
                                         <li value="{$difficulty.id}" 
                                             <if condition="($user_last_select['recommendDifficulty'] eq $difficulty['id'])AND($difficulty['question_num'] gt 0)">class="current"
+                                            <elseif condition="$difficulty['question_num'] eq 0" />class="grey not_allowed"</if>>
+                                            <span>{$difficulty.name}</span>
+                                        </li>
+                                    </volist>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="box1" <if condition="$user_last_select['viewType'] neq 5">style="display:none"</if>>
+                            <div class="kechenggrade">
+                                <ul class="kecheng J_ted">
+                                    <volist name="ted_list" id="ted">
+                                        <li value="{$ted.id}" <if condition="($user_last_select['ted'] eq $ted['id'])">class="current"</if>>
+                                        <span>{$ted.name}</span></li>
+                                    </volist>
+                                </ul>
+                                <ul class="grade J_tedDifficulty">
+                                    <volist name="tedDifficultyList" id="difficulty">
+                                        <li value="{$difficulty.id}" 
+                                            <if condition="($user_last_select['tedDifficulty'] eq $difficulty['id'])AND($difficulty['question_num'] gt 0)">class="current"
                                             <elseif condition="$difficulty['question_num'] eq 0" />class="grey not_allowed"</if>>
                                             <span>{$difficulty.name}</span>
                                         </li>
