@@ -615,7 +615,7 @@ function requestQuestion(type, clickObject, media_id) {
     var postUrl = '/ajax_get_question';
     if (viewType == 5) {
         data.ted = $(".J_ted .current").attr("value");
-        data.difficulty = $(".J_ted .current").attr("value");
+        data.difficulty = $(".J_tedDifficulty .current").attr("value");
         postUrl = '/get_question';
     } else if (viewType == 4) {
         data.media_id = media_id;
