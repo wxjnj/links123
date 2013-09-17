@@ -165,9 +165,17 @@
                             <div class="kechenggrade">
                                 <ul class="kecheng J_recommend">
                                     <volist name="recommend_list" id="recommend">
-                                        <li value="{$recommend.id}" <if condition="($user_last_select['recommend'] eq $recommend['id'])AND($recommend['question_num'] gt 0)AND($user_last_select['viewType'] eq 3)">class="current"
-                                            <elseif condition="$recommend['question_num'] eq 0" />class="grey not_allowed"</if>>
-                                        <span>{$recommend.name}</span></li>
+                                        <if condition="$key lt 20">
+                                            <li value="{$recommend.id}" <if condition="($user_last_select['recommend'] eq $recommend['id'])AND($recommend['question_num'] gt 0)AND($user_last_select['viewType'] eq 3)">class="current"
+                                                <elseif condition="$recommend['question_num'] eq 0" />class="grey not_allowed"</if>>
+                                                <span>{$recommend.name}</span>
+                                            </li>
+                                        <elseif condition="$key eq 25" />
+                                            <li id="J_recommendMore" value="more"><span>更多</span></li>
+                                            <li value="{$recommend.id}" class="J_recommendMore"><span>{$recommend.name}</span></li>
+                                        <else />
+                                            <li value="{$recommend.id}" class="J_recommendMore"><span>{$recommend.name}</span></li>
+                                        </if>
                                     </volist>
                                 </ul>
                                 <ul class="grade J_recommendDifficulty">
