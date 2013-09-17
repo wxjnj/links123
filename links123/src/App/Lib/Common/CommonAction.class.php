@@ -146,9 +146,9 @@ class CommonAction extends Action {
 	protected function getHeaderInfo($data=array()) {
 
 		$variable = $this->_getVariable();
-		$title = empty($data['title'])?'另客网 | 领先的全面导航 | 高效的组合搜索 | 独特的英语角（在建） - 学习':empty($data['title']);
-		$keywords = empty($data['keywords'])?$variable['keywords']:empty($data['keywords']);
-		$description = empty($data['description'])?$variable['description']:empty($data['description']);
+		$title = empty($data['title'])?'另客网 | 领先的全面导航 | 高效的组合搜索 | 独特的英语角':empty($data['title']);
+		$keywords = empty($data['keywords'])?$variable['Keywords']:empty($data['keywords']);
+		$description = empty($data['description'])?$variable['Description']:empty($data['description']);
 		
 		$this->assign('title', $title);
 		$this->assign('keywords', $keywords);
@@ -396,7 +396,7 @@ class CommonAction extends Action {
 	    			}
 	    		}
 	    	}
-	    	S('songItemList', $songItemList, 216000);
+	    	S('songItemList', $songItemList, 172800);
     	}
     	
     	return $songItemList;
