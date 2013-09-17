@@ -316,9 +316,9 @@ $(function() {
 
     //升级事件
     $("#J_levelUpButton").live('click', function() {
-        if ($(".J_tabs a.current").attr("value") != 1) {
-            return false;
-        }
+//        if ($(".J_tabs a.current").attr("value") != 1) {
+//            return false;
+//        }
         var next_level_li;
         //已是最高级
         if (($(".grade .current").index() + 1) == $(".grade li").size()) {
@@ -364,9 +364,9 @@ $(function() {
     //降级事件
     //bindLevelDownEvent();
     $("#J_levelDownButton").live('click', function() {
-        if ($(".J_tabs a.current").attr("value") != 1) {
-            return false;
-        }
+//        if ($(".J_tabs a.current").attr("value") != 1) {
+//            return false;
+//        }
         var prev_level_li;
         $(".grade .current").prevAll("li").each(function() {
             if (!$(this).hasClass("not_allowed") && typeof prev_level_li == "undefined") {
