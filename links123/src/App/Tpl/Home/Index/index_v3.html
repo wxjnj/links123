@@ -117,7 +117,11 @@
 					<ul id="J_sortable">
 						<volist name="_SESSION['myarea_sort']" id="areaid">
 						<if condition="$_SESSION['arealist'][$areaid]['id'] neq ''">
-							<li id="{$_SESSION['arealist'][$areaid].id}" url="{:U('Link/index')}?mod=myarea&url={$_SESSION['arealist'][$areaid].url}" data-id="{$_SESSION['arealist'][$areaid].id}" data-url="{$_SESSION['arealist'][$areaid].url}"><span class="nm" ><i class="mask"></i><b>{$_SESSION['arealist'][$areaid]['web_name']}</b></span><span class="ctl"><i class="mask"></i></span></li>
+							<li id="{$_SESSION['arealist'][$areaid].id}" url="{:U('Link/index')}?mod=myarea&url={$_SESSION['arealist'][$areaid].url}" data-id="{$_SESSION['arealist'][$areaid].id}" data-url="{$_SESSION['arealist'][$areaid].url}">
+								<i class="mask"></i>
+								<span class="nm" ><b>{$_SESSION['arealist'][$areaid]['web_name']}</b></span>
+								<span class="ctl"></span>
+							</li>
 						</if>
 						</volist>
 						<li><span class="ctl add"><i class="mask"></i></span></li>
@@ -129,7 +133,7 @@
 					</div>
 					<div class="box-bd">
 						<div class="apps">
-							<ul>
+							<ul id="J_Apps">
 								<li>
 									<p class="av newWin" url="{:U('English/Index/index')}"><img src="__PUBLIC__/IndexV3/imgs/app/app001.png" /></p>
 									<p class="nm"><a href="{:U('English/Index/index')}" target="_blank">另客英语</a></p>
@@ -144,7 +148,7 @@
 								</li>
 								<li id="J_stikynot">
 									<p class="av"><img src="__PUBLIC__/IndexV3/imgs/app/app005.png" /></p>
-									<p class="nm">便签</p>
+									<p class="nm">便&nbsp;签</p>
 								</li>
 								<li id="J_calc">
 									<p class="av"><img src="__PUBLIC__/IndexV3/imgs/app/app004.png" /></p>
@@ -152,22 +156,22 @@
 								</li>
 								<li id="J_weather">
 									<p class="av"><img src="__PUBLIC__/IndexV3/imgs/app/app-weather.png" /></p>
-									<p class="nm">天气</p>
+									<p class="nm">天&nbsp;气</p>
 								</li>
 								<li class="today" id="J_calendar">
 									<p class="ct">
 										<b>{:date('D')}</b>
 										<i>{:date('d')}</i>
 									</p>
-									<p class="nm">日历</p>
+									<p class="nm">日&nbsp;历</p>
 								</li>
 								<li id="J_mail">
 									<p class="av"><img src="__PUBLIC__/IndexV3/imgs/app/app006.png" /></p>
-									<p class="nm">邮箱</p>
+									<p class="nm">邮&nbsp;箱</p>
 								</li>
 								<li id="J_translate">
 									<p class="av"><img src="__PUBLIC__/IndexV3/imgs/app/app003.png" /></p>
-									<p class="nm">翻译</p>
+									<p class="nm">翻&nbsp;译</p>
 								</li>
 							</ul>
 						</div><!--.apps end-->
@@ -215,6 +219,15 @@
 											<a class="go" href="{:U('Detail/index')}?id={$ted.id}" target="_blank">查看</a>
 										</li>
 									</volist>
+										<li>
+											<img src="http://g1.ykimg.com/0100641F464FF8095C5D7F0114904FE904123C-4FEA-EC78-7A00-CAC72090102E" alt="">
+											<div class="mask"></div>
+											<div class="info">
+												<p class="p1">一个单词的诞生</p>
+												<p class="p2"></p>
+											</div>
+											<a class="go" href="/Detail/index.html?id=124" target="_blank">查看</a>
+										</li>
 										
 										<li class="more">
 											<a href="{:U('Index/nav')}?cid=5" target="_blank">发现更多...</a>
@@ -256,18 +269,172 @@
 					<div class="extra-col3">
 						<div class="box box-pics">
 							<div class="box-hd">
-								<h2>每日图片精选</h2>
+								<h2>每日电影精选</h2>
 							</div>
 							<div class="box-bd">
 								<div class="pics" id="J_ScrollBox">
 									<ul class="items">
-										<li><img src="__PUBLIC__/IndexV3/upload/02.jpg" alt="" width="300" /></li>
-										<li><img src="__PUBLIC__/IndexV3/upload/03.jpg" alt="" width="300" /></li>
-										<li><img src="__PUBLIC__/IndexV3/upload/04.jpg" alt="" width="300" /></li>
-										<li><img src="__PUBLIC__/IndexV3/upload/05.jpg" alt="" width="300" /></li>
-										<li><img src="__PUBLIC__/IndexV3/upload/06.jpg" alt="" width="300" /></li>
-										<li><img src="__PUBLIC__/IndexV3/upload/07.jpg" alt="" width="300" /></li>
-										<li><img src="__PUBLIC__/IndexV3/upload/08.jpg" alt="" width="300" /></li>
+										<li>
+											<img src="__PUBLIC__/IndexV3/upload/02.jpg" alt="" />
+											<div class="mask"></div>
+											<div class="info">
+												<p class="p1">我是山姆 I Am Sim (2002)</p>
+												<p class="p2">
+													IDMB评分：7.4/10<br />
+													导演: 杰茜·尼尔森<br />
+													编剧: 杰茜·尼尔森 / 克里斯汀·约翰逊<br />
+													主演: 西恩·潘 / 达科塔·范宁 / 米歇尔·菲佛 <br />
+													黛安·韦斯特 / 洛雷塔·迪瓦恩 / 理查德·希夫 <br />
+													劳拉·邓恩<br />
+													又名: 不一样的爸爸 / 他不笨他是我爸爸<br />
+													上映日期: 2001-12-03(美国)<br />
+													片长: 132 分钟<br />
+													语言: 英语
+												</p>
+												<p class="p3">
+													<a href="#">豆瓣影评</a>
+													<a href="#">在线观看</a>
+												</p>
+											</div>
+										</li>
+										<li>
+											<img src="__PUBLIC__/IndexV3/upload/03.jpg" alt="" />
+											<div class="mask"></div>
+											<div class="info">
+												<p class="p1">我是山姆 I Am Sim (2003)</p>
+												<p class="p2">
+													IDMB评分：7.4/10<br />
+													导演: 杰茜·尼尔森<br />
+													编剧: 杰茜·尼尔森 / 克里斯汀·约翰逊<br />
+													主演: 西恩·潘 / 达科塔·范宁 / 米歇尔·菲佛 <br />
+													黛安·韦斯特 / 洛雷塔·迪瓦恩 / 理查德·希夫 <br />
+													劳拉·邓恩<br />
+													又名: 不一样的爸爸 / 他不笨他是我爸爸<br />
+													上映日期: 2001-12-03(美国)<br />
+													片长: 132 分钟<br />
+													语言: 英语
+												</p>
+												<p class="p3">
+													<a href="#">豆瓣影评</a>
+													<a href="#">在线观看</a>
+												</p>
+											</div>
+										</li>
+										<li>
+											<img src="__PUBLIC__/IndexV3/upload/04.jpg" alt="" />
+											<div class="mask"></div>
+											<div class="info">
+												<p class="p1">我是山姆 I Am Sim (2004)</p>
+												<p class="p2">
+													IDMB评分：7.4/10<br />
+													导演: 杰茜·尼尔森<br />
+													编剧: 杰茜·尼尔森 / 克里斯汀·约翰逊<br />
+													主演: 西恩·潘 / 达科塔·范宁 / 米歇尔·菲佛 <br />
+													黛安·韦斯特 / 洛雷塔·迪瓦恩 / 理查德·希夫 <br />
+													劳拉·邓恩<br />
+													又名: 不一样的爸爸 / 他不笨他是我爸爸<br />
+													上映日期: 2001-12-03(美国)<br />
+													片长: 132 分钟<br />
+													语言: 英语
+												</p>
+												<p class="p3">
+													<a href="#">豆瓣影评</a>
+													<a href="#">在线观看</a>
+												</p>
+											</div>
+										</li>
+										<li>
+											<img src="__PUBLIC__/IndexV3/upload/05.jpg" alt="" />
+											<div class="mask"></div>
+											<div class="info">
+												<p class="p1">我是山姆 I Am Sim (2005)</p>
+												<p class="p2">
+													IDMB评分：7.4/10<br />
+													导演: 杰茜·尼尔森<br />
+													编剧: 杰茜·尼尔森 / 克里斯汀·约翰逊<br />
+													主演: 西恩·潘 / 达科塔·范宁 / 米歇尔·菲佛 <br />
+													黛安·韦斯特 / 洛雷塔·迪瓦恩 / 理查德·希夫 <br />
+													劳拉·邓恩<br />
+													又名: 不一样的爸爸 / 他不笨他是我爸爸<br />
+													上映日期: 2001-12-03(美国)<br />
+													片长: 132 分钟<br />
+													语言: 英语
+												</p>
+												<p class="p3">
+													<a href="#">豆瓣影评</a>
+													<a href="#">在线观看</a>
+												</p>
+											</div>
+										</li>
+										<li>
+											<img src="__PUBLIC__/IndexV3/upload/06.jpg" alt="" />
+											<div class="mask"></div>
+											<div class="info">
+												<p class="p1">我是山姆 I Am Sim (2006)</p>
+												<p class="p2">
+													IDMB评分：7.4/10<br />
+													导演: 杰茜·尼尔森<br />
+													编剧: 杰茜·尼尔森 / 克里斯汀·约翰逊<br />
+													主演: 西恩·潘 / 达科塔·范宁 / 米歇尔·菲佛 <br />
+													黛安·韦斯特 / 洛雷塔·迪瓦恩 / 理查德·希夫 <br />
+													劳拉·邓恩<br />
+													又名: 不一样的爸爸 / 他不笨他是我爸爸<br />
+													上映日期: 2001-12-03(美国)<br />
+													片长: 132 分钟<br />
+													语言: 英语
+												</p>
+												<p class="p3">
+													<a href="#">豆瓣影评</a>
+													<a href="#">在线观看</a>
+												</p>
+											</div>
+										</li>
+										<li>
+											<img src="__PUBLIC__/IndexV3/upload/07.jpg" alt="" />
+											<div class="mask"></div>
+											<div class="info">
+												<p class="p1">我是山姆 I Am Sim (2007)</p>
+												<p class="p2">
+													IDMB评分：7.4/10<br />
+													导演: 杰茜·尼尔森<br />
+													编剧: 杰茜·尼尔森 / 克里斯汀·约翰逊<br />
+													主演: 西恩·潘 / 达科塔·范宁 / 米歇尔·菲佛 <br />
+													黛安·韦斯特 / 洛雷塔·迪瓦恩 / 理查德·希夫 <br />
+													劳拉·邓恩<br />
+													又名: 不一样的爸爸 / 他不笨他是我爸爸<br />
+													上映日期: 2001-12-03(美国)<br />
+													片长: 132 分钟<br />
+													语言: 英语
+												</p>
+												<p class="p3">
+													<a href="#">豆瓣影评</a>
+													<a href="#">在线观看</a>
+												</p>
+											</div>
+										</li>
+										<li>
+											<img src="__PUBLIC__/IndexV3/upload/08.jpg" alt="" />
+											<div class="mask"></div>
+											<div class="info">
+												<p class="p1">我是山姆 I Am Sim (2008)</p>
+												<p class="p2">
+													IDMB评分：7.4/10<br />
+													导演: 杰茜·尼尔森<br />
+													编剧: 杰茜·尼尔森 / 克里斯汀·约翰逊<br />
+													主演: 西恩·潘 / 达科塔·范宁 / 米歇尔·菲佛 <br />
+													黛安·韦斯特 / 洛雷塔·迪瓦恩 / 理查德·希夫 <br />
+													劳拉·邓恩<br />
+													又名: 不一样的爸爸 / 他不笨他是我爸爸<br />
+													上映日期: 2001-12-03(美国)<br />
+													片长: 132 分钟<br />
+													语言: 英语
+												</p>
+												<p class="p3">
+													<a href="#">豆瓣影评</a>
+													<a href="#">在线观看</a>
+												</p>
+											</div>
+										</li>
 									</ul>
 								</div><!--.pics end-->
 							</div>

@@ -875,10 +875,11 @@ $(function(){
 
 	});
 
-	$('#J_box_translate').mouseout(function(){
-		$('.J_translate_source').select();
-		return false;
-	});
+	// 解决翻译结果不能复制问题
+	// $('#J_box_translate').mouseout(function(){
+	// 	$('.J_translate_source').select();
+	// 	return false;
+	// });
 
 
 	/** 翻译$ * */
