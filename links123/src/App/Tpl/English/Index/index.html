@@ -9,6 +9,7 @@
         <script type="text/javascript">
             var URL = "__URL__";
             var PUBLIC = "__PUBLIC__";
+            var screen_type = 1;
             var media_height = 325;
             var media_width = 518;
             var media_marin = '18px 0 0 20px';
@@ -35,8 +36,10 @@
             }
             function ScreenWidth(CSS1,CSS2){
                 if (screen.height <= 1050){
+                    screen_type = 1;
                     setActiveStyleSheet(CSS1);
                 }else{ 
+                    screen_type = 2;
                     media_height=448;
                     media_width=710;
                     media_marin = '24px 0 0 28px';
@@ -162,14 +165,15 @@
                             <div class="kechenggrade">
                                 <ul class="kecheng J_recommend">
                                     <volist name="recommend_list" id="recommend">
-                                        <li value="{$recommend.id}" <if condition="($user_last_select['recommend'] eq $recommend['id'])">class="current"</if>>
+                                        <li value="{$recommend.id}" <if condition="($user_last_select['recommend'] eq $recommend['id'])AND($recommend['question_num'] gt 0)AND($user_last_select['viewType'] eq 3)">class="current"
+                                            <elseif condition="$recommend['question_num'] eq 0" />class="grey not_allowed"</if>>
                                         <span>{$recommend.name}</span></li>
                                     </volist>
                                 </ul>
                                 <ul class="grade J_recommendDifficulty">
                                     <volist name="recommendDifficultyList" id="difficulty">
                                         <li value="{$difficulty.id}" 
-                                            <if condition="($user_last_select['recommendDifficulty'] eq $difficulty['id'])AND($difficulty['question_num'] gt 0)">class="current"
+                                            <if condition="($user_last_select['recommendDifficulty'] eq $difficulty['id'])AND($difficulty['question_num'] gt 0)AND($user_last_select['viewType'] eq 3)">class="current"
                                             <elseif condition="$difficulty['question_num'] eq 0" />class="grey not_allowed"</if>>
                                             <span>{$difficulty.name}</span>
                                         </li>
@@ -181,7 +185,8 @@
                             <div class="kechenggrade">
                                 <ul class="kecheng J_ted">
                                     <volist name="ted_list" id="ted">
-                                        <li value="{$ted.id}" <if condition="($user_last_select['ted'] eq $ted['id'])">class="current"</if>>
+                                        <li value="{$ted.id}" <if condition="($user_last_select['ted'] eq $ted['id'])AND($ted['question_num'] gt 0)">class="current"
+                                            <elseif condition="$ted['question_num'] eq 0" />class="grey not_allowed"</if>>
                                         <span>{$ted.name}</span></li>
                                     </volist>
                                 </ul>
@@ -209,7 +214,10 @@
                     <label id="J_mediaPath" style="display: none">{$question['media_info']['real_path']}</label>
                     <label id="J_mediaLocalPath" style="display: none">{$question['media_local_path']}</label>
                     <div class="videottl">
-                        <a href="javascript:;">快速加载</a><em>这里是标题内容这里是标题内容</em>
+                        <a id="J_mediaLocalPlayButton" href="javascript:;" <empty name="question['media_local_path']">style="display:none"</empty>>
+                            快速加载
+                        </a>
+                        <em id="J_mediaTitle" title="{$question.name}">{$question.name}</em>
                     </div>
                     <div class="videoplay">
                         <!-- $Flash视频播放 视频非本地化方法 -->
@@ -362,7 +370,6 @@
                             <li id="J_nextQuestion"><img src="__PUBLIC__/English/images/down.png" width="14" height="21" /> 下一题</li>
                             <li id="J_levelUpButton"><img src="__PUBLIC__/English/images/up.png" width="14" height="21" /> &nbsp;升  级</li>
                             <li id="J_levelDownButton"><img src="__PUBLIC__/English/images/down.png" width="14" height="21" /> &nbsp;降  级</li>
-                            <li id="J_mediaLocalPlayButton" <empty name="question['media_local_path']">style="display:none"</empty>>&nbsp;加速播放</li>
                         </ul>
                     </div>
                     <div class="leveltext"><label id="J_currentRiceNameLabel">本级：</label><span id="J_currentRice" class="red">{$user_conut_info['right_num']*100}</span>粒<br />

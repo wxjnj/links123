@@ -5,6 +5,7 @@ var next_question_lvlup = false;
 var timer;
 var is_local_play = false;//是否播放本地地址
 $(function() {
+    resetMediaTitle();
     //提示施工中...
     var style = {
         'top': $(".J_tabs").offset().top - 20,
@@ -20,6 +21,7 @@ $(function() {
         }
         $(this).hide();
     })
+    setTimeout('$("#J_mediaLocalPlayButton").fadeOut();', 30000);
     //说力，上一句事件
     $("#J_preSentenceButton img").click(function() {
         $('#Links123Player')[0].prev();
@@ -648,6 +650,8 @@ function requestQuestion(type, clickObject, media_id) {
         data.subject = clickObject.attr("value");
     } else if (type == "recommend") {
         data.recommend = clickObject.attr("value");
+    } else if (type == "ted") {
+        data.ted = clickObject.attr("value");
     } else if (type == "difficulty") {
         data.difficulty = clickObject.attr("value");
     }
@@ -742,7 +746,7 @@ function requestQuestion(type, clickObject, media_id) {
 
                 if (viewType == 5) {
                     if (type == "ted") {
-                        rewriteTedAndDifficultyList(null, 0, data.recommend_difficulty_list, data.question.difficulty);
+                        rewriteTedAndDifficultyList(null, 0, data.ted_difficulty_list, data.question.difficulty);
                     } else if (type == "switch_view_type") {
                         rewriteTedAndDifficultyList(data.ted_list, data.question.ted, data.ted_difficulty_list, data.question.difficulty);
                     }
@@ -794,11 +798,14 @@ function requestQuestion(type, clickObject, media_id) {
                     $(".answertitle").text(question.content);
                 }
                 $("#J_questionId").text(question.id);
+                $("#J_mediaTitle").text(question.name).attr("title",question.name);
+                resetMediaTitle();
                 $("#J_textButton").attr("media_text_url", question.media_source_url);
                 is_local_play = false;
                 if (question.media_local_path) {
                     $("#J_mediaLocalPath").text(question.media_local_path);
                     $("#J_mediaLocalPlayButton").show();
+                    setTimeout('$("#J_mediaLocalPlayButton").fadeOut();', 30000);
                 } else {
                     $("#J_mediaLocalPath").text("");
                     $("#J_mediaLocalPlayButton").hide();
@@ -946,7 +953,11 @@ function requestQuestion(type, clickObject, media_id) {
                 }
 
                 if (question.isAboutVideo) {
-                    $('#J_media_img').attr('src', question.media_thumb_url);
+                    if(question.media_thumb_img!=""){
+                        $('#J_media_img').attr('src', question.media_thumb_img);
+                    }else{
+                        $('#J_media_img').attr('src',PUBLIC+"/English/images/deafult_media_img.jpg");
+                    }
                     $('#J_media_div').css('visibility', 'hidden');
 
                     $('.J_player').css('display', 'block');
@@ -992,7 +1003,7 @@ function requestQuestion(type, clickObject, media_id) {
                     }
                     $(".J_tabs a[value='" + data.viewType + "']").addClass("current").parent("li").siblings("li").children("a").removeClass("current");
                     $(".panes > div:eq(" + (data.viewType - 1) + ")").show().siblings().hide();
-                } else if (type == "object" || type == "level" || type == "subject" || type == "recommend" || type == "difficulty") {
+                } else if (type == "object" || type == "level" || type == "subject" || type == "recommend" || type == "ted" || type == "difficulty") {
                     clickObject.addClass("current").siblings("li").removeClass("current");
                 } else if (type == "switch_view_type") {
                     var index = clickObject.parent("li").index();
@@ -1734,4 +1745,19 @@ function playLocalMedia(local_path) {
             swfVersionStr, xiSwfUrlStr,
             flashvars, params, attributes);
     swfobject.createCSS("#flashContent", "display:block;text-align:left;");
+}
+
+function resetMediaTitle(){
+    var text = $("#J_mediaTitle").text();
+    var length = text.length;
+    var index = 40;
+    if(screen_type==2){
+        index = 60;
+    }
+    text = text.substr(0,index);
+    if(text.length<length){
+        text+="...";
+    }
+    $("#J_mediaTitle").text(text);
+    //$("#J_mediaTitle").tooltip();
 }

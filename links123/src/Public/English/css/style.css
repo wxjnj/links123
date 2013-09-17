@@ -250,7 +250,6 @@ ul.grade li.current span{
 	line-height:33px;
 	font-family: "黑体", Helvetica, Arial, Sans;
 	clear:both;
-	margin-left:20px;
 }
 
 .leveltext #J_currentRice,.leveltext #J_totalRice{margin:0 5px}
@@ -378,7 +377,7 @@ ul.grade li.current span{
 	height: 450px;
 	background: url(../images/retina_wood_@2X.png) no-repeat;
 	position: absolute;
-	top: 59px;
+	top: 99px;
 	left: 280px;
 	display: none;
 }

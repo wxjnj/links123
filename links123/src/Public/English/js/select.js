@@ -23,6 +23,15 @@ $(function() {
 		}
 		return false;
 	});
+    $('#J_RankListExpose').hover(function(){
+        $('.ranklist').stop();
+        $("#J_RankListExpose").attr('class', 'rl-close');
+        $('.ranklist').animate({'left' : '0'});
+    },function(){
+        //$('.ranklist').stop();
+        //$("#J_RankListExpose").attr('class', 'rl-close');
+        //$('.ranklist').animate({'left' : '-273px'});
+    })
 	$(document).click(function(){
 		$('#J_RankListExpose').is('.rl-close') && $('#J_RankListExpose').click();
 	});

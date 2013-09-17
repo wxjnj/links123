@@ -16,6 +16,7 @@ class EnglishMediaRecommendModel extends CommonModel {
         array("updated", "time", 3, "function")
     );
 
+    /*
     public function getRecommendListToIndex($voice = 1, $target = 1, $pattern = 1) {
         $ret = $this->alias("recommend")
                 ->field("recommend.*")
@@ -24,6 +25,22 @@ class EnglishMediaRecommendModel extends CommonModel {
                         RIGHT JOIN " . C("DB_PREFIX") . "english_media media on question.media_id=media.id 
                         where media.voice={$voice} and question.target={$target} and media.pattern={$pattern} and recommend.id=media.recommend and media.status=1 
                         and question.status=1)>0")
+                ->order("recommend.sort asc")
+                ->select();
+        if (false === $ret) {
+            return array();
+        }
+        return $ret;
+    }*/
+    
+    public function getRecommendListToIndex($voice = 1, $target = 1, $pattern = 1) {
+        $ret = $this->alias("recommend")
+                ->field("recommend.*,(SELECT COUNT(question.id) from " .
+                        C("DB_PREFIX") . "english_question question 
+                        right join " . C("DB_PREFIX") . "english_media media on question.media_id=media.id 
+                        where media.voice={$voice} and question.target={$target} and media.pattern={$pattern} and media.recommend=recommend.id and media.status=1 
+                        and question.status=1) as question_num")
+                ->where("recommend.status=1")
                 ->order("recommend.sort asc")
                 ->select();
         if (false === $ret) {

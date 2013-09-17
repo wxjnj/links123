@@ -476,9 +476,9 @@ class EnglishQuestionModel extends CommonModel {
                     ->select();
         }
         $difficultyList = array(
-            array("id" => 1, "name" => "初级", "question_num" => $params['init_num']),
-            array("id" => 2, "name" => "中级", "question_num" => $params['init_num']),
-            array("id" => 3, "name" => "高级", "question_num" => $params['init_num'])
+            array("id" => 1, "name" => "初级", "question_num" => intval($params['init_num'])),
+            array("id" => 2, "name" => "中级", "question_num" => intval($params['init_num'])),
+            array("id" => 3, "name" => "高级", "question_num" => intval($params['init_num']))
         );
         if ($ret) {
             foreach ($ret as $value) {
@@ -883,7 +883,6 @@ class EnglishQuestionModel extends CommonModel {
 
         $map['media.status'] = 1;
         $map['question.status'] = 1;
-
         $result = $this->alias("question")->field($needField)
                         ->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media ON question.media_id=media.id")
                         ->where($map)->order($order)->limit(1)->select();
