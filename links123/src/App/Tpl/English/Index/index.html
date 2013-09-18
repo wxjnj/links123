@@ -222,7 +222,9 @@
                     <label id="J_mediaPath" style="display: none">{$question['media_info']['real_path']}</label>
                     <label id="J_mediaLocalPath" style="display: none">{$question['media_local_path']}</label>
                     <div class="videottl">
-                        <a id="J_mediaLocalPlayButton" href="javascript:;" <empty name="question['media_local_path']">style="display:none"</empty>>
+                        <a id="J_mediaLocalPlayButton" href="javascript:;" 
+                           <if condition="(empty($question['media_local_path'])) || (!empty($question['media_local_path'])AND($question['priority_type'] eq 2))">style="display:none"</if> 
+                           >
                             快速加载
                         </a>
                         <em id="J_mediaTitle" title="{$question.name}">{$question.name}</em>
@@ -308,15 +310,38 @@
                                             </script>
                                         </case>
                                         <case value="4">
-                                            <div id="J_media_swfobject_div"></div>
+                                            <div id="flashContent"></div>
                                             <script type="text/javascript">
-                                            $('#J_media_swfobject_div').css({
+                                                var swfVersionStr = "10.2.0";
+                                                var xiSwfUrlStr = PUBLIC + "/Js/Links123Player/playerProductInstall.swf";
+                                                var flashvars = new Object();
+                                                flashvars.logging = true;
+                                                flashvars.playerMode = 1;//播放器播放类型，1一般看，2说力看，3说力说模式
+                                                flashvars.url = "{$question['play_code']}";
+                                                //flashvars.autoplay = false;
+                                                var params = new Object();
+                                                params.quality = "high";
+                                                params.bgcolor = "#ffffff";
+                                                params.allowscriptaccess = "sameDomain";
+                                                params.allowfullscreen = "true";
+                                                var attributes = new Object();
+                                                attributes.id = "Links123Player";
+                                                attributes.name = "Links123Player";
+                                                attributes.align = "middle";
+                                                swfobject.embedSWF(
+                                                        PUBLIC + "/Js/Links123Player/Links123Player.swf", "flashContent",
+                                                        media_width, media_height,
+                                                        swfVersionStr, xiSwfUrlStr,
+                                                        flashvars, params, attributes);
+                                                swfobject.createCSS("#flashContent", "display:block;text-align:left;");
+                                            /*$('#J_media_swfobject_div').css({
                                                 'height': media_height,
                                                 'width': media_width
                                             });
                                             var media_thumb_img = "{$question['media_thumb_img']}";
                                             var media_url = "{$question['play_code']}";
                                             flowplayer("J_media_swfobject_div", "http://releases.flowplayer.org/swf/flowplayer-3.2.16.swf", {playlist:[media_thumb_img,{url: media_url,autoPlay: false}]});
+                                            */
                                             </script>
                                         </case>
                                         <default />

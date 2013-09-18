@@ -19,6 +19,7 @@ $(function() {
         if (local_path) {
             playLocalMedia(local_path);
         }
+        is_local_play = true;
         $(this).hide();
     })
     setTimeout('$("#J_mediaLocalPlayButton").fadeOut();', 30000);
@@ -89,46 +90,40 @@ $(function() {
         if ($(".answer").is(":visible")) {
             $("#J_answerButton").removeClass("current");
             $(".answer").slideUp("slow", function() { //这里收起后显示
-                if (is_local_play == false) {
-                    if ($("#J_media_div").attr("play_type") == 1 || $("#J_media_div").attr("play_type") == 2) {
-                        $("#J_media_div").css({'display': '', 'position': '', 'left': ''}).show();
-                    } else if ($("#J_media_div").attr("play_type") == 4) {
-                        $("#J_media_swfobject_div").show();
-                    } else if ($("#J_media_div").attr("data_isaboutvideo") == 1) {
-                        $(".J_player").show();
-                    }
-                } else {
-                    $("#Links123Player")[0].playPause();
-                }
+            if ($("#J_media_div").attr("play_type") == 1 || $("#J_media_div").attr("play_type") == 2) {
+                $("#J_media_div").css({'display': '', 'position': '', 'left': ''}).show();
+            } else if ($("#J_media_div").attr("play_type") == 4) {
+                $("#Links123Player")[0].playPause();
+                $("#J_media_swfobject_div").show();
+            } else if ($("#J_media_div").attr("data_isaboutvideo") == 1) {
+                $(".J_player").show();
+            }
             });
 
             $(this).text(' 　答  题');
         } else { //这里先隐藏后展开
-            if (is_local_play == false) {
-                //播放的视频停止
-                play_code = $("#J_media_object embed").attr("src");
-                videoStr = '';
-                videoStr += '<object id="J_media_object" height="100%" width="100%" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">';
-                videoStr += '<param name="wmode" value="transparent">';
-                videoStr += '<param name="movie" value="' + play_code + '">';
-                videoStr += '<embed name="swf" menu="true" height="100%" width="100%" play="false" type="application/x-shockwave-flash" allowfullscreen="true" wmode="transparent" src="' + play_code + '">';
-                videoStr += '</object>';
-                $('#J_media_div').html(videoStr);
+                 if ($("#J_media_div").attr("play_type") == 4){
+                     if (playState == "playing") {
+                        $("#Links123Player")[0].playPause();
+                    }
+                 }else{
+                    //播放的视频停止
+                    play_code = $("#J_media_object embed").attr("src");
+                    videoStr = '';
+                    videoStr += '<object id="J_media_object" height="100%" width="100%" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">';
+                    videoStr += '<param name="wmode" value="transparent">';
+                    videoStr += '<param name="movie" value="' + play_code + '">';
+                    videoStr += '<embed name="swf" menu="true" height="100%" width="100%" play="false" type="application/x-shockwave-flash" allowfullscreen="true" wmode="transparent" src="' + play_code + '">';
+                    videoStr += '</object>';
+                    $('#J_media_div').html(videoStr);
 
-                if ($("#J_media_div").attr("play_type") == 1 || $("#J_media_div").attr("play_type") == 2) {
-                    $("#J_media_div").css({'display': 'block', 'position': 'absolute', 'left': '-9999px'}).hide();
-                } else if ($("#J_media_div").attr("play_type") == 4) {
-                    $("#J_media_swfobject_div").hide();
-                } else if ($("#J_media_div").attr("data_isaboutvideo") == 1) {
-                    $(".J_player").hide();
-                    $('#J_media_div').html('');
-                }
-            } else {
-                if (playState == "playing") {
-                    $("#Links123Player")[0].playPause();
-                }
+                    if ($("#J_media_div").attr("play_type") == 1 || $("#J_media_div").attr("play_type") == 2) {
+                        $("#J_media_div").css({'display': 'block', 'position': 'absolute', 'left': '-9999px'}).hide();
+                    } else if ($("#J_media_div").attr("data_isaboutvideo") == 1) {
+                        $(".J_player").hide();
+                        $('#J_media_div').html('');
+                    }
             }
-
             $("#J_answerButton").addClass("current");
             $(".answer").slideDown("slow");
 
@@ -934,9 +929,14 @@ function requestQuestion(type, clickObject, media_id) {
                             swfobject.embedSWF(swfUrl, "J_media_swfobject_div", "100%", "100%", version, "/swf/playerProductInstall.swf", question.play_code, params);
 
                         } else if (question.play_type == 4 && question.target == 1) {
-                            $('#J_media_div').html('<div id="J_media_swfobject_div" style="height:' + media_height + 'px;width:' + media_width + 'px;"></div>');
+                            playLocalMedia(question.play_code);
+                            if(question.priority_type==2){
+                                is_local_play = true;
+                                $("#J_mediaLocalPlayButton").hide();
+                            }
+                            //$('#J_media_div').html('<div id="J_media_swfobject_div" style="height:' + media_height + 'px;width:' + media_width + 'px;"></div>');
 
-                            flowplayer("J_media_swfobject_div", "http://releases.flowplayer.org/swf/flowplayer-3.2.16.swf", {playlist: [question.media_thumb_img, {url: question.play_code, autoPlay: false}]});
+                            //flowplayer("J_media_swfobject_div", "http://releases.flowplayer.org/swf/flowplayer-3.2.16.swf", {playlist: [question.media_thumb_img, {url: question.play_code, autoPlay: false}]});
 
                         } else {
 
@@ -1720,7 +1720,6 @@ function playLocalMedia(local_path) {
     if ($(".focus_player")) {
         $(".focus_player").hide();
     }
-    is_local_play = true;
     $("#J_media_div").html("");
     $("#J_media_div").css("visibility", "");
     $("#J_media_div").html("<div id='flashContent'></div>");

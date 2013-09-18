@@ -305,6 +305,12 @@ class IndexAction extends EnglishAction {
             }
             $question['play_code'] = preg_replace(array('/width="(.*?)"/is', '/height="(.*?)"/is', '/width=300 height=280/is', '/width=600 height=400/is'), array('width="100%"', 'height="100%"', 'width="100%" height="100%"', 'width="100%" height="100%"'), $question['play_code']);
         }
+        //如果是优先本地播放，播放类型设置为4
+        if ($question['priority_type'] == 2 && $question['media_local_path']) {
+            $question['play_type'] = 4;
+            $question['play_code'] = $question['media_local_path'];
+            $isAboutVideo=0;
+        }
         //
         //保存历史记录
         $user_last_select['voice'] = $voice;
@@ -638,6 +644,13 @@ class IndexAction extends EnglishAction {
                     $ret['question']['play_code'] = str_replace('width=585&amp;height=575', 'width=100%&amp;height=100%', $ret['question']['play_code']);
                 }
                 $ret['question']['play_code'] = preg_replace(array('/width="(.*?)"/is', '/height="(.*?)"/is', '/width=300 height=280/is', '/width=600 height=400/is'), array('width="100%"', 'height="100%"', 'width="100%" height="100%"', 'width="100%" height="100%"'), $ret['question']['play_code']);
+            }
+            
+            //如果是优先本地播放，播放类型设置为4
+            if ($ret['question']['priority_type'] == 2 && $ret['question']['media_local_path']) {
+                $ret['question']['play_type'] = 4;
+                $ret['question']['play_code'] = $ret['question']['media_local_path'];
+                $isAboutVideo = 0;
             }
 
             /*
@@ -1337,15 +1350,15 @@ class IndexAction extends EnglishAction {
             //记录浏览题目
             $englishViewRecordModel->addViewRecord($viewType, $ret['question']);
             /*
-            if ($viewType == 2) {
-                $englishViewRecordModel->addRecord($ret['question']['id'], 0, 0, $ret['question']['subject'], 0, $ret['question']['difficulty'], $ret['question']['voice'], $ret['question']['target'], $ret['question']['pattern'], $viewType);
-            } else if ($viewType == 3) {
-                $englishViewRecordModel->addRecord($ret['question']['id'], 0, 0, 0, $recommend, $ret['question']['difficulty'], $ret['question']['voice'], $ret['question']['target'], $ret['question']['pattern'], $viewType);
-            } else if ($viewType == 1) {
-                $englishViewRecordModel->addRecord($ret['question']['id'], $ret['question']['level'], $object, 0, 0, 0, $ret['question']['voice'], $ret['question']['target'], $ret['question']['pattern'], $viewType);
-            } else if ($viewType == 4) {
-                $englishViewRecordModel->addRecord($ret['question']['id'], 0, 0, 0, 0, 0, $ret['question']['voice'], $ret['question']['target'], $ret['question']['pattern'], $viewType);
-            }*/
+              if ($viewType == 2) {
+              $englishViewRecordModel->addRecord($ret['question']['id'], 0, 0, $ret['question']['subject'], 0, $ret['question']['difficulty'], $ret['question']['voice'], $ret['question']['target'], $ret['question']['pattern'], $viewType);
+              } else if ($viewType == 3) {
+              $englishViewRecordModel->addRecord($ret['question']['id'], 0, 0, 0, $recommend, $ret['question']['difficulty'], $ret['question']['voice'], $ret['question']['target'], $ret['question']['pattern'], $viewType);
+              } else if ($viewType == 1) {
+              $englishViewRecordModel->addRecord($ret['question']['id'], $ret['question']['level'], $object, 0, 0, 0, $ret['question']['voice'], $ret['question']['target'], $ret['question']['pattern'], $viewType);
+              } else if ($viewType == 4) {
+              $englishViewRecordModel->addRecord($ret['question']['id'], 0, 0, 0, 0, 0, $ret['question']['voice'], $ret['question']['target'], $ret['question']['pattern'], $viewType);
+              } */
             $ret['english_user_info'] = D("EnglishUserInfo")->getEnglishUserInfo();
             //获取用户统计信息
             $englishUserCountModel = D("EnglishUserCount");
@@ -1430,6 +1443,12 @@ class IndexAction extends EnglishAction {
                     $ret['question']['play_code'] = str_replace('width=585&amp;height=575', 'width=100%&amp;height=100%', $ret['question']['play_code']);
                 }
                 $ret['question']['play_code'] = preg_replace(array('/width="(.*?)"/is', '/height="(.*?)"/is', '/width=300 height=280/is', '/width=600 height=400/is'), array('width="100%"', 'height="100%"', 'width="100%" height="100%"', 'width="100%" height="100%"'), $ret['question']['play_code']);
+            }
+            //如果是优先本地播放，播放类型设置为4
+            if ($ret['question']['priority_type'] == 2 && $ret['question']['media_local_path']) {
+                $ret['question']['play_type'] = 4;
+                $ret['question']['play_code'] = $ret['question']['media_local_path'];
+                $isAboutVideo = 0;
             }
 
             $ret['question']['isAboutVideo'] = $isAboutVideo;
