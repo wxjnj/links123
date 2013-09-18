@@ -755,7 +755,7 @@ class IndexAction extends EnglishAction {
         if ($user_count_info['right_num'] < 0) {
             $user_count_info['right_num'] = 0;
         }
-        $user_count_info['rice'] = $user_count_info['right_num'] * 10;
+        $user_count_info['rice'] = $user_count_info['right_num'] * 100;
         $englishUserCountModel->saveEnglishUserCountInfo($user_count_info);
 
         if ($data['level_up']) {
