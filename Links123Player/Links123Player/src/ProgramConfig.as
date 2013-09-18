@@ -6,6 +6,7 @@ package
 	
 	import flash.events.IEventDispatcher;
 	import flash.external.ExternalInterface;
+	import flash.media.SoundCodec;
 	import flash.utils.unescapeMultiByte;
 	
 	import mx.core.FlexGlobals;
@@ -15,19 +16,28 @@ package
 
 	public class ProgramConfig extends ConfigBase
 	{
+		//,["host","Host","s",""],["url","URL","s",""]
 		private static const CONFIGITEMS:Array=[
-			["skin","Skin","s",""],["logLevel","LogLevel","f","parsingLogLevel"],
-			["logging","LogEnabled","b",""],["host","Host","s",""],["url","URL","s",""]
+			["skin","Skin","s",""],["logLevel","LogLevel","f","parsingLogLevel"],["mp3host","Mp3Host","s",""],["questionId","QuestionId","n",""],["mediaId","MediaId","n",""],["rate","RATE","n",""],["codec","CODEC","n",""],
+			["logging","LogEnabled","b",""],["wordhost","WORDHOST","s",""],["url","URL","s",""],["playerMode","PlayerMode","n",""],["sendDataHost","SendDataHost","s",""],["datahost","DATAHOST","s",""],["autoplay","AutoPlay","b",""]
 		];
 		private static var _config:ProgramConfig;
 		private var param:Object;
 		public var LogEnabled:Boolean=false;
 		public var LogLevel:int=0;//error level
 		public var LogFilter:String="*";
-		public var Host:String="";
+		public var Mp3Host:String="";//单词读音服务器地址
 		public var URL:String = "";
-		
+		public var QuestionId:Number = 0;//初始化答题id
+		public var MediaId:Number = 0;//初始化视频id
+		public var WORDHOST:String = "";//请求单词数据host
+		public var PlayerMode:Number = 1;//默认为1 //1:为"看"播放器  2:为"说"播放器
+		public var SendDataHost:String = "";//传递数据服务器地址.
+		public var DATAHOST:String = "";//服务器地址
 		public var application:Application;
+		public var RATE:int = 44;//默认采样率
+		public var CODEC:int = 1;//默认模式 
+		public var AutoPlay:Boolean = true;//是否自动播放
 		public function ProgramConfig()
 		{
 			this.application=mx.core.FlexGlobals.topLevelApplication as Application;

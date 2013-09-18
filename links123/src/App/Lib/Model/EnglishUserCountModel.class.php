@@ -252,27 +252,33 @@ class EnglishUserCountModel extends CommonModel {
      */
     public function getTopRiceUserList($limit = 3, $voice, $target, $pattern, $object, $level) {
         $condition = array();
+        $params = array();
         if (intval($voice) > 0) {
             $condition['user_count_info.voice'] = $voice;
+            $params['voice'] = $voice;
         }
         if (intval($target) > 0) {
             $condition['user_count_info.target'] = $target;
+            $params['target'] = $target;
         }
         if (intval($pattern) > 0) {
             $condition['user_count_info.pattern'] = $pattern;
+            $params['pattern'] = $pattern;
         }
         if (intval($object) > 0) {
             $object_map['id'] = $object;
             $objecr_name = D("EnglishObject")->where($object_map)->getField("name");
             if ($objecr_name != "综合") {
                 $condition['user_count_info.object'] = $object;
+                $params['object'] = $object;
             }
         }
         if (intval($level) > 0) {
             $condition['user_count_info.level'] = $level;
+            $params['level'] = $level;
         }
         $list = $this->alias("user_count_info")
-                ->field("SUM(user_count_info.rice) as rice_sum,user.nickname as nickname,level.name as best_level_name")
+                ->field("SUM(user_count_info.rice) as rice_sum,user.face,user.id as user_id,user.nickname as nickname,level.name as best_level_name")
                 ->join(C("DB_PREFIX") . "english_user_info english_user_info on user_count_info.user_id=english_user_info.user_id")
                 ->join(C("DB_PREFIX") . "english_level level on english_user_info.best_level=level.id")
                 ->join("RIGHT JOIN " . C("DB_PREFIX") . "member user on user_count_info.user_id=user.id")
@@ -281,6 +287,20 @@ class EnglishUserCountModel extends CommonModel {
                 ->order("rice_sum DESC")
                 ->limit($limit)
                 ->select();
+        if (intval($_SESSION[C('MEMBER_AUTH_KEY')]) == 0) {
+            $list[] = $this->getNowUserCountToTop($params);
+        } else {
+            $user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+            $user_is_in_top = false;
+            foreach ($list as $value) {
+                if ($value['user_id'] == $user_id) {
+                    $user_is_in_top = true;
+                }
+            }
+            if (false == $user_is_in_top) {
+                $list[] = $this->getNowUserCountToTop($params);
+            }
+        }
         return $list;
     }
 
@@ -323,6 +343,53 @@ class EnglishUserCountModel extends CommonModel {
             }
         }
         D("EnglishRecord")->clearUserRecord($object, $level, $voice, $target); //重置用户记录
+    }
+
+    /**
+     * 
+     */
+    public function getNowUserCountToTop($params) {
+        if (intval($_SESSION[C('MEMBER_AUTH_KEY')]) == 0) {
+            $model = D("EnglishTouristCount");
+            $params['user_id'] = intval(cookie('english_tourist_id'));
+            $ret = $model->field("SUM(rice) as rice_sum")->where($params)->find();
+            $user_info = D("EnglishUserInfo")->getEnglishUserInfo();
+            $ret['nickname'] = "我";
+            $ret['face'] = "face.jpg";
+            $ret['best_level_name'] = $user_info['best_level_name'];
+        } else {
+            $condition = array();
+            $condition['user_count_info.user_id'] = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+            if (intval($params['voice']) > 0) {
+                $condition['user_count_info.voice'] = $params['voice'];
+            }
+            if (intval($params['target']) > 0) {
+                $condition['user_count_info.target'] = $params['target'];
+            }
+            if (intval($params['pattern']) > 0) {
+                $condition['user_count_info.pattern'] = $params['pattern'];
+            }
+            if (intval($params['object']) > 0) {
+                $object_map['id'] = $params['object'];
+                $objecr_name = D("EnglishObject")->where($object_map)->getField("name");
+                if ($objecr_name != "综合") {
+                    $condition['user_count_info.object'] = $params['object'];
+                }
+            }
+            if (intval($params['level']) > 0) {
+                $condition['user_count_info.level'] = $params['level'];
+            }
+            $ret = $this->alias("user_count_info")
+                    ->field("SUM(user_count_info.rice) as rice_sum,user.face,user.id as user_id,user.nickname as nickname,level.name as best_level_name")
+                    ->join(C("DB_PREFIX") . "english_user_info english_user_info on user_count_info.user_id=english_user_info.user_id")
+                    ->join(C("DB_PREFIX") . "english_level level on english_user_info.best_level=level.id")
+                    ->where($condition)
+                    ->find();
+            if ($ret == false) {
+                $ret = array();
+            }
+        }
+        return $ret;
     }
 
 }

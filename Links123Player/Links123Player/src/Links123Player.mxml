@@ -1,20 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
-			   xmlns:s="library://ns.adobe.com/flex/spark" 
-			   xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:components="com.links123.player.components.*" backgroundAlpha="0" currentState="player" creationComplete="application1_creationCompleteHandler(event)">
-	<fx:Script>
-		<![CDATA[
-		]]>
-	</fx:Script>
+			   xmlns:s="library://ns.adobe.com/flex/spark"
+			   xmlns:mx="library://ns.adobe.com/flex/mx" 
+			   skinClass="ApplicationBgSkin"
+			   preloader="LoadingProgressBar"
+			   xmlns:components="com.links123.player.components.*" currentState="player" creationComplete="application1_creationCompleteHandler(event)">
 	<fx:Declarations>
 		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
 	</fx:Declarations>
 	
 	<fx:Script source="Init.as"/>
 	<fx:Script source="log/Logging.as"/>
-	<fx:Script source="Main.as"/>
-	<fx:Style source="style.css">
-	</fx:Style>
+	<fx:Style source="style.css"></fx:Style>
 	
 	<s:states>
 		<s:State name="loggingForm"/>
@@ -35,6 +32,6 @@
 	</s:Group>
 	
 	<!--- player -->
-	<components:Player id="playercon" includeIn="player" top="0" right="0" left="0" bottom="0">
-	</components:Player>
+	<s:Group id="playercontainer" includeIn="player" top="0" right="0" left="0" bottom="0">
+	</s:Group>
 </s:Application>

@@ -22,7 +22,7 @@ in accordance with the terms of the license agreement accompanying it.
 -->
 <s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark"
 			 xmlns:fb="http://ns.adobe.com/flashbuilder/2009" alpha.disabledStates="0.5" 
-			 chromeColor.fullScreenStates="0xCCCCCC"   xmlns:components="com.links123.player.components.*">
+			 chromeColor.fullScreenStates="0xCCCCCC"   xmlns:components="com.links123.player.components.*" xmlns:controls="com.exsky.controls.*">
 	<!-- A chrome color of 0xCCCCCC in the fullScreenStates means we ignore the chromeColor property 
 	all together as 0xCCCCCC is essentially just a no-op color transform -->
 	
@@ -37,9 +37,9 @@ in accordance with the terms of the license agreement accompanying it.
 	<fx:Script fb:purpose="styling">
 		<![CDATA[
 			/* Define the skin elements that should not be colorized. */
-			static private const exclusions:Array = ["videoDisplay","introWordPanel","musiccon","recordbtn","endrecordbtn","playrecordbtn", "playPauseButton","wordshow","prevbtn","slowbtn","nextbtn", "scrubBar", 
-				"currentTimeDisplay", "timeDivider", "durationDisplay",
-				"volumeBar", "fullScreenButton"];
+			static private const exclusions:Array = ["videoDisplay","introWordPanel","scorepanel","musiccon","recordbtn","endrecordbtn", "playPauseButton","wordshow","scrubBar", 
+				"currentTimeDisplay", "timeDivider", "durationDisplay","loading","loadfail",
+				"volumeBar", "fullScreenButton","controlbg","pausecon","pologizebtn","chinese","goonplaybtn"];
 			
 			/**
 			 * @private
@@ -105,11 +105,7 @@ in accordance with the terms of the license agreement accompanying it.
 	<s:Group id="clippedGroup" clipAndEnableScrolling="true" left="0" top="0" right="0" bottom="0" 
 			 verticalScrollPosition="{Math.max(0, 184-clippedGroup.height)}">
 		
-		<!-- There's a minimum size for the video and controls.  If we go below that
-		we are clipped. -->
 		<s:Group minWidth="263" minHeight="184" left="0" right="0" top="0" bottom="0">
-			
-			<!-- background when the videoDisplay doesn't fill its whole spot -->
 			<s:Rect bottom="1" left="1" right="1" top="1"
 					bottom.fullScreenStates="0" left.fullScreenStates="0" 
 					right.fullScreenStates="0" top.fullScreenStates="0">
@@ -118,16 +114,78 @@ in accordance with the terms of the license agreement accompanying it.
 				</s:fill>
 			</s:Rect>
 			
-			<!--- @copy spark.components.VideoPlayer#videoDisplay -->
-			<s:VideoDisplay id="videoDisplay" bottom="24" left="1" right="1" top="1" 
+			<components:VideoDisplay id="videoDisplay" bottom="40" left="1" right="1" top="1"
 							bottom.fullScreenStates="0" left.fullScreenStates="0" 
 							right.fullScreenStates="0" top.fullScreenStates="0" />
+	        
+			
+			<s:Group id="pausecon" bottom="38" left="1" right="1" top="1">
+				<s:ToggleButton doubleClickEnabled="true" mouseEnabled="true" id="playPauseButton" bottom="1" left="1" right="1" top="1"  visible="false"
+								skinClass="com.links123.player.skins.PlayPauseButtonSkin" 
+								skinClass.fullScreenStates="com.links123.player.skins.PlayPauseButtonSkin"
+								focusIn="event.target.depth=1" focusOut="event.target.depth=0" />
+			</s:Group>
+			
+			<s:Group id="recordcon"  bottom="38" left="1" right="1" top="1">
+				<s:Button id="recordbtn" label="开始录音" verticalCenter="0" horizontalCenter="-25" buttonMode="true" skinClass="com.links123.player.skins.RecordButtonSkin" visible="false">
+				</s:Button>
+				<s:Button id="goonplaybtn" label="继续" horizontalCenter="75" verticalCenter="0" buttonMode="true" skinClass="com.links123.player.skins.GOONButtonSkin" visible="false">
+				</s:Button>
+				<s:Button id="endrecordbtn" label="结束录音" verticalCenter="0" horizontalCenter="50" buttonMode="true" skinClass="com.links123.player.skins.EndRecordButtonSkin" visible="false">
+				</s:Button>
+				<s:Button id="pologizebtn" label="语音分析" verticalCenter="0" horizontalCenter="60" buttonMode="true" skinClass="com.links123.player.skins.PologizeButtonSkin" visible="false">
+				</s:Button>
+			</s:Group>
+			
+			<!--- 字幕显示容器 -->
+			<s:Group visible="false" right="0" left="0" height="72" id="wordshow">
+				<s:Rect bottom="1" left="1" right="1" top="18" alpha="0.7"
+						bottom.fullScreenStates="0" left.fullScreenStates="0" 
+						right.fullScreenStates="0" top.fullScreenStates="0">
+					<s:fill>
+						<s:SolidColor color="0x000000" />
+					</s:fill>
+				</s:Rect>
+				<s:Group  id="chinesebtn" right="5" buttonMode="true">
+					<controls:FlexMovieClip source="{new PLAYER_CHINESE_LOGO()}">
+					</controls:FlexMovieClip>
+				</s:Group>
+				<s:Group  id="englishbtn" right="35" buttonMode="true">
+					<controls:FlexMovieClip source="{new PLAYER_ENGLISH_LOGO()}">
+					</controls:FlexMovieClip>
+				</s:Group>
+				<controls:FlexMovieClip source="{new PLAYER_CLOSE_WORD()}" buttonMode="true" id="closebtn" right="5" top="20">
+				</controls:FlexMovieClip>
+				<s:HGroup right="0" bottom="0" left="0" top="20" horizontalAlign="center" verticalAlign="middle" textAlign="left">
+					<controls:FlexMovieClip source="{new PLAYER_PREV_BUTTON()}" buttonMode="true" id="prevbtn">
+					</controls:FlexMovieClip>
+					<s:Group>
+						<s:VGroup id="wordCon" gap="0" top="0" right="0" left="0" bottom="0" verticalAlign="middle">
+						</s:VGroup>
+						<s:Label visible="false" id="chinese" fontWeight="bold" color="0xffffff" fontSize="18" fontFamily="黑体"
+								 textAlign="center" maxDisplayedLines="1"
+								 horizontalCenter="0" verticalCenter="1" verticalAlign="middle">
+						</s:Label>
+					</s:Group>
+					<controls:FlexMovieClip source="{new PLAYER_NEXT_BUTTON()}" buttonMode="true" id="nextbtn">
+					</controls:FlexMovieClip>
+				</s:HGroup>
+			</s:Group>
 			
 			<!--- 音频播放器容器 -->
 			<s:Group id="musiccon" bottom="1" left="1" right="1" top="1" bottom.fullScreenStates="0" left.fullScreenStates="0" right.fullScreenStates="0" top.fullScreenStates="0">
 			</s:Group>
-			<!--- 字幕显示容器 -->
-			<s:Group visible="false" right="0" left="0" bottom="40" height="50" id="wordshow">
+			
+			<!--- 单词说明面板 -->
+			<components:IntroWordPanel id="introWordPanel" visible="false" right="0" left="0" minHeight="150" top="0" bottom="90">
+			</components:IntroWordPanel>
+			
+			<!--- 得分面板 -->
+			<components:ScorePanel id="scorepanel" right="0" left="0" minHeight="150" top="0" bottom="90" visible="false">
+			</components:ScorePanel>
+			
+			<!--- 加载失败 -->
+			<s:Group top="1" right="1" left="1" bottom="38" id="loadfail" visible="false">
 				<s:Rect bottom="1" left="1" right="1" top="1" alpha="0.5"
 						bottom.fullScreenStates="0" left.fullScreenStates="0" 
 						right.fullScreenStates="0" top.fullScreenStates="0">
@@ -135,151 +193,74 @@ in accordance with the terms of the license agreement accompanying it.
 						<s:SolidColor color="0x000000" />
 					</s:fill>
 				</s:Rect>
-				
-				<s:HGroup id="wordCon"  right="0" bottom="0" left="0" top="0" horizontalAlign="center" verticalAlign="middle" textAlign="left">
-				</s:HGroup>
+				<s:Label text="播放失败,请重新刷新页面..." fontSize="24" color="0xffffff" verticalCenter="0" horizontalCenter="0">
+				</s:Label>
 			</s:Group>
-			<!--- 单词说明面板 -->
-			<components:IntroWordPanel id="introWordPanel" visible="false" right="0" left="0" height="150" verticalCenter="0" horizontalCenter="0">
-			</components:IntroWordPanel>
 			
-			<!--- @copy spark.components.VideoPlayer#scrubBar -->
-			<components:ScrubBar id="scrubBar" snapInterval="0.1" right="0" left="0" height="30" bottom="10" liveDragging="true"
-					    skinClass="com.links123.player.skins.ScrubBarSkin"
-						skinClass.fullScreenStates="com.links123.player.skins.ScrubBarSkin" />
-	        
+			<!--- 加载动画 -->
+			<s:Group top="1" right="1" left="1" bottom="38" id="loading" visible="false">
+				<controls:FlexMovieClip source="{new PLAYER_LOADING_MOVIE()}" verticalCenter="44" horizontalCenter="44">
+				</controls:FlexMovieClip>
+			</s:Group>
+			
 			<!-- video player controls -->
-			<s:Group left="0" right="0" height="24" bottom="0" bottom.fullScreenStates="150">
+			<s:Group left="0" right="0" height="40" bottom="0">
 				
 				<!-- actual controls with a maxWidth in non-fullScreen mode -->
 				<!--- @copy spark.components.VideoPlayer#playerControls -->
-				<s:Group bottom="0" horizontalCenter="0" left="0" right="0" maxWidth.fullScreenStates="755" id="playerControls">
+				<s:Group bottom="0" horizontalCenter="0" left="0" right="0" id="playerControls" height="40">
+					<s:Group id="controlbg" left="0" right="0" top="0" bottom="0" >
+						<controls:FlexMovieClip source="{new PLAYER_CONTROLBAR_MIDDLE}" left="0" right="0" top="0" bottom="0">
+						</controls:FlexMovieClip>
+						<controls:FlexMovieClip source="{new PLAYER_CONTROLBAR_LEFT()}" left="0" top="0" bottom="0">
+						</controls:FlexMovieClip>
+						<controls:FlexMovieClip source="{new PLAYER_CONTROLBAR_RIGHT()}" right="0" top="0" bottom="0">
+						</controls:FlexMovieClip>
+					</s:Group>
 					
+					<!--- @copy spark.components.VideoPlayer#scrubBar -->
+					<components:ScrubBar id="scrubBar" snapInterval=".01" stepSize=".01" right="100" left="70" height="30" verticalCenter="9" liveDragging="true"
+										 skinClass="com.links123.player.skins.ScrubBarSkin"
+										 skinClass.fullScreenStates="com.links123.player.skins.ScrubBarSkin" />
 					
-					<!--- @copy spark.components.VideoPlayer#playPauseButton -->
-					<s:ToggleButton id="playPauseButton" left="0" bottom="0" 
-									skinClass="spark.skins.spark.mediaClasses.normal.PlayPauseButtonSkin" 
-									skinClass.fullScreenStates="spark.skins.spark.mediaClasses.fullScreen.PlayPauseButtonSkin"
-									layoutDirection="ltr"
-									focusIn="event.target.depth=1" focusOut="event.target.depth=0" />
-					
-					<!-- scrubbar + the currentTime/duration labels -->
-					<s:Group left="39" right="75" top="0" bottom="0">
-						
-						<!-- background for scrubbar + the currentTime/duration -->
-						<s:Rect left="0" right="0" top="0" bottom="0">
-							<s:fill>
-								<s:LinearGradient rotation="90">
-									<s:GradientEntry color="0xFFFFFF" color.fullScreenStates="0x585858" alpha.fullScreenStates="0.55"/>
-									<s:GradientEntry color="0xDCDCDC" color.fullScreenStates="0x1E1E1E" alpha.fullScreenStates="0.55"/>
-								</s:LinearGradient>
-							</s:fill>
-						</s:Rect>
-						
-						<!-- fill highlight  (exclude in fullScreen) -->
-						<s:Rect left="1" right="1" top="1" height="11" excludeFrom="fullScreenStates">
-							<s:fill>
-								<s:SolidColor color="0xFFFFFF" alpha="0.3" />
-							</s:fill>
-						</s:Rect>
-						
-						<!-- one pixel border -->
-						<s:Rect left="1" right="1" top="1" bottom="1">
-							<s:stroke>
-								<s:LinearGradientStroke weight="1" rotation="90">
-									<s:GradientEntry color="0xFEFEFE" color.fullScreenStates="0xFFFFFF" alpha.fullScreenStates="0.12" />
-									<s:GradientEntry color="0xEAEAEA" color.fullScreenStates="0xFFFFFF" alpha.fullScreenStates="0.09" />
-								</s:LinearGradientStroke>
-							</s:stroke>
-						</s:Rect>
-						
-						<!-- border for the scrubbar/time label controls -->
-						<s:Rect left="-1" right="0" top="0" bottom="0">
-							<s:stroke>
-								<s:SolidColorStroke color="0x131313" color.fullScreenStates="0x222222" alpha.fullScreenStates="0.66"  />
-							</s:stroke>
-						</s:Rect>
-						
-						<!-- scrub bar + currentTime/duration in a HorizontalLayout -->
-						<s:Group left="0" right="0" height="23" bottom="0">
+					<s:Group left="0" top="0" bottom="0">
+						<s:Group left="0" right="0" height="23" verticalCenter="0">
 							<s:layout>
 								<s:HorizontalLayout verticalAlign="middle" gap="1" />
 							</s:layout>
-							
-							<!-- spacer -->
 							<s:Rect width="7" height="1" />
-							
-							
-							
-							<!-- spacer -->
-							<s:Rect width="8" height="1" />
-							
 							<!--- @copy spark.components.VideoPlayer#currentTimeDisplay -->
-							<s:Label id="currentTimeDisplay" color.fullScreenStates="0xFFFFFF" />
-							
+							<s:Label id="currentTimeDisplay" fontWeight="bold" color.fullScreenStates="0xFFFFFF" />
 							<!--- @private -->
-							<s:Label id="timeDivider" text="/" color.fullScreenStates="0xFFFFFF" />
-							
+							<s:Label id="timeDivider" text="/" fontWeight="bold" color.fullScreenStates="0xFFFFFF" />
 							<!--- @copy spark.components.VideoPlayer#durationDisplay -->
-							<s:Label id="durationDisplay" color.fullScreenStates="0xFFFFFF" />
-							
-							<!-- spacer -->
+							<s:Label id="durationDisplay" fontWeight="bold" color.fullScreenStates="0xFFFFFF" />
 							<s:Rect width="8" height="1" />
 						</s:Group>
 						
 					</s:Group>
 					
-					<s:HGroup gap="5" verticalCenter="0" horizontalCenter="0">
-						<!--- 上一词 -->
-						<s:Button id="prevbtn" label="上一句" skinClass="spark.skins.spark.ButtonSkin">
-						</s:Button>
-						
-						<!--- 慢放 -->
-						<s:Button id="slowbtn" label="慢放">
-						</s:Button>
-						
-						<!--- 下一词 -->
-						<s:Button id="nextbtn" label="下一句">
-						</s:Button>
-						
-						<!--- 开始录音 -->
-						<s:Button id="recordbtn" label="开始录音">
-						</s:Button>
-						
-						<!--- 结束录音 -->
-						<s:Button id="endrecordbtn" label="结束录音">
-						</s:Button>
-						
-						<!--- 录音回放 -->
-						<s:Button id="playrecordbtn" label="录音回放">
-						</s:Button>
-					</s:HGroup>
-					
 					<!--- @copy spark.components.VideoPlayer#volumeBar -->
 					<s:VolumeBar id="volumeBar" snapInterval=".01" stepSize=".01" liveDragging="true"
-								 right="37" bottom="0" 
-								 layoutDirection="ltr"
-								 skinClass="spark.skins.spark.mediaClasses.normal.VolumeBarSkin"
-								 skinClass.fullScreenStates="spark.skins.spark.mediaClasses.fullScreen.VolumeBarSkin"
+								 right="20" verticalCenter="0" 
+								 skinClass="com.links123.player.skins.VolumeBarSkin"
+								 skinClass.fullScreenStates="com.links123.player.skins.VolumeBarSkin"
 								 focusIn="event.target.depth=1" focusOut="event.target.depth=0" />
 					
 					<!--- @copy spark.components.VideoPlayer#fullScreenButton -->
-					<s:Button id="fullScreenButton" right="0" bottom="0" label="Fullscreen" 
-							  skinClass="spark.skins.spark.mediaClasses.normal.FullScreenButtonSkin"
-							  skinClass.fullScreenStates="spark.skins.spark.mediaClasses.fullScreen.FullScreenButtonSkin"
+					<s:Button id="fullScreenButton" right="0" bottom="0" verticalCenter="0" width="42" height="30" label="Fullscreen" 
+							  skinClass="com.links123.player.skins.FullScreenButtonSkin"
+							  skinClass.fullScreenStates="com.links123.player.skins.FullScreenExitButtonSkin"
 							  focusIn="event.target.depth=1" focusOut="event.target.depth=0" />
-					
 				</s:Group>
 				
 			</s:Group>
 			
-			<!-- border -->
 			<s:Rect left="0" right="0" top="0" bottom="0" excludeFrom="fullScreenStates">
 				<s:stroke>
 					<s:SolidColorStroke color="0x131313" />
 				</s:stroke>
 			</s:Rect>
-			
 		</s:Group>
 	</s:Group>
 </s:SparkSkin>

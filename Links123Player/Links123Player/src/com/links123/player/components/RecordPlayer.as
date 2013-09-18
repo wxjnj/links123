@@ -1,28 +1,45 @@
 package com.links123.player.components
 {
+	import com.links123.player.Mode.ClipsVO;
+	import com.links123.player.Mode.PlayerVO;
+	import com.links123.player.event.EventSprite;
+	import com.links123.player.event.RecordEvent;
+	import com.links123.player.event.RecordingEvent;
+	import com.links123.player.mic.MicRecorder;
+	import com.links123.player.mic.MicrophoneRecorder;
+	
 	import flash.events.Event;
+	import flash.events.EventDispatcher;
 	import flash.events.HTTPStatusEvent;
 	import flash.events.IOErrorEvent;
 	import flash.events.MouseEvent;
+	import flash.events.TimerEvent;
+	import flash.media.Microphone;
+	import flash.media.SoundCodec;
 	import flash.net.URLLoader;
 	import flash.net.URLLoaderDataFormat;
 	import flash.net.URLRequest;
 	import flash.net.URLRequestMethod;
+	import flash.net.URLVariables;
+	import flash.system.Security;
 	import flash.utils.ByteArray;
+	import flash.utils.Timer;
 	
-	import org.as3wavsound.WavSound;
-	import org.bytearray.micrecorder.MicRecorder;
-	import org.bytearray.micrecorder.encoder.WaveEncoder;
-	import org.bytearray.micrecorder.events.RecordingEvent;
-	import org.httpclient.events.HttpStatusEvent;
+	import mx.controls.Alert;
+	import mx.utils.Base64Encoder;
 
-	public class RecordPlayer
+	public class RecordPlayer extends EventDispatcher
 	{
 		include "../../../../log/Logging/Logger.as";
+//		/**
+//		 * 录音类 
+//		 */		
+//		public var recorder:MicRecorder;
+		
 		/**
 		 * 录音类 
 		 */		
-		private var recorder:MicRecorder;
+		public var recorder:MicrophoneRecorder;
 		
 		/**
 		 * 录制状态 
@@ -32,16 +49,6 @@ package com.links123.player.components
 		private var _recordData:ByteArray;
 		
 		/**
-		 * google 语音识别 api接口 
-		 */		
-		private var googleapi:String="http://www.google.com/speech-api/v1/recognize?xjerr=1&client=chromium&lang=zh-CN&maxresults=1";
-		
-		/**
-		 * google请求头 
-		 */		
-		private var googleContentType:String = "audio/speex;rate=16000";
-		
-		/**
 		 * 加载数据类 
 		 */		
 		private var urloder:URLLoader;
@@ -49,7 +56,24 @@ package com.links123.player.components
 		/**
 		 * 回放声音播放器 
 		 */		
-		private var player:WavSound;
+		//private var player:WavSound;
+		
+		private var mic:Microphone;
+		
+		/**
+		 * 超时 
+		 */		
+		public static var OVERTIME:String = "overtime";
+		
+		/**
+		 * 无话筒
+		 */		
+		public static var NOMIC:String = "no microphone";
+		
+		/**
+		 * 录音过短 
+		 */		
+		public static var SHORT:String = "short";
 		
 		/**
 		 * 录音播放器 
@@ -57,12 +81,39 @@ package com.links123.player.components
 		 */		
 		public function RecordPlayer()
 		{
-			recorder = new MicRecorder(new WaveEncoder());
-			recorder.rate = 16;
-			recorder.silenceLevel=0;
-			recorder.gain=100;
-			recorder.addEventListener(Event.COMPLETE,onRecordComplete);
-			recorder.addEventListener(RecordingEvent.RECORDING,onRecording);
+			mic = Microphone.getMicrophone();
+			if( mic != null )
+			{
+				recorder = new MicrophoneRecorder();
+				recorder.microphone = mic;
+				if(ProgramConfig.config.RATE != 0)
+				{
+					//recorder.rate = ProgramConfig.config.RATE;
+					recorder.rate();
+				}
+				if(ProgramConfig.config.CODEC == 1)
+				{
+					recorder.codec = SoundCodec.NELLYMOSER;
+				}else if(ProgramConfig.config.CODEC == 2)
+				{
+					recorder.codec = SoundCodec.SPEEX;
+				}
+				recorder.addEventListener(Event.COMPLETE,onRecordComplete);
+				recorder.addEventListener(RecordingEvent.RECORDING,onRecording);
+			}else
+			{
+				alertNoMicMess();
+				Logger.debug("NOT find the Microphone divice!");
+			}
+		}
+		
+		/**
+		 * 弹出警告提示框 
+		 * 
+		 */		
+		private function alertNoMicMess():void
+		{
+			dispatchEvent(new Event(RecordPlayer.NOMIC));
 		}
 		
 		/**
@@ -76,13 +127,25 @@ package com.links123.player.components
 		}
 		
 		/**
+		 * 录制时间 
+		 */		
+		private var recordtime:Number = 0;
+		
+		/**
 		 * 正在录制触发 
 		 * @param event
 		 * 
 		 */		
 		protected function onRecording(event:RecordingEvent):void
 		{
-			Logger.debug("it already record:"+event.time+"ms");
+			Logger.debug("it already record:{0},ms",event.time);
+			//trace(event.time);
+			recordtime = event.time;
+			if(event.time>30)
+			{
+				Logger.debug("超过30s停止录制.....");
+				dispatchEvent(new Event(RecordPlayer.OVERTIME));
+			}
 		}
 		
 		/**
@@ -94,83 +157,145 @@ package com.links123.player.components
 			Logger.debug("start recording!");
 			RecordStatus = 1;
 			recorder.record();
-		}
+		}		
 		
 		/**
 		 * 停止录制 
 		 * 
 		 */		
-		public function endrecord():void
-		{
+		public function endrecord(curvo:ClipsVO):void
+		{	
 			if(RecordStatus == 1)
-			{
+			{	
 				recorder.stop();
 				//保存录音数据
 				_recordData = recorder.output;
-				sendGoogle();
+				//sendGoogle();
+				if(recordtime > 1)
+				{
+					Logger.debug("录音时长大于1发送php服务器");
+					sendDataToPhp(curvo);
+				}else
+				{
+					Logger.debug("当前录音过短(小于等于1秒)");
+					dispatchEvent(new Event(RecordPlayer.SHORT));
+				}
 				RecordStatus = 2;
+				//player = new WavSound(recordData);
 			}
+			
 		}
 		
 		/**
-		 * 录制回放 
+		 * 录制回放 播放与暂停
 		 * 
 		 */		
 		public function playrecord():void
 		{
-			Logger.debug("开始回放");
-			player = new WavSound(recordData);
-			player.play();
-		}
-		
-		/**
-		 * 向google发送数据 请求识别 
-		 * 
-		 */		
-		protected function sendGoogle():void
-		{
-			//请求google
-			var request:URLRequest = new URLRequest(googleapi);
-			request.contentType = googleContentType; 
-			request.method=URLRequestMethod.POST;
-			request.data=recordData;
+			Logger.debug("start repeat play!");
+			try{
+				if(recorder != null)
+				{
+					recorder.playBack();
+				}
+			}catch(e:Error)
+			{
+				Logger.debug("play record wav filed:{0}",e.errorID);
+			}
 			
+		}
+
+		/**
+		 * 停止录制 
+		 * 
+		 */		
+		public function stoprecord():void
+		{
+			Logger.debug("stop repeat play!");
+			try{
+				if(recorder != null)
+				{
+					//recorder.stopplayBack();
+					recorder.stop();
+				}
+			}catch(e:Error)
+			{
+				Logger.debug("play record wav filed:{0}",e.errorID);
+			}
+			
+		}
+		
+		/**
+		 * 制造参数 两个字段score state
+		 * @return 
+		 * 
+		 */		
+		private function makeparam(state:String,score:int):Object
+		{
+			var obj:Object = new Object();
+			obj.score = score;
+			obj.state = state;
+			return obj;
+		}
+		
+		/**
+		 * 往php服务端发送数据 
+		 * 
+		 */		
+		private function sendDataToPhp(curvo:ClipsVO):void
+		{
+			Logger.debug("enter php http request:{0}",ProgramConfig.config.SendDataHost);
+			var request:URLRequest = new URLRequest(ProgramConfig.config.SendDataHost);//音频数据传输接口
+			request.method=URLRequestMethod.POST;
+			var baseStr:Base64Encoder = new Base64Encoder()
+			baseStr.encodeBytes(recordData);
+			var vr:URLVariables = new URLVariables();
+			
+			vr.mp3data = baseStr;
+			vr.questionid = PlayerVO.getInstance().questionid;
+			vr.clipid=curvo.sid;
+			request.data = vr;
+	
 			urloder = new URLLoader();
-			urloder.dataFormat = URLLoaderDataFormat.BINARY;
 			urloder.load(request);
-			urloder.addEventListener(Event.COMPLETE,uploadComplete);
-			urloder.addEventListener(HTTPStatusEvent.HTTP_STATUS,HTTPStatusheader);
-			urloder.addEventListener(IOErrorEvent.IO_ERROR,uploadError);
+			urloder.addEventListener(Event.COMPLETE,sendUploadComplete);
+			urloder.addEventListener(HTTPStatusEvent.HTTP_STATUS,sendHTTPStatusheader);
+			urloder.addEventListener(IOErrorEvent.IO_ERROR,sendUploadError);
 		}
 		
 		/**
-		 * 返回当前请求google状态 
+		 * 当前请求php失败 
 		 * @param event
 		 * 
 		 */		
-		protected function HTTPStatusheader(event:HTTPStatusEvent):void
+		protected function sendUploadError(event:IOErrorEvent):void
 		{
-			Logger.debug("current google http status:{0}"+event.status);
+			Logger.debug("current php http is failed!");
+			var obj:Object = makeparam("phpHttpError",0);
+			EventSprite.getInstance().dispatchEvent(new RecordEvent(RecordEvent.GETSCORE_COMPLETED,obj));
 		}
 		
 		/**
-		 * 当前请求google失败 
+		 * 返回当前请求php状态 
 		 * @param event
 		 * 
-		 */		
-		protected function uploadError(event:IOErrorEvent):void
+		 */	
+		protected function sendHTTPStatusheader(event:HTTPStatusEvent):void
 		{
-			Logger.debug("current google http is failed!");
+			Logger.debug("current php http status:{0}",event.status);
 		}
 		
 		/**
-		 * 上传成功返回取得google返回数据 
+		 * 服务器返回数据 
 		 * @param event
 		 * 
 		 */		
-		protected function uploadComplete(event:Event):void
+		protected function sendUploadComplete(event:Event):void
 		{
-			Logger.debug("Google server back data:"+event.target.data);
+			Logger.debug("php server back data:{0}",event.target.data);
+			var num:int = int(event.target.data);
+			var obj:Object = makeparam("OK",num);
+			EventSprite.getInstance().dispatchEvent(new RecordEvent(RecordEvent.GETSCORE_COMPLETED,obj));
 		}
 		
 		/**

@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+
+ADOBE SYSTEMS INCORPORATED
+Copyright 2008 Adobe Systems Incorporated
+All Rights Reserved.
+
+NOTICE: Adobe permits you to use, modify, and distribute this file
+in accordance with the terms of the license agreement accompanying it.
+
+-->
+
+<!--- The default skin class for the volume bar of a Spark VideoPlayer component
+in the normal skin state. The normal skin state means the component is not in 
+one of the <code>fullScreen</code> skin states.  
+
+@see spark.components.VideoPlayer
+
+@langversion 3.0
+@playerversion Flash 10
+@playerversion AIR 1.5
+@productversion Flex 4
+-->
+<s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark" 
+			 xmlns:fb="http://ns.adobe.com/flashbuilder/2009" currentStateChange="sparkskin1_currentStateChangeHandler(event)" xmlns:controls="com.exsky.controls.*" creationComplete="sparkskin1_creationCompleteHandler()" alpha.disabled=".5" xmlns:components="com.links123.player.components.*"> 
+	
+	<!-- host component -->
+	<fx:Metadata>
+		/** 
+		* @copy spark.skins.spark.ApplicationSkin#hostComponent
+		*/
+		[HostComponent("com.links123.player.components.HorizontalVolumeBar")]
+	</fx:Metadata>
+	
+	<fx:Script fb:purpose="styling">
+		
+		<![CDATA[
+			import mx.events.FlexEvent;
+			import mx.events.StateChangeEvent;
+		/* Define the skin elements that should not be colorized. */
+		static private const exclusions:Array = ["muteButton", "track", "thumb","bg"];
+		
+		/**
+		 * @private
+		 */
+		override public function get colorizeExclusions():Array {return exclusions;}
+		
+		/**
+		 * @private
+		 */
+		override protected function initializationComplete():void
+		{
+			useChromeColor = true;
+			super.initializationComplete();
+		}
+		
+		private var s:Sprite;
+		protected function sparkskin1_creationCompleteHandler():void
+		{	
+			this.muteButton.addEventListener(FlexEvent.MUTED_CHANGE,mutedchanggehandle);
+			this.muteButton.addEventListener(FlexEvent.VALUE_COMMIT,mutedchanggehandle);
+			this.muteButton.addEventListener(MouseEvent.CLICK,clickhandle);
+		}
+		
+		protected function mutedchanggehandle(event:FlexEvent):void
+		{	
+			if(s != null)
+			{
+				if(this.muteButton.muted == false)
+				{
+					s.height = track.track2.height*this.muteButton.volume;
+					trace("thumb y:"+thumb.y)
+					trace("声音点:"+thumb.y+",声音值:"+this.muteButton.volume);
+				}
+				else
+				{
+					s.height = 0;
+				}
+			}
+		}
+			private var firstlogo:Boolean = false;
+			
+			protected function sparkskin1_currentStateChangeHandler(event:StateChangeEvent):void
+			{
+				if(currentState == "open")
+				{
+					s = new Sprite();
+					track.trackcon.rawChildren.addChild(s);
+					s.graphics.beginFill(0xFF0000);
+					var n:Number = track.track2.height*this.muteButton.volume;
+					if(n == 0)
+					{
+						n = 1;
+					}
+					s.graphics.drawRect(track.track2.x,track.track2.y,track.track2.width,n);  
+					s.graphics.endFill();
+					s.rotation = 180;
+					s.x = track.track2.x+track.track2.width*2.5;
+					s.y = track.track2.y+track.track2.height;
+					track.track2.mask = s;
+					if(firstlogo == false || this.muteButton.volume == 0.8)
+					{
+						this.muteButton.volume=0.8;
+						s.height = track.track2.height*0.8;
+						thumb.y = 27;
+						firstlogo = true;
+					}else
+					{
+						if(this.muteButton.muted == true)
+						{
+							s.height = 0;
+						}else
+						{
+							trace(this.muteButton.volume);
+							s.height = track.track2.height*this.muteButton.volume;
+						}
+					}
+					//this.muteButton.dispatchEvent(new FlexEvent(FlexEvent.MUTED_CHANGE));
+				}
+			}
+			
+			protected function clickhandle(event:MouseEvent):void
+			{
+				if(this.muteButton.muted == false && this.muteButton.volume == 0.8)
+				{
+					this.muteButton.volume = 1;
+					s.height = track.track2.height;
+				}
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<s:states>
+		<s:State name="normal" />
+		<s:State name="open" />
+		<s:State name="disabled" />
+	</s:states>
+	
+	<s:PopUpAnchor id="popup" displayPopUp.normal="false" displayPopUp.open="true" includeIn="open"
+				   left="0" right="0" top="0" bottom="0" popUpPosition="above" itemDestructionPolicy="auto">
+		<s:Group id="dropDown" width="33" height="133" horizontalCenter="0">
+			<s:Group horizontalCenter="4" bottom="0" id="bg">
+				<controls:FlexMovieClip source="{new SOUND_BG()}" verticalCenter="-2">
+				</controls:FlexMovieClip> 
+				<s:Rect height="10" width="30" bottom="0" alpha="0">
+					<s:fill>
+						<s:SolidColor color="0x000000" />
+					</s:fill>
+				</s:Rect>
+			</s:Group>
+			<components:VolumeScrubBarTrackButton id="track" horizontalCenter="4" bottom="10"
+					  skinClass="com.links123.player.skins.VolumeScrubBarTrackSkin" />
+			
+			<s:Button id="thumb" horizontalCenter="2" width="16" height="16"
+					  skinClass="com.links123.player.skins.VolumeBarThumbSkin" />
+		</s:Group>
+	</s:PopUpAnchor>
+	
+	<s:MuteButton id="muteButton" volume="0.8" left="0" right="0" top="0" bottom="0" focusEnabled="false"
+				  skinClass="com.links123.player.skins.MuteButtonSkin" />
+	
+</s:SparkSkin>

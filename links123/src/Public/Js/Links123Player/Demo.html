@@ -34,9 +34,9 @@
            	flashvars.url="http://121.199.26.124:8000/English/Video/test2.flv";
             flashvars.wordhost="http://adamtest.links123.net/English/Index/requestionWordInfo";//"http://127.0.0.1/links123/worddata.json";
             flashvars.mp3host=encodeURIComponent("http://dict.youdao.com/dictvoice?audio=###&type=1");
-            flashvars.datahost=encodeURIComponent("http://121.199.26.124/English/Index/requestionMediaInfo.html");
-            flashvars.questionId = 1;
-            flashvars.mediaId = 1;
+            flashvars.datahost="http://test.links123.net/English/Index/requestionMediaInfo";
+            flashvars.questionId = 2;
+            flashvars.mediaId = 2307;
             flashvars.playerMode=2;//1:为一般播放器 2:为"看"播放器  3:为"说"播放器
             flashvars.rate = 44;//采样率配置s 
             flashvars.codec= 1;//模式 1.默认模式  2.speex压缩模式
@@ -120,6 +120,12 @@
      		{
      			document.getElementById("Links123Player").playerChoose(2);
      		}
+     		//取得当前是否录音的状态 true表示正在录音 false表示录音结束
+     		function getPlayerRecordState()
+     		{
+     			var b = document.getElementById("Links123Player").getPlayerRecordState();
+     			alert(b);
+     		}
         </script>
     </head>
     <body>
@@ -131,9 +137,10 @@
     <input type="button" onclick="prev();" value="上一句"/>
     <input type="button" onclick="next();" value="下一句"/>
     <input type="button" onclick="slow();" value="慢放"/>
-     <input type="button" onclick="replay();" value="回放"/>
-    <input type="button" onclick="clickplaynew();" value="播放新地址"/>
+    <input type="button" onclick="replay();" value="回放"/>
     <input type="button" onclick="chooseSpeak();" value="切换说播放器"/>
     <input type="button" onclick="chooseLook();" value="切换看播放器"/>
+    <input type="button" onclick="getPlayerRecordState();" value="当前录音状态"/>
+    <input type="button" onclick="clickplaynew();" value="播放新地址"/>
    </body>
 </html>

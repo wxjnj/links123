@@ -131,6 +131,9 @@ class EnglishUserInfoModel extends CommonModel {
         } else {
             $map['user_id'] = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
             $english_user_info = $this->where($map)->find(); //获取最新的用户信息
+            $user_info = D("Member")->field("nickname,face")->find($map['user_id']);
+            $english_user_info['nickname'] = $user_info['nickname']?$user_info['nickname']:"";
+            $english_user_info['face'] = $user_info['face']?$user_info['face']:"face.jpg";
         }
         //初始化信息，防止记录不存在
         $english_user_info['total_rice'] = intval($english_user_info['total_rice']);
@@ -274,7 +277,7 @@ class EnglishUserInfoModel extends CommonModel {
         //全部大米数
         if ($type == "total_rice") {
             $ret[0] = $this->alias("english_user_info")
-                    ->field("(select b.total_rice from " . C("DB_PREFIX") . "english_user_info b where b.user_id=english_user_info.user_id order by b.updated desc limit 1) as rice_sum,user.nickname as nickname,level.name as best_level_name")
+                    ->field("(select b.total_rice from " . C("DB_PREFIX") . "english_user_info b where b.user_id=english_user_info.user_id order by b.updated desc limit 1) as rice_sum,user.face,user.nickname as nickname,user.id as user_id,level.name as best_level_name")
                     ->join(C("DB_PREFIX") . "english_level level on english_user_info.best_level=level.id")
                     ->join(C("DB_PREFIX") . "member user on english_user_info.user_id=user.id")
                     ->where("user.status=1")
@@ -282,6 +285,26 @@ class EnglishUserInfoModel extends CommonModel {
                     ->order("total_rice DESC")
                     ->limit($limit)
                     ->select();
+            if (intval($_SESSION[C('MEMBER_AUTH_KEY')]) == 0) {
+                $user_count = $this->getEnglishUserInfo();
+                $user_count['rice_sum'] = $user_count['total_rice'];
+                $user_count['nickname'] = "我";
+                $user_count['face'] = "face.jpg";
+                $ret[0][] = $user_count;
+            } else {
+                $user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+                $user_is_in_top = false;
+                foreach ($ret[0] as $value) {
+                    if ($value['user_id'] == $user_id) {
+                        $user_is_in_top = true;
+                    }
+                }
+                if (false == $user_is_in_top) {
+                    $user_count = $this->getEnglishUserInfo();
+                    $user_count['rice_sum'] = $user_count['total_rice'];
+                    $ret[0][] = $user_count;
+                }
+            }
         } else if ($type == "continue_right_num") {
             
         } else if (preg_match("/object/", $type)) {

@@ -1,5 +1,7 @@
 package com.links123.player.components
 {
+	import com.exsky.controls.FlexMovieClip;
+	
 	import flash.events.MouseEvent;
 	
 	import spark.components.Button;
@@ -26,7 +28,11 @@ package com.links123.player.components
 		
 		//继续按钮
 		[SkinPart(required="false")]
-		public var goon:Button;
+		public var goon:FlexMovieClip;
+		
+		//语音
+		[SkinPart(required="false")]
+		public var speak:Button;
 		
 		private var _wordstr:String;
 		private var _typestr:String;

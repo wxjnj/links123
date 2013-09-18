@@ -20,7 +20,7 @@ mx|ToolTip
 	color: #000000;
 }
 
-p|Player
+p|CommonPlayer
 {
 	skin-class:ClassReference("com.links123.player.skins.VideoPlayerSkin");
 }
@@ -38,4 +38,12 @@ p|LabelButton
 p|IntroWordPanel
 {
 	skin-class:ClassReference("com.links123.player.skins.IntroWordPanelSkin");
+}
+p|VolumeScrubBarTrackButton
+{
+	skin-class:ClassReference("com.links123.player.skins.VolumeScrubBarTrackSkin");
+}
+p|ScorePanel
+{
+	skin-class:ClassReference("com.links123.player.skins.ScorePanelSkin");
 }

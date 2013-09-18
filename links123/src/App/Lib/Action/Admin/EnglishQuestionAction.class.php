@@ -746,7 +746,7 @@ class EnglishQuestionAction extends CommonAction {
                             '56.com' => '_56',
                             'letv.com' => '_letv',
                             'sohu.com' => '_sohu',
-                            'ted.com' => '_ted',
+                            //'ted.com' => '_ted',
                             '163.com' => '_163',
                             'umiwi.com' => '_umiwi',
                             'about.com' => '_about',

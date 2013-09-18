@@ -140,7 +140,7 @@ UL.tabs A.current.xl {
 .ranklist .ranklist-bd .rl-listen,
 .ranklist .ranklist-bd .rl-speak{
 	color: #242424;
-	padding: 15px 9px 15px 15px;
+	padding: 15px 9px 25px 15px;
 	height: 150px;
 	overflow: hidden;
 }

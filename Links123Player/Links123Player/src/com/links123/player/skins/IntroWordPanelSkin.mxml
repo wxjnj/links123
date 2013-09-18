@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		xmlns:s="library://ns.adobe.com/flex/spark" 
-		xmlns:mx="library://ns.adobe.com/flex/mx">
+		xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:controls="com.exsky.controls.*">
 	<!-- host component -->
 	<fx:Metadata>
 		[HostComponent("com.links123.player.components.IntroWordPanel")]
@@ -20,18 +20,28 @@
 				<s:SolidColor color="0x000000" />
 			</s:fill>
 		</s:Rect>
-		<s:VGroup gap="10" left="30" top="10">
-			<s:Label id="word" fontSize="24" fontWeight="bold" text="{hostComponent.wordstr}" fontFamily="Arial,Helvetica,sans-serif">
-			</s:Label>
-			<s:Label id="type" fontStyle="italic" text="{hostComponent.typestr}">
-			</s:Label>
-			<s:Label id="intro" text="{hostComponent.introstr}" fontSize="18" fontWeight="bold" fontFamily="Arial,Helvetica,sans-serif">
-			</s:Label>
-			<s:Label id="example" fontStyle="italic" text="{hostComponent.examplestr}">
-			</s:Label>
-			<s:Button id="goon" label="继续">
-			</s:Button>
-		</s:VGroup>
 		
+		<s:VGroup gap="10" left="20" top="5">
+			<s:Group>
+				<controls:FlexMovieClip source="{new PLAYER_SOUCANG()}">
+				</controls:FlexMovieClip>
+				<s:Label id="word" left="50" verticalCenter="0" fontSize="24" color="0xffffff" fontWeight="bold" text="{hostComponent.wordstr}" fontFamily="Arial,Helvetica,sans-serif">
+				</s:Label>
+			</s:Group>
+			<s:Label right="0" left="0" color="0xffd1a0" fontSize="14" id="type" fontWeight="bold" text="{hostComponent.typestr}">
+			</s:Label>
+			<s:Label right="0" left="0" id="intro" color="0xffd1a0" fontSize="14"  width="440" height="30" fontWeight="bold" text="{hostComponent.introstr}" fontFamily="Arial,Helvetica,sans-serif">
+			</s:Label>
+			<s:Label right="0" left="0" id="example" color="0xffd1a0" width="440" height="30" fontSize="14" fontWeight="bold" text="{hostComponent.examplestr}">
+			</s:Label>
+			<s:Group>
+				<s:Label color="0xffffff" fontSize="14" fontWeight="bold" text="发音:">
+				</s:Label>
+				<s:Button id="speak" top="20" buttonMode="true" skinClass="com.links123.player.skins.speakButtonSkin">
+				</s:Button>
+			</s:Group>
+		</s:VGroup>
+		<controls:FlexMovieClip id="goon" source="{new PLAYER_END_WORDS()}" buttonMode="true" top="10" right="10">
+		</controls:FlexMovieClip>
 	</s:Group>
 </s:Skin>

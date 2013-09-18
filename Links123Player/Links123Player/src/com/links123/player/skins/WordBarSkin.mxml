@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Skin xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		xmlns:s="library://ns.adobe.com/flex/spark" 
-		xmlns:mx="library://ns.adobe.com/flex/mx" currentState="noplay" creationComplete="init()">
+		xmlns:mx="library://ns.adobe.com/flex/mx" currentState="noplay" xmlns:controls="com.exsky.controls.*" creationComplete="init()">
 	<!-- host component -->
 	<fx:Metadata>
 		[HostComponent("com.links123.player.components.WordBar")]
@@ -30,20 +30,11 @@
 	</fx:Script>
 	
 	<s:Group id="wordbar" bottom="0" top="0" right="0" left="0" buttonMode="true">
-		<s:Rect bottom="0" top="0" right="0" left="0" includeIn="noplay">
-			<s:fill>
-				<s:SolidColor color="0x666666" />
-			</s:fill>
-		</s:Rect>
-		<s:Rect bottom="0" top="0" right="0" left="0" includeIn="playing">
-			<s:fill>
-				<s:SolidColor color="0xff9600" />
-			</s:fill>
-		</s:Rect>
-		<s:Rect bottom="0" top="0" right="0" left="0" includeIn="played">
-			<s:fill>
-				<s:SolidColor color="0x009d00"/>
-			</s:fill>
-		</s:Rect>
+		<controls:FlexMovieClip source="{new PLAYER_WNOPLAY()}" bottom="0" top="0" right="0" left="0" includeIn="noplay">
+		</controls:FlexMovieClip>
+		<controls:FlexMovieClip source="{new PLAYER_WPLAYING()}" bottom="0" top="0" right="0" left="0" includeIn="playing">
+		</controls:FlexMovieClip>
+		<controls:FlexMovieClip source="{new PLAYER_WPLAYED()}" bottom="0" top="0" right="0" left="0" includeIn="played">
+		</controls:FlexMovieClip>
 	</s:Group>
 </s:Skin>

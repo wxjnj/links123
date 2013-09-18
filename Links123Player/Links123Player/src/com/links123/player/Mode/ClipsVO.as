@@ -7,38 +7,52 @@ package com.links123.player.Mode
 	 */	
 	public class ClipsVO
 	{
+	   private var _sid:String;
 	   private var _cliptitle:String;
 	   private var _starttime:Number;
 	   private var _endtime:Number;
 	   private var _english:String;
 	   private var _chinese:String;
-	   private var _wordclips:Vector.<WordClipsVO> = new Vector.<WordClipsVO>();
+	   private var _wordsarr:Array;
+	 //  private var _wordclips:Vector.<WordClipsVO> = new Vector.<WordClipsVO>();
 		public function ClipsVO(obj:Object)
 		{
 			if(obj != null)
 			{
+				_sid = obj["id"];
 				_cliptitle = obj["title"];
 				_starttime = obj["starttime"];
 				_endtime = obj["endtime"];
 				_english = obj["english"];
 				_chinese = obj["chinese"];
-				var arr:Array = obj["wordclips"] as Array;
-				for(var i:int=0;i<arr.length;i++)
-				{
-					var clip:WordClipsVO = new WordClipsVO(arr[i] as Object);
-					_wordclips.push(clip);
-				}
+				_wordsarr = _english.split(" ");
+//				for(var i:int=0;i<arr.length;i++)
+//				{
+//					var clip:WordClipsVO = new WordClipsVO(arr[i] as Object);
+//					_wordclips.push(clip);
+//				}
 			}
 		}
 		
-	   /**
-	    * 单词 
-	    * @return 
-	    * 
-	    */		
-	   public function get wordclips():Vector.<WordClipsVO>
+		
+//	   /**
+//	    * 单词 
+//	    * @return 
+//	    * 
+//	    */		
+//	   public function get wordclips():Vector.<WordClipsVO>
+//	   {
+//		   return _wordclips;
+//	   }
+
+	   public function get sid():String
 	   {
-		   return _wordclips;
+		   return _sid;
+	   }
+
+	   public function get wordsarr():Array
+	   {
+		   return _wordsarr;
 	   }
 
 	   /**

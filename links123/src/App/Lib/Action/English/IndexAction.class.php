@@ -200,7 +200,7 @@ class IndexAction extends EnglishAction {
 
         if ($target == 2) {
 
-            $question = $questionModel->getSpeak($viewType, $object, $level, $subject, $recommend, $difficulty, $voice, $pattern);
+            $question = $questionModel->getQuestionToIndex($viewType, $object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern, $media_id);
         } elseif ($viewType == 2) {
             $question_id = $englishViewRecordModel->getUserViewQuestionLastId('', '', $subject, '', $difficulty, $voice, $target, $pattern);
             $question = $questionModel->getSpecialSubjectQuestion($subject, $difficulty, $voice, $target, $pattern, $type, $question_id, $now_question_id);
@@ -304,6 +304,12 @@ class IndexAction extends EnglishAction {
                 $question['play_code'] = str_replace('width=585&amp;height=575', 'width=100%&amp;height=100%', $question['play_code']);
             }
             $question['play_code'] = preg_replace(array('/width="(.*?)"/is', '/height="(.*?)"/is', '/width=300 height=280/is', '/width=600 height=400/is'), array('width="100%"', 'height="100%"', 'width="100%" height="100%"', 'width="100%" height="100%"'), $question['play_code']);
+        }
+        //如果是优先本地播放，播放类型设置为4
+        if ($question['priority_type'] == 2 && $question['media_local_path']) {
+            $question['play_type'] = 4;
+            $question['play_code'] = $question['media_local_path'];
+            $isAboutVideo = 0;
         }
         //
         //保存历史记录
@@ -638,6 +644,13 @@ class IndexAction extends EnglishAction {
                     $ret['question']['play_code'] = str_replace('width=585&amp;height=575', 'width=100%&amp;height=100%', $ret['question']['play_code']);
                 }
                 $ret['question']['play_code'] = preg_replace(array('/width="(.*?)"/is', '/height="(.*?)"/is', '/width=300 height=280/is', '/width=600 height=400/is'), array('width="100%"', 'height="100%"', 'width="100%" height="100%"', 'width="100%" height="100%"'), $ret['question']['play_code']);
+            }
+
+            //如果是优先本地播放，播放类型设置为4
+            if ($ret['question']['priority_type'] == 2 && $ret['question']['media_local_path']) {
+                $ret['question']['play_type'] = 4;
+                $ret['question']['play_code'] = $ret['question']['media_local_path'];
+                $isAboutVideo = 0;
             }
 
             /*
@@ -984,13 +997,13 @@ class IndexAction extends EnglishAction {
             $standard_audio = "./Public/Uploads/Video" . $senetenceInfo['standard_audio']; //标准音
             ///mnt/oral/python
             //
-            exec("python /mnt/oral/python/python/compute-vectors.py " . $standard_audio . " " . $standard_audio_vec); //生成特征矢量文件算法
+            exec("python /mnt/oral/python/compute-vectors.py " . $standard_audio . " " . $standard_audio_vec); //生成特征矢量文件算法
             //python ./Extend/ryan/python/compute-vectors.py ./Public/Uploads/Video/1.wav ./Public/Uploads/Video/1.vec
         }
         //
         //评分
         exec("python /mnt/oral/python/oral-evaluation.py " . $standard_audio_vec . " " . $recordFile . ' "' . $senetenceInfo['content'] . '" "' . $googleRet['utterance'] . '" ' . $googleRet['confidence'], $score_ret);
-        //echo "python ./Extend/python/oral-evaluation.py " . $standard_audio_vec . " " . $recordFile . ' "' . $senetenceInfo['content'] . '" "' . $googleRet['utterance'] . '" ' . $googleRet['confidence'];exit;
+        //echo "python /mnt/oral/python/oral-evaluation.py " . $standard_audio_vec . " " . $recordFile . ' "' . $senetenceInfo['content'] . '" "' . $googleRet['utterance'] . '" ' . $googleRet['confidence'];exit;
         $score = intval($score_ret[0]);
         if ($score == 4) {
             $score = 20;
@@ -1337,15 +1350,15 @@ class IndexAction extends EnglishAction {
             //记录浏览题目
             $englishViewRecordModel->addViewRecord($viewType, $ret['question']);
             /*
-            if ($viewType == 2) {
-                $englishViewRecordModel->addRecord($ret['question']['id'], 0, 0, $ret['question']['subject'], 0, $ret['question']['difficulty'], $ret['question']['voice'], $ret['question']['target'], $ret['question']['pattern'], $viewType);
-            } else if ($viewType == 3) {
-                $englishViewRecordModel->addRecord($ret['question']['id'], 0, 0, 0, $recommend, $ret['question']['difficulty'], $ret['question']['voice'], $ret['question']['target'], $ret['question']['pattern'], $viewType);
-            } else if ($viewType == 1) {
-                $englishViewRecordModel->addRecord($ret['question']['id'], $ret['question']['level'], $object, 0, 0, 0, $ret['question']['voice'], $ret['question']['target'], $ret['question']['pattern'], $viewType);
-            } else if ($viewType == 4) {
-                $englishViewRecordModel->addRecord($ret['question']['id'], 0, 0, 0, 0, 0, $ret['question']['voice'], $ret['question']['target'], $ret['question']['pattern'], $viewType);
-            }*/
+              if ($viewType == 2) {
+              $englishViewRecordModel->addRecord($ret['question']['id'], 0, 0, $ret['question']['subject'], 0, $ret['question']['difficulty'], $ret['question']['voice'], $ret['question']['target'], $ret['question']['pattern'], $viewType);
+              } else if ($viewType == 3) {
+              $englishViewRecordModel->addRecord($ret['question']['id'], 0, 0, 0, $recommend, $ret['question']['difficulty'], $ret['question']['voice'], $ret['question']['target'], $ret['question']['pattern'], $viewType);
+              } else if ($viewType == 1) {
+              $englishViewRecordModel->addRecord($ret['question']['id'], $ret['question']['level'], $object, 0, 0, 0, $ret['question']['voice'], $ret['question']['target'], $ret['question']['pattern'], $viewType);
+              } else if ($viewType == 4) {
+              $englishViewRecordModel->addRecord($ret['question']['id'], 0, 0, 0, 0, 0, $ret['question']['voice'], $ret['question']['target'], $ret['question']['pattern'], $viewType);
+              } */
             $ret['english_user_info'] = D("EnglishUserInfo")->getEnglishUserInfo();
             //获取用户统计信息
             $englishUserCountModel = D("EnglishUserCount");
@@ -1431,10 +1444,49 @@ class IndexAction extends EnglishAction {
                 }
                 $ret['question']['play_code'] = preg_replace(array('/width="(.*?)"/is', '/height="(.*?)"/is', '/width=300 height=280/is', '/width=600 height=400/is'), array('width="100%"', 'height="100%"', 'width="100%" height="100%"', 'width="100%" height="100%"'), $ret['question']['play_code']);
             }
+            //如果是优先本地播放，播放类型设置为4
+            if ($ret['question']['priority_type'] == 2 && $ret['question']['media_local_path']) {
+                $ret['question']['play_type'] = 4;
+                $ret['question']['play_code'] = $ret['question']['media_local_path'];
+                $isAboutVideo = 0;
+            }
 
             $ret['question']['isAboutVideo'] = $isAboutVideo;
 
             $this->ajaxReturn($ret, "请求成功", true);
+        }
+    }
+
+    public function getAudio() {
+        $word = $_REQUEST['word'];
+        $type = $_REQUEST['type'];
+        $html = file_get_contents("http://dictionary.cambridge.org/dictionary/british/" . $word); //获取html内容
+        /*
+          echo "<pre>";
+          echo htmlentities($html);
+          echo "</pre>";
+         * 
+         */
+        //
+        //preg获取单词解释
+        if ($type == 1) {
+            $preg = "/<audio\sid=\"audio_pron-uk_0\".*<source .*src=\"(.*\.mp3)\"/i";
+        } else {
+            $preg = "/<audio id=\"audio_pron-us_1\".*<source .*src=\"(.*\.mp3)\"/i";
+        }
+        preg_match($preg, $html, $match);
+        //<audio id="audio_pron-uk_0" onerror="playSoundException('play_sound_button')"><source class="audio_file_source" type="audio/mpeg" src="http://dictionary.cambridge.org/media/british/uk_pron/u/ukm/ukmut/ukmutto011.mp3"></source>
+        //audio_pron-us_1
+//        header('Content-Type:"audio/mpeg"');
+        if ($match[1]) {
+            redirect($match[1]);
+        } else {
+            if ($type == 1) {
+                $req_type = 2;
+            } else {
+                $req_type = 1;
+            }
+            redirect("http://dict.youdao.com/dictvoice?audio=" . $word . "type=" . $req_type);
         }
     }
 
