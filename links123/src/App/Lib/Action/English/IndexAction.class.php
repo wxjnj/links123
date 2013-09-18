@@ -984,13 +984,13 @@ class IndexAction extends EnglishAction {
             $standard_audio = "./Public/Uploads/Video" . $senetenceInfo['standard_audio']; //标准音
             ///mnt/oral/python
             //
-            exec("python /mnt/oral/python/python/compute-vectors.py " . $standard_audio . " " . $standard_audio_vec); //生成特征矢量文件算法
+            exec("python /mnt/oral/python/compute-vectors.py " . $standard_audio . " " . $standard_audio_vec); //生成特征矢量文件算法
             //python ./Extend/ryan/python/compute-vectors.py ./Public/Uploads/Video/1.wav ./Public/Uploads/Video/1.vec
         }
         //
         //评分
         exec("python /mnt/oral/python/oral-evaluation.py " . $standard_audio_vec . " " . $recordFile . ' "' . $senetenceInfo['content'] . '" "' . $googleRet['utterance'] . '" ' . $googleRet['confidence'], $score_ret);
-        //echo "python ./Extend/python/oral-evaluation.py " . $standard_audio_vec . " " . $recordFile . ' "' . $senetenceInfo['content'] . '" "' . $googleRet['utterance'] . '" ' . $googleRet['confidence'];exit;
+        echo "python /mnt/oral/python/oral-evaluation.py " . $standard_audio_vec . " " . $recordFile . ' "' . $senetenceInfo['content'] . '" "' . $googleRet['utterance'] . '" ' . $googleRet['confidence'];exit;
         $score = intval($score_ret[0]);
         if ($score == 4) {
             $score = 20;
