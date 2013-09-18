@@ -77,13 +77,15 @@ function getTopUserList(type, target) {
 
 				if (top_1 != null) {
 					for (var i = 0; i < top_1.length; i++) {
-						top_str_1 += '<li><p class="idx"><img src="' + PUBLIC + '/English/images/';
+						top_str_1 += '<li><p class="idx"><img src="' + PUBLIC ;
 						if (i == 0) {
-							top_str_1 += 'gold.png" width="26" height="25" />';
+							top_str_1 += '/English/images/gold.png" width="26" height="25" />';
 						} else if (i == 1) {
-							top_str_1 += 'yingpai.png" width="26" height="25" />';
+							top_str_1 += '/English/images/yingpai.png" width="26" height="25" />';
 						} else if (i == 2) {
-							top_str_1 += 'tongpai.png" width="26" height="25" />';
+							top_str_1 += '/English/images/tongpai.png" width="26" height="25" />';
+						}else if (i == 3) {
+							top_str_1 += '/Uploads/Faces/' + top_1[i]['face'] + '" width="26" height="25" />';
 						}
 						
 						top_str_1 += '</p>';
