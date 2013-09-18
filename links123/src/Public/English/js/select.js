@@ -76,23 +76,27 @@ function getTopUserList(type, target) {
 				var top_str_1 = "";
 
 				if (top_1 != null) {
-					for (var i = 0; i < top_1.length; i++) {
-						top_str_1 += '<li><p class="idx"><img src="' + PUBLIC ;
-						if (i == 0) {
-							top_str_1 += '/English/images/gold.png" width="26" height="25" />';
-						} else if (i == 1) {
-							top_str_1 += '/English/images/yingpai.png" width="26" height="25" />';
-						} else if (i == 2) {
-							top_str_1 += '/English/images/tongpai.png" width="26" height="25" />';
-						}else if (i == 3) {
-							top_str_1 += '/Uploads/Faces/' + top_1[i]['face'] + '" width="26" height="25" />';
-						}
-						
-						top_str_1 += '</p>';
-						top_str_1 += '<p class="nm" title="' + top_1[i]['nickname'] + '">' + top_1[i]['nickname'] + '</p>';
-						top_str_1 += '<p class="sum">' + top_1[i]['rice_sum'] + '</p>';
-						top_str_1 += '<p class="ln">' + top_1[i]['best_level_name'] + '</p>';
-						top_str_1 += '</li>';
+                    var key = 0;
+					for (var i in top_1) {
+                        top_str_1 += '<li><p class="idx"><img src="' + PUBLIC ;
+                        if (key == 0) {
+                            top_str_1 += '/English/images/gold.png" width="26" height="25" />';
+                        } else if (key == 1) {
+                            top_str_1 += '/English/images/yingpai.png" width="26" height="25" />';
+                        } else if (key == 2) {
+                            top_str_1 += '/English/images/tongpai.png" width="26" height="25" />';
+                        }else if (key == 3) {
+                            top_str_1 += '/Uploads/Faces/' + top_1[i]['face'] + '" width="26" height="25" />';
+                        }
+
+                        top_str_1 += '</p>';
+                        top_str_1 += '<p class="nm" title="' + top_1[i]['nickname'] + '">' + top_1[i]['nickname'] + '</p>';
+                        top_str_1 += '<p class="sum">' + top_1[i]['rice_sum'] + '</p>';
+                        top_str_1 += '<p class="ln">' + top_1[i]['best_level_name'] + '</p>';
+                        top_str_1 += '</li>';
+                        if(top_1[i]['rice_sum'] > 0){
+                            key++;
+                        }
 					}
 				}
 				$(".J_top_1").html(top_str_1);
