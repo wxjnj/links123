@@ -272,7 +272,7 @@ $(function(){
 					parent.document.getElementById('main').src = "http://" + url;
 				}
 			} else {
-				if (tid == '4' || tid == '40' || tid == '58' || tid == '110' || tid == '117') { // 谷歌、美试、啪啪、PQuora
+				if (tid == '4' || tid == '26' || tid == '40' || tid == '58' || tid == '110' || tid == '117') { // 谷歌、美试、啪啪、PQuora
 					
 					$.post(URL + "/thl_count", {tid : tid}, function() {});
 					window.open("http://" + url);
