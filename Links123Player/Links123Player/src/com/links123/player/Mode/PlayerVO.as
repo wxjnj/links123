@@ -9,7 +9,7 @@ package com.links123.player.Mode
 	{	
 		include "../../../../log/Logging/Logger.as";
 		private var _title:String;
-		private var _duration:int;
+		private var _questionid:String;
 		private var _url:String;
 		private var _mp3url:String;
 		private var _clips:Vector.<ClipsVO> = new Vector.<ClipsVO>();
@@ -32,7 +32,7 @@ package com.links123.player.Mode
 			if(obj != null)
 			{
 				_title = obj["title"];
-				_duration = obj["duration"];
+				_questionid = obj["question_id"];
 				_url = obj["url"];
 				_mp3url = obj["mp3url"]
 				var arr:Array = obj["clips"] as Array;
@@ -76,13 +76,13 @@ package com.links123.player.Mode
 		}
 
 		/**
-		 * 取得总时长 
+		 * 取得答题id 
 		 * @return 
 		 * 
 		 */		
-		public function get duration():int
+		public function get questionid():String
 		{
-			return _duration;
+			return _questionid;
 		}
 
 		/**

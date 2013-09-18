@@ -12,6 +12,8 @@
 package com.links123.player.components
 {
 	
+	import com.exsky.controls.FlexMovieClip;
+	
 	import flash.display.DisplayObject;
 	import flash.display.StageDisplayState;
 	import flash.events.Event;
@@ -28,20 +30,18 @@ package com.links123.player.components
 	import mx.core.FlexGlobals;
 	import mx.core.IVisualElementContainer;
 	import mx.core.mx_internal;
+	import mx.effects.Sequence;
 	import mx.events.FlexEvent;
 	import mx.managers.PopUpManager;
 	import mx.utils.BitFlagUtil;
-	
-	import org.osmf.events.LoadEvent;
-	import org.osmf.events.MediaPlayerStateChangeEvent;
-	import org.osmf.events.TimeEvent;
-	import org.osmf.media.MediaPlayerState;
 	
 	import spark.components.Button;
 	import spark.components.Group;
 	import spark.components.HGroup;
 	import spark.components.Label;
-	import spark.components.VideoDisplay;
+	import spark.components.TileGroup;
+	import spark.components.ToggleButton;
+	import spark.components.VGroup;
 	import spark.components.mediaClasses.MuteButton;
 	import spark.components.mediaClasses.VolumeBar;
 	import spark.components.supportClasses.ButtonBase;
@@ -49,6 +49,11 @@ package com.links123.player.components
 	import spark.components.supportClasses.ToggleButtonBase;
 	import spark.core.IDisplayText;
 	import spark.events.TrackBaseEvent;
+	
+	import org.osmf.events.LoadEvent;
+	import org.osmf.events.MediaPlayerStateChangeEvent;
+	import org.osmf.events.TimeEvent;
+	import org.osmf.media.MediaPlayerState;
 	
 	use namespace mx_internal;
 	
@@ -658,17 +663,17 @@ package com.links123.player.components
 //		[SkinPart(required="false")]
 //		public var word:spark.components.Label;
 		
-		//上一句
-		[SkinPart(required="false")]
-		public var prevbtn:Button;
-		
-		//慢放
-		[SkinPart(required="false")]
-		public var slowbtn:Button;
-		
-		//下一句
-		[SkinPart(required="false")]
-		public var nextbtn:Button;
+//		//上一句
+//		[SkinPart(required="false")]
+//		public var prevbtn:Button;
+//		
+//		//慢放
+//		[SkinPart(required="false")]
+//		public var slowbtn:Button;
+//		
+//		//下一句
+//		[SkinPart(required="false")]
+//		public var nextbtn:Button;
 		
 		//声音容器
 		[SkinPart(required="false")]
@@ -682,17 +687,56 @@ package com.links123.player.components
 		[SkinPart(required="false")]
 		public var endrecordbtn:Button;
 		
-		//录音回放
+		//语音分析中
 		[SkinPart(required="false")]
-		public var playrecordbtn:Button
+		public var pologizebtn:Button;
+		
+		//继续播放
+		[SkinPart(required="false")]
+		public var goonplaybtn:Button;
 		
 		//文字存放容器
 		[SkinPart(required="false")]
-		public var wordCon:HGroup;
+		public var wordCon:VGroup;
 		
 		//单词介绍面板
 		[SkinPart(required="false")]
-		public var introWordPanel:IntroWordPanel
+		public var introWordPanel:IntroWordPanel;
+		
+		//得分面板
+		[SkinPart(required="false")]
+		public var scorepanel:ScorePanel;
+		
+		//加载动画
+		[SkinPart(required="false")]
+		public var loading:Group;
+		
+		//关闭按钮
+		[SkinPart(required="false")]
+		public var closebtn:FlexMovieClip;
+		
+		//上一句
+		[SkinPart(required="false")]
+		public var prevbtn:FlexMovieClip;
+		
+		//下一句
+		public var nextbtn:FlexMovieClip;
+		
+		//失败画面
+		[SkinPart(required="false")]
+		public var loadfail:Group;
+		
+		//中文按钮
+		[SkinPart(required="false")]
+		public var chinesebtn:Group;
+		
+		//英文按钮
+		[SkinPart(required="false")]
+		public var englishbtn:Group;
+		
+		//中文字幕
+		[SkinPart(required="false")]
+		public var chinese:spark.components.Label;
 		
 		[SkinPart(required="false")]
 		
@@ -1715,6 +1759,7 @@ package com.links123.player.components
 			else if (instance == playPauseButton)
 			{
 				playPauseButton.addEventListener(MouseEvent.CLICK, playPauseButton_clickHandler);
+				playPauseButton.addEventListener(MouseEvent.DOUBLE_CLICK,playPauseButton_doubleclickhandle); 
 			}
 			else if (instance == stopButton)
 			{
@@ -2486,12 +2531,22 @@ package com.links123.player.components
 		{
 			stop();
 		}
-		
+		private var isDoubleClick:Boolean = false;//判断是否是双击的标志  
+		private var timer:Timer;
 		/**
 		 *  @private
 		 */
-		private function playPauseButton_clickHandler(event:MouseEvent):void
+		protected function playPauseButton_clickHandler(event:MouseEvent):void
+		{	
+			isDoubleClick = false;  
+			timer = new Timer(260, 1);  
+			timer.start();//也就是说两次单击间隔在260毫秒之内的就被认为是双击  
+			timer.addEventListener(TimerEvent.TIMER, clickOrDouble);//这边的clickOrDouble也可以写成匿名函数，把mouseEvent传进去
+		}
+		
+		private function clickFunc():void
 		{
+			trace("单击播放暂停 :"+playing);
 			if (playing)
 				pause();
 			else
@@ -2501,6 +2556,28 @@ package com.links123.player.components
 			// the play() didn't actually play() because there's no source 
 			// or we're in an error state
 			playPauseButton.selected = playing;
+		}
+		
+		private function clickOrDouble(event:TimerEvent):void {  
+			if(isDoubleClick == false)
+			{  
+				trace("单击");
+				clickFunc();//调用单击响应函数  
+			} 
+			timer.stop();
+			timer.removeEventListener(TimerEvent.TIMER, clickOrDouble);
+		}  
+		
+		/**
+		 * 双击 
+		 * @param event
+		 * 
+		 */		
+		protected function playPauseButton_doubleclickhandle(event:MouseEvent):void
+		{
+			trace("双击");
+			isDoubleClick = true;
+			fullScreenButton.dispatchEvent(new MouseEvent(MouseEvent.CLICK));
 		}
 		
 		/**
@@ -2553,7 +2630,7 @@ package com.links123.player.components
 		/**
 		 *  @private
 		 */
-		private function scrubBar_changeStartHandler(event:Event):void
+		protected function scrubBar_changeStartHandler(event:Event):void
 		{
 			scrubBarChanging = true;
 		}
@@ -2595,7 +2672,7 @@ package com.links123.player.components
 		/**
 		 *  @private
 		 */
-		private function scrubBar_changeEndHandler(event:Event):void
+		protected function scrubBar_changeEndHandler(event:Event):void
 		{      
 			scrubBarChanging = false;
 		}

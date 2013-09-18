@@ -48,6 +48,24 @@ public class SoundPlayer extends Sprite 
       //SoundMixer.bufferTime = BUFFERTIME; 
    }
 
+public function get isShowMovie():Boolean
+{
+	return _isShowMovie;
+}
+
+public function set isShowMovie(value:Boolean):void
+{
+	if(value == false)
+	{
+	    this.visible = false;
+	}else if(value == true)
+	{
+		this.visible = true;
+	}
+	_isShowMovie = value;
+}
+
+
 	/**
 	 * 创建一个声音对象
 	 * @param url 媒体地址
@@ -55,7 +73,7 @@ public class SoundPlayer extends Sprite 
 	 * @isShowMovie 是否显示音频谱
 	 * 
 	 */      
-    public function createSound(url:String,playNow:Boolean = true,isShowMovie:Boolean=false):void
+    public function createSound(url:String,playNow:Boolean = true):void
     {              
 		Logger.debug("init sound object!");          
         dispose();
@@ -66,10 +84,7 @@ public class SoundPlayer extends Sprite 
 		{
            play();    
 		}
-		if(isShowMovie==true)
-		{
-			this.addEventListener(Event.ENTER_FRAME,enterframehandle);
-		}                        
+			this.addEventListener(Event.ENTER_FRAME,enterframehandle);                       
     }
 
 	/**
@@ -79,7 +94,10 @@ public class SoundPlayer extends Sprite 
 	 */
 	protected function enterframehandle(event:Event):void
 	{
-		playMovie();
+		if(isShowMovie == true)
+		{
+			playMovie();
+		}
 	}
              
 	/**
@@ -144,7 +162,7 @@ public class SoundPlayer extends Sprite 
 	 */
 	public function stop():void
 	{
-	   if(isPlaying)
+	   if(isPlaying && soundCh!=null)
 	   {
 	       soundCh.stop();
 	       isPlaying = false;                                
@@ -217,11 +235,15 @@ public class SoundPlayer extends Sprite 
 	{
 		  this.removeEventListener(Event.ENTER_FRAME,enterframehandle);
 	      if(sound == null)
+		{
 	             return ;
+		}
 	      if(sound.isBuffering)
-	              sound.close();
+	      {
+	              //sound.close();
 	              stop();                 
 	              sound = null;
+	      }
 	}
 	
 	/**
@@ -231,7 +253,7 @@ public class SoundPlayer extends Sprite 
 	private function playMovie():void
 	{
 		this.graphics.clear();
-		SoundMixer.computeSpectrum(byte,true,1);//将当前声音输出为ByteArray  
+		SoundMixer.computeSpectrum(byte,false,1);//将当前声音输出为ByteArray  
 		for (var i:int=0; i <1000; i=i+5) {  
 			n = byte.readFloat()*60;//把数据流读取成浮点数并扩大其值  
 			this.graphics.lineStyle(3,0xFFFFFF,1,true,"noSacle","none");  

@@ -23,7 +23,7 @@ one of the <code>fullScreen</code> skin states.
 -->
 <s:SparkSkin xmlns:fx="http://ns.adobe.com/mxml/2009" xmlns:s="library://ns.adobe.com/flex/spark"
 			 xmlns:fb="http://ns.adobe.com/flashbuilder/2009" minHeight="14" minWidth="60"
-			 alpha.disabled="0.5" xmlns:mx="library://ns.adobe.com/flex/mx">
+			 alpha.disabled="0.5" xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:controls="com.exsky.controls.*" creationComplete="init()">
 	
 	<fx:Metadata>
 		/** 
@@ -34,7 +34,7 @@ one of the <code>fullScreen</code> skin states.
 	
 	<fx:Script fb:purpose="styling">
 		/* Define the skin elements that should not be colorized. */
-		static private const exclusions:Array = ["track", "thumb","clipcon"];
+		static private const exclusions:Array = ["track", "thumb","clipcon","playedAreabg","loadedRangeAreabg"];
 		
 		/**
 		 * @private
@@ -48,6 +48,16 @@ one of the <code>fullScreen</code> skin states.
 		{
 			useChromeColor = true;
 			super.initializationComplete();
+		}
+		
+		//根据选择模式判断是否显示
+		private function init():void
+		{
+			if(ProgramConfig.config.PlayerMode == 2 || ProgramConfig.config.PlayerMode == 3)
+			{
+				playedArea.visible = false;
+				loadedRangeArea.visible = false;
+			}
 		}
 	</fx:Script>
 	
@@ -81,25 +91,16 @@ one of the <code>fullScreen</code> skin states.
 	
 	<!--- The skin pat that defines the video timeline. The timeline shows the current playhead location  
 	in the video, the amount of the video previously played, and the loaded in part of the video. -->
-	<s:Button id="track" left="0" right="0" top="0" height="11"
-			  skinClass="spark.skins.spark.mediaClasses.normal.ScrubBarTrackSkin" visible="false" />
+	<s:Button id="track" left="0" right="0" top="0" height="14"
+			  skinClass="com.links123.player.skins.ScrubBarTrackSkin"/>
 	
-	<!--- @copy spark.components.mediaClasses.ScrubBar#loadedRangeArea -->
-	<s:Group id="loadedRangeArea" x="0" y="0" height="11" includeInLayout="false" visible="false">
-		
-		<!-- inset 7 and 6 pixels because that's thumbSize/2 -->
-		<s:Group left="7" right="6" top="0" bottom="0" minWidth="0">
-			
-			<!-- fill -->
+	<s:Group id="loadedRangeArea" x="0" y="0" height="5" includeInLayout="false">
+		<!--<s:Group left="7" right="6" top="0" bottom="0" minWidth="0">
 			<s:Rect left="1" right="1" top="1" bottom="1">
 				<s:fill>
 					<s:SolidColor color="0xD7D7D7" />
 				</s:fill>
 			</s:Rect>
-			
-			<!-- inner glow -->
-			<!-- set height to 100%, maxHeight=1, minHeight=0 b/c only want this line to show up 
-			if there's room for it -->
 			<s:Rect left="1" top="1" bottom="1" width="100%" maxWidth="1" minWidth="0">
 				<s:fill>
 					<s:SolidColor color="0x000000" alpha="0.12" />
@@ -110,26 +111,21 @@ one of the <code>fullScreen</code> skin states.
 					<s:SolidColor color="0x000000" alpha="0.12" />
 				</s:fill>
 			</s:Rect>
-			
-			<!-- black line on right -->
-			<!-- set width to 100%, maxWidth=1, minWidth=0 b/c only want this line to show up 
-			if there's room for it -->
 			<s:Rect right="0" top="1" bottom="1" width="100%" maxWidth="1" minWidth="0">
 				<s:fill>
 					<s:SolidColor color="0x000000" alpha=".5"/>
 				</s:fill>
 			</s:Rect>
-			
-		</s:Group>    
+		</s:Group>-->
+		<s:Group left="5" right="7" top="5" bottom="0" minWidth="0" id="loadedRangeAreabg">
+			<controls:FlexMovieClip source="{new PROGRESS_LOADED_MIDDLE}" right="0" left="3">
+			</controls:FlexMovieClip>
+			<controls:FlexMovieClip source="{new PROGRESS_LOADED_LEFT()}" left="0">
+			</controls:FlexMovieClip>
+		</s:Group>
 	</s:Group>
-	
-	<!--- @copy spark.components.mediaClasses.ScrubBar#playedArea -->
-	<s:Group id="playedArea" x="0" y="0" height="11" includeInLayout="false" visible="false">
-		
-		<!-- inset 7 and 6 pixels because that's thumbSize/2 -->
-		<s:Group left="7" right="6" top="0" bottom="0" minWidth="0">
-			
-			<!-- inner glow -->
+	<s:Group id="playedArea" x="0" y="0" height="5" includeInLayout="false">
+		<!--<s:Group left="7" right="6" top="0" bottom="0" minWidth="0">
 			<s:Rect left="1" right="1" top="1" bottom="1">
 				<s:fill>
 					<s:LinearGradient rotation="90">
@@ -139,7 +135,6 @@ one of the <code>fullScreen</code> skin states.
 				</s:fill>
 			</s:Rect>
 			
-			<!-- fill -->
 			<s:Rect left="2" right="2" top="2" bottom="2">
 				<s:fill>
 					<s:LinearGradient rotation="90">
@@ -148,17 +143,19 @@ one of the <code>fullScreen</code> skin states.
 					</s:LinearGradient>
 				</s:fill>
 			</s:Rect>
-			
-			<!-- black line on right -->
-			<!-- set width to 100%, maxWidth=1, minWidth=0 b/c only want this line to show up 
-			if there's room for it -->
 			<s:Rect right="0" top="1" bottom="1" width="100%" maxWidth="1" minWidth="0">
 				<s:fill>
 					<s:SolidColor color="0x131313"/>
 				</s:fill>
 			</s:Rect>
 			
-		</s:Group>  
+		</s:Group> -->
+		<s:Group left="5" right="7" top="5" bottom="0" minWidth="0" id="playedAreabg">
+			<controls:FlexMovieClip source="{new PROGRESS_PLAYED_MIDDLE}" right="0" left="3">
+			</controls:FlexMovieClip>
+			<controls:FlexMovieClip source="{new PROGRESS_PLAYED_LEFT()}" left="0">
+			</controls:FlexMovieClip>
+		</s:Group>
 	</s:Group>
 	
 	<!--- 字幕条容器 -->
@@ -167,7 +164,7 @@ one of the <code>fullScreen</code> skin states.
 	
 	<!--- A skin part that defines a button that can be dragged along the track to increase or decrease 
 	the playhead location in the video.   -->
-	<s:Button id="thumb" x="0" y="0" width="14" height="19" includeInLayout="false"
-			  skinClass="spark.skins.spark.mediaClasses.normal.ScrubBarThumbSkin" />
+	<s:Button id="thumb" x="0" y="-1" width="16" height="16" includeInLayout="false" buttonMode="true"
+			  skinClass="com.links123.player.skins.ScrubBarThumbSkin" />
 	
 </s:SparkSkin>
