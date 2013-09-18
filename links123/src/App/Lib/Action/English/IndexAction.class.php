@@ -309,7 +309,7 @@ class IndexAction extends EnglishAction {
         if ($question['priority_type'] == 2 && $question['media_local_path']) {
             $question['play_type'] = 4;
             $question['play_code'] = $question['media_local_path'];
-            $isAboutVideo=0;
+            $isAboutVideo = 0;
         }
         //
         //保存历史记录
@@ -645,7 +645,7 @@ class IndexAction extends EnglishAction {
                 }
                 $ret['question']['play_code'] = preg_replace(array('/width="(.*?)"/is', '/height="(.*?)"/is', '/width=300 height=280/is', '/width=600 height=400/is'), array('width="100%"', 'height="100%"', 'width="100%" height="100%"', 'width="100%" height="100%"'), $ret['question']['play_code']);
             }
-            
+
             //如果是优先本地播放，播放类型设置为4
             if ($ret['question']['priority_type'] == 2 && $ret['question']['media_local_path']) {
                 $ret['question']['play_type'] = 4;
@@ -1454,6 +1454,39 @@ class IndexAction extends EnglishAction {
             $ret['question']['isAboutVideo'] = $isAboutVideo;
 
             $this->ajaxReturn($ret, "请求成功", true);
+        }
+    }
+
+    public function getAudio() {
+        $word = $_REQUEST['word'];
+        $type = $_REQUEST['type'];
+        $html = file_get_contents("http://dictionary.cambridge.org/dictionary/british/" . $word); //获取html内容
+        /*
+          echo "<pre>";
+          echo htmlentities($html);
+          echo "</pre>";
+         * 
+         */
+        //
+        //preg获取单词解释
+        if ($type == 1) {
+            $preg = "/<audio\sid=\"audio_pron-uk_0\".*<source .*src=\"(.*\.mp3)\"/i";
+        } else {
+            $preg = "/<audio id=\"audio_pron-us_1\".*<source .*src=\"(.*\.mp3)\"/i";
+        }
+        preg_match($preg, $html, $match);
+        //<audio id="audio_pron-uk_0" onerror="playSoundException('play_sound_button')"><source class="audio_file_source" type="audio/mpeg" src="http://dictionary.cambridge.org/media/british/uk_pron/u/ukm/ukmut/ukmutto011.mp3"></source>
+        //audio_pron-us_1
+//        header('Content-Type:"audio/mpeg"');
+        if ($match[1]) {
+            redirect($match[1]);
+        } else {
+            if ($type == 1) {
+                $req_type = 2;
+            } else {
+                $req_type = 1;
+            }
+            redirect("http://dict.youdao.com/dictvoice?audio=" . $word . "type=" . $req_type);
         }
     }
 
