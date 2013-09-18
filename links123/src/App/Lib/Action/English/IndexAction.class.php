@@ -551,6 +551,7 @@ class IndexAction extends EnglishAction {
             $englishMediaModel = D("EnglishMedia");
             $ret['recommedsQuestionNum'] = $englishMediaModel->getRecommendQuestionNum($target, $voice, $pattern);
             $ret['subjectsQuestionNum'] = $englishMediaModel->getSubjectQuestionNum($target, $voice, $pattern);
+            $ret['tedsQuestionNum'] = $englishMediaModel->getTedQuestionNum($target, $voice, $pattern);
             //
             //记录浏览题目
             $englishViewRecordModel = D("EnglishViewRecord");
