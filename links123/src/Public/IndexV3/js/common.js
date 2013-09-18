@@ -489,7 +489,7 @@ var THL = {
 		});
 	},
 	go : function(url, tid, keyword){
-		if (tid == '4' || tid == '40' || tid == '58' || tid == '110' || tid == '117') { // 谷歌、美试、啪啪、PQuora
+		if (tid == '4' || tid == '26' || tid == '40' || tid == '58' || tid == '110' || tid == '117') { // 谷歌、美试、啪啪、PQuora
 			$.post(URL + "/thl_count", {tid : tid}, function() {});
 			window.open("http://" + url);
 		} else if (tid == '10' || tid == '20') { // 另客、维修
