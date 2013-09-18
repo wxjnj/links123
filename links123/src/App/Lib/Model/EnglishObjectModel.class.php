@@ -76,6 +76,13 @@ class EnglishObjectModel extends CommonModel {
         }
         return $default_ret;
     }
+    
+    public function getObjectInfo($object){
+    	
+    	$ret = $this->alias("object")->where(array("id" => $object, "status" => 1))->find();
+    	
+    	return $ret;
+    }
 
 }
 
