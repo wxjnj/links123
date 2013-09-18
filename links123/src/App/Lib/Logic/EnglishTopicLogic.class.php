@@ -27,6 +27,8 @@ class EnglishTopicLogic {
 	protected $mEnglishMedia = null;
 	
 	protected $mEnglishMediaSubject = null;
+	
+	protected $mEnglishViewRecord = null;
 
 	protected $cEnglishCategory = null;
 	
@@ -65,6 +67,12 @@ class EnglishTopicLogic {
 		if (empty($this->mEnglishMediaSubject)){
 			$this->errMsg = 'mEnglishMediaSubject init failed';
 			Log::write(__FUNCTION__ . ' mEnglishMediaSubject ' . __LINE__  .  ' init failed!', Log::ERR);
+		}		
+
+		$this->mEnglishViewRecord = D("EnglishViewRecord");
+		if (empty($this->mEnglishViewRecord)){
+			$this->errMsg = 'EnglishViewRecord init failed';
+			Log::write(__FUNCTION__ . ' EnglishViewRecord ' . __LINE__  .  ' init failed!', Log::ERR);
 		}
 		
 		$this->cEnglishCategory = new EnglishCategoryLogic();
@@ -78,14 +86,44 @@ class EnglishTopicLogic {
 	 */
 	public function getQuestion($uls, $dwVoice, $dwTarget, $dwPattern, $media_id=0){
 		
-         $question = $this->mQuestion->getQuestionToIndex(
-         		$uls['viewType'], 
-         		isset($uls['object'])?$uls['object']:0,
-         		isset($uls['level'])?$uls['level']:0,  
-         		isset($uls['subject'])?$uls['subject']:0, 
-         		isset($uls['recommend'])?$uls['recommend']:0,
-         		isset($uls['difficulty'])?$uls['difficulty']:0, 
-         		$dwVoice, $dwTarget, $dwPattern, $media_id);
+		$viewType = $uls['viewType'];
+		$object = isset($uls['object'])?$uls['object']:0;
+		$level =isset($uls['level'])?$uls['level']:0;
+		$subject = isset($uls['subject'])?$uls['subject']:0;
+		$recommend = isset($uls['recommend'])?$uls['recommend']:0;
+		$difficulty = isset($uls['difficulty'])?$uls['difficulty']:0;
+		$ted = isset($uls['ted'])?$uls['ted']:0;
+		$now_question_id = isset($uls['now_question_id'])?$uls['now_question_id']:0;
+		$voice = $dwVoice;
+		$target = $dwTarget;
+		$pattern = $dwPattern;
+		
+		if ($dwTarget == 2) {
+            $question = $this->mQuestion->getQuestionToIndex($viewType, $object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern, $media_id);
+        } elseif ($viewType == 2) {
+            $question_id = $this->mEnglishViewRecord->getUserViewQuestionLastId('', '', $subject, '', $difficulty, $voice, $target, $pattern);
+            $question = $this->mQuestion->getSpecialSubjectQuestion($subject, $difficulty, $voice, $target, $pattern, $type, $question_id, $now_question_id);
+        } elseif ($viewType == 3) {
+            $question_id = $this->mEnglishViewRecord->getUserViewQuestionLastId('', '', '', $recommend, $difficulty, $voice, $target, $pattern);
+            $question = $this->mQuestion->getRecommendQuestion($recommend, $difficulty, $voice, $target, $pattern, $type, $question_id, $now_question_id);
+        } elseif ($viewType == 4) {
+            $question = $this->mQuestion->getSpecialRecommend($media_id, $type, $now_question_id);
+        } elseif ($viewType == 5) {
+            $question_id = $this->mEnglishViewRecord->getUserLastViewedTedQuestionId($ted, $difficulty, $voice, $target, $pattern);
+            $question = $this->mQuestion->getTedQuestion($ted, $difficulty, $voice, $target, $pattern, $type, $question_id, $now_question_id);
+        } else {
+            $question_id = $this->mEnglishViewRecord->getUserViewQuestionLastId($object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern);
+            $question = $this->mQuestion->getSubjectQuestion($object, $level, $voice, $target, $pattern, $type, $question_id, $now_question_id);
+        }
+		
+//         $question = $this->mQuestion->getQuestionToIndex(
+//         		$uls['viewType'], 
+//         		isset($uls['object'])?$uls['object']:0,
+//         		isset($uls['level'])?$uls['level']:0,  
+//         		isset($uls['subject'])?$uls['subject']:0, 
+//         		isset($uls['recommend'])?$uls['recommend']:0,
+//         		isset($uls['difficulty'])?$uls['difficulty']:0, 
+//         		$dwVoice, $dwTarget, $dwPattern, $media_id);
 		if (false === $question){
 			Log::write(__FUNCTION__ . '  ' . __LINE__  .' error!', Log::ERR);
 			return false;
@@ -171,6 +209,11 @@ class EnglishTopicLogic {
 		
 		/** 全量获取列表参数 @todo 根据不同场景可以降低db查询次数 */
 		switch ($viewType){
+			case 5: { //ted
+           		$ret = $this->cEnglishCategory
+           					->getTEDList($post_data['voice'], $post_data['target'], $post_data['pattern']);
+           		break;
+        	}   
         	case 4: { //特别推荐
            		$ret = $this->cEnglishCategory
            					->getSpecRecommendList($post_data['voice'], $post_data['target'], $post_data['pattern']);
@@ -207,6 +250,8 @@ class EnglishTopicLogic {
         if (isset($retlist['level_info'])) $ret['level_info'] = $retlist['level_info'];
         if (isset($retlist['object_list'])) $ret['object_list'] = $retlist['object_list'];
         if (isset($retlist['level_list'])) $ret['level_list'] = $retlist['level_list'];
+        if (isset($retlist['ted_list'])) $ret['ted_list'] = $retlist['ted_list'];
+        if (isset($retlist['tedDifficultyList'])) $ret['ted_difficulty_list'] = $retlist['tedDifficultyList'];
         if (isset($retlist['recommend_list'])) $ret['recommend_list'] = $retlist['recommend_list'];
         if (isset($retlist['recommendDifficultyList'])) $ret['recommend_difficulty_list'] = $retlist['recommendDifficultyList'];
         if (isset($retlist['subject_list'])) $ret['subject_list'] = $retlist['subject_list'];
@@ -263,19 +308,21 @@ class EnglishTopicLogic {
             }
         }
         else {
-	        $englishViewRecordModel = D("EnglishViewRecord");
+	        $this->mEnglishViewRecord = D("EnglishViewRecord");
 	        if ($viewType != 1 && $target == 2) {
 	            $questionInfo = $this->mQuestion->getSpeak($viewType, $object, $level, $subject, $recommend, $difficulty, $voice, $pattern);
 	        } elseif ($viewType == 2) {
-	            $question_id = $englishViewRecordModel->getUserViewQuestionLastId( $subject,  $difficulty, $voice, $target, $pattern);
+	            $question_id = $this->mEnglishViewRecord->getUserViewQuestionLastId( $subject,  $difficulty, $voice, $target, $pattern);
 	            $questionInfo = $this->mQuestion->getSpecialSubjectQuestion($subject, $difficulty, $voice, $target, $pattern, $type, $question_id, $now_question_id);
 	        } elseif ($viewType == 3) {
-	            $question_id = $englishViewRecordModel->getUserViewQuestionLastId('', '', '', $recommend, $difficulty, $voice, $target, $pattern);
+	            $question_id = $this->mEnglishViewRecord->getUserViewQuestionLastId('', '', '', $recommend, $difficulty, $voice, $target, $pattern);
 	            $questionInfo = $this->mQuestion->getRecommendQuestion($recommend, $difficulty, $voice, $target, $pattern, $type, $question_id, $now_question_id);
 	        } elseif ($viewType == 4) {
 	            $questionInfo = $this->mQuestion->getSpecialRecommend($media_id, $type, $now_question_id);
-	        } else {
-	            $question_id = $englishViewRecordModel->getUserViewQuestionLastId($object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern);
+	        } elseif ($viewType == 5) {
+                $questionInfo = $this->mQuestion->getTedQuestion($ted, $difficulty, $voice, $target, $pattern, $type, $question_id, $now_question_id);
+            }else {
+	            $question_id = $this->mEnglishViewRecord->getUserViewQuestionLastId($object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern);
 	            $questionInfo = $this->mQuestion->getSubjectQuestion($object, $level, $voice, $target, $pattern, $type, $question_id, $now_question_id);
 	        }
 	        $ret['question'] = $questionInfo;

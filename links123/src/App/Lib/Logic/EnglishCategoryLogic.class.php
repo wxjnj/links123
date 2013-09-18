@@ -87,8 +87,12 @@ class EnglishCategoryLogic {
     
         $recommedsQuestionNum = $this->mEnglishMedia->getRecommendQuestionNum($dwTarget, $dwVoice, $dwPattern);
         $subjectsQuestionNum = $this->mEnglishMedia->getSubjectQuestionNum($dwTarget, $dwVoice, $dwPattern);
-        
+        $tedsQuestionNum = $this->mEnglishMedia->getTedQuestionNum($target, $voice, $pattern);
 		 switch ($viewType){
+		 	case 5:{ //选择ted
+		 		$ret = self::getTEDList($user_last_select,$dwVoice, $dwTarget, $dwPattern);
+		 		break;
+		 	}
         	case 4: { //特别推荐
            		$ret = self::getSpecRecommendList($dwVoice, $dwTarget, $dwPattern);
            		break;
@@ -110,9 +114,13 @@ class EnglishCategoryLogic {
 		
 		$ret['recommedsQuestionNum'] = $recommedsQuestionNum;
 		$ret['subjectsQuestionNum'] = $subjectsQuestionNum;
+		$ret['tedsQuestionNum'] = $tedsQuestionNum;
 	
 		return $ret;
 	}
+	
+	
+
 	/**
 	 * @desc 获取特别推荐列表  viewtype=4
  	 * @param int voice     
@@ -134,6 +142,59 @@ class EnglishCategoryLogic {
 		
         return array('recommend_list' => $list,
                      'recommendDifficultyList' => $dlist,);
+	}	
+	
+	/**
+	 * @desc 获取TED列表  viewtype=5
+ 	 * @param int voice     
+	 * @param int target     
+	 * @param int pattern
+	 * 
+	 * @return  mixed | array() | boolean
+	 */
+	public function  getTEDList(&$user_last_select, $voice, $target, $pattern){
+		
+        $englishMediaTedModel = D("EnglishMediaTed");
+            //TED列表
+            $ted_list = $englishMediaTedModel->getTedListToIndex($voice, $target, $pattern);
+            //TED
+            $ted = intval($user_last_select['ted']);
+            //
+            $params = array("voice" => $voice, "target" => $target, "pattern" => $pattern, "ted" => $ted);
+            //上次的ted为零，获取默认的ted的id
+            if ($ted == 0) {
+                $ted = $englishMediaTedModel->getDefaultTedId($voice, $target, $pattern);
+            } else {
+                //判断上次的ted下是否有题目，没有则获取默认ted
+                $params['ted'] = $ted;
+                $num = $questionModel->getQuestionNumber($params);
+                if ($num == 0) {
+                    $ted = $englishMediaTedModel->getDefaultTedId($voice, $target, $pattern);
+                }
+            }
+            $params['ted'] = $ted; //更新查询数组
+            //获取TED下的难度列表
+            $tedDifficultyList = $questionModel->getDefaultDifficultyList($viewType, $params);
+             //上次TED的难度
+            if (in_array(intval($user_last_select['tedDifficulty']), array(1, 2, 3))) {
+                $difficulty = intval($user_last_select['tedDifficulty']);
+            } else {
+                $difficulty = $questionModel->getDefaultDifficultyId($viewType, $params);
+            }
+            $params["difficulty"] = $difficulty;
+            //防止上次的难度下没有题目
+            $num = $questionModel->getQuestionNumber($params);
+            if ($num == 0) {
+                $difficulty = $questionModel->getDefaultDifficultyId($viewType, $params);
+            }
+            
+          	$user_last_select['difficulty'] = $difficulty;
+            $user_last_select['ted'] = $ted;
+            
+           	return array('ted_list' => $ted_list,
+		                 'tedDifficultyList' => $tedDifficultyList,
+		                 'difficulty' => $difficulty,
+		                 'ted' => $ted);
 	}
 	
 	/**

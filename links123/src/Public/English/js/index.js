@@ -3,26 +3,9 @@ var playState = "unable";//播放器状态，默认不可用
 var sign = false;
 var next_question_lvlup = false;
 var timer;
-var is_local_play = false;//是否播放本地地址
 $(function() {
-    resetMediaTitle();
     //提示施工中...
-    var style = {
-        'top': $(".J_tabs").offset().top - 20,
-        'left': $(".J_tabs").offset().left + 500,
-        'font-size': "18px",
-        'width': '125px'
-    };
-    showMsg("施工中 . . .", style, 5000);
-    $("#J_mediaLocalPlayButton").click(function() {
-        var local_path = $("#J_mediaLocalPath").text();
-        if (local_path) {
-            playLocalMedia(local_path);
-        }
-        is_local_play = true;
-        $(this).hide();
-    })
-    setTimeout('$("#J_mediaLocalPlayButton").fadeOut();', 30000);
+    showMsg("施工中 . . .", $(".J_tabs").offset().top - 20, 370, 5000, 99,18);
     //说力，上一句事件
     $("#J_preSentenceButton img").click(function() {
         $('#Links123Player')[0].prev();
@@ -81,7 +64,7 @@ $(function() {
         next_question_lvlup = true;
     }
     $(".scrollable").scrollable({circular: true});
-    //$(".grade li:eq(13)").css("margin-left", level_margin_index + "px");
+    $(".grade li:eq(13)").css("margin-left", level_margin_index + "px");
 
     //答题按钮点击事件
     $("#J_answerButton").click(function() {
@@ -90,41 +73,37 @@ $(function() {
         if ($(".answer").is(":visible")) {
             $("#J_answerButton").removeClass("current");
             $(".answer").slideUp("slow", function() { //这里收起后显示
-            if ($("#J_media_div").attr("play_type") == 1 || $("#J_media_div").attr("play_type") == 2) {
-                $("#J_media_div").css({'display': '', 'position': '', 'left': ''}).show();
-            } else if ($("#J_media_div").attr("play_type") == 4) {
-                $("#Links123Player")[0].playPause();
-                $("#J_media_swfobject_div").show();
-            } else if ($("#J_media_div").attr("data_isaboutvideo") == 1) {
-                $(".J_player").show();
-            }
+                if ($("#J_media_div").attr("play_type") == 1 || $("#J_media_div").attr("play_type") == 2) {
+                    $("#J_media_div").css({'display': '', 'position': '', 'left': ''}).show();
+                } else if ($("#J_media_div").attr("play_type") == 4) {
+                    $("#J_media_swfobject_div").show();
+                } else if ($("#J_media_div").attr("data_isaboutvideo") == 1) {
+                    $(".J_player").show();
+                }
             });
 
             $(this).text(' 　答  题');
         } else { //这里先隐藏后展开
-                 if ($("#J_media_div").attr("play_type") == 4){
-                     if (playState == "playing") {
-                        $("#Links123Player")[0].playPause();
-                    }
-                 }else{
-                    //播放的视频停止
-                    play_code = $("#J_media_object embed").attr("src");
-                    videoStr = '';
-                    videoStr += '<object id="J_media_object" height="100%" width="100%" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">';
-                    videoStr += '<param name="wmode" value="transparent">';
-                    videoStr += '<param name="movie" value="' + play_code + '">';
-                    videoStr += '<embed name="swf" menu="true" height="100%" width="100%" play="false" type="application/x-shockwave-flash" allowfullscreen="true" wmode="transparent" src="' + play_code + '">';
-                    videoStr += '</object>';
-                    $('#J_media_div').html(videoStr);
 
-                    if ($("#J_media_div").attr("play_type") == 1 || $("#J_media_div").attr("play_type") == 2) {
-                        $("#J_media_div").css({'display': 'block', 'position': 'absolute', 'left': '-9999px'}).hide();
-                    } else if ($("#J_media_div").attr("data_isaboutvideo") == 1) {
-                        $(".J_player").hide();
-                        $('#J_media_div').html('');
-                    }
-            }
+            //播放的视频停止
+            play_code = $("#J_media_object embed").attr("src");
+            videoStr = '';
+            videoStr += '<object id="J_media_object" height="100%" width="100%" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">';
+            videoStr += '<param name="wmode" value="transparent">';
+            videoStr += '<param name="movie" value="' + play_code + '">';
+            videoStr += '<embed name="swf" menu="true" height="100%" width="100%" play="false" type="application/x-shockwave-flash" allowfullscreen="true" wmode="transparent" src="' + play_code + '">';
+            videoStr += '</object>';
+            $('#J_media_div').html(videoStr);
+
             $("#J_answerButton").addClass("current");
+            if ($("#J_media_div").attr("play_type") == 1 || $("#J_media_div").attr("play_type") == 2) {
+                $("#J_media_div").css({'display': 'block', 'position': 'absolute', 'left': '-9999px'}).hide();
+            } else if ($("#J_media_div").attr("play_type") == 4) {
+                $("#J_media_swfobject_div").hide();
+            } else if ($("#J_media_div").attr("data_isaboutvideo") == 1) {
+                $(".J_player").hide();
+                $('#J_media_div').html('');
+            }
             $(".answer").slideDown("slow");
 
             $(this).text(' 　视  频');
@@ -240,35 +219,8 @@ $(function() {
         requestQuestion("recommend", $(this));
 
     });
-    //推荐点击事件
-    $('.J_ted li').live('click', function() {
-        if ($(this).hasClass("grey")) {
-            var top = $(this).offset().top - 15;
-            var left = $(this).offset().left + 10;
-            fadeTip("<span  class='messager_span'>Coming soon...</span>", top, left);
-            return false;
-        } else if ($(this).hasClass("current")) {
-
-            var top = $(this).offset().top - 50;
-            var left = $(this).offset().left - 10;
-            $.messager.show({
-                msg: "<span  class='messager_span'>您已在: " + $(this).text() + "</span>",
-                showType: 'fade',
-                width: 175,
-                height: 45,
-                timeout: 2000,
-                style: {
-                    left: left,
-                    top: top
-                }
-            });
-            return false;
-        }
-        requestQuestion("ted", $(this));
-
-    });
     //难度点击事件
-    $('.J_subjectDifficulty li,.J_recommendDifficulty li,.J_tedDifficulty li').live('click', function() {
+    $('.J_subjectDifficulty li,.J_recommendDifficulty li').live('click', function() {
         if ($(this).hasClass("grey")) {
             var top = $(this).offset().top - 15;
             var left = $(this).offset().left + 10;
@@ -311,9 +263,9 @@ $(function() {
 
     //升级事件
     $("#J_levelUpButton").live('click', function() {
-//        if ($(".J_tabs a.current").attr("value") != 1) {
-//            return false;
-//        }
+        if ($(".J_tabs a.current").attr("value") != 1) {
+            return false;
+        }
         var next_level_li;
         //已是最高级
         if (($(".grade .current").index() + 1) == $(".grade li").size()) {
@@ -359,9 +311,9 @@ $(function() {
     //降级事件
     //bindLevelDownEvent();
     $("#J_levelDownButton").live('click', function() {
-//        if ($(".J_tabs a.current").attr("value") != 1) {
-//            return false;
-//        }
+        if ($(".J_tabs a.current").attr("value") != 1) {
+            return false;
+        }
         var prev_level_li;
         $(".grade .current").prevAll("li").each(function() {
             if (!$(this).hasClass("not_allowed") && typeof prev_level_li == "undefined") {
@@ -550,12 +502,63 @@ $(function() {
     bindMediaTextClickEvent("disable");
     bindOptionClickEvent();
     trimWhiteSpace();
+    
+    /** **/
+    getPrice();
 });
+
+/**
+ * 请求用户信息（大米总数和本级大米）
+ */
+function  getPrice(){
+	console.log('fefe1');
+    var data = {}; 
+    $.ajax({
+        url: URL + '/get_price',
+        data: data,
+        type: 'POST',
+        dataType: 'json',
+        cache: false,
+        success: function(msg) {
+        	console.log(msg);
+	        if (msg) {
+                var data = msg.data;
+                if (data == null) {
+                    $.messager.show({
+                        msg: "<span  class='messager_span'>加载大米数失败</span>",
+                        showType: 'fade',
+                        width: 180,
+                        height: 45,
+                        timeout: 2000,
+                        style: {
+                            left: '50%',
+                            top: '4%'
+                        }
+                    });
+
+                    return false;
+                }
+                else {
+                	$("#J_currentRice").text(data.user_count_info.right_num * 100);
+	                $("#J_riceDiv").removeClass().addClass("rice_" + data.user_count_info.right_num * 100);
+	                //
+	                var english_user_info = data.english_user_info;
+	                if (english_user_info == null) {
+	                    english_user_info.total_rice = 0;
+	                }
+	                $("#J_totalRice").text(english_user_info.total_rice);
+	            }
+	        }
+        }
+
+	});
+}
+
 
 /**
  * 请求题目
  * 响应分类、科目、等级以及上下题的点击，最终目的为请求题目。
- * @param {string} type [请求类型，大类为category，科目为object，等级为level,专题为subject，推荐为recommend，难度为difficulty,特别推荐为special_recommend,ted,上一题下一题为quick_select_prev和quick_select_next
+ * @param {string} type [请求类型，大类为category，科目为object，等级为level,专题为subject，推荐为recommend，难度为difficulty,特别推荐为special_recommend,上一题下一题为quick_select_prev和quick_select_next
  * @returns {void}
  * @author Adam $date2013-07-26$
  */
@@ -606,13 +609,9 @@ function requestQuestion(type, clickObject, media_id) {
         'type': type,
         'now_question_id': now_question_id
     };
-
+    
     var postUrl = '/ajax_get_question';
-    if (viewType == 5) {
-        data.ted = $(".J_ted .current").attr("value");
-        data.difficulty = $(".J_tedDifficulty .current").attr("value");
-        postUrl = '/get_question';
-    } else if (viewType == 4) {
+    if (viewType == 4) {
         data.media_id = media_id;
         postUrl = '/get_question';
     } else if (viewType == 3) {
@@ -645,16 +644,14 @@ function requestQuestion(type, clickObject, media_id) {
         data.subject = clickObject.attr("value");
     } else if (type == "recommend") {
         data.recommend = clickObject.attr("value");
-    } else if (type == "ted") {
-        data.ted = clickObject.attr("value");
     } else if (type == "difficulty") {
         data.difficulty = clickObject.attr("value");
     }
-
+    
     if (data.target == 2) {
-        postUrl = '/ajax_get_question';
+    	postUrl = '/ajax_get_question';
     }
-
+    
     layer_div("show");
     ajaxRequest = $.ajax({
         url: URL + postUrl,
@@ -691,12 +688,12 @@ function requestQuestion(type, clickObject, media_id) {
                     }
                     if (data.question.max) {
                         var content = "已经最后一题了，升级吧！";
-                        if (viewType == 4) {
+                        if(viewType==4){
                             content = "已经最后一个了，往前看看吧！";
                         }
                     } else if (data.question.min) {
                         var content = "已经第一题了，降级吧！";
-                        if (viewType == 4) {
+                        if(viewType==4){
                             content = "已经第一个了，往后看看吧！";
                         }
                     }
@@ -715,10 +712,10 @@ function requestQuestion(type, clickObject, media_id) {
                             }
                         });
                     }
-
+                    
                     if (!data.question.id) {
-                        layer_div();
-                        return false;
+                    	layer_div();
+                    	return false;
                     }
                 }
                 if (type == "category") {
@@ -738,14 +735,7 @@ function requestQuestion(type, clickObject, media_id) {
                     rewriteReommendAndDifficultyList(data.recommend_list, data.question.recommend, data.recommend_difficulty_list, data.question.difficulty);
                     rewriteSubjectAndDifficultyList(data.subject_list, data.question.subject, data.subject_difficulty_list, data.question.difficulty);
                 }
-
-                if (viewType == 5) {
-                    if (type == "ted") {
-                        rewriteTedAndDifficultyList(null, 0, data.ted_difficulty_list, data.question.difficulty);
-                    } else if (type == "switch_view_type") {
-                        rewriteTedAndDifficultyList(data.ted_list, data.question.ted, data.ted_difficulty_list, data.question.difficulty);
-                    }
-                } else if (viewType == 4) {
+                if (viewType == 4) {
                     rewriteReommendAndDifficultyList(data.recommend_list, 0, data.recommend_difficulty_list, 0);
                     $(".J_recommend li.current").removeClass("current");
                     $(".J_recommendDifficulty li.current").removeClass("current");
@@ -793,18 +783,7 @@ function requestQuestion(type, clickObject, media_id) {
                     $(".answertitle").text(question.content);
                 }
                 $("#J_questionId").text(question.id);
-                $("#J_mediaTitle").text(question.name).attr("title",question.name);
-                resetMediaTitle();
-                $("#J_textButton").attr("media_text_url", question.media_source_url);
-                is_local_play = false;
-                if (question.media_local_path) {
-                    $("#J_mediaLocalPath").text(question.media_local_path);
-                    $("#J_mediaLocalPlayButton").show();
-                    setTimeout('$("#J_mediaLocalPlayButton").fadeOut();', 30000);
-                } else {
-                    $("#J_mediaLocalPath").text("");
-                    $("#J_mediaLocalPlayButton").hide();
-                }
+                $("#J_textButton").attr("media_text_url", question.media_text_url);
                 bindMediaTextClickEvent("disable");//点击选项后才能查看文本
                 updateOption(question.option);
                 //说力听力耳朵切换
@@ -854,13 +833,7 @@ function requestQuestion(type, clickObject, media_id) {
                 }
 
                 $("#J_currentRice").text(data['user_count_info']['right_num'] * 100);
-                if (data['user_count_info']['right_num'] == 0) {
-                    $("#J_riceDiv").hide();
-                } else {
-                    $("#J_riceDiv").attr("src", PUBLIC + "/English/images/rice" + data['user_count_info']['right_num'] * 100 + ".png");
-                    $("#J_riceDiv").show();
-                }
-                //$("#J_riceDiv").removeClass().addClass("rice_" + data['user_count_info']['right_num'] * 100);
+                $("#J_riceDiv").removeClass().addClass("rice_" + data['user_count_info']['right_num'] * 100);
                 //
                 /** $视频播放 **/
                 var videoStr = '';
@@ -869,7 +842,34 @@ function requestQuestion(type, clickObject, media_id) {
                 if (question.play_code || question.media_info) {
 
                     if (question.isAboutVideo != 1) {
-                        if (question.target == 2) {
+                        if (question.play_type == 1) {
+                            videoStr = question.play_code;
+                        } else if (question.play_type == 2) {
+                            videoStr = '<iframe class="media_iframe" src="' + question.play_code + '" width="100%" height="100%" scrolling="no" frameborder="0">';
+                        } else if (question.play_type == 3) {
+
+                            $('#J_media_div').html('<div id="J_media_swfobject_div"></div>');
+
+                            var swfUrl = 'http://www.kizphonics.com/wp-content/uploads/jw-player-plugin-for-wordpress/player/player.swf';
+                            var version = '10.2.0';
+                            var params = {
+                                quality: "high",
+                                wmode: "opaque",
+                                scale: "noscale",
+                                align: "left",
+                                allowFullScreen: "true",
+                                allowScriptAccess: "always",
+                                bgColor: "#000000"
+                            };
+
+                            swfobject.embedSWF(swfUrl, "J_media_swfobject_div", "100%", "100%", version, "/swf/playerProductInstall.swf", question.play_code, params);
+
+                        } else if (question.play_type == 4 && question.target == 1) {
+                            $('#J_media_div').html('<div id="J_media_swfobject_div" style="height:' + media_height + 'px;width:' + media_width + 'px;"></div>');
+
+                            flowplayer("J_media_swfobject_div", "http://releases.flowplayer.org/swf/flowplayer-3.2.16.swf", {playlist: [question.media_thumb_img, {url: question.play_code, autoPlay: false}]});
+
+                        } else if (question.play_type == 4 && question.target == 2) {
                             var media_info = question.media_info;
                             $("#J_mediaId").text(media_info.id);//记录媒体id
                             $("#J_mediaPath").text(media_info.question_id);//记录媒体地址
@@ -906,38 +906,6 @@ function requestQuestion(type, clickObject, media_id) {
                             swfobject.createCSS("#flashContent", "display:block;text-align:left;");
                             $("#J_viewButton").addClass("current");
                             $("#J_speakButton").removeClass("current");
-                        } else if (question.play_type == 1) {
-                            videoStr = question.play_code;
-                        } else if (question.play_type == 2) {
-                            videoStr = '<iframe class="media_iframe" src="' + question.play_code + '" width="100%" height="100%" scrolling="no" frameborder="0">';
-                        } else if (question.play_type == 3) {
-
-                            $('#J_media_div').html('<div id="J_media_swfobject_div"></div>');
-
-                            var swfUrl = 'http://www.kizphonics.com/wp-content/uploads/jw-player-plugin-for-wordpress/player/player.swf';
-                            var version = '10.2.0';
-                            var params = {
-                                quality: "high",
-                                wmode: "opaque",
-                                scale: "noscale",
-                                align: "left",
-                                allowFullScreen: "true",
-                                allowScriptAccess: "always",
-                                bgColor: "#000000"
-                            };
-
-                            swfobject.embedSWF(swfUrl, "J_media_swfobject_div", "100%", "100%", version, "/swf/playerProductInstall.swf", question.play_code, params);
-
-                        } else if (question.play_type == 4 && question.target == 1) {
-                            playLocalMedia(question.play_code);
-                            if(question.priority_type==2){
-                                is_local_play = true;
-                                $("#J_mediaLocalPlayButton").hide();
-                            }
-                            //$('#J_media_div').html('<div id="J_media_swfobject_div" style="height:' + media_height + 'px;width:' + media_width + 'px;"></div>');
-
-                            //flowplayer("J_media_swfobject_div", "http://releases.flowplayer.org/swf/flowplayer-3.2.16.swf", {playlist: [question.media_thumb_img, {url: question.play_code, autoPlay: false}]});
-
                         } else {
 
                             videoStr += '<object id="J_media_object" height="100%" width="100%" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">';
@@ -953,11 +921,7 @@ function requestQuestion(type, clickObject, media_id) {
                 }
 
                 if (question.isAboutVideo) {
-                    if(question.media_thumb_img!=""){
-                        $('#J_media_img').attr('src', question.media_thumb_img);
-                    }else{
-                        $('#J_media_img').attr('src',PUBLIC+"/English/images/deafult_media_img.jpg");
-                    }
+                    $('#J_media_img').attr('src', question.media_thumb_url);
                     $('#J_media_div').css('visibility', 'hidden');
 
                     $('.J_player').css('display', 'block');
@@ -1003,7 +967,7 @@ function requestQuestion(type, clickObject, media_id) {
                     }
                     $(".J_tabs a[value='" + data.viewType + "']").addClass("current").parent("li").siblings("li").children("a").removeClass("current");
                     $(".panes > div:eq(" + (data.viewType - 1) + ")").show().siblings().hide();
-                } else if (type == "object" || type == "level" || type == "subject" || type == "recommend" || type == "ted" || type == "difficulty") {
+                } else if (type == "object" || type == "level" || type == "subject" || type == "recommend" || type == "difficulty") {
                     clickObject.addClass("current").siblings("li").removeClass("current");
                 } else if (type == "switch_view_type") {
                     var index = clickObject.parent("li").index();
@@ -1091,13 +1055,7 @@ function bindOptionClickEvent() {
                 }
                 //$("#J_rightNum").text(user_count_info.right_num);
                 $("#J_currentRice").text(user_count_info.right_num * 100);
-                if (data['user_count_info']['right_num'] == 0) {
-                    $("#J_riceDiv").hide();
-                } else {
-                    $("#J_riceDiv").attr("src", PUBLIC + "/English/images/rice" + data['user_count_info']['right_num'] * 100 + ".png");
-                    $("#J_riceDiv").show();
-                }
-                //$("#J_riceDiv").removeClass().addClass("rice_" + user_count_info.right_num * 100);
+                $("#J_riceDiv").removeClass().addClass("rice_" + user_count_info.right_num * 100);
                 //
                 var english_user_info = data.english_user_info;
                 if (english_user_info == null) {
@@ -1241,7 +1199,7 @@ function rewriteObjectAndLevelList(object_list, object, level_list, level) {
         if ($(".J_level .current").size() < 1) {
             $(".J_level li").not(".grey").first().addClass("current");
         }
-        //$(".J_level li:eq(13)").css("margin-left", level_margin_index + "px");
+        $(".J_level li:eq(13)").css("margin-left", level_margin_index + "px");
     }
 }
 /**
@@ -1347,57 +1305,6 @@ function rewriteReommendAndDifficultyList(recommend_list, recommend, difficulty_
     }
 }
 /**
- * 重写TED和难度列表
- * @param {object} ted_list [TED列表]
- * @param {int} ted [当前TEDid]
- * @param {object} difficulty_list [难度列表]
- * @param {int} difficulty [当前难度id]
- * @returns {void}
- * @author Adam $date2013.09.03$
- */
-function rewriteTedAndDifficultyList(ted_list, ted, difficulty_list, difficulty) {
-    //
-    //更新专题列表
-    if (ted_list != null) {
-        var str = '';
-        for (var i = 0; i < ted_list.length; i++) {
-            str += '<li value="' + ted_list[i]['id'] + '"';
-            if (ted == ted_list[i]['id']) {
-                str += ' class="current" ';
-            } else {
-                if (ted_list[i]['question_num'] == 0) {
-                    str += ' class="grey not_allowed" ';
-                }
-            }
-            str += '><span>' + ted_list[i]['name'] + '</span></li>';
-        }
-        $(".J_ted").html(str);
-        if ($(".J_ted .current").size() < 1) {
-            $(".J_ted li").not(".grey").first().addClass("current");
-        }
-    }
-    //
-    //更新等级列表
-    if (difficulty_list != null) {
-        var str = '';
-        for (var i = 0; i < difficulty_list.length; i++) {
-            str += '<li value="' + difficulty_list[i]['id'] + '"';
-            if (difficulty == difficulty_list[i]['id']) {
-                str += ' class="current" ';
-            } else {
-                if (difficulty_list[i]['question_num'] == 0) {
-                    str += ' class="grey not_allowed" ';
-                }
-            }
-            str += '><span>' + difficulty_list[i]['name'] + '</span></li>';
-        }
-        $(".J_tedDifficulty").html(str);
-        if ($(".J_tedDifficulty .current").size() < 1) {
-            $(".J_tedDifficulty li").not(".grey").first().addClass("current");
-        }
-    }
-}
-/**
  * 更新选项
  * @param {array} option [选项数组]
  * @returns {void}
@@ -1409,7 +1316,7 @@ function updateOption(option) {
     $('.answer').hide();
 
     if (option != null) {
-        for (var i in option) {
+        for (var i = 0; i < option.length; i++) {
             str += '<p class="J_option" id="J_option_' + option[i]['id'] + '" value="' + option[i]['id'] + '"><span class="gc"></span>' + '<span class="ricenumber">';
             if (i == 0) {
                 str += "A";
@@ -1612,23 +1519,13 @@ function fadeTip(content, top, left, time, index) {
     timer = setTimeout("$('.J_fadeDiv').fadeOut(1000,function(){$('.J_fadeDiv').remove();})", time);
 }
 
-function showMsg(content, style, time, is_alert) {
+function showMsg(content, top, left, time, index, font_size) {
     $('.J_fadeDiv').remove();
-    style = arguments[1] ? arguments[1] : {top: 0, right: 0, index: 99, witdh: "auto"};
-    time = arguments[2] ? arguments[2] : 2000;
-    is_alert = arguments[3] ? arguments[3] : false;
 
-    var div = $("<div class=\"autobox autobox-text J_fadeDiv\" style='display:none;position:absolute;'><div class=\"autobox-layer\"><span class=\"autobox-arr\"></span>" +
-            "<div class=\"autobox-ct\">" + content + "</div><span class=\"autobox-end\"></span></div></div>");
-    div.css(style);
+    //var div = $("<div class='J_fadeDiv' style='color:#ffffff;display:none;position:absolute;z-index:" + index + ";top:" + top + "px;left:" + left + "px;'></div>");
+    var div = $("<div class=\"autobox autobox-hits J_fadeDiv\" style='display:none;position:absolute;z-index:" + index + ";top:" + top + "px;left:" + left +
+            "px;font-size:" + font_size + "px;'><div class=\"autobox-layer\"><span class=\"autobox-arr\"></span><b>" + content + "</b><span class=\"autobox-end\"></span></div></div>");
     $("body").append(div);
-    if (is_alert) {
-        div.addClass("autobox-hits").removeClass("autobox-text");
-        div.css("padding-left:65px;");
-    } else {
-        div.find(".autobox-ct").css("padding", "0 20px");
-    }
-    div.find(".autobox-ct").css("width", div.width() - 34);
     div.fadeIn(1000);
     setTimeout("$('.J_fadeDiv').fadeOut(1000,function(){$('.J_fadeDiv').remove();})", time);
 }
@@ -1639,13 +1536,13 @@ function bindSpeakListenSwitchEvent() {
         }
         var playerMode = 2;
         sign = false;
-        if ($(this).attr("id") == "J_speakButton") {
+		if ($(this).attr("id") == "J_speakButton") {
             playerMode = 3;
             sign = true;
         }
-        $("#Links123Player")[0].playerChoose(playerMode);
-        $(this).addClass("current").siblings(".J_speakButtons").removeClass("current");
-        return false;
+		$("#Links123Player")[0].playerChoose(playerMode);
+		$(this).addClass("current").siblings(".J_speakButtons").removeClass("current");
+		return false;
         //旧的切换
         $("#J_media_div").html("<div id='flashContent'></div>");
         var swfVersionStr = "10.2.0";
@@ -1694,69 +1591,22 @@ function bindSpeakListenSwitchEvent() {
 function playerStateChange(state) {
     playState = state;
 //    alert(state);
-    if ($(".target.current").attr("value") == 2) {
-        if (state == "playing") {
-            $("#J_pauseButton img").attr("src", PUBLIC + "/English/images/video6.png");
-        } else {
-            $("#J_pauseButton img").attr("src", PUBLIC + "/English/images/video5.png");
-        }
-        if (state == "completed")
-        {
-            //测试由看切换到说
-            if (sign == false)
-            {
-                $("#Links123Player")[0].playerChoose(3);
-                $("#J_speakButton").addClass("current");
-                $("#J_viewButton").removeClass("current");
-                $("#Links123Player")[0].playPause();
-                sign = true;
-            }
-        }
+    if (state == "playing") {
+        $("#J_pauseButton img").attr("src", PUBLIC + "/English/images/video6.png");
+    } else {
+        $("#J_pauseButton img").attr("src", PUBLIC + "/English/images/video5.png");
     }
+    if(state == "completed")
+	{
+		//测试由看切换到说
+		if(sign == false)
+		{
+			$("#Links123Player")[0].playerChoose(3);
+            $("#J_speakButton").addClass("current");
+            $("#J_viewButton").removeClass("current");
+			$("#Links123Player")[0].playPause();
+			sign = true;
+		}
+	}
     return state;
-}
-
-function playLocalMedia(local_path) {
-    if ($(".focus_player")) {
-        $(".focus_player").hide();
-    }
-    $("#J_media_div").html("");
-    $("#J_media_div").css("visibility", "");
-    $("#J_media_div").html("<div id='flashContent'></div>");
-    var swfVersionStr = "10.2.0";
-    var xiSwfUrlStr = PUBLIC + "/Js/Links123Player/playerProductInstall.swf";
-    var flashvars = new Object();
-    flashvars.logging = true;
-    flashvars.playerMode = 1;//播放器播放类型，1一般看，2说力看，3说力说模式
-    flashvars.url = local_path;
-    var params = new Object();
-    params.quality = "high";
-    params.bgcolor = "#ffffff";
-    params.allowscriptaccess = "sameDomain";
-    params.allowfullscreen = "true";
-    var attributes = new Object();
-    attributes.id = "Links123Player";
-    attributes.name = "Links123Player";
-    attributes.align = "middle";
-    swfobject.embedSWF(
-            PUBLIC + "/Js/Links123Player/Links123Player.swf", "flashContent",
-            media_width, media_height,
-            swfVersionStr, xiSwfUrlStr,
-            flashvars, params, attributes);
-    swfobject.createCSS("#flashContent", "display:block;text-align:left;");
-}
-
-function resetMediaTitle(){
-    var text = $("#J_mediaTitle").text();
-    var length = text.length;
-    var index = 40;
-    if(screen_type==2){
-        index = 60;
-    }
-    text = text.substr(0,index);
-    if(text.length<length){
-        text+="...";
-    }
-    $("#J_mediaTitle").text(text);
-    //$("#J_mediaTitle").tooltip();
 }
