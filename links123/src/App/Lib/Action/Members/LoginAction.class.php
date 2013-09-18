@@ -73,6 +73,7 @@ class LoginAction extends CommonAction
 		$_SESSION['nickname'] = $mbrNow['nickname'];
 		$_SESSION['face'] = empty($mbrNow['face']) ? 'face.jpg' : $mbrNow['face'];
 		$_SESSION['skinId'] = $mbrNow['skin'];
+		$_SESSION['myarea_sort'] = $mbrNow['myarea_sort'] ? explode(',', $mbrNow['myarea_sort']) : '';
 		
 		//使用cookie过期时间来控制前台登陆的过期时间
 		cookie(md5('home_session_expire'), time(), intval(D("Variable")->getVariable("home_session_expire")));
@@ -99,6 +100,13 @@ class LoginAction extends CommonAction
 			echo "邮箱丢失！";
 			return false;
 		}
+		
+		$verify = trim($this->_param('verify'));
+		if ($_SESSION['verify'] != md5(strtoupper($verify))) {
+			echo "验证码错误";
+			return false;
+		}
+		
 		$mbr = M("Member");
 		$mbrNow = $mbr->getByEmail($email);
 		

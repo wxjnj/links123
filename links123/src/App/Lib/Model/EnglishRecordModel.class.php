@@ -25,6 +25,7 @@ class EnglishRecordModel extends CommonModel {
         $data['level'] = $question_info['level'];
         $data['subject'] = $question_info['subject'];
         $data['recommend'] = $question_info['recommend'];
+        $data['ted'] = $question_info['ted'];
         $data['difficulty'] = $question_info['difficulty'];
         $data['special_recommend'] = $question_info['special_recommend'];
         $data['user_answer'] = $answer;
@@ -134,7 +135,7 @@ class EnglishRecordModel extends CommonModel {
             $map['subject'] = intval($subject);
         }
         if (intval($recommend) > 0) {
-            $map['_string'] = "FIND_IN_SET('" . $recommend . "',media.recommend)";
+            $map['media.recommend'] = $recommend;
         }
         if (intval($difficulty) > 0) {
             $map['difficulty'] = intval($difficulty);
@@ -150,6 +151,85 @@ class EnglishRecordModel extends CommonModel {
         }
         if (intval($special_recommend) > 0) {
             $map['special_recommend'] = intval($special_recommend);
+        }
+        if (!empty($extend_condition)) {
+            $map['_string'] .= $extend_condition;
+        }
+        if (isset($_SESSION[C('MEMBER_AUTH_KEY')]) && intval($_SESSION[C('MEMBER_AUTH_KEY')]) > 0) {
+            $map['user_id'] = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+            $ret = $this->where($map)->select();
+            if (!empty($ret) && false !== $ret) {
+                foreach ($ret as $value) {
+                    $question_ids[] = intval($value['question_id']);
+                }
+            }
+        } else {
+            $map['user_id'] = intval(cookie("english_tourist_id"));
+            $englishTourishRecordModel = D("EnglishTouristRecord");
+            $ret = $englishTourishRecordModel->where($map)->select();
+            if (!empty($ret) && false !== $ret) {
+                foreach ($ret as $value) {
+                    $question_ids[] = intval($value['question_id']);
+                }
+            }
+        }
+        return $question_ids;
+    }
+
+    /**
+     * 获取用户做过的题目id列表
+     * @param array $params [条件数组]
+     * @param string $extend_condition [额外条件]
+     * @return array
+     * @author Adam $date2013.08.30$
+     */
+    public function getUserTestedQuestionIdList($viewType, $params, $extend_condition = "") {
+        $question_ids = array();
+        $question_ids[0] = 0;
+        if ($viewType == 1) {
+            if (intval($params['object'])) {
+                if (D("EnglishObject")->where("id=" . intval($params['object']))->getField("name") == "综合") {
+                    $params['object'] = 0;
+                }
+            }
+            if (intval($params['object']) > 0) {
+                $map['object'] = intval($params['object']);
+            }
+            if (intval($params['level']) > 0) {
+                $map['level'] = intval($params['level']);
+            }
+        } else if ($viewType == 2) {
+            if (intval($params['subject']) > 0) {
+                $map['subject'] = intval($params['subject']);
+            }
+            if (intval($params['difficulty']) > 0) {
+                $map['difficulty'] = intval($params['difficulty']);
+            }
+        } else if ($viewType == 3) {
+            if (intval($params['recommend']) > 0) {
+                $map['recommend'] = intval($params['recommend']);
+            }
+            if (intval($params['difficulty']) > 0) {
+                $map['difficulty'] = intval($params['difficulty']);
+            }
+        } else if ($viewType == 4) {
+            $map['special_recommend'] = 1;
+        } else if ($viewType == 5) {
+            if (intval($params['ted']) > 0) {
+                $map['media.ted'] = $params['ted'];
+            }
+            if (intval($params['difficulty']) > 0) {
+                $map['difficulty'] = intval($params['difficulty']);
+            }
+        }
+        if (intval($params['voice']) > 0) {
+            $map['voice'] = intval($params['voice']);
+        }
+        if (intval($params['target']) > 0) {
+            $map['target'] = intval($params['target']);
+        }
+        if (intval($params['pattern']) > 0) {
+            $map['pattern'] = intval($params['pattern']);
         }
         if (!empty($extend_condition)) {
             $map['_string'] .= $extend_condition;
@@ -231,7 +311,7 @@ class EnglishRecordModel extends CommonModel {
             $map['subject'] = intval($subject);
         }
         if (intval($recommend) > 0) {
-            $map['_string'] = "FIND_IN_SET('" . $recommend . "',media.recommend)";
+            $map['media.recommend'] = $recommend;
         }
         if (intval($difficulty) > 0) {
             $map['difficulty'] = intval($difficulty);
@@ -250,6 +330,23 @@ class EnglishRecordModel extends CommonModel {
         }
         //用户做过的题目去除
         $user_question_ids = $this->getUserTestQuestionIdList($object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern);
+        $map['status'] = 1;
+        $map['_string'] = "`id` not in(" . implode(",", $user_question_ids) . ")";
+        $englishQuestionModel = D("EnglishQuestion");
+        $count = $englishQuestionModel->where($map)->count();
+        return intval($count);
+    }
+
+    /**
+     * 获取用户没有做过的题目的数量
+     * @param int $viewType
+     * @param array $params
+     * @return int
+     * @author Adam $date2013.09.17$
+     */
+    public function getUserUntestedQuestionNumber($viewType, $params) {
+        //用户做过的题目去除
+        $user_question_ids = $this->getUserTestedQuestionIdList($viewType, $params);
         $map['status'] = 1;
         $map['_string'] = "`id` not in(" . implode(",", $user_question_ids) . ")";
         $englishQuestionModel = D("EnglishQuestion");

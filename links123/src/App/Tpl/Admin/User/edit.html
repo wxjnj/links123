@@ -26,7 +26,7 @@ function resetPwd(){
 			<tr>
 				<td class="tRight" colspan="2"><hr></td>
 			</tr>
-		<form method='post' id="form1" >
+		<form method='post' id="form1" action="__URL__/update/" >
 			<tr>
 				<td class="tRight" >用户名：</td>
 				<td class="tLeft" ><input type="text" class="medium bLeftRequire" check='^\S+$' warning="用户名不能为空,且不能含有空格" name="account" value="{$vo.account}" /></td>
@@ -53,8 +53,8 @@ function resetPwd(){
 				<td></td>
 				<td class="center">
 					<input type="hidden" name="id" value="{$vo.id}" />
-					<input type="hidden" name="ajax" value="1" />
-					<input type="button" value="保 存" onclick="ThinkAjax.sendForm('form1','__URL__/update/')" class="small submit" />&nbsp;
+					<!-- <input type="hidden" name="ajax" value="1" />  -->
+					<input type="submit" value="保 存" class="small submit" />&nbsp;
 					<input type="reset" class="submit  small" value="清 空" />
 				</td>
 			</tr>

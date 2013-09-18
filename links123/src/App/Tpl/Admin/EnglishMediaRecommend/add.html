@@ -3,18 +3,18 @@
 
 <div id="main" class="main" >
 	<div class="content">
-		<div class="title">新增英语角媒体专题[ <a href="__URL__">返回列表</a> ]</div>
+		<div class="title">新增英语角推荐分类[ <a href="__URL__">返回列表</a> ]</div>
 		<form method='post' id="form1" action="__URL__/insert/" >
 			<table cellpadding=3 cellspacing=3>
 				<tr>
-					<td class="tRight" >专题名称：</td>
+					<td class="tRight" >分类名称：</td>
 					<td class="tLeft" ><input type="text" class="bLeftRequire" name="name" /></td>
 				</tr>
                 <tr>
-					<td class="tRight" >父级专题：</td>
+					<td class="tRight" >父级分类：</td>
 					<td class="tLeft" >
                         <select name="pid">
-                            <option value="0">顶级专题</option>
+                            <option value="0">顶级分类</option>
                             <volist name="top_recommend_list" id="recommend">
                                 <option value="{$recommend.id}">{$recommend.name}</option>
                             </volist>

@@ -146,9 +146,9 @@ class CommonAction extends Action {
 	protected function getHeaderInfo($data=array()) {
 
 		$variable = $this->_getVariable();
-		$title = empty($data['title'])?'另客网 | 领先的全面导航 | 高效的组合搜索 | 独特的英语角（在建） - 学习':empty($data['title']);
-		$keywords = empty($data['keywords'])?$variable['keywords']:empty($data['keywords']);
-		$description = empty($data['description'])?$variable['description']:empty($data['description']);
+		$title = empty($data['title'])?'另客网 | 领先的全面导航 | 高效的组合搜索 | 独特的英语角':empty($data['title']);
+		$keywords = empty($data['keywords'])?$variable['Keywords']:empty($data['keywords']);
+		$description = empty($data['description'])?$variable['Description']:empty($data['description']);
 		
 		$this->assign('title', $title);
 		$this->assign('keywords', $keywords);
@@ -339,6 +339,80 @@ class CommonAction extends Action {
 		}
 		
 		return $skins;
+    }
+    
+    /**
+     * 获取热门音乐，数据来源百度音乐，1小时更新一次
+     *
+     * @return $songItemList: 音乐列表数据
+     *
+     * @author slate date:2013-09-15
+     */
+    public function getDayhotMusic() {
+    	
+    	$songItemList = S('songItemList');
+    	
+    	if (!$songItemList) {
+    		
+	    	$playUrl = 'http://play.baidu.com/?__methodName=mboxCtrl.playSong&__argsValue=';
+	    	$url = 'http://music.baidu.com/top/dayhot';
+	    	$imgUploadsPath = realpath('./Public/Uploads/Others/');
+	    	$imgUrlHost = '/Public/Uploads/Others/';
+	    	
+	    	$str = file_get_contents($url);
+	    	
+	    	preg_match_all('/<li  data-songitem(.*?)<\/li>/is', $str, $match);
+	    	
+	    	$songItemList = array();
+	    	
+	    	foreach ($match[0] as $key => $value) {
+	    	
+	    		$data_songitem = str_replace('&quot;', '', $this->tp_match('/data-songitem = \'(.*?)\'/is', $value, 1));
+	    		$data_songitem = $this->tp_match('/{songItem:{sid:(.*?),author:(.*?),sname:(.*?)}}/is', $data_songitem, -1);
+	    	
+	    		$songItem['sid'] = $data_songitem[1];
+	    		$songItem['img'] = '';
+	    		
+	    		$img = $this->tp_match('/<img(.*?)src="(.*?)"(.*?)\/>/is', $value, 2);
+	    		if ($img) {
+		    		$imgFile =$songItem['sid'] . '.' . end(explode('.', $img));
+		    		
+		    		if (!file_exists($imgUploadsPath . '/' . $imgFile)) {
+		    			file_put_contents($imgUploadsPath . '/' . $imgFile, file_get_contents($img));
+		    		}
+		    		
+		    		$songItem['img'] = $imgUrlHost . $imgFile;
+	    		}
+	    		$songItem['url'] = $playUrl . $songItem['sid'];
+	    		
+	    		$songInfo = json_decode('{"author":"'.$data_songitem[2].'","sname":"'.$data_songitem[3].'"}', true);
+				$songItem = array_merge($songItem, $songInfo);
+	    	
+	    		if ($songItem['sid']) {
+	    			if ($songItem['img']) {
+	    				$songItemList['top'][$songItem['sid']] = $songItem;
+	    			} else {
+	    				$songItemList['fair'][$songItem['sid']] = $songItem;
+	    			}
+	    		}
+	    	}
+	    	S('songItemList', $songItemList, 172800);
+    	}
+    	
+    	return $songItemList;
+    }
+    
+    public function tp_match($pattern, $subject, $num = 1) {
+    	$boolean = preg_match($pattern, $subject, $matches);
+    	$str = '';
+    	if ($boolean) {
+    		if ($num >= 0) {
+    			$str = $matches[$num];
+    		} else {
+    			$str = $matches;;
+    		}
+    	}
+    	return $str;
     }
 }
 

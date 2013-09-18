@@ -1,49 +1,57 @@
 <?php
-// 直达网址
+/**
+ * @desc 直达网址
+ * @name DirectLinksAction.class.php
+ * @package Admin
+ * @author Frank UPDATE 2013-09-14
+ * @version 1.0
+ */
 class DirectLinksAction extends CommonAction {
-	// 
+	
 	protected function _filter(&$map, &$param){
-		//
-		if ( isset($_REQUEST['tag']) ) {
-			$tag = $_REQUEST['tag'];
-		}
+		$tag = $this->_param('tag');
+		$url = $this->_param('url');
+		$status = $this->_param('status');
+		$cn_tag = $this->_param('cn_tag');
+		$checked = $this->_param('checked');
+		
 		if ( !empty($tag) ) {
-			$map['tag'] = array('like',"%".$tag."%");
+			$map['tag'] = array('like', "%".$tag."%");
 			$this->assign('tag', $tag);
 			$param['tag'] = $tag;
 		}
-		//
-		if ( isset($_REQUEST['url']) ) {
-			$url = $_REQUEST['url'];
-		}
+		
 		if ( !empty($url) ) {
-			$map['url'] = array('like',"%".$url."%");
+			$map['url'] = array('like', "%".$url."%");
 			$this->assign('url', $url);
 			$param['url'] = $url;
 		}
-		//
-		if (isset($_REQUEST['status']) && $_REQUEST['status']!='') {
-			$map['status'] = $_REQUEST['status'];
+		
+		if (!empty($status)) {
+			$map['status'] = $status;
 			$this->assign('status', $map['status']);
 			$param['status'] = $map['status'];
 		}
-		//
-		if (isset($_REQUEST['cn_tag']) && $_REQUEST['cn_tag']!='') {
-			$map['cn_tag'] = $_REQUEST['cn_tag'];
+		
+		if (!empty($cn_tag)) {
+			$map['cn_tag'] = $cn_tag;
 			$this->assign('cn_tag', $map['cn_tag']);
 			$param['cn_tag'] = $map['cn_tag'];
 		}
-		//
-		if (isset($_REQUEST['checked']) && $_REQUEST['checked']!='') {
-			$map['checked'] = $_REQUEST['checked'];
+		
+		if (!empty($checked)) {
+			$map['checked'] = $checked;
 			$this->assign('checked', $map['checked']);
 			$param['checked'] = $map['checked'];
 		}
 	}
 	
-	// 列表
+	/**
+	 * @desc 列表过滤器，生成查询Map对象
+	 * @author Frank UPDATE 2013-09-14
+	 */
 	public function index() {
-		//列表过滤器，生成查询Map对象
+		
 		$map = array();
 		$param = array();
 		if (method_exists ( $this, '_filter' )) {

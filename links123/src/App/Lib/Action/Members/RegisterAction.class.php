@@ -40,8 +40,9 @@ class RegisterAction extends CommonAction
 	public function saveReg() 
 	{
         $nickname = trim($this->_param('nickname'));
-        $password = $this->_param('password');
-        $verify = $this->_param('verify');
+        $password = trim($this->_param('password'));
+        $verify = trim($this->_param('verify'));
+        $email = trim($this->_param('email'));
                 
 		$member = M("Member");
 
@@ -51,6 +52,11 @@ class RegisterAction extends CommonAction
 		}
 		if (!checkStr($password)) {
 			echo '密码应为6到20位数字或字母';
+			return false;
+		}
+		
+		if (!checkEmail($email)) {
+			echo '请填写正确格式的Email';
 			return false;
 		}
                 
@@ -64,8 +70,14 @@ class RegisterAction extends CommonAction
 			return false;
 		}
 		
+		if ($member->where("email = '%s'", $email)->select()) {
+			echo '该邮箱已注册过';
+			return false;
+		}
+		
 		import("@.ORG.String");
 		$data['nickname'] = $nickname;
+		$data['email'] = $email;
 		$data['salt'] = String::randString();
 		$data['password'] = md5(md5($password) . $data['salt']);
 		$data['status'] = 1;

@@ -119,16 +119,16 @@ function getMediaDifficultyName($difficulty) {
     $name = "";
     switch ($difficulty) {
         case 1:
-            $name = "初级";
+            $name = "<span class='difficulty'>初级</span>";
             break;
         case 2:
-            $name = "中级";
+            $name = "<span class='difficulty'>中级</span>";
             break;
         case 3:
-            $name = "高级";
+            $name = "<span class='difficulty'>高级</span>";
             break;
         default:
-            $name = "未知";
+            $name = "<span class='difficulty'>无</span>";
             break;
     }
     return $name;

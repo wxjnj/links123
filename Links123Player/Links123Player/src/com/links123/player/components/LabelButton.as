@@ -10,19 +10,24 @@ package com.links123.player.components
 	public class LabelButton extends Button
 	{
 		
-		private var _wordcli:WordClipsVO;
-		public function LabelButton(wordclip:WordClipsVO)
+		private var _wordtitle:String;
+		public function LabelButton(wordstr:String)
 		{
-			_wordcli = wordclip;
+			_wordtitle = wordstr;
 			super();
 		}
 		
-		/**
-		 * 保存 按钮数据
-		 */
-		public function get wordcli():WordClipsVO
+//		/**
+//		 * 保存 按钮数据
+//		 */
+//		public function get wordcli():WordClipsVO
+//		{
+//			return _wordcli;
+//		}
+
+		public function get wordtitle():String
 		{
-			return _wordcli;
+			return _wordtitle;
 		}
 
 		override protected function getCurrentSkinState():String
@@ -36,7 +41,7 @@ package com.links123.player.components
 			if(instance == labelDisplay)
 			{
 				//赋值
-				this.label = _wordcli.word;
+				this.label = _wordtitle;
 			}
 		}
 		

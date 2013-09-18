@@ -6,18 +6,22 @@ class EnglishQuestionAction extends CommonAction {
         if (isset($_REQUEST['name'])) {
             $name = ftrim($_REQUEST['name']);
         }
+        //媒体口音
         if (intval($_REQUEST['voice']) > 0) {
-            $map['englishQuestion.voice'] = intval($_REQUEST['voice']);
+            $map['englishMedia.voice'] = intval($_REQUEST['voice']);
             $param['voice'] = intval($_REQUEST['voice']);
         }
+        //试题目标
         if (intval($_REQUEST['target']) > 0) {
             $map['englishQuestion.target'] = intval($_REQUEST['target']);
             $param['target'] = intval($_REQUEST['target']);
         }
+        //视频类型
         if (intval($_REQUEST['pattern']) > 0) {
             $map['englishMedia.pattern'] = intval($_REQUEST['pattern']);
             $param['pattern'] = intval($_REQUEST['pattern']);
         }
+        //视频科目
         if (intval($_REQUEST['object']) > 0) {
             $map['englishMedia.object'] = intval($_REQUEST['object']);
             $object_info = D("EnglishObject")->find($map['englishMedia.object']);
@@ -26,9 +30,43 @@ class EnglishQuestionAction extends CommonAction {
             }
             $param['object'] = intval($_REQUEST['object']);
         }
+        //视频等级
         if (intval($_REQUEST['level']) > 0) {
             $map['englishMedia.level'] = intval($_REQUEST['level']);
             $param['level'] = intval($_REQUEST['level']);
+        }
+        //视频专题
+        if (intval($_REQUEST['subject']) > 0) {
+            $map['englishMedia.subject'] = intval($_REQUEST['subject']);
+            $param['subject'] = intval($_REQUEST['subject']);
+        }
+        //视频难度值
+        if (intval($_REQUEST['difficulty']) > 0) {
+            $map['englishMedia.difficulty'] = intval($_REQUEST['difficulty']);
+            $param['difficulty'] = intval($_REQUEST['difficulty']);
+        }
+        //视频推荐
+        if (isset($_REQUEST['recommend'])) {
+            if (intval($_REQUEST['recommend']) == 0) {
+                $map['englishMedia.recommend'] = 0;
+            } else {
+                $map['englishMedia.recommend'] = array("neq", 0);
+            }
+            $param['recommend'] = intval($_REQUEST['recommend']);
+        }
+        //是否TED
+        if (isset($_REQUEST['ted'])) {
+            if (intval($_REQUEST['ted']) == 0) {
+                $map['englishMedia.ted'] = 0;
+            } else {
+                $map['englishMedia.ted'] = array("neq", 0);
+            }
+            $param['ted'] = intval($_REQUEST['ted']);
+        }
+        //视频特别推荐
+        if (isset($_REQUEST['special_recommend'])) {
+            $map['englishMedia.special_recommend'] = intval($_REQUEST['special_recommend']);
+            $param['special_recommend'] = intval($_REQUEST['special_recommend']);
         }
         if (isset($_REQUEST['status'])) {
             if ($_REQUEST['status'] != -2) {
@@ -36,9 +74,28 @@ class EnglishQuestionAction extends CommonAction {
             }
             $param['status'] = intval($_REQUEST['status']);
         }
+        //是否存在本地视频文件
+        if (isset($_REQUEST['has_local_path'])) {
+            if (intval($_REQUEST['has_local_path']) == 0) {
+                $map['englishMedia.local_path'] = array("eq", "");
+            } else {
+                $map['englishMedia.local_path'] = array("neq", "");
+            }
+            $param['has_local_path'] = intval($_REQUEST['has_local_path']);
+        }
+        //试题创建时间
         if (isset($_REQUEST['created']) && strtotime($_REQUEST['created'])) {
             $map['_string'] = "DATE_FORMAT(FROM_UNIXTIME(englishQuestion.`created`),'%Y-%m-%d')='" . $_REQUEST['created'] . "'";
             $param['created'] = $_REQUEST['created'];
+        }
+        //媒体缩略图
+        if (isset($_REQUEST['thumb'])) {
+            if (intval($_REQUEST['thumb']) == 1) {
+                $map['englishMedia.media_thumb_img'] = array("neq", "");
+            } else {
+                $map['englishMedia.media_thumb_img'] = array("eq", "");
+            }
+            $param['thumb'] = intval($_REQUEST['thumb']);
         }
         if (!empty($name)) {
             $key['englishQuestion.id'] = $name;
@@ -127,24 +184,24 @@ class EnglishQuestionAction extends CommonAction {
         $option_id = array();
         //依次存入选项，不知道问题id
         $option_data['created'] = time();
-        $index = 1;
+        $index = array(1, 2, 3, 4);
         foreach ($_POST['option'] as $key => $value) {
             if (!empty($value)) {
-                $d_1 = preg_match("/all\sof\sthe\sabove.?/i", $value);
-                $d_2 = preg_match("/none\sof\sthe\sabove.?/i", $value);
-                $d_3 = preg_match("/either\sB\sor\sC.?/i", $value);
-                $d_4 = preg_match("/(both\s)?B\sand\sC.?/i", $value);
-                $c_1 = preg_match("/(both\sA)?\sand\sB.?/i", $value);
-                $c_2 = preg_match("/either\sA\sor\sB.?/i", $value);
+                $d_1 = preg_match("/all(\s)+of(\s)+the(\s+)above.?/i", $value);
+                $d_2 = preg_match("/none(\s)+of(\s)+the(\s)+above.?/i", $value);
+                $d_3 = preg_match("/either(\s)+B(\s)+or(\s)+C.?/i", $value);
+                $d_4 = preg_match("/(both(\s)+)?B(\s)+and(\s)+C.?/i", $value);
+                $c_1 = preg_match("/(both(\s)+A)?(\s)+and(\s)+B.?/i", $value);
+                $c_2 = preg_match("/either(\s)+A(\s)+or(\s)+B.?/i", $value);
                 $option_data['content'] = $value;
+                $option_data['sort'] = current($index);
                 if ($d_1 || $d_2 || $d_3 || $d_4) {
                     $option_data['sort'] = 4; //D
                 } else if ($c_1 || $c_2) {
                     $option_data['sort'] = 3; //C
-                } else {
-                    $option_data['sort'] = $index; //除去特殊项目，其他自动顶上
-                    $index++;
                 }
+                unset($index[array_search($option_data['sort'], $index)]); //已排序的序号删除
+
                 $ret = $optionModel->add($option_data);
                 if (false === $ret) {
                     $model->rollback();
@@ -210,7 +267,7 @@ class EnglishQuestionAction extends CommonAction {
         $id = intval($_REQUEST [$model->getPk()]);
 //        $vo = $model->getById($id);
         $vo = $model->alias("question")->field("question.*,media.name as media_name,media.media_source_url as media_source_url")->join(C("DB_PREFIX") . "english_media media on media.id=question.media_id")->where("question.id=" . intval($id))->find();
-        $option_list = D("EnglishOptions")->getQuestionOptionList($id);
+        $option_list = D("EnglishOptions")->getQuestionOptionList($id, false);
         $this->assign('option_list', $option_list);
         $this->assign('vo', $vo);
         $this->assign('doubleQuotes', '"');
@@ -251,24 +308,25 @@ class EnglishQuestionAction extends CommonAction {
         $option_data['question_id'] = $id;
         $option_data['created'] = time();
         $answer_id = 0;
-        $index = 1;
+        $index = array(1, 2, 3, 4);
         foreach ($_POST['option'] as $key => $value) {
             if (!empty($value)) {
-                $d_1 = preg_match("/all\sof\sthe\sabove.?/i", $value);
-                $d_2 = preg_match("/none\sof\sthe\sabove.?/i", $value);
-                $d_3 = preg_match("/either\sB\sor\sC.?/i", $value);
-                $d_4 = preg_match("/(both\s)?B\sand\sC.?/i", $value);
-                $c_1 = preg_match("/(both\s)?A\sand\sB.?/i", $value);
-                $c_2 = preg_match("/either\sA\sor\sB.?/i", $value);
+                $d_1 = preg_match("/all(\s)+of(\s)+the(\s+)above.?/i", $value);
+                $d_2 = preg_match("/none(\s)+of(\s)+the(\s)+above.?/i", $value);
+                $d_3 = preg_match("/either(\s)+B(\s)+or(\s)+C.?/i", $value);
+                $d_4 = preg_match("/(both(\s)+)?B(\s)+and(\s)+C.?/i", $value);
+                $c_1 = preg_match("/(both(\s)+A)?(\s)+and(\s)+B.?/i", $value);
+                $c_2 = preg_match("/either(\s)+A(\s)+or(\s)+B.?/i", $value);
                 $option_data['content'] = $value;
+                $option_data['sort'] = current($index); //获取最前面的序号
                 if ($d_1 || $d_2 || $d_3 || $d_4) {
                     $option_data['sort'] = 4; //D
                 } else if ($c_1 || $c_2) {
                     $option_data['sort'] = 3; //C
-                } else {
-                    $option_data['sort'] = $index; //除去特殊项目，其他自动顶上
-                    $index++;
                 }
+
+                unset($index[array_search($option_data['sort'], $index)]); //已排序的序号删除
+
                 $ret = $optionModel->add($option_data);
                 if (false === $ret) {
                     $optionModel->rollback();
@@ -415,11 +473,19 @@ class EnglishQuestionAction extends CommonAction {
                 $subject_list[$value['name']] = $value['id'];
             }
             //推荐列表备用
-            $recommendList = $recommendModel->field("id,name,`sort`")->where("status=1")->order("`sort` desc")->select();
+            $recommendList = $recommendModel->field("id,name,`sort`")->order("`sort` desc")->select();
             foreach ($recommendList as $value) {
                 $recommendNameList[$value['name']] = intval($value['id']);
             }
             $recommendSort = intval($recommendList[0]['sort']) + 1;
+
+            //TED列表备用
+            $tedModel=D("EnglishMediaTed");
+            $tedList = $tedModel->field("id,name,`sort`")->order("`sort` desc")->select();
+            foreach ($tedList as $value) {
+                $tedNameList[$value['name']] = intval($value['id']);
+            }
+            $tedSort = intval($recommendList[0]['sort']) + 1;
             $model->startTrans();
             //
             //循环读取所有表,表迭代器
@@ -427,8 +493,8 @@ class EnglishQuestionAction extends CommonAction {
                 foreach ($worksheet->getRowIterator() as $row) {
                     //行迭代器
                     $cellIterator = $row->getCellIterator();
-                    $data = array(); //暂时保存数据的数组
-                    $media_data = array();
+                    $data = array(); //保存试题数据的数组
+                    $media_data = array(); //保存媒体数据的数组
                     $repeat_ret = false; //题目是否重复
                     $cellIterator->setIterateOnlyExistingCells(false); //单元格为空也迭代
                     foreach ($cellIterator as $cell) {
@@ -443,7 +509,7 @@ class EnglishQuestionAction extends CommonAction {
                             } else if ($cell->getColumn() == "D") {
                                 $data['target'] = $cell->getCalculatedValue(); //目标，听力，说力
                             } else if ($cell->getColumn() == "E") {
-                                $media_data['level'] = ftrim($cell->getCalculatedValue()); //等级
+                                $media_data['level_name'] = ftrim($cell->getCalculatedValue()); //等级
                             } else if ($cell->getColumn() == "F") {
                                 $media_data['object_name'] = ftrim($cell->getCalculatedValue()); //科目
                             } else if ($cell->getColumn() == "G") {
@@ -454,18 +520,20 @@ class EnglishQuestionAction extends CommonAction {
                             } else if ($cell->getColumn() == "I") {
                                 $media_data['special_recommend'] = intval($cell->getCalculatedValue()); //是否特别推荐
                             } else if ($cell->getColumn() == "J") {
-                                $data['media_text_url'] = $media_data['media_source_url'] = ftrim($cell->getCalculatedValue()); //媒体内容地址
+                                $media_data['ted'] = intval($cell->getCalculatedValue()); //是否特别推荐
                             } else if ($cell->getColumn() == "K") {
-                                $data['content'] = ftrim($cell->getCalculatedValue()); //题目内容
+                                $data['media_text_url'] = $media_data['media_source_url'] = ftrim($cell->getCalculatedValue()); //媒体内容地址
                             } else if ($cell->getColumn() == "L") {
-                                $data['answer'] = ftrim($cell->getCalculatedValue()); //题目答案
+                                $data['content'] = ftrim($cell->getCalculatedValue()); //题目内容
                             } else if ($cell->getColumn() == "M") {
-                                $data['option'][0] = ftrim($cell->getCalculatedValue()); //题目选项一
+                                $data['answer'] = intval($cell->getCalculatedValue()); //题目答案
                             } else if ($cell->getColumn() == "N") {
-                                $data['option'][1] = ftrim($cell->getCalculatedValue()); //题目选项二
+                                $data['option'][0] = ftrim($cell->getCalculatedValue()); //题目选项一
                             } else if ($cell->getColumn() == "O") {
-                                $data['option'][2] = ftrim($cell->getCalculatedValue()); //题目选项三
+                                $data['option'][1] = ftrim($cell->getCalculatedValue()); //题目选项二
                             } else if ($cell->getColumn() == "P") {
+                                $data['option'][2] = ftrim($cell->getCalculatedValue()); //题目选项三
+                            } else if ($cell->getColumn() == "Q") {
                                 $data['option'][3] = ftrim($cell->getCalculatedValue()); //题目选项四
                             }
                         }
@@ -476,8 +544,8 @@ class EnglishQuestionAction extends CommonAction {
                     //根据问题内容、视频、科目、等级以及答案内容查询是否有重复
                     $condition['question.content'] = array("like", $data['content']);
                     $condition['media.media_source_url'] = array("like", $media_data['media_source_url']);
-                    $condition['media.object'] = $object_list[$media_data['object']];
-                    $condition['media.level'] = $level_list[$media_data['level']];
+                    $condition['media.object'] = $object_list[$media_data['object_name']];
+                    $condition['media.level'] = $level_list[$media_data['level_name']];
                     $condition['english_options.content'] = array("like", $data['option'][$data['answer'] - 1]);
                     $repeat_ret = $model->alias("question")
                             ->join(C("DB_PREFIX") . "english_media media on media.id=question.media_id")
@@ -491,7 +559,8 @@ class EnglishQuestionAction extends CommonAction {
                     $time = time();
                     //
                     //获取媒体的id
-                    $mediaId = intval($mediaModel->where("media_source_url='" . $media_data['media_source_url'] . "'")->getField("id"));
+                    $media_info = $mediaModel->field("id,local_path")->where(array("media_source_url" => array("like", $media_data['media_source_url'])))->find();
+                    $mediaId = intval($media_info['id']);
                     //
                     //来源地址未匹配到媒体，则添加媒体
                     if ($mediaId == 0) {
@@ -500,57 +569,108 @@ class EnglishQuestionAction extends CommonAction {
                         $media_data['created'] = $time;
                         //等级、科目、专题的名称换成对应的id
                         $media_data['object'] = intval($object_list[$media_data['object_name']]);
-                        $media_data['difficulty'] = intval($difficulty_list[$media_data['level']]);
-                        $media_data['level'] = intval($level_list[$media_data['level']]);
+                        $media_data['difficulty'] = intval($difficulty_list[$media_data['level_name']]);
+                        $media_data['level'] = intval($level_list[$media_data['level_name']]);
                         $media_data['subject'] = intval($subject_list[$media_data['subject_name']]);
                         if ($media_data['special_recommend'] == 1) {
                             $media_data['recommend'] = 1;
                         }
                         //是推荐
+                        if ($media_data['ted'] == 1) {
+                            $ted_id = 0;
+                            //专题存在
+                            if ($media_data['subject'] > 0) {
+                                $ted_id = $tedNameList[$media_data['subject_name']];
+                                //推荐类存在专题名
+                                if (intval($ted_id) == 0) {
+                                    $ted_data['sort'] = $tedSort;
+                                    $ted_data['name'] = $media_data['subject_name'];
+                                    $ted_data['created'] = $time;
+                                    $ted_data['updated'] = $time;
+                                    $ted_id = $tedModel->add($ted_data);
+                                    if (false === $ted_id) {
+                                        $model->rollback();
+                                        @unlink($dest);
+                                        die(json_encode(array("info" => "导入失败，添加专题名到TED失败！", "status" => false)));
+                                    }
+                                    $tedNameList[$media_data['subject_name']] = $ted_id;
+                                    $tedSort++;
+                                }
+                            } else {
+                                //科目存在
+                                if ($media_data['object'] > 0) {
+                                    $ted_id = $tedNameList[$media_data['object_name']];
+                                    //推荐类存在科目名
+                                    if (intval($ted_id) == 0) {
+                                        $ted_data['sort'] = $tedSort;
+                                        $ted_data['name'] = $media_data['object_name'];
+                                        $ted_data['created'] = $time;
+                                        $ted_data['updated'] = $time;
+                                        $ted_id = $tedModel->add($ted_data);
+                                        if (false === $ted_id) {
+                                            $model->rollback();
+                                            @unlink($dest);
+                                            die(json_encode(array("info" => "导入失败，添加科目名到TED失败！", "status" => false)));
+                                        }
+                                        $tedNameList[$media_data['object_name']] = $ted_id;
+                                        $tedSort++;
+                                    }
+                                }
+                            }
+                            $media_data['ted'] = $ted_id;
+                        }
+                        
+                        //是推荐
                         if ($media_data['recommend'] == 1) {
                             $recommend_id = 0;
-                            //科目存在
-                            if ($media_data['object'] > 0) {
-                                $recommend_id = $recommendNameList[$media_data['object_name']];
-                                //推荐类存在科目名
-                                if (intval($recommend_id == 0)) {
+                            //专题存在
+                            if ($media_data['subject'] > 0) {
+                                $recommend_id = $recommendNameList[$media_data['subject_name']];
+                                //推荐类存在专题名
+                                if (intval($recommend_id) == 0) {
                                     $recommend_data['sort'] = $recommendSort;
-                                    $recommend_data['name'] = $media_data['object_name'];
+                                    $recommend_data['name'] = $media_data['subject_name'];
                                     $recommend_data['created'] = $time;
                                     $recommend_data['updated'] = $time;
                                     $recommend_id = $recommendModel->add($recommend_data);
                                     if (false === $recommend_id) {
                                         $model->rollback();
                                         @unlink($dest);
-                                        die(json_encode(array("info" => "导入失败1", "status" => false)));
+                                        die(json_encode(array("info" => "导入失败，添加专题名到推荐失败！", "status" => false)));
                                     }
-                                    $recommendNameList[$media_data['object_name']] = $recommend_id;
+                                    $recommendNameList[$media_data['subject_name']] = $recommend_id;
                                     $recommendSort++;
                                 }
                             } else {
-                                //专题存在
-                                if ($media_data['subject'] > 0) {
-                                    $recommend_id = $recommendNameList[$media_data['subject_name']];
-                                    //推荐类存在专题名
-                                    if (intval($recommend_id == 0)) {
+                                //科目存在
+                                if ($media_data['object'] > 0) {
+                                    $recommend_id = $recommendNameList[$media_data['object_name']];
+                                    //推荐类存在科目名
+                                    if (intval($recommend_id) == 0) {
                                         $recommend_data['sort'] = $recommendSort;
-                                        $recommend_data['name'] = $media_data['subject_name'];
+                                        $recommend_data['name'] = $media_data['object_name'];
                                         $recommend_data['created'] = $time;
                                         $recommend_data['updated'] = $time;
                                         $recommend_id = $recommendModel->add($recommend_data);
                                         if (false === $recommend_id) {
                                             $model->rollback();
                                             @unlink($dest);
-                                            die(json_encode(array("info" => "导入失败2", "status" => false)));
+                                            die(json_encode(array("info" => "导入失败，添加科目名到推荐失败！", "status" => false)));
                                         }
-                                        $recommendNameList[$media_data['subject_name']] = $recommend_id;
+                                        $recommendNameList[$media_data['object_name']] = $recommend_id;
                                         $recommendSort++;
                                     }
                                 }
                             }
                             $media_data['recommend'] = $recommend_id;
                         }
+                        
                         $mediaId = $mediaModel->add($media_data);
+                        if (false === $recommend_id) {
+                            $model->rollback();
+                            @unlink($dest);
+                            die(json_encode(array("info" => "导入失败，添加媒体到媒体表失败！", "status" => false)));
+                        }
                     }
                     $data['media_id'] = intval($mediaId);
                     //没有媒体id，题目禁用
@@ -578,36 +698,36 @@ class EnglishQuestionAction extends CommonAction {
                     //
                     //依次存入选项，不知道问题id
                     $option_data['created'] = $time;
-                    $index = 1;
+                    $index = array(1, 2, 3, 4); //选择序号数组
                     foreach ($data['option'] as $key => $value) {
                         if (!empty($value)) {
-                            $d_1 = preg_match("/all\sof\sthe\sabove.?/i", $value);
-                            $d_2 = preg_match("/none\sof\sthe\sabove.?/i", $value);
-                            $d_3 = preg_match("/either\sB\sor\sC.?/i", $value);
-                            $d_4 = preg_match("/(both\s)?B\sand\sC.?/i", $value);
-                            $c_1 = preg_match("/(both\s)?A\sand\sB.?/i", $value);
-                            $c_2 = preg_match("/either\sA\sor\sB.?/i", $value);
+                            $d_1 = preg_match("/all(\s)+of(\s)+the(\s+)above.?/i", $value);
+                            $d_2 = preg_match("/none(\s)+of(\s)+the(\s)+above.?/i", $value);
+                            $d_3 = preg_match("/either(\s)+B(\s)+or(\s)+C.?/i", $value);
+                            $d_4 = preg_match("/(both(\s)+)?B(\s)+and(\s)+C.?/i", $value);
+                            $c_1 = preg_match("/(both(\s)+A)?(\s)+and(\s)+B.?/i", $value);
+                            $c_2 = preg_match("/either(\s)+A(\s)+or(\s)+B.?/i", $value);
                             $option_data['content'] = $value;
+                            $option_data['sort'] = current($index); //选项排序等于当前最前面序号
                             if ($d_1 || $d_2 || $d_3 || $d_4) {
                                 $option_data['sort'] = 4; //D
                             } else if ($c_1 || $c_2) {
                                 $option_data['sort'] = 3; //C
-                            } else {
-                                $option_data['sort'] = $index; //除去特殊项目，其他自动顶上
-                                $index++;
                             }
+                            unset($index[array_search($option_data['sort'], $index)]); //已排序的序号删除
 
                             $ret = $optionModel->add($option_data);
                             if (false === $ret) {
                                 $model->rollback();
                                 @unlink($dest);
-                                die(json_encode(array("info" => "导入失败3", "status" => false)));
+                                die(json_encode(array("info" => "导入失败，添加试题选项失败！", "status" => false)));
                             }
                             array_push($option_id, $ret); //保存增加的id数组，用于更新选项对应的问题id
                         }
                     }
                     //答案id
                     $data['answer'] = $option_id[$data['answer'] - 1];
+                    //没有答案或者不是双选下选项小于4
                     if ($data['answer'] == 0 || (count($option_id) < 4 && !($is_double_false && $is_double_true))) {
                         $data['status'] = 0;
                         $data['answer'] = 0;
@@ -626,7 +746,7 @@ class EnglishQuestionAction extends CommonAction {
                             '56.com' => '_56',
                             'letv.com' => '_letv',
                             'sohu.com' => '_sohu',
-                            'ted.com' => '_ted',
+                            //'ted.com' => '_ted',
                             '163.com' => '_163',
                             'umiwi.com' => '_umiwi',
                             'about.com' => '_about',
@@ -671,14 +791,14 @@ class EnglishQuestionAction extends CommonAction {
                                 //更新答案对应的题目id
                                 $model->rollback();
                                 @unlink($dest);
-                                die(json_encode(array("info" => "导入失败4", "status" => false)));
+                                die(json_encode(array("info" => "导入失败，更新选项和试题关联失败！", "status" => false)));
                             }
                         }
                     } else {
                         $model->rollback();
                         @unlink($dest);
                         //失败提示
-                        die(json_encode(array("info" => "导入失败5", "status" => false)));
+                        die(json_encode(array("info" => "导入失败，保存试题信息失败！", "status" => false)));
                     }
                 }
             }

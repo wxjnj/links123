@@ -4,24 +4,28 @@
 	<meta charset="UTF-8" />
 	<title>另客网V3</title>
 	<link rel="stylesheet" href="__PUBLIC__/Demo/css/base.css" />
-	<link rel="stylesheet" href="__PUBLIC__/Demo/css/index.css" />
+	<link rel="stylesheet" href="__PUBLIC__/Demo/css/jquery-ui.css" />
+	<link rel="stylesheet" href="__PUBLIC__/Demo/css/style.css" />
 	<link rel="stylesheet" href="__PUBLIC__/Demo/skins/dark/style.css" />
-	
-	<link rel="stylesheet" type="text/css" href="__PUBLIC__/skin/fancybox/jquery.fancybox.css?v=2.1.4" media="screen" />
-	<link href="__PUBLIC__/Index/css/jquery-ui.css" rel="stylesheet" type="text/css"/>
-	<link href="__PUBLIC__/Index/css/app.css?2013091201" rel="stylesheet" type="text/css" />
-	
+	<link rel="stylesheet" href="__PUBLIC__/skin/fancybox/jquery.fancybox.css" />
+	<link rel="stylesheet" href="__PUBLIC__/Demo/css/app.css" />
 	<link rel="stylesheet" href="about:blank" id="J_Skins" />
-	<!-- <link rel="stylesheet" href="skins/light/style.css" /> -->
-	<!-- <script src="js/respond.min.js"></script> -->
+	<script>
+		var $CONFIG = {
+			'APP' : '__APP__/',
+			'URL' : '__URL__',
+			'PUBLIC' : '__PUBLIC__',
+			'IsLogin' : <empty name="_SESSION[C('MEMBER_AUTH_KEY')]">1<else />0</empty>
+		};
+	</script>
 </head>
 <body>
 
-	<div id="header" class="J_header_top">
+	<div id="header">
 		<div class="header-inner">
 			<div class="zdl">
 				<form id="frm_drct" method="post" action="__APP__/Link/direct/" target="_blank">
-					<input class="ipt ipton" type="text" name="tag" id="direct_text" value="{$directTip}"  txt="{$directTip}" autocomplete="on" />
+					<input class="ipt ipton" type="text" name="tag" id="direct_text" txt="{$directTip}" value="{$directTip}" autocomplete="on" />
 					<input class="btn J_direct_submit" type="submit" value="提交" />
 				</form>
 			</div>
@@ -32,47 +36,49 @@
 				<li><a href="#">寻觅好友</a></li>
 			</ul>
 			<div class="uc">
-				<a class="join J_signup" href="#">加入另客</a><a class="login J_signin" href="#">登录</a>
+				<empty name="_SESSION[C('MEMBER_AUTH_KEY')]">
+					<a class="join J_SignUp" href="javascript:;">加入另客</a><a class="login J_SignIn" href="javascript:;">登录</a>
+				<else />
+					<div class="uc-menu">
+						<p>Hello，{$Think.session.nickname}</p>
+						<ul>
+							<li><a target="_blank" href="/Members/Index">个人中心</a></li>
+							<li><a target="_blank" href="/Members/Collection">我的收藏</a></li>
+							<li><a target="_blank" href="/Members/Recommend">我的推荐</a></li>
+							<li><a target="_blank" href="/Members/Comment">我的说说</a></li>
+							<li><a target="_blank" href="/Members/Suggestion">留言板</a></li>
+							<li><a target="_blank" href="/Members/Logout">退出</a></li>
+						</ul>
+					</div>
+				</empty>
 			</div>
 		</div>
 	</div><!--#header end-->
 	<div id="container">
 		<div class="skins">
 			<ul class="skins-style">
-				<li data-id="1">
-					<p><img src="http://www.links123.cn/Public/Index/imgs/skins/wood/wood.png" alt="" /></p>
-				</li>
-				<li data-id="2">
-					<p><img src="http://www.links123.cn/Public/Index/imgs/skins/wood/wood.png" alt="" /></p>
-				</li>
-				<li data-id="3">
-					<p><img src="http://www.links123.cn/Public/Index/imgs/skins/wood/wood.png" alt="" /></p>
-				</li>
+				<volist name="skinCategory" id="vo">
+					<li data-id="{$vo.categoryId}"><p><img src="{$vo.categoryImg}" alt="" /></p></li>
+				</volist>
 			</ul>
 			<dl class="skins-all">
-				<dd class="sa1">
-					<ul>
-						<li data-bg="" data-id="1">
-							<p><img src="http://www.links123.cn/Public/Index/imgs/skins/wood/icon-skin001.png" alt="" /></p>
-						</li>
-						<li data-bg="" data-id="2">
-							<p><img src="http://www.links123.cn/Public/Index/imgs/skins/wood/icon-skin001.png" alt="" /></p>
-						</li>
-						<li data-bg="" data-id="3">
-							<p><img src="http://www.links123.cn/Public/Index/imgs/skins/wood/icon-skin001.png" alt="" /></p>
-						</li>
-						<li data-bg="" data-id="4">
-							<p><img src="http://www.links123.cn/Public/Index/imgs/skins/wood/icon-skin001.png" alt="" /></p>
-						</li>
-						<li data-bg="" data-id="5">
-							<p><img src="http://www.links123.cn/Public/Index/imgs/skins/wood/icon-skin001.png" alt="" /></p>
-						</li>
-					</ul>
-				</dd>
+				<volist name="skinList" id="vo" key="k">
+					<dd class="sa{$k}">
+						<ul>
+							<volist name="vo" id="skin">
+								<li data-bg="{$skin.skin}" data-id="{$skin.skinId}" <if condition="$skin.skinId eq $skinId">class="added"</if>>
+									<p><img src="{$skin.smallSkin}" alt="" /></p>
+									<s></s>
+									<p class="imgb"><img src="{$skin.middleSkin}" /></p>
+								</li>
+							</volist>
+						</ul>
+					</dd>
+				</volist>
 			</dl>
 		</div>
 		<div class="container-inner">
-			<div class="ci-hd">
+			<div class="ci-hd J_thl_area">
 				<h1><a class="logo" href="/" rel="home">另客网</a></h1>
 				<div class="thl">
 					<form action="" id="searchForm">
@@ -80,10 +86,8 @@
 						<input name="tid" id="J_tid" type="hidden" value="">
 						<input name="q" id="J_q" type="hidden" value="">
 						<input type="text" value="" style="display:none;" />
-						
 						<input type="hidden" id="tidNow" value="{$tidNow}" />
-		
-						<div class="cate" id="J_thl_div" >
+						<div class="cate cate-in" id="J_thl_div" >
 							<volist name="thl_list" id="vo" key="m"><a <eq name="thlNow" value="$vo['thl']">class="on"</eq> href="#">{$vo['thl']}</a><if condition='$m neq 12'>&nbsp;-&nbsp;</if></volist>
 						</div>					
 						<div class="subcate">
@@ -95,21 +99,21 @@
 								</volist>
 							</dl>
 						</div>
-						<div class="ctls" id="rch_sch">
-							<input type="text" id="search_text" class="ipt" x-webkit-speech lang="zh-CN" value="{$_COOKIE['keyword']}" autocomplete="on" />
+						<div class="ctls">
+							<input type="text" id="search_text" class="ipt" x-webkit-speech lang="zh-CN" value="{$_COOKIE['keyword']}" autocomplete="off" />
 							<input type="hidden" id="search_text_o" />
 							<input class="btn" type="submit" value="" id="btn_search" />
-							<ul id="tips"></ul>
 						</div>
 					</form>
 				</div>
 			</div>
 			<div class="ci-bd">
-				<div class="zld">
-					<ul>
-						<volist name="_SESSION['arealist']" id="vo">
-						<if condition="$vo['id'] neq ''">
-							<li id="{$vo.id}"><span class="nm J_myarea_link" url="{:U('Link/index')}?mod=myarea&url={$vo.url}" data-id="{$vo.id}" data-url="{$vo.url}"><i class="mask"></i><b>{$vo.web_name}</b></span><span class="ctl"><i class="mask"></i></span></li>
+				<div class="zld" id="J_ZldList">
+					<form action="{:U('Link/index')}?mod=myarea" id="J_MyAreaForm" target="_blank" method="post"><input type="hidden" name="url" value="" /></form>
+					<ul id="J_sortable">
+						<volist name="_SESSION['myarea_sort']" id="areaid">
+						<if condition="$_SESSION['arealist'][$areaid]['id'] neq ''">
+							<li id="{$_SESSION['arealist'][$areaid].id}" url="{:U('Link/index')}?mod=myarea&url={$_SESSION['arealist'][$areaid].url}" data-id="{$_SESSION['arealist'][$areaid].id}" data-url="{$_SESSION['arealist'][$areaid].url}"><span class="nm" ><i class="mask"></i><b>{$_SESSION['arealist'][$areaid]['web_name']}</b></span><span class="ctl"><i class="mask"></i></span></li>
 						</if>
 						</volist>
 						<li><span class="ctl add"><i class="mask"></i></span></li>
@@ -117,7 +121,6 @@
 				</div><!--.zld end-->
 				<div class="box box-apps">
 					<div class="box-hd">
-						<span class="edit"></span>
 						<h2>我的应用</h2>
 					</div>
 					<div class="box-bd">
@@ -130,6 +133,10 @@
 								<li>
 									<p class="av newWin" url="{:U('Home/Index/nav')}"><img src="__PUBLIC__/Demo/imgs/app/app002.png" /></p>
 									<p class="nm"><a href="{:U('Home/Index/nav')}" target="_blank">另客导航</a></p>
+								</li>
+								<li id="J_music">
+									<p class="av"><img src="__PUBLIC__/Demo/imgs/app/app007.png" /></p>
+									<p class="nm">音乐盒</p>
 								</li>
 								<li id="J_stikynot">
 									<p class="av"><img src="__PUBLIC__/Demo/imgs/app/app005.png" /></p>
@@ -164,101 +171,80 @@
 				</div>
 				<div class="extra">
 					<div class="extra-col1">
-						<div class="box box-schedule">
+						<div class="box box-schedule" id="J_Schedule">
 							<div class="box-hd">
-								<span class="del"></span>
-								<span class="edit"></span>
+								<span class="new"></span>
 								<h2>我的日程表</h2>
 							</div>
 							<div class="box-bd">
 								<div class="schedule">
 									<ul>
-										<li class="first">
-											<span class="sp">音效提醒</span>
-											<span class="info">8月30日 - 下午 - 3点 - 与客户见面与客户见面与客户见面与客户见面</span>
+									<volist name="schedule_list" key="i" id="schedule">
+									<li class='<if condition="$i eq 1">first</if> task{$schedule.id}' data-id="{$schedule.id}">
+											<if condition="$i eq 1 AND $schedule.mid eq 0"><else /><span class="sp">取消日程</span></if>
+											<div class="info">
+												<span data-d='{$schedule.datetime|date="m月d日",###}' class="d"><input type="text" value='{$schedule.datetime|date="m月d日",###}' /></span>
+												<span class="s"> - </span>
+												<span class="t"><input type="text" value="{$schedule.content}" /></span>
+											</div>
 										</li>
-										<li>
-											<span class="sp">无提醒</span>
-											<span class="info">8月30日 - 下午 - 3点 - 与客户见面与客户见面与客户见面</span>
-										</li>
-										<li>
-											<span class="sp">音效提醒</span>
-											<span class="info">8月30日 - 下午 - 3点 - 与客户见面与客见面与客户见面</span>
-										</li>
-										<li>
-											<span class="sp">音效提醒</span>
-											<span class="info">8月30日 - 下午 - 3点 - 与客户见面与，面与面与面</span>
-										</li>
-										<li>
-											<span class="sp">音效提醒</span>
-											<span class="info">8月30日 - 下午 - 3点 - 与客户面与面与面与面与面与面与见面</span>
-										</li>
+									</volist>
 									</ul>
 								</div><!--.schedule end-->
 							</div>
 						</div>
-						<div class="box box-find">
+						<div class="box box-find" id="J_Find">
 							<div class="box-hd">
-								<span class="del"></span>
-								<span class="edit"></span>
-								<h2>发现</h2>
+								<h2>TED发现</h2>
 							</div>
 							<div class="box-bd">
 								<div class="find">
-									
+									<ul>
+									<volist name="ted_list" id="ted">
+										<li>
+											<img src="{$ted.link_cn_img}" alt="" />
+											<div class="mask"></div>
+											<div class="info">
+												<p class="p1">{$ted.title}</p>
+												<p class="p2"></p>
+											</div>
+											<a class="go" href="{:U('Detail/index')}?id={$ted.id}" target="_blank">查看</a>
+										</li>
+									</volist>
+										
+										<li class="more">
+											<a href="{:U('Index/nav')}?cid=5" target="_blank">发现更多...</a>
+										</li>
+									</ul>
 								</div><!--.find end-->
 							</div>
 						</div>
 					</div><!--.extra-col1 end-->
 					<div class="extra-col2">
-						<div class="box box-music">
+						<div class="box box-music" id="J_Music">
 							<div class="box-hd">
 								<span class="del"></span>
-								<span class="edit"></span>
-								<h2>每周音乐专辑推荐</h2>
+								<h2>热门音乐推荐</h2>
 							</div>
 							<div class="box-bd">
 								<div class="music">
-									<dl class="music-col1">
-										<dt>
-											<p class="img"><img src="__PUBLIC__/Demo/upload/01.jpg" alt="" /></p>
-											<p class="nm">你比从前快乐你比从前快乐</p>
-										</dt>
-										<dd>
-											<ul>
-												<li class="first">容祖儿 - 快乐最快</li>
-												<li>何洁 - 那一天【老公的春天片尾曲】</li>
-												<li>吉克隽逸 - 月到天心处</li>
-												<li>齐柒柒 - 梦的起点</li>
-												<li>张木易 - 都在你身边</li>
-												<li>容祖儿 - 快乐最快</li>
-												<li>何洁 - 那一天【老公的春天片尾曲】</li>
-												<li>吉克隽逸 - 月到天心处</li>
-												<li>齐柒柒 - 梦的起点</li>
-												<li>张木易 - 都在你身边</li>
-											</ul>
-										</dd>
-									</dl>
-									<dl class="music-col2">
-										<dt>
-											<p class="img"><img src="__PUBLIC__/Demo/upload/01.jpg" alt="" /></p>
-											<p class="nm">你比从前快乐你比从前快乐</p>
-										</dt>
-										<dd>
-											<ul>
-												<li class="first">容祖儿 - 快乐最快</li>
-												<li>何洁 - 那一天【老公的春天片尾曲】</li>
-												<li>吉克隽逸 - 月到天心处</li>
-												<li>齐柒柒 - 梦的起点</li>
-												<li>张木易 - 都在你身边</li>
-												<li>容祖儿 - 快乐最快</li>
-												<li>何洁 - 那一天【老公的春天片尾曲】</li>
-												<li>吉克隽逸 - 月到天心处</li>
-												<li>齐柒柒 - 梦的起点</li>
-												<li>张木易 - 都在你身边</li>
-											</ul>
-										</dd>
-									</dl>
+									<div class="top-mv">
+										<ul>
+										<volist name="songTopList" key="i" id="song">
+											<li <if condition="$i%2 eq 1">class="first"</if>>
+												<p class="img"><img src="{$song.img}" alt="" /></p>
+												<p class="nm"><a href="javascript:;" data-url="{$song.url}" title="{$song.sname}">{$song.author} - {$song.sname}</a></p>
+											</li>
+										</volist>
+										</ul>
+									</div>
+									<div class="hot-music">
+										<ul>
+										<volist name="songFairList" key="i" id="song">
+											<li <if condition="$i%2 neq 1">class="odd"</if>><a href="javascript:;" data-url="{$song.url}" title="{$song.sname}">{$song.author} - {$song.sname}</a></li>
+										</volist>
+										</ul>
+									</div>
 								</div><!--.music end-->
 							</div>
 						</div>
@@ -266,16 +252,19 @@
 					<div class="extra-col3">
 						<div class="box box-pics">
 							<div class="box-hd">
-								<span class="del"></span>
-								<span class="edit"></span>
 								<h2>每日图片精选</h2>
 							</div>
 							<div class="box-bd">
-								<div class="pics">
-									<ul>
+								<div class="pics" id="J_ScrollBox">
+									<ul class="items">
 										<li><img src="__PUBLIC__/Demo/upload/02.jpg" alt="" width="300" /></li>
+										<li><img src="__PUBLIC__/Demo/upload/03.jpg" alt="" width="300" /></li>
+										<li><img src="__PUBLIC__/Demo/upload/04.jpg" alt="" width="300" /></li>
+										<li><img src="__PUBLIC__/Demo/upload/05.jpg" alt="" width="300" /></li>
+										<li><img src="__PUBLIC__/Demo/upload/06.jpg" alt="" width="300" /></li>
+										<li><img src="__PUBLIC__/Demo/upload/07.jpg" alt="" width="300" /></li>
+										<li><img src="__PUBLIC__/Demo/upload/08.jpg" alt="" width="300" /></li>
 									</ul>
-									<div class="pg"><ul><li class="on"></li><li></li><li></li><li></li></ul></div>
 								</div><!--.pics end-->
 							</div>
 						</div>
@@ -300,23 +289,19 @@
 		</div>
 	</div><!--#footer end-->
 
-	<include file="Demo:dialog" />
-	
 	<include file="Contorls:app" />
-
-	<input type="hidden" id="J_APP" value="__APP__/" />
-	<input type="hidden" id="J_URL" value="__URL__" />
-	<input type="hidden" id="J_PUBLIC" value="__PUBLIC__" />
 				
-	<script type="text/javascript" src="__PUBLIC__/English/js/jquery-1.7.2.min.js"></script>
-	<script type="text/javascript" src="__PUBLIC__/skin/js/jquery.cookies.2.2.0.min.js"></script>
-	<script type="text/javascript" src="__PUBLIC__/skin/fancybox/jquery.fancybox.js?v=2.1.4"></script>
-	<script type="text/javascript" src="__PUBLIC__/skin/fancybox/jquery.bpopup-0.5.1.min.js"></script>
-	<script type="text/javascript" src="__PUBLIC__/skin/js/jquery-ui.min.js"></script>
-	<script type="text/javascript" src="__PUBLIC__/skin/js/json2.js"></script>
-	
-	<script type="text/javascript" src="__PUBLIC__/Demo/js/index.js"></script>
-	<script type="text/javascript" src="__PUBLIC__/Index/js/app.js?2013091201"></script>
+	<script src="__PUBLIC__/skin/js/jquery-1.7.1.min.js"></script>
+	<script src="__PUBLIC__/Demo/js/jquery.placeholder.js"></script>
+	<script src="__PUBLIC__/skin/js/jquery.cookies.2.2.0.min.js"></script>
+	<script src="__PUBLIC__/skin/fancybox/jquery.fancybox.js"></script>
+	<script src="__PUBLIC__/Demo/js/jquery.switchable.js"></script>
+	<script src="__PUBLIC__/skin/js/jquery-ui.min.js"></script>
+	<script src="__PUBLIC__/skin/fancybox/jquery.bpopup-0.5.1.min.js"></script>
+	<script src="__PUBLIC__/skin/js/json2.js"></script>
+	<script src="__PUBLIC__/Demo/js/index.js"></script>
+	<script src="__PUBLIC__/Demo/js/common.js"></script>
+	<script src="__PUBLIC__/Demo/js/widget.js"></script>
 	
 </body>
 </html>

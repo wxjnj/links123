@@ -53,7 +53,7 @@ class EnglishQuestionSpeakModel extends CommonModel {
             }
         } else if ($viewType == 3) {
             if (intval($recommend) > 0) {
-                $map['_string'] = "FIND_IN_SET('" . $recommend . "',media.recommend)";
+                $map['media.recommend'] = $recommend;
             } else {
                 return $ret;
             }

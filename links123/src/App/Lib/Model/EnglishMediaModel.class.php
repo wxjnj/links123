@@ -16,7 +16,7 @@ class EnglishMediaModel extends CommonModel {
     );
     protected $_auto = array(
         array("updated", "time", 3, "function"),
-        array("created", "time", 3, "function")
+        array("created", "time", 1, "function")
     );
 
     /**
@@ -167,8 +167,8 @@ class EnglishMediaModel extends CommonModel {
         if (!empty($media_info)) {
             $data['title'] = $media_info['name'];
             $data['question_id'] = $media_info['question_id'];
-            $data['url'] = C("WEB_HOST_URL") . $media_info['real_path'];
-            $data['mp3url'] = C("WEB_HOST_URL") . C("VIDEO_UPLOAD_PATH") . $media_info['slow_audio']; //慢放的mp3
+            $data['url'] = $media_info['real_path'];
+            $data['mp3url'] = C("VIDEO_UPLOAD_PATH") . $media_info['slow_audio']; //慢放的mp3
             $data['clips'] = array();
             foreach ($media_info['captions'] as $key => $value) {
                 $data['clips'][$key]['title'] = "clip " . $key;
@@ -200,8 +200,8 @@ class EnglishMediaModel extends CommonModel {
         if (!empty($media_info)) {
             $data['title'] = $media_info['name'];
             $data['question_id'] = $media_info['question_id'];
-            $data['url'] = C("WEB_HOST_URL") . $media_info['real_path'];
-            $data['mp3url'] = C("WEB_HOST_URL") . C("VIDEO_UPLOAD_PATH") . $media_info['slow_audio']; //慢放的mp3
+            $data['url'] = $media_info['real_path'];
+            $data['mp3url'] = C("VIDEO_UPLOAD_PATH") . $media_info['slow_audio']; //慢放的mp3
             $data['clips'] = array();
             foreach ($media_info['captions'] as $key => $value) {
                 $data['clips'][$key]['title'] = "clip " . $key;
@@ -307,7 +307,7 @@ class EnglishMediaModel extends CommonModel {
         } else if ($recommend == -1) {
             $condition['media.recommend'] = array("neq", 0);
         } else {
-            $condition['_string'] = "FIND_IN_SET(" . $recommend . ",media.recommend)";
+            $condition['recommend'] = $recommend;
         }
         $num = $this->alias("media")
                 ->join(C("DB_PREFIX") . $english_question_table_name . " question on question.media_id=media.id")
@@ -330,6 +330,28 @@ class EnglishMediaModel extends CommonModel {
             $condition['media.subject'] = array("neq", 0);
         } else {
             $condition['media.subject'] = $subject;
+        }
+        $num = $this->alias("media")
+                ->join(C("DB_PREFIX") . $english_question_table_name . " question on question.media_id=media.id")
+                ->where($condition)
+                ->count("question.id");
+        return intval($num);
+    }
+
+    public function getTedQuestionNum($target = 1, $voice = 1, $pattern = 1, $ted = 0) {
+        $english_question_table_name = "english_question";
+        if ($target == 2) {
+            $english_question_table_name = "english_question_speak";
+        }
+        $condition = array();
+        $condition['question.status'] = 1;
+        $condition['media.status'] = 1;
+        $condition['media.voice'] = $voice;
+        $condition['media.pattern'] = $pattern;
+        if ($ted == 0) {
+            $condition['media.ted'] = array("neq", 0);
+        } else {
+            $condition['media.ted'] = $ted;
         }
         $num = $this->alias("media")
                 ->join(C("DB_PREFIX") . $english_question_table_name . " question on question.media_id=media.id")

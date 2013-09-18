@@ -13,6 +13,21 @@ global
 	focus-color: #999999;
 	accent-color: #8C8C8C;
 	fontFamily:"宋体";
+	modalTransparencyBlur: 0;
+	modalTransparency: 0.3;
+	modalTransparencyColor: black;
+	modalTransparencyDuration: 300;
+}
+
+s|DropDownList #labelDisplay
+{
+	font-size:14;
+	color:#ffffff;	
+}
+
+s|Application,mx|Panel
+{
+	background-color: #666666;  
 }
 
 mx|ToolTip
@@ -20,7 +35,7 @@ mx|ToolTip
 	color: #000000;
 }
 
-p|Player
+p|CommonPlayer
 {
 	skin-class:ClassReference("com.links123.player.skins.VideoPlayerSkin");
 }
@@ -38,4 +53,12 @@ p|LabelButton
 p|IntroWordPanel
 {
 	skin-class:ClassReference("com.links123.player.skins.IntroWordPanelSkin");
+}
+p|VolumeScrubBarTrackButton
+{
+	skin-class:ClassReference("com.links123.player.skins.VolumeScrubBarTrackSkin");
+}
+p|ScorePanel
+{
+	skin-class:ClassReference("com.links123.player.skins.ScorePanelSkin");
 }

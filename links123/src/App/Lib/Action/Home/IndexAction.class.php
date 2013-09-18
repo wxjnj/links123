@@ -11,9 +11,116 @@ class IndexAction extends CommonAction {
 	
 	/**
 	 * @desc 新首页
-	 * @author slate date: 2013-08-20
+	 *
+	 * @author slate date:2013-09-06
 	 */
 	public function index() {
+		
+		//自留地
+		$myareaModel = M("Myarea");
+		$scheduleModel = M("Schedule");
+		
+		$user_id = intval($this->_session(C('MEMBER_AUTH_KEY')));
+		if ($user_id) {
+			$memberModel = M("Member");
+			$mbrNow = $memberModel->where(array('id' => $user_id))->find();
+			$_SESSION['myarea_sort'] = $mbrNow['myarea_sort'] ? explode(',', $mbrNow['myarea_sort']) : '';
+			
+			$skinId = session('skinId');
+			if (!$skinId) {
+				$skinId = cookie('skinId');
+			}
+		} else {
+			
+			$skinId = cookie('skinId');
+		}
+		
+		//快捷皮肤
+		
+		$skins = $this->getSkins();
+		
+		$this->assign("skinId", $skinId);
+		$this->assign("skin", $skins['skin'][$skinId]);
+		$this->assign("skinList", $skins['list']);
+		$this->assign("skinCategory", $skins['category']);
+		
+		if ($user_id || !$_SESSION['arealist']) {	
+			$areaList = $myareaModel->where(array('mid' => $user_id))->select();
+			
+			if ($areaList) {
+				$_SESSION['arealist'] = array();
+			}
+			
+			foreach ($areaList as $value) {
+				$_SESSION['arealist'][$value['id']] = $value;
+			}
+		}
+		if (!$_SESSION['myarea_sort']) {
+			
+			$_SESSION['myarea_sort'] = array_keys($_SESSION['arealist']);
+		}
+	
+		//日程表
+		if ($user_id) {
+			
+			$schedule_list = $scheduleModel->where(array('mid' => $user_id, 'status' => 0))->select();
+		} else {
+			
+			$schedule_list = cookie(md5('schedule_list'));
+			if (!$schedule_list[0]) {
+				$schedule_list = $scheduleModel->where(array('mid' => 0, 'status' => 0))->select();
+			}
+		}
+		
+		if (!$schedule_list[0]['datetime']) {
+			$schedule_list[0]['datetime'] = time();
+			$schedule_list[0]['content'] = '快来创建第一个日程';
+		}
+		
+		cookie(md5('schedule_list'), $schedule_list);
+		$this->assign('schedule_list', $schedule_list);
+		
+		//热门音乐
+		
+		$songList = $this->getDayhotMusic();
+		shuffle($songList['top']);
+		shuffle($songList['fair']);
+		$songTopList = array_chunk($songList['top'], 2, true);
+		$songTopList = $songTopList[0];
+		$songFairList = array_chunk($songList['fair'], 20, true);
+		$songFairList = $songFairList[0];
+		
+		$this->assign('songTopList', $songTopList);
+		$this->assign('songFairList', $songFairList);
+		
+		//TED 发现
+		$ted_list = S('ted_list');
+		if (!$ted_list) {
+			
+			$linksModel = M("Links");
+			$ted_ids = '134,158,166,246,176';	//TODO 放到后台管理
+			$result = $linksModel->where('id in ('.$ted_ids.')')->limit(5)->select();
+			
+			$ted_list = array();
+			foreach ($result as $value) {
+				
+				$ted_list[$value['id']] = array('id' => $value['id'], 'title' => $value['title'], 'link_cn_img' => $value['link_cn_img']);
+			}
+			S('ted_list', $ted_list);
+		}
+		$this->assign('ted_list', $ted_list);
+		
+		//图片精选
+		
+		$this->getHeaderInfo();
+		$this->display('index_v3');
+	}
+	
+	/**
+	 * @desc 首页2.0
+	 * @author slate date: 2013-08-20
+	 */
+	public function old_index() {
 		import("@.ORG.String");
 	
 		// 公告
@@ -190,142 +297,6 @@ class IndexAction extends CommonAction {
 		
 		$this->getHeaderInfo();
 		$this->display('index');
-	}
-	
-	/**
-	 * @name updateArealist
-	 * @desc 更新我的地盘
-	 * @param string url
-	 * @param string web_name
-	 * @param int id
-	 * @author Frank UPDATE 2013-08-20
-	 */
-	public function updateArealist() {
-		
-		$url = $this->_param('url');
-		$webname = $this->_param('web_name');
-		$id = $this->_param('id');
-		
-		foreach ($_SESSION['arealist'] as $key => $value) {
-			if ($id == $value['id']) {
-				$_SESSION['arealist'][$key]['url'] = $url;
-				$_SESSION['arealist'][$key]['web_name'] = $webname;
-			}
-		}
-		
-		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
-		
-		$result = true;
-		$reason = "updateOK";
-		
-		if ($user_id) {
-			$myarea = M("Myarea");
-			$list = $myarea->where("mid = '%d'", $user_id)->order('sort')->select();	
-			$myarea->startTrans();
-			
-			$now = time();
-			$data['mid'] = $user_id;
-			$data['create_time'] = $now;
-			if (empty($list)) {
-				foreach ($_SESSION['arealist'] as $value) {
-					$data['web_name'] = $value['web_name'];
-					$data['url'] = $value['url'];
-					if (false === $myarea->add($data)) {
-						$result = false;
-						Log::write('新增我的地盘失败：' . $myarea->getLastSql(), Log::SQL);
-						$reason = '新增我的地盘失败！';
-					}
-				}
-			} else {
-					
-				$saveData = array(
-						'url' => $url,
-						'web_name' => $webname,
-						'create_time' => $now
-				);
-				
-				if (false === $myarea->where(array('id' => $id, 'mid' => $user_id))->save($saveData)) {
-					$result = false;
-					Log::write('更新我的地盘失败：' . $myarea->getLastSql(), Log::SQL);
-					$reason = '保存我的地盘失败！';
-				}
-			}
-			
-			if ($result) {
-				$myarea->commit();
-			} else {
-				$myarea->rollback();
-			}
-		}
-		
-		echo $reason;
-	}
-	/**
-	 * @name sortArealist
-	 * @desc 拖动我的地盘进行排序
-	 * @param string area
-	 * @author Frank UPDATE 2013-08-20
-	 */
-	public function sortArealist() {
-		if ($this->isAjax()) {
-			$area_list = $this->_post('area');
-			$sort = 1;
-			foreach ($area_list as $value) {
-				foreach ($_SESSION['arealist'] as $val) {
-					if ($val['id'] == intval($value)) {
-						$val['sort'] = $sort;
-						$new_area_list[] = $val;
-						$sort++;
-					}
-				}
-			}
-			$_SESSION['arealist'] = $new_area_list;
-			
-			$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
-			if ($user_id) {
-				
-				$myarea = M("Myarea");
-				$list = $myarea->where("mid = '%d'", $user_id)->order('id')->select();
-				$myarea->startTrans();
-				$result = true;
-				$reason = "未知";
-				
-				$now = time();
-				$data['mid'] = $user_id;
-				$data['create_time'] = $now;
-				if (empty($list)) {
-					foreach ($_SESSION['arealist'] as $value) {
-						$data['web_name'] = $value['web_name'];
-						$data['url'] = $value['url'];
-						$data['sort'] = $value['sort'];
-						if (false === $myarea->add($data)) {
-							$result = false;
-							Log::write('新增我的地盘失败：' . $myarea->getLastSql(), Log::SQL);
-							$reason = '新增我的地盘失败！';
-						}
-					}
-				} else {
-					foreach ($_SESSION['arealist'] as $key => $value) {
-						Log::write('session：sort_myarea ' . $_SESSION['arealist'][$key]['web_name'] . ';sort:' . $_SESSION['arealist'][$key]['sort'], Log::SQL);
-						if (false === $myarea->save($value)) {
-							$result = false;
-							Log::write('更新我的地盘失败：' . $myarea->getLastSql(), Log::SQL);
-							$reason = '更新我的地盘失败！';
-						}
-					}
-				}
-				
-				if ($result) {
-					$myarea->commit();
-					die(json_encode(array('status' => 'ok', 'data' => $_SESSION['arealist'])));
-				} else {
-					$myarea->rollback();
-					echo $reason;
-				}
-			} else {
-				die(json_encode(array('status' => 'ok', 'data' => $_SESSION['arealist'])));
-			}
-		}
 	}
 	
 	/**
@@ -704,10 +675,314 @@ class IndexAction extends CommonAction {
 	public function google_translate() {
 		$srcLang = $this->_param('sl');
 		$tatLang =$this->_param('tl');
-		$q = urlencode(trim($_POST['q']));
+		$q = rawurlencode(trim($_POST['q']));
 		
 		$url = 'http://translate.google.cn/translate_a/t?client=t&hl=zh-CN&sl=' . $srcLang . '&tl=' . $tatLang . '&ie=UTF-8&oe=UTF-8&multires=1&oc=1&prev=conf&psl=en&ptl=vi&otf=1&it=sel.166768%2Ctgtd.2118&ssel=4&tsel=4&sc=1&q=' . $q;
 		$result = file_get_contents($url);
 		$this->ajaxReturn($result, '', true);
+	}
+	
+	/**
+	 * @name addSchedule
+	 * @desc 添加日程
+	 * @param string content
+	 * @param string datetime
+	 * @return 成功:1; 失败:0; 未登录或登录已失效: -1
+	 * @author slate date:2013-09-14
+	 */
+	public function addSchedule() {
+	
+		$content = $this->_param('content');
+		$datetime = $this->_param('datetime');
+	
+		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+	
+		$result = 0;
+	
+		if ($user_id) {
+			$scheduleModel = M("Schedule");
+	
+			$now = time();
+				
+			if ($datetime) {
+	
+				$datetime = str_replace(array('月','日'), '-', $datetime);
+	
+				$datetime = strtotime('2013-' . $datetime);
+	
+				$datetime = $datetime ? $datetime : $now;
+			}
+	
+			$saveData = array(
+					'mid' => $user_id,
+					'content' => $content,
+					'datetime' => $datetime,
+					'status' => 0,
+					'create_time' => $now,
+					'update_time' => $now
+			);
+	
+			$id = $scheduleModel->add($saveData);
+				
+			if ($id) {
+	
+				$saveData['id'] = $result = $id;
+				$schedule_list = cookie(md5('schedule_list'));
+				$schedule_list[$id] = $saveData;
+				cookie(md5('schedule_list'), $schedule_list);
+			}
+		} else {
+				
+			$result = -1;
+		}
+	
+		echo $result;
+	}
+	
+	/**
+	 * @name updateSchedule
+	 * @desc 更新日程表
+	 * @param int id
+	 * @param String content
+	 * @param String datetime
+	 * @return 成功:1; 失败:0;
+	 * @author slate date:2013-09-14
+	 */
+	public function updateSchedule() {
+	
+		$id = $this->_param('id');
+		$content = $this->_param('content');
+		$datetime = $this->_param('datetime');
+	
+		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+	
+		$result = 0;
+	
+		if ($id) {
+				
+			$now = time();
+				
+			if ($datetime) {
+	
+				$datetime = str_replace(array('月','日'), '-', $datetime);
+	
+				$datetime = strtotime('2013-' . $datetime);
+	
+				$datetime = $datetime ? $datetime : $now;
+			}
+	
+			$saveData = array(
+					'content' => $content,
+					'datetime' => $datetime,
+					'update_time' => $now
+			);
+				
+			$result = 1;
+				
+			if ($user_id) {
+				$scheduleModel = M("Schedule");
+					
+				if (false === $scheduleModel->where(array('id' => $id, 'mid' => $user_id))->save($saveData)) {
+						
+					$result = 0;
+				}
+			}
+				
+			$schedule_list = cookie(md5('schedule_list'));
+			$schedule_list[$id] = array_merge($schedule_list[$id], $saveData);
+			cookie(md5('schedule_list'), $schedule_list);
+		}
+			
+		echo $result;
+	}
+	
+	/**
+	 * @name delSchedule
+	 * @desc 删除日程表
+	 * @param int id
+	 * @return 成功:1; 失败:0;
+	 * @author slate date:2013-09-14
+	 */
+	public function delSchedule() {
+	
+		$id = $this->_param('id');
+	
+		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+	
+		$result = 0;
+	
+		if ($id) {
+				
+			$result = 1;
+				
+			if ($user_id) {
+	
+				$scheduleModel = M("Schedule");
+	
+				if (false === $scheduleModel->where(array('mid' => $user_id, 'id' => $id))->save(array('status' => 1))) {
+	
+					$result = 0;
+				}
+	
+			}
+				
+			$schedule_list = cookie(md5('schedule_list'));
+			unset($schedule_list[array_search($id, $schedule_list)]);
+			cookie(md5('schedule_list'), $schedule_list);
+		}
+	
+		echo $result;
+	
+	}
+	
+	/**
+	 * @name delArea
+	 * @desc 删除自留地
+	 * @param string web_id
+	 * @return 成功:1; 失败:0; 未登录或登录已失效: -1
+	 * @author slate date:2013-09-14
+	 */
+	public function delArea() {
+	
+		$id = $this->_param('web_id');
+	
+		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+	
+		$result = 0;
+	
+		if ($id) {
+			if ($user_id) {
+	
+				$memberModel = M("Member");
+	
+				$myarea = M("Myarea");
+					
+				if (false !== $myarea->where(array('id' => $id, 'mid' => $user_id))->delete()) {
+	
+					$result = 1;
+						
+					unset($_SESSION['myarea_sort'][array_search($id, $_SESSION['myarea_sort'])]);
+					$memberModel->where(array('id' => $user_id))->save(array('myarea_sort' => implode(',', $_SESSION['myarea_sort'])));
+				}
+	
+			} else {
+					
+				$result = -1;
+			}
+		}
+	
+		echo $result;
+	
+	}
+	
+	/**
+	 * @name updateArea
+	 * @desc 更新我的地盘
+	 * @param string web_url
+	 * @param string web_name
+	 * @return 成功:1; 失败:0; 未登录或登录已失效: -1
+	 * @author slate date:2013-09-14
+	 */
+	public function updateArea() {
+	
+		$url = $this->_param('web_url');
+		$webname = $this->_param('web_name');
+		$id = $this->_param('web_id');
+	
+		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+	
+		$result = 0;
+	
+		if ($user_id) {
+			$myarea = M("Myarea");
+			$memberModel =  M("Member");
+	
+			$now = time();
+	
+			$saveData = array(
+					'url' => $url,
+					'web_name' => $webname,
+					'create_time' => $now
+			);
+	
+			if (!$id) {
+				$saveData['mid'] = $user_id;
+				$id = $myarea->add($saveData);
+				if ($id) {
+	
+					$saveData['id'] = $result = $id;
+						
+					$_SESSION['arealist'][$id] = $saveData;
+					array_push($_SESSION['myarea_sort'], $id);
+					$memberModel->where(array('id' => $user_id))->save(array('myarea_sort' => implode(',', $_SESSION['myarea_sort'])));
+				}
+			} else {
+				if (false !== $myarea->where(array('id' => $id, 'mid' => $user_id))->save($saveData)) {
+						
+					$result = 1;
+				}
+			}
+	
+			if ($result) {
+	
+				if ($id) {
+					$_SESSION['arealist'][$id]['url'] = $url;
+					$_SESSION['arealist'][$id]['web_name'] = $webname;
+				}
+			}
+		} else {
+				
+			$result = -1;
+		}
+	
+		echo $result;
+	}
+	/**
+	 * @name sortArealist
+	 * @desc 拖动我的地盘进行排序
+	 * @param Array area
+	 * @return 成功:1; 失败:0;
+	 * @author slate date:2013-09-14
+	 */
+	public function sortArealist() {
+	
+		$result = 1;
+	
+		$area_list = $this->_post('area');
+	
+		if ($this->isAjax() && $area_list) {
+				
+			
+			$_SESSION['myarea_sort'] = $area_list;
+				
+			$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+				
+			$memberModel = M("Member");
+				
+			if ($user_id) {
+	
+				$memberModel->where(array('id' => $user_id))->save(array('myarea_sort' => implode(',', $area_list)));
+					
+			}
+				
+		} else {
+				
+			$result = 0;
+		}
+	
+		echo $result;
+	}
+	
+	public function tag() {
+		$key = $this->_param('q');
+		$dl = M('directLinks');
+		$condition['tag'] = array('like', '%' . $key . '%');
+		$data = $dl->where($condition)->select();
+		$val = '';
+		foreach ($data as $row) {
+			$val .= $row['tag'].'|'.$row['id']."\n";
+		}
+		echo $val;
+		exit;
 	}
 }

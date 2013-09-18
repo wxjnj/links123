@@ -3,8 +3,8 @@
  * @name UserAction.class.php
  * @package Admin
  * @desc 后台管理-用户
- * @author Lee UPDATE 2013-08-27
- * @version 0.0.1
+ * @author Lee Frank 2013-09-13
+ * @version 1.0
  */
  
 class UserAction extends CommonAction {
@@ -17,16 +17,17 @@ class UserAction extends CommonAction {
 	 * @return array    
 	 */   
     protected function _filter(&$map, &$param) {
+    	$nickname = $this->_param('nickname');
         if (!isset($_SESSION[C('ADMIN_AUTH_KEY')])) {
     		$map['id'] = array('gt', 1);
     	}
         
-    	if (isset($_REQUEST['nickname']) && !empty($_REQUEST['nickname'])) {
-    		$map['nickname'] = array('like', "%".$_REQUEST['nickname']."%");
+    	if (isset($nickname) && !empty($nickname)) {
+    		$map['nickname'] = array('like', "%".$nickname."%");
     	}
         
-    	$this->assign('nickname', $_REQUEST['nickname']);
-    	$param['nickname'] = $_REQUEST['nickname'];
+    	$this->assign('nickname', $nickname);
+    	$param['nickname'] = $nickname;
     }
 
 	/**
@@ -34,20 +35,19 @@ class UserAction extends CommonAction {
      * @author Lee UPDATE 2013-08-27  
 	 */
     public function checkAccount() {
-        if(!preg_match('/^[a-z]\w{4,}$/i', $_POST['account'])) {
+    	$account = $this->_param('account');
+        if(!preg_match('/^[a-z]\w{4,}$/i', $account)) {
             $this->error('用户名必须是字母，且5位以上！');
+            exit(0);
         }
         
         $User = M("User");
         
         //检查用户名是否存在
-        $name  = $_REQUEST['account'];
-        $result  = $User->getByAccount($name);
-        if($result){
-            $this->error('该用户名已经存在！');
-        }else {
-            $this->success('该用户名可以使用！');
-        }
+        $result  = $User->getByAccount($account);
+        !empty($result) ? $this->error('该用户名已经存在！') : $this->success('该用户名可以使用！');
+        
+        exit(0);
     }
 
 	/**
@@ -56,19 +56,19 @@ class UserAction extends CommonAction {
 	 */
     public function insert() {
         $User = D("User");
-        
         if(!$User->create()) {
             $this->error($User->getError());
-        }else{
+        }else {
         	$result = $User->add();
             if($result) {
                 //添加权限
                 $this->addRole($result);
                 $this->success('用户添加成功！');
-            }else{
+            } else {
                 $this->error('用户添加失败！');
             }
         }
+        exit(0);
     }
 	     
 	/**
@@ -88,19 +88,17 @@ class UserAction extends CommonAction {
      * @author Lee UPDATE 2013-08-27  
 	 */      
     public function resetPwd() {
-        $id  = $_POST['id'];
-        $password = $_POST['password'];
+        $id  = $this->_param('id');
+        $password = $this->_param('password');
         if('' == trim($password)) {
             $this->error('密码不能为空！');
+            exit(0);
         }
         $User = M('User');
         $User->password	= md5($password);
         $User->id =	$id;
         $result	= $User->save();
-        if(false !== $result) {
-            $this->success("密码修改为$password");
-        }else {
-            $this->error('重置密码失败！');
-        }
+        false !== $result ? $this->success("密码修改为  $password") : $this->error('重置密码失败！');
+        exit(0);
     }
 }

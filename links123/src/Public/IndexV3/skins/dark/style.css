@@ -1,0 +1,17 @@
+/*************************************************************
+** dark
+*************************************************************/
+body{ color: #fff; }
+a{ color: #fff; }
+a:hover{ text-decoration: none; }
+#container{
+	background: #3f3a39 url(bg.jpg) top center fixed;
+}
+.box{ color: #e1e0e2; }
+.box .box-hd{ border-top: 1px solid #e1e0e2; }
+.schedule li{ border-top: 1px solid #e1e0e2; }
+.music dl dd li{ border-top: 1px solid #e1e0e2; }
+.edit, .del, .new{ background: url(sprite.png); }
+.edit{ background-position: -6px -6px; }
+.del{ background-position: -37px -6px; }
+.new{ background-position: -66px -6px; }
