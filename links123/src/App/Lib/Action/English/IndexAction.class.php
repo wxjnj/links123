@@ -200,7 +200,7 @@ class IndexAction extends EnglishAction {
 
         if ($target == 2) {
 
-            $question = $questionModel->getSpeak($viewType, $object, $level, $subject, $recommend, $difficulty, $voice, $pattern);
+            $question = $questionModel->getQuestionToIndex($viewType, $object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern, $media_id);
         } elseif ($viewType == 2) {
             $question_id = $englishViewRecordModel->getUserViewQuestionLastId('', '', $subject, '', $difficulty, $voice, $target, $pattern);
             $question = $questionModel->getSpecialSubjectQuestion($subject, $difficulty, $voice, $target, $pattern, $type, $question_id, $now_question_id);
