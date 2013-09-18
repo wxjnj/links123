@@ -225,9 +225,6 @@ class EnglishQuestionModel extends CommonModel {
         if ($pattern > 0) {
             $map['media.pattern'] = $pattern;
         }
-        if ($target > 0) {
-            $map['question.target'] = $target;
-        }
         if (intval($object) > 0) {
             $object_info = D("EnglishObject")->find($object);
             if ($object_info['name'] != "综合") {
@@ -250,9 +247,17 @@ class EnglishQuestionModel extends CommonModel {
         if (!empty($extend_condition)) {
             $map['_string'] .= $extend_condition;
         }
-        $num = $this->alias("question")
-                        ->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media on question.media_id=media.id")
-                        ->where($map)->count("question.id");
+        $question_table_name = "english_question";
+        if ($target == 1) {
+            $num = $this->alias("question")
+                            ->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media on question.media_id=media.id")
+                            ->where($map)->count("question.id");
+        } else {
+            $model =D("EnglishQuestionSpeak"); 
+            $num = $model->alias("question")
+                            ->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media on question.media_id=media.id")
+                            ->where($map)->count("question.id");
+        }
         if (false === $num) {
             $num = 0;
         }
