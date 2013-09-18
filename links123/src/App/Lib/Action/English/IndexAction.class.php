@@ -990,7 +990,7 @@ class IndexAction extends EnglishAction {
         //
         //评分
         exec("python /mnt/oral/python/oral-evaluation.py " . $standard_audio_vec . " " . $recordFile . ' "' . $senetenceInfo['content'] . '" "' . $googleRet['utterance'] . '" ' . $googleRet['confidence'], $score_ret);
-        echo "python /mnt/oral/python/oral-evaluation.py " . $standard_audio_vec . " " . $recordFile . ' "' . $senetenceInfo['content'] . '" "' . $googleRet['utterance'] . '" ' . $googleRet['confidence'];exit;
+        //echo "python /mnt/oral/python/oral-evaluation.py " . $standard_audio_vec . " " . $recordFile . ' "' . $senetenceInfo['content'] . '" "' . $googleRet['utterance'] . '" ' . $googleRet['confidence'];exit;
         $score = intval($score_ret[0]);
         if ($score == 4) {
             $score = 20;
