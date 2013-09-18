@@ -952,8 +952,6 @@ class IndexAction extends CommonAction {
 	
 		if ($this->isAjax() && $area_list) {
 				
-			//去除排序中最后一位的空值
-			unset($area_list[array_search('', $area_list)]);
 			
 			$_SESSION['myarea_sort'] = $area_list;
 				

@@ -30,7 +30,7 @@ $(function() {
 		triggersWrapCls: 'pg',
 		panels: '.items li',
 		effect: 'scrollLeft',
-		interval: 2,
+		interval: 10,
 		loop: true,
 		autoplay: true,
 		speed: 1.5
