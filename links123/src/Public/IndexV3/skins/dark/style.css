@@ -1,12 +1,11 @@
 /*************************************************************
 ** dark
 *************************************************************/
-body{ color: #e1e0e2; }
-a{ color: #e1e0e2; }
+body{ color: #fff; }
+a{ color: #fff; }
 a:hover{ text-decoration: none; }
 #container{
-	background: #3f3a39 url(bg.jpg) top center no-repeat;
-	background-size: cover;
+	background: #3f3a39 url(bg.jpg) top center fixed;
 }
 .box{ color: #e1e0e2; }
 .box .box-hd{ border-top: 1px solid #e1e0e2; }

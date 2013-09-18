@@ -22,6 +22,8 @@ $(function() {
 		window.open($(this).attr('url'));
 	});
 
+	$('#J_Apps').sortable();
+
 	// 幻灯
 	$('#J_ScrollBox').switchable({
 		putTriggers: 'appendTo',
@@ -30,7 +32,11 @@ $(function() {
 		effect: 'scrollLeft',
 		interval: 2,
 		loop: true,
-		autoplay: true
+		autoplay: true,
+		speed: 1.5
+	});
+	$('#J_ScrollBox').find('li').on('hover', function(){
+		$(this).toggleClass('hover');
 	});
 
 	// 发现
@@ -63,7 +69,6 @@ $(function() {
 		$(this).find('.imgb').hide();
 		$(this).find('s').hide();
 	});
-	
 	$('.skins').on('mouseleave', function(){
 		$('.skins-all dd').hide();
 	});
@@ -151,7 +156,12 @@ var Zld = { // 自留地
 		});
 
 		$('#J_sortable').sortable({
+			items: '> li:not(.add)',
+			start: function(event, ui){
+				$(ui.item).find('span').css('cursor', 'move');
+			},
 			update: function(event, ui){
+				$(ui.item).find('span').css('cursor', 'pointer');
 				Zld.IsSortable = true;
 				
 				$.post(
@@ -565,7 +575,7 @@ var HelpMouse = {
 			var mousePos = self.getcoords(ev);
 			if(mousePos.y < 70){
 				if($('#direct_text').val() == $('#direct_text').attr('txt')){
-					$('#direct_text').select().addClass('ipson');
+					$('#direct_text').select().removeClass('ipton');
 					isSearchTxtSelected = false;
 					if($.trim($('#search_text').val()) ==""){
 						$('#J_thl_div').hide();
@@ -573,7 +583,7 @@ var HelpMouse = {
 				}
 			}
 			if(mousePos.y > 110 && mousePos.y < 220){
-				$('#direct_text').val($('#direct_text').attr('txt')).removeClass('ipson');
+				$('#direct_text').val($('#direct_text').attr('txt')).addClass('ipton');
 				if(!isSearchTxtSelected){
 					$('#search_text').select().trigger('mouseenter');
 					isSearchTxtSelected = true;
