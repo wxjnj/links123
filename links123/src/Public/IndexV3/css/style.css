@@ -372,9 +372,9 @@ input:focus{ outline: 0; }
 	color: #fff;
 	cursor: pointer;
 	display: inline-block;
-	height: 32px;
-	line-height: 32px;
-	padding: 0 10px 0 20px;
+	height: 16px;
+	line-height: 16px;
+	padding: 8px 10px 8px 20px;
 	position: relative;
 	vertical-align: middle;
 }
