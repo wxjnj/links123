@@ -509,7 +509,13 @@ var Schedule = {
 		return false;
 	},
 	Del: function(el){
-		var id = $(el).closest('li').data('id');
+		var li = $(el).closest('li');
+		var id = li.data('id');
+		if(id == 0){
+			li.next().addClass('first');
+			li.remove();
+			return false;
+		}
 		$.post(
 			URL + '/delSchedule', 
 			{ 'id': id },

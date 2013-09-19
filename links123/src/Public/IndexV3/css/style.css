@@ -1,5 +1,5 @@
 body{
-	font-family: '\5FAE\8F6F\96C5\9ED1','Hiragino Sans GB','Hiragino Sans GB W3';
+	font-family: \5FAE\8F6F\96C5\9ED1,Hiragino Sans GB,Hiragino Sans GB W3;
 	font-size: 12px;
 }
 input:focus{ outline: 0; }
@@ -186,7 +186,7 @@ input:focus{ outline: 0; }
 	height: 28px;
 	line-height: 28px;
 	margin: 6px 0 0 5px;
-	width: 104px;
+	width: 78px;
 	text-align: center;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
@@ -263,7 +263,7 @@ input:focus{ outline: 0; }
 }
 .thl .ctls{
 	background: #fff;
-	height: 38px;
+	height: 34px;
 	padding: 0 10px;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
@@ -274,15 +274,15 @@ input:focus{ outline: 0; }
 	border: 0 none;
 	height: 16px;
 	line-height: 16px;
-	padding: 11px 0;
+	padding: 9px 0;
 	width: 415px;
 	float: left;
 }
 .thl .ctls .btn{
-	background: url(../imgs/sprite.png) -5px 4px no-repeat;
+	background: url(../imgs/sprite.png) -5px 2px no-repeat;
 	cursor: pointer;
 	float: right;
-	height: 38px;
+	height: 34px;
 	width: 20px;
 	line-height: 999px;
 	font-size: 0;
@@ -296,7 +296,7 @@ input:focus{ outline: 0; }
 }
 .thl .cate{
 	position: absolute;
-	top: 36px;
+	top: 34px;
 	left: 85px;
 }
 .thl .subcate a{
@@ -349,6 +349,7 @@ input:focus{ outline: 0; }
 .zld ul li{
 	display: inline-block;
 	float: left;
+	height: 33px;
 	margin: 5px 5px 0 0;
 	white-space: nowrap;
 	position: relative;
@@ -633,6 +634,9 @@ input:focus{ outline: 0; }
 	-moz-opacity: 0.6;
 	-khtml-opacity: 0.6;
 	opacity: 0.6;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
 }
 .find li.more a:hover{
 	text-decoration: none;
@@ -712,6 +716,13 @@ input:focus{ outline: 0; }
 .music .top-mv ul li img{
 	height: 128px;
 	width: 147px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	vertical-align: middle;
+}
+.music .top-mv ul li .nm{
+	margin-top: 3px;
 }
 .music .hot-music{
 	margin-top: 20px;
@@ -753,6 +764,9 @@ input:focus{ outline: 0; }
 	vertical-align: middle;
 	width: 310px;
 	height: 448px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
 }
 .pics .items{
 	height: 448px;
@@ -857,9 +871,13 @@ input:focus{ outline: 0; }
 	border: 1px dotted #fff;
 	display: block;
 	float: left;
+	line-height: 24px;
+	margin: 0 8px;
 	text-align: center;
 	width: 110px;
-	margin: 0 8px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
 }
 
 /*lk-dialog*/
@@ -896,6 +914,7 @@ input:focus{ outline: 0; }
 	background: #eeefef;
 	border: 1px solid #e0e1e1;
 	color: #717071;
+	font-size: 14px;
 	height: 16px;
 	line-height: 16px;
 	padding: 12px 5px;

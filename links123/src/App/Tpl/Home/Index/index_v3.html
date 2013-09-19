@@ -32,12 +32,9 @@
 				</form>
 			</div>
 			<ul class="nav">
-				<li class="on"><a href="{:U('Index')}">首页</a></li>
 				<li><a href="{:U('English/Index/index')}" target="_blank">另客英语</a></li>
-				<!-- 
-				<li><a href="#">我的抽屉</a></li>
-				<li><a href="#">寻觅好友</a></li>
-				 -->
+				<li><a href="{:U('Home/Index/nav')}" target="_blank">另客导航</a></li>
+				<li><a href="{:U('/Suggestion')}" target="_blank">留言板</a></li>
 			</ul>
 			<div class="uc">
 				<empty name="_SESSION[C('MEMBER_AUTH_KEY')]">
@@ -59,28 +56,6 @@
 		</div>
 	</div><!--#header end-->
 	<div id="container" <if condition="$skin">style="background-image:url({$skin})"</if>>
-		<div class="skins">
-			<ul class="skins-style">
-				<volist name="skinCategory" id="vo">
-					<li data-id="{$vo.categoryId}"><p><img src="{$vo.categoryImg}" alt="" /></p></li>
-				</volist>
-			</ul>
-			<dl class="skins-all">
-				<volist name="skinList" id="vo" key="k">
-					<dd class="sa{$k}">
-						<ul>
-							<volist name="vo" id="skin">
-								<li data-bg="{$skin.skin}" data-id="{$skin.skinId}" <if condition="$skin.skinId eq $skinId">class="added"</if>>
-									<p><img src="{$skin.smallSkin}" alt="" /></p>
-									<s></s>
-									<p class="imgb"><img src="{$skin.middleSkin}" /></p>
-								</li>
-							</volist>
-						</ul>
-					</dd>
-				</volist>
-			</dl>
-		</div>
 		<div class="container-inner">
 			<div class="ci-hd J_thl_area">
 				<h1><a class="logo" href="/" rel="home">另客网</a></h1>
@@ -268,7 +243,14 @@
 											<img src="__PUBLIC__/IndexV3/upload/02.jpg" alt="" />
 											<div class="mask"></div>
 											<div class="info">
-												<p class="p1">coming soon...</p>
+												<p class="p1">Title For This Item</p>
+												<p class="p2">
+													Content For This Item
+												</p>
+												<p class="p3">
+													<a href="#">豆瓣影评</a>
+													<a href="#">在线观看</a>
+												</p>
 											</div>
 										</li>
 										<li>
