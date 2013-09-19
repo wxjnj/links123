@@ -110,6 +110,9 @@ input:focus{ outline: 0; }
 	vertical-align: middle;
 }
 /*wrap*/
+.header-inner{
+	height: 40px;
+}
 .header-inner,
 .container-inner,
 .footer-inner{
