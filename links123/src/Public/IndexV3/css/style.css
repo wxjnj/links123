@@ -374,9 +374,9 @@ input:focus{ outline: 0; }
 	display: inline-block;
 	height: 18px;
 	line-height: 18px;
-	padding: 8px 10px 8px 20px;
+	padding: 7px 10px 7px 20px;
 	position: relative;
-	vertical-align: baseline;
+	vertical-align: top;
 }
 .zld ul li .nm:hover{
 	color: #fc2a06;
@@ -386,12 +386,12 @@ input:focus{ outline: 0; }
 	font-weight: normal;
 }
 .zld ul li .ctl{
-	background: url(../imgs/sprite.png) -59px 1px no-repeat;
+	background: url(../imgs/sprite.png) -59px 2px no-repeat;
 	cursor: pointer;
 	display: inline-block;
 	height: 32px;
 	position: relative;
-	vertical-align: middle;
+	vertical-align: top;
 	width: 32px;
 }
 .zld ul li .add{
