@@ -170,7 +170,6 @@ input:focus{ outline: 0; }
 	height: 40px;
 	line-height: 40px;
 	padding: 0 20px;
-	vertical-align: middle;
 }
 .nav li a:hover,
 .nav li.on a{
@@ -279,7 +278,6 @@ input:focus{ outline: 0; }
 	height: 20px;
 	padding: 6px 0;
 	line-height: 20px;
-	text-decoration: none;
 }
 .uc-menu ul li a:hover{
 	background: #218b3a;
