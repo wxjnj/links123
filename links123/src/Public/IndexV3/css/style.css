@@ -13,8 +13,6 @@ input:focus{ outline: 0; }
 #footer{
 	background: #2e2a28;
 	color: #514f4e;
-	height: 46px;
-	line-height: 46px;
 	bottom: 0;
 	left: 0;
 	width: 100%;
@@ -163,6 +161,8 @@ input:focus{ outline: 0; }
 }
 .nav li{
 	float: left;
+	height: 40px;
+	line-height: 40px;
 }
 .nav li a{
 	display: block;
@@ -178,6 +178,8 @@ input:focus{ outline: 0; }
 /*uc*/
 .uc{
 	float: right;
+	height: 28px;
+	line-height: 28px;
 }
 .login,
 .join{
@@ -550,7 +552,8 @@ input:focus{ outline: 0; }
 }
 /*footer*/
 .subnav{
-
+	height: 46px;
+	line-height: 46px;
 }
 .subnav ul{
 	float: left;
@@ -559,9 +562,13 @@ input:focus{ outline: 0; }
 	display: inline;
 	float: left;
 	padding-right: 15px;
+	height: 46px;
+	line-height: 46px;
 }
 .copyright{
 	float: right;
+	height: 46px;
+	line-height: 46px;
 }
 
 /*extra*/
@@ -770,6 +777,7 @@ input:focus{ outline: 0; }
 }
 .music .hot-music{
 	margin-top: 20px;
+	line-height: 22px;
 }
 .music .hot-music ul{
 	*zoom: 1;
