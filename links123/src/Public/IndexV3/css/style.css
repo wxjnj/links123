@@ -349,10 +349,12 @@ input:focus{ outline: 0; }
 .zld ul li{
 	display: inline-block;
 	float: left;
-	height: 33px;
+	height: 32px;
+	line-height: 32px;
 	margin: 5px 5px 0 0;
 	white-space: nowrap;
 	position: relative;
+	vertical-align: middle;
 }
 .zld ul li .mask{
 	width: 100%;
@@ -370,9 +372,9 @@ input:focus{ outline: 0; }
 	color: #fff;
 	cursor: pointer;
 	display: inline-block;
-	height: 33px;
-	line-height: 33px;
-	padding: 0 0 0 20px;
+	height: 32px;
+	line-height: 32px;
+	padding: 0 10px 0 20px;
 	position: relative;
 	vertical-align: middle;
 }
@@ -384,7 +386,7 @@ input:focus{ outline: 0; }
 	font-weight: normal;
 }
 .zld ul li .ctl{
-	background: url(../imgs/sprite.png) -59px 3px no-repeat;
+	background: url(../imgs/sprite.png) -59px 2px no-repeat;
 	cursor: pointer;
 	display: inline-block;
 	height: 33px;
