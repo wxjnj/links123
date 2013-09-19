@@ -110,9 +110,6 @@ input:focus{ outline: 0; }
 	vertical-align: middle;
 }
 /*wrap*/
-.header-inner{
-	height: 40px;
-}
 .header-inner,
 .container-inner,
 .footer-inner{
@@ -163,12 +160,9 @@ input:focus{ outline: 0; }
 .nav{
 	float: left;
 	font-size: 14px;
-	height: 40px;
 }
 .nav li{
 	float: left;
-	height: 40px;
-	line-height: 40px;
 }
 .nav li a{
 	display: block;
@@ -176,6 +170,7 @@ input:focus{ outline: 0; }
 	height: 40px;
 	line-height: 40px;
 	padding: 0 20px;
+	vertical-align: middle;
 }
 .nav li a:hover,
 .nav li.on a{
