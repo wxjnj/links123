@@ -221,37 +221,76 @@ input:focus{ outline: 0; }
 }
 /*uc-menu*/
 .uc-menu{
-	background: #fff;
-	color: #2e2a28;
-	padding: 0 20px;
+	color: #fff;
+	border-left: 1px solid #201d1c;
+	border-right: 1px solid #3a3634;
+	height: 40px;
+	line-height: 40px;
 	position: relative;
 }
-.uc-menu p{
-	background: url(../imgs/down.png) right 11px no-repeat;
+.uc-menu .nm{
+	border-right: 1px solid #201d1c;
+	border-left: 1px solid #3a3634;
+	padding: 0 10px;
+	height: 40px;
+	float: left;
+}
+.uc-menu .setting .tool{
+	background: url(../imgs/sprite.png) -296px 5px no-repeat;
 	cursor: pointer;
-	height: 26px;
-	line-height: 26px;
-	padding-right: 20px;
-	margin-top: 6px;
+	display: block;
+	height: 40px;
+	width: 38px;
+}
+.uc-menu .setting{
+	float: right;
+	border-left: 1px solid #3a3634;
+	border-right: 1px solid #201d1c;
+	height: 40px;
+	width: 38px;
+}
+.uc-menu .setting:hover{
+	background: #fff;
 }
 .uc-menu ul{
 	background: #fff;
+	border: 1px solid #2e2a28;
+	border-width: 0px 1px 1px;
 	display: none;
-	padding: 5px 0;
 	position: absolute;
 	right: 0;
-	top: 26px;
+	top: 40px;
 	width: 120px;
+	-moz-border-radius: 0 0 5px 5px;
+	-webkit-border-radius: 0 0 5px 5px;
+	border-radius: 0 0 5px 5px;
 }
 .uc-menu ul li{
-	padding: 5px 0;
+	padding: 0;
+	margin: 0;
+	line-height: 18px;
 	text-align: center;
 }
 .uc-menu ul li a{
-	color: #2e2a28;
+	color: #727171;
+	display: block;
+	width: 120px;
+	height: 20px;
+	padding: 6px 0;
+	line-height: 20px;
 }
 .uc-menu ul li a:hover{
-	text-decoration: underline;
+	background: #218b3a;
+	color: #fff;
+}
+.uc-menu ul li.logout a,
+.uc-menu ul li.logout a:hover{
+	background: #dcdcdd;
+	color: #727171;
+	padding: 7px 0;
+	-moz-border-radius: 0 0 5px 5px;
+	-webkit-border-radius: 0 0 5px 5px;
+	border-radius: 0 0 5px 5px;
 }
 /*thl*/
 .thl{
@@ -396,6 +435,9 @@ input:focus{ outline: 0; }
 }
 .zld ul li .add{
 	background: url(../imgs/sprite.png) -29px 3px no-repeat;
+}
+.zld ul li .add:hover{
+	background-position: -269px 3px;
 }
 /*box*/
 .edit,

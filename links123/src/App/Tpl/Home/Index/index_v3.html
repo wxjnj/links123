@@ -41,15 +41,18 @@
 					<a class="join J_SignUp" href="javascript:;">加入另客</a><a class="login J_SignIn" href="javascript:;">登录</a>
 				<else />
 					<div class="uc-menu">
-						<p>Hello，{$Think.session.nickname}</p>
-						<ul>
-							<li><a target="_blank" href="/Members/Index">个人中心</a></li>
-							<li><a target="_blank" href="/Members/Collection">我的收藏</a></li>
-							<li><a target="_blank" href="/Members/Recommend">我的推荐</a></li>
-							<li><a target="_blank" href="/Members/Comment">我的说说</a></li>
-							<li><a target="_blank" href="/Members/Suggestion">留言板</a></li>
-							<li><a target="_blank" href="/Members/Logout">退出</a></li>
-						</ul>
+						<p class="nm">Hello，{$Think.session.nickname}</p>
+						<div class="setting">
+							<a class="tool" href="javascript:;"></a>
+							<ul>
+								<li><a target="_blank" href="/Members/Index">个人中心</a></li>
+								<li><a target="_blank" href="/Members/Collection">我的收藏</a></li>
+								<li><a target="_blank" href="/Members/Recommend">我的推荐</a></li>
+								<li><a target="_blank" href="/Members/Comment">我的说说</a></li>
+								<li><a target="_blank" href="/Members/Suggestion">留言板</a></li>
+								<li class="logout"><a target="_blank" href="/Members/Logout">退出</a></li>
+							</ul>
+						</div>
 					</div>
 				</empty>
 			</div>

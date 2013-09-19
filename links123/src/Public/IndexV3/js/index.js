@@ -11,7 +11,7 @@ $(function() {
 	HelpMouse.init();
 
 	// 用户菜单
-	$('.uc-menu').hover(
+	$('.uc-menu .setting').hover(
 		function(){
 			$(this).find('ul').toggle();
 		}
