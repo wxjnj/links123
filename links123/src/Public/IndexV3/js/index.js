@@ -10,13 +10,6 @@ $(function() {
 	MusicPlayer.Init();
 	HelpMouse.init();
 
-	// 用户菜单
-	$('.uc-menu .setting').hover(
-		function(){
-			$(this).find('ul').toggle();
-		}
-	);
-	
 	// 弹出页
 	$(".newWin").on('click', function() {
 		window.open($(this).attr('url'));
@@ -32,8 +25,7 @@ $(function() {
 		effect: 'scrollLeft',
 		interval: 10,
 		loop: true,
-		autoplay: true,
-		speed: 1.5
+		autoplay: true
 	});
 	$('#J_ScrollBox').find('li').on('hover', function(){
 		$(this).toggleClass('hover');
@@ -153,6 +145,9 @@ var Zld = { // 自留地
 				Zld.IsSortable = false;
 			}
 			return false;
+		});
+		$(document).on('mouseenter', '#J_Zld input[name="url"], #J_Zld input[name="name"]', function(){
+			$(this).select();
 		});
 
 		$('#J_sortable').sortable({

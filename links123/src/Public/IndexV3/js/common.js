@@ -5,6 +5,9 @@ $(function(){
 var User = {
 	Init: function(){
 		var self = this;
+		$('.uc-menu .setting').on('hover', function(){
+				$(this).find('ul').toggle();
+		});
 		$('.J_SignUp').on('click', function(){
 			self.Reg();
 			return false;
@@ -46,7 +49,7 @@ var User = {
 			hl = hl + '		</ul>';
 			hl = hl + '	</div>';
 			hl = hl + '	<div class="lkd-ft">';
-			hl = hl + '		<a class="lkd-reg" href="javascript:;">注册</a>';
+			hl = hl + '		<a class="lkd-reg" href="javascript:;">注&nbsp;册</a>';
 			hl = hl + '		<a class="lkd-login" href="javascript:;">已有帐号！登录！</a>';
 			hl = hl + '	</div>';
 			hl = hl + '</div>';
@@ -181,7 +184,7 @@ var User = {
 			hl = hl + '		</form>';
 			hl = hl + '	</div>';
 			hl = hl + '	<div class="lkd-ft">';
-			hl = hl + '		<a class="lkd-reg" href="javascript:;">登录</a>';
+			hl = hl + '		<a class="lkd-reg" href="javascript:;">登&nbsp;录</a>';
 			hl = hl + '	</div>';
 			hl = hl + '</div>';
 			$('body').append(hl);
