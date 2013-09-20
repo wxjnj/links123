@@ -105,7 +105,7 @@ class IndexAction extends CommonAction {
 			if (!$home_ted_hot_list) {
 				
 				$home_ted_hot_list = $variableModel->where(array('vname' => 'home_ted_hot'))->find();
-				$home_ted_hot_list =  unserialize($home_ted_hot_list);
+				$home_ted_hot_list =  unserialize($home_ted_hot_list['value_varchar']);
 				S('home_ted_hot', $home_ted_hot_list);
 			}
 			
@@ -115,7 +115,7 @@ class IndexAction extends CommonAction {
 			$ted_list = array();
 			foreach ($result as $value) {
 				
-				$ted_list[$value['id']] = array('id' => $value['id'], 'title' => $value['title'], 'link_cn_img' => $value['link_cn_img'], 'status' => $home_ted_hot_list[$id]);
+				$ted_list[$value['id']] = array('id' => $value['id'], 'title' => $value['title'], 'link_cn_img' => $value['link_cn_img'], 'status' => $home_ted_hot_list[$value['id']]);
 			}
 					
 			S('ted_list', $ted_list);

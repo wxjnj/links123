@@ -54,7 +54,7 @@
 								<li><a target="_blank" href="/Members/Collection">我的收藏</a></li>
 								<li><a target="_blank" href="/Members/Recommend">我的推荐</a></li>
 								<li><a target="_blank" href="/Members/Comment">我的说说</a></li>
-								<li><a target="_blank" href="/Members/Suggestion">留言板</a></li>
+								<li><a href="/Members/Suggestion">留言板</a></li>
 								<li class="logout"><a target="_blank" href="/Members/Logout">退出</a></li>
 							</ul>
 						</div>
@@ -192,6 +192,7 @@
 								<div class="find">
 									<ul>
 									<volist name="ted_list" id="ted">
+										<if condition="$ted['status'] eq 1">
 										<li>
 											<img src="{$ted.link_cn_img}" alt="" />
 											<div class="mask"></div>
@@ -201,6 +202,7 @@
 											</div>
 											<a class="go" href="{:U('Detail/index')}?id={$ted.id}" target="_blank">查看</a>
 										</li>
+										</if>
 									</volist>
 										<li class="more">
 											<a href="{:U('Index/nav')}?cid=5" target="_blank">发现更多...</a>
