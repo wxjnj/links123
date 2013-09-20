@@ -97,15 +97,27 @@ class IndexAction extends CommonAction {
 		$ted_list = S('ted_list');
 		if (!$ted_list) {
 			
+			$variableModel = M('Variable');
 			$linksModel = M("Links");
-			$ted_ids = '134,158,171,246,176,107';	//TODO 放到后台管理
-			$result = $linksModel->where('id in ('.$ted_ids.')')->limit(6)->select();
+			
+			$ted_list = array();
+			$home_ted_hot_list = S('home_ted_hot');
+			if (!$home_ted_hot_list) {
+				
+				$home_ted_hot_list = $variableModel->where(array('vname' => 'home_ted_hot'))->find();
+				$home_ted_hot_list =  unserialize($home_ted_hot_list['value_varchar']);
+				S('home_ted_hot', $home_ted_hot_list);
+			}
+			
+			$ted_ids = implode(',', array_keys($home_ted_hot_list));
+			$result = $linksModel->where('id in ('.$ted_ids.')')->select();
 			
 			$ted_list = array();
 			foreach ($result as $value) {
 				
-				$ted_list[$value['id']] = array('id' => $value['id'], 'title' => $value['title'], 'link_cn_img' => $value['link_cn_img']);
+				$ted_list[$value['id']] = array('id' => $value['id'], 'title' => $value['title'], 'link_cn_img' => $value['link_cn_img'], 'status' => $home_ted_hot_list[$value['id']]);
 			}
+					
 			S('ted_list', $ted_list);
 		}
 		$this->assign('ted_list', $ted_list);
