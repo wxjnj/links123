@@ -27,6 +27,7 @@ class LinksAction extends CommonAction {
 			$catNow = M("Category")->getById($category);
 			$this->assign('cat_name', $catNow['cat_name']);
 			$this->assign('rid', $catNow['prt_id']);
+			$this->assign('cat_id', $catNow['id']);
 		}
 		$param['category'] = $category;
 		

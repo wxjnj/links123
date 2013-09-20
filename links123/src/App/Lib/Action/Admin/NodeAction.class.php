@@ -12,9 +12,13 @@ class NodeAction extends CommonAction {
 		$this->assign('title', $title);
 		$param['title'] = $title;
 		//
-		if (isset($_REQUEST['group_id']) && $_REQUEST['group_id']!='') {
-                    $map['group_id'] = $_REQUEST['group_id'];
-		}
+		/**
+		 * 显示全部的节点管理
+		 * @author slate 2013-09-20
+		 */
+// 		if (isset($_REQUEST['group_id']) && $_REQUEST['group_id']!='') {
+//                     $map['group_id'] = $_REQUEST['group_id'];
+// 		}
 		$this->assign('group_id', $map['group_id']);
                 $this->assign("nowGroup",D("group")->find(intval($map['group_id'])));
 		$param['group_id'] = $map['group_id'];
