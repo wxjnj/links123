@@ -18,7 +18,7 @@ class RoleAction extends CommonAction {
     	}
     	$this->assign('name',$name);
     	$param['name'] = $name;
-    	if(!empty($status)) {
+    	if($status != '') {
     		$map['status'] = $status;
     	}
     	$this->assign('status',$map['status']);
