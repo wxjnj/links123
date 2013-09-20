@@ -30,6 +30,19 @@ input:focus{ outline: 0; }
 	position: relative;
 	padding-top: 40px;
 } /* TODO skins */
+
+/*styles*/
+.styles{
+	float: right;
+	height: 40px;
+	padding-right: 20px;
+}
+.styles li{
+	display: inline;
+	float: left;
+	padding-top: 9px;
+	margin-left: 6px;
+}
 .skins{
 	background: url(../imgs/skins.png) 0 0 no-repeat;
 	cursor: pointer;
@@ -818,7 +831,6 @@ input:focus{ outline: 0; }
 	vertical-align: top;
 }
 .pics .pg li{
-	background: #e1e0e2;
 	cursor: pointer;
 	display: inline-block;
 	*display: inline;

@@ -36,11 +36,6 @@
 				<li><a href="{:U('Home/Index/nav')}" target="_blank">另客导航</a></li>
 				<li><a href="{:U('/Suggestion')}" target="_blank">留言板</a></li>
 			</ul>
-			<div class="styles">
-				<ul>
-					<li><a href="javascript:;"></a></li>
-				</ul>
-			</div>
 			<div class="uc">
 				<empty name="_SESSION[C('MEMBER_AUTH_KEY')]">
 					<a class="join J_SignUp" href="javascript:;">加入另客</a><a class="login J_SignIn" href="javascript:;">登&nbsp;录</a>
@@ -61,6 +56,14 @@
 					</div>
 				</empty>
 			</div>
+			<!-- <div class="styles">
+				<ul>
+					<li><a href="javascript:;"><img src="__PUBLIC__/IndexV3/skins/q/01_s.jpg" alt="" /></a></li>
+					<li><a href="javascript:;"><img src="__PUBLIC__/IndexV3/skins/q/02_s.jpg" alt="" /></a></li>
+					<li><a href="javascript:;"><img src="__PUBLIC__/IndexV3/skins/q/03_s.jpg" alt="" /></a></li>
+					<li><a href="javascript:;">+</a></li>
+				</ul>
+			</div> -->
 		</div>
 	</div><!--#header end-->
 	<div id="container" <if condition="$skin">style="background-image:url({$skin})"</if>>

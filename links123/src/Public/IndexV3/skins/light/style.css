@@ -16,6 +16,7 @@ a:hover{ text-decoration: none; }
 .schedule li input{ color: #000; }
 .music .hot-music li{ border-bottom: 1px solid #000; }
 .find li.more a{ border: 1px dotted #000; }
+.pics .pg li{ background: #000; }
 .edit, .del, .new{ background: url(sprite.png); }
 .edit{ background-position: -6px -6px; }
 .del{ background-position: -37px -6px; }
