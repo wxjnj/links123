@@ -9,8 +9,13 @@ a:hover{ text-decoration: none; }
 }
 .box{ color: #000; }
 .box .box-hd{ border-top: 1px solid #000; }
+.zld ul li .nm{ color: #fff; }
+.apps ul li{ color: #000; }
+.zld ul li .mask{ background: #000; }
 .schedule li{ border-top: 1px solid #000; }
-.music dl dd li{ border-top: 1px solid #000; }
+.schedule li input{ color: #000; }
+.music .hot-music li{ border-bottom: 1px solid #000; }
+.find li.more a{ border: 1px dotted #000; }
 .edit, .del, .new{ background: url(sprite.png); }
 .edit{ background-position: -6px -6px; }
 .del{ background-position: -37px -6px; }
