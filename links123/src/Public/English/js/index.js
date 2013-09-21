@@ -85,7 +85,7 @@ $(function() {
 
     //答题按钮点击事件
     $("#J_answerButton").click(function() {
-
+        
 //        $(this).toggleClass("current");
         if ($(".answer").is(":visible")) {
             $("#J_answerButton").removeClass("current");
@@ -96,7 +96,9 @@ $(function() {
                 if ($("#J_media_div").attr("play_type") == 1 || $("#J_media_div").attr("play_type") == 2) {
                     $("#J_media_div").css({'display': 'block', 'position': '', 'left': ''}).show();
                 } else if ($("#J_media_div").attr("play_type") == 4) {
-                    $("#Links123Player")[0].playPause();
+                    if($("#Links123Player")[0]){
+                        $("#Links123Player")[0].playPause();
+                    }
                 } else if ($("#J_media_div").attr("data_isaboutvideo") == 1) {
                     $(".J_player").show();
                 } else {
