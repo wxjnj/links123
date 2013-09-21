@@ -181,7 +181,10 @@ var Zld = { // 自留地
 						}
 					}
 				);
-			}  
+			},
+			stop: function(event, ui) {
+				Zld.IsSortable = false;
+			}
 		});
 		$('#J_sortable').sortable('enable');
 		
