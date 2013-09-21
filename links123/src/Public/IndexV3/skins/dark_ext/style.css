@@ -1,0 +1,24 @@
+/*************************************************************
+** dark
+*************************************************************/
+body{ color: #fff; }
+a{ color: #fff; }
+a:hover{ text-decoration: none; }
+#container{
+	background: #3f3a39 url(bg.jpg) top center fixed;
+	background-size: cover;
+}
+.box{ color: #e1e0e2; }
+.box .box-hd{ border-top: 1px solid #e1e0e2; }
+.zld ul li .nm{ color: #fff; }
+.apps ul li{ color: #fff; }
+.zld ul li .mask{ background: #fff; }
+.schedule li{ border-top: 1px solid #e1e0e2; }
+.schedule li input{ color: #fff; }
+.music .hot-music li{ border-bottom: 1px solid #c9cbcd; }
+.find li.more a{ border: 1px dotted #fff; }
+.pics .pg li{ background: #e1e0e2; }
+.edit, .del, .new{ background: url(sprite.png); }
+.edit{ background-position: -6px -6px; }
+.del{ background-position: -37px -6px; }
+.new{ background-position: -66px -6px; }

@@ -541,7 +541,9 @@ var Theme  = {
 				obj.addClass('on').siblings().removeClass('on');
 				var bg = obj.data('bg');
 				var theme = obj.data('theme');
-				self.SetBackGround(theme, bg);
+				var id = obj.data('id');
+				
+				self.SetBackGround(id, theme, bg);
 			}
 			return false;
 		});
@@ -550,10 +552,12 @@ var Theme  = {
 			return false;
 		});
 	},
-	SetBackGround: function(tm, bg){
+	SetBackGround: function(id, tm, bg){
 		var tmurl = $CONFIG['PUBLIC']+ '/IndexV3/skins/{0}/style.css';
 		$('#J_Skins').attr('href', tmurl.replace('{0}', tm));
 		$('#container').css('background-image', 'url('+bg+')');
+		
+		$.post(URL + "/updateSkinTheme", {'themeId': id});
 		return false;
 	}
 };
