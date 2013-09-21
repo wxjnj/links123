@@ -89,40 +89,41 @@ $(function() {
 //        $(this).toggleClass("current");
         if ($(".answer").is(":visible")) {
             $("#J_answerButton").removeClass("current");
-            $(".answer").slideUp("slow", function() { //这里收起后显示
-            if ($("#J_media_div").attr("play_type") == 1 || $("#J_media_div").attr("play_type") == 2) {
-                $("#J_media_div").css({'display': '', 'position': '', 'left': ''}).show();
-            } else if ($("#J_media_div").attr("play_type") == 4) {
+            if ($("#J_media_div").attr("play_type") == 4) {
+                $("#J_media_div").css({'position': '', 'left': ''});
                 $("#Links123Player")[0].playPause();
-                $("#J_media_swfobject_div").show();
-            } else if ($("#J_media_div").attr("data_isaboutvideo") == 1) {
-                $(".J_player").show();
             }
+            $(".answer").slideUp("slow", function() { //这里收起后显示
+                if ($("#J_media_div").attr("play_type") == 1 || $("#J_media_div").attr("play_type") == 2) {
+                    $("#J_media_div").css({'display': 'block', 'position': '', 'left': ''}).show();
+                }  else if ($("#J_media_div").attr("data_isaboutvideo") == 1) {
+                    $(".J_player").show();
+                }else{
+                    $("#J_media_div").css({'display': 'block', 'position': '', 'left': ''}).show();
+                }
             });
 
             $(this).text(' 　答  题');
         } else { //这里先隐藏后展开
-                 if ($("#J_media_div").attr("play_type") == 4){
-                     if (playState == "playing") {
-                        $("#Links123Player")[0].playPause();
-                    }
-                 }else{
-                    //播放的视频停止
-                    play_code = $("#J_media_object embed").attr("src");
-                    videoStr = '';
-                    videoStr += '<object id="J_media_object" height="100%" width="100%" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">';
-                    videoStr += '<param name="wmode" value="transparent">';
-                    videoStr += '<param name="movie" value="' + play_code + '">';
-                    videoStr += '<embed name="swf" menu="true" height="100%" width="100%" play="false" type="application/x-shockwave-flash" allowfullscreen="true" wmode="transparent" src="' + play_code + '">';
-                    videoStr += '</object>';
-                    $('#J_media_div').html(videoStr);
+            //播放的视频停止
+            /*videoStr = '';
+             videoStr += '<object id="J_media_object" height="100%" width="100%" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">';
+             videoStr += '<param name="wmode" value="transparent">';
+             videoStr += '<param name="movie" value="' + play_code + '">';
+             videoStr += '<embed name="swf" menu="true" height="100%" width="100%" play="false" type="application/x-shockwave-flash" allowfullscreen="true" wmode="transparent" src="' + play_code + '">';
+             videoStr += '</object>';
+             $('#J_media_div').html(videoStr);*/
 
-                    if ($("#J_media_div").attr("play_type") == 1 || $("#J_media_div").attr("play_type") == 2) {
-                        $("#J_media_div").css({'display': 'block', 'position': 'absolute', 'left': '-9999px'}).hide();
-                    } else if ($("#J_media_div").attr("data_isaboutvideo") == 1) {
-                        $(".J_player").hide();
-                        $('#J_media_div').html('');
-                    }
+            if ($("#J_media_div").attr("play_type") == 4) {
+                if (playState == "playing") {
+                    $("#Links123Player")[0].playPause();
+                }
+                $("#J_media_div").css({'position': 'absolute', 'left': '-9999px'});
+            }else if ($("#J_media_div").attr("data_isaboutvideo") == 1) {
+                $(".J_player").hide();
+                $('#J_media_div').html('');
+            }else{
+                $("#J_media_div").css({'display': 'none', 'position': 'absolute', 'left': '-9999px'}).hide();
             }
             $("#J_answerButton").addClass("current");
             $(".answer").slideDown("slow");
@@ -550,7 +551,6 @@ $(function() {
     bindMediaTextClickEvent("disable");
     bindOptionClickEvent();
     trimWhiteSpace();
- 	//getPrice();
 });
 
 /**
@@ -794,7 +794,7 @@ function requestQuestion(type, clickObject, media_id) {
                     $(".answertitle").text(question.content);
                 }
                 $("#J_questionId").text(question.id);
-                $("#J_mediaTitle").text(question.name).attr("title",question.name);
+                $("#J_mediaTitle").text(question.name).attr("title", question.name);
                 resetMediaTitle();
                 $("#J_textButton").attr("media_text_url", question.media_source_url);
                 is_local_play = false;
@@ -931,7 +931,7 @@ function requestQuestion(type, clickObject, media_id) {
 
                         } else if (question.play_type == 4 && question.target == 1) {
                             playLocalMedia(question.play_code);
-                            if(question.priority_type==2){
+                            if (question.priority_type == 2) {
                                 is_local_play = true;
                                 $("#J_mediaLocalPlayButton").hide();
                             }
@@ -954,10 +954,10 @@ function requestQuestion(type, clickObject, media_id) {
                 }
 
                 if (question.isAboutVideo) {
-                    if(question.media_thumb_img!=""){
+                    if (question.media_thumb_img != "") {
                         $('#J_media_img').attr('src', question.media_thumb_img);
-                    }else{
-                        $('#J_media_img').attr('src',PUBLIC+"/English/images/deafult_media_img.jpg");
+                    } else {
+                        $('#J_media_img').attr('src', PUBLIC + "/English/images/deafult_media_img.jpg");
                     }
                     $('#J_media_div').css('visibility', 'hidden');
 
@@ -1752,63 +1752,17 @@ function playLocalMedia(local_path) {
     swfobject.createCSS("#flashContent", "display:block;text-align:left;");
 }
 
-function resetMediaTitle(){
+function resetMediaTitle() {
     var text = $("#J_mediaTitle").text();
     var length = text.length;
     var index = 40;
-    if(screen_type==2){
+    if (screen_type == 2) {
         index = 60;
     }
-    text = text.substr(0,index);
-    if(text.length<length){
-        text+="...";
+    text = text.substr(0, index);
+    if (text.length < length) {
+        text += "...";
     }
     $("#J_mediaTitle").text(text);
     //$("#J_mediaTitle").tooltip();
-}
-
-/**
- * 请求用户信息（大米总数和本级大米）
- */
-function  getPrice(){
-    var data = {}; 
-    $.ajax({
-        url: URL + '/get_price',
-        data: data,
-        type: 'POST',
-        dataType: 'json',
-        cache: false,
-        success: function(msg) {
-        	console.log(msg);
-	        if (msg) {
-                var data = msg.data;
-                if (data == null) {
-                    $.messager.show({
-                        msg: "<span  class='messager_span'>加载大米数失败</span>",
-                        showType: 'fade',
-                        width: 180,
-                        height: 45,
-                        timeout: 2000,
-                        style: {
-                            left: '50%',
-                            top: '4%'
-                        }
-                    });
-
-                    return false;
-                }
-                else {
-                	$("#J_currentRice").text(data.user_count_info.right_num * 100);
-	                $("#J_riceDiv").removeClass().addClass("rice_" + data.user_count_info.right_num * 100);
-	                //
-	                var english_user_info = data.english_user_info;
-	                if (english_user_info == null) {
-	                    english_user_info.total_rice = 0;
-	                }
-	                $("#J_totalRice").text(english_user_info.total_rice);
-	            }
-	        }
-        }
-
-	});
 }
