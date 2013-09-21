@@ -74,6 +74,13 @@ class EnglishLevelModel extends CommonModel {
         }
         return $ret;
     }
+    
+    public function getLevelInfo($level){
+    	
+    	$ret = $this->alias("level")->where(array("id" => $level, "status" => 1))->find();
+    	
+    	return $ret;
+    }
 
 }
 

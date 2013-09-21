@@ -550,6 +550,7 @@ $(function() {
     bindMediaTextClickEvent("disable");
     bindOptionClickEvent();
     trimWhiteSpace();
+ 	 getPrice();
 });
 
 /**
@@ -1759,4 +1760,50 @@ function resetMediaTitle(){
     }
     $("#J_mediaTitle").text(text);
     //$("#J_mediaTitle").tooltip();
+}
+
+/**
+ * 请求用户信息（大米总数和本级大米）
+ */
+function  getPrice(){
+    var data = {}; 
+    $.ajax({
+        url: URL + '/get_price',
+        data: data,
+        type: 'POST',
+        dataType: 'json',
+        cache: false,
+        success: function(msg) {
+        	console.log(msg);
+	        if (msg) {
+                var data = msg.data;
+                if (data == null) {
+                    $.messager.show({
+                        msg: "<span  class='messager_span'>加载大米数失败</span>",
+                        showType: 'fade',
+                        width: 180,
+                        height: 45,
+                        timeout: 2000,
+                        style: {
+                            left: '50%',
+                            top: '4%'
+                        }
+                    });
+
+                    return false;
+                }
+                else {
+                	$("#J_currentRice").text(data.user_count_info.right_num * 100);
+	                $("#J_riceDiv").removeClass().addClass("rice_" + data.user_count_info.right_num * 100);
+	                //
+	                var english_user_info = data.english_user_info;
+	                if (english_user_info == null) {
+	                    english_user_info.total_rice = 0;
+	                }
+	                $("#J_totalRice").text(english_user_info.total_rice);
+	            }
+	        }
+        }
+
+	});
 }

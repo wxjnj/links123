@@ -20,7 +20,7 @@ class CategoryAction extends CommonAction {
 		$this->assign('cat_name', $cat_name);
 		$param['cat_name'] = $cat_name;
 		
-		if (!empty($prt_id)) {
+		if ($prt_id != '') {
 			$map['prt_id'] = $prt_id;
 		}
 		$this->assign('prt_id', $map['prt_id']);

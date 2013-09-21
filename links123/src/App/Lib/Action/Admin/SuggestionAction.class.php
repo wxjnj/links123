@@ -27,7 +27,7 @@ class SuggestionAction extends CommonAction {
 			$param['suggest'] = $suggest;
 		}
         
-		if (!empty($type)) {
+		if ($type != '') {
 			$map['type'] = $type;
 			$this->assign('type', $type);
 			$param['type'] = $type;

@@ -7,8 +7,8 @@
 	<meta name="Description" content="{$description}" />
 	<link rel="stylesheet" href="__PUBLIC__/IndexV3/css/base.css" />
 	<link rel="stylesheet" href="__PUBLIC__/IndexV3/css/jquery-ui.css" />
-	<link rel="stylesheet" href="__PUBLIC__/IndexV3/css/style.css?2013091801" />
-	<link rel="stylesheet" href="__PUBLIC__/IndexV3/skins/dark/style.css?2013091801" />
+	<link rel="stylesheet" href="__PUBLIC__/IndexV3/css/style.css" />
+	<link rel="stylesheet" href="__PUBLIC__/IndexV3/skins/dark/style.css" />
 	<link rel="stylesheet" href="__PUBLIC__/skin/fancybox/jquery.fancybox.css" />
 	<link rel="stylesheet" href="__PUBLIC__/IndexV3/css/app.css" />
 	<link rel="stylesheet" href="about:blank" id="J_Skins" />
@@ -32,55 +32,41 @@
 				</form>
 			</div>
 			<ul class="nav">
-				<li class="on"><a href="{:U('Index')}">首页</a></li>
 				<li><a href="{:U('English/Index/index')}" target="_blank">另客英语</a></li>
-				<!-- 
-				<li><a href="#">我的抽屉</a></li>
-				<li><a href="#">寻觅好友</a></li>
-				 -->
+				<li><a href="{:U('Home/Index/nav')}" target="_blank">另客导航</a></li>
+				<li><a href="{:U('/Suggestion')}" target="_blank">留言板</a></li>
 			</ul>
 			<div class="uc">
 				<empty name="_SESSION[C('MEMBER_AUTH_KEY')]">
-					<a class="join J_SignUp" href="javascript:;">加入另客</a><a class="login J_SignIn" href="javascript:;">登录</a>
+					<a class="join J_SignUp" href="javascript:;">注&nbsp;册</a><a class="login J_SignIn" href="javascript:;">登&nbsp;录</a>
 				<else />
 					<div class="uc-menu">
-						<p>Hello，{$Think.session.nickname}</p>
-						<ul>
-							<li><a target="_blank" href="/Members/Index">个人中心</a></li>
-							<li><a target="_blank" href="/Members/Collection">我的收藏</a></li>
-							<li><a target="_blank" href="/Members/Recommend">我的推荐</a></li>
-							<li><a target="_blank" href="/Members/Comment">我的说说</a></li>
-							<li><a target="_blank" href="/Members/Suggestion">留言板</a></li>
-							<li><a target="_blank" href="/Members/Logout">退出</a></li>
-						</ul>
+						<p class="nm">Hello，{$Think.session.nickname}</p>
+						<div class="setting">
+							<a class="tool" href="javascript:;"></a>
+							<ul>
+								<li><a target="_blank" href="/Members/Index">个人中心</a></li>
+								<li><a target="_blank" href="/Members/Collection">我的收藏</a></li>
+								<li><a target="_blank" href="/Members/Recommend">我的推荐</a></li>
+								<li><a target="_blank" href="/Members/Comment">我的说说</a></li>
+								<li><a href="/Members/Suggestion">留言板</a></li>
+								<li class="logout"><a target="_blank" href="/Members/Logout">退出</a></li>
+							</ul>
+						</div>
 					</div>
 				</empty>
 			</div>
+			<!-- <div class="styles">
+				<ul>
+					<li><a href="javascript:;"><img src="__PUBLIC__/IndexV3/skins/q/01_s.jpg" alt="" /></a></li>
+					<li><a href="javascript:;"><img src="__PUBLIC__/IndexV3/skins/q/02_s.jpg" alt="" /></a></li>
+					<li><a href="javascript:;"><img src="__PUBLIC__/IndexV3/skins/q/03_s.jpg" alt="" /></a></li>
+					<li><a href="javascript:;">+</a></li>
+				</ul>
+			</div> -->
 		</div>
 	</div><!--#header end-->
 	<div id="container" <if condition="$skin">style="background-image:url({$skin})"</if>>
-		<div class="skins">
-			<ul class="skins-style">
-				<volist name="skinCategory" id="vo">
-					<li data-id="{$vo.categoryId}"><p><img src="{$vo.categoryImg}" alt="" /></p></li>
-				</volist>
-			</ul>
-			<dl class="skins-all">
-				<volist name="skinList" id="vo" key="k">
-					<dd class="sa{$k}">
-						<ul>
-							<volist name="vo" id="skin">
-								<li data-bg="{$skin.skin}" data-id="{$skin.skinId}" <if condition="$skin.skinId eq $skinId">class="added"</if>>
-									<p><img src="{$skin.smallSkin}" alt="" /></p>
-									<s></s>
-									<p class="imgb"><img src="{$skin.middleSkin}" /></p>
-								</li>
-							</volist>
-						</ul>
-					</dd>
-				</volist>
-			</dl>
-		</div>
 		<div class="container-inner">
 			<div class="ci-hd J_thl_area">
 				<h1><a class="logo" href="/" rel="home">另客网</a></h1>
@@ -209,6 +195,7 @@
 								<div class="find">
 									<ul>
 									<volist name="ted_list" id="ted">
+										<if condition="$ted['status'] eq 1">
 										<li>
 											<img src="{$ted.link_cn_img}" alt="" />
 											<div class="mask"></div>
@@ -218,6 +205,7 @@
 											</div>
 											<a class="go" href="{:U('Detail/index')}?id={$ted.id}" target="_blank">查看</a>
 										</li>
+										</if>
 									</volist>
 										<li class="more">
 											<a href="{:U('Index/nav')}?cid=5" target="_blank">发现更多...</a>
@@ -269,6 +257,14 @@
 											<div class="mask"></div>
 											<div class="info">
 												<p class="p1">coming soon...</p>
+												<!-- <p class="p1">Title For This Item</p>
+												<p class="p2">
+													Content For This Item
+												</p>
+												<p class="p3">
+													<a href="#">豆瓣影评</a>
+													<a href="#">在线观看</a>
+												</p> -->
 											</div>
 										</li>
 										<li>

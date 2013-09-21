@@ -1,5 +1,7 @@
 <?php
-
+/***
+ * @todo 不出现session、cookie、post、get超级变量的引用，否则脚本或其他非action调用无法实现。 
+ */
 class EnglishRecordModel extends CommonModel {
 
     protected $_auto = array(

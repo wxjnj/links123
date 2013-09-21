@@ -28,7 +28,7 @@ class ThlAction extends CommonAction {
 		$this->assign('thl',$thl);
 		$param['thl'] = $thl;
 		
-		if (!empty($needkey)) {
+		if ($needkey != '') {
 			$map['needkey'] = $needkey;
 		}
 		$this->assign('needkey', $map['needkey']);

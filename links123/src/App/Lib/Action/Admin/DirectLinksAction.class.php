@@ -15,31 +15,31 @@ class DirectLinksAction extends CommonAction {
 		$cn_tag = $this->_param('cn_tag');
 		$checked = $this->_param('checked');
 		
-		if ( !empty($tag) ) {
+		if ($tag != '') {
 			$map['tag'] = array('like', "%".$tag."%");
 			$this->assign('tag', $tag);
 			$param['tag'] = $tag;
 		}
 		
-		if ( !empty($url) ) {
+		if ($url != '') {
 			$map['url'] = array('like', "%".$url."%");
 			$this->assign('url', $url);
 			$param['url'] = $url;
 		}
 		
-		if (!empty($status)) {
+		if ($status != '') {
 			$map['status'] = $status;
 			$this->assign('status', $map['status']);
 			$param['status'] = $map['status'];
 		}
 		
-		if (!empty($cn_tag)) {
+		if ($cn_tag != '') {
 			$map['cn_tag'] = $cn_tag;
 			$this->assign('cn_tag', $map['cn_tag']);
 			$param['cn_tag'] = $map['cn_tag'];
 		}
 		
-		if (!empty($checked)) {
+		if ($checked != '') {
 			$map['checked'] = $checked;
 			$this->assign('checked', $map['checked']);
 			$param['checked'] = $map['checked'];
