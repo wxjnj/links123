@@ -402,6 +402,37 @@ class CommonAction extends Action {
     	return $songItemList;
     }
     
+    /**
+     * 获取主题
+     *
+     *
+     * @author slate date:2013-9-21
+     */
+    public function getTheme($themeId) {
+    	 
+    	$themeList = S('themeList');
+    	
+    	if (!$themeList) {
+    		
+    		$themeList = array();
+    		
+	    	$themeModel = M('SkinTheme');
+	    
+	    	$result = $themeModel->where(array('status' => 0))->select();
+	    	 
+	    	foreach ($result as $value) {
+	    			
+	    		$themeList[$value['themeId']] = $value['themeName'];
+	    	}
+	    	
+	    	S('themeList', $themeList);
+    	}
+    
+    	$theme = $themeList[$themeId];
+    	
+    	return $theme ? $theme : 'dark';
+    }
+    
     public function tp_match($pattern, $subject, $num = 1) {
     	$boolean = preg_match($pattern, $subject, $matches);
     	$str = '';

@@ -30,9 +30,15 @@ class IndexAction extends CommonAction {
 			if (!$skinId) {
 				$skinId = cookie('skinId');
 			}
+			
+			$themeId = session('themeId');
+			if (!$themeId) {
+				$themeId = cookie('themeId');
+			}
 		} else {
 			
 			$skinId = cookie('skinId');
+			$themeId = cookie('themeId');
 		}
 		
 		//快捷皮肤
@@ -43,6 +49,9 @@ class IndexAction extends CommonAction {
 		$this->assign("skin", $skins['skin'][$skinId]);
 		$this->assign("skinList", $skins['list']);
 		$this->assign("skinCategory", $skins['category']);
+		
+		$theme = $this->getTheme($themeId);
+		$this->assign('theme', $theme);
 		
 		if ($user_id || !$_SESSION['arealist']) {	
 			$areaList = $myareaModel->where(array('mid' => $user_id))->select();
@@ -206,6 +215,41 @@ class IndexAction extends CommonAction {
 			
 		cookie('skinId', $skinId, array('expire' => 0));
 		
+		$this->ajaxReturn($result);
+	}
+	
+	/**
+	 * 更新首页主题
+	 *
+	 * @param themeId: ThemeID
+	 *
+	 * @return void
+	 *
+	 * @author slate date:2013-09-21
+	 */
+	public function updateSkinTheme() {
+	
+		$themeId = intval($this->_param('themeId'));
+	
+		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+	
+		$result = true;
+	
+		if ($user_id) {
+				
+			$memberModel = M("member");
+				
+			if (!$memberModel->where(array('id' => $user_id))->setField('theme' , $themeId)) {
+	
+				$result = false;
+			}
+				
+			session('themeId', $themeId);
+		}
+			
+		cookie('themeId', $themeId, array('expire' => 0));
+	
+		$this->updateSkin(0);
 		$this->ajaxReturn($result);
 	}
 	
