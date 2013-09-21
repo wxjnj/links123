@@ -1,12 +1,16 @@
 $(function(){
 	User.Init();
 	THL.Init();
+	Theme.Init();
 });
+
 var User = {
 	Init: function(){
 		var self = this;
-		$('.uc-menu .setting').on('hover', function(){
-				$(this).find('ul').toggle();
+		$('.uc-menu .nm').on('mouseenter', function(){
+			$(this).find('ul').show();
+		}).on('mouseleave', function(){
+			$(this).find('ul').hide();
 		});
 		$('.J_SignUp').on('click', function(){
 			self.Reg();
@@ -525,5 +529,31 @@ var THL = {
 			$('#J_thl_div').hide(); //没值隐藏
 			$("#J_thl_div").css("top", top).addClass('cate-in');	
 		}	
+	}
+};
+
+var Theme  = {
+	Init: function(){
+		var self = this;
+		$('#J_Styles li:not(.add)').on('click', function(){
+			var obj = $(this).closest('li');
+			if(!obj.is('.on')){
+				obj.addClass('on').siblings().removeClass('on');
+				var bg = obj.data('bg');
+				var theme = obj.data('theme');
+				self.SetBackGround(theme, bg);
+			}
+			return false;
+		});
+		$('#J_Styles li.add a').on('click', function(){
+			alert('coming soon');
+			return false;
+		});
+	},
+	SetBackGround: function(tm, bg){
+		var tmurl = $CONFIG['PUBLIC']+ '/IndexV3/skins/{0}/style.css';
+		$('#J_Skins').attr('href', tmurl.replace('{0}', tm));
+		$('#container').css('background-image', 'url('+bg+')');
+		return false;
 	}
 };
