@@ -45,35 +45,6 @@ $(function() {
 		$(this).toggleClass('hover');
 	});
 
-	// 皮肤
-	$('.skins').on('mouseenter', function(){
-		$('.skins-style').show();
-	}).on('mouseleave', function(){
-		$('.skins-style').hide();
-	});
-	$('.skins-style li').on('mouseover', function(){
-		var id = $(this).data('id');
-		$(this).toggleClass('on');
-		$('.sa'+id).show().siblings().hide();
-	});
-	$('.skins-all li').on('click', function(){
-		var bg = $(this).data('bg');
-		$('#container').css('background-image', 'url('+bg+')');
-		$(this).addClass('added').siblings().removeClass('added');
-		$(this).find('.imgb').hide();
-		$(this).find('s').hide();
-		$.post(URL + "/updateSkin", {'skinId': $(this).data('id')});
-	}).on('mouseenter', function(){
-		$(this).find('.imgb').show();
-		$(this).find('s').show();
-	}).on('mouseleave', function(){
-		$(this).find('.imgb').hide();
-		$(this).find('s').hide();
-	});
-	$('.skins').on('mouseleave', function(){
-		$('.skins-all dd').hide();
-	});
-	
 });
 
 var ZhiDaLan = { // 直达框
