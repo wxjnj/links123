@@ -91,11 +91,12 @@ $(function() {
             $("#J_answerButton").removeClass("current");
             if ($("#J_media_div").attr("play_type") == 4) {
                 $("#J_media_div").css({'position': '', 'left': ''});
-                $("#Links123Player")[0].playPause();
             }
             $(".answer").slideUp("slow", function() { //这里收起后显示
                 if ($("#J_media_div").attr("play_type") == 1 || $("#J_media_div").attr("play_type") == 2) {
                     $("#J_media_div").css({'display': 'block', 'position': '', 'left': ''}).show();
+                } else if ($("#J_media_div").attr("play_type") == 4) {
+                    $("#Links123Player")[0].playPause();
                 } else if ($("#J_media_div").attr("data_isaboutvideo") == 1) {
                     $(".J_player").show();
                 } else {
