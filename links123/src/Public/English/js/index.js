@@ -96,9 +96,9 @@ $(function() {
             $(".answer").slideUp("slow", function() { //这里收起后显示
                 if ($("#J_media_div").attr("play_type") == 1 || $("#J_media_div").attr("play_type") == 2) {
                     $("#J_media_div").css({'display': 'block', 'position': '', 'left': ''}).show();
-                }  else if ($("#J_media_div").attr("data_isaboutvideo") == 1) {
+                } else if ($("#J_media_div").attr("data_isaboutvideo") == 1) {
                     $(".J_player").show();
-                }else{
+                } else {
                     $("#J_media_div").css({'display': 'block', 'position': '', 'left': ''}).show();
                 }
             });
@@ -119,10 +119,10 @@ $(function() {
                     $("#Links123Player")[0].playPause();
                 }
                 $("#J_media_div").css({'position': 'absolute', 'left': '-9999px'});
-            }else if ($("#J_media_div").attr("data_isaboutvideo") == 1) {
+            } else if ($("#J_media_div").attr("data_isaboutvideo") == 1) {
                 $(".J_player").hide();
                 $('#J_media_div').html('');
-            }else{
+            } else {
                 $("#J_media_div").css({'display': 'none', 'position': 'absolute', 'left': '-9999px'}).hide();
             }
             $("#J_answerButton").addClass("current");
@@ -315,24 +315,37 @@ $(function() {
 //        if ($(".J_tabs a.current").attr("value") != 1) {
 //            return false;
 //        }
+        var targetClassName = "J_level";
+        var targetObjectClassName = "J_object";
         var next_level_li;
+        var viewType = $(".J_tabs a.current").attr("value");
+        if (viewType == 2) {
+            targetClassName = "J_subjectDifficulty";
+            targetObjectClassName = "J_subject";
+        } else if (viewType == 3) {
+            targetClassName = "J_recommendDifficulty";
+            targetObjectClassName = "J_recommend";
+        } else if (viewType == 5) {
+            targetObjectClassName = "J_ted";
+            targetClassName = "J_tedDifficulty";
+        }
         //已是最高级
-        if (($(".grade .current").index() + 1) == $(".grade li").size()) {
-            if ($(".kecheng .current").index() + 1 == $(".kecheng li").size()) {
-                $(".kecheng .current").prevAll("li").each(function() {
+        if (($("." + targetClassName + " .current").index() + 1) == $("." + targetClassName + " li").size()) {
+            if ($("." + targetObjectClassName + " .current").index() + 1 == $("." + targetObjectClassName + " li").size()) {
+                $("." + targetObjectClassName + " .current").prevAll("li").each(function() {
                     if (!$(this).hasClass("not_allowed") && typeof next_level_li == "undefined") {
                         next_level_li = $(this);
                     }
                 });
             } else {
-                $(".kecheng .current").nextAll("li").each(function() {
+                $("." + targetObjectClassName + " .current").nextAll("li").each(function() {
                     if (!$(this).hasClass("not_allowed") && typeof next_level_li == "undefined") {
                         next_level_li = $(this);
                     }
                 });
             }
         } else {
-            $(".grade .current").nextAll("li").each(function() {
+            $("." + targetClassName + " .current").nextAll("li").each(function() {
                 if (!$(this).hasClass("not_allowed") && typeof next_level_li == "undefined") {
                     next_level_li = $(this);
                 }
@@ -363,8 +376,17 @@ $(function() {
 //        if ($(".J_tabs a.current").attr("value") != 1) {
 //            return false;
 //        }
+        var targetClassName = "J_level";
         var prev_level_li;
-        $(".grade .current").prevAll("li").each(function() {
+        var viewType = $(".J_tabs a.current").attr("value");
+        if (viewType == 2) {
+            targetClassName = "J_subjectDifficulty";
+        } else if (viewType == 3) {
+            targetClassName = "J_recommendDifficulty";
+        } else if (viewType == 5) {
+            targetClassName = "J_tedDifficulty";
+        }
+        $("." + targetClassName + " .current").prevAll("li").each(function() {
             if (!$(this).hasClass("not_allowed") && typeof prev_level_li == "undefined") {
                 prev_level_li = $(this);
             }
