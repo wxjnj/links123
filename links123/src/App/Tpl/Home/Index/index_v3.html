@@ -8,10 +8,9 @@
 	<link rel="stylesheet" href="__PUBLIC__/IndexV3/css/base.css" />
 	<link rel="stylesheet" href="__PUBLIC__/IndexV3/css/jquery-ui.css" />
 	<link rel="stylesheet" href="__PUBLIC__/IndexV3/css/style.css" />
-	<link rel="stylesheet" href="__PUBLIC__/IndexV3/skins/dark/style.css" />
 	<link rel="stylesheet" href="__PUBLIC__/skin/fancybox/jquery.fancybox.css" />
 	<link rel="stylesheet" href="__PUBLIC__/IndexV3/css/app.css" />
-	<link rel="stylesheet" href="about:blank" id="J_Skins" />
+	<link rel="stylesheet" href="__PUBLIC__/IndexV3/skins/dark/style.css" id="J_Skins" />
 	<script>
 		var $CONFIG = {
 			'APP' : '__APP__/',
@@ -56,14 +55,20 @@
 					</div>
 				</empty>
 			</div>
-			<!-- <div class="styles">
+			<div class="styles" id="J_Styles">
 				<ul>
-					<li><a href="javascript:;"><img src="__PUBLIC__/IndexV3/skins/q/01_s.jpg" alt="" /></a></li>
-					<li><a href="javascript:;"><img src="__PUBLIC__/IndexV3/skins/q/02_s.jpg" alt="" /></a></li>
-					<li><a href="javascript:;"><img src="__PUBLIC__/IndexV3/skins/q/03_s.jpg" alt="" /></a></li>
-					<li><a href="javascript:;">+</a></li>
+					<li class="on" data-theme="dark" data-bg="__PUBLIC__/IndexV3/skins/q/01_b.jpg">
+						<a href="javascript:;"><img src="__PUBLIC__/IndexV3/skins/q/01_s.jpg" alt="" /></a>
+					</li>
+					<li data-theme="light" data-bg="__PUBLIC__/IndexV3/skins/q/02_b.jpg">
+						<a href="javascript:;"><img src="__PUBLIC__/IndexV3/skins/q/02_s.jpg" alt="" /></a>
+					</li>
+					<li data-theme="dark" data-bg="__PUBLIC__/IndexV3/skins/q/03_b.jpg">
+						<a href="javascript:;"><img src="__PUBLIC__/IndexV3/skins/q/03_s.jpg" alt="" /></a>
+					</li>
+					<li class="add"><a href="javascript:;">+</a></li>
 				</ul>
-			</div> -->
+			</div>
 		</div>
 	</div><!--#header end-->
 	<div id="container" <if condition="$skin">style="background-image:url({$skin})"</if>>

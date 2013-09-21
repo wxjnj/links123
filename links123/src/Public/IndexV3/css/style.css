@@ -12,7 +12,7 @@ input:focus{ outline: 0; }
 }
 #footer{
 	background: #2e2a28;
-	color: #514f4e;
+	color: #bbbaba;
 	height: 46px;
 	line-height: 46px;
 	bottom: 0;
@@ -21,7 +21,7 @@ input:focus{ outline: 0; }
 }
 #footer a,
 #footer a:hover{
-	color: #514f4e;
+	color: #bbbaba;
 }
 #footer img{
 	vertical-align: middle;
@@ -40,8 +40,30 @@ input:focus{ outline: 0; }
 .styles li{
 	display: inline;
 	float: left;
-	padding-top: 9px;
+	padding-top: 8px;
 	margin-left: 6px;
+}
+.styles li img{
+	border: 1px solid #2e2a28;
+	vertical-align: middle;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+}
+.styles li:hover img,
+.styles li.on img{
+	border-color: #fc2a06;
+}
+.styles li.add{
+	padding: 11px 70px 0 10px;
+}
+.styles li.add a{
+	background: url(../imgs/sprite.png) -276px -7px no-repeat;
+	display: block;
+	text-indent: -999px;
+	overflow: hidden;
+	height: 17px;
+	width: 17px;
 }
 .skins{
 	background: url(../imgs/skins.png) 0 0 no-repeat;
@@ -249,7 +271,7 @@ input:focus{ outline: 0; }
 	float: left;
 }
 .uc-menu .setting .tool{
-	background: url(../imgs/sprite.png) -296px 5px no-repeat;
+	background: url(../imgs/sprite.png) -236px 5px no-repeat;
 	cursor: pointer;
 	display: block;
 	height: 40px;
@@ -282,14 +304,14 @@ input:focus{ outline: 0; }
 	padding: 0;
 	margin: 0;
 	line-height: 18px;
-	text-align: center;
+	text-align: left;
 }
 .uc-menu ul li a{
 	color: #727171;
 	display: block;
-	width: 120px;
+	width: 105px;
 	height: 20px;
-	padding: 6px 0;
+	padding: 6px 0 6px 15px;
 	line-height: 20px;
 }
 .uc-menu ul li a:hover{
@@ -300,7 +322,7 @@ input:focus{ outline: 0; }
 .uc-menu ul li.logout a:hover{
 	background: #dcdcdd;
 	color: #727171;
-	padding: 7px 0;
+	padding: 7px 0 7px 15px;
 	-moz-border-radius: 0 0 5px 5px;
 	-webkit-border-radius: 0 0 5px 5px;
 	border-radius: 0 0 5px 5px;
@@ -398,8 +420,8 @@ input:focus{ outline: 0; }
 .zld ul li{
 	display: inline-block;
 	float: left;
-	height: 32px;
-	line-height: 32px;
+	height: 34px;
+	line-height: 34px;
 	margin: 5px 5px 0 0;
 	white-space: nowrap;
 	position: relative;
@@ -421,7 +443,7 @@ input:focus{ outline: 0; }
 	display: inline-block;
 	height: 18px;
 	line-height: 18px;
-	padding: 7px 10px 7px 20px;
+	padding: 8px 10px 8px 20px;
 	position: relative;
 	vertical-align: top;
 }
@@ -436,16 +458,16 @@ input:focus{ outline: 0; }
 	background: url(../imgs/sprite.png) -59px 2px no-repeat;
 	cursor: pointer;
 	display: inline-block;
-	height: 32px;
+	height: 34px;
 	position: relative;
 	vertical-align: top;
-	width: 32px;
+	width: 34px;
 }
 .zld ul li .add{
 	background: url(../imgs/sprite.png) -29px 3px no-repeat;
 }
 .zld ul li .add:hover{
-	background-position: -269px 3px;
+	background-position: -29px -27px;
 }
 /*box*/
 .edit,
@@ -469,7 +491,7 @@ input:focus{ outline: 0; }
 }
 .close:focus{ outline: 0; }
 .close:hover{
-	background-position: -245px -6px;
+	background-position: -125px -36px;
 }
 .box{} /* TODO skins */
 .box h2{
@@ -676,13 +698,14 @@ input:focus{ outline: 0; }
 	text-align: center;
 	line-height: 26px;
 	width: 498px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	border-radius: 5px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
 }
 .find li.more a:hover{
+	border: 1px dotted #d00316;
+	color: #d00316;
 	text-decoration: none;
-	color: #d00316;	
 }
 .find li .mask,
 .find li .info,
@@ -755,9 +778,9 @@ input:focus{ outline: 0; }
 .music .top-mv ul li img{
 	height: 128px;
 	width: 147px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	border-radius: 5px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
 	vertical-align: middle;
 }
 .music .top-mv ul li .nm{
@@ -802,9 +825,9 @@ input:focus{ outline: 0; }
 	vertical-align: middle;
 	width: 310px;
 	height: 448px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	border-radius: 5px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
 }
 .pics .items{
 	height: 448px;
@@ -868,6 +891,9 @@ input:focus{ outline: 0; }
 	-moz-opacity: 0.7;
 	-khtml-opacity: 0.7;
 	opacity: 0.7;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
 }
 .pics .items li .info{
 	color: #fff;

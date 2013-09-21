@@ -1,7 +1,9 @@
 $(function(){
 	User.Init();
 	THL.Init();
+	Theme.Init();
 });
+
 var User = {
 	Init: function(){
 		var self = this;
@@ -525,5 +527,23 @@ var THL = {
 			$('#J_thl_div').hide(); //没值隐藏
 			$("#J_thl_div").css("top", top).addClass('cate-in');	
 		}	
+	}
+};
+
+var Theme  = {
+	Init: function(){
+		var self = this;
+		$('#J_Styles').find('li a').on('click', function(){
+			var obj = $(this).closest('li');
+			var bg = obj.data('bg');
+			var theme = obj.data('theme');
+			self.SetBackGround(theme, bg);
+		});
+	},
+	SetBackGround: function(tm, bg){
+		var tmurl = $CONFIG['PUBLIC']+ '/IndexV3/skins/{0}/style.css';
+		$('#J_Skins').attr('href', tmurl.replace('{0}', tm));
+		$('#container').css('background-image', 'url('+bg+')');
+		return false;
 	}
 };
