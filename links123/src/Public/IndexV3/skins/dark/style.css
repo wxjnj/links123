@@ -15,6 +15,7 @@ a:hover{ text-decoration: none; }
 .zld ul li .mask{ background: #fff; }
 .schedule li{ border-top: 1px solid #e1e0e2; }
 .schedule li input{ color: #fff; }
+.schedule li .sp{ color: #fff; }
 .music .hot-music li{ border-bottom: 1px solid #c9cbcd; }
 .find li.more a{ border: 1px dotted #fff; }
 .pics .pg li{ background: #e1e0e2; }

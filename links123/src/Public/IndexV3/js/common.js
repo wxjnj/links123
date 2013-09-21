@@ -96,6 +96,10 @@ var User = {
 				$(this).css('background', '#eeefef');
 			});
 
+			$(document).on('mouseenter', '#J_Reg input[name="user"], #J_Reg input[name="password"], #J_Reg input[name="email"], #J_Reg input[name="vcode"]', function(){
+				$(this).select();
+			});
+
 			var _loading = false;
 
 			obj.find('.lkd-reg').on('click', function(){
@@ -234,6 +238,10 @@ var User = {
 				$(this).css('background', '#eeefef');
 			});
 
+			$(document).on('mouseenter', '#J_Login input[name="user"], #J_Login input[name="password"]', function(){
+				$(this).select();
+			});
+
 			obj.find('.lkd-reg').on('click', function(){
 				var objusername = obj.find('input[name="user"]');
 				var objpassword = obj.find('input[name="password"]');
@@ -340,6 +348,10 @@ var User = {
 				$(this).css('background', '#fff');
 			}).on('blur', function(){
 				$(this).css('background', '#eeefef');
+			});
+
+			$(document).on('mouseenter', '#J_FindPass input[name="email"], #J_FindPass input[name="vcode"]', function(){
+				$(this).select();
 			});
 
 			var _loading = false;

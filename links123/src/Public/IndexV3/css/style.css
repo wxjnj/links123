@@ -35,7 +35,7 @@ input:focus{ outline: 0; }
 .styles{
 	float: right;
 	height: 40px;
-	padding-right: 20px;
+	padding-right: 0;
 }
 .styles li{
 	display: inline;
@@ -70,7 +70,7 @@ input:focus{ outline: 0; }
 	display: none;
 	position: absolute;
 	top: 32px;
-	left: 0;
+	left: -107px;
 	-moz-border-radius: 0;
 	-webkit-border-radius: 0;
 	border-radius: 0;
@@ -315,21 +315,24 @@ input:focus{ outline: 0; }
 	display: block;
 	width: 105px;
 	height: 20px;
-	padding: 6px 0 6px 15px;
+	padding: 3px 0 3px 15px;
 	line-height: 20px;
 }
 .uc-menu ul li a:hover{
 	background: #218b3a;
 	color: #fff;
 }
-.uc-menu ul li.logout a,
-.uc-menu ul li.logout a:hover{
+.uc-menu ul li.logout a{
 	background: #dcdcdd;
 	color: #727171;
-	padding: 7px 0 7px 15px;
+	padding: 4px 0 4px 15px;
 	-moz-border-radius: 0 0 5px 5px;
 	-webkit-border-radius: 0 0 5px 5px;
 	border-radius: 0 0 5px 5px;
+}
+.uc-menu ul li.logout a:hover{
+	background: #717071;
+	color: #fff;
 }
 /*thl*/
 .thl{
@@ -465,6 +468,9 @@ input:focus{ outline: 0; }
 	position: relative;
 	vertical-align: top;
 	width: 34px;
+}
+.zld ul li .ctl:hover{
+	background-position: -59px -28px;
 }
 .zld ul li .add{
 	background: url(../imgs/sprite.png) -29px 3px no-repeat;
@@ -631,18 +637,18 @@ input:focus{ outline: 0; }
 .schedule li .sp,
 .schedule li .d,
 .schedule li .t{
-	color: #fff;
 	cursor: pointer;
 }
 .schedule li .s{
 	margin-right: -5px;
 }
-.schedule li .sp:hover,
+.schedule li .sprite:hover,
 .schedule li .d:hover{
 	color: #fc2a06;
 }
 .schedule li .d:hover input{
 	color: #fc2a06;
+	cursor: pointer;
 	text-decoration: underline;
 }
 .schedule li input{
@@ -1528,7 +1534,7 @@ input:focus{ outline: 0; }
 	.thl{ margin-left: 400px; }
 	.nav{ font-size: 14px; }
 	.nav li a{ padding: 0 20px; }
-	.styles li.add{ padding: 11px 70px 0 10px; }
+	.styles li.add{ padding: 11px 0 0 10px; }
 	.schedule li .t input{ width: 340px; }
 	.find ul{ margin-left: -10px; }
 	.find li{
