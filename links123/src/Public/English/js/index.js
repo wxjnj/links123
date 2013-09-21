@@ -550,7 +550,7 @@ $(function() {
     bindMediaTextClickEvent("disable");
     bindOptionClickEvent();
     trimWhiteSpace();
- 	 getPrice();
+ 	//getPrice();
 });
 
 /**
@@ -1029,6 +1029,11 @@ function requestQuestion(type, clickObject, media_id) {
                     $(".J_tabs a[value='2']").removeClass("grey");
                 } else {
                     $(".J_tabs a[value='2']").addClass("grey");
+                }
+                if (data.tedsQuestionNum > 0) {
+                    $(".J_tabs a[value='5']").removeClass("grey");
+                } else {
+                    $(".J_tabs a[value='5']").addClass("grey");
                 }
                 ajaxRequest = undefined;
                 return true;

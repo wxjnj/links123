@@ -135,6 +135,14 @@ class CommonModel extends Model {
             return True;
         }
     }
+    public function isAvailable($id){
+        $status = $this->field("status")->find($id);
+        if(intval($status)==1){
+            return true;
+        }else{
+            return false;
+        }
+    }
 
 }
 

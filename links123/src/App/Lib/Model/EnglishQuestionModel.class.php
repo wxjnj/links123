@@ -656,7 +656,7 @@ class EnglishQuestionModel extends CommonModel {
         $result = $this->alias("question")->field($needField)
                         ->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media ON question.media_id=media.id")
                         ->where($map)->order($order)->limit(1)->select();
-
+        
         $ret = $result[0];
         if ($ret) {
             
