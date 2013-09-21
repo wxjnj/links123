@@ -7,8 +7,10 @@ $(function(){
 var User = {
 	Init: function(){
 		var self = this;
-		$('.uc-menu .setting').on('hover', function(){
-				$(this).find('ul').toggle();
+		$('.uc-menu .nm').on('mouseenter', function(){
+			$(this).find('ul').show();
+		}).on('mouseleave', function(){
+			$(this).find('ul').hide();
 		});
 		$('.J_SignUp').on('click', function(){
 			self.Reg();
@@ -533,11 +535,19 @@ var THL = {
 var Theme  = {
 	Init: function(){
 		var self = this;
-		$('#J_Styles').find('li a').on('click', function(){
+		$('#J_Styles li:not(.add)').on('click', function(){
 			var obj = $(this).closest('li');
-			var bg = obj.data('bg');
-			var theme = obj.data('theme');
-			self.SetBackGround(theme, bg);
+			if(!obj.is('.on')){
+				obj.addClass('on').siblings().removeClass('on');
+				var bg = obj.data('bg');
+				var theme = obj.data('theme');
+				self.SetBackGround(theme, bg);
+			}
+			return false;
+		});
+		$('#J_Styles li.add a').on('click', function(){
+			alert('coming soon');
+			return false;
 		});
 	},
 	SetBackGround: function(tm, bg){

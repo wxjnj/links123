@@ -11,6 +11,7 @@
 	<link rel="stylesheet" href="__PUBLIC__/skin/fancybox/jquery.fancybox.css" />
 	<link rel="stylesheet" href="__PUBLIC__/IndexV3/css/app.css" />
 	<link rel="stylesheet" href="__PUBLIC__/IndexV3/skins/dark/style.css" id="J_Skins" />
+	<script src="__PUBLIC__/IndexV3/js/respond.min.js"></script>
 	<script>
 		var $CONFIG = {
 			'APP' : '__APP__/',
@@ -40,9 +41,8 @@
 					<a class="join J_SignUp" href="javascript:;">注&nbsp;册</a><a class="login J_SignIn" href="javascript:;">登&nbsp;录</a>
 				<else />
 					<div class="uc-menu">
-						<p class="nm">Hello，{$Think.session.nickname}</p>
-						<div class="setting">
-							<a class="tool" href="javascript:;"></a>
+						<div class="nm">
+							<p>Hi，{$Think.session.nickname}</p>
 							<ul>
 								<li><a target="_blank" href="/Members/Index">个人中心</a></li>
 								<li><a target="_blank" href="/Members/Collection">我的收藏</a></li>
@@ -57,14 +57,23 @@
 			</div>
 			<div class="styles" id="J_Styles">
 				<ul>
-					<li class="on" data-theme="dark" data-bg="__PUBLIC__/IndexV3/skins/q/01_b.jpg">
-						<a href="javascript:;"><img src="__PUBLIC__/IndexV3/skins/q/01_s.jpg" alt="" /></a>
+					<li data-theme="dark" data-bg="__PUBLIC__/IndexV3/skins/q/01_b.jpg">
+						<a href="javascript:;">
+							<img src="__PUBLIC__/IndexV3/skins/q/01_s.jpg" alt="" />
+							<img class="m" src="__PUBLIC__/IndexV3/skins/q/01_m.jpg" alt="" />
+						</a>
 					</li>
 					<li data-theme="light" data-bg="__PUBLIC__/IndexV3/skins/q/02_b.jpg">
-						<a href="javascript:;"><img src="__PUBLIC__/IndexV3/skins/q/02_s.jpg" alt="" /></a>
+						<a href="javascript:;">
+							<img src="__PUBLIC__/IndexV3/skins/q/02_s.jpg" alt="" />
+							<img class="m" src="__PUBLIC__/IndexV3/skins/q/02_m.jpg" alt="" />
+						</a>
 					</li>
 					<li data-theme="dark" data-bg="__PUBLIC__/IndexV3/skins/q/03_b.jpg">
-						<a href="javascript:;"><img src="__PUBLIC__/IndexV3/skins/q/03_s.jpg" alt="" /></a>
+						<a href="javascript:;">
+							<img src="__PUBLIC__/IndexV3/skins/q/03_s.jpg" alt="" />
+							<img class="m" src="__PUBLIC__/IndexV3/skins/q/03_m.jpg" alt="" />
+						</a>
 					</li>
 					<li class="add"><a href="javascript:;">+</a></li>
 				</ul>
@@ -261,15 +270,15 @@
 											<img src="__PUBLIC__/IndexV3/upload/02.jpg" alt="" />
 											<div class="mask"></div>
 											<div class="info">
-												<p class="p1">coming soon...</p>
-												<!-- <p class="p1">Title For This Item</p>
+												<!-- <p class="p1">coming soon...</p> -->
+												<p class="p1">Title For This Item</p>
 												<p class="p2">
 													Content For This Item
 												</p>
 												<p class="p3">
 													<a href="#">豆瓣影评</a>
 													<a href="#">在线观看</a>
-												</p> -->
+												</p>
 											</div>
 										</li>
 										<li>
@@ -341,7 +350,7 @@
 	</div><!--#footer end-->
 
 	<include file="Contorls:app" />
-				
+
 	<script src="__PUBLIC__/skin/js/jquery-1.7.1.min.js"></script>
 	<script src="__PUBLIC__/IndexV3/js/jquery.placeholder.js"></script>
 	<script src="__PUBLIC__/skin/js/jquery.cookies.2.2.0.min.js"></script>

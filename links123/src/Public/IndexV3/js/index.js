@@ -18,14 +18,23 @@ $(function() {
 	$('#J_Apps').sortable();
 
 	// 幻灯
-	$('#J_ScrollBox').switchable({
-		putTriggers: 'appendTo',
-		triggersWrapCls: 'pg',
-		panels: '.items li',
-		effect: 'scrollLeft',
-		interval: 10,
-		loop: true,
-		autoplay: true
+	var swapi;
+	var _dosw = function(){
+		swapi = $('#J_ScrollBox').switchable({
+			putTriggers: 'appendTo',
+			triggersWrapCls: 'pg',
+			panels: '.items li',
+			effect: 'scrollLeft',
+			interval: 10,
+			loop: true,
+			autoplay: true
+		});
+	}
+	_dosw();
+	$(window).on('resize', function(){
+		console.log(1);
+		swapi.unbind();
+		_dosw();
 	});
 	$('#J_ScrollBox').find('li').on('hover', function(){
 		$(this).toggleClass('hover');
@@ -401,6 +410,7 @@ var Schedule = {
 		});
 		$(document).on('click', '#J_Schedule li .sp', function(){
 			self.Del(this);
+			return false;
 		});
 		obj.find('.new').on('click', function(){
 			if(User.CheckLogin()){
