@@ -81,7 +81,7 @@ class IndexAction extends EnglishAction {
             $recommend_list = D("EnglishMediaRecommend")->getRecommendListToIndex($voice, $target, $pattern);
             $this->assign("recommend_list", $recommend_list);
             //
-            $recommendDifficultyList = $questionModel->getDifficultyList($viewType, $params);
+            $recommendDifficultyList = $questionModel->getDefaultDifficultyList($viewType, $params);
             $this->assign("recommendDifficultyList", $recommendDifficultyList);
         } else if ($viewType == 3) {
             $englishMediaRecommendModel = D("EnglishMediaRecommend");
@@ -146,7 +146,7 @@ class IndexAction extends EnglishAction {
             $num = $questionModel->getQuestionNumber($params);
             if ($num == 0) {
                 unset($params['difficulty']);
-                $difficulty = $questionModel->getDefaultDifficulty($viewType, $params);
+                $difficulty = $questionModel->getDefaultDifficultyId($viewType, $params);
             }
         } else if ($viewType == 1) {
             //科目列表
@@ -1230,10 +1230,10 @@ class IndexAction extends EnglishAction {
                     }
                 }
                 $params['difficulty'] = $difficulty;
-                $questionNum = $questionModel->getQuestionNum($params);
+                $questionNum = $questionModel->getQuestionNumber($params);
                 if (intval($questionNum) == 0) {
                     unset($params['difficulty']);
-                    $difficulty = $questionModel->getDefaultDifficulty($viewType, $params);
+                    $difficulty = $questionModel->getDefaultDifficultyId($viewType, $params);
                 }
             } else if ($viewType == 2) {
                 $englishMediaSubjectModel = D("EnglishMediaSubject");
@@ -1268,7 +1268,7 @@ class IndexAction extends EnglishAction {
                 $questionNum = $questionModel->getQuestionNumber($params);
                 if (intval($questionNum) == 0) {
                     unset($params['difficulty']);
-                    $difficulty = $questionModel->getDefaultDifficulty($viewType, $params);
+                    $difficulty = $questionModel->getDefaultDifficultyId($viewType, $params);
                 }
             } else {
                 $viewType = 1; //统一为空的浏览方式
