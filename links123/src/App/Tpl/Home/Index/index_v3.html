@@ -49,7 +49,7 @@
 								<li><a target="_blank" href="/Members/Recommend">我的推荐</a></li>
 								<li><a target="_blank" href="/Members/Comment">我的说说</a></li>
 								<li><a href="/Members/Suggestion">留言板</a></li>
-								<li class="logout"><a target="_blank" href="/Members/Logout">退出</a></li>
+								<li class="logout"><a target="_blank" href="/Members/Logout">退出登录</a></li>
 							</ul>
 						</div>
 					</div>
@@ -75,7 +75,30 @@
 							<img class="m" src="__PUBLIC__/IndexV3/skins/q/03_m.jpg" alt="" />
 						</a>
 					</li>
-					<li class="add"><a href="javascript:;">+</a></li>
+					<li class="add">
+						<div class="skins">
+							<ul class="skins-style">
+								<volist name="skinCategory" id="vo">
+									<li data-id="{$vo.categoryId}"><p><img src="{$vo.categoryImg}" alt="" /></p></li>
+								</volist>
+							</ul>
+							<dl class="skins-all">
+								<volist name="skinList" id="vo" key="k">
+									<dd class="sa{$k}">
+										<ul>
+											<volist name="vo" id="skin">
+												<li data-bg="{$skin.skin}" data-theme="dark" data-id="{$skin.skinId}" <if condition="$skin.skinId eq $skinId">class="added"</if>>
+													<p><img src="{$skin.smallSkin}" alt="" /></p>
+													<s></s>
+													<p class="imgb"><img src="{$skin.middleSkin}" /></p>
+												</li>
+											</volist>
+										</ul>
+									</dd>
+								</volist>
+							</dl>
+						</div>
+					</li>
 				</ul>
 			</div>
 		</div>

@@ -85,7 +85,7 @@ $(function() {
 
     //答题按钮点击事件
     $("#J_answerButton").click(function() {
-
+        
 //        $(this).toggleClass("current");
         if ($(".answer").is(":visible")) {
             $("#J_answerButton").removeClass("current");
@@ -96,7 +96,9 @@ $(function() {
                 if ($("#J_media_div").attr("play_type") == 1 || $("#J_media_div").attr("play_type") == 2) {
                     $("#J_media_div").css({'display': 'block', 'position': '', 'left': ''}).show();
                 } else if ($("#J_media_div").attr("play_type") == 4) {
-                    $("#Links123Player")[0].playPause();
+                    if($("#Links123Player")[0]){
+                        $("#Links123Player")[0].playPause();
+                    }
                 } else if ($("#J_media_div").attr("data_isaboutvideo") == 1) {
                     $(".J_player").show();
                 } else {
@@ -317,23 +319,29 @@ $(function() {
 //            return false;
 //        }
         var targetClassName = "J_level";
-        var targetObjectClassName = "J_object";
+        //var targetObjectClassName = "J_object";
         var next_level_li;
         var viewType = $(".J_tabs a.current").attr("value");
         if (viewType == 2) {
             targetClassName = "J_subjectDifficulty";
-            targetObjectClassName = "J_subject";
+            //targetObjectClassName = "J_subject";
         } else if (viewType == 3) {
             targetClassName = "J_recommendDifficulty";
-            targetObjectClassName = "J_recommend";
+            //targetObjectClassName = "J_recommend";
         } else if (viewType == 5) {
-            targetObjectClassName = "J_ted";
+            //targetObjectClassName = "J_ted";
             targetClassName = "J_tedDifficulty";
         }
+        $("." + targetClassName + " .current").nextAll("li").each(function() {
+            if (!$(this).hasClass("not_allowed") && typeof next_level_li == "undefined") {
+                next_level_li = $(this);
+            }
+        })
+        /*
         //已是最高级
         if (($("." + targetClassName + " .current").index() + 1) == $("." + targetClassName + " li").size()) {
             if ($("." + targetObjectClassName + " .current").index() + 1 == $("." + targetObjectClassName + " li").size()) {
-                $("." + targetObjectClassName + " .current").prevAll("li").each(function() {
+                $("." + targetObjectClassName + " .current").nextAll("li").each(function() {
                     if (!$(this).hasClass("not_allowed") && typeof next_level_li == "undefined") {
                         next_level_li = $(this);
                     }
@@ -351,7 +359,7 @@ $(function() {
                     next_level_li = $(this);
                 }
             });
-        }
+        }*/
         if (typeof next_level_li != "undefined") {
             next_level_li.click();
         } else {
