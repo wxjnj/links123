@@ -731,6 +731,10 @@ function requestQuestion(type, clickObject, media_id) {
                         if (viewType == 4) {
                             content = "已经第一个了，往后看看吧！";
                         }
+                    }else{
+                        if (data.question.play_code==false) {
+                            window.location.reload();
+                        }
                     }
                     if (content) {
                         var top = $(".videoplay").offset().top - 30;

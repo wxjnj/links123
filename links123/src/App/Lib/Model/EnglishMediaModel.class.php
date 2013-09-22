@@ -360,6 +360,77 @@ class EnglishMediaModel extends CommonModel {
         return intval($num);
     }
 
+    public function analysisMediaPlayCode(&$media) {
+        if (strpos($media['media_source_url'], 'http://www.youtube.com') !== FALSE && $media['media_local_path']) {
+            $media['priority_type'] = 2;
+        }
+        $media['isAboutVideo'] = 0;
+        //优先播放本地，且本地视频存在
+        if ($media['priority_type'] == 2 && $media['media_local_path']) {
+            $media['play_type'] = 4;
+            $media['play_code'] = $media['media_local_path'];
+            $media['isAboutVideo'] = 0;
+            return;
+        } else {
+            //play_code为空，则进行视频解析
+            if (!$media['play_code']) {
+                //视频解析库
+                import("@.ORG.VideoHooks");
+                $videoHooks = new VideoHooks();
+
+                $media['media_source_url'] = trim(str_replace(' ', '', $media['media_source_url']));
+                $videoInfo = $videoHooks->analyzer($media['media_source_url']);
+
+                $play_code = $videoInfo['swf'];
+
+                $media_thumb_img = $videoInfo['img'];
+
+                //解析成功，保存视频解析地址
+                if (!$videoHooks->getError() && $play_code) {
+
+                    $play_type = $videoInfo['media_type'];
+                    $saveData = array(
+                        'id' => $media['media_id'],
+                        'media_thumb_img' => $media_thumb_img,
+                        'play_code' => $play_code,
+                        'play_type' => $play_type
+                    );
+                    D("EnglishMedia")->save($saveData);
+                    $media['play_code'] = $play_code;
+
+                    $media['media_thumb_img'] = $media_thumb_img;
+
+                    $media['play_type'] = $play_type;
+                    //判断是否为about.com视频
+                    if (strpos($media['media_source_url'], 'http://video.about.com') !== FALSE && $media['target'] == 1) {
+                        $media['isAboutVideo'] = 1;
+                    }
+                    if (strpos($media['media_source_url'], 'britishcouncil.org') !== FALSE) {
+                        $media['play_code'] = preg_replace('/<!--<!\[endif\]-->(.*)/is', '</object></object>', $media['play_code']);
+                        $media['play_code'] = str_replace('width=585&amp;height=575', 'width=100%&amp;height=100%', $media['play_code']);
+                    }
+                    $media['play_code'] = preg_replace(array('/width="(.*?)"/is', '/height="(.*?)"/is', '/width=300 height=280/is', '/width=600 height=400/is'), array('width="100%"', 'height="100%"', 'width="100%" height="100%"', 'width="100%" height="100%"'), $media['play_code']);
+                    return;
+                } else {
+                    if ($media['media_local_path']) {
+                        $media['priority_type'] = 2;
+                        $media['play_type'] = 4;
+                        $media['play_code'] = $media['media_local_path'];
+                        return;
+                    } else {
+                        $media['play_code'] = FALSE;
+                        $saveData = array(
+                            'id' => $media['media_id'],
+                            'status' => 0
+                        );
+                        D("EnglishMedia")->save($saveData);
+                    }
+                }
+            }
+        }
+        return;
+    }
+
 }
 
 ?>
