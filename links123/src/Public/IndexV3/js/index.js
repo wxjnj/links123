@@ -155,6 +155,7 @@ var Zld = { // 自留地
 			},
 			stop: function(event, ui) {
 				Zld.IsSortable = false;
+				$(ui.item).find('span').css('cursor', 'pointer');
 			}
 		});
 		$('#J_sortable').sortable('enable');
