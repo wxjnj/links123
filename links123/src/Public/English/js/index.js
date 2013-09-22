@@ -50,19 +50,11 @@ $(function() {
     easyloader.load('messager');
     $(".J_tabs a").click(function() {
         if ($(this).hasClass("current")) {
-            var top = $(this).offset().top - 50;
-            var left = $(this).offset().left - 10;
-            $.messager.show({
-                msg: "<span  class='messager_span'>您已在: " + $(this).text() + "</span>",
-                showType: 'fade',
-                width: 175,
-                height: 45,
-                timeout: 2000,
-                style: {
-                    left: left,
-                    top: top
-                }
-            });
+            var style = {
+                'top': $(".videottl").offset().top-30,
+                'left':"45%"
+            };
+            showMsg("您已在: " + $(this).text(), style, 2000);
             return false;
         } else if ($(this).hasClass("grey")) {
             var top = $(this).offset().top - 15;
@@ -81,7 +73,6 @@ $(function() {
         next_question_lvlup = true;
     }
     $(".scrollable").scrollable({circular: true});
-    //$(".grade li:eq(13)").css("margin-left", level_margin_index + "px");
 
     //答题按钮点击事件
     $("#J_answerButton").click(function() {
@@ -109,14 +100,6 @@ $(function() {
             $(this).text(' 　答  题');
         } else { //这里先隐藏后展开
             //播放的视频停止
-            /*videoStr = '';
-             videoStr += '<object id="J_media_object" height="100%" width="100%" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">';
-             videoStr += '<param name="wmode" value="transparent">';
-             videoStr += '<param name="movie" value="' + play_code + '">';
-             videoStr += '<embed name="swf" menu="true" height="100%" width="100%" play="false" type="application/x-shockwave-flash" allowfullscreen="true" wmode="transparent" src="' + play_code + '">';
-             videoStr += '</object>';
-             $('#J_media_div').html(videoStr);*/
-
             if ($("#J_media_div").attr("play_type") == 4) {
                 if (playState == "playing") {
                     $("#Links123Player")[0].playPause();
@@ -143,22 +126,13 @@ $(function() {
             fadeTip("<span  class='messager_span'>Coming soon...</span>", top, left);
             return false;
         } else if ($(this).hasClass("current")) {
-            var top = $(this).offset().top - 50;
-            var left = $(this).offset().left - 10;
-            $.messager.show({
-                msg: "<span  class='messager_span'>您已在科目: " + $(this).text() + "</span>",
-                showType: 'fade',
-                width: 175,
-                height: 45,
-                timeout: 2000,
-                style: {
-                    left: left,
-                    top: top
-                }
-            });
+            var style = {
+                'top': $(".videottl").offset().top-30,
+                'left': "45%"
+            };
+            showMsg("您已在科目: " + $(this).text(), style, 2000);
             return false;
         }
-        //$(this).addClass("current").siblings("li").removeClass("current");
         requestQuestion("object", $(this));
 
     });
@@ -170,20 +144,11 @@ $(function() {
             fadeTip("<span  class='messager_span'>Coming soon...</span>", top, left);
             return false;
         } else if ($(this).hasClass("current")) {
-
-            var top = $(this).offset().top - 50;
-            var left = $(this).offset().left - 10;
-            $.messager.show({
-                msg: "<span  class='messager_span'>您已在等级: " + $(this).text() + "</span>",
-                showType: 'fade',
-                width: 155,
-                height: 45,
-                timeout: 2000,
-                style: {
-                    left: left,
-                    top: top
-                }
-            });
+            var style = {
+                'top': $(".videottl").offset().top-30,
+                'left': "45%"
+            };
+            showMsg("您已在等级: " + $(this).text(), style, 2000);
             return false;
         }
 
@@ -198,20 +163,11 @@ $(function() {
             fadeTip("<span  class='messager_span'>Coming soon...</span>", top, left);
             return false;
         } else if ($(this).hasClass("current")) {
-
-            var top = $(this).offset().top - 50;
-            var left = $(this).offset().left - 10;
-            $.messager.show({
-                msg: "<span  class='messager_span'>您已在专题: " + $(this).text() + "</span>",
-                showType: 'fade',
-                width: 175,
-                height: 45,
-                timeout: 2000,
-                style: {
-                    left: left,
-                    top: top
-                }
-            });
+            var style = {
+                'top': $(".videottl").offset().top-30,
+                'left': "45%"
+            };
+            showMsg("您已在专题: " + $(this).text(), style, 2000);
             return false;
         }
         requestQuestion("subject", $(this));
@@ -225,20 +181,11 @@ $(function() {
             fadeTip("<span  class='messager_span'>Coming soon...</span>", top, left);
             return false;
         } else if ($(this).hasClass("current")) {
-
-            var top = $(this).offset().top - 50;
-            var left = $(this).offset().left - 10;
-            $.messager.show({
-                msg: "<span  class='messager_span'>您已在: " + $(this).text() + "</span>",
-                showType: 'fade',
-                width: 175,
-                height: 45,
-                timeout: 2000,
-                style: {
-                    left: left,
-                    top: top
-                }
-            });
+            var style = {
+                'top': $(".videottl").offset().top-30,
+                'left': "45%"
+            };
+            showMsg("您已在: " + $(this).text(), style, 2000);
             return false;
         }
         requestQuestion("recommend", $(this));
@@ -252,20 +199,12 @@ $(function() {
             fadeTip("<span  class='messager_span'>Coming soon...</span>", top, left);
             return false;
         } else if ($(this).hasClass("current")) {
-
-            var top = $(this).offset().top - 50;
-            var left = $(this).offset().left - 10;
-            $.messager.show({
-                msg: "<span  class='messager_span'>您已在: " + $(this).text() + "</span>",
-                showType: 'fade',
-                width: 175,
-                height: 45,
-                timeout: 2000,
-                style: {
-                    left: left,
-                    top: top
-                }
-            });
+            
+            var style = {
+                'top': $(".videottl").offset().top-30,
+                'left': "45%"
+            };
+            showMsg("您已在: " + $(this).text(), style, 2000);
             return false;
         }
         requestQuestion("ted", $(this));
@@ -279,20 +218,11 @@ $(function() {
             fadeTip("<span  class='messager_span'>Coming soon...</span>", top, left);
             return false;
         } else if ($(this).hasClass("current")) {
-
-            var top = $(this).offset().top - 50;
-            var left = $(this).offset().left - 10;
-            $.messager.show({
-                msg: "<span  class='messager_span'>您已在难度: " + $(this).text() + "</span>",
-                showType: 'fade',
-                width: 175,
-                height: 45,
-                timeout: 2000,
-                style: {
-                    left: left,
-                    top: top
-                }
-            });
+            var style = {
+                'top': $(".videottl").offset().top-30,
+                'left': "45%"
+            };
+            showMsg("您已在难度: " + $(this).text(), style, 2000);
             return false;
         }
         requestQuestion("difficulty", $(this));
@@ -315,21 +245,14 @@ $(function() {
 
     //升级事件
     $("#J_levelUpButton").live('click', function() {
-//        if ($(".J_tabs a.current").attr("value") != 1) {
-//            return false;
-//        }
         var targetClassName = "J_level";
-        //var targetObjectClassName = "J_object";
         var next_level_li;
         var viewType = $(".J_tabs a.current").attr("value");
         if (viewType == 2) {
             targetClassName = "J_subjectDifficulty";
-            //targetObjectClassName = "J_subject";
         } else if (viewType == 3) {
             targetClassName = "J_recommendDifficulty";
-            //targetObjectClassName = "J_recommend";
         } else if (viewType == 5) {
-            //targetObjectClassName = "J_ted";
             targetClassName = "J_tedDifficulty";
         }
         $("." + targetClassName + " .current").nextAll("li").each(function() {
@@ -337,54 +260,19 @@ $(function() {
                 next_level_li = $(this);
             }
         })
-        /*
-         //已是最高级
-         if (($("." + targetClassName + " .current").index() + 1) == $("." + targetClassName + " li").size()) {
-         if ($("." + targetObjectClassName + " .current").index() + 1 == $("." + targetObjectClassName + " li").size()) {
-         $("." + targetObjectClassName + " .current").nextAll("li").each(function() {
-         if (!$(this).hasClass("not_allowed") && typeof next_level_li == "undefined") {
-         next_level_li = $(this);
-         }
-         });
-         } else {
-         $("." + targetObjectClassName + " .current").nextAll("li").each(function() {
-         if (!$(this).hasClass("not_allowed") && typeof next_level_li == "undefined") {
-         next_level_li = $(this);
-         }
-         });
-         }
-         } else {
-         $("." + targetClassName + " .current").nextAll("li").each(function() {
-         if (!$(this).hasClass("not_allowed") && typeof next_level_li == "undefined") {
-         next_level_li = $(this);
-         }
-         });
-         }*/
         if (typeof next_level_li != "undefined") {
             next_level_li.click();
         } else {
-            var top = $(".videoplay").offset().top - 30;
-            var left = $(".videoplay").offset().left + $(".videoplay").width() / 2 - 80;
-            $.messager.show({
-                msg: "<span  class='messager_span'>最高级别，无法升级！</span>",
-                showType: 'fade',
-                width: 155,
-                height: 45,
-                timeout: 2000,
-                style: {
-                    left: left,
-                    top: top
-                }
-            });
+            var style = {
+                'top': $(".videottl").offset().top-30,
+                'left': "45%"
+            };
+            showMsg("最高级别，无法升级！", style, 2000);
         }
     });
 
     //降级事件
-    //bindLevelDownEvent();
     $("#J_levelDownButton").live('click', function() {
-//        if ($(".J_tabs a.current").attr("value") != 1) {
-//            return false;
-//        }
         var targetClassName = "J_level";
         var prev_level_li;
         var viewType = $(".J_tabs a.current").attr("value");
@@ -403,19 +291,11 @@ $(function() {
         if (typeof prev_level_li != "undefined") {
             prev_level_li.click();
         } else {
-            var top = $(".videoplay").offset().top - 30;
-            var left = $(".videoplay").offset().left + $(".videoplay").width() / 2 - 80;
-            $.messager.show({
-                msg: "<span  class='messager_span'>最小级别，无法降级！</span>",
-                showType: 'fade',
-                width: 155,
-                height: 45,
-                timeout: 2000,
-                style: {
-                    left: left,
-                    top: top
-                }
-            });
+            var style = {
+                'top': $(".videottl").offset().top-30,
+                'left': "45%"
+            };
+            showMsg("最小级别，无法降级！", style, 2000);
         }
     });
 
@@ -428,22 +308,13 @@ $(function() {
             fadeTip("<span  class='messager_span'>Coming soon...</span>", top, left);
             return false;
         } else if ($(this).hasClass("current")) {
-            var top = $(".menuleft").offset().top - 50;
-            var left = $(".menuleft").offset().left + 23;
-            $.messager.show({
-                msg: "<span  class='messager_span'>您已在" + trim_all($(this).children("span").text()) + "状态</span>",
-                showType: 'fade',
-                width: 120,
-                height: 45,
-                timeout: 2000,
-                style: {
-                    left: left,
-                    top: top
-                }
-            });
+            var style = {
+                'top': $(".videottl").offset().top-30,
+                'left': "45%"
+            };
+            showMsg("您已在" + trim_all($(this).children("span").text()) + "状态", style, 2000);
             return false;
         }
-        //$(this).addClass("current").siblings("li.class1").removeClass("current");
         requestQuestion("category", $(this));
     });
     //
@@ -455,19 +326,11 @@ $(function() {
             fadeTip("<span  class='messager_span'>Coming soon...</span>", top, left);
             return false;
         } else if ($(this).hasClass("current")) {
-            var top = $(".menuleft").offset().top - 50;
-            var left = $(".menuleft").offset().left + 23;
-            $.messager.show({
-                msg: "<span  class='messager_span'>您已在" + trim_all($(this).children("span").text()) + "状态</span>",
-                showType: 'fade',
-                width: 120,
-                height: 45,
-                timeout: 2000,
-                style: {
-                    left: left,
-                    top: top
-                }
-            });
+            var style = {
+                'top': $(".videottl").offset().top-30,
+                'left': "45%"
+            };
+            showMsg("您已在" + trim_all($(this).children("span").text()) + "状态", style, 2000);
             return false;
         }
         if ($(this).attr("value") == 2) {
@@ -475,7 +338,6 @@ $(function() {
             var left = $(this).offset().left;
             fadeTip("<span  class='messager_span'>施工中...</span>", top, left);
         }
-        //$(this).addClass("current").siblings("li.class2").removeClass("current");
         requestQuestion("category", $(this));
     });
     //
@@ -487,22 +349,13 @@ $(function() {
             fadeTip("<span  class='messager_span'>Coming soon...</span>", top, left);
             return false;
         } else if ($(this).hasClass("current")) {
-            var top = $(".menuleft").offset().top - 50;
-            var left = $(".menuleft").offset().left + 23;
-            $.messager.show({
-                msg: "<span  class='messager_span'>您已在" + trim_all($(this).children("span").text()) + "状态</span>",
-                showType: 'fade',
-                width: 120,
-                height: 45,
-                timeout: 2000,
-                style: {
-                    left: left,
-                    top: top
-                }
-            });
+            var style = {
+                'top': $(".videottl").offset().top-30,
+                'left': "45%"
+            };
+            showMsg("您已在" + trim_all($(this).children("span").text()) + "状态", style, 2000);
             return false;
         }
-        //$(this).addClass("current").siblings("li.class3").removeClass("current");
         requestQuestion("category", $(this));
     });
 
@@ -544,18 +397,12 @@ $(function() {
         var type = 0;	//0=>视频错误  1=>建议
         var media_html = $('.video_div').html();
         var tip_type = $(this).attr('data-type');
-
-        $.messager.show({
-            msg: "<span class='messager_span'>感谢您的反馈,我们会尽快处理！</span>",
-            showType: 'fade',
-            width: 215,
-            height: 45,
-            timeout: 2000,
-            style: {
-                left: '75%',
-                top: '0'
-            }
-        });
+        
+        var style = {
+                'top': $(".videottl").offset().top-30,
+                'left': "45%"
+            };
+        showMsg("感谢您的反馈,我们会尽快处理！", style, 2000);
 
         $.ajax({
             url: URL + '/feedback',
@@ -594,20 +441,11 @@ $(function() {
 function requestQuestion(type, clickObject, media_id) {
     //如果有题目正在请求，中断此次请求并提示（修改为abort ajax）
     if (typeof ajaxRequest != "undefined") {
-        var top = $(".videoplay").offset().top - 30;
-        var left = $(".videoplay").offset().left + $(".videoplay").width() / 2 - 80;
-        $.messager.show({
-            msg: "<span class='messager_span'>题目正在加载，请稍后...</span>",
-            showType: 'fade',
-            width: 175,
-            height: 45,
-            timeout: 2000,
-            style: {
-                left: left,
-                top: top
-            }
-        });
-        //return false;
+        var style = {
+            'top': $(".videottl").offset().top-30,
+            'left':"45%"
+        };
+        showMsg("题目正在加载，请稍后...", style, 2000);
         ajaxRequest.abort();
     }
     //查看类型
@@ -699,18 +537,11 @@ function requestQuestion(type, clickObject, media_id) {
             if (msg) {
                 var data = msg.data;
                 if (data == null) {
-                    $.messager.show({
-                        msg: "<span  class='messager_span'>该题目不存在，请重试...</span>",
-                        showType: 'fade',
-                        width: 180,
-                        height: 45,
-                        timeout: 2000,
-                        style: {
-                            left: '50%',
-                            top: '4%'
-                        }
-                    });
-
+                    var style = {
+                        'top': $(".videottl").offset().top-30,
+                        'left':"45%"
+                    };
+                    showMsg("该题目不存在，请重试...", style, 2000);
                     ajaxRequest = undefined;
                     return false;
                 }
@@ -737,19 +568,11 @@ function requestQuestion(type, clickObject, media_id) {
                         }
                     }
                     if (content) {
-                        var top = $(".videoplay").offset().top - 30;
-                        var left = $(".videoplay").offset().left + $(".videoplay").width() / 2 - 90;
-                        $.messager.show({
-                            msg: "<span class='messager_span'>" + content + "</span>",
-                            showType: 'fade',
-                            width: 200,
-                            height: 45,
-                            timeout: 2000,
-                            style: {
-                                left: left,
-                                top: top
-                            }
-                        });
+                        var style = {
+                            'top': $(".videottl").offset().top-30,
+                            'left':"45%"
+                        };
+                        showMsg(content, style, 2000);
                     }
 
                     if (!data.question.id) {
@@ -874,26 +697,19 @@ function requestQuestion(type, clickObject, media_id) {
                 if (viewType == 1 && next_question_lvlup) {
                     //
                     //提示可以升级了
-                    var top = $(".videoplay").offset().top - 30;
-                    var left = $(".videoplay").offset().left + $(".videoplay").width() / 2 - 75;
-                    $.messager.show({
-                        msg: "<span  class='messager_span'>恭喜，你可以升级了</span>",
-                        showType: 'fade',
-                        width: 175,
-                        height: 45,
-                        timeout: 2000,
-                        style: {
-                            left: left,
-                            top: top
-                        }
-                    });
+                    var style = {
+                        'top': $(".videottl").offset().top-30,
+                        'left':"45%"
+                    };
+                    showMsg("恭喜，你可以升级了", style, 2000);
                 }
 
                 $("#J_currentRice").text(data['user_count_info']['right_num'] * 100);
                 if (data['user_count_info']['right_num'] == 0) {
+                    $("#J_riceDiv").attr("src", "");
                     $("#J_riceDiv").hide();
                 } else {
-                    $("#J_riceDiv").attr("src", PUBLIC + "/English/images/rice" + data['user_count_info']['right_num'] * 100 + ".png");
+                    $("#J_riceDiv").attr("src", PUBLIC + "/English/images/rice" + data['user_count_info']['right_num'] * 100 + ".png?20130922");
                     $("#J_riceDiv").show();
                 }
                 //$("#J_riceDiv").removeClass().addClass("rice_" + data['user_count_info']['right_num'] * 100);
@@ -1133,9 +949,10 @@ function bindOptionClickEvent() {
                 //$("#J_rightNum").text(user_count_info.right_num);
                 $("#J_currentRice").text(user_count_info.right_num * 100);
                 if (data['user_count_info']['right_num'] == 0) {
+                    $("#J_riceDiv").attr("src", "");
                     $("#J_riceDiv").hide();
                 } else {
-                    $("#J_riceDiv").attr("src", PUBLIC + "/English/images/rice" + data['user_count_info']['right_num'] * 100 + ".png");
+                    $("#J_riceDiv").attr("src", PUBLIC + "/English/images/rice" + data['user_count_info']['right_num'] * 100 + ".png?20130922");
                     $("#J_riceDiv").show();
                 }
                 //$("#J_riceDiv").removeClass().addClass("rice_" + user_count_info.right_num * 100);
@@ -1147,19 +964,11 @@ function bindOptionClickEvent() {
                 $("#J_totalRice").text(english_user_info.total_rice);
 
                 if (data.level_up) {
-                    var top = $(".videoplay").offset().top - 30;
-                    var left = $(".videoplay").offset().left + $(".videoplay").width() / 2 - 80;
-                    $.messager.show({
-                        msg: "<span  class='messager_span'>恭喜，你可以升级了</span>",
-                        showType: 'fade',
-                        width: 175,
-                        height: 45,
-                        timeout: 2000,
-                        style: {
-                            left: left,
-                            top: top
-                        }
-                    });
+                    var style = {
+                        'top': $(".videottl").offset().top-30,
+                        'left':"45%"
+                    };
+                    showMsg("恭喜，你可以升级了", style, 2000);
                 }
                 //最佳科目和等级
 //                            if(english_user_info!=null){
@@ -1198,33 +1007,17 @@ function bindOptionClickEvent() {
                         next_question_lvlup = false;
                         content = "本题已做对" + english_user_record.right_num + "次，换新题吧";
                     }
-                    var top = $(".videoplay").offset().top - 30;
-                    var left = $(".videoplay").offset().left + $(".videoplay").width() / 2 - 100;
-                    $.messager.show({
-                        msg: "<span  class='messager_span'>" + content + "</span>",
-                        showType: 'fade',
-                        width: 200,
-                        height: 45,
-                        timeout: 2000,
-                        style: {
-                            left: left,
-                            top: top
-                        }
-                    });
+                    var style = {
+                        'top': $(".videottl").offset().top-30,
+                        'left':"45%"
+                    };
+                    showMsg(content, style, 2000);
                 } else if (english_user_record.is_right == 0 && english_user_record.error_num >= 2) {
-                    var top = $(".videoplay").offset().top - 30;
-                    var left = $(".videoplay").offset().left + $(".videoplay").width() / 2 - 65;
-                    $.messager.show({
-                        msg: "<span  class='messager_span'>唉，又错了！</span>",
-                        showType: 'fade',
-                        width: 125,
-                        height: 45,
-                        timeout: 2000,
-                        style: {
-                            left: left,
-                            top: top
-                        }
-                    });
+                    var style = {
+                        'top': $(".videottl").offset().top-30,
+                        'left':"45%"
+                    };
+                    showMsg("唉，又错了！", style, 2000);
                 }
             }
             bindMediaTextClickEvent();
@@ -1481,38 +1274,22 @@ function bindMediaTextClickEvent(type) {
         $("#J_textButton").click(function() {
             var url = trim($(this).attr("media_text_url"));
             if (url == "") {
-                var top = $(".videoplay").offset().top - 30;
-                var left = $(".videoplay").offset().left + $(".videoplay").width() / 2 - 80;
-                $.messager.show({
-                    msg: "<span class='messager_span'>对不起，文本不存在!</span>",
-                    showType: 'fade',
-                    width: 155,
-                    height: 45,
-                    timeout: 2000,
-                    style: {
-                        left: left,
-                        top: top
-                    }
-                });
+                var style = {
+                    'top': $(".videottl").offset().top-30,
+                    'left':"45%"
+                };
+                showMsg("对不起，文本不存在!", style, 2000);
                 return false;
             }
             window.open(url, "_blank");
         })
     } else {
         $("#J_textButton").click(function() {
-            var top = $(".videoplay").offset().top - 30;
-            var left = $(".videoplay").offset().left + $(".videoplay").width() / 2 - 80;
-            $.messager.show({
-                msg: "<span class='messager_span'>答题后才能查看文本！</span>",
-                showType: 'fade',
-                width: 155,
-                height: 45,
-                timeout: 2000,
-                style: {
-                    left: left,
-                    top: top
-                }
-            });
+            var style = {
+                'top': $(".videottl").offset().top-30,
+                'left':"45%"
+            };
+            showMsg("答题后才能查看文本！", style, 2000);
             return false;
         })
     }
@@ -1654,8 +1431,9 @@ function fadeTip(content, top, left, time, index) {
 }
 
 function showMsg(content, style, time, is_alert) {
+    clearTimeout(timer);
     $('.J_fadeDiv').remove();
-    style = arguments[1] ? arguments[1] : {top: 0, right: 0, index: 99, witdh: "auto"};
+    style = arguments[1] ? arguments[1] : {top: "30%", left: "45%", index: 99, witdh: "auto"};
     time = arguments[2] ? arguments[2] : 2000;
     is_alert = arguments[3] ? arguments[3] : false;
 
@@ -1671,7 +1449,7 @@ function showMsg(content, style, time, is_alert) {
     }
     div.find(".autobox-ct").css("width", div.width() - 34);
     div.fadeIn(1000);
-    setTimeout("$('.J_fadeDiv').fadeOut(1000,function(){$('.J_fadeDiv').remove();})", time);
+    timer = setTimeout("$('.J_fadeDiv').fadeOut(1000,function(){$('.J_fadeDiv').remove();})", time);
 }
 function bindSpeakListenSwitchEvent() {
     $(".J_speakButtons").click(function() {

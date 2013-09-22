@@ -396,6 +396,8 @@ class EnglishViewRecordModel extends CommonModel {
     public function getUserViewQuestionLastId($object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern, $extend_condition = "") {
         //试题id数组初始化
         $question_ids = array();
+        $map['media.status'] = 1;
+        $map['question.status'] = 1;
         if (intval($object)) {
             if (D("EnglishObject")->where("id=" . intval($object))->getField("name") == "综合") {
                 $object = 0;

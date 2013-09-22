@@ -1400,7 +1400,6 @@ class IndexAction extends EnglishAction {
               } else if ($viewType == 1) {
               $ret['user_count_info'] = $englishUserCountModel->getEnglishUserCountInfo($viewType, $object, $level, 0, 0, 0, $voice, $target);
               } */
-
             $englishMediaModel->analysisMediaPlayCode($ret['question']);
             //
             //保存历史记录
