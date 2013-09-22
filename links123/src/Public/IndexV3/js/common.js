@@ -96,6 +96,10 @@ var User = {
 				$(this).css('background', '#eeefef');
 			});
 
+			$(document).on('mouseenter', '#J_Reg input[name="user"], #J_Reg input[name="password"], #J_Reg input[name="email"], #J_Reg input[name="vcode"]', function(){
+				$(this).select();
+			});
+
 			var _loading = false;
 
 			obj.find('.lkd-reg').on('click', function(){
@@ -234,6 +238,10 @@ var User = {
 				$(this).css('background', '#eeefef');
 			});
 
+			$(document).on('mouseenter', '#J_Login input[name="user"], #J_Login input[name="password"]', function(){
+				$(this).select();
+			});
+
 			obj.find('.lkd-reg').on('click', function(){
 				var objusername = obj.find('input[name="user"]');
 				var objpassword = obj.find('input[name="password"]');
@@ -340,6 +348,10 @@ var User = {
 				$(this).css('background', '#fff');
 			}).on('blur', function(){
 				$(this).css('background', '#eeefef');
+			});
+
+			$(document).on('mouseenter', '#J_FindPass input[name="email"], #J_FindPass input[name="vcode"]', function(){
+				$(this).select();
 			});
 
 			var _loading = false;
@@ -550,6 +562,40 @@ var Theme  = {
 		$('#J_Styles li.add a').on('click', function(){
 			alert('coming soon');
 			return false;
+		});
+
+		$('.skins-style, .skins-all').on('mousemove', function(){
+			return false;
+		});
+
+		$('#J_Styles li.add').on('mousemove', function(){
+			$('.skins-style').show();
+		}).on('mouseleave', function(){
+			$('.skins-style').hide();
+			$('.skins-all dd').hide();
+		});
+		$('.skins-style li').on('mouseover', function(){
+			var id = $(this).data('id');
+			$(this).toggleClass('on');
+			$('.sa'+id).show().siblings().hide();
+		});
+		$('.skins-all li').on('click', function(){
+			var bg = $(this).data('bg');
+			var theme = $(this).data('theme');
+			var id = $(this).data('id');
+
+			self.SetBackGround(id, theme, bg);
+
+			$(this).addClass('added').siblings().removeClass('added');
+			$(this).find('.imgb').hide();
+			$(this).find('s').hide();
+			$.post(URL + "/updateSkin", {'skinId': $(this).data('id')});
+		}).on('mouseenter', function(){
+			$(this).find('.imgb').show();
+			$(this).find('s').show();
+		}).on('mouseleave', function(){
+			$(this).find('.imgb').hide();
+			$(this).find('s').hide();
 		});
 	},
 	SetBackGround: function(id, tm, bg){

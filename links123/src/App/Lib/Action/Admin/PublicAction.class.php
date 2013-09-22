@@ -484,8 +484,8 @@ class PublicAction extends BaseAction {
     public function clearCache($path=null) {
     	//先删除目录下的文件：
     	if ( empty($path) ) {
-    		$path = realpath('./App/Runtime/runtime.txt');
-    		$path = str_replace('runtime.txt', '', $path);
+    		$path = realpath('./App/Runtime');
+    		//$path = str_replace('Runtime.txt', '', $path);
     	}
     	$dh = opendir($path);
     	while ($file = readdir($dh)) {
@@ -508,10 +508,12 @@ class PublicAction extends BaseAction {
     	}
     	closedir($dh);
     	//删除当前文件夹：
-    	if(rmdir($path)) {
-    		echo "<span style='color:blue'>dir</span>&nbsp;&nbsp;".$path." <span style='color:green'>clear OK!</span><br />";
-    	} else {
-    		echo "<span style='color:blue'>dir</span>&nbsp;&nbsp;".$path." <span style='color:red'>clear faild!</span><br />";
+    	if(strpos($path, '\App\Runtime/')) {
+	    	if(rmdir($path)) {
+	    		echo "<span style='color:blue'>dir</span>&nbsp;&nbsp;".$path." <span style='color:green'>clear OK!</span><br />";
+	    	} else {
+	    		echo "<span style='color:blue'>dir</span>&nbsp;&nbsp;".$path." <span style='color:red'>clear faild!</span><br />";
+	    	}
     	}
     }
 
