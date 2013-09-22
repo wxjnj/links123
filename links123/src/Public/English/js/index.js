@@ -85,7 +85,7 @@ $(function() {
 
     //答题按钮点击事件
     $("#J_answerButton").click(function() {
-        
+
 //        $(this).toggleClass("current");
         if ($(".answer").is(":visible")) {
             $("#J_answerButton").removeClass("current");
@@ -96,7 +96,7 @@ $(function() {
                 if ($("#J_media_div").attr("play_type") == 1 || $("#J_media_div").attr("play_type") == 2) {
                     $("#J_media_div").css({'display': 'block', 'position': '', 'left': ''}).show();
                 } else if ($("#J_media_div").attr("play_type") == 4) {
-                    if($("#Links123Player")[0]){
+                    if ($("#Links123Player")[0]) {
                         $("#Links123Player")[0].playPause();
                     }
                 } else if ($("#J_media_div").attr("data_isaboutvideo") == 1) {
@@ -338,28 +338,28 @@ $(function() {
             }
         })
         /*
-        //已是最高级
-        if (($("." + targetClassName + " .current").index() + 1) == $("." + targetClassName + " li").size()) {
-            if ($("." + targetObjectClassName + " .current").index() + 1 == $("." + targetObjectClassName + " li").size()) {
-                $("." + targetObjectClassName + " .current").nextAll("li").each(function() {
-                    if (!$(this).hasClass("not_allowed") && typeof next_level_li == "undefined") {
-                        next_level_li = $(this);
-                    }
-                });
-            } else {
-                $("." + targetObjectClassName + " .current").nextAll("li").each(function() {
-                    if (!$(this).hasClass("not_allowed") && typeof next_level_li == "undefined") {
-                        next_level_li = $(this);
-                    }
-                });
-            }
-        } else {
-            $("." + targetClassName + " .current").nextAll("li").each(function() {
-                if (!$(this).hasClass("not_allowed") && typeof next_level_li == "undefined") {
-                    next_level_li = $(this);
-                }
-            });
-        }*/
+         //已是最高级
+         if (($("." + targetClassName + " .current").index() + 1) == $("." + targetClassName + " li").size()) {
+         if ($("." + targetObjectClassName + " .current").index() + 1 == $("." + targetObjectClassName + " li").size()) {
+         $("." + targetObjectClassName + " .current").nextAll("li").each(function() {
+         if (!$(this).hasClass("not_allowed") && typeof next_level_li == "undefined") {
+         next_level_li = $(this);
+         }
+         });
+         } else {
+         $("." + targetObjectClassName + " .current").nextAll("li").each(function() {
+         if (!$(this).hasClass("not_allowed") && typeof next_level_li == "undefined") {
+         next_level_li = $(this);
+         }
+         });
+         }
+         } else {
+         $("." + targetClassName + " .current").nextAll("li").each(function() {
+         if (!$(this).hasClass("not_allowed") && typeof next_level_li == "undefined") {
+         next_level_li = $(this);
+         }
+         });
+         }*/
         if (typeof next_level_li != "undefined") {
             next_level_li.click();
         } else {
@@ -731,6 +731,10 @@ function requestQuestion(type, clickObject, media_id) {
                         if (viewType == 4) {
                             content = "已经第一个了，往后看看吧！";
                         }
+                    } else {
+                        if (data.question.play_code == false) {
+                            window.location.reload();
+                        }
                     }
                     if (content) {
                         var top = $(".videoplay").offset().top - 30;
@@ -975,7 +979,7 @@ function requestQuestion(type, clickObject, media_id) {
                             videoStr += '<object id="J_media_object" height="100%" width="100%" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">';
                             videoStr += '<param name="wmode" value="transparent">';
                             videoStr += '<param name="movie" value="' + question.play_code + '">';
-                            videoStr += '<embed name="swf" menu="true" height="100%" width="100%" play="false" type="application/x-shockwave-flash" allowfullscreen="true" wmode="transparent" src="' + question.play_code + '">';
+                            videoStr += '<embed name="swf" menu="true" height="100%" width="100%" play="true" type="application/x-shockwave-flash" allowfullscreen="true" wmode="transparent" src="' + question.play_code + '">';
                             videoStr += '</object>';
                         }
                     }
@@ -1759,28 +1763,42 @@ function playLocalMedia(local_path) {
     }
     $("#J_media_div").html("");
     $("#J_media_div").css("visibility", "");
-    $("#J_media_div").html("<div id='flashContent'></div>");
-    var swfVersionStr = "10.2.0";
-    var xiSwfUrlStr = PUBLIC + "/Js/Links123Player/playerProductInstall.swf";
-    var flashvars = new Object();
-    flashvars.logging = true;
-    flashvars.playerMode = 1;//播放器播放类型，1一般看，2说力看，3说力说模式
-    flashvars.url = local_path;
-    var params = new Object();
-    params.quality = "high";
-    params.bgcolor = "#ffffff";
-    params.allowscriptaccess = "sameDomain";
-    params.allowfullscreen = "true";
-    var attributes = new Object();
-    attributes.id = "Links123Player";
-    attributes.name = "Links123Player";
-    attributes.align = "middle";
-    swfobject.embedSWF(
-            PUBLIC + "/Js/Links123Player/Links123Player.swf", "flashContent",
-            media_width, media_height,
-            swfVersionStr, xiSwfUrlStr,
-            flashvars, params, attributes);
-    swfobject.createCSS("#flashContent", "display:block;text-align:left;");
+    var type = /\.[^\.]+$/.exec(local_path);
+    type = type.toString().toLowerCase();
+    if (type == ".swf") {
+        var videoStr = "";
+        videoStr += '<object id="J_media_object" height="100%" width="100%" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">';
+        videoStr += '<param name="wmode" value="transparent">';
+        videoStr += '<param name="movie" value="' + local_path + '">';
+        videoStr += '<embed name="swf" menu="true" height="100%" width="100%" play="true" type="application/x-shockwave-flash" allowfullscreen="true" wmode="transparent" src="' + local_path + '">';
+        videoStr += '</object>';
+        $("#J_media_div").html(videoStr);
+        $("#J_media_div").attr("play_type", "0");
+    } else {
+        $("#J_media_div").html("<div id='flashContent'></div>");
+        var swfVersionStr = "10.2.0";
+        var xiSwfUrlStr = PUBLIC + "/Js/Links123Player/playerProductInstall.swf";
+        var flashvars = new Object();
+        flashvars.logging = true;
+        flashvars.playerMode = 1;//播放器播放类型，1一般看，2说力看，3说力说模式
+        flashvars.url = local_path;
+        var params = new Object();
+        params.quality = "high";
+        params.bgcolor = "#ffffff";
+        params.allowscriptaccess = "sameDomain";
+        params.allowfullscreen = "true";
+        var attributes = new Object();
+        attributes.id = "Links123Player";
+        attributes.name = "Links123Player";
+        attributes.align = "middle";
+        swfobject.embedSWF(
+                PUBLIC + "/Js/Links123Player/Links123Player.swf", "flashContent",
+                media_width, media_height,
+                swfVersionStr, xiSwfUrlStr,
+                flashvars, params, attributes);
+        swfobject.createCSS("#flashContent", "display:block;text-align:left;");
+        $("#J_media_div").attr("play_type", "4");
+    }
 }
 
 function resetMediaTitle() {

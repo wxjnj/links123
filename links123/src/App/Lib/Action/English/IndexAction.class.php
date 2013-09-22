@@ -230,90 +230,76 @@ class IndexAction extends EnglishAction {
             $question['object'] = $object;
         }
         $englishViewRecordModel->addViewRecord($viewType, $question);
-        /*
-          if ($viewType == 2) {
-          $englishViewRecordModel->addRecord($question['id'], 0, 0, $question['subject'], 0, $question['difficulty'], $question['voice'], $question['target'], $question['pattern'], $viewType);
-          } else if ($viewType == 3) {
-          $englishViewRecordModel->addRecord($question['id'], 0, 0, 0, $recommend, $question['difficulty'], $question['voice'], $$question['target'], $question['pattern'], $viewType);
-          } else if ($viewType == 1) {
-          $englishViewRecordModel->addRecord($question['id'], $question['level'], $object, 0, 0, 0, $question['voice'], $question['target'], $question['pattern'], $viewType);
-          } else if ($viewType == 4) {
-          $englishViewRecordModel->addRecord($question['id'], 0, 0, 0, 0, 0, $question['voice'], $question['target'], $question['pattern'], $viewType);
-          } */
-        //
         //获取用户统计信息
         $englishUserCountModel = D("EnglishUserCount");
         $user_count_info = $englishUserCountModel->getEnglishUserCount($viewType, $question);
-        /*
-          if ($viewType == 3) {
-          $user_count_info = $englishUserCountModel->getEnglishUserCountInfo($viewType, 0, 0, 0, $recommend, $difficulty, $voice, $targe);
-          } else if ($viewType == 2) {
-          $user_count_info = $englishUserCountModel->getEnglishUserCountInfo($viewType, 0, 0, $subject, 0, $difficulty, $voice, $target);
-          } else if ($viewType == 1) {
-          $user_count_info = $englishUserCountModel->getEnglishUserCountInfo($viewType, $object, $level, 0, 0, 0, $voice, $target);
-          } else if ($viewType == 4) {
-          $user_count_info = $englishUserCountModel->getEnglishUserCountInfo($viewType, 0, 0, 0, 0, 0, $voice, $target);
-          } */
         $this->assign("user_conut_info", $user_count_info);
+        //分析视频播放代码
+        $englishMediaModel->analysisMediaPlayCode($question);
+        /*
+          //play_code为空，则进行视频解析
+          if (!$question['play_code']) {
+          //视频解析库
+          import("@.ORG.VideoHooks");
+          $videoHooks = new VideoHooks();
 
-        //play_code为空，则进行视频解析
-        if (!$question['play_code']) {
-            //视频解析库
-            import("@.ORG.VideoHooks");
-            $videoHooks = new VideoHooks();
+          $question['media_source_url'] = trim(str_replace(' ', '', $question['media_source_url']));
+          $videoInfo = $videoHooks->analyzer($question['media_source_url']);
 
-            $question['media_source_url'] = trim(str_replace(' ', '', $question['media_source_url']));
-            $videoInfo = $videoHooks->analyzer($question['media_source_url']);
+          $play_code = $videoInfo['swf'];
 
-            $play_code = $videoInfo['swf'];
+          $media_thumb_img = $videoInfo['img'];
 
-            $media_thumb_img = $videoInfo['img'];
+          //解析成功，保存视频解析地址
+          if (!$videoHooks->getError() && $play_code) {
 
-            //解析成功，保存视频解析地址
-            if (!$videoHooks->getError() && $play_code) {
+          $play_type = $videoInfo['media_type'];
+          $saveData = array(
+          'id' => $question['media_id'],
+          'media_thumb_img' => $media_thumb_img,
+          'play_code' => $play_code,
+          'play_type' => $play_type
+          );
+          $englishMediaModel = $englishMediaModel ? $englishMediaModel : D("EnglishMedia");
+          $englishMediaModel->save($saveData);
+          }
 
-                $play_type = $videoInfo['media_type'];
-                $saveData = array(
-                    'id' => $question['media_id'],
-                    'media_thumb_img' => $media_thumb_img,
-                    'play_code' => $play_code,
-                    'play_type' => $play_type
-                );
-                $englishMediaModel = $englishMediaModel ? $englishMediaModel : D("EnglishMedia");
-                $englishMediaModel->save($saveData);
-            }
+          $question['play_code'] = $play_code;
 
-            $question['play_code'] = $play_code;
+          $question['media_thumb_img'] = $media_thumb_img;
 
-            $question['media_thumb_img'] = $media_thumb_img;
+          $question['play_type'] = $play_type;
+          }
 
-            $question['play_type'] = $play_type;
-        }
+          //判断是否为about.com视频
+          $isAboutVideo = 0;
+          if (strpos($question['media_source_url'], 'http://video.about.com') !== FALSE && $question['target'] == 1) {
+          $isAboutVideo = 1;
 
-        //判断是否为about.com视频
-        $isAboutVideo = 0;
-        if (strpos($question['media_source_url'], 'http://video.about.com') !== FALSE && $question['target'] == 1) {
-            $isAboutVideo = 1;
+          //about.com视频修改自动播放为false
+          //$question['media_url'] = str_replace('&autoStart=true', '&autoStart=false', $question['media_url']);
+          }
+          if (strpos($question['media_source_url'], 'http://www.youtube.com') !== FALSE) {
+          $question['priority_type'] = 2;
+          }
+          if ($question['play_code']) {
+          if (strpos($question['media_source_url'], 'britishcouncil.org') !== FALSE) {
+          $question['play_code'] = preg_replace('/<!--<!\[endif\]-->(.*)/is', '</object></object>', $question['play_code']);
+          $question['play_code'] = str_replace('width=585&amp;height=575', 'width=100%&amp;height=100%', $question['play_code']);
+          }
+          $question['play_code'] = preg_replace(array('/width="(.*?)"/is', '/height="(.*?)"/is', '/width=300 height=280/is', '/width=600 height=400/is'), array('width="100%"', 'height="100%"', 'width="100%" height="100%"', 'width="100%" height="100%"'), $question['play_code']);
+          }else{
+          if($question['priority_type'] == 2){
 
-            //about.com视频修改自动播放为false
-            //$question['media_url'] = str_replace('&autoStart=true', '&autoStart=false', $question['media_url']);
-        }
-        if (strpos($question['media_source_url'], 'http://www.youtube.com') !== FALSE) {
-                $question['priority_type'] = 2;
-        }
-        if ($question['play_code']) {
-            if (strpos($question['media_source_url'], 'britishcouncil.org') !== FALSE) {
-                $question['play_code'] = preg_replace('/<!--<!\[endif\]-->(.*)/is', '</object></object>', $question['play_code']);
-                $question['play_code'] = str_replace('width=585&amp;height=575', 'width=100%&amp;height=100%', $question['play_code']);
-            }
-            $question['play_code'] = preg_replace(array('/width="(.*?)"/is', '/height="(.*?)"/is', '/width=300 height=280/is', '/width=600 height=400/is'), array('width="100%"', 'height="100%"', 'width="100%" height="100%"', 'width="100%" height="100%"'), $question['play_code']);
-        }
-        //如果是优先本地播放，播放类型设置为4
-        if ($question['priority_type'] == 2 && $question['media_local_path']) {
-            $question['play_type'] = 4;
-            $question['play_code'] = $question['media_local_path'];
-            $isAboutVideo = 0;
-        }
+          }
+          }
+          //如果是优先本地播放，播放类型设置为4
+          if ($question['priority_type'] == 2 && $question['media_local_path']) {
+          $question['play_type'] = 4;
+          $question['play_code'] = $question['media_local_path'];
+          $isAboutVideo = 0;
+          }
+         */
         //
         //保存历史记录
         $user_last_select['voice'] = $voice;
@@ -353,7 +339,7 @@ class IndexAction extends EnglishAction {
 
         $this->assign("question", $question);
 
-        $this->assign('isAboutVideo', $isAboutVideo);
+        $this->assign('isAboutVideo', $question['isAboutVideo']);
         $this->display();
     }
 
@@ -1299,8 +1285,9 @@ class IndexAction extends EnglishAction {
                     $levelInfo = $levelModel->getDefaultLevelInfo($object, $voice, $target, $pattern);
                     $level = intval($levelInfo['id']) > 0 ? intval($levelInfo['id']) : 1;
                 }
+                $params['level'] = $level;
                 //防止等级下没有试题
-                $levelNum = $questionModel->getQuestionNum($object, $level, 0, 0, 0, $voice, $target, $pattern);
+                $levelNum = $questionModel->getQuestionNumber($params);
                 if ($levelNum == 0) {
                     $levelInfo = $levelModel->getDefaultLevelInfo($object, $voice, $target, $pattern);
                     $level = intval($levelInfo['id']) > 0 ? intval($levelInfo['id']) : 1;
@@ -1414,11 +1401,18 @@ class IndexAction extends EnglishAction {
               $ret['user_count_info'] = $englishUserCountModel->getEnglishUserCountInfo($viewType, $object, $level, 0, 0, 0, $voice, $target);
               } */
 
+            $englishMediaModel->analysisMediaPlayCode($ret['question']);
             //
             //保存历史记录
             $user_last_select['voice'] = $ret['question']['voice'];
             $user_last_select['target'] = $ret['question']['target'];
             $user_last_select['pattern'] = $ret['question']['pattern'];
+            if ($ret['question']['play_code'] == false) {
+                $viewType = 1;
+                $object = $objectModel->getDefaultObjectId($voice, $target, $pattern);
+                $ret['level_info'] = $levelModel->getDefaultLevelInfo($object, $voice, $target, $pattern);
+                $level = $ret['level_info']['id'];
+            }
             $user_last_select['viewType'] = $viewType;
 
             if ($viewType == 5) {
@@ -1437,62 +1431,64 @@ class IndexAction extends EnglishAction {
                 $user_last_select['level'] = $level;
             }
             cookie('english_user_last_select', $user_last_select, 60 * 60 * 24 * 30); // 存储用户点击历史
-            //play_code为空，则进行视频解析
-            if (!$ret['question']['play_code']) {
-                //视频解析库
-                import("@.ORG.VideoHooks");
-                $videoHooks = new VideoHooks();
+            /*
+              //play_code为空，则进行视频解析
+              if (!$ret['question']['play_code']) {
+              //视频解析库
+              import("@.ORG.VideoHooks");
+              $videoHooks = new VideoHooks();
 
-                $ret['question']['media_source_url'] = trim(str_replace(' ', '', $ret['question']['media_source_url']));
-                $videoInfo = $videoHooks->analyzer($ret['question']['media_source_url']);
+              $ret['question']['media_source_url'] = trim(str_replace(' ', '', $ret['question']['media_source_url']));
+              $videoInfo = $videoHooks->analyzer($ret['question']['media_source_url']);
 
-                $play_code = $videoInfo['swf'];
+              $play_code = $videoInfo['swf'];
 
-                $media_thumb_img = $videoInfo['img'];
+              $media_thumb_img = $videoInfo['img'];
 
-                //解析成功，保存视频解析地址
-                if (!$videoHooks->getError() && $play_code) {
+              //解析成功，保存视频解析地址
+              if (!$videoHooks->getError() && $play_code) {
 
-                    $play_type = $videoInfo['media_type'];
-                    $saveData = array(
-                        'id' => $ret['question']['media_id'],
-                        'play_code' => $play_code,
-                        'media_thumb_url' => $media_thumb_img,
-                        'play_type' => $play_type
-                    );
+              $play_type = $videoInfo['media_type'];
+              $saveData = array(
+              'id' => $ret['question']['media_id'],
+              'play_code' => $play_code,
+              'media_thumb_url' => $media_thumb_img,
+              'play_type' => $play_type
+              );
 
-                    $englishMediaModel->save($saveData);
-                }
+              $englishMediaModel->save($saveData);
+              }
 
-                $ret['question']['media_thumb_url'] = $media_thumb_img;
-                $ret['question']['play_code'] = $play_code;
-                $ret['question']['play_type'] = $play_type;
-            }
+              $ret['question']['media_thumb_url'] = $media_thumb_img;
+              $ret['question']['play_code'] = $play_code;
+              $ret['question']['play_type'] = $play_type;
+              }
 
-            //判断是否为about.com视频
-            $isAboutVideo = 0;
-            if (strpos($ret['question']['media_source_url'], 'http://video.about.com') !== FALSE && $ret['question']['target'] == 1) {
-                $isAboutVideo = 1;
-            }
-            if (strpos($ret['question']['media_source_url'], 'http://www.youtube.com') !== FALSE) {
-                $ret['question']['priority_type'] = 2;
-            }
+              //判断是否为about.com视频
+              $isAboutVideo = 0;
+              if (strpos($ret['question']['media_source_url'], 'http://video.about.com') !== FALSE && $ret['question']['target'] == 1) {
+              $isAboutVideo = 1;
+              }
+              if (strpos($ret['question']['media_source_url'], 'http://www.youtube.com') !== FALSE) {
+              $ret['question']['priority_type'] = 2;
+              }
 
-            if ($ret['question']['play_code']) {
-                if (strpos($ret['question']['media_source_url'], 'britishcouncil.org') !== FALSE) {
-                    $ret['question']['play_code'] = preg_replace('/<!--<!\[endif\]-->(.*)/is', '</object></object>', $ret['question']['play_code']);
-                    $ret['question']['play_code'] = str_replace('width=585&amp;height=575', 'width=100%&amp;height=100%', $ret['question']['play_code']);
-                }
-                $ret['question']['play_code'] = preg_replace(array('/width="(.*?)"/is', '/height="(.*?)"/is', '/width=300 height=280/is', '/width=600 height=400/is'), array('width="100%"', 'height="100%"', 'width="100%" height="100%"', 'width="100%" height="100%"'), $ret['question']['play_code']);
-            }
-            //如果是优先本地播放，播放类型设置为4
-            if ($ret['question']['priority_type'] == 2 && $ret['question']['media_local_path']) {
-                $ret['question']['play_type'] = 4;
-                $ret['question']['play_code'] = $ret['question']['media_local_path'];
-                $isAboutVideo = 0;
-            }
+              if ($ret['question']['play_code']) {
+              if (strpos($ret['question']['media_source_url'], 'britishcouncil.org') !== FALSE) {
+              $ret['question']['play_code'] = preg_replace('/<!--<!\[endif\]-->(.*)/is', '</object></object>', $ret['question']['play_code']);
+              $ret['question']['play_code'] = str_replace('width=585&amp;height=575', 'width=100%&amp;height=100%', $ret['question']['play_code']);
+              }
+              $ret['question']['play_code'] = preg_replace(array('/width="(.*?)"/is', '/height="(.*?)"/is', '/width=300 height=280/is', '/width=600 height=400/is'), array('width="100%"', 'height="100%"', 'width="100%" height="100%"', 'width="100%" height="100%"'), $ret['question']['play_code']);
+              }
+              //如果是优先本地播放，播放类型设置为4
+              if ($ret['question']['priority_type'] == 2 && $ret['question']['media_local_path']) {
+              $ret['question']['play_type'] = 4;
+              $ret['question']['play_code'] = $ret['question']['media_local_path'];
+              $isAboutVideo = 0;
+              }
 
-            $ret['question']['isAboutVideo'] = $isAboutVideo;
+              $ret['question']['isAboutVideo'] = $isAboutVideo;
+             */
 
             $this->ajaxReturn($ret, "请求成功", true);
         }
