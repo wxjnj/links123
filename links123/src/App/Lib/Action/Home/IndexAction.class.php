@@ -45,8 +45,10 @@ class IndexAction extends CommonAction {
 		
 		$skins = $this->getSkins();
 		
-		$this->assign("skinId", $skinId);
-		$this->assign("skin", $skins['skin'][$skinId]);
+		if ($skinId) {
+			$this->assign("skinId", $skinId);
+			$this->assign("skin", $skins['skin'][$skinId]);
+		}
 		$this->assign("skinList", $skins['list']);
 		$this->assign("skinCategory", $skins['category']);
 		
