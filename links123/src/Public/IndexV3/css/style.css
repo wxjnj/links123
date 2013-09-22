@@ -1319,22 +1319,14 @@ input:focus{ outline: 0; }
 	text-decoration: none;
 }
 /*process*/
-.process,
-.process .process-inner{
+.process{
 	background: url(../imgs/process.png) 1000px  1000px no-repeat;
 	height: 10px;
 	overflow: hidden;
-}
-.process{
 	background-position: 0 0;
 	height: 10px;
 	width: 288px;
 	margin-top: 3px;
-}
-.process .process-inner{
-	background-position: right -10px;
-	cursor: pointer;
-	width: 50%;
 }
 /*upload-panel*/
 .upload-panel{
@@ -1423,6 +1415,30 @@ input:focus{ outline: 0; }
 .upload-ctls a:hover{
 	background: #60ad6b;
 }
+
+/*重写*/
+.lk-dialog-settings .ui-widget-content{ border: 0; }
+.lk-dialog-settings .ui-widget-header{
+	background-image: url(../imgs/process.png);
+	background-position: right -10px;
+	background-repeat: no-repeat;
+	cursor: pointer;
+}
+.lk-dialog-settings .ui-corner-all{
+	-moz-border-radius: 0;
+	-webkit-border-radius: 0;
+	border-radius: 0;
+}
+.lk-dialog-settings .ui-slider .ui-state-default,
+.lk-dialog-settings .ui-slider .ui-slider-handle{
+	border: 0;
+	margin: 0 3px 0 0;
+	cursor: pointer;
+	background: #9fa0a0;
+	width: 4px;
+	overflow: hidden;
+}
+
 /*respond*/
 @media screen and (max-width: 1200px){
 

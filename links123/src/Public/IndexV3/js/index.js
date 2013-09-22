@@ -32,7 +32,6 @@ $(function() {
 	}
 	_dosw();
 	$(window).on('resize', function(){
-		console.log(1);
 		swapi.unbind();
 		_dosw();
 	});
