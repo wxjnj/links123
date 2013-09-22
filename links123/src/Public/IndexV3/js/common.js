@@ -605,5 +605,8 @@ var Theme  = {
 		
 		$.post(URL + "/updateSkinTheme", {'themeId': id});
 		return false;
+	},
+	Settings: function(){
+		
 	}
 };

@@ -185,34 +185,35 @@ input:focus{ outline: 0; }
 /*zdl*/
 .zdl{
 	float: left;
-	padding-top: 5px;
+	padding-top: 7px;
 	width: 330px;
 	position: relative;
 }
 .zdl .ipt{
 	border: 0 none;
-	font-size: 12px;
-	height: 18px;
-	line-height: 18px;
-	padding: 5px;
-	width: 290px;
+	font-size: 13px;
+	height: 17px;
+	line-height: 17px;
+	padding: 4px 10px;
+	vertical-align: text-bottom;
+	width: 280px;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
 	border-radius: 5px;
 }
 .zdl .ipton{ color: #999; }
 .zdl .btn{
-	background: url(../imgs/sprite.png) -95px -4px;
+	background: url(../imgs/sprite.png) -95px -3px;
 	border: 0 none;
 	cursor: pointer;
 	display: block;
 	font-size: 0;
-	height: 19px;
+	height: 20px;
 	line-height: -999px;
 	overflow: hidden;
 	width: 20px;
 	position: absolute;
-	top: 10px;
+	top: 9px;
 	left: 273px;
 }
 /*nav*/
@@ -358,11 +359,12 @@ input:focus{ outline: 0; }
 .thl .ctls .ipt{
 	background: #fff;
 	border: 0 none;
+	float: left;
+	font-size: 14px;
 	height: 16px;
 	line-height: 16px;
 	padding: 9px 0;
 	width: 415px;
-	float: left;
 }
 .thl .ctls .btn{
 	background: url(../imgs/sprite.png) -5px 2px no-repeat;
@@ -378,12 +380,12 @@ input:focus{ outline: 0; }
 .thl .subcate{
 	position: absolute;
 	top: 3px;
-	left: 50px;
+	left: 52px;
 }
 .thl .cate{
 	position: absolute;
 	top: 34px;
-	left: 85px;
+	left: 86px;
 }
 .thl .subcate a:hover{
 	color: #fc2a06;
