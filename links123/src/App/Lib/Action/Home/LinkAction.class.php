@@ -78,10 +78,11 @@ class LinkAction extends CommonAction {
 				}
 				
 				$headerInfo = get_headers($directUrl, 1);
-				if(!preg_match('/200/', $headerInfo[0])){
+				if(!preg_match('/200|301|302/', $headerInfo[0])){
 					
 					$directUrl = '';
 				}
+				
 			}
 			
 		}
