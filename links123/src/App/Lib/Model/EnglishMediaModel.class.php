@@ -367,9 +367,13 @@ class EnglishMediaModel extends CommonModel {
         $media['isAboutVideo'] = 0;
         //优先播放本地，且本地视频存在
         if ($media['priority_type'] == 2 && $media['media_local_path']) {
-            $media['play_type'] = 4;
             $media['play_code'] = $media['media_local_path'];
             $media['isAboutVideo'] = 0;
+            if (strtolower(end(explode(".", $media['media_local_path']))) == "swf") {
+                $media['play_type'] = 0;
+            } else {
+                $media['play_type'] = 4;
+            }
             return;
         } else {
             //play_code为空，则进行视频解析
