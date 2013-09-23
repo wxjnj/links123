@@ -22,7 +22,6 @@ $(function() {
         is_local_play = true;
         $(this).hide();
     })
-    setTimeout('$("#J_mediaLocalPlayButton").fadeOut();', 30000);
     //说力，上一句事件
     $("#J_preSentenceButton img").click(function() {
         $('#Links123Player')[0].prev();
@@ -659,7 +658,6 @@ function requestQuestion(type, clickObject, media_id) {
                 if (question.media_local_path) {
                     $("#J_mediaLocalPath").text(question.media_local_path);
                     $("#J_mediaLocalPlayButton").show();
-                    setTimeout('$("#J_mediaLocalPlayButton").fadeOut();', 30000);
                 } else {
                     $("#J_mediaLocalPath").text("");
                     $("#J_mediaLocalPlayButton").hide();
@@ -709,7 +707,7 @@ function requestQuestion(type, clickObject, media_id) {
                     $("#J_riceDiv").attr("src", "");
                     $("#J_riceDiv").hide();
                 } else {
-                    $("#J_riceDiv").attr("src", PUBLIC + "/English/images/rice" + data['user_count_info']['right_num'] * 100 + ".png?20130922");
+                    $("#J_riceDiv").attr("src", PUBLIC + "/English/images/rice" + data['user_count_info']['right_num'] * 100 + ".png?2013092301");
                     $("#J_riceDiv").show();
                 }
                 //$("#J_riceDiv").removeClass().addClass("rice_" + data['user_count_info']['right_num'] * 100);
@@ -952,7 +950,7 @@ function bindOptionClickEvent() {
                     $("#J_riceDiv").attr("src", "");
                     $("#J_riceDiv").hide();
                 } else {
-                    $("#J_riceDiv").attr("src", PUBLIC + "/English/images/rice" + data['user_count_info']['right_num'] * 100 + ".png?20130922");
+                    $("#J_riceDiv").attr("src", PUBLIC + "/English/images/rice" + data['user_count_info']['right_num'] * 100 + ".png?2013092301");
                     $("#J_riceDiv").show();
                 }
                 //$("#J_riceDiv").removeClass().addClass("rice_" + user_count_info.right_num * 100);

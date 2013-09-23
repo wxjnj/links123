@@ -12,6 +12,10 @@
 
 ### 开发环境 ###
 
+####<b style="color:#d30000">shoaly绿色服务端</b> : ####
+- 双击根目录下面 /server/usbwebserver.exe
+- 打开浏览器 地址栏输入 <http://localhost:82>  , 希望成功 :) 
+
 为避免本地环境和服务器环境不一致造成本地正常但服务器端不正常，统一使用一致的开发环境
 
 1. 安装virtualbox
