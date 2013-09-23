@@ -1440,7 +1440,7 @@ input:focus{ outline: 0; }
 }
 
 /*respond*/
-@media screen and (max-width: 1200px){
+@media screen and (max-width: 1440px){
 
 	#header,
 	#container,
@@ -1463,6 +1463,10 @@ input:focus{ outline: 0; }
 	.extra .extra-col1{ width: 400px; }
 	.extra .extra-col2{ width: 250px; }
 	.extra .extra-col3{ width: 250px; }
+
+	.screen-change-btn{position:absolute; height:40px; line-height:40px; margin-left:-40px;}
+	.screen-change-btn a{color:#bbbaba;}
+	.screen-change-btn a:hover{color:red;}
 
 	.thl{ margin-left: 320px; }
 	.nav{ font-size: 12px; }
@@ -1530,7 +1534,9 @@ input:focus{ outline: 0; }
 	}
 
 }
-@media screen and (min-width: 1200px){
+
+@media screen and (min-width: 1440px){
+
 
 	#header,
 	#container,
@@ -1555,6 +1561,9 @@ input:focus{ outline: 0; }
 	.extra .extra-col3{ width: 310px; }
 
 	.thl{ margin-left: 400px; }
+
+	.screen-change-btn{display:none;}
+
 	.nav{ font-size: 14px; }
 	.nav li a{ padding: 0 20px; }
 	.schedule li .t input{ width: 340px; }

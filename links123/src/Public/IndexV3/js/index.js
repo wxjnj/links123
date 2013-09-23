@@ -44,6 +44,14 @@ $(function() {
 		$(this).toggleClass('hover');
 	});
 
+	// 切换宽屏
+	$('.screen-change-btn').find('a').click(function(){
+		var link = document.createElement("link");
+		link.rel = "stylesheet";
+		link.type = "text/css";
+		link.href = PUBLIC + '/IndexV3/css/style-widescreen.css';
+		document.getElementsByTagName("head")[0].appendChild(link);
+	});
 });
 
 var ZhiDaLan = { // 直达框
