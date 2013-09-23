@@ -1,0 +1,10 @@
+[Mon Sep 23 13:22:55 2013] [notice] Apache/2.2.21 (Win32) PHP/5.3.9 configured -- resuming normal operations
+[Mon Sep 23 13:22:55 2013] [notice] Server built: Sep 10 2011 11:34:11
+[Mon Sep 23 13:22:55 2013] [notice] Parent: Created child process 17104
+[Mon Sep 23 13:22:56 2013] [notice] Child 17104: Child process is running
+[Mon Sep 23 13:22:56 2013] [notice] Child 17104: Acquired the start mutex.
+[Mon Sep 23 13:22:56 2013] [notice] Child 17104: Starting 64 worker threads.
+[Mon Sep 23 13:22:56 2013] [notice] Child 17104: Starting thread to listen on port 82.
+[Mon Sep 23 13:22:56 2013] [notice] Child 17104: Starting thread to listen on port 82.
+[Mon Sep 23 13:23:01 2013] [error] [client ::1] Request exceeded the limit of 10 internal redirects due to probable configuration error. Use 'LimitInternalRecursion' to increase the limit if necessary. Use 'LogLevel debug' to get a backtrace., referer: http://localhost:82/
+[Mon Sep 23 13:23:01 2013] [error] [client ::1] Request exceeded the limit of 10 internal redirects due to probable configuration error. Use 'LimitInternalRecursion' to increase the limit if necessary. Use 'LogLevel debug' to get a backtrace., referer: http://localhost:82/
