@@ -709,7 +709,7 @@ function requestQuestion(type, clickObject, media_id) {
                     $("#J_riceDiv").attr("src", "");
                     $("#J_riceDiv").hide();
                 } else {
-                    $("#J_riceDiv").attr("src", PUBLIC + "/English/images/rice" + data['user_count_info']['right_num'] * 100 + ".png?20130922");
+                    $("#J_riceDiv").attr("src", PUBLIC + "/English/images/rice" + data['user_count_info']['right_num'] * 100 + ".png?2013092301");
                     $("#J_riceDiv").show();
                 }
                 //$("#J_riceDiv").removeClass().addClass("rice_" + data['user_count_info']['right_num'] * 100);
@@ -952,7 +952,7 @@ function bindOptionClickEvent() {
                     $("#J_riceDiv").attr("src", "");
                     $("#J_riceDiv").hide();
                 } else {
-                    $("#J_riceDiv").attr("src", PUBLIC + "/English/images/rice" + data['user_count_info']['right_num'] * 100 + ".png?20130922");
+                    $("#J_riceDiv").attr("src", PUBLIC + "/English/images/rice" + data['user_count_info']['right_num'] * 100 + ".png?2013092301");
                     $("#J_riceDiv").show();
                 }
                 //$("#J_riceDiv").removeClass().addClass("rice_" + user_count_info.right_num * 100);
