@@ -559,8 +559,8 @@ var Theme  = {
 			}
 			return false;
 		});
-		$('#J_Styles li.add a').on('click', function(){
-			alert('coming soon');
+		$('#J_Styles li.add').on('click', function(){
+			self.SetGlobal();
 			return false;
 		});
 
@@ -605,5 +605,172 @@ var Theme  = {
 		
 		$.post(URL + "/updateSkinTheme", {'themeId': id});
 		return false;
+	},
+	SetGlobal: function(){
+		var self = this;
+		if(!$('#J_StyleGlobal').size()){
+			var hl = '';
+			hl = hl + '<div class="lk-dialog lk-dialog-settings" id="J_StyleGlobal">';
+			hl = hl + '	<div class="lkd-hd">';
+			hl = hl + '		<a class="close" href="#">X</a>';
+			hl = hl + '	</div>';
+			hl = hl + '	<div class="lkd-bd">';
+			hl = hl + '		<div class="settings">';
+			hl = hl + '			<div class="settings-tabs">';
+			hl = hl + '				<a class="on" href="javascript:;">全局设置</a> <a class="J_SetBackGround" href="javascript:;">背景设置</a>';
+			hl = hl + '			</div>';
+			hl = hl + '			<div class="settings-content">';
+			hl = hl + '				<div class="ttl">全局风格设置</div>';
+			hl = hl + '				<ul class="ct">';
+			hl = hl + '					<li class="on"><img src="'+PUBLIC+'/indexv3/skins/styleshot01.jpg" alt="" /></li>';
+			hl = hl + '				</ul>';
+			hl = hl + '				<div class="ft">';
+			hl = hl + '					<em>板块不透明度调节</em>';
+			hl = hl + '					<span>0%</span>';
+			hl = hl + '					<div class="process"></div>';
+			hl = hl + '					<span>100%</span>';
+			hl = hl + '				</div>';
+			hl = hl + '			</div>';
+			hl = hl + '		</div>';
+			hl = hl + '	</div>';
+			hl = hl + '	<div class="lkd-ft">';
+			hl = hl + '		<label for=""><input type="checkbox" name="" id="" /> 发条另客告诉大家</label>';
+			hl = hl + '		<a class="lkd-add" href="javascript:;"><em>确&nbsp;认</em></a>';
+			hl = hl + '	</div>';
+			hl = hl + '</div>';
+
+			$('body').append(hl);
+
+			var obj = $('#J_StyleGlobal');
+
+			obj.find('.close').on('click', function(){
+				obj.dialog('close');
+				return false;
+			});
+
+			obj.find('.lkd-add').on('click', function(){
+				//TODO 确定按钮事件
+				return false;
+			});
+
+			obj.find('.J_SetBackGround').on('click', function(){
+				obj.dialog('close');
+				self.SetCustom();
+				return false;
+			});
+
+			var xslider = obj.find('.process');
+
+			xslider.slider({
+				range: "min",
+				value: 0,
+				min: 0,
+				max: 100,
+				slide: function(event, ui){
+					$(xslider).next().html(ui.value+'%');
+				}
+			});
+
+			obj.dialog({
+				autoOpen: true,
+				width: 502,
+				modal: true,
+				resizable: false
+			});
+
+			return false;
+		}else{
+			var obj = $('#J_StyleGlobal');
+			obj.find('input[type="checkbox"]').attr('checked', false);
+			obj.dialog('open');
+		}
+	},
+	SetCustom: function(){
+		var self = this;
+		if(!$('#J_StyleCustom').size()){
+			var hl = '';
+			hl = hl + '<div class="lk-dialog lk-dialog-settings" id="J_StyleCustom">';
+			hl = hl + '	<div class="lkd-hd">';
+			hl = hl + '		<a class="close" href="#">X</a>';
+			hl = hl + '	</div>';
+			hl = hl + '	<div class="lkd-bd">';
+			hl = hl + '		<div class="settings">';
+			hl = hl + '			<div class="settings-tabs">';
+			hl = hl + '				<a class="J_SetGlobal" href="javascript:;">全局设置</a> <a class="on" href="javascript:;">背景设置</a>';
+			hl = hl + '			</div>';
+			hl = hl + '			<div class="settings-content">';
+			hl = hl + '				<div class="bg-ttl">';
+			hl = hl + '					<div class="pg">';
+			hl = hl + '						<ul>';
+			hl = hl + '							<li class="prev"><a href="#">上一页</a></li>';
+			hl = hl + '							<li class="on"><a href="#">1</a></li>';
+			hl = hl + '							<li><a href="#">2</a></li>';
+			hl = hl + '							<li><a href="#">3</a></li>';
+			hl = hl + '							<li><a href="#">4</a></li>';
+			hl = hl + '							<li><a href="#">5</a></li>';
+			hl = hl + '							<li class="next"><a href="#">下一页</a></li>';
+			hl = hl + '						</ul>';
+			hl = hl + '					</div>';
+			hl = hl + '					<div class="bg-style bg-on">';
+			hl = hl + '						炫彩光晕';
+			hl = hl + '						<ul>';
+			hl = hl + '							<li><a href="#">测试效果</a></li>';
+			hl = hl + '							<li><a href="#">效果测试</a></li>';
+			hl = hl + '						</ul>';
+			hl = hl + '					</div><a class="bg-custom" href="#">自定义</a>';
+			hl = hl + '				</div>';
+			hl = hl + '				<div class="bg-list">';
+			hl = hl + '					<ul>';
+			hl = hl + '						<li class="on"><img src="skins/dark/screenshot.jpg" alt="" /></li>';
+			hl = hl + '						<li><img src="skins/dark/screenshot.jpg" alt="" /></li>';
+			hl = hl + '						<li><img src="skins/dark/screenshot.jpg" alt="" /></li>';
+			hl = hl + '						<li><img src="skins/dark/screenshot.jpg" alt="" /></li>';
+			hl = hl + '						<li><img src="skins/dark/screenshot.jpg" alt="" /></li>';
+			hl = hl + '						<li><img src="skins/dark/screenshot.jpg" alt="" /></li>';
+			hl = hl + '						<li><img src="skins/dark/screenshot.jpg" alt="" /></li>';
+			hl = hl + '						<li><img src="skins/dark/screenshot.jpg" alt="" /></li>';
+			hl = hl + '					</ul>';
+			hl = hl + '				</div>';
+			hl = hl + '			</div>';
+			hl = hl + '		</div>';
+			hl = hl + '	</div>';
+			hl = hl + '	<div class="lkd-ft">';
+			hl = hl + '		<label for=""><input type="checkbox" name="" id="" /> 发条另客告诉大家</label>';
+			hl = hl + '		<a class="lkd-add" href="#"><em>确认</em></a>';
+			hl = hl + '	</div>';
+			hl = hl + '</div>';
+			$('body').append(hl);
+
+			var obj = $('#J_StyleCustom');
+
+			obj.find('.close').on('click', function(){
+				obj.dialog('close');
+				return false;
+			});
+
+			obj.find('.lkd-add').on('click', function(){
+				//TODO 确定按钮事件
+				return false;
+			});
+
+			obj.find('.J_SetGlobal').on('click', function(){
+				obj.dialog('close');
+				self.SetGlobal();
+				return false;
+			});
+
+			obj.dialog({
+				autoOpen: true,
+				width: 502,
+				modal: true,
+				resizable: false
+			});
+
+			return false;
+		}else{
+			var obj = $('#J_StyleCustom');
+			obj.find('input[type="checkbox"]').attr('checked', false);
+			obj.dialog('open');
+		}
 	}
 };

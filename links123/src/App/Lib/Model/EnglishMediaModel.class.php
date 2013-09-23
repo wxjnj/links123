@@ -366,7 +366,7 @@ class EnglishMediaModel extends CommonModel {
         }
         $media['isAboutVideo'] = 0;
         //优先播放本地，且本地视频存在
-        if ($media['priority_type'] == 2 && $media['media_local_path']) {
+        if ($media['priority_type'] == 2 && !empty($media['media_local_path'])) {
             $media['play_code'] = $media['media_local_path'];
             $media['isAboutVideo'] = 0;
             if (strtolower(end(explode(".", $media['media_local_path']))) == "swf") {
@@ -416,7 +416,7 @@ class EnglishMediaModel extends CommonModel {
                     $media['play_code'] = preg_replace(array('/width="(.*?)"/is', '/height="(.*?)"/is', '/width=300 height=280/is', '/width=600 height=400/is'), array('width="100%"', 'height="100%"', 'width="100%" height="100%"', 'width="100%" height="100%"'), $media['play_code']);
                     return;
                 } else {
-                    if ($media['media_local_path']) {
+                    if (!empty($media['media_local_path'])) {
                         $media['priority_type'] = 2;
                         $media['play_type'] = 4;
                         $media['play_code'] = $media['media_local_path'];
@@ -430,6 +430,16 @@ class EnglishMediaModel extends CommonModel {
                         D("EnglishMedia")->save($saveData);
                     }
                 }
+            } else {
+                //判断是否为about.com视频
+                if (strpos($media['media_source_url'], 'http://video.about.com') !== FALSE && $media['target'] == 1) {
+                    $media['isAboutVideo'] = 1;
+                }
+                if (strpos($media['media_source_url'], 'britishcouncil.org') !== FALSE) {
+                    $media['play_code'] = preg_replace('/<!--<!\[endif\]-->(.*)/is', '</object></object>', $media['play_code']);
+                    $media['play_code'] = str_replace('width=585&amp;height=575', 'width=100%&amp;height=100%', $media['play_code']);
+                }
+                $media['play_code'] = preg_replace(array('/width="(.*?)"/is', '/height="(.*?)"/is', '/width=300 height=280/is', '/width=600 height=400/is'), array('width="100%"', 'height="100%"', 'width="100%" height="100%"', 'width="100%" height="100%"'), $media['play_code']);
             }
         }
         return;
