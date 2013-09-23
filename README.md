@@ -13,7 +13,7 @@
 ### 开发环境 ###
 
 #### shoaly绿色服务端 : ####
-- (`下载地址http://pan.baidu.com/share/link?shareid=604559635&uk=2519257532)
+- (`下载地址http://pan.baidu.com/share/link?shareid=604559635&uk=2519257532`)
 - 双击根目录下面 /server/usbwebserver.exe
 - 打开浏览器 地址栏输入 <http://localhost:82>  , 希望成功 :) 
 
