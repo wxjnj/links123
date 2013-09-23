@@ -59,7 +59,7 @@ var ZhiDaLan = { // 直达框
 		$(document).on('click', function(){
 			$('#direct_text').val($('#direct_text').attr('txt')).addClass('ipton');
 		});
-
+			/*
 		$("#header").on('mouseenter', function(){
 			var tag = $.trim($('#direct_text').val());
 			if(tag == $('#direct_text').attr('txt')){
@@ -73,7 +73,7 @@ var ZhiDaLan = { // 直达框
 				$('#search_text').select();
 				$('#direct_text').addClass('ipton');
 			}
-		});
+		});*/
 
 		$("#direct_text").on('mouseout', function(){
 			var tag = $.trim($('#direct_text').val());
@@ -141,10 +141,11 @@ var Zld = { // 自留地
 			}
 			return false;
 		});
+		/*
 		$(document).on('mouseenter', '#J_Zld input[name="url"], #J_Zld input[name="name"]', function(){
 			$(this).select();
 		});
-
+		*/
 		$('#J_sortable').sortable({
 			items: '> li:not(.add)',
 			start: function(event, ui){
@@ -580,7 +581,7 @@ var HelpMouse = {
 			});
 			if(!isNeedHelp){ return false; }
 			var mousePos = self.getcoords(ev);
-			if(mousePos.y < 70){
+			if(mousePos.y < 40 && mousePos.x < search_text_right_end_pos){
 				if($('#direct_text').val() == $('#direct_text').attr('txt')){
 					$('#direct_text').select().removeClass('ipton');
 					isSearchTxtSelected = false;
@@ -589,30 +590,14 @@ var HelpMouse = {
 					}
 				}
 			}
-			if(mousePos.y > 110 && mousePos.y < 220){
+			if((mousePos.y > 110 && mousePos.y < 220) || mousePos.x > search_text_left_end_pos){
 				$('#direct_text').val($('#direct_text').attr('txt')).addClass('ipton');
 				if(!isSearchTxtSelected){
 					$('#search_text').select().trigger('mouseenter');
 					isSearchTxtSelected = true;
 				}
 			}
-			//鼠标横移 切换焦点
-			if(mousePos.x < direct_text_right_end_pos){
-				if($('#direct_text').val() == $('#direct_text').attr('txt')){
-					$('#direct_text').select().removeClass('ipton');
-					isSearchTxtSelected = false;
-					if($.trim($('#search_text').val()) ==""){
-						$('#J_thl_div').hide();
-					}
-				}
-			}
-			if(mousePos.x > search_text_left_end_pos /*&& mousePos.x < search_text_right_end_pos */){
-				$('#direct_text').val($('#direct_text').attr('txt')).addClass('ipton');
-				if(!isSearchTxtSelected){
-					$('#search_text').select().trigger('mouseenter');
-					isSearchTxtSelected = true;
-				}
-			}
+
 		});
 	},
 	getcoords: function(ev){
