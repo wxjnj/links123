@@ -703,24 +703,19 @@ var Theme  = {
 			hl = hl + '					<div class="pg">';
 			hl = hl + '						<ul>';
 			hl = hl + '							<li class="prev"><a href="#">上一页</a></li>';
-			hl = hl + '							<li class="on"><a href="#">1</a></li>';
-			hl = hl + '							<li><a href="#">2</a></li>';
-			hl = hl + '							<li><a href="#">3</a></li>';
-			hl = hl + '							<li><a href="#">4</a></li>';
-			hl = hl + '							<li><a href="#">5</a></li>';
 			hl = hl + '							<li class="next"><a href="#">下一页</a></li>';
 			hl = hl + '						</ul>';
 			hl = hl + '					</div>';
-			hl = hl + '					<div class="bg-style bg-on">';
+			hl = hl + '					<div class="bg-cate bg-style bg-on">';
 			hl = hl + '						炫彩光晕';
-			hl = hl + '						<ul>';
+			hl = hl + '						<ul class="dropdown bg-cate-dropdown">';
 			hl = hl + '							<li><a href="#">测试效果</a></li>';
 			hl = hl + '							<li><a href="#">效果测试</a></li>';
 			hl = hl + '						</ul>';
-			hl = hl + '					</div><a class="bg-custom" href="#">自定义</a>';
+			hl = hl + '					</div><a class="bg-custom" href="javascript:;">自定义</a>';
 			hl = hl + '				</div>';
 			hl = hl + '				<div class="bg-list">';
-			hl = hl + '					<ul>';
+			hl = hl + '					<ul class="imglist">';
 			hl = hl + '						<li class="on"><img src="skins/dark/screenshot.jpg" alt="" /></li>';
 			hl = hl + '						<li><img src="skins/dark/screenshot.jpg" alt="" /></li>';
 			hl = hl + '						<li><img src="skins/dark/screenshot.jpg" alt="" /></li>';
@@ -730,6 +725,31 @@ var Theme  = {
 			hl = hl + '						<li><img src="skins/dark/screenshot.jpg" alt="" /></li>';
 			hl = hl + '						<li><img src="skins/dark/screenshot.jpg" alt="" /></li>';
 			hl = hl + '					</ul>';
+			hl = hl + '					<div class="upload-panel">';
+			hl = hl + '						<div class="upload-demo">';
+			hl = hl + '							<div class="upload-demo-box">';
+			hl = hl + '								<img src="imgs/imgdemo.jpg" alt="" style="width:190px;" />';
+			hl = hl + '							</div>';
+			hl = hl + '						</div>';
+			hl = hl + '						<div class="upload-ct">';
+			hl = hl + '							<div class="row1">';
+			hl = hl + '								<input class="txtimg" readonly="readonly" type="text" name="" id="upfile" /><a onclick="path.click();return false;" class="btnimg" href="#">选择图片</a>';
+			hl = hl + '								<input type="file" id="path" style="display:none" onchange="upfile.value=this.value" />';
+			hl = hl + '							</div>';
+			hl = hl + '							<div class="row2">';
+			hl = hl + '								<div class="bg-align bg-style">';
+			hl = hl + '									<em>居中对齐</em>';
+			hl = hl + '									<ul class="dropdown bg-align-dropdown">';
+			hl = hl + '										<li><a href="#">居中对齐</a></li>';
+			hl = hl + '									</ul>';
+			hl = hl + '								</div>';
+			hl = hl + '								<label for=""><input type="checkbox" name="" id=""> 平铺</label>';
+			hl = hl + '								<label for=""><input type="checkbox" name="" id=""> 锁定</label>';
+			hl = hl + '								背景配色 <a href="javascript:;" class="color"></a>';
+			hl = hl + '							</div>';
+			hl = hl + '						</div>';
+			hl = hl + '						<div class="upload-ctls"><a href="#">点击上传</a></div>';
+			hl = hl + '					</div>';
 			hl = hl + '				</div>';
 			hl = hl + '			</div>';
 			hl = hl + '		</div>';
@@ -743,9 +763,32 @@ var Theme  = {
 
 			var obj = $('#J_StyleCustom');
 
+			obj.find('.bg-cate').dropdown({
+				classNm: ".bg-cate-dropdown"
+			});
+			obj.find('.bg-cate').on('mouseenter', function(){
+				$(this).removeClass('bg-on');
+			}).on('mouseleave', function(){
+				$(this).addClass('bg-on');
+			});
+			obj.find('.bg-align').dropdown({
+				classNm: ".bg-align-dropdown"
+			});
+			obj.find('.bg-align').on('mouseenter', function(){
+				$(this).removeClass('bg-on');
+			}).on('mouseleave', function(){
+				$(this).addClass('bg-on');
+			});
+
 			obj.find('.close').on('click', function(){
 				obj.dialog('close');
 				return false;
+			});
+
+			obj.find('.bg-custom').on('click', function(){
+				obj.find('.upload-panel').show().siblings().hide();
+				$(this).addClass('bg-custom-on');
+				obj.find('.pg').hide();
 			});
 
 			obj.find('.lkd-add').on('click', function(){
