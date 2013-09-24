@@ -20,10 +20,6 @@
   .extra .extra-col2{ width: 250px; }
   .extra .extra-col3{ width: 250px; }
 
-  .screen-change-btn{position:absolute; height:40px; line-height:40px; margin-left:-40px;}
-  .screen-change-btn a{color:#bbbaba;}
-  .screen-change-btn a:hover{color:red;}
-
   .thl{ margin-left: 320px; }
   .nav{ font-size: 12px; }
   .nav li a{ padding: 0 10px; }
