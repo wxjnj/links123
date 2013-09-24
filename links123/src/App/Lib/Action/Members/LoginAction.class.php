@@ -59,7 +59,7 @@ class LoginAction extends CommonAction
 			return false;
 		}
         if ($mbrNow['status'] == -1) {
-			echo json_encode(array("code"=>404, "content" => "已禁用！"));
+			echo json_encode(array("code"=>403, "content" => "已禁用！"));
 			return false;
 		}
 		
