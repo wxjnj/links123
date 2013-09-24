@@ -292,6 +292,9 @@ var User = {
                             case 503:
                                 showmsg(objpassword[0], resp.content);
                                 break;
+                            case 504:
+                                showmsg(objpassword[0], resp.content);
+                                break;
                         }
                         
 					}

@@ -41,6 +41,9 @@ class LoginAction extends CommonAction
         $username = trim($this->_param('username'));
         $password = $this->_param('password');
         $auto_login = $this->_param('auto_login');
+        
+        // 用户登录次数计数
+        isset($_SESSION['userLoginCounter']) ? $_SESSION['userLoginCounter']++ : $_SESSION['userLoginCounter'] = 1;
 
 		if (checkEmail($username)) {
 			$param = 'email';
@@ -65,7 +68,15 @@ class LoginAction extends CommonAction
 		
 		$password = md5(md5($password).$mbrNow['salt']);
 		if ($password != $mbrNow['password']) {
-			echo json_encode(array("code"=>503, "content" => "用户名与密码不符！"));
+            // 用户登录输入错误密码次数计数
+            isset($_SESSION['userLoginCounterPaswd']) ? $_SESSION['userLoginCounterPaswd']++ : $_SESSION['userLoginCounterPaswd'] = 1;
+            
+            if ($_SESSION['userLoginCounterPaswd'] > 2){
+                echo json_encode(array("code"=>504, "content" => "建议检查用户名是否正确"));
+            }
+            else {
+                echo json_encode(array("code"=>503, "content" => "用户名与密码不符"));
+            }
 			return false;
 		}
 		
