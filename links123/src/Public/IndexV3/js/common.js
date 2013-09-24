@@ -247,6 +247,7 @@ var User = {
 				var objpassword = obj.find('input[name="password"]');
 				var username = objusername.val();
 				var password = objpassword.val();
+                var verify = "";
 				var auto_login = obj.find('input[name="autologin"]').attr('checked');
 				
 				if (!username || username == '帐号') {
@@ -262,7 +263,20 @@ var User = {
 				}
 				
 				var data = { "username": username, "password": password, "auto_login": (auto_login=='checked' ? 1 : 0) };
-				
+                
+                if ($('#J_Login').find('li.vcode').length !== 0) {
+                    var objverify = obj.find('input[name="vcode"]');
+                    verify = objverify.val();
+                    
+                    if (!verify) {
+                        objmsg.html('验证码不能为空');
+                        objverify.focus();
+                        return false;
+                    }
+                    
+                    data["verify"] = verify;
+                }
+                
 				$.post(APP + "Members/Login/checkLogin", data, 
 					function(data){
                         var resp = eval('(' + data + ')');
@@ -270,7 +284,8 @@ var User = {
                             $(obj).val("");
                             $(obj).attr('placeholder', msg);
                             $(obj).focus();
-                        }
+                        };
+                        
                         switch(resp.code) {
                             case 200:
                                 if(window.opener){
@@ -294,6 +309,22 @@ var User = {
                                 break;
                             case 504:
                                 showmsg(objpassword[0], resp.content);
+                                break;
+                            case 505:
+                                var vcode = $('#J_Login').find('li.vcode');
+                                if (vcode.length === 0) {
+                                    $('<li class="vcode">\n\
+                                        <input class="ipt" type="text" name="vcode" placeholder="验证码" value="" /><img src="/Verify" alt="验证码" class="J_VerifyImg" title="点击刷新" />\n\
+                                        </li>').insertAfter($('#J_Login input[name="password"]').parent("li"));
+                                }
+                                else {
+                                    $('#J_Login').find('li.vcode img').click();
+                                }
+                                break;
+                            case 506:
+                                objmsg.html(resp.content);
+                                obj.find('input[name="vcode"]').focus();
+                                $('#J_Login').find('li.vcode img').click();
                                 break;
                         }
                         

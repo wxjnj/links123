@@ -41,10 +41,8 @@ class LoginAction extends CommonAction
         $username = trim($this->_param('username'));
         $password = $this->_param('password');
         $auto_login = $this->_param('auto_login');
+        $verify = trim($this->_param('verify'));
         
-        // 用户登录次数计数
-        isset($_SESSION['userLoginCounter']) ? $_SESSION['userLoginCounter']++ : $_SESSION['userLoginCounter'] = 1;
-
 		if (checkEmail($username)) {
 			$param = 'email';
 		} else if (checkName($username)) {
@@ -71,7 +69,7 @@ class LoginAction extends CommonAction
             // 用户登录输入错误密码次数计数
             isset($_SESSION['userLoginCounterPaswd']) ? $_SESSION['userLoginCounterPaswd']++ : $_SESSION['userLoginCounterPaswd'] = 1;
             
-            if ($_SESSION['userLoginCounterPaswd'] > 2){
+            if ($_SESSION['userLoginCounterPaswd'] > 2){    // 输入错误密码次数超过2次给用户不同的提示信息
                 echo json_encode(array("code"=>504, "content" => "建议检查用户名是否正确"));
             }
             else {
@@ -79,6 +77,21 @@ class LoginAction extends CommonAction
             }
 			return false;
 		}
+        
+        // 尝试登录超过5次，用户需要输入验证码
+        if (isset($_SESSION['userLoginCounterPaswd']) && $_SESSION['userLoginCounterPaswd'] > 5) {
+            if (empty($verify)) {
+                echo json_encode(array("code"=>505, "content" => "请输入验证码"));
+                return false;
+            }
+            else {
+                if ($_SESSION['verify'] != md5(strtoupper($verify))) {
+                    echo json_encode(array("code"=>506, "content" => "验证码错误"));
+                    return false;
+                }
+            }
+            
+        }
 		
 		$_SESSION[C('MEMBER_AUTH_KEY')] = $mbrNow['id'];
 		$_SESSION['nickname'] = $mbrNow['nickname'];
