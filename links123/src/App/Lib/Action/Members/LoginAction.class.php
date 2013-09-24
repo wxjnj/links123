@@ -47,7 +47,7 @@ class LoginAction extends CommonAction
 		} else if (checkName($username)) {
 			$param = 'nickname';
 		} else {
-			echo "用户名有不法字符";
+			echo json_encode(array("code"=>501, "content" => "用户名有不法字符"));
 			return false;
 		}
 		
@@ -55,17 +55,17 @@ class LoginAction extends CommonAction
 		$mbrNow = $member->where("$param = '%s'", $username)->find();
 		
 		if (empty($mbrNow)) {
-			echo "用户名不存在";
+			echo json_encode(array("code"=>502, "content" => "用户名不存在"));
 			return false;
 		}
         if ($mbrNow['status'] == -1) {
-			echo "已禁用！";
+			echo json_encode(array("code"=>404, "content" => "已禁用！"));
 			return false;
 		}
 		
 		$password = md5(md5($password).$mbrNow['salt']);
 		if ($password != $mbrNow['password']) {
-			echo "用户名与密码不符！";
+			echo json_encode(array("code"=>503, "content" => "用户名与密码不符！"));
 			return false;
 		}
 		
@@ -86,7 +86,7 @@ class LoginAction extends CommonAction
 			cookie("USER_ID", $str, $auto_login_time ? : 60*60*24*7);
 		}
 		
-		echo "loginOK";
+		echo json_encode(array("code"=>200, "content" => "loginOK"));
 	}
 	
 	/**
