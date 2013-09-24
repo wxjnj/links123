@@ -46,10 +46,19 @@ $(function() {
 
 	// 切换宽屏
 	$('.screen-change-btn').find('a').click(function(){
+		var css;
+		var self = $(this);
+		if(self.html() == '宽 屏'){
+			self.html('窄 屏');
+			css = 'style-widescreen';
+		}else{
+			self.html('宽 屏');
+			css = 'style-960';
+		}
 		var link = document.createElement("link");
 		link.rel = "stylesheet";
 		link.type = "text/css";
-		link.href = PUBLIC + '/IndexV3/css/style-widescreen.css';
+		link.href = PUBLIC + '/IndexV3/css/' + css + '.css';
 		document.getElementsByTagName("head")[0].appendChild(link);
 	});
 });
@@ -581,7 +590,7 @@ var HelpMouse = {
 			});
 			if(!isNeedHelp){ return false; }
 			var mousePos = self.getcoords(ev);
-			if(mousePos.y < 40 && mousePos.x < search_text_right_end_pos){
+			if((mousePos.y < 200) && (mousePos.x < search_text_left_end_pos)){
 				if($('#direct_text').val() == $('#direct_text').attr('txt')){
 					$('#direct_text').select().removeClass('ipton');
 					isSearchTxtSelected = false;
@@ -589,13 +598,13 @@ var HelpMouse = {
 						$('#J_thl_div').hide();
 					}
 				}
-			}
-			if((mousePos.y > 110 && mousePos.y < 220) || mousePos.x > search_text_left_end_pos){
+			}//else{
+			if((mousePos.y > 200) || mousePos.x > search_text_left_end_pos){
 				$('#direct_text').val($('#direct_text').attr('txt')).addClass('ipton');
-				if(!isSearchTxtSelected){
+				//if(!isSearchTxtSelected){
 					$('#search_text').select().trigger('mouseenter');
 					isSearchTxtSelected = true;
-				}
+				//}
 			}
 
 		});
