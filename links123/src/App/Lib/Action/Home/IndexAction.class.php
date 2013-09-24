@@ -104,6 +104,11 @@ class IndexAction extends CommonAction {
 		$this->assign('songTopList', $songTopList);
 		$this->assign('songFairList', $songFairList);
 		
+		//豆瓣电影信息 0正在上映 1即将上映
+//		$movieList = $this->getDoubanMovieInfo();
+//		$nowplayingmovie = $movieList[0];
+//      $latermovie = $movieList[1];
+        
 		//TED 发现
 		$ted_list = S('ted_list');
 		if (!$ted_list) {
