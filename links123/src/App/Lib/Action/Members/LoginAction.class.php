@@ -55,7 +55,7 @@ class LoginAction extends CommonAction
 		$mbrNow = $member->where("$param = '%s'", $username)->find();
 		
 		if (empty($mbrNow)) {
-			echo "用户不存在";
+			echo "用户名不存在";
 			return false;
 		}
         if ($mbrNow['status'] == -1) {
@@ -65,7 +65,7 @@ class LoginAction extends CommonAction
 		
 		$password = md5(md5($password).$mbrNow['salt']);
 		if ($password != $mbrNow['password']) {
-			echo "密码错误！";
+			echo "用户名与密码不符！";
 			return false;
 		}
 		
