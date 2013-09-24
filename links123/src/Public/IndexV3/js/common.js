@@ -265,14 +265,35 @@ var User = {
 				
 				$.post(APP + "Members/Login/checkLogin", data, 
 					function(data){
-						if ( data.indexOf("loginOK") >= 0 ) {
-							if(window.opener){
-								window.opener.location.reload();
-							}
-							window.location.href = APP+"Index";
-						}else{
-							objmsg.html(data);
-						}
+                        var resp = eval('(' + data + ')');
+                        var showmsg = function(obj, msg){
+                            $(obj).val("");
+                            $(obj).attr('placeholder', msg);
+                            $(obj).focus();
+                        }
+                        switch(resp.code) {
+                            case 200:
+                                if(window.opener){
+                                    window.opener.location.reload();
+                                }
+                                window.location.href = APP+"Index";
+                                break;
+                            case 403:
+                                $(objusername[0]).val("");
+                                $(objpassword[0]).val("");
+                                objmsg.html(resp.content);
+                                break;
+                            case 501:
+                                showmsg(objusername[0], resp.content);
+                                break;
+                            case 502:
+                                showmsg(objusername[0], resp.content);
+                                break;
+                            case 503:
+                                showmsg(objpassword[0], resp.content);
+                                break;
+                        }
+                        
 					}
 				);
 
