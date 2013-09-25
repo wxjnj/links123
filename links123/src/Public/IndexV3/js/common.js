@@ -644,7 +644,7 @@ var Theme  = {
 			$(this).addClass('added').siblings().removeClass('added');
 			$(this).find('.imgb').hide();
 			$(this).find('s').hide();
-			$.post(URL + "/updateSkin", {'skinId': $(this).data('id')});
+			
 		}).on('mouseenter', function(){
 			$(this).find('.imgb').show();
 			$(this).find('s').show();
@@ -658,7 +658,7 @@ var Theme  = {
 		$('#J_Skins').attr('href', tmurl.replace('{0}', tm));
 		$('#container').css('background-image', 'url('+bg+')');
 		
-		$.post(URL + "/updateSkinTheme", {'themeId': id});
+		$.post(URL + "/updateSkin", {'skinId': $(this).data('id')});
 		return false;
 	},
 	SetGlobal: function(){
