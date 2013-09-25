@@ -1,3 +1,4 @@
+
   #header,
   #container,
   #footer,
@@ -20,7 +21,22 @@
   .extra .extra-col2{ width: 310px; }
   .extra .extra-col3{ width: 310px; }
 
-  .thl{ margin-left: 400px; }
+  .screen-change-btn .s-wide{display:none;}
+  .screen-change-btn .s-960{display:inline;}
+
+  .thl{
+    margin-left: 400px; 
+    width: 460px;
+  }
+  .thl .ctls .ipt{
+    width: 415px;
+  }
+  .thl .subcate{
+    left: 52px;
+  }
+  .thl .cate{
+    left: 86px;
+  }
 
   .nav{ font-size: 14px; }
   .nav li a{ padding: 0 20px; }
