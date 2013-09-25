@@ -12,7 +12,7 @@ $(function(){
 	});
 	$('#J_weather').click(function(){
 
-    $.fancybox({
+	$.fancybox({
 			href: '#J_box_weather',
 			helpers:  {
 				title:  null,
@@ -52,16 +52,18 @@ $(function(){
 	});
 	
 	$('.music_button').click(function(){
-			$('#J_music_iframe').attr('src','');
-			$('.music_button').hide();
-			$('.music_button_min').hide();
-			g_music_currentkey = -1;
+		$('#J_music_iframe').attr('src','').hide();
+		$('.music_button').hide();
+		$('.music_button_min').hide();
+		g_music_currentkey = -1;
+		return false;
 	}); 
 	$('.music_button_min').click(function(){
-			$('#J_box_music').hide(); 
+		$('#J_box_music').hide(); 
 		$("#bModal").trigger("click");
-			//$('.music_button').hide();
-			//$('.music_button_min').hide();
+		//$('.music_button').hide();
+		//$('.music_button_min').hide();
+		return false;
 	});
 	
 	function music_box_proc(){
