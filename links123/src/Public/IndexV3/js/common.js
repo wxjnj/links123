@@ -602,7 +602,7 @@ var THL = {
 var Theme  = {
 	Init: function(){
 		var self = this;
-		$('#J_Styles li:not(.add)').on('click', function(){
+		$('#J_Styles>ul>li:not(.add)').on('click', function(){
 			var obj = $(this).closest('li');
 			if(!obj.is('.on')){
 				obj.addClass('on').siblings().removeClass('on');
@@ -610,7 +610,7 @@ var Theme  = {
 				var theme = obj.data('theme');
 				var id = obj.data('id');
 				
-				self.SetBackGround(id, theme, bg);
+				self.SetTheme(id, theme, bg);
 			}
 			return false;
 		});
@@ -645,6 +645,7 @@ var Theme  = {
 			$(this).find('.imgb').hide();
 			$(this).find('s').hide();
 			
+			return false;
 		}).on('mouseenter', function(){
 			$(this).find('.imgb').show();
 			$(this).find('s').show();
@@ -657,8 +658,16 @@ var Theme  = {
 		var tmurl = $CONFIG['PUBLIC']+ '/IndexV3/skins/{0}/style.css';
 		$('#J_Skins').attr('href', tmurl.replace('{0}', tm));
 		$('#container').css('background-image', 'url('+bg+')');
-		
-		$.post(URL + "/updateSkin", {'skinId': $(this).data('id')});
+
+		$.post(URL + "/updateSkin", {'skinId': id});
+		return false;
+	},
+	SetTheme: function(id, tm, bg){
+		var tmurl = $CONFIG['PUBLIC']+ '/IndexV3/skins/{0}/style.css';
+		$('#J_Skins').attr('href', tmurl.replace('{0}', tm));
+		$('#container').css('background-image', 'url('+bg+')');
+
+		$.post(URL + "/updateSkinTheme", {'themeId': id});
 		return false;
 	},
 	SetGlobal: function(){
