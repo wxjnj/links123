@@ -8,7 +8,7 @@ $( function($) {
 	 * app开关触发器
 	 */
 	$.fn.links123_apptrigers = function(selector) {
-		this.delegate(selector, 'click', function() {
+		this.on('click', selector, function() {
 			var appId = $(this).attr('href');
 			$(this).data('links_app') || $(this).data('links_app', new App(appId));
 			var app = $(this).data('links_app');
@@ -48,7 +48,7 @@ $( function($) {
 		bindEvent : function(){
 			var $self = this;
 			$self.$elem.prepend('<div class="links123-close-wrap" style="width:'+this.w+'"><a href="#">x</a></div>');
-			$self.$elem.children('.links123-close-wrap').delegate('a', 'click', function(){
+			$self.$elem.children('.links123-close-wrap').on('click', 'a', function(){
 				$self.close();
 			});
 			$(document).bind('keyup', function( e ){
@@ -83,18 +83,18 @@ $( function($) {
 			var app = app;
 			load();
 			// 变背景色
-			$note.delegate('[class^=color_]', 'click', function(){
+			$note.on('click', '[class^=color_]', function(){
 				textareaBg = '' + $(this).css('background-color');
 				$textarea.css('background', textareaBg );
 				remember();
 			});
 			// 新建
-			$note.delegate('.btn_add', 'click', function(){
+			$note.on('click', '.btn_add', function(){
 				var back = app.clone();// clone a new note app object
 				callbacks['#J_box_note'](back);
 			});
 			// 删除
-			$note.delegate('.btn_clear', 'click', function(){
+			$note.on('click', '.btn_clear', function(){
 				$textarea.val('');
 				remember();
 			});
