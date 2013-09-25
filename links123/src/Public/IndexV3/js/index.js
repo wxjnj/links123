@@ -177,13 +177,13 @@ var Zld = { // 自留地
 			var nm = $(this);
 			nm.css({
 				'width': 'auto',
-				'display': 'inline',
+				'display': '',
 				'text-align': 'center',
 				'font-size': '12px',
-				'padding-left': holder.oldPaddingLeft,
-				'padding-right': holder.oldPaddingRight
+				'padding-left': holder.oldPaddingLeft + 'px',
+				'padding-right': holder.oldPaddingRight + 'px'
 			});
-			nm.find('b').css('margin-right', '0');
+			nm.find('b').css('margin', '0');
 		});
 		/*
 		$(document).on('mouseenter', '#J_Zld input[name="url"], #J_Zld input[name="name"]', function(){
