@@ -41,13 +41,14 @@ class LoginAction extends CommonAction
         $username = trim($this->_param('username'));
         $password = $this->_param('password');
         $auto_login = $this->_param('auto_login');
-
+        $verify = trim($this->_param('verify'));
+        
 		if (checkEmail($username)) {
 			$param = 'email';
 		} else if (checkName($username)) {
 			$param = 'nickname';
 		} else {
-			echo "用户名有不法字符";
+			echo json_encode(array("code"=>501, "content" => "用户名有不法字符"));
 			return false;
 		}
 		
@@ -55,19 +56,42 @@ class LoginAction extends CommonAction
 		$mbrNow = $member->where("$param = '%s'", $username)->find();
 		
 		if (empty($mbrNow)) {
-			echo "用户不存在";
+			echo json_encode(array("code"=>502, "content" => "用户名不存在"));
 			return false;
 		}
         if ($mbrNow['status'] == -1) {
-			echo "已禁用！";
+			echo json_encode(array("code"=>403, "content" => "已禁用！"));
 			return false;
 		}
 		
 		$password = md5(md5($password).$mbrNow['salt']);
 		if ($password != $mbrNow['password']) {
-			echo "密码错误！";
+            // 用户登录输入错误密码次数计数
+            isset($_SESSION['userLoginCounterPaswd']) ? $_SESSION['userLoginCounterPaswd']++ : $_SESSION['userLoginCounterPaswd'] = 1;
+            
+            if ($_SESSION['userLoginCounterPaswd'] > 2){    // 输入错误密码次数超过2次给用户不同的提示信息
+                echo json_encode(array("code"=>504, "content" => "建议检查用户名是否正确"));
+            }
+            else {
+                echo json_encode(array("code"=>503, "content" => "用户名与密码不符"));
+            }
 			return false;
 		}
+        
+        // 尝试登录超过5次，用户需要输入验证码
+        if (isset($_SESSION['userLoginCounterPaswd']) && $_SESSION['userLoginCounterPaswd'] > 5) {
+            if (empty($verify)) {
+                echo json_encode(array("code"=>505, "content" => "请输入验证码"));
+                return false;
+            }
+            else {
+                if ($_SESSION['verify'] != md5(strtoupper($verify))) {
+                    echo json_encode(array("code"=>506, "content" => "验证码错误"));
+                    return false;
+                }
+            }
+            
+        }
 		
 		$_SESSION[C('MEMBER_AUTH_KEY')] = $mbrNow['id'];
 		$_SESSION['nickname'] = $mbrNow['nickname'];
@@ -86,7 +110,7 @@ class LoginAction extends CommonAction
 			cookie("USER_ID", $str, $auto_login_time ? : 60*60*24*7);
 		}
 		
-		echo "loginOK";
+		echo json_encode(array("code"=>200, "content" => "loginOK"));
 	}
 	
 	/**

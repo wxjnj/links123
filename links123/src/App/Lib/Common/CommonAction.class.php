@@ -16,7 +16,7 @@ class CommonAction extends Action {
 	private function _init() {
 		session_start();
 		//网站升级
-		$this->updating();
+		//$this->updating();
 		//自动登录
 		$this->autoLogin();
 		
@@ -183,8 +183,11 @@ class CommonAction extends Action {
         $cat = M("Category");
         $list = $cat->field('id')->where('status=1 and prt_id = %d', $pid)->select();
         if (count($list)) {
-            foreach ($list as &$value) {
-                $pids = array_merge($pids, $this->_getSubCats($value['id']));
+        	foreach ($list as $value) {
+            //foreach ($list as &$value) {
+                //$pids = array_merge($pids, $this->_getSubCats($value['id']));
+                //删除无效的二级级联查询 @slate
+                $pids[] = $value['id'];
             }
         }
         return $pids;
