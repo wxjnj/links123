@@ -565,7 +565,7 @@ input:focus{ outline: 0; }
 .apps ul li{
 	cursor: pointer;
 	display: inline;
-	margin-left: 30px;
+	margin-left: 35px;
 	float: left;
 	width: 72px;
 	height: 100px;
@@ -1521,15 +1521,15 @@ input:focus{ outline: 0; }
 	 	margin-left: 320px; 
 		width: 410px;
 	}
-  .thl .ctls .ipt{
-    width: 360px;
-  }
-  .thl .subcate{
-    left: 30px;
-  }
-  .thl .cate{
-    left: 45px;
-  }
+	.thl .ctls .ipt{
+		width: 360px;
+	}
+	.thl .subcate{
+		left: 30px;
+	}
+	.thl .cate{
+		left: 45px;
+	}
 
 
 	.nav{ font-size: 12px; }
@@ -1630,15 +1630,15 @@ input:focus{ outline: 0; }
 		margin-left: 400px; 
 	 	width: 460px;
 	}
-  .thl .ctls .ipt{
-    width: 415px;
-  }
-  .thl .subcate{
-    left: 52px;
-  }
-  .thl .cate{
-    left: 86px;
-  }
+	.thl .ctls .ipt{
+		width: 415px;
+	}
+	.thl .subcate{
+		left: 52px;
+	}
+	.thl .cate{
+		left: 86px;
+	}
 
 	.nav{ font-size: 14px; }
 	.nav li a{ padding: 0 20px; }

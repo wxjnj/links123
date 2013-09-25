@@ -1,103 +1,102 @@
+#header,
+#container,
+#footer,
+#frame-wrap{
+	min-width: 1175px;
+	width: 100%;
+}
+.header-inner,
+.container-inner,
+.footer-inner,
+#frame-wrap{
+	width: 1175px;
+	margin: 0 auto;
+}
+.extra .extra-col1,
+.extra .extra-col2{
+	margin-right: 25px;
+}
+.extra .extra-col1{ width: 500px; }
+.extra .extra-col2{ width: 310px; }
+.extra .extra-col3{ width: 310px; }
 
-  #header,
-  #container,
-  #footer,
-  #frame-wrap{
-    min-width: 1175px;
-    width: 100%;
-  }
-  .header-inner,
-  .container-inner,
-  .footer-inner,
-  #frame-wrap{
-    width: 1175px;
-    margin: 0 auto;
-  }
-  .extra .extra-col1,
-  .extra .extra-col2{
-    margin-right: 25px;
-  }
-  .extra .extra-col1{ width: 500px; }
-  .extra .extra-col2{ width: 310px; }
-  .extra .extra-col3{ width: 310px; }
+.screen-change-btn .s-wide{display:none;}
+.screen-change-btn .s-960{display:inline;}
 
-  .screen-change-btn .s-wide{display:none;}
-  .screen-change-btn .s-960{display:inline;}
+.thl{
+	margin-left: 400px; 
+	width: 460px;
+}
+.thl .ctls .ipt{
+	width: 415px;
+}
+.thl .subcate{
+	left: 52px;
+}
+.thl .cate{
+	left: 86px;
+}
 
-  .thl{
-    margin-left: 400px; 
-    width: 460px;
-  }
-  .thl .ctls .ipt{
-    width: 415px;
-  }
-  .thl .subcate{
-    left: 52px;
-  }
-  .thl .cate{
-    left: 86px;
-  }
-
-  .nav{ font-size: 14px; }
-  .nav li a{ padding: 0 20px; }
-  .schedule li .t input{ width: 340px; }
-  .find ul{ margin-left: -10px; }
-  .find li{
-    height: 98px;
-    margin: 0 0 10px 10px;
-    width: 159px;
-  }
-  .find li.more{ width: 498px; }
-  .find li.hover .info{
-    padding: 30px 15px 0 15px;
-    width: 129px;
-    height: 68px;
-  }
-  .find li .mask,
-  .find li .info,
-  .find li .go{
-    height: 98px;
-    width: 159px;
-  }
-  .music .top-mv ul li img{
-    height: 128px;
-    width: 147px;
-  }
-  .music .top-mv ul li{
-    margin-left: 16px;
-    width: 147px;
-  }
-  .music .hot-music li{
-    width: 147px;
-  }
-  .music .hot-music li.odd{
-    margin-left: 16px;
-  }
-  .pics{
-    height: 473px;
-    width: 310px;
-  }
-  .pics .items li,
-  .pics img{
-    height: 448px;
-    width: 310px;
-  }
-  .pics .items li .info .p2{
-    margin-top: 20px;
-  }
-  .pics .pg{
-    top: 463px;
-  }
-  .pics .items li .info{
-    width: 250px;
-    padding: 35px 30px;
-    height: 378px;
-  }
-  .pics .items li .info .p3{
-    left: 30px;
-    width: 260px;
-  }
-  .pics .items li .info .p3 a,
-  .pics .items li .info .p3 a:hover{
-    width: 110px;
-  }
+.nav{ font-size: 14px; }
+.nav li a{ padding: 0 20px; }
+.schedule li .t input{ width: 340px; }
+.find ul{ margin-left: -10px; }
+.find li{
+	height: 98px;
+	margin: 0 0 10px 10px;
+	width: 159px;
+}
+.find li.more{ width: 498px; }
+.find li.hover .info{
+	padding: 30px 15px 0 15px;
+	width: 129px;
+	height: 68px;
+}
+.find li .mask,
+.find li .info,
+.find li .go{
+	height: 98px;
+	width: 159px;
+}
+.music .top-mv ul li img{
+	height: 128px;
+	width: 147px;
+}
+.music .top-mv ul li{
+	margin-left: 16px;
+	width: 147px;
+}
+.music .hot-music li{
+	width: 147px;
+}
+.music .hot-music li.odd{
+	margin-left: 16px;
+}
+.pics{
+	height: 473px;
+	width: 310px;
+}
+.pics .items li,
+.pics img{
+	height: 448px;
+	width: 310px;
+}
+.pics .items li .info .p2{
+	margin-top: 20px;
+}
+.pics .pg{
+	top: 463px;
+}
+.pics .items li .info{
+	width: 250px;
+	padding: 35px 30px;
+	height: 378px;
+}
+.pics .items li .info .p3{
+	left: 30px;
+	width: 260px;
+}
+.pics .items li .info .p3 a,
+.pics .items li .info .p3 a:hover{
+	width: 110px;
+}
