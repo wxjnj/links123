@@ -89,11 +89,11 @@
 								<volist name="skinList" id="vo" key="k">
 									<dd class="sa{$k}">
 										<ul>
-											<volist name="vo" id="skin">
-												<li data-bg="{$skin.skin}" data-theme="dark" data-id="{$skin.skinId}" <if condition="$skin.skinId eq $skinId">class="added"</if>>
-													<p><img src="{$skin.smallSkin}" alt="" /></p>
+											<volist name="vo" id="skins">
+												<li data-bg="{$skins.skin}" data-theme="dark" data-id="{$skins.skinId}" <if condition="$skins.skinId eq $skinId">class="added"</if>>
+													<p><img src="{$skins.smallSkin}" alt="" /></p>
 													<s></s>
-													<p class="imgb"><img src="{$skin.middleSkin}" /></p>
+													<p class="imgb"><img src="{$skins.middleSkin}" /></p>
 												</li>
 											</volist>
 										</ul>
