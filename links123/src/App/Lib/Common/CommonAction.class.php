@@ -16,7 +16,7 @@ class CommonAction extends Action {
 	private function _init() {
 		session_start();
 		//网站升级
-		$this->updating();
+		//$this->updating();
 		//自动登录
 		$this->autoLogin();
 		
