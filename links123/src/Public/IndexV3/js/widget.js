@@ -1,14 +1,18 @@
 $(function(){
 
+	//解决safari禁用第三方cookie造成天气控件不显示的bug
+	if($.browser.safari && navigator.userAgent.toLowerCase().match(/chrome/) == null){
+		var weatherPlugin = '<iframe frameborder="0" scrolling="no" src="/Home/weather/index_new.html" ' + 
+			'style="z-index: 99999; width: 380px; height: 220px; border: 0px;"></iframe>';
+		$('#J_box_weather').html(weatherPlugin);
+	}
+
 	$('#J_apps_add').click(function(){
 		alert('Coming soon...');
 	});
 	$('#J_weather').click(function(){
-//      $.post("/Weather/index", function(data){
-//          $('#J_box_weather').html(data);
-//      }); 
-		
-		$.fancybox({
+
+	$.fancybox({
 			href: '#J_box_weather',
 			helpers:  {
 				title:  null,
@@ -29,14 +33,13 @@ $(function(){
 	});
 	
 	$('#J_music').click(function(){
-		
+
 		if(g_music_currentkey != -1){
 			if ($('#J_box_music').is(":hidden")){
-			  $('#J_box_music').show(); 
-			  $('.music_button').show();
-			  $('.music_button_min').show();
-			}
-			else {
+				$('#J_box_music').show(); 
+				$('.music_button').show();
+				$('.music_button_min').show();
+			}else {
 				$('#J_box_music').hide(); 
 				$('.music_button').hide();
 				$('.music_button_min').hide();
@@ -47,17 +50,19 @@ $(function(){
 
 	});
 	
-	$('.music_button').click(function(){
-			$('#J_music_iframe').attr('src','');
-			$('.music_button').hide();
-			$('.music_button_min').hide();
-			g_music_currentkey = -1;
+	$('.music_button').click(function(){  //close
+		$('#J_music_iframe').attr('src','').hide();
+		$('.music_button').hide();
+		$('.music_button_min').hide();
+		g_music_currentkey = -1;
+		return false;
 	}); 
-	$('.music_button_min').click(function(){
-			$('#J_box_music').hide(); 
+	$('.music_button_min').click(function(){ //min
+		$('#J_box_music').hide(); 
 		$("#bModal").trigger("click");
-			//$('.music_button').hide();
-			//$('.music_button_min').hide();
+		//$('.music_button').hide();
+		//$('.music_button_min').hide();
+		return false;
 	});
 	
 	function music_box_proc(){
@@ -73,9 +78,7 @@ $(function(){
 		$.each(musicurl, function(key, value){
 			if (g_music_currentkey == key)  {
 				g_music_currentkey++;
-
 				g_music_currentkey = g_music_currentkey % 4;
-			
 				return false;
 			}
 		});
@@ -119,6 +122,7 @@ $(function(){
 
 		$('.music_button').show();
 		$('.music_button_min').show();
+		$('#J_music_iframe').show();
 	}
 	
 	//fancybox esc
