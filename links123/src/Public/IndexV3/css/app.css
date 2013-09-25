@@ -1,5 +1,5 @@
 @charset "utf-8";
-/* CSS Document - updated by lpgray 2013-09-25 14:39*/
+/* CSS Document */
 
 /** $box-mail **/
 .box-mail {
@@ -19,7 +19,7 @@
 .box-mail li {
 	margin-top: 12px;
 	margin-left: 35px;
-	/*height: 28px;*/
+	height: 28px;
 }
 
 .box-mail_input,.box-mail_select,.box-mail_btn {
@@ -690,8 +690,8 @@ div.gt-baf-translations {
 	outline: medium none;
 	white-space: pre-wrap;
 	border: 0;
-	width: 100%;
-	padding: 10px 0;
+	width: 350px;
+	padding: 10px;
 	border: 0 none;
 	resize: none;
 	vertical-align: middle;

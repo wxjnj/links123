@@ -1,0 +1,134 @@
+/** $box_note **/
+.J_box_note{
+	padding: 0;
+}
+.J_box_note .box_note_header{
+	height: 34px;
+	line-height: 34px;
+	background: #EDEDED;
+	width: 320px;
+	position: relative;
+}
+.J_box_note .box_note_header a{
+	display: inline-block;
+}
+.J_box_note .box_note_header > a{
+	opacity: .7;
+}
+.J_box_note .box_note_header > a:hover{
+	opacity: 1;
+}
+.J_box_note .box_note_header .colors-wrap{
+	position: absolute;
+	height: 25px;
+	top: 8px;
+	left: 50px;
+	line-height: 0;
+}
+.J_box_note .box_note_header .btn_add{
+	background: url('../imgs/glyphicons-halflings.png') -407px -96px no-repeat;
+	width: 16px;
+	height: 16px;
+	margin: 0;
+	position: absolute;
+	left: 10px;
+	top: 8px;
+	font-size: 0;
+}
+.J_box_note .box_note_header .btn_clear{
+	background: url('../imgs/glyphicons-halflings.png') -454px 0 no-repeat;
+	width: 16px;
+	height: 16px;
+	font-size: 0;
+	position: absolute;
+	top: 8px;
+	right: 10px;
+}
+.J_box_note .box_note_header .colors-wrap a{
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	font-size: 0;
+	border: 1px solid #999;
+	background: #000;
+	margin-left: 12px;
+	vertical-align: middle;
+}
+.J_box_note .box_note_header .colors-wrap a.color_1{
+	background: #fff;
+}
+.J_box_note .box_note_header .colors-wrap a.color_2{
+	background: #f6ebb5;
+}
+.J_box_note .box_note_header .colors-wrap a.color_3{
+	background: #cee7dd;
+}
+.J_box_note .box_note_header .colors-wrap a.color_4{
+	background: #fbd9f3;
+}
+.J_box_note .box_note_header .colors-wrap a.color_5{
+	background: #b9e1fa;
+}
+.J_box_note .box_note_header .colors-wrap a.color_6{
+	background: #fab0a4;
+}
+.J_box_note textarea{
+	background: #fff;
+	width: 300px;
+	padding: 10px;
+	height: 330px;
+	border: 0;
+	margin: 0;
+	display: block;
+}
+/** box_note$ **/
+/** $App Object Frame **/
+.clearfix {
+	*zoom: 1;
+}
+.clearfix:before, .clearfix:after {
+	display: table;
+	content: "";
+	line-height: 0;
+}
+.clearfix:after {
+	clear: both;
+}
+.links123-app-frame{
+	width: auto;
+	position : absolute;
+	top : 50%;
+	left : 50%;
+	padding : 10px;
+	border-radius : 5px;
+	background: #fff;
+	border: 1px solid #ccc;
+}
+.links123-app-frame iframe{
+	padding: 0;
+	margin: 0;
+	border: 0;
+	outline: none;
+	vertical-align: top;
+	display: block;
+}
+.links123-app-frame .links123-close-wrap{
+	position: relative;
+	height: 0;
+	z-index: 1000;
+}
+.links123-app-frame > .links123-close-wrap > a{
+	background: #f00;
+	display: block;
+	width: 26px;
+	height: 26px;
+	line-height: 26px;
+	position: absolute;
+	right: -20px;
+	top: -20px;
+	color: #fff;
+	text-align: center;
+	z-index: 1000;
+	font: normal bold 20px 'arial';
+}
+/** App Object Frame$ **/
