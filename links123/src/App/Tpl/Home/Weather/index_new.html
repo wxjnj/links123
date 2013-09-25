@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta content="zh-cn" http-equiv="Content-Language" />
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+<title>标准版</title>
+<style>
+
+body{margin:0;font-family:宋体;padding:0; }
+body div.border{border:1px solid;}
+body div.border.radius{border-radius:5px;}
+a{text-decoration:none; }
+a:hover{text-decoration:underline;}
+table{border-collapse:collapse;border-spacing:0;empty-cells:show;}
+table td{padding:0;}
+em{font-family:Arial,Helvetica,sans-serif;font-style:normal;}
+.container{font-size:12px;width:100%; font-family:'宋体';}
+.hide{display:none;}
+.sep{border-bottom:1px #EAEAEA dashed;}
+.vsep{border-right:1px #EAEAEA dashed;}
+/*icon*/
+.icon-search{background-image:url('http://static.css.weather.com.cn/gadget/images/glyphicons-halflings-white.png');background-position:-48px 0;background-repeat:no-repeat;display:inline-block;height:14px;line-height:14px;vertical-align:text-top;width:14px;}
+/*天气图标*/
+.symbol-big{width:56px;height:56px; display:inline-block;}
+.symbol-small{width:36px;height:36px;display:inline-block;}
+.symbol-mini{width:20px;height:20px;display:inline-block;}
+/*小符号*/
+.symbol-small-cloudy{background-position:-36px 0;}
+.symbol-small-dustblowing{background-position:-144px -108px;}
+.symbol-small-duststorm{background-position:-72px -108px;}
+.symbol-small-floatingdust{background-position:-108px -108px;}
+.symbol-small-fog{background-position:-36px -108px;}
+.symbol-small-freezingrain{background-position:-36px -72px;}
+.symbol-small-hail{background-position:-180px 0;}
+.symbol-small-heavyrain{background-position:-180px -36px;}
+.symbol-small-heavysnow{background-position:-180px -72px;}
+.symbol-small-lightrain{background-position:-36px -36px;}
+.symbol-small-lightsnow{background-position:-108px -72px;}
+.symbol-small-moderaterain{background-position:-72px -36px;}
+.symbol-small-moderatesnow{background-position:-144px -72px;}
+.symbol-small-overcast{background-position:-72px 0;}
+.symbol-small-rain{background-position:-108px -36px;}
+.symbol-small-shower{background-position:-108px 0;}
+.symbol-small-sleet{background-position:0 -36px;}
+.symbol-small-snow{background-position:0 -108px;}
+.symbol-small-snowshower{background-position:-72px -72px;}
+.symbol-small-sunny{background-position:0 0;}
+.symbol-small-thundershower{background-position:-144px 0;}
+.symbol-small-torrentialrain{background-position:-144px -36px;}
+.symbol-small-twister{background-position:-180px -108px;}
+.symbol-small-xrain{background-position:0 -72px;}
+/*微符号*/
+.symbol-mini-cloudy{background-position:-20px 0;}
+.symbol-mini-dustblowing{background-position:-80px -60px;}
+.symbol-mini-duststorm{background-position:-40px -60px;}
+.symbol-mini-floatingdust{background-position:-60px -60px;}
+.symbol-mini-fog{background-position:-20px -60px;}
+.symbol-mini-freezingrain{background-position:-20px -40px;}
+.symbol-mini-hail{background-position:-100px 0;}
+.symbol-mini-heavyrain{background-position:-100px -20px;}
+.symbol-mini-heavysnow{background-position:-100px -40px;}
+.symbol-mini-lightrain{background-position:-20px -20px;}
+.symbol-mini-lightsnow{background-position:-100px -40px;}
+.symbol-mini-moderaterain{background-position:-40px -20px;}
+.symbol-mini-moderatesnow{background-position:-80px -40px;}
+.symbol-mini-overcast{background-position:-40px 0;}
+.symbol-mini-rain{background-position:-60px -20px;}
+.symbol-mini-shower{background-position:-60px 0;}
+.symbol-mini-sleet{background-position:0 -20px;}
+.symbol-mini-snow{background-position:0 -60px;}
+.symbol-mini-snowshower{background-position:-40px -40px;}
+.symbol-mini-sunny{background-position:0 0;}
+.symbol-mini-thundershower{background-position:-80px 0;}
+.symbol-mini-torrentialrain{background-position:-80px -20px;}
+.symbol-mini-twister{background-position:-100px -60px;}
+.symbol-mini-xrain{background-position:0 -40px;}
+
+/*经典版*/
+.classic .symbol-mini{background-image:url(http://static.css.weather.com.cn/gadget/css/images/symbols/classic/mini.png); background-repeat: no-repeat;}
+.classic .symbol-small{background-image:url(http://static.css.weather.com.cn/gadget/css/images/symbols/classic/small.png); background-repeat: no-repeat;}
+.classic .symbol-big-cloudy{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/classic/big/cloudy.png);}
+.classic .symbol-big-dustblowing{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/classic/big/dustblowing.png);}
+.classic .symbol-big-duststorm{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/classic/big/duststorm.png);}
+.classic .symbol-big-floatingdust{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/classic/big/floatingdust.png);}
+.classic .symbol-big-fog{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/classic/big/fog.png);}
+.classic .symbol-big-freezingrain{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/classic/big/freezingrain.png);}
+.classic .symbol-big-hail{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/classic/big/hail.png);}
+.classic .symbol-big-heavyrain{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/classic/big/heavyrain.png);}
+.classic .symbol-big-heavysnow{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/classic/big/heavysnow.png);}
+.classic .symbol-big-lightrain{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/classic/big/lightrain.png);}
+.classic .symbol-big-lightsnow{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/classic/big/lightsnow.png);}
+.classic .symbol-big-moderaterain{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/classic/big/moderaterain.png);}
+.classic .symbol-big-moderatesnow{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/classic/big/moderatesnow.png);}
+.classic .symbol-big-overcast{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/classic/big/overcast.png);}
+.classic .symbol-big-rain{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/classic/big/rain.png);}
+.classic .symbol-big-shower{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/classic/big/shower.png);}
+.classic .symbol-big-sleet{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/classic/big/sleet.png);}
+.classic .symbol-big-snow{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/classic/big/snow.png);}
+.classic .symbol-big-snowshower{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/classic/big/snowshower.png);}
+.classic .symbol-big-sunny{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/classic/big/sunny.png);}
+.classic .symbol-big-thundershower{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/classic/big/thundershower.png);}
+.classic .symbol-big-torrentialrain{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/classic/big/torrentialrain.png);}
+.classic .symbol-big-twister{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/classic/big/twister.png);}
+.classic .symbol-big-xrain{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/classic/big/xrain.png);}
+
+/*现代版*/
+.modern .symbol-mini{background-image:url(http://static.css.weather.com.cn/gadget/css/images/symbols/modern/mini.png); background-repeat: no-repeat;}
+.modern .symbol-small{background-image:url(http://static.css.weather.com.cn/gadget/css/images/symbols/modern/small.png); background-repeat: no-repeat;}
+.modern .symbol-big-cloudy{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/modern/big/cloudy.png);}
+.modern .symbol-big-dustblowing{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/modern/big/dustblowing.png);}
+.modern .symbol-big-duststorm{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/modern/big/duststorm.png);}
+.modern .symbol-big-floatingdust{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/modern/big/floatingdust.png);}
+.modern .symbol-big-fog{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/modern/big/fog.png);}
+.modern .symbol-big-freezingrain{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/modern/big/freezingrain.png);}
+.modern .symbol-big-hail{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/modern/big/hail.png);}
+.modern .symbol-big-heavyrain{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/modern/big/heavyrain.png);}
+.modern .symbol-big-heavysnow{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/modern/big/heavysnow.png);}
+.modern .symbol-big-lightrain{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/modern/big/lightrain.png);}
+.modern .symbol-big-lightsnow{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/modern/big/lightsnow.png);}
+.modern .symbol-big-moderaterain{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/modern/big/moderaterain.png);}
+.modern .symbol-big-moderatesnow{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/modern/big/moderatesnow.png);}
+.modern .symbol-big-overcast{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/modern/big/overcast.png);}
+.modern .symbol-big-rain{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/modern/big/rain.png);}
+.modern .symbol-big-shower{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/modern/big/shower.png);}
+.modern .symbol-big-sleet{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/modern/big/sleet.png);}
+.modern .symbol-big-snow{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/modern/big/snow.png);}
+.modern .symbol-big-snowshower{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/modern/big/snowshower.png);}
+.modern .symbol-big-sunny{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/modern/big/sunny.png);}
+.modern .symbol-big-thundershower{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/modern/big/thundershower.png);}
+.modern .symbol-big-torrentialrain{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/modern/big/torrentialrain.png);}
+.modern .symbol-big-twister{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/modern/big/twister.png);}
+.modern .symbol-big-xrain{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/modern/big/xrain.png);}
+
+/*流行版*/
+.pop .symbol-mini{background-image:url(http://static.css.weather.com.cn/gadget/css/images/symbols/pop/mini.png); background-repeat:no-repeat;}
+.pop .symbol-small{background-image:url(http://static.css.weather.com.cn/gadget/css/images/symbols/pop/small.png); background-repeat:no-repeat;}
+.pop .symbol-big-cloudy{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/pop/big/cloudy.png);}
+.pop .symbol-big-dustblowing{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/pop/big/dustblowing.png);}
+.pop .symbol-big-duststorm{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/pop/big/duststorm.png);}
+.pop .symbol-big-floatingdust{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/pop/big/floatingdust.png);}
+.pop .symbol-big-fog{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/pop/big/fog.png);}
+.pop .symbol-big-freezingrain{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/pop/big/freezingrain.png);}
+.pop .symbol-big-hail{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/pop/big/hail.png);}
+.pop .symbol-big-heavyrain{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/pop/big/heavyrain.png);}
+.pop .symbol-big-heavysnow{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/pop/big/heavysnow.png);}
+.pop .symbol-big-lightrain{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/pop/big/lightrain.png);}
+.pop .symbol-big-lightsnow{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/pop/big/lightsnow.png);}
+.pop .symbol-big-moderaterain{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/pop/big/moderaterain.png);}
+.pop .symbol-big-moderatesnow{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/pop/big/moderatesnow.png);}
+.pop .symbol-big-overcast{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/pop/big/overcast.png);}
+.pop .symbol-big-rain{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/pop/big/rain.png);}
+.pop .symbol-big-shower{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/pop/big/shower.png);}
+.pop .symbol-big-sleet{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/pop/big/sleet.png);}
+.pop .symbol-big-snow{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/pop/big/snow.png);}
+.pop .symbol-big-snowshower{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/pop/big/snowshower.png);}
+.pop .symbol-big-sunny{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/pop/big/sunny.png);}
+.pop .symbol-big-thundershower{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/pop/big/thundershower.png);}
+.pop .symbol-big-torrentialrain{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/pop/big/torrentialrain.png);}
+.pop .symbol-big-twister{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/pop/big/twister.png);}
+.pop .symbol-big-xrain{background:url(http://static.css.weather.com.cn/gadget/css/images/symbols/pop/big/xrain.png);}
+
+
+/* Css Hacks */
+[class^="symbol-"],[class*=" symbol-"]{*display:block;}
+
+#lunar{height:24px;padding:0 5px;}
+#city{height:25px;padding:0 5px;}
+#city-name{font-size:14px; font-size:15px; position:relative; }/*添加了新样式*/
+#city-name .en{display: none;}
+#city-btn{width:18px;height:18px;padding:2px;margin-right:5px;border-radius:5px;background-color:#b6b8c5; position:relative;top:-2px; }
+#city input{height:16px;width:100px;}
+/*实况*/
+#rt{height:78px;}
+#rt table{width:100%;height:78px;border:0 none;}
+#rt table td{border:0 none;padding:0; white-space:nowrap;}
+#rt-symbol{text-align:center;}
+#rt table td#rt-temp{vertical-align:top;height:22px;overflow:hidden;font-family:Arial,Helvetica,sans-serif;}
+#rt-temp-value{font-size:24px;line-height:28px;float:left;height:24px;}
+#rt-temp-unit{vertical-align:super;font-family:'微软雅黑'; position:relative; top:2px; left:6px;}/*添加了新样式*/
+#rt-scene{font-size:14px;height:18px;}
+#rt-wind{height:14px;}
+#rt-wind span{float:left;}
+#rt-hum{font-family: 'Arial'; font-size: 12px;}
+#rt-hum span{float:left;height:12px;}
+
+/*新添加的样式:调节温度字母之间的细节*/
+.temp{font-family:Arial;position:relative;top:2px;left:6px;}
+#rt-symbol a{ position:relative;left:-4px; top:2px;}
+#rt-scene span{position:relative; left:7px; top:1px;}
+#rt-wind span{position:relative; left:7px; top:1px;}
+#rt-hum span{position:relative; left:7px;}
+.p_t{position:relative; top:-2px; }
+.p_m{position:relative; top:-2px;}
+.p_h{position:relative; top:-2px;}
+.l_range{font-family:Arial; letter-spacing:-1px; position:relative; left:0px;font-family:'微软雅黑'; }
+.h_range{font-family:Arial;letter-spacing:-1px; margin-left:-2px; position:relative; left:0px;font-family:'微软雅黑'; }
+/*新添加的样式 结束*/
+
+/*预报*/
+#fc{height:87px;}
+#fc table{height:85px;}
+#fc table td{border:0 none;text-align:center;}
+#fc table tr#symbols{height:56px;}
+/*字幕*/
+#slider,#slider1{height:24px;padding:0 5px;}
+#slider a,#slider1 a{color:#6699FF;}
+/* !!!!!!!!!!!!Css Hacks!!!!!!!!!!!!!!!!!!!!*号处理IE7,_下划线处理IE6 */
+#city{*height:25px;}
+#city-btn{background-image:-ms-linear-gradient(top,#b6b8c5,#8b90a6);background-image:-moz-linear-gradient(top,#b6b8c5,#8b90a6);background-image:-o-linear-gradient(top,#b6b8c5,#8b90a6);background-image:-webkit-gradient(linear,0 0,0 100%,from(#b6b8c5),to(#8b90a6));}
+#lunar{*height:24px;}
+#rt{*height:78px;}
+#rt-temp{*line-height:22px;*vertical-align:top;}
+#rt-temp-value{*line-height:28px;*height:20px;}
+#rt-scene{*height:14px;}
+#rt-wind{*height:14px;}
+#rt-wind span{*height:14px;}
+#rt-hum span{*height:18px;}
+#fc{*height:86px;}
+#slider,#slider1{*height:24px;}
+</style>
+<script>
+var INIT_ID = '{$region}' || 1;
+</script>
+</head>
+
+<body>
+    <div>
+        <table class="container hide" cellpadding="0" cellspacing="0" border="0">
+            <tbody>
+                <tr height="29px">
+                    <td id="city" colspan="2" class="sep">
+                        <a id="city-btn" href="#"><i class="icon-search"></i></a><span id="city-name"><span
+                            class="cn"></span><span class="en"></span></span>
+                    </td>
+                    <td style="width: 20px" id="ad" class="sep">
+                    </td>
+                </tr>
+                <tr>
+                    <td id="rt" class="sep" colspan="3">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td id="rt-symbol" rowspan="4" style="width: 42%">
+                                        <a class="symbol-big" href="#"></a>
+                                    </td>
+                                    <td colspan="2" id="rt-temp">
+                                        <span id="rt-temp-value" class="temp"></span><span id="rt-temp-unit">°C</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td id="rt-scene" colspan="2">
+                                        <span></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td id="rt-wind" colspan="2">
+                                        <span></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td id="rt-hum" colspan="2">
+                                        <span></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                <tr id="fc">
+                    <td class="sep" colspan="3">
+                        <table style="width: 100%">
+                            <tr id="symbols">
+                                <td id="fc-s1" width="33%">
+                                    <a class="symbol-small" href="#"></a>
+                                </td>
+                                <td id="fc-s2" width="33%">
+                                    <a class="symbol-small" href="#"></a>
+                                </td>
+                                <td id="fc-s3" width="33%">
+                                    <a class="symbol-small" href="#"></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="33%" class="p_t">
+                                    今天
+                                </td>
+                                <td width="33%" class="p_m">
+                                    明天
+                                </td>
+                                <td width="33%" class="p_h">
+                                    后天
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="33%">
+                                    <span id="fc-l1" class="l_range"></span>/<span id="fc-h1" class="h_range"></span>
+                                </td>
+                                <td width="33%">
+                                    <span id="fc-l2" class="l_range"></span>/<span id="fc-h2" class="h_range"></span>
+                                </td>
+                                <td width="33%">
+                                    <span id="fc-l3" class="l_range"></span>/<span id="fc-h3" class="h_range"></span>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td id="slider" colspan="3">
+                        <a href="#">加载中...</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+<script>
+        vm={"h":220,"w":380,"f":true,"r":true,"l":false,"u":false,"s":true,"c":"101210101","n":"北京","en":"hangzhou","bg":"#ffffff","fc":"#000000","b":null,"br":false,"o":0,"it":"classic","g":47111,"url":null,"d":"www.links123.cn","wd":2};
+</script>
+<script src="http://static.js.weather.com.cn/uc/js/jquery.js"></script>
+<!--<script src="http://cfps.cw.china-netwave.com/TextProvider.aspx?lid=14"></script>-->
+<script>
+/* File Created: 九月 23, 2012 */
+//document.domain = 'ext.weather.com.cn'
+var l = $('#lunar'), r = $('#rt'), f = $('#fc'), s = $('#slider'), c = $('#city');
+var cb = c.find('#city-btn'), cn = c.find('#city-name .cn'), en = c.find('#city-name .en');
+String.prototype.u = function () {
+    if (vm.url) {
+        var u = vm.url;
+        for (var i in vm) {
+            u = u.replace('$' + i, vm[i])
+        }
+        return u;
+    }
+    else
+        return ['http://www.weather.com.cn/weather/', this, '.shtml'].join('')
+}
+
+var slider = [];
+slider.next = function () {
+    if (!slider.curIndex) slider.curIndex = 0;
+    return slider[(slider.curIndex++) % slider.length];
+};
+slider.show = function () {
+    var a = s.find('a'), n = slider.next();
+    n && a.fadeOut(200, function () {
+        if (n.url) a.attr('href', n.url);
+        else a.removeAttr('href');
+        a.html(n.title).attr('target', '_blank').fadeIn(200);
+    });
+};
+var sliderad = [];
+var symbolMap = {
+    '晴': 'sunny',
+    '多云': 'cloudy',
+    '阴': 'overcast',
+    '阵雨': 'shower',
+    '雷阵雨': 'thundershower',
+    '冰雹': 'hail',
+    '雨夹雪': 'sleet',
+    '小雨': 'lightrain',
+    '中雨': 'moderaterain',
+    '大雨': 'heavyrain',
+    '暴雨': 'torrentialrain',
+    '大暴雨': 'xrain',
+    '特大暴雨': 'xrain',
+    '阵雪': 'snowshower',
+    '小雪': 'lightsnow',
+    '中雪': 'moderatesnow',
+    '大雪': 'heavysnow',
+    '暴雪': 'torrentialsnow',
+    '雾': 'fog',
+    '冻雨': 'freezingrain',
+    '沙尘暴': 'duststorm',
+    '小到中雨': 'moderaterain',
+    '中到大雨': 'heavyrain',
+    '大到暴雨': 'torrentialrain',
+    '暴雨到大暴雨': 'xrain',
+    '大暴雨到特大暴雨': 'xrain',
+    '小到中雪': 'moderatesnow',
+    '中到大雪': 'heavysnow',
+    '大到暴雪': 'torrentialsnow',
+    '浮尘': 'floatingdust',
+    '扬沙': 'dustblowing',
+    '强沙尘暴': 'duststorm',
+    '雨': 'rain',
+    '雪': 'snow',
+    '霾': 'haze'
+};
+
+function getWeekday(wd) {
+    var i = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
+    return i[wd % 7]
+}
+
+function getRgba(bg, opacity) {
+    if (bg) {
+        if (bg.length == 4) bg = ['#', bg.charAt(1), bg.charAt(1), bg.charAt(2), bg.charAt(2), bg.charAt(3), bg.charAt(3)].join('');
+        var r = parseInt([bg.charAt(1), bg.charAt(2)].join(''), 16);
+        var g = parseInt([bg.charAt(3), bg.charAt(4)].join(''), 16);
+        var b = parseInt([bg.charAt(5), bg.charAt(6)].join(''), 16);
+        var a = opacity / 100.0;
+        return ['rgba(', r, ',', g, ',', b, ',', a, ')'].join('');
+    } else return 'transparent';
+}
+function getFilter(bg, opacity) {
+    if (bg) {
+        if (bg.length == 4) bg = [bg.charAt(1), bg.charAt(1), bg.charAt(2), bg.charAt(2), bg.charAt(3), bg.charAt(3)].join('');
+        else bg = [bg.charAt(1), bg.charAt(2), bg.charAt(3), bg.charAt(4), bg.charAt(5), bg.charAt(6)].join('');
+        opacity = Math.floor(opacity * 255 / 100);
+        opacity = opacity.toString(16);
+        if (opacity.length == 1) opacity = '0' + opacity;
+        bg = opacity + bg;
+        return ['progid:dximagetransform.microsoft.gradient(startColorstr=\'#', bg, '\', endColorstr=\'#', bg, '\', GradientType=1)'].join('');
+    } else return 'transparent';
+}
+
+
+function enterq() {
+    c.html('<input type="text" id="city-search">').find('input').focus().blur(leaveq).keydown(function (event) { if (event.which == 13) { d($(this).val()); leaveq(); } if (event.which == 27) leaveq(); });
+    return false;
+}
+
+function leaveq() {
+    c.html('<a id="city-btn" href="#"><i class="icon-search"></i></a><span id="city-name"><span class="cn">北京</span><span class="en"></span></span>').find('#city-name').mouseover(ha);
+    cb = c.find('#city-btn').click(enterq), cn = $('.cn').text(vm.n), $('.en').text(vm.en);
+}
+
+
+function d(id) {
+    if (typeof id != 'string') id = vm.c;
+    //var u = 'http://ext.weather.com.cn/' + id + '.json';
+    var u = 'data.html?id=' + id;
+    if (!id.match(/^\d{9}$/)){
+        u = 'city.html?city=' + encodeURIComponent(id);
+        $.get(u, function(data){
+
+            id = data;
+            u = 'data.php';
+
+        });
+    }
+    $.getJSON(u, function (data) {
+
+        vm.c = data.c;
+        vm.en = data.en;
+        vm.n = data.n;
+        //$.getScript('/' + data.c + '.' + (vm.g || 0) + '.city.js')
+        leaveq();
+        var size;
+        // 实况
+        if (vm.r) {
+            $('#rt-temp-value,[data-value="rt-temp-value"]').text(data.t);
+            $('#rt-scene span,[data-value="rt-temp-scene"] span').text(data.s);
+            $('#rt-wind span,[data-value="rt-wind"] span').text(data.w);
+            $('#rt-hum span,[data-value="rt-temp-span"] span').text('湿度 ' + data.h + '%');
+            var r_s = $('#rt-symbol a,[data-value="rt-symbol"] a');
+            if (r_s.length) {
+                size = r_s.attr('class').split(' ')[0].split('-')[1];
+                r_s.attr('class', ['symbol-', size, ' symbol-', size, '-', symbolMap[data.s]].join('')).attr('href', vm.c.u())
+            }
+        }
+        // 预报
+        if (vm.f) {
+            var s1 = $('#fc-s1 a');
+            if (s1.length) {
+                size = s1.attr('class').split(' ')[0].split('-')[1]
+                s1.attr('class', ['symbol-', size, ' symbol-', size, '-', symbolMap[data.d1.s]].join('')).attr('href', vm.c.u())
+            }
+            var s1_2 = $('#fc-s1-2 a');
+            if (s1_2.length) {
+                size = s1_2.attr('class').split(' ')[0].split('-')[1]
+                s1_2.attr('class', ['symbol-', size, ' symbol-', size, '-', symbolMap[data.d1.s]].join('')).attr('href', vm.c.u())
+            }
+            var s2 = $('#fc-s2 a');
+            if (s2.length) {
+                size = s2.attr('class').split(' ')[0].split('-')[1];
+                s2.attr('class', ['symbol-', size, ' symbol-', size, '-', symbolMap[data.d2.s]].join('')).attr('href', vm.c.u())
+            }
+
+            var s3 = $('#fc-s3 a');
+            if (s3.length) {
+                size = s3.attr('class').split(' ')[0].split('-')[1];
+                s3.attr('class', ['symbol-', size, ' symbol-', size, '-', symbolMap[data.d3.s]].join('')).attr('href', vm.c.u())
+            }
+
+            $('#fc-l1,[data-value="fc-l1"]').text(data.d1.l + '℃');
+            $('#fc-l2,[data-value="fc-l2"]').text(data.d2.l + '℃');
+            $('#fc-l3,[data-value="fc-l3"]').text(data.d3.l + '℃');
+            $('#fc-h1,[data-value="fc-h1"]').text(data.d1.h + '℃');
+            $('#fc-h2,[data-value="fc-h2"]').text(data.d2.h + '℃');
+            $('#fc-h3,[data-value="fc-h3"]').text(data.d3.h + '℃');
+            $('#fc-w1,[data-value="fc-w1"]').text(data.d1.w);
+            $('#fc-s1 span,[data-value="fc-s1"] span').text(data.d1.s);
+            $('#fc-n1,[data-value="fc-n1"]').text(data.d1.s);
+            $('#fc-n2,[data-value="fc-n2"]').text(data.d2.s);
+            $('#fc-n3,[data-value="fc-n3"]').text(data.d3.s);
+            $('#fc-wd1,[data-value="fc-wd1"]').text(getWeekday(vm.wd))
+            $('#fc-wd2,[data-value="fc-wd2"]').text(getWeekday(vm.wd + 1))
+            $('#fc-wd3,[data-value="fc-wd3"]').text(getWeekday(vm.wd + 2))
+        }
+        //农历
+        if (vm.l) {
+            $('#lunar').text('农历 ' + data.l);
+        }
+        // 指数
+        slider.length = 0;
+        // 广告
+//        if (sliderad.length) {
+//            for (var i = 0; i < sliderad.length; i++) {
+//                slider.push(sliderad[i]);
+//            }
+//        }
+        if (data.i) {
+            data.i.cy && slider.push({ title: ['【穿衣指数】', data.i.cy.level, data.i.cy.label].join(' '), url: data.c.u() });
+            data.i.xc && slider.push({ title: ['【洗车指数】', data.i.xc.level, data.i.xc.label].join(' '), url: data.c.u() });
+            data.i.uv && slider.push({ title: ['【紫外线指数】', data.i.uv.level, data.i.uv.label].join(' '), url: data.c.u() });
+        }
+        if (!slider.length) {
+            s.html('<a href="#" target="_blank">七天预报</a>').find('a').attr('href', vm.c.u());
+        }
+        $('.container').removeClass('hide')
+        b();
+        // 跑马灯
+        {
+            slider.show()
+            if (!slider.timer)
+                slider.timer = setInterval(slider.show, 2000);
+        }
+
+        $(window).trigger($.extend($.Event('data.loaded'), { d: data }))
+    });
+}
+if (!vm.p || true) {
+
+    $(function () {
+        $(window).on('city.changed', function (event) { d(event.cityid) })
+        $('.container').addClass(vm.it);
+        // 跑马灯广告
+        if (slider && typeof objectName != 'undefined' && objectName.array && objectName.array.length) {
+            var arr = objectName.array, o = arr[0], a = { title: o.text, url: o.clickUrl ? o.clickUrl + '&lid=' + objectName.lid + '&aid=' + o.aid + '&type=3' : '' };
+            sliderad.push(a);
+            var log = document.createElement('script');
+            log.type = 'text/javascript';
+            log.src = objectName.logUrl + '&lid=' + objectName.lid + '&aid=' + o.aid + '&type=1&ref=' + encodeURIComponent(document.referrer);
+            document.body.appendChild(log);
+        }
+        // 数据展现
+        d(INIT_ID);
+
+        //!vm.p && $.getScript('http://gadget.weather.com.cn/stat.js')
+    });
+}
+$(function () {
+    var a = document.createElement('a');
+    a.id = 'ha'
+    document.body.appendChild(a);
+    $(a).css({ 'position': 'absolute', 'z-index': '100' }).hide()
+    $('a').attr('target', '_blank').click(function () {
+        $.getScript('http://wlog.cw.uitv.com.cn/pluginlog.aspx?pluginid=' + vm.g + '&href=' + encodeURIComponent(this.href))
+    })
+    setTimeout(function () {
+        $.getScript('http://wlog.cw.uitv.com.cn/pluginlog.aspx?pluginid=' + vm.g)
+    }, 1000)
+})
+
+function ha(event) {
+    $('#ha').css({
+        left: $(this).offset().left,
+        top: $(this).offset().top,
+        width: $(this).width(),
+        height: $(this).height(),
+        'background-color': 'red',
+        opacity: 0,
+        filter: 'alpha(opacity=0)',
+        '-moz-opacity': 0
+    }).attr('href', vm.c.u()).show()
+}
+
+function b() {
+    var box = $('body>div');
+    vm.bg && box.css('background-color', getRgba(vm.bg, vm.o) || 'transparent').css('filter', getFilter(vm.bg, vm.o) || 'transparent');
+    vm.b && box.addClass('border').css('border-color', vm.b);
+    vm.br && box.addClass('radius');
+    vm.w && box.width(vm.w);
+    vm.h && box.height(vm.h - parseInt($('body').css('margin-top')));
+    vm.fc && box.css('color', vm.fc);
+    !vm.l && l.remove();
+    if (!vm.r) r.remove(); else r.find('a').attr('href', vm.c.u());
+    if (!vm.f) f.remove(); else f.find('a').attr('href', vm.c.u());
+    if (!vm.s) cb.remove(); else if (!vm.p || true) cb.click(enterq);
+
+    cn.text(vm.n), en.text(vm.en);
+    $('#a,#rt,#fc').mouseover(ha);
+
+}
+</script>
+</body>
+
+</html>

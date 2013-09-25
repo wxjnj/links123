@@ -104,6 +104,11 @@ class IndexAction extends CommonAction {
 		$this->assign('songTopList', $songTopList);
 		$this->assign('songFairList', $songFairList);
 		
+		//豆瓣电影信息 0正在上映 1即将上映
+//		$movieList = $this->getDoubanMovieInfo();
+//		$nowplayingmovie = $movieList[0];
+//      $latermovie = $movieList[1];
+        
 		//TED 发现
 		$ted_list = S('ted_list');
 		if (!$ted_list) {
@@ -323,19 +328,6 @@ class IndexAction extends CommonAction {
 		$announce = M("Announcement");
 		$announces = $announce->where('status = 1')->order('sort ASC, create_time DESC')->select();
 		
-		// 我的地盘
-		$myarea = M("Myarea");
-		session('arealist_default', $myarea->where('mid = 0')->order('sort ASC')->select());
-		//存在用户登录，获取用户的我的地盘
-		
-		if ($mid) {
-			$areaList = $myarea->where("mid = '%d'", $mid)->order('sort ASC')->select();
-			empty($areaList) && $areaList = session('arealist_default');
-			session('arealist', $areaList);
-		} else {
-			$areaList = $this->_session('arealist');
-			empty($areaList) && session('arealist', session('arealist_default'));
-		}
 		// 目录图片
 		$catPics = $this->getCatPics($rid);
 		

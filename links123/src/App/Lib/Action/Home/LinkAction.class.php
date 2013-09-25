@@ -59,6 +59,7 @@ class LinkAction extends CommonAction {
 	
 		$model = M("DirectLinks");
 		$linkNow = $model->where($condition)->find();
+		$directUrl = '';
 		if ($linkNow) {
 			
 			$directUrl = 'http://' . $linkNow['url'];
@@ -77,11 +78,11 @@ class LinkAction extends CommonAction {
 					$directUrl = $tag;
 				}
 				
-				$headerInfo = get_headers($directUrl, 1);
-				if(!preg_match('/200|301|302/', $headerInfo[0])){
+// 				$headerInfo = get_headers($directUrl, 1);
+// 				if(!preg_match('/200|301|302/', $headerInfo[0])){
 					
-					$directUrl = '';
-				}
+// 					$directUrl = '';
+// 				}
 				
 			}
 			

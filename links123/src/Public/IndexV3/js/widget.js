@@ -1,14 +1,18 @@
 $(function(){
 
+	//解决safari禁用第三方cookie造成天气控件不显示的bug
+	if($.browser.safari && navigator.userAgent.toLowerCase().match(/chrome/) == null){
+		var weatherPlugin = '<iframe frameborder="0" scrolling="no" src="/Home/weather/index_new.html" ' + 
+			'style="z-index: 99999; width: 380px; height: 220px; border: 0px;"></iframe>';
+		$('#J_box_weather').html(weatherPlugin);
+	}
+
 	$('#J_apps_add').click(function(){
 		alert('Coming soon...');
 	});
 	$('#J_weather').click(function(){
-//      $.post("/Weather/index", function(data){
-//          $('#J_box_weather').html(data);
-//      }); 
-		
-		$.fancybox({
+
+    $.fancybox({
 			href: '#J_box_weather',
 			helpers:  {
 				title:  null,

@@ -183,8 +183,11 @@ class CommonAction extends Action {
         $cat = M("Category");
         $list = $cat->field('id')->where('status=1 and prt_id = %d', $pid)->select();
         if (count($list)) {
-            foreach ($list as &$value) {
-                $pids = array_merge($pids, $this->_getSubCats($value['id']));
+        	foreach ($list as $value) {
+            //foreach ($list as &$value) {
+                //$pids = array_merge($pids, $this->_getSubCats($value['id']));
+                //删除无效的二级级联查询 @slate
+                $pids[] = $value['id'];
             }
         }
         return $pids;
@@ -401,7 +404,91 @@ class CommonAction extends Action {
     	
     	return $songItemList;
     }
-    
+
+    /**
+     * 获取豆瓣电影信息，数据来源豆瓣电影
+     * 
+     * @return $movieinfo: 电影信息数据
+     * 
+     * @author Lee date:2013-09-24
+     */
+    public function getDoubanMovieInfo() {
+        $movieinfo = S('movieinfo');
+
+        if (!$movieinfo) {
+            $url = 'http://movie.douban.com/nowplaying/shanghai/';
+
+            $str = file_get_contents($url);
+
+            preg_match_all('/<ul class="lists">(.*?)>/is', $str, $match);
+            $movieinfo = array();
+            foreach ($match[0] as $key => $value) {
+                //豆瓣id
+                preg_match('/data-subject="(.*?)"/is', $value, $matchid);
+                $movieinfo[$key]['id'] = $matchid[1];
+
+                //电影详情
+                $detailurl = 'http://movie.douban.com/subject/'.$movieinfo[$key]['id'];
+                $detailstr = file_get_contents($detailurl);
+
+                //电影海报(存入本地)
+                preg_match('/<div id="mainpic" class="">(.*?)<\/div>/is', $detailstr, $matchimg);
+                preg_match('/<img src="(.*?)"(.*?)\/>/is', $matchimg[1], $matchimgs);
+                $movieinfo[$key]['img'] = $matchimgs[1];
+
+                //编剧
+                preg_match('/编剧<\/span>: (.*?)<\/span>/is', $detailstr, $matchwriter);
+                $movieinfo[$key]['writer'] = strip_tags($matchwriter[1]);
+
+                //又名
+                preg_match('/又名:<\/span> (.*?)<br\/>/is', $detailstr, $matchaname);
+                $movieinfo[$key]['aname'] = $matchaname[1];
+
+                //语言
+                preg_match('/语言:<\/span> (.*?)<br\/>/is', $detailstr, $matchlanguage);
+                $movieinfo[$key]['language'] = $matchlanguage[1];
+
+                //电影标题
+                preg_match('/v:itemreviewed">(.*?)</is', $detailstr, $matchtitle);
+                $movieinfo[$key]['title'] = $matchtitle[1];
+
+                //电影年代
+                preg_match('/year">(.*?)</is', $detailstr, $matchyear);
+                $movieinfo[$key]['year'] = $matchyear[1];
+
+                //电影标题(加上年代)
+                $movieinfo[$key]['title'] = $movieinfo[$key]['title'].$movieinfo[$key]['year'];
+
+                //评分
+                preg_match('/v:average">(.*?)</is', $detailstr, $matchscore);
+                $movieinfo[$key]['score'] = $matchscore[1];
+
+                //导演
+                preg_match('/v:directedBy"(.*?)>(.*?)</is', $detailstr, $matchdirector);
+                $movieinfo[$key]['director'] = $matchdirector[2];
+
+                //主演
+                preg_match_all('/v:starring"(.*?)>(.*?)</is', $detailstr, $matchstars);
+                $movieinfo[$key]['stars'] = $matchstars[2];
+
+                //上映时间
+                preg_match_all('/v:initialReleaseDate"(.*?)>(.*?)</is', $detailstr, $matchdate);
+                $movieinfo[$key]['date'] = $matchdate[2];
+
+                //片长
+                preg_match('/片长:<\/span> (.*?)<br\/>/is', $detailstr, $matchruntime);
+                $movieinfo[$key]['runtime'] = strip_tags($matchruntime[1]);
+
+                //影评地址
+                $movieinfo[$key]['filmreviewurl'] = 'http://movie.douban.com/subject/'.$movieinfo[$key]['id'].'/new_review';
+            }
+            
+            S('movieinfo', $movieinfo, 172800);
+        }
+
+        return $movieinfo;
+    }
+        
     /**
      * 获取主题
      *
