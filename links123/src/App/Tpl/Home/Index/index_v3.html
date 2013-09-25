@@ -22,7 +22,6 @@
 	</script>
 </head>
 <body>
-
 	<div id="header">
 		<div class="header-inner">
 			<div class="zdl">
@@ -151,6 +150,7 @@
 						<li class="add"><span class="ctl add"><i class="mask"></i></span></li>
 					</ul>
 				</div><!--.zld end-->
+				
 				<div class="box box-apps">
 					<div class="box-hd">
 						<h2>我的应用</h2>
@@ -159,48 +159,67 @@
 						<div class="apps">
 							<ul id="J_Apps">
 								<li>
-									<p class="av newWin" url="{:U('English/Index/index')}"><img src="__PUBLIC__/IndexV3/imgs/app/app001.png" /></p>
-									<p class="nm"><a href="{:U('English/Index/index')}" target="_blank">另客英语</a></p>
+									<a href="#">
+									   <p class="av newWin" url="{:U('English/Index/index')}"><img src="__PUBLIC__/IndexV3/imgs/app/app001.png" /></p>
+									   <p class="nm"><a href="{:U('English/Index/index')}" target="_blank">另客英语</a></p>
+									</a>
 								</li>
 								<li>
-									<p class="av newWin" url="{:U('Home/Index/nav')}"><img src="__PUBLIC__/IndexV3/imgs/app/app002.png" /></p>
-									<p class="nm"><a href="{:U('Home/Index/nav')}" target="_blank">另客导航</a></p>
+									<a href="#">
+									   <p class="av newWin" url="{:U('Home/Index/nav')}"><img src="__PUBLIC__/IndexV3/imgs/app/app002.png" /></p>
+									   <p class="nm"><a href="{:U('Home/Index/nav')}" target="_blank">另客导航</a></p>
+									</a>
 								</li>
-								<li id="J_music">
-									<p class="av"><img src="__PUBLIC__/IndexV3/imgs/app/app007.png" /></p>
-									<p class="nm">音乐盒</p>
+								<li>
+									<a href="#">
+									    <p class="av"><img src="__PUBLIC__/IndexV3/imgs/app/app007.png" /></p>
+                                        <p class="nm">音乐盒</p>
+									</a>
 								</li>
-								<li id="J_stikynot">
-									<p class="av"><img src="__PUBLIC__/IndexV3/imgs/app/app005.png" /></p>
-									<p class="nm">便&nbsp;签</p>
+								<li>
+									<a href="#J_box_stikynot_1">
+									    <p class="av"><img src="__PUBLIC__/IndexV3/imgs/app/app005.png" /></p>
+                                        <p class="nm">便&nbsp;签</p>
+									</a>
 								</li>
-								<li id="J_calc">
-									<p class="av"><img src="__PUBLIC__/IndexV3/imgs/app/app004.png" /></p>
-									<p class="nm">计算器</p>
+								<li>
+								    <a href="#J_box_calc" class="fancybox-btn">
+								        <p class="av"><img src="__PUBLIC__/IndexV3/imgs/app/app004.png" /></p>
+                                        <p class="nm">计算器</p>
+								    </a>
 								</li>
-								<li id="J_weather">
-									<p class="av"><img src="__PUBLIC__/IndexV3/imgs/app/app-weather.png" /></p>
-									<p class="nm">天&nbsp;气</p>
+								<li>
+									<a href="#J_box_weather" class="fancybox-btn">
+									   <p class="av"><img src="__PUBLIC__/IndexV3/imgs/app/app-weather.png" /></p>
+									   <p class="nm">天&nbsp;气</p>
+									</a>
 								</li>
-								<li class="today" id="J_calendar">
-									<p class="ct">
-										<b>{:date('D')}</b>
-										<i>{:date('d')}</i>
-									</p>
-									<p class="nm">日&nbsp;历</p>
+								<li class="today">
+									<a href="#J_box_calendar" class="fancybox-btn">
+									    <p class="ct">
+                                            <b>{:date('D')}</b>
+                                            <i>{:date('d')}</i>
+                                        </p>
+                                        <p class="nm">日&nbsp;历</p>
+									</a>
 								</li>
-								<li id="J_mail">
-									<p class="av"><img src="__PUBLIC__/IndexV3/imgs/app/app006.png" /></p>
-									<p class="nm">邮&nbsp;箱</p>
+								<li>
+									<a href="#J_box_mail" class="fancybox-btn">
+									   <p class="av"><img src="__PUBLIC__/IndexV3/imgs/app/app006.png" /></p>
+									   <p class="nm">邮&nbsp;箱</p>
+									</a>
 								</li>
-								<li id="J_translate">
-									<p class="av"><img src="__PUBLIC__/IndexV3/imgs/app/app003.png" /></p>
-									<p class="nm">翻&nbsp;译</p>
+								<li>
+								    <a href="#J_box_translate" class="fancybox-btn">
+    									<p class="av"><img src="__PUBLIC__/IndexV3/imgs/app/app003.png" /></p>
+    									<p class="nm">翻&nbsp;译</p>
+									</a>
 								</li>
 							</ul>
 						</div><!--.apps end-->
-					</div>
-				</div>
+					</div><!-- app-box-body end -->
+				</div><!-- app-box end -->
+				
 				<div class="extra">
 					<div class="extra-col1">
 						<div class="box box-schedule" id="J_Schedule">
@@ -385,8 +404,10 @@
 	<script src="__PUBLIC__/skin/js/json2.js"></script>
 	<script src="__PUBLIC__/IndexV3/js/index.js?2013092101"></script>
 	<script src="__PUBLIC__/IndexV3/js/common.js?2013092101"></script>
-	<script src="__PUBLIC__/IndexV3/js/widget.js?2013091801"></script>
+	<!-- <script src="__PUBLIC__/IndexV3/js/widget.js?2013091801"></script> -->
 	<script src="__PUBLIC__/IndexV3/js/jquery.dropdown.js"></script>
 	
+	<!-- 新增的 page_home_apps.js -->
+	<script src="__PUBLIC__/IndexV3/js/page_home_apps.js"></script>
 </body>
 </html>
