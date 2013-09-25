@@ -33,14 +33,13 @@ $(function(){
 	});
 	
 	$('#J_music').click(function(){
-		
+
 		if(g_music_currentkey != -1){
 			if ($('#J_box_music').is(":hidden")){
-			  $('#J_box_music').show(); 
-			  $('.music_button').show();
-			  $('.music_button_min').show();
-			}
-			else {
+				$('#J_box_music').show(); 
+				$('.music_button').show();
+				$('.music_button_min').show();
+			}else {
 				$('#J_box_music').hide(); 
 				$('.music_button').hide();
 				$('.music_button_min').hide();
@@ -51,14 +50,14 @@ $(function(){
 
 	});
 	
-	$('.music_button').click(function(){
+	$('.music_button').click(function(){  //close
 		$('#J_music_iframe').attr('src','').hide();
 		$('.music_button').hide();
 		$('.music_button_min').hide();
 		g_music_currentkey = -1;
 		return false;
 	}); 
-	$('.music_button_min').click(function(){
+	$('.music_button_min').click(function(){ //min
 		$('#J_box_music').hide(); 
 		$("#bModal").trigger("click");
 		//$('.music_button').hide();
@@ -79,9 +78,7 @@ $(function(){
 		$.each(musicurl, function(key, value){
 			if (g_music_currentkey == key)  {
 				g_music_currentkey++;
-
 				g_music_currentkey = g_music_currentkey % 4;
-			
 				return false;
 			}
 		});
@@ -125,6 +122,7 @@ $(function(){
 
 		$('.music_button').show();
 		$('.music_button_min').show();
+		$('#J_music_iframe').show();
 	}
 	
 	//fancybox esc
