@@ -48,18 +48,25 @@ $(function() {
 	$('.screen-change-btn').find('a').click(function(){
 		var css;
 		var self = $(this);
-		if(self.html() == '宽 屏'){
-			self.html('窄 屏');
+		if(self.attr('data-size') == 'wide'){
+			//self.html('窄 屏');
 			css = 'style-widescreen';
 		}else{
-			self.html('宽 屏');
+			//self.html('宽 屏');
 			css = 'style-960';
 		}
+
+		// ie8下 需要先remove掉respone.js，负责该js一直hold住mediaquery部分的css，无法完成切换
+		$('#ie_respond_script').remove();
+		$('#screen-style-link').remove();
+		
 		var link = document.createElement("link");
+		link.id = "screen-style-link";
 		link.rel = "stylesheet";
 		link.type = "text/css";
 		link.href = PUBLIC + '/IndexV3/css/' + css + '.css';
 		document.getElementsByTagName("head")[0].appendChild(link);
+		
 	});
 });
 
@@ -149,6 +156,34 @@ var Zld = { // 自留地
 				Zld.IsSortable = false;
 			}
 			return false;
+		});
+
+		var holder = {};
+		$(document).on('mouseover', '#J_sortable li .nm', function(){
+			var nm = $(this);
+			var oldWidth = nm.width();
+			holder.oldPaddingLeft = nm.css('padding-left').replace('px', '') * 1;
+			holder.oldPaddingRight = nm.css('padding-right').replace('px', '') * 1;
+			nm.css({
+				'width': oldWidth + holder.oldPaddingRight + holder.oldPaddingLeft + 'px',
+				'display': 'inline-block',
+				'text-align': 'center',
+				'font-size': '14px',
+				'padding-left': 0,
+				'padding-right': 0
+			});
+			nm.find('b').css('margin', '0 -10px -5px 0');
+		}).on('mouseout', '#J_sortable li .nm', function(){
+			var nm = $(this);
+			nm.css({
+				'width': 'auto',
+				'display': 'inline',
+				'text-align': 'center',
+				'font-size': '12px',
+				'padding-left': holder.oldPaddingLeft,
+				'padding-right': holder.oldPaddingRight
+			});
+			nm.find('b').css('margin-right', '0');
 		});
 		/*
 		$(document).on('mouseenter', '#J_Zld input[name="url"], #J_Zld input[name="name"]', function(){
@@ -322,6 +357,10 @@ var Zld = { // 自留地
 				$(this).css('background', '#fff');
 			}).on('blur', function(){
 				$(this).css('background', '#eeefef');
+			});
+
+			obj.find('input[name="name"],input[name="url"]').on('mouseover', function(){
+				$(this).focus().select();
 			});
 
 			obj.find('input[name="name"],input[name="url"]').on('keydown', function(event){
@@ -509,8 +548,6 @@ var Schedule = {
 				}
 			);
 		}
-
-		
 		return false;
 	},
 	Del: function(el){
@@ -576,6 +613,20 @@ var HelpMouse = {
 		var search_text_right_end_pos = search_text_left_end_pos + $search_text.width();
 		var direct_text_right_end_pos = $direct_text.offset().left + $direct_text.width() + 10;
 
+		//当页面翻过首屏时，通过坐标判断直达栏是否获取焦点的方法就不再适用，
+		//这里增加鼠标移至直达栏直接获取焦点
+		$(document).on('mousemove', '#direct_text', function(){
+				if($('#direct_text').val() == $('#direct_text').attr('txt')){
+					$('#direct_text').select().removeClass('ipton');
+					isSearchTxtSelected = false;
+					if($.trim($('#search_text').val()) ==""){
+						$('#J_thl_div').hide();
+					}
+				}
+				//在直达栏上移动鼠标，不冒泡，避免与ev坐标判断焦点方法冲突
+				return false;
+		});
+
 		$(document).on('mousemove', function(ev){
 			var isNeedHelp = 1;
 			$('.ui-dialog').each(function(){
@@ -599,12 +650,23 @@ var HelpMouse = {
 					}
 				}
 			}//else{
-			if((mousePos.y > 200) || mousePos.x > search_text_left_end_pos){
+			if((mousePos.y < 200)  && (mousePos.x > search_text_left_end_pos)){
+				if($('#J_thl_div').is(':hidden') && $('#J_thl_div').attr('data-hide') == 'true'){
+					$('#J_thl_div').attr('data-hide', 'false').show();
+				}
+			}
+			if((mousePos.y > 200 && mousePos.y < 360) || mousePos.x > search_text_left_end_pos){
 				$('#direct_text').val($('#direct_text').attr('txt')).addClass('ipton');
+				if($('#J_thl_div').is(':hidden') && $('#J_thl_div').attr('data-hide') == 'true'){
+					return;
+				}
 				//if(!isSearchTxtSelected){
 					$('#search_text').select().trigger('mouseenter');
 					isSearchTxtSelected = true;
 				//}
+			}
+			if(mousePos.y > 360){
+				$('#J_thl_div').attr('data-hide', 'true').hide();
 			}
 
 		});
@@ -615,7 +677,7 @@ var HelpMouse = {
 		} 
 		return{ 
 			x: ev.clientX + document.body.scrollLeft - document.body.clientLeft, 
-			y: ev.clientY + document.body.scrollTop - document.body.clientTop 
+			y: ev.clientY + document.body.scrollTop// - document.body.clientTop 
 		}; 
 	}
 };

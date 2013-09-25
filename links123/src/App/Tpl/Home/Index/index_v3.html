@@ -11,7 +11,7 @@
 	<link rel="stylesheet" href="__PUBLIC__/skin/fancybox/jquery.fancybox.css" />
 	<link rel="stylesheet" href="__PUBLIC__/IndexV3/css/app.css" />
 	<link rel="stylesheet" href="__PUBLIC__/IndexV3/skins/{$theme}/style.css" id="J_Skins" />
-	<script src="__PUBLIC__/IndexV3/js/respond.min.js"></script>
+	<script src="__PUBLIC__/IndexV3/js/respond.min.js" id="ie_respond_script"></script>
 	<script>
 		var $CONFIG = {
 			'APP' : '__APP__/',
@@ -22,7 +22,6 @@
 	</script>
 </head>
 <body>
-
 	<div id="header">
 		<div class="header-inner">
 			<div class="zdl">
@@ -56,7 +55,10 @@
 				</empty>
 			</div>
 			<div class="styles" id="J_Styles">
-				<div class="screen-change-btn"><a href="javascript:;">宽 屏</a></div>
+				<div class="screen-change-btn">
+					<a class="s-wide" data-size="wide" href="javascript:;">宽 屏</a>
+					<a class="s-960" data-size="960" href="javascript:;">窄 屏</a>
+				</div>
 				<ul>
 					<li data-id="1" data-theme="dark" data-bg="__PUBLIC__/IndexV3/skins/q/01_b.jpg">
 						<a href="javascript:;">

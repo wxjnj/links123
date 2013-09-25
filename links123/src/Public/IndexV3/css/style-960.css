@@ -14,13 +14,30 @@
   }
   .extra .extra-col1,
   .extra .extra-col2{
-    margin-right: 30px;
+    margin-right: 25px;
   }
-  .extra .extra-col1{ width: 400px; }
+  .extra .extra-col1{ width: 410px; }
   .extra .extra-col2{ width: 250px; }
   .extra .extra-col3{ width: 250px; }
 
-  .thl{ margin-left: 320px; }
+  .screen-change-btn .s-wide{display:inline;}
+  .screen-change-btn .s-960{display:none;}
+
+  .thl{
+    margin-left: 320px; 
+    width: 410px;
+  }
+  .thl .ctls .ipt{
+    width: 360px;
+  }
+  .thl .subcate{
+    left: 30px;
+  }
+  .thl .cate{
+    left: 45px;
+  }
+
+
   .nav{ font-size: 12px; }
   .nav li a{ padding: 0 10px; }
   .schedule li .t input{ width: 250px; }
