@@ -624,20 +624,33 @@ var MusicPlayer = {
 			musicController.find('.' + name).removeClass('hover');
 		});
 
-		$('#J_Music').find('.music-control').on('click', 'a.big', function(){
+		$('#J_Music').find('.music-control').on('click', 'a.big, a.stop', function(){
 			var st = $(this).hasClass('go') ? 'pause' : 'go';
-			musicController.find('.big').removeClass('go pause').addClass(st);
+			$('#music-controller').find('.big').removeClass('go pause').addClass(st);
 			if(st == 'pause'){
 				self.Play(li.find('.nm a').data('url'));
 			}else{
 				self.Stop();
 			}
 		});
+		$('#J_Music').find('.music-control').on('click', 'a.prev', function(){
+
+		});
+		$('#J_Music').find('.music-control').on('click', 'a.next', function(){
+			
+		});
 
 	},
 	Play: function(url){
+		$('#J_Music').find('.top-mv li').eq(0).trigger('mouseover');
+
+		var mc = $('#J_Music').find('.music-control');
+		$('#music-controller').find('.big').removeClass('go pause').addClass('pause');
+
 		if(!$('#J_MusicPlayer').size()){
-			$('body').append('<iframe id="J_MusicPlayer" frameborder="0" style="width:0;height:0;visibility:hidden;" src="'+url+'"></iframe>');
+			//兼容模式下iframe display:none 不播 包括父级 display:none 也不播
+			//TODO
+			$('body').append('<p style="height:0;overflow:hidden;"><iframe id="J_MusicPlayer" frameborder="0" style="visibility:hidden;" src="'+url+'"></iframe></p>');
 		}else{
 			$('#J_MusicPlayer').attr('src', url);
 		}
