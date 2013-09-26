@@ -667,16 +667,16 @@ var HelpMouse = {
 
 		$(document).on('mousemove', function(ev){
 			var isNeedHelp = 1;
-			$('.ui-dialog').each(function(){
+			$('.links123-app-frame').each(function(){
 				if($(this).is(":visible")){
 					isNeedHelp ? isNeedHelp = 0 : '';
 				}
 			});
-			$('.fancybox-wrap').each(function(){
-				if($(this).is(":visible")){
-					isNeedHelp ? isNeedHelp = 0 : '';
-				}
-			});
+			// $('.fancybox-wrap').each(function(){
+				// if($(this).is(":visible")){
+					// isNeedHelp ? isNeedHelp = 0 : '';
+				// }
+			// });
 			if(!isNeedHelp){ return false; }
 			var mousePos = self.getcoords(ev);
 

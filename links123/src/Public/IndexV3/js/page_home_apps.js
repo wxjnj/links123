@@ -17,8 +17,7 @@ $( function($) {
 		});
 	}
 	$('#J_Apps').links123_apptrigers('.J_app_trig');
-	
-	
+
 	/*
 	 * 当前的 App集合
 	 */
@@ -32,91 +31,104 @@ $( function($) {
 		this.$elem.addClass('links123-app-frame');
 		this.initStyle();
 		this.bindEvent();
-		apps.push( this );
-		callbacks[appId] && callbacks[appId]( this );
+		apps.push(this);
+		callbacks[appId] && callbacks[appId](this);
 	};
 	App.prototype = {
 		show : function() {
-			this.$elem.css('display','block');
+			this.$elem.css('display', 'block');
 		},
 		close : function() {
-			this.$elem.css('display','none');
+			this.$elem.css('display', 'none');
 		},
 		initStyle : function() {
 			this.w = this.$elem.outerWidth();
 			var h = this.$elem.outerHeight();
-			var fixedStyle = {
-				'margin-left' : -this.w/2,
-				'margin-top' : -h/2 + $('#header').outerHeight()
+			var fixedStyle = parseInt(h) < parseInt($(window).height()) ? {
+				'margin-left' : -this.w / 2,
+				'margin-top' : -h / 2 + parseInt( $('#header').outerHeight() )
+			} : {
+				'margin-left' : -this.w / 2,
+				'margin-top' : 0,
+				'top' : parseInt( $('#header').outerHeight() ) + 10
 			}
 			this.$elem.css(fixedStyle);
+			$(window).height();
 		},
-		bindEvent : function(){
+		bindEvent : function() {
 			var self = this;
-			self.$elem.prepend('<div class="links123-close-wrap" style="width:'+this.w+'"><a href="#">x</a></div>');
-			self.$elem.children('.links123-close-wrap').on('click', 'a', function(){
+			self.$elem.prepend('<div class="links123-close-wrap" style="width:' + this.w + '"><a href="#">x</a></div>');
+			self.$elem.children('.links123-close-wrap').on('click', 'a', function() {
 				self.close();
 			});
-			self.$elem.bind('mousedown keydown', function(){
-			  $.map(apps, function( app ){
-          app.$elem.css('z-index','9000');
-        });
-        self.$elem.css('z-index','10000');
+			self.$elem.bind('mousedown keydown', function() {
+				$.map(apps, function(app) {
+					app.$elem.css('z-index', '9000');
+				});
+				self.$elem.css('z-index', '10000');
 			});
-			  
-			$(document).bind('keyup', function( e ){
+
+			$(document).bind('keyup', function(e) {
 				e.keyCode === 27 && self.close();
 			});
-			
+
 		},
-		clone : function(){
-			var $cloneObj = this.$elem.clone(),
-			    left = parseInt(this.$elem.offset().left) - parseInt( this.$elem[0].style.marginLeft ) + 20,
-			    top = parseInt(this.$elem.offset().top) - parseInt( this.$elem[0].style.marginTop ) + 20;
+		clone : function() {
+			var $cloneObj = this.$elem.clone(), 
+				left = parseInt(this.$elem.offset().left) - parseInt(this.$elem[0].style.marginLeft) + 20, 
+				top = parseInt(this.$elem.offset().top) - parseInt(this.$elem[0].style.marginTop) + 20;
 			$cloneObj.attr('id', (Math.random()).toString().substring(3));
-			$cloneObj.css({'left' : left, 'top' : top});
-			$('body').append( $cloneObj );
-			return new App( '#' + $cloneObj.attr('id') );
+			$cloneObj.css({
+				'left' : left,
+				'top' : top
+			});
+			$('body').append($cloneObj);
+			return new App('#' + $cloneObj.attr('id'));
 		},
-		sync : function(){
-			$.post('', this.data, function(){}, 'json');
+		sync : function() {
+			$.post('', this.data, function() {
+			}, 'json');
 		},
-		enableDrag : function( selector ){
-		  var self = this,
-		      $dragBar = this.$elem.find(selector),
-		      move = function( e ){
-		        var cX = parseInt(e.clientX);
-		        var cY = parseInt(e.clientY);
-		        var left = cX - self._x - parseInt( self.$elem[0].style.marginLeft );
-		        var top = cY - self._y - parseInt( self.$elem[0].style.marginTop );
-		        self.$elem.css({'left' : left, 'top' : top});
-		        
-		        $(document).bind('mouseup', stop);
-		      },
-		      stop = function(){
-		        $(document).unbind('mousemove', move);
-		      };
-		  $dragBar.css('cursor', 'move');
-		  $dragBar.bind('mousedown', function(e){
-		    self._x = parseInt(e.clientX) - parseInt(self.$elem.offset().left);
-        self._y = parseInt(e.clientY) - parseInt(self.$elem.offset().top);
-		    $(document).bind('mousemove', move);
-		    $(document).bind('mouseup', stop);
-		  });
-		  $dragBar.bind('mouseup', stop);
+		enableDrag : function(selector) {
+			var self = this, $dragBar = this.$elem.find(selector), 
+				move = function(e) {
+					var cX = parseInt(e.clientX);
+					var cY = parseInt(e.clientY);
+					var mL = parseInt(self.$elem[0].style.marginLeft);
+					var mT = parseInt(self.$elem[0].style.marginTop);
+					var left = cX - self._x - mL;
+					var top = cY - self._y - mT;
+					if( (top + mT) <= 0){
+						top = 0 - mT;
+					}
+					self.$elem.css({
+						'left' : left,
+						'top' : top
+					});
+	
+					$(document).bind('mouseup', stop);
+				}, stop = function() {
+					$(document).unbind('mousemove', move);
+				};
+				
+			$dragBar.css('cursor', 'move');
+			$dragBar.bind('mousedown', function(e) {
+				self._x = parseInt(e.clientX) - parseInt(self.$elem.offset().left);
+				self._y = parseInt(e.clientY) - parseInt(self.$elem.offset().top);
+				$(document).bind('mousemove', move);
+				$(document).bind('mouseup', stop);
+			});
+			$dragBar.bind('mouseup', stop);
 		}
 	};
-	
+
 	/*
 	 * callbacks
 	 * 不同app初始化会调用这里的callback
 	 * 以dom id为key调用对应的函数，每个函数欧诺只会调用一次，而且是按需调用
 	 */
 	var callbacks = {
-		/*
-		 * 便签
-		 */
-		'#J_box_note' : function( app ){
+		'#J_box_note' : function(app) {
 			var $note = app.$elem;
 			var $textarea = $note.find('textarea');
 			var textareaBg = null;
@@ -125,496 +137,575 @@ $( function($) {
 			theapp.enableDrag('.box_note_header');
 			load();
 			// 变背景色
-      $note.on('click', '[class^=color_]', function(){
-        textareaBg = '' + $(this).css('background-color');
-				$textarea.css('background', textareaBg );
+			$note.on('click', '[class^=color_]', function() {
+				textareaBg = '' + $(this).css('background-color');
+				$textarea.css('background', textareaBg);
 				remember();
 			});
 			// 新建
-			$note.on('click', '.btn_add', function(){
-				var back = theapp.clone();// clone a new note app object
+			$note.on('click', '.btn_add', function() {
+				var back = theapp.clone();
 				callbacks['#J_box_note'](back);
+				back.$elem.find('textarea').val('');
+				back.$elem.find('textarea').css('background', '#fff');
 			});
 			// 删除
-			$note.on('click', '.btn_clear', function(){
+			$note.on('click', '.btn_clear', function() {
 				$textarea.val('');
 				remember();
 			});
 			// remember
-			function remember(){
+			function remember() {
 				$.cookies.set('links123_note_bg', textareaBg);
 				//$.cookies.set('links123_note_content', $textarea.val());
 			}
+
 			// load
-			function load(){
-				$textarea.css('background', $.cookies.get('links123_note_bg') );
+			function load() {
+				setTimeout(function(){
+					$textarea.focus();
+				},100);
+				$textarea.css('background', $.cookies.get('links123_note_bg'));
 				//!!$.cookies.get('links123_note_content') && $textarea.val( $.cookies.get('links123_note_content') );
+			}
+
+		},
+
+		'#J_box_mail' : function() {
+			var Config = {
+				MailConfig : [{
+					action : "https://ssl.mail.163.com/entry/coremail/fcg/ntesdoor2?df=mail163_letter&from=web&funcid=loginone&iframe=1&language=-1&net=t&passtype=1&product=mail163&race=382_92_196_gz&style=-1",
+					name : "@163.com",
+					params : {
+						//  url: "http://entry.mail.163.com/coremail/fcg/ntesdoor2?lightweight=1&verifycookie=1&language=-1&style=15",
+						username : "#{u}",
+						password : "#{p}",
+						savelogin : "0",
+						url2 : "http://mail.163.com/errorpage/err_163.htm"
+					}
+				}, {
+					action : "https://ssl.mail.126.com/entry/cgi/ntesdoor?hid=10010102&funcid=loginone&df=mail126_letter&language=-1&passtype=1&verifycookie=-1&iframe=1&from=web&net=failed&product=mail126&style=-1&race=-2_-2_-2_db",
+					name : "@126.com",
+					params : {
+						domain : "126.com",
+						username : "#{u}@126.com",
+						password : "#{p}",
+						savelogin : "0",
+						url2 : "http://mail.126.com/errorpage/err_126.htm"
+						//url: "http://entry.mail.126.com/cgi/ntesdoor?lightweight%3D1%26verifycookie%3D1%26language%3D0%26style%3D-1"
+					}
+				}, {
+					action : "https://login.sina.com.cn/sso/login.php",
+					name : "@sina.com",
+					params : {
+						username : "#{u}@sina.com",
+						password : "#{p}",
+						entry : "freemail",
+						gateway : "0",
+						encoding : "UTF-8",
+						url : "http://mail.sina.com.cn/",
+						returntype : "META"
+					}
+				}, {
+					action : "https://edit.bjs.yahoo.com/config/login",
+					name : "@yahoo.com.cn",
+					params : {
+						login : "#{u}@yahoo.com.cn",
+						passwd : "#{p}",
+						domainss : "yahoo",
+						".intl" : "cn",
+						".src" : "ym"
+					}
+				}, {
+					action : "https://login.sina.com.cn/sso/login.php",
+					name : "@sina.cn",
+					params : {
+						username : "#{u}@sina.cn",
+						password : "#{p}",
+						entry : "freemail",
+						gateway : "0",
+						encoding : "UTF-8",
+						url : "http://mail.sina.com.cn/",
+						returntype : "META"
+					}
+				}, {
+					action : "http://passport.sohu.com/login.jsp",
+					name : "@sohu.com",
+					params : {
+						loginid : "#{u}@sohu.com",
+						passwd : "#{p}",
+						fl : "1",
+						vr : "1|1",
+						appid : "1113",
+						ru : "http://login.mail.sohu.com/servlet/LoginServlet",
+						ct : "1173080990",
+						sg : "5082635c77272088ae7241ccdf7cf062"
+					}
+				}, {
+					action : "https://mail.yeah.net/entry/cgi/ntesdoor?df=webmailyeah&from=web&funcid=loginone&iframe=1&language=-1&passtype=1&verifycookie=1&product=mailyeah&style=-1&",
+					name : "@yeah.net",
+					params : {
+						domain : "yeah.net",
+						username : "#{u}@yeah.net",
+						user : "#{u}",
+						password : "#{p}",
+						savelogin : "0",
+						url2 : "http://mail.yeah.net/errorpage/err_yeah.htm"
+						//url: "http://entry.mail.yeah.net/cgi/ntesdoor?lightweight%3D1%26verifycookie%3D1%26style%3D-1"
+					}
+				}, {
+					action : "https://mail.10086.cn/Login/Login.ashx?_fv=5&cguid=1144153566504&_=3900d6b56d0742590535b3bb5ddee9f923b4326c ",
+					name : "@139.com",
+					params : {
+						UserName : "#{u}",
+						Password : "#{p}"
+						//clientid: "5015"
+					}
+				}, {
+					action : "http://passport.21cn.com/maillogin.jsp",
+					name : "@21cn.com",
+					params : {
+						UserName : "#{u}@21cn.com",
+						passwd : "#{p}",
+						domainname : "21cn.com"
+					}
+				}, {
+					action : "http://mail.qq.com",
+					type : "link"
+				}, {
+					action : "http://gmail.google.com",
+					type : "link"
+				}, {
+					action : "http://www.hotmail.com",
+					type : "link"
+				}, {
+					action : "https://passport.alipay.com/login/login.htm?fromSite=9&return_url=http%3A%2F%2Fmail.aliyun.com%2Funiquelogin.htm",
+					type : "link"
+				}, {
+					action : "https://login.yahoo.com/config/login_verify2?&.src=ym&.intl=us",
+					type : "link"
+				}]
+			}
+
+			var MailLogin = {
+				mailCache : [],
+
+				sendMail : function() {
+					var mailUserName = $.trim($('#mailUserName').val());
+					var mailPassWord = $.trim($('#mailPassWord').val());
+
+					if (mailUserName == "") {
+						alert("\u7528\u6237\u540d\u4e0d\u80fd\u4e3a\u7a7a\uff01");
+						return false;
+					}
+					if (mailPassWord == "") {
+						alert("\u5bc6\u7801\u4e0d\u80fd\u4e3a\u7a7a\uff01");
+						return false;
+					}
+
+					var mailFormObj = $('#J_mailForm');
+					var mailType = $('#mail_list').attr('selectindex');
+
+					var mailConfig = Config.MailConfig[mailType];
+
+					if (mailConfig.val == 0) {
+						alert("\u60a8\u6ca1\u6709\u9009\u62e9\u90ae\u7bb1\uff01");
+						return;
+					}
+
+					mailFormObj.attr('action', mailConfig.action);
+					var str = '';
+					for (param in mailConfig.params) {
+
+						str = '<input type="hidden" class="J_mail_form_hidden" name="' + param + '" value="' + mailConfig.params[param].replace('#{u}', mailUserName).replace('#{p}', mailPassWord) + '" />';
+
+						mailFormObj.append(str);
+					}
+
+					mailFormObj.submit();
+					$('.J_mail_form_hidden').remove();
+					$('#mailPassWord').value = '';
+				},
+
+				change : function(mailType) {
+					var mailConfig = Config.MailConfig[mailType];
+					if (mailConfig.type == "link") {
+
+						$('#mailSelect').text(Config.MailConfig[0].name);
+						$('#mail_list').attr('selectindex', 0);
+
+						var mailFormObj = $('#J_mailForm');
+
+						mailFormObj.attr('action', mailConfig.action);
+						var str = '';
+						for (param in mailConfig.params) {
+
+							str = '<input type="hidden" class="J_mail_form_hidden" name="' + param + '" value="' + mailConfig.params[param].replace('#{u}', mailUserName).replace('#{p}', mailPassWord) + '" />';
+
+							mailFormObj.append(str);
+						}
+						mailFormObj.append(str);
+
+						mailFormObj.submit();
+						$('.J_mail_form_hidden').remove();
+						$('#mailPassWord').value = '';
+					} else {
+						$('#mailSelect').text(Config.MailConfig[mailType].name);
+						$('#mail_list').attr('selectindex', mailType);
+					}
+				}
+			}
+
+			$('#J_box_mail').mouseover(function() {
+				$('#mailUserName').select();
+				return false;
+			});
+
+			$('#mailPassWord').mouseover(function() {
+				$('#mailPassWord').select();
+				return false;
+			});
+
+			$('#J_mail_submit').click(function() {
+				MailLogin.sendMail();
+				return false;
+			});
+
+			$("#mailPassWord").keypress(function(event) {
+				if (event.keyCode == 13) {
+					MailLogin.sendMail();
+					return false;
+				}
+			});
+
+			$('.mail-list li').click(function() {
+				MailLogin.change($(this).attr('dn'));
+				$("#mailUserName").select();
+			});
+
+			$('.mail-list li').mouseover(function() {
+				$(this).addClass('option-hover');
+			});
+
+			$('.mail-list li').mouseout(function() {
+				$(this).removeClass('option-hover');
+			});
+
+		},
+
+		'#J_box_calendar' : function() {
+			$('#J_calendar_iframe').attr('src', 'http://baidu365.duapp.com/wnl.html');
+			$('#J_box_calendar_list a').click(function() {
+				$('#J_calendar_iframe').attr('src', $(this).attr('data-url'));
+				return false;
+			});
+		},
+
+		'#J_box_calc' : function() {
+			$('#J_calc_iframe').attr('src', 'http://qiqiapp3.duapp.com/yuyinjisuanqi/');
+			$('#J_box_calc_list a').click(function() {
+				$('#J_calc_iframe').attr('src', $(this).attr('data-url'));
+				return false;
+			});
+		},
+
+		'#J_box_translate' : function() {
+			var translateLang = 0;
+
+			$('.J_translate_source').select();
+
+			$('.J_translate_clear').click(function() {
+				$('#gt-res-dict').html('');
+				$('#result_box').html('');
+				$('.J_translate_source').val('');
+				$('.J_translate_source').select();
+				return false;
+			});
+
+			$('#gt-sl-gms').click(function() {
+				translateLang = 0;
+				if ($(this).hasClass('goog-flat-menu-button-focused')) {
+					$(this).removeClass('goog-flat-menu-button-focused');
+					$('#gt-sl-gms-menu').hide();
+				} else {
+					$('#gt-tl-gms').removeClass('goog-flat-menu-button-focused');
+					$(this).addClass('goog-flat-menu-button-focused');
+					$('.J_lang_auto').show();
+					$('#gt-sl-gms-menu').show();
+				}
+				return false;
+			});
+			$('#gt-tl-gms').click(function() {
+				translateLang = 1;
+				if ($(this).hasClass('goog-flat-menu-button-focused')) {
+					$(this).removeClass('goog-flat-menu-button-focused');
+					$('#gt-sl-gms-menu').hide();
+				} else {
+					$('#gt-sl-gms').removeClass('goog-flat-menu-button-focused');
+					$(this).addClass('goog-flat-menu-button-focused');
+					$('.J_lang_auto').hide();
+					$('#gt-sl-gms-menu').show();
+				}
+				return false;
+			});
+
+			$('.goog-menuitem').mouseover(function() {
+				$('.goog-menuitem').removeClass('goog-menuitem-highlight');
+				$(this).addClass('goog-menuitem-highlight');
+			});
+
+			$('.goog-menuitem').click(function() {
+				var langText = $.trim($(this).text());
+				var lang = $(this).attr('data-id');
+				if (translateLang == 1) {
+					$('#J_lang_tgt').text(langText);
+					$('#gt-tl-gms').removeClass('goog-flat-menu-button-focused');
+					$('#gt-tl').val(lang);
+				} else {
+					$('#J_lang_src').text(langText);
+					$('#gt-sl-gms').removeClass('goog-flat-menu-button-focused');
+					$('#gt-sl').val(lang);
+				}
+				$('#gt-sl-gms-menu').hide();
+
+				$("#gt-submit").trigger("click");
+				return false;
+			});
+
+			$('#gt-swap').click(function() {
+				var slLangText = $.trim($('#J_lang_src').text());
+				var tlLangText = $.trim($('#J_lang_tgt').text());
+				var slLang = $('#gt-sl').val();
+				var tlLang = $('#gt-tl').val();
+
+				$('#J_lang_tgt').text(slLangText);
+				$('#gt-tl').val(slLang);
+
+				$('#J_lang_src').text(tlLangText);
+				$('#gt-sl').val(tlLang);
+
+				$("#gt-submit").trigger("click");
+
+				return false;
+			});
+
+			$('#gt-submit').click(function() {
+
+				var sl = $('#gt-sl').val();
+				var tl = $('#gt-tl').val();
+				var q = $('.J_translate_source').val();
+
+				$('#gt-res-dict').html('<tr><td colspan="4"><div class="gt-baf-cell gt-baf-pos">翻译中...</div></td></tr>');
+				$('#result_box').html('');
+
+				$.ajax({
+					type : 'POST',
+					url : APP + 'Index/google_translate',
+					data : {
+						'sl' : sl,
+						'tl' : tl,
+						'q' : q
+					},
+					cache : false,
+					dataType : 'json',
+					success : function(data) {
+
+						var dictArr = eval(data.data);
+
+						if (dictArr) {
+							var dictStr = '';
+							dictStr += '<table class="gt-baf-table"><tbody>';
+
+							var dictSubArr = '';
+							var dictType = 0;
+							//0为词语，1为句子
+							if ( typeof dictArr[1] != "undefined") {
+								dictSubArr = dictArr[1];
+							} else if ( typeof dictArr[0] != "undefined") {
+								dictSubArr = dictArr[0];
+								dictType = 1;
+							}
+
+							if (dictSubArr) {
+
+								if (dictType) {
+									dictStr += '<span lang="zh-CN" id="result_box">';
+									for (var i = 0; i < dictSubArr.length; i++) {
+
+										var bafArr = dictSubArr[i];
+
+										//dictStr += '<tr><td colspan="4"><div class="gt-baf-cell gt-baf-pos">' + bafArr[0] + '</div></td></tr>';
+										dictStr += '<span>' + bafArr[0].replace('\n', '</br>') + '</span>';
+									}
+									dictStr += '</span>';
+								} else {
+
+									for (var i = 0; i < dictSubArr.length; i++) {
+
+										var bafArr = dictSubArr[i];
+
+										dictStr += '<tr><td colspan="4"><div class="gt-baf-cell gt-baf-pos">' + bafArr[0] + '</div></td></tr>';
+
+										if (bafArr[2] instanceof Array) {
+											for (var j = 0; j < bafArr[2].length; j++) {
+												dictStr += '<tr>';
+												var wordArr = bafArr[2][j];
+
+												dictStr += '<td>';
+												var cts_width = 24;
+												if (wordArr[3] < 0.01) {
+													cts_width = 8;
+												} else if (wordArr[3] < 0.1) {
+													cts_width = 16;
+												}
+												dictStr += '<div class="gt-baf-cell gt-baf-marker-container"><div class="gt-baf-cts" style="width:' + cts_width + 'px;"></div></div>';
+
+												dictStr += '</td>';
+
+												dictStr += '<td><div class="gt-baf-cell gt-baf-bar"></div></td>';
+
+												dictStr += '<td>';
+												dictStr += '<div class="gt-baf-cell gt-baf-word-clickable" style="text-align: left; direction: ltr;">' + wordArr[0] + '</div>';
+												dictStr += '</td>';
+
+												dictStr += '<td style="width: 100%;">';
+												dictStr += '<div class="gt-baf-cell gt-baf-translations" style="direction: ltr;">';
+
+												for (var k = 0; k < wordArr[1].length; k++) {
+													dictStr += '<span class="gt-baf-back">' + wordArr[1][k];
+													if (k != wordArr[1].length - 1) {
+														dictStr += ', '
+													}
+													dictStr += '</span>'
+												}
+
+												dictStr += '</div>';
+												dictStr += '</td>';
+												dictStr += '</tr>';
+											}
+										}
+									}
+								}
+								dictStr += '</tbody></table>';
+
+								$('#gt-res-dict').html(dictStr);
+							} else {
+								$('#gt-res-dict').html('');
+							}
+
+							if (!dictType) {
+								$('#result_box').html(dictArr[0][0][0]);
+							}
+
+						} else {
+							$('#result_box').html('<span style="font-size:14px; color: red;">亲，未找到你所查询的结果，再试下吧!</span>');
+						}
+					},
+					error : function() {
+
+					}
+				});
+
+			});
+		},
+
+		'#J_box_weather' : function() {
+			//解决safari禁用第三方cookie造成天气控件不显示的bug
+			if ($.browser.safari && navigator.userAgent.toLowerCase().match(/chrome/) == null) {
+				var weatherPlugin = '<iframe frameborder="0" scrolling="no" src="/Home/weather/index_new.html" ' + 'style="z-index: 99999; width: 380px; height: 220px; border: 0px;"></iframe>';
+				$('#J_box_weather').html(weatherPlugin);
 			}
 		},
 		
-		'#J_box_mail' : function(){
-  		  var Config = {
-          MailConfig : [
-              {
-                action: "https://ssl.mail.163.com/entry/coremail/fcg/ntesdoor2?df=mail163_letter&from=web&funcid=loginone&iframe=1&language=-1&net=t&passtype=1&product=mail163&race=382_92_196_gz&style=-1",
-                name: "@163.com",
-                params: {
-                  //  url: "http://entry.mail.163.com/coremail/fcg/ntesdoor2?lightweight=1&verifycookie=1&language=-1&style=15",
-                  username: "#{u}",
-                  password: "#{p}",
-                  savelogin:  "0",
-                  url2:   "http://mail.163.com/errorpage/err_163.htm"
-                }
-              },
-              {
-                action: "https://ssl.mail.126.com/entry/cgi/ntesdoor?hid=10010102&funcid=loginone&df=mail126_letter&language=-1&passtype=1&verifycookie=-1&iframe=1&from=web&net=failed&product=mail126&style=-1&race=-2_-2_-2_db",
-                name: "@126.com",
-                params: {
-                  domain: "126.com",
-                  username: "#{u}@126.com",
-                  password: "#{p}",
-                  savelogin:  "0",
-                  url2:   "http://mail.126.com/errorpage/err_126.htm"
-                  //url: "http://entry.mail.126.com/cgi/ntesdoor?lightweight%3D1%26verifycookie%3D1%26language%3D0%26style%3D-1"
-                }
-              },
-              {
-                action : "https://login.sina.com.cn/sso/login.php",
-                name: "@sina.com",
-                params : {
-                  username : "#{u}@sina.com",
-                  password : "#{p}",
-                  entry : "freemail",
-                  gateway : "0",
-                  encoding : "UTF-8",
-                  url : "http://mail.sina.com.cn/",
-                  returntype : "META"
-                }
-              },
-              {
-                action: "https://edit.bjs.yahoo.com/config/login",
-                name: "@yahoo.com.cn",
-                params: {
-                  login: "#{u}@yahoo.com.cn",
-                  passwd: "#{p}",
-                  domainss: "yahoo",
-                  ".intl": "cn",
-                  ".src": "ym"
-                }
-              },
-              {
-                action : "https://login.sina.com.cn/sso/login.php",
-                name: "@sina.cn",
-                params : {
-                  username : "#{u}@sina.cn",
-                  password : "#{p}",
-                  entry : "freemail",
-                  gateway : "0",
-                  encoding : "UTF-8",
-                  url : "http://mail.sina.com.cn/",
-                  returntype : "META"
-                }
-              },
-              {
-                action: "http://passport.sohu.com/login.jsp",
-                name: "@sohu.com",
-                params: {
-                  loginid: "#{u}@sohu.com",
-                  passwd: "#{p}",
-                  fl: "1",
-                  vr: "1|1",
-                  appid: "1113",
-                  ru: "http://login.mail.sohu.com/servlet/LoginServlet",
-                  ct: "1173080990",
-                  sg: "5082635c77272088ae7241ccdf7cf062"
-                }
-              },
-              {
-                action: "https://mail.yeah.net/entry/cgi/ntesdoor?df=webmailyeah&from=web&funcid=loginone&iframe=1&language=-1&passtype=1&verifycookie=1&product=mailyeah&style=-1&",
-                name: "@yeah.net",
-                params: {
-                  domain: "yeah.net",
-                  username: "#{u}@yeah.net",
-                  user: "#{u}",
-                  password: "#{p}",
-                  savelogin:  "0",
-                  url2:   "http://mail.yeah.net/errorpage/err_yeah.htm"
-                  //url: "http://entry.mail.yeah.net/cgi/ntesdoor?lightweight%3D1%26verifycookie%3D1%26style%3D-1"
-                }
-              },
-              {
-                action: "https://mail.10086.cn/Login/Login.ashx?_fv=5&cguid=1144153566504&_=3900d6b56d0742590535b3bb5ddee9f923b4326c ",
-                name: "@139.com",
-                params: {
-                  UserName: "#{u}",
-                  Password: "#{p}"
-                  //clientid: "5015"
-                }
-              },
-              {
-                action: "http://passport.21cn.com/maillogin.jsp",
-                name: "@21cn.com",
-                params: {
-                  UserName: "#{u}@21cn.com",
-                  passwd: "#{p}",
-                  domainname: "21cn.com"
-                }
-              },
-              {
-                action : "http://mail.qq.com",
-                type : "link"
-              }, 
-              {
-                action : "http://gmail.google.com",
-                type : "link"
-              }, 
-              {
-                action : "http://www.hotmail.com",
-                type : "link"
-              },
-              {
-                action : "https://passport.alipay.com/login/login.htm?fromSite=9&return_url=http%3A%2F%2Fmail.aliyun.com%2Funiquelogin.htm",
-                type : "link"
-              },
-              {
-                action : "https://login.yahoo.com/config/login_verify2?&.src=ym&.intl=us",
-                type : "link"
-              }
-              ]
-        }
-        
-        var MailLogin = {
-          mailCache : [],
-      
-          sendMail : function() {
-            var mailUserName = $.trim($('#mailUserName').val());
-            var mailPassWord = $.trim($('#mailPassWord').val());
-      
-            if (mailUserName == "") {
-              alert("\u7528\u6237\u540d\u4e0d\u80fd\u4e3a\u7a7a\uff01");
-              return false;
-            }
-            if (mailPassWord == "") {
-              alert("\u5bc6\u7801\u4e0d\u80fd\u4e3a\u7a7a\uff01");
-              return false;
-            }
-      
-            var mailFormObj = $('#J_mailForm');
-            var mailType = $('#mail_list').attr('selectindex');
-      
-            var mailConfig = Config.MailConfig[mailType];
-      
-            if (mailConfig.val == 0) {
-              alert("\u60a8\u6ca1\u6709\u9009\u62e9\u90ae\u7bb1\uff01");
-              return;
-            }
-      
-            mailFormObj.attr('action', mailConfig.action);
-            var str = '';
-            for (param in mailConfig.params) {
-              
-              str = '<input type="hidden" class="J_mail_form_hidden" name="' + param + '" value="'
-                + mailConfig.params[param].replace('#{u}', mailUserName).replace('#{p}', mailPassWord) + '" />';
-              
-              mailFormObj.append(str);
-            }
-            
-            mailFormObj.submit();
-            $('.J_mail_form_hidden').remove();
-            $('#mailPassWord').value = '';
-          },
-      
-          change : function(mailType) {
-            var mailConfig = Config.MailConfig[mailType];
-            if (mailConfig.type == "link") {
-              
-              $('#mailSelect').text(Config.MailConfig[0].name);
-              $('#mail_list').attr('selectindex', 0);
-              
-              var mailFormObj = $('#J_mailForm');
-              
-              mailFormObj.attr('action', mailConfig.action);
-              var str = '';
-              for (param in mailConfig.params) {
-                
-                str = '<input type="hidden" class="J_mail_form_hidden" name="' + param + '" value="'
-                  + mailConfig.params[param].replace('#{u}', mailUserName).replace('#{p}', mailPassWord) + '" />';
-                
-                mailFormObj.append(str);
-              }
-              mailFormObj.append(str);
-              
-              mailFormObj.submit();
-              $('.J_mail_form_hidden').remove();
-              $('#mailPassWord').value = '';
-            } else {
-              $('#mailSelect').text(Config.MailConfig[mailType].name);
-              $('#mail_list').attr('selectindex', mailType);
-            }
-          }
-        }
-        
-        $('#J_box_mail').mouseover(function(){
-          $('#mailUserName').select();
-          return false;
-        });
-      
-        $('#mailPassWord').mouseover(function(){
-          $('#mailPassWord').select();
-          return false;
-        });
-      
-        $('#J_mail_submit').click(function(){
-          MailLogin.sendMail();
-          return false;
-        });
-      
-        $("#mailPassWord").keypress(function(event){
-            if(event.keyCode==13) {
-              MailLogin.sendMail();
-              return false;
-            }
-        });
-    
-    
-        $('.mail-list li').click(function() {
-          MailLogin.change($(this).attr('dn'));
-          $("#mailUserName").select();
-         });
-         
-        $('.mail-list li').mouseover(function() {
-          $(this).addClass('option-hover');       
-         });
-        
-        $('.mail-list li').mouseout(function() {
-        $(this).removeClass('option-hover');      
-      });
-
-    },
-    
-    '#J_box_calendar' : function(){
-      $('#J_calendar_iframe').attr('src', 'http://baidu365.duapp.com/wnl.html');
-      $('#J_box_calendar_list a').click(function() {
-        $('#J_calendar_iframe').attr('src', $(this).attr('data-url'));
-        return false;
-      });
-    },
-    
-    '#J_box_calc' : function(){
-      $('#J_calc_iframe').attr('src', 'http://qiqiapp3.duapp.com/yuyinjisuanqi/');
-      $('#J_box_calc_list a').click(function() {
-        $('#J_calc_iframe').attr('src', $(this).attr('data-url'));
-        return false;
-      });
-    },
-    
-    '#J_box_translate' : function(){
-      var translateLang = 0;
-      
-      $('.J_translate_source').select();
-      
-      $('.J_translate_clear').click(function(){
-        $('#gt-res-dict').html('');
-        $('#result_box').html('');
-        $('.J_translate_source').val('');
-        $('.J_translate_source').select();
-        return false;
-      });
-    
-      $('#gt-sl-gms').click(function(){
-        translateLang = 0;
-        if ($(this).hasClass('goog-flat-menu-button-focused')) {
-          $(this).removeClass('goog-flat-menu-button-focused');
-          $('#gt-sl-gms-menu').hide();
-        } else {
-          $('#gt-tl-gms').removeClass('goog-flat-menu-button-focused');
-          $(this).addClass('goog-flat-menu-button-focused');
-          $('.J_lang_auto').show();
-          $('#gt-sl-gms-menu').show();
-        }
-        return false;
-      });
-      $('#gt-tl-gms').click(function(){
-        translateLang = 1;
-        if ($(this).hasClass('goog-flat-menu-button-focused')) {
-          $(this).removeClass('goog-flat-menu-button-focused');
-          $('#gt-sl-gms-menu').hide();
-        } else {
-          $('#gt-sl-gms').removeClass('goog-flat-menu-button-focused');
-          $(this).addClass('goog-flat-menu-button-focused');
-          $('.J_lang_auto').hide();
-          $('#gt-sl-gms-menu').show();
-        }
-        return false;
-      });
-    
-      $('.goog-menuitem').mouseover(function(){
-        $('.goog-menuitem').removeClass('goog-menuitem-highlight');
-        $(this).addClass('goog-menuitem-highlight');
-      });
-    
-      $('.goog-menuitem').click(function(){
-        var langText = $.trim($(this).text());
-        var lang = $(this).attr('data-id');
-        if (translateLang == 1) {
-          $('#J_lang_tgt').text(langText);
-          $('#gt-tl-gms').removeClass('goog-flat-menu-button-focused');
-          $('#gt-tl').val(lang);
-        } else {
-          $('#J_lang_src').text(langText);
-          $('#gt-sl-gms').removeClass('goog-flat-menu-button-focused');
-          $('#gt-sl').val(lang);
-        }
-        $('#gt-sl-gms-menu').hide();
-        
-        $("#gt-submit").trigger("click");
-        return false;
-      });
-    
-      $('#gt-swap').click(function(){
-        var slLangText = $.trim($('#J_lang_src').text());
-        var tlLangText = $.trim($('#J_lang_tgt').text());
-        var slLang = $('#gt-sl').val();
-        var tlLang = $('#gt-tl').val();
-        
-        $('#J_lang_tgt').text(slLangText);
-        $('#gt-tl').val(slLang);
-        
-        $('#J_lang_src').text(tlLangText);
-        $('#gt-sl').val(tlLang);
-        
-        $("#gt-submit").trigger("click");
-        
-        return false;
-      });
-    
-      $('#gt-submit').click(function() {
-    
-        var sl = $('#gt-sl').val();
-        var tl = $('#gt-tl').val();
-        var q = $('.J_translate_source').val();
-        
-        $('#gt-res-dict').html('<tr><td colspan="4"><div class="gt-baf-cell gt-baf-pos">翻译中...</div></td></tr>');
-        $('#result_box').html('');
-        
-        $.ajax({
-          type : 'POST',
-          url : APP + 'Index/google_translate',
-          data : {
-            'sl' : sl,
-            'tl' : tl,
-            'q'  : q
-          },
-          cache : false,
-          dataType : 'json',
-          success : function(data) {
-            
-            var dictArr = eval(data.data);
-            
-            if (dictArr) {
-              var dictStr = '';
-              dictStr += '<table class="gt-baf-table"><tbody>';
-              
-              var dictSubArr = '';
-              var dictType = 0;   //0为词语，1为句子
-              if (typeof dictArr[1] != "undefined") {
-                dictSubArr = dictArr[1];
-              } else if (typeof dictArr[0] != "undefined") {
-                dictSubArr = dictArr[0];
-                dictType = 1;
-              }
-              
-              if (dictSubArr) {
-                
-                if (dictType) {
-                  dictStr += '<span lang="zh-CN" id="result_box">';
-                  for (var i = 0; i < dictSubArr.length; i++) {
-                    
-                    var bafArr = dictSubArr[i];
-                    
-                    //dictStr += '<tr><td colspan="4"><div class="gt-baf-cell gt-baf-pos">' + bafArr[0] + '</div></td></tr>';
-                    dictStr += '<span>' + bafArr[0].replace('\n','</br>')+ '</span>';
-                  }
-                  dictStr += '</span>';
-                } else {
-                
-                  for (var i = 0; i < dictSubArr.length; i++) {
-                    
-                    var bafArr = dictSubArr[i];
-                    
-                    dictStr += '<tr><td colspan="4"><div class="gt-baf-cell gt-baf-pos">' + bafArr[0] + '</div></td></tr>';
-                  
-                    if (bafArr[2] instanceof Array) {
-                      for (var j = 0; j < bafArr[2].length; j++) {
-                        dictStr += '<tr>';
-                        var wordArr = bafArr[2][j];
-                        
-                        dictStr += '<td>';
-                        var cts_width = 24;
-                        if (wordArr[3] < 0.01) {
-                          cts_width = 8;
-                        } else if (wordArr[3] < 0.1) {
-                          cts_width = 16;
-                        }
-                        dictStr += '<div class="gt-baf-cell gt-baf-marker-container"><div class="gt-baf-cts" style="width:' + cts_width + 'px;"></div></div>'; 
-                        
-                        dictStr += '</td>';
-                        
-                        dictStr += '<td><div class="gt-baf-cell gt-baf-bar"></div></td>';
-                        
-                        dictStr += '<td>';
-                        dictStr += '<div class="gt-baf-cell gt-baf-word-clickable" style="text-align: left; direction: ltr;">' + wordArr[0] + '</div>';
-                        dictStr += '</td>';
-                        
-                        dictStr += '<td style="width: 100%;">';
-                        dictStr += '<div class="gt-baf-cell gt-baf-translations" style="direction: ltr;">';
-                        
-                        for (var k = 0; k < wordArr[1].length; k++) {
-                          dictStr += '<span class="gt-baf-back">' + wordArr[1][k];
-                          if (k != wordArr[1].length - 1) {
-                            dictStr += ', '
-                          }
-                          dictStr += '</span>'
-                        }
-                        
-                        dictStr += '</div>';
-                        dictStr += '</td>';
-                        dictStr += '</tr>';
-                      }
-                    }
-                  }
-                }
-                dictStr += '</tbody></table>';
-                
-                $('#gt-res-dict').html(dictStr);
-              } else {
-                $('#gt-res-dict').html('');
-              }
-              
-              if (!dictType) {
-                $('#result_box').html(dictArr[0][0][0]);
-              }
-              
-            } else {
-              $('#result_box').html('<span style="font-size:14px; color: red;">亲，未找到你所查询的结果，再试下吧!</span>');
-            }
-          },
-          error : function() {
-            
-          }
-        });
-    
-      });
-    },
-    
-    '#J_box_weather' : function(){
-      //解决safari禁用第三方cookie造成天气控件不显示的bug
-      if($.browser.safari && navigator.userAgent.toLowerCase().match(/chrome/) == null){
-        var weatherPlugin = '<iframe frameborder="0" scrolling="no" src="/Home/weather/index_new.html" ' + 
-          'style="z-index: 99999; width: 380px; height: 220px; border: 0px;"></iframe>';
-        $('#J_box_weather').html(weatherPlugin);
-      }
-    }
+		'#J_box_music' : function(){
+			// var g_music_currentkey = -1;
+			// //音乐盒面板-选择电台
+			// var ch_select = $('#channel-select');
+			// var lis = ch_select.find('li');
+			// ch_select.on('mouseenter', function(){
+				// ch_select.find('b').removeClass('down-arrow').addClass('up-arrow');
+				// lis.removeClass('only').show().first().addClass('first').end().last().addClass('last');
+			// }).on('mouseleave', function(){
+				// ch_select.find('b').removeClass('up-arrow').addClass('down-arrow');
+				// lis.removeClass('first last').hide();
+				// lis.filter('[data-value=' + g_music_currentkey + ']').addClass('only').show();
+			// }).on('click', 'li', function(){
+				// g_music_currentkey = $(this).attr('data-value') * 1;
+				// music_box_proc();
+			// });
+// 			
+			// var music_box_proc = function(st){
+				// if(-1 == g_music_currentkey){
+					// g_music_currentkey = lis.first().attr('data-value') * 1;
+				// }
+				// var musicurl = {
+					// 1:'http://web.kugou.com/default.html',
+					// 2:'http://kuang.xiami.com/res/kuang/xiamikuang0709.swf',
+					// 3:'http://y.qq.com/player/',
+					// 0:'http://douban.fm/swf/53053/radioplayer.swf'
+				// };
+				// //只有双击切换 使用此算法
+				// //select切换不用
+				// if(st){
+					// $.each(musicurl, function(key, value){
+						// if (g_music_currentkey == key)  {
+							// g_music_currentkey++;
+							// g_music_currentkey = g_music_currentkey % 4;
+							// return false;
+						// }
+					// });
+				// }
+				// //根据g_music_currentkey重新排列select
+				// var o = lis.filter('[data-value=' + g_music_currentkey + ']');
+				// ch_select.find('ul').prepend(o);
+				// lis.removeClass('first last').hide();
+				// o.addClass('only').show();
+// 				
+				// var myposition=[200,10];
+				// //适配不同播放器
+				// switch(g_music_currentkey){
+					// case 0:{//douban
+						// $('#J_music_iframe').attr('width', 450);
+						// $('#J_music_iframe').attr('height', 170);
+// 							
+						// myposition = [$(window).height()-300,$(window).width()-580];
+						// break;
+					// }
+					// case 2:{//xiami
+						// $('#J_music_iframe').attr('width', 530);
+						// $('#J_music_iframe').attr('height', 250);
+// 							
+						// myposition = [$(window).height()-320,$(window).width()-680];
+						// console.log(myposition);
+						// break;
+					// }
+					// case 1:{//kugou
+						// $('#J_music_iframe').attr('width', 320);
+						// $('#J_music_iframe').attr('height', 140);
+						// myposition = [$(window).height()-300,$(window).width()-450];
+						// break;
+					// }
+					// case 3:{//qq
+						// $('#J_music_iframe').attr('width', 360);
+						// $('#J_music_iframe').attr('height', 380);
+						// myposition = [$(window).height()-450,$(window).width()-550];
+						// //myposition = [400,300];
+						// break;
+					// }
+				// }
+				// $('#J_music_iframe').attr('src', musicurl[g_music_currentkey]);
+				// $('.music_button').show();
+				// $('.music_button_min').show();
+				// $('#J_music_iframe').show();
+			// }
+// 			
+// 			
+			// $('#J_music').dblclick(function(){
+				// music_box_proc(true);
+			// });
+// 
+			// music_box_proc();
+		}
 	}
 
-}(jQuery)); 
+}(jQuery));
