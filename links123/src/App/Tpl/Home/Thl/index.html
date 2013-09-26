@@ -1,17 +1,72 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>糖葫芦-另客网</title>
-	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-	<style>*{ margin:0; padding:0; }</style>
+  <title>糖葫芦-另客网</title>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+  <link rel="stylesheet" href="__PUBLIC__/IndexV3/css/base.css" />
+  <link rel="stylesheet" href="__PUBLIC__/Search_new/css/style.css" />
+  <link rel="stylesheet" href="__PUBLIC__/IndexV3/css/app.css?20130926" />
+  <script src="__PUBLIC__/IndexV3/js/respond.min.js" id="ie_respond_script"></script>
 </head>
-<frameset cols="*,980,*" frameborder="0" framespacing="0" border="0">
-<frame src="about:blank"></frame>
-	<frameset name="myset" id="searchFrameSet" frameborder="0" framespacing="0" border="0" rows="130, *"> 
-		<frame src="__URL__/top/{$topParam}" id="top" name="top" frameborder="0" noresize scrolling="no" marginwidth="0" marginheight="0">
-		<frame src="http://{$subUrl}" frameborder=0 id="main" name="main">
-	</frameset>
-<frame src="about:blank"></frame>
-</frameset>
-<noframes></noframes>
+<body>
+<div id="header">
+  <div class="header-inner">
+    <ul class="nav">
+      <li><a href="/English/Index/index.html" target="_blank">首页</a></li>
+      <li><a href="/English/Index/index.html" target="_blank">另客英语</a></li>
+      <li><a href="/Home/Index/nav.html" target="_blank">另客导航</a></li>
+      <li><a href="/Suggestion.html" target="_blank">留言板</a></li>
+    </ul>
+    <div class="uc">
+      <a class="join J_SignUp" href="javascript:;">注&nbsp;册</a><a class="login J_SignIn" href="javascript:;">登&nbsp;录</a>
+    </div>
+  </div>
+</div>
+<div id="container">
+  <div id="search-result-page-header">
+    <div class="container-inner">
+      <div class="ci-hd J_thl_area">
+        <h1><a class="logo" href="/" rel="home">另客网</a></h1>
+        <div class="thl">
+          <form action="" id="searchForm">
+            <input name="thl" id="J_thl" type="hidden" value="">
+            <input name="tid" id="J_tid" type="hidden" value="">
+            <input name="q" id="J_q" type="hidden" value="">
+            <input type="text" value="" style="display:none;" />
+            <input type="hidden" id="tidNow" value="{$tidNow}" />
+            <div class="cate cate-in" id="J_thl_div" >
+              <volist name="thl_list" id="vo" key="m"><a <eq name="thlNow" value="$vo['thl']">class="on"</eq> href="#">{$vo['thl']}</a><if condition='$m neq 12'>&nbsp;-&nbsp;</if></volist>
+            </div>          
+            <div class="subcate">
+              <dl>
+                <volist name="thl_list" id="vo" key="i">
+                  <dd class="J_thlz" <neq name="vo['thl']" value="$thlNow">style="display:none;"</neq> >
+                    <volist name="vo['thlz']" id="thlz" key="j"><a <if condition='$thlz["id"] eq $tidNow'>class="on"</if> href="#" title="{$thlz['tip']}" ndk="{$thlz['needkey']}" url="{$thlz['url']}" tid="{$thlz['id']}" tag_name="{$thlz['url_tag_name']}">{$thlz['name']}</a><neq name="vo['thlz_len']" value="$j">&nbsp;-&nbsp;</neq></volist>
+                  </dd>
+                </volist>
+              </dl>
+            </div>
+            <div class="ctls">
+              <input type="text" id="search_text" class="ipt" x-webkit-speech lang="zh-CN" value="{$_COOKIE['keyword']}" autocomplete="off" />
+              <input type="hidden" id="search_text_o" />
+              <input class="btn" type="submit" value="" id="btn_search" />
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="search-result-page-header-after"></div>
+  <div id="main-wrap">
+    <iframe src="http://{$subUrl}" frameborder=0 id="main" name="main" style="width:100%;height:100px;"></iframe>
+  </div>
+</div>
+  <script src="__PUBLIC__/skin/js/jquery-1.7.1.min.js"></script>
+  <script src="__PUBLIC__/IndexV3/js/jquery.placeholder.js"></script>
+  <script src="__PUBLIC__/skin/js/jquery.cookies.2.2.0.min.js"></script>
+  <script src="__PUBLIC__/skin/js/jquery-ui.min.js"></script>
+  <script src="__PUBLIC__/skin/js/json2.js"></script>
+  <script src="__PUBLIC__/Search_new/js/index.js?2013092101"></script>
+  <script src="__PUBLIC__/Search_new/js/common.js?2013092101"></script>
+</body>
 </html>
