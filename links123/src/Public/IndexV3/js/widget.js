@@ -141,6 +141,7 @@ $(function(){
 		}
 
 		$('#J_box_music').bPopup({
+			follow: [true, false],
 			position : myposition,
 			modal : false
 		}).show().css({'left': myposition[1], 'top': myposition[0]}); //找不到bPopup接口，直接重写位置
