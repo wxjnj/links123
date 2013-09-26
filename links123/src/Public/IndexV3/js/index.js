@@ -450,7 +450,11 @@ var Schedule = {
 
 		$(document).on('focus', '#J_Schedule .t input', function(){
 			$(this).addClass('on');
-			$(this).val($(this).val());
+			if($(this).val() == '快来创建第一个日程'){
+				$(this).val('');
+			}else{
+				$(this).val($(this).val());
+			}
 		}).on('blur', '#J_Schedule .t input', function(){
 			$(this).removeClass('on');
 			self.Save(this);
