@@ -13,9 +13,10 @@ $( function($) {
 			$(this).data('links_app') || $(this).data('links_app', new App(appId));
 			var app = $(this).data('links_app');
 			app.show();
+			return false;
 		});
 	}
-	$('#J_Apps').links123_apptrigers('a');
+	$('#J_Apps').links123_apptrigers('.J_app_trig');
 	
 	
 	/*
@@ -142,7 +143,7 @@ $( function($) {
 			// remember
 			function remember(){
 				$.cookies.set('links123_note_bg', textareaBg);
-				$.cookies.set('links123_note_content', $textarea.val());
+				//$.cookies.set('links123_note_content', $textarea.val());
 			}
 			// load
 			function load(){
@@ -599,6 +600,7 @@ $( function($) {
             }
           },
           error : function() {
+            
           }
         });
     
@@ -606,7 +608,12 @@ $( function($) {
     },
     
     '#J_box_weather' : function(){
-      
+      //解决safari禁用第三方cookie造成天气控件不显示的bug
+      if($.browser.safari && navigator.userAgent.toLowerCase().match(/chrome/) == null){
+        var weatherPlugin = '<iframe frameborder="0" scrolling="no" src="/Home/weather/index_new.html" ' + 
+          'style="z-index: 99999; width: 380px; height: 220px; border: 0px;"></iframe>';
+        $('#J_box_weather').html(weatherPlugin);
+      }
     }
 	}
 
