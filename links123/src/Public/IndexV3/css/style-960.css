@@ -60,6 +60,9 @@
 		height: 82px;
 		width: 130px;
 	}
+	.find li .go:hover{
+		background-position: 40px 15px;
+	}
 	.music .top-mv ul li img{
 		height: 102px;
 		width: 118px;
@@ -74,6 +77,7 @@
 	.music .hot-music li.odd{
 		margin-left: 14px;
 	}
+
 	.pics{
 		height: 386px;
 		width: 250px;
@@ -101,4 +105,24 @@
 	.pics .items li .info .p3 a,
 	.pics .items li .info .p3 a:hover{
 		width: 82px;
+	}
+
+	.music-control .prev{
+		margin:0 0 0 15px; 
+	}
+	.music-control .stop{
+		margin:-23px 0 0 47px; 
+	}
+	.music-control .next{
+		margin:-23px 0 0 80px; 
+	}
+
+	.music-control .big{
+		margin:20px 33px 0;
+	}
+	.control-layer{
+		width:118px; height:102px; margin-top:-102px;
+	}
+	.control-layer-black{
+		width:118px; height:102px;  margin-top:-102px;
 	}
