@@ -457,6 +457,10 @@ var Schedule = {
 			}
 		}).on('blur', '#J_Schedule .t input', function(){
 			$(this).removeClass('on');
+			console.log($(this).data('tip'));
+			if($(this).val() == '' && $(this).data('tip')){
+				$(this).val('快来创建第一个日程');
+			}
 			self.Save(this);
 		});
 		$(document).on('click', '#J_Schedule li .sp', function(){
@@ -625,7 +629,6 @@ var MusicPlayer = {
 			var st = $(this).hasClass('go') ? 'pause' : 'go';
 			musicController.find('.big').removeClass('go pause').addClass(st);
 			if(st == 'pause'){
-				console.log(li.find('.nm a').data('url'));
 				self.Play(li.find('.nm a').data('url'));
 			}
 		});
