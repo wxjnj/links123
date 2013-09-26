@@ -643,7 +643,7 @@ var Theme  = {
 			return false;
 		});
 		$('#J_Styles li.add').on('click', function(){
-			self.SetGlobal();
+			//self.SetGlobal();
 			return false;
 		});
 
