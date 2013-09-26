@@ -107,21 +107,20 @@
 }
 
 .music-control .prev{
-	margin:0 0 0 15px; 
+	margin: 0 0 0 15px; 
 }
 .music-control .stop{
-	margin:-23px 0 0 47px; 
+	margin: -23px 0 0 47px; 
 }
 .music-control .next{
-	margin:-23px 0 0 80px; 
+	margin: -23px 0 0 80px; 
 }
 
 .music-control .big{
-	margin:20px 33px 0;
+	margin: 20px 33px 0;
 }
 .control-layer{
-	width:118px; height:102px; margin-top:-102px;
-}
-.control-layer-black{
-	width:118px; height:102px;  margin-top:-102px;
+	height: 102px;
+	margin-top: -102px;
+	width: 118px;
 }

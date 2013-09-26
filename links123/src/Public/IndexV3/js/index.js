@@ -629,6 +629,8 @@ var MusicPlayer = {
 			musicController.find('.big').removeClass('go pause').addClass(st);
 			if(st == 'pause'){
 				self.Play(li.find('.nm a').data('url'));
+			}else{
+				self.Stop();
 			}
 		});
 
