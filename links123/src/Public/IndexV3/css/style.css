@@ -678,6 +678,10 @@ input:focus{ outline: 0; }
 	float: right;
 	margin-left: 15px;
 }
+.schedule .sp:hover{
+	color: #fc2a06;
+	text-decoration: underline;
+}
 .schedule .info{}
 /*find*/
 .find{}

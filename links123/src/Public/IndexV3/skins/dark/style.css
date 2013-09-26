@@ -8,7 +8,7 @@ a:hover{ text-decoration: none; }
 	background: #3f3a39 url(bg.jpg) top center fixed;
 	background-size: cover;
 }
-.box{ color: #e1e0e2; }
+.box{ color: #fff; }
 .box .box-hd{ border-top: 1px solid #e1e0e2; }
 .zld ul li .nm{ color: #fff; }
 .apps ul li{ color: #fff; }
