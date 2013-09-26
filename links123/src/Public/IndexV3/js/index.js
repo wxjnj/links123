@@ -643,13 +643,11 @@ var MusicPlayer = {
 			}else if(type == "2"){
 				var currid = $('#J_MusicPlayer').data('currid');
 				var o = $('.song'+currid).prev();
-				console.log(o);
 				if(o.size()){
 					self.Play(o.find('a').data('url'), 2, o.data('id'));
 				}else{
 					o = $('.hot-music>ul>li:last');
 					self.Play(o.find('a').data('url'), 2, o.data('id'));
-					console.log(o);
 				}
 			}
 		});
@@ -663,8 +661,6 @@ var MusicPlayer = {
 			}else if(type == "2"){
 				var currid = $('#J_MusicPlayer').data('currid');
 				var o = $('.song'+currid).next();
-				console.log(currid);
-				console.log(o);
 				if(o.size()){
 					self.Play(o.find('a').data('url'), 2, o.data('id'));
 				}else{
