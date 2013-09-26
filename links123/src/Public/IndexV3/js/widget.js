@@ -123,7 +123,6 @@ $(function(){
 				$('#J_music_iframe').attr('height', 250);
 					
 				myposition = [$(window).height()-320,$(window).width()-680];
-				console.log(myposition);
 				break;
 			}
 			case 1:{//kugou
@@ -140,10 +139,12 @@ $(function(){
 				break;
 			}
 		}
+
 		$('#J_box_music').bPopup({
 			position : myposition,
 			modal : false
-		}).show();
+		}).show().css({'left': myposition[1], 'top': myposition[0]}); //找不到bPopup接口，直接重写位置
+
 		$('#J_music_iframe').attr('src', musicurl[g_music_currentkey]);
 		$('.music_button').show();
 		$('.music_button_min').show();
