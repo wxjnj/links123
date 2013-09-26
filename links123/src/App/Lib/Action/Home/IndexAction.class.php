@@ -36,18 +36,23 @@ class IndexAction extends CommonAction {
 				$themeId = cookie('themeId');
 			}
 		} else {
-			
-			$skinId = cookie('skinId');
-			$themeId = cookie('themeId');
+			$skinId = session('skinId');
+			if (!$skinId) {
+				$skinId = cookie('skinId');
+			}
+			$themeId = session('themeId');
+			if (!$themeId) {
+				$themeId = cookie('themeId');
+			}
 		}
-		
 		//快捷皮肤
 		
 		$skins = $this->getSkins();
 		
 		if ($skinId) {
+			$skin = $skins['skin'][$skinId];
 			$this->assign("skinId", $skinId);
-			$this->assign("skin", $skins['skin'][$skinId]);
+			$this->assign("skin", $skin);
 		}
 		$this->assign("skinList", $skins['list']);
 		$this->assign("skinCategory", $skins['category']);
@@ -105,8 +110,8 @@ class IndexAction extends CommonAction {
 		$this->assign('songFairList', $songFairList);
 		
 		//豆瓣电影信息 0正在上映 1即将上映
-//		$movieList = $this->getDoubanMovieInfo();
-//		$nowplayingmovie = $movieList[0];
+// 		$movieList = $this->getDoubanMovieInfo();
+// 		$nowplayingmovie = $movieList[0];
 //      $latermovie = $movieList[1];
         
 		//TED 发现
@@ -217,12 +222,17 @@ class IndexAction extends CommonAction {
 				$result = false;
 			}
 			
-			session('skinId', $skinId);
 		}
-			
-		cookie('skinId', $skinId, array('expire' => 0));
 		
-		$this->ajaxReturn($result);
+		if ($skinId) {
+			session('skinId', $skinId);
+			cookie('skinId', $skinId, array('expire' => 0));
+		} else {
+			unset($_SESSION['skinId']);
+			cookie('skinId',null);
+		}
+		
+		$this->ajaxReturn(cookie('skinId'));
 	}
 	
 	/**
@@ -251,9 +261,9 @@ class IndexAction extends CommonAction {
 				$result = false;
 			}
 				
-			session('themeId', $themeId);
 		}
-			
+		
+		session('themeId', $themeId);
 		cookie('themeId', $themeId, array('expire' => 0));
 	
 		$this->updateSkin(0);

@@ -1,34 +1,7 @@
-// Avoid `console` errors in browsers that lack a console.
-(function() {
-    var method;
-    var noop = function () {};
-    var methods = [
-        'assert', 'clear', 'count', 'debug', 'dir', 'dirxml', 'error',
-        'exception', 'group', 'groupCollapsed', 'groupEnd', 'info', 'log',
-        'markTimeline', 'profile', 'profileEnd', 'table', 'time', 'timeEnd',
-        'timeStamp', 'trace', 'warn'
-    ];
-    var length = methods.length;
-    var console = (window.console = window.console || {});
-
-    while (length--) {
-        method = methods[length];
-        // Only stub undefined methods.
-        if (!console[method]) {
-            console[method] = noop;
-        }
-    }
-}());
-
-// stop default link behavior
-$(document).on('click', '[href="#"],.disabled', function(e) {
-  e.preventDefault();
-});
-
 $(function(){
 	User.Init();
 	THL.Init();
-	Theme.Init();
+//	Theme.Init();
 });
 
 var User = {
@@ -274,7 +247,7 @@ var User = {
 				var objpassword = obj.find('input[name="password"]');
 				var username = objusername.val();
 				var password = objpassword.val();
-				var verify = "";
+                var verify = "";
 				var auto_login = obj.find('input[name="autologin"]').attr('checked');
 				
 				if (!username || username == '帐号') {
@@ -291,67 +264,69 @@ var User = {
 				
 				var data = { "username": username, "password": password, "auto_login": (auto_login=='checked' ? 1 : 0) };
                 
-				if ($('#J_Login').find('li.vcode').length !== 0) {
-					var objverify = obj.find('input[name="vcode"]');
-					verify = objverify.val();
-
-					if (!verify) {
-						objmsg.html('验证码不能为空');
-						objverify.focus();
-						return false;
-					}
-
-					data["verify"] = verify;
-				}
+                if ($('#J_Login').find('li.vcode').length !== 0) {
+                    var objverify = obj.find('input[name="vcode"]');
+                    verify = objverify.val();
+                    
+                    if (!verify) {
+                        objmsg.html('验证码不能为空');
+                        objverify.focus();
+                        return false;
+                    }
+                    
+                    data["verify"] = verify;
+                }
                 
 				$.post(APP + "Members/Login/checkLogin", data, 
 					function(data){
-						var resp = eval('(' + data + ')');
-						var showmsg = function(obj, msg){
-							$(obj).val("");
-							$(obj).attr('placeholder', msg);
-							$(obj).focus();
-						};
+                        var resp = eval('(' + data + ')');
+                        var showmsg = function(obj, msg){
+                            $(obj).val("");
+                            $(obj).attr('placeholder', msg);
+                            $(obj).focus();
+                        };
                         
-						switch(resp.code) {
-							case 200:
-								if(window.opener){
-									window.opener.location.reload();
-								}
-								window.location.href = APP+"Index";
-								break;
-							case 403:
-								$(objusername[0]).val("");
-								$(objpassword[0]).val("");
-								objmsg.html(resp.content);
-								break;
-							case 501:
-								showmsg(objusername[0], resp.content);
-								break;
-							case 502:
-								showmsg(objusername[0], resp.content);
-								break;
-							case 503:
-								showmsg(objpassword[0], resp.content);
-								break;
-							case 504:
-								showmsg(objpassword[0], resp.content);
-								break;
-							case 505:
-								var vcode = $('#J_Login').find('li.vcode');
-								if (vcode.length === 0) {
-								$('<li class="vcode">\n\<input class="ipt" type="text" name="vcode" placeholder="验证码" value="" /><img src="/Verify" alt="验证码" class="J_VerifyImg" title="点击刷新" />\n\</li>').insertAfter($('#J_Login input[name="password"]').parent("li"));
-								}
-								else {
-								$('#J_Login').find('li.vcode img').click();
-								}
-								break;
-							case 506:
-								objmsg.html(resp.content);
-								obj.find('input[name="vcode"]').focus();
-								$('#J_Login').find('li.vcode img').click();
-								break;
-						}
+                        switch(resp.code) {
+                            case 200:
+                                if(window.opener){
+                                    window.opener.location.reload();
+                                }
+                                window.location.href = APP+"Index";
+                                break;
+                            case 403:
+                                $(objusername[0]).val("");
+                                $(objpassword[0]).val("");
+                                objmsg.html(resp.content);
+                                break;
+                            case 501:
+                                showmsg(objusername[0], resp.content);
+                                break;
+                            case 502:
+                                showmsg(objusername[0], resp.content);
+                                break;
+                            case 503:
+                                showmsg(objpassword[0], resp.content);
+                                break;
+                            case 504:
+                                showmsg(objpassword[0], resp.content);
+                                break;
+                            case 505:
+                                var vcode = $('#J_Login').find('li.vcode');
+                                if (vcode.length === 0) {
+                                    $('<li class="vcode">\n\
+                                        <input class="ipt" type="text" name="vcode" placeholder="验证码" value="" /><img src="/Verify" alt="验证码" class="J_VerifyImg" title="点击刷新" />\n\
+                                        </li>').insertAfter($('#J_Login input[name="password"]').parent("li"));
+                                }
+                                else {
+                                    $('#J_Login').find('li.vcode img').click();
+                                }
+                                break;
+                            case 506:
+                                objmsg.html(resp.content);
+                                obj.find('input[name="vcode"]').focus();
+                                $('#J_Login').find('li.vcode img').click();
+                                break;
+                        }
                         
 					}
 				);
@@ -487,7 +462,7 @@ var User = {
 
 var THL = {
 	conf : {
-		topnm : 32,
+		topnm : 34,
 		topex : 64
 	},
 	Init : function(){
@@ -497,14 +472,8 @@ var THL = {
 		$.cookies.set('keyword', '');
 		$("#search_text").val('').select(); //选中文本框
 		
-		$('.thl').mouseover( function(){ 
-		  $('#J_thl_div').show();
-		  $("#search_text").select();
-		});//移入糖葫芦区域 显示糖葫芦, 选中 文本
-		
-		$('.J_thl_area').mouseleave(function(){ 
-		  $('#J_thl_div').hide(); 
-		});//移除糖葫芦主区域 隐藏糖葫芦
+		$('.thl').mouseover(function(){ $('#J_thl_div').show(); }); //移入糖葫芦区域 显示糖葫芦
+		$('.J_thl_area').mouseleave(function(){ $('#J_thl_div').hide(); }); //移除糖葫芦主区域 隐藏糖葫芦
 		
 		$(".J_thlz a").click(function(){ //糖葫芦籽点击
 			$(this).addClass("on").siblings("a").removeClass("on");
@@ -532,6 +501,8 @@ var THL = {
 			self.setpos();
 		});
 
+		$(".thl").mouseenter(function(){ $("#search_text").select(); }); //移入 糖葫芦 选中 文本
+
 		$('#search_text').on('click', function(){
 			if (!$.cookies.get('keyword')) {
 				var key  = $.trim($("#search_text").val());
@@ -540,6 +511,7 @@ var THL = {
 					$(this).val(key);
 				}
 			} else {
+				
 				$(this).data('key', '');
 			}
 		});
@@ -624,288 +596,5 @@ var THL = {
 			$('#J_thl_div').hide(); //没值隐藏
 			$("#J_thl_div").css("top", top).addClass('cate-in');	
 		}	
-	}
-};
-
-var Theme  = {
-	Init: function(){
-		var self = this;
-		$('#J_Styles>ul>li:not(.add)').on('click', function(){
-			var obj = $(this).closest('li');
-			if(!obj.is('.on')){
-				obj.addClass('on').siblings().removeClass('on');
-				var bg = obj.data('bg');
-				var theme = obj.data('theme');
-				var id = obj.data('id');
-				
-				self.SetTheme(id, theme, bg);
-			}
-			return false;
-		});
-		$('#J_Styles li.add').on('click', function(){
-			//self.SetGlobal();
-			return false;
-		});
-
-		$('.skins-style, .skins-all').on('mousemove', function(){
-			return false;
-		});
-
-		$('#J_Styles li.add').on('mousemove', function(){
-			$('.skins-style').show();
-		}).on('mouseleave', function(){
-			$('.skins-style').hide();
-			$('.skins-all dd').hide();
-		});
-		$('.skins-style li').on('mouseover', function(){
-			var id = $(this).data('id');
-			$(this).toggleClass('on');
-			$('.sa'+id).show().siblings().hide();
-		});
-		$('.skins-all li').on('click', function(){
-			var bg = $(this).data('bg');
-			var theme = $(this).data('theme');
-			var id = $(this).data('id');
-
-			self.SetBackGround(id, theme, bg);
-
-			$(this).addClass('added').siblings().removeClass('added');
-			$(this).find('.imgb').hide();
-			$(this).find('s').hide();
-			
-			return false;
-		}).on('mouseenter', function(){
-			$(this).find('.imgb').show();
-			$(this).find('s').show();
-		}).on('mouseleave', function(){
-			$(this).find('.imgb').hide();
-			$(this).find('s').hide();
-		});
-	},
-	SetBackGround: function(id, tm, bg){
-		var tmurl = $CONFIG['PUBLIC']+ '/IndexV3/skins/{0}/style.css';
-		$('#J_Skins').attr('href', tmurl.replace('{0}', tm));
-		$('#container').css('background-image', 'url('+bg+')');
-
-		$.post(URL + "/updateSkin", {'skinId': id});
-		return false;
-	},
-	SetTheme: function(id, tm, bg){
-		var tmurl = $CONFIG['PUBLIC']+ '/IndexV3/skins/{0}/style.css';
-		$('#J_Skins').attr('href', tmurl.replace('{0}', tm));
-		$('#container').css('background-image', 'url('+bg+')');
-
-		$.post(URL + "/updateSkinTheme", {'themeId': id});
-		return false;
-	},
-	SetGlobal: function(){
-		var self = this;
-		if(!$('#J_StyleGlobal').size()){
-			var hl = '';
-			hl = hl + '<div class="lk-dialog lk-dialog-settings" id="J_StyleGlobal">';
-			hl = hl + '	<div class="lkd-hd">';
-			hl = hl + '		<a class="close" href="#">X</a>';
-			hl = hl + '	</div>';
-			hl = hl + '	<div class="lkd-bd">';
-			hl = hl + '		<div class="settings">';
-			hl = hl + '			<div class="settings-tabs">';
-			hl = hl + '				<a class="on" href="javascript:;">全局设置</a> <a class="J_SetBackGround" href="javascript:;">背景设置</a>';
-			hl = hl + '			</div>';
-			hl = hl + '			<div class="settings-content">';
-			hl = hl + '				<div class="ttl">全局风格设置</div>';
-			hl = hl + '				<ul class="ct">';
-			hl = hl + '					<li class="on"><img src="'+PUBLIC+'/indexv3/skins/styleshot01.jpg" alt="" /></li>';
-			hl = hl + '				</ul>';
-			hl = hl + '				<div class="ft">';
-			hl = hl + '					<em>板块不透明度调节</em>';
-			hl = hl + '					<span>0%</span>';
-			hl = hl + '					<div class="process"></div>';
-			hl = hl + '					<span>100%</span>';
-			hl = hl + '				</div>';
-			hl = hl + '			</div>';
-			hl = hl + '		</div>';
-			hl = hl + '	</div>';
-			hl = hl + '	<div class="lkd-ft">';
-			hl = hl + '		<label for=""><input type="checkbox" name="" id="" /> 发条另客告诉大家</label>';
-			hl = hl + '		<a class="lkd-add" href="javascript:;"><em>确&nbsp;认</em></a>';
-			hl = hl + '	</div>';
-			hl = hl + '</div>';
-
-			$('body').append(hl);
-
-			var obj = $('#J_StyleGlobal');
-
-			obj.find('.close').on('click', function(){
-				obj.dialog('close');
-				return false;
-			});
-
-			obj.find('.lkd-add').on('click', function(){
-				//TODO 确定按钮事件
-				return false;
-			});
-
-			obj.find('.J_SetBackGround').on('click', function(){
-				obj.dialog('close');
-				self.SetCustom();
-				return false;
-			});
-
-			var xslider = obj.find('.process');
-
-			xslider.slider({
-				range: "min",
-				value: 0,
-				min: 0,
-				max: 100,
-				slide: function(event, ui){
-					$(xslider).next().html(ui.value+'%');
-				}
-			});
-
-			obj.dialog({
-				autoOpen: true,
-				width: 502,
-				modal: true,
-				resizable: false
-			});
-
-			return false;
-		}else{
-			var obj = $('#J_StyleGlobal');
-			obj.find('input[type="checkbox"]').attr('checked', false);
-			obj.dialog('open');
-		}
-	},
-	SetCustom: function(){
-		var self = this;
-		if(!$('#J_StyleCustom').size()){
-			var hl = '';
-			hl = hl + '<div class="lk-dialog lk-dialog-settings" id="J_StyleCustom">';
-			hl = hl + '	<div class="lkd-hd">';
-			hl = hl + '		<a class="close" href="#">X</a>';
-			hl = hl + '	</div>';
-			hl = hl + '	<div class="lkd-bd">';
-			hl = hl + '		<div class="settings">';
-			hl = hl + '			<div class="settings-tabs">';
-			hl = hl + '				<a class="J_SetGlobal" href="javascript:;">全局设置</a> <a class="on" href="javascript:;">背景设置</a>';
-			hl = hl + '			</div>';
-			hl = hl + '			<div class="settings-content">';
-			hl = hl + '				<div class="bg-ttl">';
-			hl = hl + '					<div class="pg">';
-			hl = hl + '						<ul>';
-			hl = hl + '							<li class="prev"><a href="#">上一页</a></li>';
-			hl = hl + '							<li class="next"><a href="#">下一页</a></li>';
-			hl = hl + '						</ul>';
-			hl = hl + '					</div>';
-			hl = hl + '					<div class="bg-cate bg-style bg-on">';
-			hl = hl + '						炫彩光晕';
-			hl = hl + '						<ul class="dropdown bg-cate-dropdown">';
-			hl = hl + '							<li><a href="#">测试效果</a></li>';
-			hl = hl + '							<li><a href="#">效果测试</a></li>';
-			hl = hl + '						</ul>';
-			hl = hl + '					</div><a class="bg-custom" href="javascript:;">自定义</a>';
-			hl = hl + '				</div>';
-			hl = hl + '				<div class="bg-list">';
-			hl = hl + '					<ul class="imglist">';
-			hl = hl + '						<li class="on"><img src="skins/dark/screenshot.jpg" alt="" /></li>';
-			hl = hl + '						<li><img src="skins/dark/screenshot.jpg" alt="" /></li>';
-			hl = hl + '						<li><img src="skins/dark/screenshot.jpg" alt="" /></li>';
-			hl = hl + '						<li><img src="skins/dark/screenshot.jpg" alt="" /></li>';
-			hl = hl + '						<li><img src="skins/dark/screenshot.jpg" alt="" /></li>';
-			hl = hl + '						<li><img src="skins/dark/screenshot.jpg" alt="" /></li>';
-			hl = hl + '						<li><img src="skins/dark/screenshot.jpg" alt="" /></li>';
-			hl = hl + '						<li><img src="skins/dark/screenshot.jpg" alt="" /></li>';
-			hl = hl + '					</ul>';
-			hl = hl + '					<div class="upload-panel">';
-			hl = hl + '						<div class="upload-demo">';
-			hl = hl + '							<div class="upload-demo-box">';
-			hl = hl + '								<img src="imgs/imgdemo.jpg" alt="" style="width:190px;" />';
-			hl = hl + '							</div>';
-			hl = hl + '						</div>';
-			hl = hl + '						<div class="upload-ct">';
-			hl = hl + '							<div class="row1">';
-			hl = hl + '								<input class="txtimg" readonly="readonly" type="text" name="" id="upfile" /><a onclick="path.click();return false;" class="btnimg" href="#">选择图片</a>';
-			hl = hl + '								<input type="file" id="path" style="display:none" onchange="upfile.value=this.value" />';
-			hl = hl + '							</div>';
-			hl = hl + '							<div class="row2">';
-			hl = hl + '								<div class="bg-align bg-style">';
-			hl = hl + '									<em>居中对齐</em>';
-			hl = hl + '									<ul class="dropdown bg-align-dropdown">';
-			hl = hl + '										<li><a href="#">居中对齐</a></li>';
-			hl = hl + '									</ul>';
-			hl = hl + '								</div>';
-			hl = hl + '								<label for=""><input type="checkbox" name="" id=""> 平铺</label>';
-			hl = hl + '								<label for=""><input type="checkbox" name="" id=""> 锁定</label>';
-			hl = hl + '								背景配色 <a href="javascript:;" class="color"></a>';
-			hl = hl + '							</div>';
-			hl = hl + '						</div>';
-			hl = hl + '						<div class="upload-ctls"><a href="#">点击上传</a></div>';
-			hl = hl + '					</div>';
-			hl = hl + '				</div>';
-			hl = hl + '			</div>';
-			hl = hl + '		</div>';
-			hl = hl + '	</div>';
-			hl = hl + '	<div class="lkd-ft">';
-			hl = hl + '		<label for=""><input type="checkbox" name="" id="" /> 发条另客告诉大家</label>';
-			hl = hl + '		<a class="lkd-add" href="#"><em>确认</em></a>';
-			hl = hl + '	</div>';
-			hl = hl + '</div>';
-			$('body').append(hl);
-
-			var obj = $('#J_StyleCustom');
-
-			obj.find('.bg-cate').dropdown({
-				classNm: ".bg-cate-dropdown"
-			});
-			obj.find('.bg-cate').on('mouseenter', function(){
-				$(this).removeClass('bg-on');
-			}).on('mouseleave', function(){
-				$(this).addClass('bg-on');
-			});
-			obj.find('.bg-align').dropdown({
-				classNm: ".bg-align-dropdown"
-			});
-			obj.find('.bg-align').on('mouseenter', function(){
-				$(this).removeClass('bg-on');
-			}).on('mouseleave', function(){
-				$(this).addClass('bg-on');
-			});
-
-			obj.find('.close').on('click', function(){
-				obj.dialog('close');
-				return false;
-			});
-
-			obj.find('.bg-custom').on('click', function(){
-				obj.find('.upload-panel').show().siblings().hide();
-				$(this).addClass('bg-custom-on');
-				obj.find('.pg').hide();
-			});
-
-			obj.find('.lkd-add').on('click', function(){
-				//TODO 确定按钮事件
-				return false;
-			});
-
-			obj.find('.J_SetGlobal').on('click', function(){
-				obj.dialog('close');
-				self.SetGlobal();
-				return false;
-			});
-
-			obj.dialog({
-				autoOpen: true,
-				width: 502,
-				modal: true,
-				resizable: false
-			});
-
-			return false;
-		}else{
-			var obj = $('#J_StyleCustom');
-			obj.find('input[type="checkbox"]').attr('checked', false);
-			obj.dialog('open');
-		}
 	}
 };
