@@ -687,6 +687,11 @@ var MusicPlayer = {
 
 		$('#J_MusicPlayer').data('type', type);
 		$('#J_MusicPlayer').data('currid', id ? id : 0);
+		if(type == 2){
+			var o = $('.song'+id);
+			o.siblings().find('a').removeClass('on');
+			o.find('a').addClass('on');
+		}
 	},
 	Stop: function(){
 		$('#J_MusicPlayer').size() && $('#J_MusicPlayer').remove();

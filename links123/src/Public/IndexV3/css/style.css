@@ -818,7 +818,8 @@ input:focus{ outline: 0; }
 	line-height: 24px;
 }
 .music .top-mv .nm a:hover,
-.music .hot-music li a:hover{
+.music .hot-music li a:hover,
+.music .hot-music li a.on{
 	color: #fc2a06;
 	text-decoration: underline;
 }
