@@ -1,4 +1,3 @@
-
 	#header,
 	#container,
 	#footer,
@@ -103,4 +102,24 @@
 	.pics .items li .info .p3 a,
 	.pics .items li .info .p3 a:hover{
 		width: 110px;
+	}
+
+	.music-control .prev{
+		margin:0 0 0 29px; 
+	}
+	.music-control .stop{
+		margin:-23px 0 0 62px; 
+	}
+	.music-control .next{
+		margin:-23px 0 0 94px; 
+	}
+
+	.music-control .big{
+		margin:30px 47px 0;
+	}
+	.control-layer{
+		width:147px; height:128px; margin-top:-128px;
+	}
+	.control-layer-black{
+		width:147px; height:128px;  margin-top:-128px;
 	}
