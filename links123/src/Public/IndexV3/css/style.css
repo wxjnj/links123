@@ -530,16 +530,6 @@ input:focus{ outline: 0; }
 }
 .box .box-hd{
 	padding-top: 10px;
-	filter:alpha(opacity=60);
-	-moz-opacity: 0.6;
-	-khtml-opacity: 0.6;
-	opacity: 0.6;
-}
-.box .box-hd:hover{
-	filter:alpha(opacity=100);
-	-moz-opacity: 1;
-	-khtml-opacity: 1;
-	opacity: 1;
 }
 .box .box-bd{
 	padding-top: 20px;
@@ -664,14 +654,8 @@ input:focus{ outline: 0; }
 .schedule li .s{
 	margin-right: -5px;
 }
-.schedule li .sprite:hover,
-.schedule li .d:hover{
-	color: #fc2a06;
-}
 .schedule li .d:hover input{
-	color: #fc2a06;
 	cursor: pointer;
-	text-decoration: underline;
 }
 .schedule li input{
 	font-family: '\5FAE\8F6F\96C5\9ED1','Hiragino Sans GB','Hiragino Sans GB W3';
@@ -693,6 +677,10 @@ input:focus{ outline: 0; }
 .schedule .sp{
 	float: right;
 	margin-left: 15px;
+}
+.schedule .sp:hover{
+	color: #fc2a06;
+	text-decoration: underline;
 }
 .schedule .info{}
 /*find*/
@@ -748,6 +736,9 @@ input:focus{ outline: 0; }
 	display: block;
 	text-indent: -999px;
 	overflow: hidden;
+}
+.find li .go:hover{
+	background: url(../imgs/icon-player.png) 1000px 1000px no-repeat;
 }
 .find li.hover .mask{
 	background: #000;
@@ -1592,6 +1583,9 @@ input:focus{ outline: 0; }
 		height: 82px;
 		width: 130px;
 	}
+	.find li .go:hover{
+		background-position: 40px 15px;
+	}
 	.music .top-mv ul li img{
 		height: 102px;
 		width: 118px;
@@ -1722,6 +1716,9 @@ input:focus{ outline: 0; }
 	.find li .go{
 		height: 98px;
 		width: 159px;
+	}
+	.find li .go:hover{
+		background-position: 55px 25px;
 	}
 	.music .top-mv ul li img{
 		height: 128px;

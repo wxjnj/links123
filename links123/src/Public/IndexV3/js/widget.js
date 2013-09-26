@@ -123,7 +123,6 @@ $(function(){
 				$('#J_music_iframe').attr('height', 250);
 					
 				myposition = [$(window).height()-320,$(window).width()-680];
-				console.log(myposition);
 				break;
 			}
 			case 1:{//kugou
@@ -135,15 +134,18 @@ $(function(){
 			case 3:{//qq
 				$('#J_music_iframe').attr('width', 360);
 				$('#J_music_iframe').attr('height', 380);
-				myposition = [$(window).height()-450,$(window).width()-550];
+				myposition = [$(window).height()-350,$(window).width()-550];
 				//myposition = [400,300];
 				break;
 			}
 		}
+
 		$('#J_box_music').bPopup({
+			follow: [true, false],
 			position : myposition,
 			modal : false
-		}).show();
+		}).show().css({'left': myposition[1], 'top': myposition[0]}); //找不到bPopup接口，直接重写位置
+
 		$('#J_music_iframe').attr('src', musicurl[g_music_currentkey]);
 		$('.music_button').show();
 		$('.music_button_min').show();

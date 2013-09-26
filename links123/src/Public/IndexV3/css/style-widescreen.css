@@ -61,6 +61,9 @@
 		height: 98px;
 		width: 159px;
 	}
+	.find li .go:hover{
+		background-position: 55px 25px;
+	}
 	.music .top-mv ul li img{
 		height: 128px;
 		width: 147px;
