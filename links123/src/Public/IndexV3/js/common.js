@@ -1,3 +1,30 @@
+// Avoid `console` errors in browsers that lack a console.
+(function() {
+    var method;
+    var noop = function () {};
+    var methods = [
+        'assert', 'clear', 'count', 'debug', 'dir', 'dirxml', 'error',
+        'exception', 'group', 'groupCollapsed', 'groupEnd', 'info', 'log',
+        'markTimeline', 'profile', 'profileEnd', 'table', 'time', 'timeEnd',
+        'timeStamp', 'trace', 'warn'
+    ];
+    var length = methods.length;
+    var console = (window.console = window.console || {});
+
+    while (length--) {
+        method = methods[length];
+        // Only stub undefined methods.
+        if (!console[method]) {
+            console[method] = noop;
+        }
+    }
+}());
+
+// stop default link behavior
+$(document).on('click', '[href="#"],.disabled', function(e) {
+  e.preventDefault();
+});
+
 $(function(){
 	User.Init();
 	THL.Init();
@@ -313,9 +340,7 @@ var User = {
                             case 505:
                                 var vcode = $('#J_Login').find('li.vcode');
                                 if (vcode.length === 0) {
-                                    $('<li class="vcode">\n\
-                                        <input class="ipt" type="text" name="vcode" placeholder="验证码" value="" /><img src="/Verify" alt="验证码" class="J_VerifyImg" title="点击刷新" />\n\
-                                        </li>').insertAfter($('#J_Login input[name="password"]').parent("li"));
+                                    $('<li class="vcode">\n\<input class="ipt" type="text" name="vcode" placeholder="验证码" value="" /><img src="/Verify" alt="验证码" class="J_VerifyImg" title="点击刷新" />\n\</li>').insertAfter($('#J_Login input[name="password"]').parent("li"));
                                 }
                                 else {
                                     $('#J_Login').find('li.vcode img').click();
@@ -472,8 +497,14 @@ var THL = {
 		$.cookies.set('keyword', '');
 		$("#search_text").val('').select(); //选中文本框
 		
-		$('.thl').mouseover(function(){ $('#J_thl_div').show(); }); //移入糖葫芦区域 显示糖葫芦
-		$('.J_thl_area').mouseleave(function(){ $('#J_thl_div').hide(); }); //移除糖葫芦主区域 隐藏糖葫芦
+		$('.thl').mouseover( function(){ 
+		  $('#J_thl_div').show();
+		  $("#search_text").select();
+		});//移入糖葫芦区域 显示糖葫芦, 选中 文本
+		
+		$('.J_thl_area').mouseleave(function(){ 
+		  $('#J_thl_div').hide(); 
+		});//移除糖葫芦主区域 隐藏糖葫芦
 		
 		$(".J_thlz a").click(function(){ //糖葫芦籽点击
 			$(this).addClass("on").siblings("a").removeClass("on");
@@ -501,8 +532,6 @@ var THL = {
 			self.setpos();
 		});
 
-		$(".thl").mouseenter(function(){ $("#search_text").select(); }); //移入 糖葫芦 选中 文本
-
 		$('#search_text').on('click', function(){
 			if (!$.cookies.get('keyword')) {
 				var key  = $.trim($("#search_text").val());
@@ -511,7 +540,6 @@ var THL = {
 					$(this).val(key);
 				}
 			} else {
-				
 				$(this).data('key', '');
 			}
 		});
