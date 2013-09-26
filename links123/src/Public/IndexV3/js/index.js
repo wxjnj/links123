@@ -594,11 +594,11 @@ var MusicPlayer = {
 	Init: function(){
 		var self = this;
 		$('#J_Music').find('.top-mv .nm a').on('click', function(){
-			self.Play($(this).data('url'));
+			self.Play($(this).data('url'), 1);
 			return false;
 		});
 		$('#J_Music').find('.hot-music a').on('click', function(){
-			self.Play($(this).data('url'));
+			self.Play($(this).data('url'), 2, $(this).closest('li').data('id'));
 			return false;	
 		})
 		$('#J_Music').find('.del').on('click', function(){
@@ -628,20 +628,54 @@ var MusicPlayer = {
 			var st = $(this).hasClass('go') ? 'pause' : 'go';
 			$('#music-controller').find('.big').removeClass('go pause').addClass(st);
 			if(st == 'pause'){
-				self.Play(li.find('.nm a').data('url'));
+				self.Play(li.find('.nm a').data('url'), 1);
 			}else{
 				self.Stop();
 			}
 		});
 		$('#J_Music').find('.music-control').on('click', 'a.prev', function(){
-
+			var type = $('#J_MusicPlayer').data('type');
+			if(type == "1"){
+				var o = $('.hot-music>ul>li:last');
+				var url = o.find('a').data('url');
+				var id = o.data('id');
+				self.Play(url, 2, id);
+			}else if(type == "2"){
+				var currid = $('#J_MusicPlayer').data('currid');
+				var o = $('.song'+currid).prev();
+				console.log(o);
+				if(o.size()){
+					self.Play(o.find('a').data('url'), 2, o.data('id'));
+				}else{
+					o = $('.hot-music>ul>li:last');
+					self.Play(o.find('a').data('url'), 2, o.data('id'));
+					console.log(o);
+				}
+			}
 		});
 		$('#J_Music').find('.music-control').on('click', 'a.next', function(){
-			
+			var type = $('#J_MusicPlayer').data('type');
+			if(type == "1"){
+				var o = $('.hot-music>ul>li:first');
+				var url = o.find('a').data('url');
+				var id = o.data('id');
+				self.Play(url, 2, id);
+			}else if(type == "2"){
+				var currid = $('#J_MusicPlayer').data('currid');
+				var o = $('.song'+currid).next();
+				console.log(currid);
+				console.log(o);
+				if(o.size()){
+					self.Play(o.find('a').data('url'), 2, o.data('id'));
+				}else{
+					o = $('.song1');
+					self.Play(o.find('a').data('url'), 2, o.data('id'));
+				}
+			}
 		});
 
 	},
-	Play: function(url){
+	Play: function(url, type, id){ //type=1 专辑 type=2 单曲
 		$('#J_Music').find('.top-mv li').eq(0).trigger('mouseover');
 
 		var mc = $('#J_Music').find('.music-control');
@@ -654,6 +688,9 @@ var MusicPlayer = {
 		}else{
 			$('#J_MusicPlayer').attr('src', url);
 		}
+
+		$('#J_MusicPlayer').data('type', type);
+		$('#J_MusicPlayer').data('currid', id ? id : 0);
 	},
 	Stop: function(){
 		$('#J_MusicPlayer').size() && $('#J_MusicPlayer').remove();

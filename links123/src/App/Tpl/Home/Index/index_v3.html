@@ -280,18 +280,12 @@
 												<a class="stop" data-name="stop" href="javascript:;"></a>
 												<a class="next" data-name="next" href="javascript:;"></a>
 											</div>
-											<!-- <div class="music-control control-layer-black">
-												<a class="big go" data-name="big" href="javascript:;"></a>
-												<a class="prev" data-name="prev" href="javascript:;"></a>
-												<a class="stop" data-name="stop" href="javascript:;"></a>
-												<a class="next" data-name="next" href="javascript:;"></a>
-											</div> -->
 										</div>
 									</div>
 									<div class="hot-music">
 										<ul>
 										<volist name="songFairList" key="i" id="song">
-											<li <if condition="$i%2 neq 1">class="odd"</if>><a href="javascript:;" data-url="{$song.url}" title="{$song.sname}">{$song.author} - {$song.sname}</a></li>
+											<li class="song{$i}" data-id="{$i}" <if condition="$i%2 neq 1">class="odd"</if>><a href="javascript:;" data-url="{$song.url}" title="{$song.sname}">{$song.author} - {$song.sname}</a></li>
 										</volist>
 										</ul>
 									</div>
