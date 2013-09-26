@@ -1687,13 +1687,11 @@ input:focus{ outline: 0; }
 		width: 415px;
 	}
 	.thl .subcate{
-		font-size:14px;
-		left: 22px;
+		left: 53px;
 	}
 	.thl .cate{
-		font-size:14px;
-		left: 53px;
-		top: 32px;
+		left: 87px;
+		top: 34px;
 	}
 
 	.nav{ font-size: 14px; }

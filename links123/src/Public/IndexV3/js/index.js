@@ -457,7 +457,6 @@ var Schedule = {
 			}
 		}).on('blur', '#J_Schedule .t input', function(){
 			$(this).removeClass('on');
-			console.log($(this).data('tip'));
 			if($(this).val() == '' && $(this).data('tip')){
 				$(this).val('快来创建第一个日程');
 			}
@@ -636,7 +635,7 @@ var MusicPlayer = {
 	},
 	Play: function(url){
 		if(!$('#J_MusicPlayer').size()){
-			$('body').append('<iframe id="J_MusicPlayer" style="width:0;height:0;visibility:hidden" src="'+url+'"></iframe>');
+			$('body').append('<iframe id="J_MusicPlayer" frameborder="0" style="width:0;height:0;visibility:hidden;" src="'+url+'"></iframe>');
 		}else{
 			$('#J_MusicPlayer').attr('src', url);
 		}
