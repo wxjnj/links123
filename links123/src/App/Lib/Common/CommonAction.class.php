@@ -265,6 +265,7 @@ class CommonAction extends Action {
         			$_SESSION['nickname'] = $user_info['nickname'];
         			$_SESSION['face'] = empty($user_info['face'])?'face.jpg':$user_info['face'];
         			$_SESSION['skinId'] = $user_info['skin'];
+        			$_SESSION['themeId'] = $user_info['themeId'];
         		
         			//使用cookie过期时间来控制前台登陆的过期时间
         			$home_session_expire = intval(D("Variable")->getVariable("home_session_expire"));
@@ -272,13 +273,6 @@ class CommonAction extends Action {
         		}
         	}
         }
-//去掉用户自动登录过期 @author slate 2013-08-30       
-//         if(empty($_COOKIE[md5("home_session_expire")])) {
-//         	//自动登录标示Cookie USER_ID 时间过期
-//         	unset($_SESSION[C('MEMBER_AUTH_KEY')]);
-//         	unset($_SESSION['nickname']);
-//         	unset($_SESSION['face']);
-//         }
     }
     
     /**

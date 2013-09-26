@@ -219,7 +219,7 @@
 											<div class="info">
 												<span data-d='{$schedule.datetime|date="m月d日",###}' class="d"><input type="text" value='{$schedule.datetime|date="m月d日",###}' /></span>
 												<span class="s"> - </span>
-												<span class="t"><input type="text" value="{$schedule.content}" /></span>
+												<span class="t"><input type="text" value="{$schedule.content}" data-tip="<if condition="$schedule.id eq 1">快来创建第一个日程</if>"/></span>
 											</div>
 										</li>
 									</volist>

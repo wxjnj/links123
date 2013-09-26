@@ -73,7 +73,7 @@ class LoginAction extends CommonAction
                 echo json_encode(array("code"=>504, "content" => "建议检查用户名是否正确"));
             }
             else {
-                echo json_encode(array("code"=>503, "content" => "用户名与密码不符"));
+                echo json_encode(array("code"=>503, "content" => "密码与用户名不符"));
             }
 			return false;
 		}
