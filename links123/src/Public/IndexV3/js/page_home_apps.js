@@ -618,136 +618,93 @@ $( function($) {
 		},
 		
 		'#J_box_music' : function(){
-			var g_music_currentkey = -1;
-			//音乐盒面板-选择电台
-			var ch_select = $('#channel-select');
-			var lis = ch_select.find('li');
-			ch_select.on('mouseenter', function(){
-				ch_select.find('b').removeClass('down-arrow').addClass('up-arrow');
-				lis.removeClass('only').show().first().addClass('first').end().last().addClass('last');
-			}).on('mouseleave', function(){
-				ch_select.find('b').removeClass('up-arrow').addClass('down-arrow');
-				lis.removeClass('first last').hide();
-				lis.filter('[data-value=' + g_music_currentkey + ']').addClass('only').show();
-			}).on('click', 'li', function(){
-				g_music_currentkey = $(this).attr('data-value') * 1;
-				music_box_proc();
-			});
-			
-			var music_box_proc = function(st){
-				if(-1 == g_music_currentkey){
-					g_music_currentkey = lis.first().attr('data-value') * 1;
-				}
-				var musicurl = {
-					1:'http://web.kugou.com/default.html',
-					2:'http://kuang.xiami.com/res/kuang/xiamikuang0709.swf',
-					3:'http://y.qq.com/player/',
-					0:'http://douban.fm/swf/53053/radioplayer.swf'
-				};
-				//只有双击切换 使用此算法
-				//select切换不用
-				if(st){
-					$.each(musicurl, function(key, value){
-						if (g_music_currentkey == key)  {
-							g_music_currentkey++;
-							g_music_currentkey = g_music_currentkey % 4;
-							return false;
-						}
-					});
-				}
-				//根据g_music_currentkey重新排列select
-				var o = lis.filter('[data-value=' + g_music_currentkey + ']');
-				ch_select.find('ul').prepend(o);
-				lis.removeClass('first last').hide();
-				o.addClass('only').show();
-				
-				var myposition=[200,10];
-				//适配不同播放器
-				switch(g_music_currentkey){
-					case 0:{//douban
-						$('#J_music_iframe').attr('width', 450);
-						$('#J_music_iframe').attr('height', 170);
-							
-						myposition = [$(window).height()-300,$(window).width()-580];
-						break;
-					}
-					case 2:{//xiami
-						$('#J_music_iframe').attr('width', 530);
-						$('#J_music_iframe').attr('height', 250);
-							
-						myposition = [$(window).height()-320,$(window).width()-680];
-						console.log(myposition);
-						break;
-					}
-					case 1:{//kugou
-						$('#J_music_iframe').attr('width', 320);
-						$('#J_music_iframe').attr('height', 140);
-						myposition = [$(window).height()-300,$(window).width()-450];
-						break;
-					}
-					case 3:{//qq
-						$('#J_music_iframe').attr('width', 360);
-						$('#J_music_iframe').attr('height', 380);
-						myposition = [$(window).height()-450,$(window).width()-550];
-						//myposition = [400,300];
-						break;
-					}
-				}
-				$('#J_box_music').bPopup({
-					position : myposition,
-					modal : false
-				}).show();
-				$('#J_music_iframe').attr('src', musicurl[g_music_currentkey]);
-				$('.music_button').show();
-				$('.music_button_min').show();
-				$('#J_music_iframe').show();
-			}
-			
-			
-			$('#J_music').dblclick(function(){
-				music_box_proc(true);
-			});
-			
-			// $('#J_music').click(function(){
-// 		
-				// if(g_music_currentkey != -1){
-					// if ($('#J_box_music').is(":hidden")){
-						// $('#J_box_music').show(); 
-						// $('.music_button').show();
-						// $('.music_button_min').show();
-					// }else {
-						// $('#J_box_music').hide(); 
-						// $('.music_button').hide();
-						// $('.music_button_min').hide();
-					// }
-					// return;
-				// }
+			// var g_music_currentkey = -1;
+			// //音乐盒面板-选择电台
+			// var ch_select = $('#channel-select');
+			// var lis = ch_select.find('li');
+			// ch_select.on('mouseenter', function(){
+				// ch_select.find('b').removeClass('down-arrow').addClass('up-arrow');
+				// lis.removeClass('only').show().first().addClass('first').end().last().addClass('last');
+			// }).on('mouseleave', function(){
+				// ch_select.find('b').removeClass('up-arrow').addClass('down-arrow');
+				// lis.removeClass('first last').hide();
+				// lis.filter('[data-value=' + g_music_currentkey + ']').addClass('only').show();
+			// }).on('click', 'li', function(){
+				// g_music_currentkey = $(this).attr('data-value') * 1;
 				// music_box_proc();
-// 		
 			// });
-			
-
-			music_box_proc();
-			
-			$('.music_button').click(function(){  //close
-				$('#J_music_iframe').attr('src','').hide();
-				$('#J_box_music').hide(); 
-				$('.music_button').hide();
-				$('.music_button_min').hide();
-				g_music_currentkey = -1;
-				return false;
-			}); 
-			$('.music_button_min').click(function(){ //min
-				$('#J_box_music').hide(); 
-				$("#bModal").trigger("click");
-				//$('.music_button').hide();
-				//$('.music_button_min').hide();
-				return false;
-			});
-		
-			
-			
-			
+// 			
+			// var music_box_proc = function(st){
+				// if(-1 == g_music_currentkey){
+					// g_music_currentkey = lis.first().attr('data-value') * 1;
+				// }
+				// var musicurl = {
+					// 1:'http://web.kugou.com/default.html',
+					// 2:'http://kuang.xiami.com/res/kuang/xiamikuang0709.swf',
+					// 3:'http://y.qq.com/player/',
+					// 0:'http://douban.fm/swf/53053/radioplayer.swf'
+				// };
+				// //只有双击切换 使用此算法
+				// //select切换不用
+				// if(st){
+					// $.each(musicurl, function(key, value){
+						// if (g_music_currentkey == key)  {
+							// g_music_currentkey++;
+							// g_music_currentkey = g_music_currentkey % 4;
+							// return false;
+						// }
+					// });
+				// }
+				// //根据g_music_currentkey重新排列select
+				// var o = lis.filter('[data-value=' + g_music_currentkey + ']');
+				// ch_select.find('ul').prepend(o);
+				// lis.removeClass('first last').hide();
+				// o.addClass('only').show();
+// 				
+				// var myposition=[200,10];
+				// //适配不同播放器
+				// switch(g_music_currentkey){
+					// case 0:{//douban
+						// $('#J_music_iframe').attr('width', 450);
+						// $('#J_music_iframe').attr('height', 170);
+// 							
+						// myposition = [$(window).height()-300,$(window).width()-580];
+						// break;
+					// }
+					// case 2:{//xiami
+						// $('#J_music_iframe').attr('width', 530);
+						// $('#J_music_iframe').attr('height', 250);
+// 							
+						// myposition = [$(window).height()-320,$(window).width()-680];
+						// console.log(myposition);
+						// break;
+					// }
+					// case 1:{//kugou
+						// $('#J_music_iframe').attr('width', 320);
+						// $('#J_music_iframe').attr('height', 140);
+						// myposition = [$(window).height()-300,$(window).width()-450];
+						// break;
+					// }
+					// case 3:{//qq
+						// $('#J_music_iframe').attr('width', 360);
+						// $('#J_music_iframe').attr('height', 380);
+						// myposition = [$(window).height()-450,$(window).width()-550];
+						// //myposition = [400,300];
+						// break;
+					// }
+				// }
+				// $('#J_music_iframe').attr('src', musicurl[g_music_currentkey]);
+				// $('.music_button').show();
+				// $('.music_button_min').show();
+				// $('#J_music_iframe').show();
+			// }
+// 			
+// 			
+			// $('#J_music').dblclick(function(){
+				// music_box_proc(true);
+			// });
+// 
+			// music_box_proc();
 		}
 	}
 
