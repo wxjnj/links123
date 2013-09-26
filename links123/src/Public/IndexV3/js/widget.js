@@ -134,7 +134,7 @@ $(function(){
 			case 3:{//qq
 				$('#J_music_iframe').attr('width', 360);
 				$('#J_music_iframe').attr('height', 380);
-				myposition = [$(window).height()-450,$(window).width()-550];
+				myposition = [$(window).height()-350,$(window).width()-550];
 				//myposition = [400,300];
 				break;
 			}
