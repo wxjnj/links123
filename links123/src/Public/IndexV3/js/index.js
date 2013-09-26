@@ -693,6 +693,7 @@ var MusicPlayer = {
 		if(type == 1){
 			//TODO
 		}else if(type == 2){
+			$('.top-mv .nm a').removeClass('on');
 			var o = $('.song'+id);
 			o.siblings().find('a').removeClass('on');
 			o.find('a').addClass('on');
