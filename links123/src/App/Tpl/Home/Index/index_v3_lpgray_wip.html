@@ -8,8 +8,8 @@
 	<link rel="stylesheet" href="__PUBLIC__/IndexV3/css/base.css" />
 	<link rel="stylesheet" href="__PUBLIC__/IndexV3/css/jquery-ui.css" />
 	<link rel="stylesheet" href="__PUBLIC__/IndexV3/css/style.css" />
-	<!-- <link rel="stylesheet" href="__PUBLIC__/skin/fancybox/jquery.fancybox.css" /> -->
-	<link rel="stylesheet" href="__PUBLIC__/IndexV3/css/app.css" />
+	<!-- <link rel="stylesheet" href="__PUBLIC__/skin/fancybox/jquery.fancybox.css" /> 
+	     <link rel="stylesheet" href="__PUBLIC__/IndexV3/css/app.css" /> -->
 	<link rel="stylesheet" href="__PUBLIC__/IndexV3/skins/{$theme}/style.css" id="J_Skins" />
 	<link rel="stylesheet" href="__PUBLIC__/IndexV3/css/page_home_apps.css" />
 	<script src="__PUBLIC__/IndexV3/js/respond.min.js"></script>
@@ -160,43 +160,43 @@
 						<div class="apps">
 							<ul id="J_Apps">
 								<li>
-									<a href="#">
-									   <p class="av newWin" url="{:U('English/Index/index')}"><img src="__PUBLIC__/IndexV3/imgs/app/app001.png" /></p>
+									<a href="{:U('English/Index/index')}" target="_blank">
+									   <p class="av"><img src="__PUBLIC__/IndexV3/imgs/app/app001.png" /></p>
 									   <p class="nm"><a href="{:U('English/Index/index')}" target="_blank">另客英语</a></p>
 									</a>
 								</li>
 								<li>
-									<a href="#">
-									   <p class="av newWin" url="{:U('Home/Index/nav')}"><img src="__PUBLIC__/IndexV3/imgs/app/app002.png" /></p>
+									<a href="{:U('Home/Index/nav')}" target="_blank">
+									   <p class="av"><img src="__PUBLIC__/IndexV3/imgs/app/app002.png" /></p>
 									   <p class="nm"><a href="{:U('Home/Index/nav')}" target="_blank">另客导航</a></p>
 									</a>
 								</li>
 								<li>
-									<a href="#">
+									<a href="#J_box_music" class="J_app_trig">
 									    <p class="av"><img src="__PUBLIC__/IndexV3/imgs/app/app007.png" /></p>
                                         <p class="nm">音乐盒</p>
 									</a>
 								</li>
 								<li>
-									<a href="#J_box_note">
+									<a href="#J_box_note" class="J_app_trig">
 									    <p class="av"><img src="__PUBLIC__/IndexV3/imgs/app/app005.png" /></p>
                                         <p class="nm">便&nbsp;签</p>
 									</a>
 								</li>
 								<li>
-								    <a href="#J_box_calc" class="fancybox-btn">
+								    <a href="#J_box_calc" class="J_app_trig">
 								        <p class="av"><img src="__PUBLIC__/IndexV3/imgs/app/app004.png" /></p>
                                         <p class="nm">计算器</p>
 								    </a>
 								</li>
 								<li>
-									<a href="#J_box_weather" class="fancybox-btn">
+									<a href="#J_box_weather" class="J_app_trig">
 									   <p class="av"><img src="__PUBLIC__/IndexV3/imgs/app/app-weather.png" /></p>
 									   <p class="nm">天&nbsp;气</p>
 									</a>
 								</li>
 								<li class="today">
-									<a href="#J_box_calendar" class="fancybox-btn">
+									<a href="#J_box_calendar" class="J_app_trig">
 									    <p class="ct">
                                             <b>{:date('D')}</b>
                                             <i>{:date('d')}</i>
@@ -205,13 +205,13 @@
 									</a>
 								</li>
 								<li>
-									<a href="#J_box_mail" class="fancybox-btn">
+									<a href="#J_box_mail" class="J_app_trig">
 									   <p class="av"><img src="__PUBLIC__/IndexV3/imgs/app/app006.png" /></p>
 									   <p class="nm">邮&nbsp;箱</p>
 									</a>
 								</li>
 								<li>
-								    <a href="#J_box_translate" class="fancybox-btn">
+								    <a href="#J_box_translate" class="J_app_trig">
     									<p class="av"><img src="__PUBLIC__/IndexV3/imgs/app/app003.png" /></p>
     									<p class="nm">翻&nbsp;译</p>
 									</a>
