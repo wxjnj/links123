@@ -487,6 +487,7 @@ class EnglishQuestionAction extends CommonAction {
             }
             $tedSort = intval($recommendList[0]['sort']) + 1;
             $model->startTrans();
+            $is_standard_excel = true;
             //
             //循环读取所有表,表迭代器
             foreach ($objPHPExcel->getWorksheetIterator() as $worksheet) {
@@ -500,45 +501,64 @@ class EnglishQuestionAction extends CommonAction {
                     foreach ($cellIterator as $cell) {
                         //单元格迭代器
                         if (!is_null($cell)) {
-                            if ($cell->getColumn() == "A") {
-                                $data['name'] = ftrim($cell->getCalculatedValue()); //名称
-                            } else if ($cell->getColumn() == "B") {
-                                $media_data['voice'] = $cell->getCalculatedValue(); //语种，英音，美音
-                            } else if ($cell->getColumn() == "C") {
-                                $media_data['pattern'] = $cell->getCalculatedValue(); //类型，视频，音频
-                            } else if ($cell->getColumn() == "D") {
-                                $data['target'] = $cell->getCalculatedValue(); //目标，听力，说力
-                            } else if ($cell->getColumn() == "E") {
-                                $media_data['level_name'] = ftrim($cell->getCalculatedValue()); //等级
-                            } else if ($cell->getColumn() == "F") {
-                                $media_data['object_name'] = ftrim($cell->getCalculatedValue()); //科目
-                            } else if ($cell->getColumn() == "G") {
-                                $media_data['subject_name'] = ftrim($cell->getCalculatedValue()); //专题
-                            } else if ($cell->getColumn() == "H") {
-                                //$media_data['difficulty'] = intval($cell->getCalculatedValue()); //难度
-                                $media_data['recommend'] = intval($cell->getCalculatedValue()); //推荐
-                            } else if ($cell->getColumn() == "I") {
-                                $media_data['special_recommend'] = intval($cell->getCalculatedValue()); //是否特别推荐
-                            } else if ($cell->getColumn() == "J") {
-                                $media_data['ted'] = intval($cell->getCalculatedValue()); //是否特别推荐
-                            } else if ($cell->getColumn() == "K") {
-                                $data['media_text_url'] = $media_data['media_source_url'] = ftrim($cell->getCalculatedValue()); //媒体内容地址
-                            } else if ($cell->getColumn() == "L") {
-                                $data['content'] = ftrim($cell->getCalculatedValue()); //题目内容
-                            } else if ($cell->getColumn() == "M") {
-                                $data['answer'] = intval($cell->getCalculatedValue()); //题目答案
-                            } else if ($cell->getColumn() == "N") {
-                                $data['option'][0] = ftrim($cell->getCalculatedValue()); //题目选项一
-                            } else if ($cell->getColumn() == "O") {
-                                $data['option'][1] = ftrim($cell->getCalculatedValue()); //题目选项二
-                            } else if ($cell->getColumn() == "P") {
-                                $data['option'][2] = ftrim($cell->getCalculatedValue()); //题目选项三
-                            } else if ($cell->getColumn() == "Q") {
-                                $data['option'][3] = ftrim($cell->getCalculatedValue()); //题目选项四
+                            //验证表头，验证表格是否符合标准
+                            if($cell->getRow() == 1){
+                                if ($cell->getColumn() == "A") {
+                                    if(ftrim($cell->getCalculatedValue())!="试题名称"){
+                                        $is_standard_excel = false;
+                                        break;
+                                    }
+                                }  else if ($cell->getColumn() == "Q") {
+                                    if(ftrim($cell->getCalculatedValue())!="选项D内容"){
+                                        $is_standard_excel = false;
+                                        break;
+                                    }
+                                }
+                            }else{
+                                if ($cell->getColumn() == "A") {
+                                    $data['name'] = ftrim($cell->getCalculatedValue()); //名称
+                                } else if ($cell->getColumn() == "B") {
+                                    $media_data['voice'] = $cell->getCalculatedValue(); //语种，英音，美音
+                                } else if ($cell->getColumn() == "C") {
+                                    $media_data['pattern'] = $cell->getCalculatedValue(); //类型，视频，音频
+                                } else if ($cell->getColumn() == "D") {
+                                    $data['target'] = $cell->getCalculatedValue(); //目标，听力，说力
+                                } else if ($cell->getColumn() == "E") {
+                                    $media_data['level_name'] = ftrim($cell->getCalculatedValue()); //等级
+                                } else if ($cell->getColumn() == "F") {
+                                    $media_data['object_name'] = ftrim($cell->getCalculatedValue()); //科目
+                                } else if ($cell->getColumn() == "G") {
+                                    $media_data['subject_name'] = ftrim($cell->getCalculatedValue()); //专题
+                                } else if ($cell->getColumn() == "H") {
+                                    //$media_data['difficulty'] = intval($cell->getCalculatedValue()); //难度
+                                    $media_data['recommend'] = intval($cell->getCalculatedValue()); //推荐
+                                } else if ($cell->getColumn() == "I") {
+                                    $media_data['special_recommend'] = intval($cell->getCalculatedValue()); //是否特别推荐
+                                } else if ($cell->getColumn() == "J") {
+                                    $media_data['ted'] = intval($cell->getCalculatedValue()); //是否特别推荐
+                                } else if ($cell->getColumn() == "K") {
+                                    $data['media_text_url'] = $media_data['media_source_url'] = ftrim($cell->getCalculatedValue()); //媒体内容地址
+                                } else if ($cell->getColumn() == "L") {
+                                    $data['content'] = ftrim($cell->getCalculatedValue()); //题目内容
+                                } else if ($cell->getColumn() == "M") {
+                                    $data['answer'] = intval($cell->getCalculatedValue()); //题目答案
+                                } else if ($cell->getColumn() == "N") {
+                                    $data['option'][0] = ftrim($cell->getCalculatedValue()); //题目选项一
+                                } else if ($cell->getColumn() == "O") {
+                                    $data['option'][1] = ftrim($cell->getCalculatedValue()); //题目选项二
+                                } else if ($cell->getColumn() == "P") {
+                                    $data['option'][2] = ftrim($cell->getCalculatedValue()); //题目选项三
+                                } else if ($cell->getColumn() == "Q") {
+                                    $data['option'][3] = ftrim($cell->getCalculatedValue()); //题目选项四
+                                }
                             }
                         }
                     }
-                    if (empty($data['name']) || $data['name'] == "试题名称") {
+                    if (empty($data['name']) || $row->getRowIndex()==1) {
+                        if(false == $is_standard_excel){
+                            @unlink($dest);
+                            die(json_encode(array("info" => "导入失败，表格格式错误！", "status" => false)));
+                        }
                         continue;
                     }
                     //根据问题内容、视频、科目、等级以及答案内容查询是否有重复
