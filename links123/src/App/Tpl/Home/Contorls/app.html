@@ -786,16 +786,29 @@
 	<iframe id="J_clock_iframe" width="540px" height="530px" scrolling="no" frameborder="0" style="" allowtransparency="true" src=""></iframe>
 </div>
 <!-- 闹钟$-->
-
 <!-- $天气 -->
 <div style="display:none" id="J_box_weather">
-	<script type="text/javascript" src="http://ext.weather.com.cn/47111.101010100.js"></script>
+	<script type="text/javascript" src="http://ext.weather.com.cn/47111.js"></script>
 </div>
 <!-- 天气$ -->
 <!-- $音乐盒-->
 <div  style="display:none;"  id="J_box_music">
-
-	<iframe id="J_music_iframe" width="550px" height="150px" scrolling="no" frameborder="0" style="" allowtransparency="true" src=""></iframe>
+	<div id="J_music_wrap">
+		<div class="music_icon"></div>
+		<div class="channel-select-box">
+			<p>选择电台:</p>
+			<div id="channel-select">
+				<ul>
+					<li data-value="1" class="only">酷狗音乐</li>
+					<li data-value="2">虾米音乐</li>
+					<li data-value="3">QQ音乐</li>
+					<li data-value="0">豆瓣音乐</li>
+				</ul>
+				<b class="down-arrow"></b>
+			</div>
+		</div>
+		<iframe id="J_music_iframe" width="550px" height="150px" scrolling="no" frameborder="0" style="overflow:hidden" allowtransparency="true" src=""></iframe>
+	</div>
 <a class="music_button_min"><span>-</span></a>
 	<a class="music_button"><span>X</span></a>
 	</div>

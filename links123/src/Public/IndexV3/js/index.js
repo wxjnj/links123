@@ -45,19 +45,23 @@ $(function() {
 	});
 
 	// 切换宽屏
-	$('.screen-change-btn').find('a').click(function(){
+	$('.screen-change-btn').on('click', 'a', function(){
 		var css;
 		var self = $(this);
 		if(self.attr('data-size') == 'wide'){
 			//self.html('窄 屏');
+			//强制切换图片大小
+			$('.pics .items li, .pics img').css('width', '310');
 			css = 'style-widescreen';
 		}else{
 			//self.html('宽 屏');
+			//强制切换图片大小
 			css = 'style-960';
+			$('.pics .items li, .pics img').css('width', '250');
 		}
 
 		// ie8下 需要先remove掉respone.js，负责该js一直hold住mediaquery部分的css，无法完成切换
-		$('#ie_respond_script').remove();
+		//$('#ie_respond_script').remove();
 		$('#screen-style-link').remove();
 		
 		var link = document.createElement("link");
@@ -67,6 +71,10 @@ $(function() {
 		link.href = PUBLIC + '/IndexV3/css/' + css + '.css';
 		document.getElementsByTagName("head")[0].appendChild(link);
 		
+		//强制切换宽窄屏 需要重新初始化今日焦点图控件
+		swapi.unbind();
+		_dosw();
+
 	});
 });
 
@@ -607,11 +615,6 @@ var HelpMouse = {
 		var self = this;
 		var isSearchTxtSelected = false;
 
-		var $search_text = $('#search_text');
-		var $direct_text = $('#direct_text');
-		var search_text_left_end_pos = $search_text.offset().left - 10;
-		var search_text_right_end_pos = search_text_left_end_pos + $search_text.width();
-		var direct_text_right_end_pos = $direct_text.offset().left + $direct_text.width() + 10;
 
 		//当页面翻过首屏时，通过坐标判断直达栏是否获取焦点的方法就不再适用，
 		//这里增加鼠标移至直达栏直接获取焦点
@@ -641,6 +644,13 @@ var HelpMouse = {
 			});
 			if(!isNeedHelp){ return false; }
 			var mousePos = self.getcoords(ev);
+
+			var $search_text = $('#search_text');
+			var $direct_text = $('#direct_text');
+			var search_text_left_end_pos = $search_text.offset().left - 10;
+			var search_text_right_end_pos = search_text_left_end_pos + $search_text.width();
+			var direct_text_right_end_pos = $direct_text.offset().left + $direct_text.width() + 10;
+
 			if((mousePos.y < 200) && (mousePos.x < search_text_left_end_pos)){
 				if($('#direct_text').val() == $('#direct_text').attr('txt')){
 					$('#direct_text').select().removeClass('ipton');
@@ -678,6 +688,6 @@ var HelpMouse = {
 		return{ 
 			x: ev.clientX + document.body.scrollLeft - document.body.clientLeft, 
 			y: ev.clientY + document.body.scrollTop// - document.body.clientTop 
-		}; 
+		};
 	}
 };

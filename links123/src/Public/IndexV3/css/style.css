@@ -717,7 +717,7 @@ input:focus{ outline: 0; }
 	width: 159px;
 }
 .find li.more{
-	margin: 0 0 0 10px;
+	margin: 0 0 0 5px;
 	height: 28px;
 }
 .find li.more a{
@@ -1488,6 +1488,8 @@ input:focus{ outline: 0; }
 .screen-change-btn{position:absolute; height:40px; line-height:40px; margin-left:-40px;}
 .screen-change-btn a{color:#bbbaba;}
 .screen-change-btn a:hover{color:red;}
+.screen-change-btn .s-wide{font-size:12px;}
+.screen-change-btn .s-960{font-size:14px;}
 
 /*respond*/
 @media screen and (max-width: 1440px){
@@ -1541,7 +1543,7 @@ input:focus{ outline: 0; }
 		margin: 0 0 5px 5px;
 		width: 130px;
 	}
-	.find li.more{ width: 398px; }
+	.find li.more{ width: 410px; margin: 0 0 0 5px;} 
 	.find li.hover .info{
 		padding: 15px 10px 0 10px;
 		width: 110px;
@@ -1634,10 +1636,13 @@ input:focus{ outline: 0; }
 		width: 415px;
 	}
 	.thl .subcate{
-		left: 52px;
+		font-size:14px;
+		left: 22px;
 	}
 	.thl .cate{
-		left: 86px;
+		font-size:14px;
+		left: 53px;
+		top: 32px;
 	}
 
 	.nav{ font-size: 14px; }
@@ -1649,7 +1654,7 @@ input:focus{ outline: 0; }
 		margin: 0 0 10px 10px;
 		width: 159px;
 	}
-	.find li.more{ width: 498px; }
+	.find li.more{ width: 500px; margin: 0 0 0 10px;}
 	.find li.hover .info{
 		padding: 30px 15px 0 15px;
 		width: 129px;
