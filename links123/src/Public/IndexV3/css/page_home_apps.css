@@ -292,6 +292,9 @@
 }
 /** box_calender, box_calc$ **/
 /** $box_translate **/
+#J_box_translate{
+	width: 690px;
+}
 #source {
     -moz-box-sizing: border-box;
     background-color: transparent;
@@ -584,13 +587,17 @@ div.gt-baf-translations {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     cursor: default;
     font-size: 12px;
-    margin: 0;
     outline: medium none;
     padding: 6px 0;
     position: absolute;
     transition: opacity 0.218s ease 0s;
     white-space: nowrap;
     z-index: 2147483645;
+    -moz-user-select: none; 
+    visibility: visible; 
+    left: 2px; 
+    margin: 40px 0 0 10px; 
+    -moz-box-sizing: border-box; display: none;
 }
 .goog-menu table {
     border-collapse: collapse;

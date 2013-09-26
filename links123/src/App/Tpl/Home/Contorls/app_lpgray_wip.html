@@ -44,10 +44,6 @@
 </div>
 <!-- 网页邮箱$-->
 
-<!-- $计算search text width-->
-<!-- <span id="J_str_len" style="font-weight: bold; font-size: 12;visibility: hidden;z-index:-99;"></span>  -->
-<!-- 计算search text width$-->
-
 <!-- $日历-->
 <div style="display:none;" id="J_box_calendar" class="box_with_iframe_list">
 	<div>
@@ -135,7 +131,7 @@
 	</div>
 
 	<div class="goog-menu goog-menu-vertical" id="gt-sl-gms-menu"
-		style="-moz-user-select: none; visibility: visible; left: 2px; margin-top: 29px; -moz-box-sizing: border-box; display: none;"
+		style=""
 		role="menu" aria-haspopup="true" aria-activedescendant=":2">
 		<table>
 			<tbody>
@@ -729,37 +725,6 @@
 </div>
 <!-- 计算器$-->
 
-<!-- $便签-->
-<!--<div style="display:none;" id="J_box_stikynot_1" class="box_stikynot J_box_stikynot" data-id="1">
-	<div class="box_stikynot_head" id="J_box_stikynot_head">
-		<div class="box_stikynot_bar box_stikynot_add J_stikynot_add">
-			<a href="#" title="新建便签" class="">add</a>
-		</div>
-		<div class="box_stikynot_color">
-			<div class="box_stikynot_color_bar color_1" data-class="bg_1"></div>
-			<div class="box_stikynot_color_bar color_2" data-class="bg_2"></div>
-			<div class="box_stikynot_color_bar color_3" data-class="bg_3"></div>
-			<div class="box_stikynot_color_bar color_4" data-class="bg_4"></div>
-			<div class="box_stikynot_color_bar color_5" data-class="bg_5"></div>
-			<div class="box_stikynot_color_bar color_6" data-class="bg_6"></div>
-			<!-- <div class="box_stikynot_color_bar color_b" data-class="bg_b"></div>
-			<div class="box_stikynot_color_bar color_g" data-class="bg_g"></div>
-			<div class="box_stikynot_color_bar color_pink" data-class="bg_pink"></div>
-			<div class="box_stikynot_color_bar color_p" data-class="bg_p"></div>
-			<div class="box_stikynot_color_bar color_w" data-class="bg_w"></div>
-			<div class="box_stikynot_color_bar color_y" data-class="bg_y"></div> 
-		</div>
-		<div class="box_stikynot_bar box_stikynot_del J_stikynot_del">
-			<a href="#" title="删除便签" class="">del</a>
-		</div>
-		<div style="clear: float;"></div>
-	</div>
-	<div class="box_stikynot_text">
-		<textarea name="text" class="J_stikynot_text bg_1"></textarea>
-	</div>
-</div>
-<!-- 便签$-->
-
 <!--$便签   by lpgray -->
 <div id="J_box_note" style="display: none" class="J_box_note">
 	<div class="box_note_header">
@@ -817,9 +782,24 @@
 <!-- 天气$ -->
 
 <!-- $音乐盒-->
-<div  style="display:none;"  id="J_box_music">
-	<iframe id="J_music_iframe" width="550px" height="150px" scrolling="no" frameborder="0" style="" allowtransparency="true" src=""></iframe>
-    <a class="music_button_min"><span>-</span></a>
+<div style="display:none;"  id="J_box_music">
+	<div id="J_music_wrap">
+		<div class="music_icon"></div>
+		<div class="channel-select-box">
+			<p>选择电台:</p>
+			<div id="channel-select">
+				<ul>
+					<li data-value="1" class="only">酷狗音乐</li>
+					<li data-value="2">虾米音乐</li>
+					<li data-value="3">QQ音乐</li>
+					<li data-value="0">豆瓣音乐</li>
+				</ul>
+				<b class="down-arrow"></b>
+			</div>
+		</div>
+		<iframe id="J_music_iframe" width="550px" height="150px" scrolling="no" frameborder="0" style="overflow:hidden" allowtransparency="true" src=""></iframe>
+	</div>
+	<a class="music_button_min"><span>-</span></a>
 	<a class="music_button"><span>X</span></a>
 </div>
 <!-- 音乐盒$-->
