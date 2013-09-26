@@ -590,7 +590,7 @@ var Schedule = {
 var MusicPlayer = {
 	Init: function(){
 		var self = this;
-		$('#J_Music').find('.top-mv a').on('click', function(){
+		$('#J_Music').find('.top-mv .nm a').on('click', function(){
 			self.Play($(this).data('url'));
 			return false;
 		});
@@ -601,6 +601,35 @@ var MusicPlayer = {
 		$('#J_Music').find('.del').on('click', function(){
 			self.Stop();
 		});
+
+		var musicController = $('#music-controller');
+		var li;
+		$('#J_Music').find('.top-mv').on('mouseover', 'li', function(){
+			li = $(this);
+			li.find('.img').after(musicController);
+			musicController.show();
+		}).on('mouseout', 'li', function(){
+			if(musicController.find('.pause').length !=0) return;
+			musicController.hide();
+		});
+
+		$('#J_Music').find('.music-control').on('mouseover', 'a', function(){
+			var name = $(this).attr('data-name');
+			musicController.find('.' + name).addClass('hover');
+		}).on('mouseout', 'a', function(){
+			var name = $(this).attr('data-name');
+			musicController.find('.' + name).removeClass('hover');
+		});
+
+		$('#J_Music').find('.music-control').on('click', 'a.big', function(){
+			var st = $(this).hasClass('go') ? 'pause' : 'go';
+			musicController.find('.big').removeClass('go pause').addClass(st);
+			if(st == 'pause'){
+				console.log(li.find('.nm a').data('url'));
+				self.Play(li.find('.nm a').data('url'));
+			}
+		});
+
 	},
 	Play: function(url){
 		if(!$('#J_MusicPlayer').size()){

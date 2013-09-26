@@ -956,7 +956,7 @@ div.gt-baf-translations {
 	line-height:20px; position:relative; z-index:2;}
 
 #channel-select ul{border:1px solid #eee;border-radius:3px;}
-#channel-select li{background:#fff;padding:0 8px;display:none;}
+#channel-select li{background:#fff;padding:0 8px;display:none;cursor:pointer}
 #channel-select li:hover{background:#238b3a;color:#fff;}
 #channel-select li.first{border-radius:3px 3px 0 0;}
 #channel-select li.last{border-radius:0 0 3px 3px;}
