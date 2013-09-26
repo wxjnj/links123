@@ -628,7 +628,10 @@ var MusicPlayer = {
 			var st = $(this).hasClass('go') ? 'pause' : 'go';
 			$('#music-controller').find('.big').removeClass('go pause').addClass(st);
 			if(st == 'pause'){
+				var id = $(this).closest('li').data('id');
 				self.Play(li.find('.nm a').data('url'), 1);
+				$('.top'+id).siblings().find('a').removeClass('on');
+				$('.top'+id).find('a').addClass('on');
 			}else{
 				self.Stop();
 			}
@@ -687,13 +690,17 @@ var MusicPlayer = {
 
 		$('#J_MusicPlayer').data('type', type);
 		$('#J_MusicPlayer').data('currid', id ? id : 0);
-		if(type == 2){
+		if(type == 1){
+			//TODO
+		}else if(type == 2){
 			var o = $('.song'+id);
 			o.siblings().find('a').removeClass('on');
 			o.find('a').addClass('on');
 		}
 	},
 	Stop: function(){
+		$('.hot-music>ul>li>a').removeClass('on');
+		$('.top-mv .nm a').removeClass('on');
 		$('#J_MusicPlayer').size() && $('#J_MusicPlayer').remove();
 	}
 };

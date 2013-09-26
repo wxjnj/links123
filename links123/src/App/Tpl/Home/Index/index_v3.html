@@ -266,7 +266,7 @@
 									<div class="top-mv">
 										<ul>
 										<volist name="songTopList" key="i" id="song">
-											<li <if condition="$i%2 eq 1">class="first"</if>>
+											<li data-id="{$i}" class="top{$i} <if condition="$i%2 eq 1">first</if>">
 												<p class="img"><img src="{$song.img}" alt="" /></p>
 												<p class="nm"><a href="javascript:;" data-url="{$song.url}" title="{$song.sname}">{$song.author} - {$song.sname}</a></p>
 											</li>
