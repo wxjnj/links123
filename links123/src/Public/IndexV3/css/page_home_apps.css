@@ -30,12 +30,12 @@
 	display: block;
 }
 .links123-app-frame .links123-close-wrap{
-	position: relative;
+	width: 100%;
 	height: 0;
 	z-index: 1000;
 }
 .links123-app-frame > .links123-close-wrap > a{
-	background: transparent url(../imgs/app/links-app-frame/close.png) 0 -32px no-repeat;
+	background: transparent url(../imgs/app/links-app-frame/close.png) 0 -60px no-repeat;
 	width: 30px;
 	height: 30px;
 	position: absolute;
@@ -43,9 +43,6 @@
 	top: -24px;
 	z-index: 1000;
 	font-size: 0;
-}
-.links123-app-frame > .links123-close-wrap > a:hover{
-    background-position: 0 -60px;
 }
 .links123-app-frame > .links123-close-wrap > a:active{
     background-position: 0 -2px;
@@ -782,7 +779,7 @@ div.gt-baf-translations {
 	background: #fff;
 }
 #J_music_wrap .with-submenu a{
-	width: 100%;
+	width: 75px;
 	height: 20px;
 	line-height: 20px;
 	display: block;

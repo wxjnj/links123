@@ -64,7 +64,7 @@ $( function($) {
 		bindEvent : function() {
 			var self = this;
 			if(self.$elem.children('.links123-close-wrap').length == 0){
-			  self.$elem.prepend('<div class="links123-close-wrap" style="width:' + this.w + '"><a href="#">x</a></div>');
+			  self.$elem.prepend('<div class="links123-close-wrap"><a href="#">x</a></div>');
 			}
 			self.$elem.children('.links123-close-wrap').on('click', 'a', function() {
 				self.close();
