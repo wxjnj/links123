@@ -8,11 +8,6 @@
 class CommonAction extends BaseAction {
 
     function _initialize() {
-        //针对上传插件丢失session_id的情况进行session_id的设置
-        if (isset($_REQUEST['session_id'])) {
-            session_id($_REQUEST['session_id']);
-        }
-        session_start();
         import('@.ORG.Cookie');
         //根据cookie检查session是否过期
         $time = cookie(md5("manament_login_time"));
@@ -134,6 +129,8 @@ class CommonAction extends BaseAction {
             $count = $model->where($map)->count('catPic.id');
         } elseif ($model->getModelName() == 'EnglishQuestionView') {
             $count = $model->where($map)->count('englishQuestion.id');
+        }elseif ($model->getModelName() == 'EnglishQuestionSpeakView') {
+            $count = $model->where($map)->count('englishQuestionSpeak.id');
         } elseif ($model->getModelName() == 'EnglishMediaView') {
             $count = $model->where($map)->count('englishMedia.id');
         } else {

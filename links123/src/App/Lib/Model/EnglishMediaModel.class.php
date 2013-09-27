@@ -229,14 +229,20 @@ class EnglishMediaModel extends CommonModel {
      * @param string $caption_text
      * @return array [数组格式：'start_time','end_time','en','zh']
      */
-    public function formatCaptionTextToArray($caption_text) {
+    public function formatCaptionTextToArray($caption_text,$need_zh=true) {
         $captions = array();
         if (!empty($caption_text)) {
             $ret = preg_split("/\n+/", $caption_text, -1, PREG_SPLIT_NO_EMPTY);
             $row = 0;
             $is_row = true;
+            //是否已经跳过空行
+            if (intval($ret[3]) > 0) {
+                $mod = 3;
+            }else{
+                $mod = 4;
+            }
             foreach ($ret as $key => $value) {
-                $index = $key % 4;
+                $index = $key % $mod;
                 switch ($index) {
                     case 0:
                         $is_row = true;
@@ -262,7 +268,9 @@ class EnglishMediaModel extends CommonModel {
                             $lan_temp = explode('|', $value);
                             if (!empty($lan_temp)) {
                                 $captions[$row]['en'] = $lan_temp[0];
-                                $captions[$row]['zh'] = $lan_temp[1];
+                                if($need_zh){
+                                    $captions[$row]['zh'] = $lan_temp[1];
+                                }
                             } else {
                                 $is_row = false;
                             }
@@ -366,7 +374,7 @@ class EnglishMediaModel extends CommonModel {
         }
         $media['isAboutVideo'] = 0;
         //优先播放本地，且本地视频存在
-        if ($media['priority_type'] == 2 && !empty($media['media_local_path'])) {
+        if ($media['priority_type'] == 2 && $media['media_local_path']) {
             $media['play_code'] = $media['media_local_path'];
             $media['isAboutVideo'] = 0;
             if (strtolower(end(explode(".", $media['media_local_path']))) == "swf") {
@@ -416,7 +424,7 @@ class EnglishMediaModel extends CommonModel {
                     $media['play_code'] = preg_replace(array('/width="(.*?)"/is', '/height="(.*?)"/is', '/width=300 height=280/is', '/width=600 height=400/is'), array('width="100%"', 'height="100%"', 'width="100%" height="100%"', 'width="100%" height="100%"'), $media['play_code']);
                     return;
                 } else {
-                    if (!empty($media['media_local_path'])) {
+                    if ($media['media_local_path']) {
                         $media['priority_type'] = 2;
                         $media['play_type'] = 4;
                         $media['play_code'] = $media['media_local_path'];
@@ -440,6 +448,7 @@ class EnglishMediaModel extends CommonModel {
                     $media['play_code'] = str_replace('width=585&amp;height=575', 'width=100%&amp;height=100%', $media['play_code']);
                 }
                 $media['play_code'] = preg_replace(array('/width="(.*?)"/is', '/height="(.*?)"/is', '/width=300 height=280/is', '/width=600 height=400/is'), array('width="100%"', 'height="100%"', 'width="100%" height="100%"', 'width="100%" height="100%"'), $media['play_code']);
+                return;
             }
         }
         return;
