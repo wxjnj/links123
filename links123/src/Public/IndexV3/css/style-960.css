@@ -1,4 +1,3 @@
-
 	#header,
 	#container,
 	#footer,
@@ -38,6 +37,7 @@
 		left: 45px;
 	}
 
+	#J_sortable{width:965px;}
 
 	.nav{ font-size: 12px; }
 	.nav li a{ padding: 0 10px; }
@@ -89,7 +89,7 @@
 	}
 	.slidesjs-pagination {
 		margin: -50px auto;
-  }
+  	}
 
 	.pics .items li,
 	.pics img{
@@ -116,22 +116,59 @@
 		width: 82px;
 	}
 
-	.music-control .prev{
-		margin:0 0 0 15px; 
+	.music-controller{
+		width: 118px;
+		height: 102px;
+		margin-top: -102px;
 	}
-	.music-control .stop{
-		margin:-23px 0 0 47px; 
+	.music-controller .volume{
+		width: 17px;
+		height: 17px;
+		margin: 5px 0 0 95px;
+		background-position: -106px -189px;
 	}
-	.music-control .next{
-		margin:-23px 0 0 80px; 
+	.music-controller .volume:hover{
+		background-position: -106px -206px;
 	}
-
-	.music-control .big{
-		margin:20px 33px 0;
+	.music-controller .big{
+		width: 53px;
+		height: 53px;
+		margin: -5px 0 0 32px;
 	}
-	.control-layer{
-		width:118px; height:102px; margin-top:-102px;
+	.music-controller .go{
+		background-position: -53px -149px;
 	}
-	.control-layer-black{
-		width:118px; height:102px;  margin-top:-102px;
+	.music-controller .go:hover{
+		background-position: -53px -202px;
+	}
+	.music-controller .pause{
+		background-position: 0 -149px;
+	}
+	.music-controller .pause:hover{
+		background-position: 0 -202px;
+	}
+	.music-controller .small{
+		width: 17px;
+		height: 17px;
+	}
+	.music-controller .prev{
+		margin: 5px 0 0 18px;
+		background-position: 0 -255px;
+	}
+	.music-controller .prev:hover{
+		background-position: -51px -255px;
+	}
+	.music-controller .stop{
+		margin: -17px 0 0 50px;
+		background-position: -17px -255px;
+	}
+	.music-controller .stop:hover{
+		background-position: -68px -255px;
+	}
+	.music-controller .next{
+		margin: -17px 0 0 84px;
+		background-position: -34px -255px;
+	}
+	.music-controller .next:hover{
+		background-position: -85px -255px;
 	}

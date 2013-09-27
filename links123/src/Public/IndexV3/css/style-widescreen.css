@@ -1,4 +1,3 @@
-
 	#header,
 	#container,
 	#footer,
@@ -32,13 +31,11 @@
 		width: 415px;
 	}
 	.thl .subcate{
-		font-size:14px;
-		left: 22px;
+		left: 53px;
 	}
 	.thl .cate{
-		font-size:14px;
-		left: 53px;
-		top: 32px;
+		left: 87px;
+		top: 34px;
 	}
 
 	.nav{ font-size: 14px; }
@@ -116,22 +113,59 @@
 		width: 110px;
 	}
 
-	.music-control .prev{
-		margin:0 0 0 29px; 
+	.music-controller{
+		width: 147px;
+		height: 128px;
+		margin-top: -128px;
 	}
-	.music-control .stop{
-		margin:-23px 0 0 62px; 
+	.music-controller .volume{
+		width: 20px;
+		height: 20px;
+		margin: 8px 0 0 118px;
+		background-position: -106px -150px;
 	}
-	.music-control .next{
-		margin:-23px 0 0 94px; 
+	.music-controller .volume:hover{
+		background-position: -106px -170px;
 	}
-
-	.music-control .big{
-		margin:30px 47px 0;
+	.music-controller .big{
+		width: 65px;
+		height: 65px;
+		margin: -8px auto 0;
 	}
-	.control-layer{
-		width:147px; height:128px; margin-top:-128px;
+	.music-controller .go{
+		background-position: -65px -0px;
 	}
-	.control-layer-black{
-		width:147px; height:128px;  margin-top:-128px;
+	.music-controller .go:hover{
+		background-position: -65px -65px;
+	}
+	.music-controller .pause{
+		background-position: 0 0;
+	}
+	.music-controller .pause:hover{
+		background-position: 0 -65px;
+	}
+	.music-controller .small{
+		width: 19px;
+		height: 19px;
+	}
+	.music-controller .prev{
+		margin: 8px 0 0 28px;
+		background-position: 0 -130px;
+	}
+	.music-controller .prev:hover{
+		background-position: -57px -130px;
+	}
+	.music-controller .stop{
+		margin: -19px auto 0;
+		background-position: -19px -130px;
+	}
+	.music-controller .stop:hover{
+		background-position: -76px -130px;
+	}
+	.music-controller .next{
+		margin: -19px 0 0 102px;
+		background-position: -38px -130px;
+	}
+	.music-controller .next:hover{
+		background-position: -95px -130px;
 	}

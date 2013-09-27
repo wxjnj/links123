@@ -818,11 +818,12 @@ input:focus{ outline: 0; }
 	line-height: 24px;
 }
 .music .top-mv .nm a:hover,
-.music .hot-music li a:hover{
+.music .hot-music li a:hover,
+.music .top-mv .nm a.on,
+.music .hot-music li a.on{
 	color: #fc2a06;
 	text-decoration: underline;
 }
-
 
 .music-controller{
 	overflow: hidden;
@@ -832,9 +833,9 @@ input:focus{ outline: 0; }
 }
 .music-controller a{
 	display: block;
+	position: relative;
 	background: url(../imgs/music_new.png) no-repeat;
 }
-
 
 
 /*pics*/
@@ -1602,6 +1603,7 @@ input:focus{ outline: 0; }
 		left: 45px;
 	}
 
+	#J_sortable{width:965px;}
 
 	.nav{ font-size: 12px; }
 	.nav li a{ padding: 0 10px; }
@@ -1653,7 +1655,7 @@ input:focus{ outline: 0; }
 	}
 	.slidesjs-pagination {
 		margin: -50px auto;
-  }
+  	}
 
 	.pics .items li,
 	.pics img{
@@ -1697,7 +1699,7 @@ input:focus{ outline: 0; }
 	.music-controller .big{
 		width: 53px;
 		height: 53px;
-		margin: -5px auto 0;
+		margin: -5px 0 0 32px;
 	}
 	.music-controller .go{
 		background-position: -53px -149px;
@@ -1723,7 +1725,7 @@ input:focus{ outline: 0; }
 		background-position: -51px -255px;
 	}
 	.music-controller .stop{
-		margin: -17px auto 0;
+		margin: -17px 0 0 50px;
 		background-position: -17px -255px;
 	}
 	.music-controller .stop:hover{
@@ -1774,13 +1776,11 @@ input:focus{ outline: 0; }
 		width: 415px;
 	}
 	.thl .subcate{
-		font-size:14px;
-		left: 22px;
+		left: 53px;
 	}
 	.thl .cate{
-		font-size:14px;
-		left: 53px;
-		top: 32px;
+		left: 87px;
+		top: 34px;
 	}
 
 	.nav{ font-size: 14px; }

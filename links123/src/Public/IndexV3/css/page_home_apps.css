@@ -35,14 +35,26 @@
 	z-index: 1000;
 }
 .links123-app-frame > .links123-close-wrap > a{
-	background: transparent url(../imgs/app/links-app-frame/close.png) 0 0 no-repeat;
+	background: transparent url(../imgs/app/links-app-frame/close.png) 0 -32px no-repeat;
 	width: 30px;
 	height: 30px;
 	position: absolute;
-	right: -20px;
-	top: -19px;
+	right: -24px;
+	top: -24px;
 	z-index: 1000;
 	font-size: 0;
+}
+.links123-app-frame > .links123-close-wrap > a:hover{
+    background-position: 0 -60px;
+}
+.links123-app-frame > .links123-close-wrap > a:active{
+    background-position: 0 -2px;
+}
+/**复写app关闭按钮位置 **/
+#J_box_music .links123-close-wrap > a,
+.J_box_note .links123-close-wrap > a{
+    right: -16px;
+    top: -16px;
 }
 /** App Object Frame$ **/
 /** $box_note **/
@@ -292,6 +304,9 @@
 }
 /** box_calender, box_calc$ **/
 /** $box_translate **/
+#J_box_translate{
+	width: 690px;
+}
 #source {
     -moz-box-sizing: border-box;
     background-color: transparent;
@@ -567,7 +582,6 @@ div.gt-baf-translations {
 .gt-baf-back {
     cursor: pointer;
 }
-
 #gt-langs {
     margin-top: 10px;
 }
@@ -584,13 +598,17 @@ div.gt-baf-translations {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     cursor: default;
     font-size: 12px;
-    margin: 0;
     outline: medium none;
     padding: 6px 0;
     position: absolute;
     transition: opacity 0.218s ease 0s;
     white-space: nowrap;
     z-index: 2147483645;
+    -moz-user-select: none; 
+    visibility: visible; 
+    left: 2px; 
+    margin: 40px 0 0 10px; 
+    -moz-box-sizing: border-box; display: none;
 }
 .goog-menu table {
     border-collapse: collapse;
@@ -646,7 +664,6 @@ table.gt-baf-table {
 table.gt-baf-table td {
     padding:0
 }
-
 #gt-res-dict {
     width:100%;
     overflow:hidden;
@@ -738,3 +755,136 @@ div.gt-baf-translations {
     color: #336699;
 }
 /** box_translate$ **/
+/** $music **/
+#J_box_music{
+	padding: 0;
+}
+#J_music_wrap{
+	padding: 5px; 
+	background:#f3f3f3;
+	border-radius: 3px;
+	position: relative;
+}
+#J_music_wrap .music_icon{width:88px;height:35px;background:url(../imgs/app/music_box_icon.png) 0 0 no-repeat;
+	margin-bottom:5px;}
+#J_music_wrap .channel-select-box{
+	position: absolute;
+	right: 7px;
+	top: 10px;
+	line-height: 20px;
+	color: #222;
+}
+#J_music_wrap .with-submenu{
+	display: inline-block;
+	vertical-align: top;
+	border: 1px solid #e5e5e5;
+	border-radius: 5px;
+	background: #fff;
+}
+#J_music_wrap .with-submenu a{
+	width: 100%;
+	height: 20px;
+	line-height: 20px;
+	display: block;
+	color: #000;
+	text-align: center;
+	cursor: pointer;
+}
+#J_music_wrap .with-submenu > a{
+	border-radius: 5px 5px 0 0;
+	position: relative;
+}
+#J_music_wrap .with-submenu a:hover{
+	color: #fff;
+	background: #238b3a;
+}
+#J_music_wrap .with-submenu .down-arrow{
+	width: 0;
+	height: 0;
+	display: inline-block;
+	position: absolute;
+	right: 4px;
+	top: 7px;
+	border-left: 3px solid transparent;
+	border-right: 3px solid transparent;
+	_border-left: 4px solid white;
+	_border-right: 4px solid white;
+	border-top: 4px solid black;
+	overflow:hidden;
+	transition: all .2s ease 0;
+}
+#J_music_wrap .submenu {
+	width: 75px;
+	border-radius: 5px;
+	border-top: 0;
+}
+#J_music_wrap .submenu li.last a{
+	border-radius: 0 0 5px 5px;
+}
+#J_music_wrap .submenu > .hide{
+	display: none;
+}
+#J_music_wrap .submenu-wrap{
+	max-height: 0;
+	overflow: hidden;
+	transition: all .3s ease 0;
+}
+#J_music_wrap .with-submenu:hover .down-arrow{
+    border-top-width: 0;
+    border-bottom: 4px solid black;
+}
+#J_music_wrap .with-submenu:hover > .submenu-wrap{
+	max-height: 500px;
+}
+/** music$ **/
+/** 登录 、设置框    **/
+.ui-dialog .ui-dialog-content {
+    padding: 0;
+}
+.ui-widget-content {
+}
+.ui-dialog {
+    padding: 0;
+    border: 0;
+    background: transparent;
+}
+.ui-dialog:focus{
+    outline: 0;
+}
+.ui-widget-header {
+    background: none repeat scroll 0 0 #EDEDED;
+    font-weight: 0;
+    border: 0;
+}
+.ui-dialog .ui-dialog-titlebar-close {
+    top: 12px;
+    width: 20px;
+}
+.ui-dialog .ui-dialog-titlebar {
+    padding-bottom: 2px;
+}
+.ui-draggable .ui-dialog-titlebar {
+    height: 15px;
+}
+.ui-dialog .ui-dialog-title {
+    display: none;
+}
+.ui-widget-overlay {
+    background: none repeat scroll 0 0 #000000;
+    opacity: 0.5;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+.ui-front{ z-index: 9999; }
+.ui-draggable .ui-dialog-titlebar{
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    display: none;
+}
+.ui-stikynot .ui-dialog-titlebar{
+    display: block;
+}
+/** 登录、设置框$ **/
