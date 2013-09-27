@@ -212,19 +212,19 @@ li.skin_selection_li{
 }
 #J_skin_selection .subpanel-wrap{
 	width: 560px;
-	background: #fff;
 	position: absolute;
 	z-index: 1000;
 	right: -120px;
 	padding: 0;
 	top: 40px;
+}
+#J_skin_selection .subpanel{
+	padding: 10px 15px 15px 15px;
 	border-radius: 0 0 5px 5px;
 	border: 1px solid #757575;
 	border-top: 0;
 	box-shadow: 0 2px 5px rgba(0,0,0,.4);
-}
-#J_skin_selection .subpanel{
-	margin: 10px 15px 15px 15px;
+	background: #fff;
 }
 #J_skin_selection .subpanel-wrap a{
 	display: inline-block;
