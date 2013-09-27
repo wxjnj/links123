@@ -99,6 +99,8 @@ class LoginAction extends CommonAction
 		$_SESSION['skinId'] = $mbrNow['skin'];
 		$_SESSION['themeId'] = $mbrNow['theme'];
 		$_SESSION['myarea_sort'] = $mbrNow['myarea_sort'] ? explode(',', $mbrNow['myarea_sort']) : '';
+        $str = $mbrNow['id'] . "|" . md5($mbrNow['password'] . $mbrNow['nickname']);
+        cookie(md5(C('MEMBER_AUTH_KEY')), $str, intval(D("Variable")->getVariable("home_session_expire")));//设置cookie记录用户登录信息，提供给英语角同步登录 Adam 2013.09.27 @todo 安全性，下一步进行单点登录优化 
 		
 		//使用cookie过期时间来控制前台登陆的过期时间
 		cookie(md5('home_session_expire'), time(), intval(D("Variable")->getVariable("home_session_expire")));
