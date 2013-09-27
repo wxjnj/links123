@@ -17,6 +17,10 @@ $( function($) {
 		});
 	}
 	$('#J_Apps').links123_apptrigers('.J_app_trig');
+	
+	$('#J_Apps').on('click', '.J_app_link', function(){
+	  window.open($(this).data('href'));
+	});
 
 	/*
 	 * 当前的 App集合
@@ -59,7 +63,9 @@ $( function($) {
 		},
 		bindEvent : function() {
 			var self = this;
-			self.$elem.prepend('<div class="links123-close-wrap" style="width:' + this.w + '"><a href="#">x</a></div>');
+			if(self.$elem.children('.links123-close-wrap').length == 0){
+			  self.$elem.prepend('<div class="links123-close-wrap" style="width:' + this.w + '"><a href="#">x</a></div>');
+			}
 			self.$elem.children('.links123-close-wrap').on('click', 'a', function() {
 				self.close();
 			});

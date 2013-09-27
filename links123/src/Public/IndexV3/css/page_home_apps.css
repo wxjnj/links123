@@ -52,7 +52,7 @@
 }
 /**复写app关闭按钮位置 **/
 #J_box_music .links123-close-wrap > a,
-#J_box_note .links123-close-wrap > a{
+.J_box_note .links123-close-wrap > a{
     right: -16px;
     top: -16px;
 }
