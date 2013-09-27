@@ -784,22 +784,24 @@
 <!-- $音乐盒-->
 <div style="display:none;"  id="J_box_music">
 	<div id="J_music_wrap">
-		<div class="music_icon"></div>
-		<div class="channel-select-box">
-			选择电台 : 
-				<span class="with-submenu">
-					<a>酷狗音乐 <b class="down-arrow"></b></a>
-					<div class="submenu-wrap">
-						<ul class="submenu">
-							<li class="hide"><a data-href="http://web.kugou.com/default.html">酷狗音乐</a></li>
-							<li><a data-href="http://kuang.xiami.com/res/kuang/xiamikuang0709.swf">虾米音乐</a></li>
-							<li><a data-href="http://y.qq.com/player/">QQ音乐</a></li>
-							<li><a data-href="http://douban.fm/swf/53053/radioplayer.swf">豆瓣音乐</a></li>
-						</ul>
-					</div>
-				</span>
+		<div class="box-header">
+    		<div class="music_icon"></div>
+    		<div class="channel-select-box">
+    			选择电台 : 
+    				<span id="J_with_submenu" class="with-submenu">
+    					<a><span class="J_root_menu"></span> <span class="down-arrow"></span></a>
+    					<div class="submenu-wrap">
+    						<ul class="submenu">
+    							<li><a data-href="http://web.kugou.com/default.html" data-width="320" data-height="140">酷狗音乐</a></li>
+    							<li><a data-href="http://kuang.xiami.com/res/kuang/xiamikuang0709.swf" data-width="530" data-height="250">虾米音乐</a></li>
+    							<!-- <li><a data-href="http://y.qq.com/player/" data-width="" data-height="">QQ音乐</a></li> -->
+    							<li><a data-href="http://douban.fm/swf/53053/radioplayer.swf" data-width="450" data-height="170">豆瓣音乐</a></li>
+    						</ul>
+    					</div>
+    				</span>
+    		</div>
 		</div>
-		<iframe id="J_music_iframe" width="550px" height="150px" scrolling="no" frameborder="0" style="overflow:hidden" allowtransparency="true" src=""></iframe>
+		<iframe id="J_music_iframe" scrolling="no" frameborder="0" style="overflow:hidden" allowtransparency="true" src=""></iframe>
 	</div>
 </div>
 <!-- 音乐盒$-->
