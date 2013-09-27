@@ -52,7 +52,7 @@ $( function($) {
 			var h = this.$elem.outerHeight();
 			var fixedStyle = parseInt(h) < parseInt($(window).height()) ? {
 				'margin-left' : -this.w / 2,
-				'margin-top' : -h / 2 + parseInt( $('#header').outerHeight() )
+				'margin-top' : -h / 2 + parseInt( $('#J_header').outerHeight() )
 			} : {
 				'margin-left' : -this.w / 2,
 				'margin-top' : 0,

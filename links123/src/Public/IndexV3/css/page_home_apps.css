@@ -138,6 +138,9 @@
 	margin: 0;
 	display: block;
 }
+.J_box_note textarea:focus{
+	outline: 0;
+}
 /** box_note$ **/
 /** $box_mail **/
 .box-mail {
