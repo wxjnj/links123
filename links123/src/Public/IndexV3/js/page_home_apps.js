@@ -9,7 +9,7 @@ $( function($) {
 	 */
 	$.fn.links123_apptrigers = function(selector) {
 		this.on('click', selector, function() {
-			var appId = $(this).attr('href');
+			var appId = $(this).data('href');
 			$(this).data('links_app') || $(this).data('links_app', new App(appId));
 			var app = $(this).data('links_app');
 			app.show();
@@ -17,6 +17,10 @@ $( function($) {
 		});
 	}
 	$('#J_Apps').links123_apptrigers('.J_app_trig');
+	
+	$('#J_Apps').on('click', '.J_app_link', function(){
+	  window.open($(this).data('href'));
+	});
 
 	/*
 	 * 当前的 App集合
@@ -36,10 +40,12 @@ $( function($) {
 	};
 	App.prototype = {
 		show : function() {
-			this.$elem.css('display', 'block');
+			// this.$elem.css('display', 'block');
+			this.$elem.fadeIn();
 		},
 		close : function() {
-			this.$elem.css('display', 'none');
+			// this.$elem.css('display', 'none');
+			this.$elem.fadeOut();
 		},
 		initStyle : function() {
 			this.w = this.$elem.outerWidth();
@@ -57,7 +63,9 @@ $( function($) {
 		},
 		bindEvent : function() {
 			var self = this;
-			self.$elem.prepend('<div class="links123-close-wrap" style="width:' + this.w + '"><a href="#">x</a></div>');
+			if(self.$elem.children('.links123-close-wrap').length == 0){
+			  self.$elem.prepend('<div class="links123-close-wrap" style="width:' + this.w + '"><a href="#">x</a></div>');
+			}
 			self.$elem.children('.links123-close-wrap').on('click', 'a', function() {
 				self.close();
 			});
@@ -100,6 +108,9 @@ $( function($) {
 					var top = cY - self._y - mT;
 					if( (top + mT) <= 0){
 						top = 0 - mT;
+					}
+					if( (left) >= $(window).width()+mL ){
+					  left = $(window) - mL/2;
 					}
 					self.$elem.css({
 						'left' : left,
@@ -617,94 +628,37 @@ $( function($) {
 			}
 		},
 		
-		'#J_box_music' : function(){
-			// var g_music_currentkey = -1;
-			// //音乐盒面板-选择电台
-			// var ch_select = $('#channel-select');
-			// var lis = ch_select.find('li');
-			// ch_select.on('mouseenter', function(){
-				// ch_select.find('b').removeClass('down-arrow').addClass('up-arrow');
-				// lis.removeClass('only').show().first().addClass('first').end().last().addClass('last');
-			// }).on('mouseleave', function(){
-				// ch_select.find('b').removeClass('up-arrow').addClass('down-arrow');
-				// lis.removeClass('first last').hide();
-				// lis.filter('[data-value=' + g_music_currentkey + ']').addClass('only').show();
-			// }).on('click', 'li', function(){
-				// g_music_currentkey = $(this).attr('data-value') * 1;
-				// music_box_proc();
-			// });
-// 			
-			// var music_box_proc = function(st){
-				// if(-1 == g_music_currentkey){
-					// g_music_currentkey = lis.first().attr('data-value') * 1;
-				// }
-				// var musicurl = {
-					// 1:'http://web.kugou.com/default.html',
-					// 2:'http://kuang.xiami.com/res/kuang/xiamikuang0709.swf',
-					// 3:'http://y.qq.com/player/',
-					// 0:'http://douban.fm/swf/53053/radioplayer.swf'
-				// };
-				// //只有双击切换 使用此算法
-				// //select切换不用
-				// if(st){
-					// $.each(musicurl, function(key, value){
-						// if (g_music_currentkey == key)  {
-							// g_music_currentkey++;
-							// g_music_currentkey = g_music_currentkey % 4;
-							// return false;
-						// }
-					// });
-				// }
-				// //根据g_music_currentkey重新排列select
-				// var o = lis.filter('[data-value=' + g_music_currentkey + ']');
-				// ch_select.find('ul').prepend(o);
-				// lis.removeClass('first last').hide();
-				// o.addClass('only').show();
-// 				
-				// var myposition=[200,10];
-				// //适配不同播放器
-				// switch(g_music_currentkey){
-					// case 0:{//douban
-						// $('#J_music_iframe').attr('width', 450);
-						// $('#J_music_iframe').attr('height', 170);
-// 							
-						// myposition = [$(window).height()-300,$(window).width()-580];
-						// break;
-					// }
-					// case 2:{//xiami
-						// $('#J_music_iframe').attr('width', 530);
-						// $('#J_music_iframe').attr('height', 250);
-// 							
-						// myposition = [$(window).height()-320,$(window).width()-680];
-						// console.log(myposition);
-						// break;
-					// }
-					// case 1:{//kugou
-						// $('#J_music_iframe').attr('width', 320);
-						// $('#J_music_iframe').attr('height', 140);
-						// myposition = [$(window).height()-300,$(window).width()-450];
-						// break;
-					// }
-					// case 3:{//qq
-						// $('#J_music_iframe').attr('width', 360);
-						// $('#J_music_iframe').attr('height', 380);
-						// myposition = [$(window).height()-450,$(window).width()-550];
-						// //myposition = [400,300];
-						// break;
-					// }
-				// }
-				// $('#J_music_iframe').attr('src', musicurl[g_music_currentkey]);
-				// $('.music_button').show();
-				// $('.music_button_min').show();
-				// $('#J_music_iframe').show();
-			// }
-// 			
-// 			
-			// $('#J_music').dblclick(function(){
-				// music_box_proc(true);
-			// });
-// 
-			// music_box_proc();
+		'#J_box_music' : function( app ){
+		  //启用拖动
+		  app.enableDrag('.box-header');
+		  // 加载
+		  var $submenu = $('#J_with_submenu').find('.submenu');
+		  var $rootMenu = $('#J_with_submenu').children('a').children('.J_root_menu');
+		  $submenu.on('click', 'a', function(){
+		    $(this).parent().siblings().removeClass('hide last');
+		    $(this).parent().addClass('hide').removeClass('last');
+		    $rootMenu.html($(this).html());
+		    // 给最后一个添加圆角
+		    var currentMenu = $submenu.children('[class!=hide]');
+		    $(currentMenu[currentMenu.length - 1]).addClass('last');
+		    // 选择音乐频道
+		    selectChannel( $(this) );
+		  });
+		  
+		  var selectChannel = function( btn ){
+		    $('#J_music_iframe').attr({
+		      'src' : btn.data('href'),
+		      'width' : btn.data('width'),
+		      'height' : btn.data('height')
+		    });
+		    $("#J_box_music").css({
+		      'margin-left' : '-' + btn.data('width')/2 + 'px',
+		      'margin-top' : '-' + btn.data('height')/2 + 'px'
+		    });
+		  };
+		  
+		  // 默认加载第一个
+		  $submenu.children(':first-child').children('a').click();
 		}
 	}
 
