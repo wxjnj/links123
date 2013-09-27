@@ -9,7 +9,7 @@ $( function($) {
 	 */
 	$.fn.links123_apptrigers = function(selector) {
 		this.on('click', selector, function() {
-			var appId = $(this).attr('href');
+			var appId = $(this).data('href');
 			$(this).data('links_app') || $(this).data('links_app', new App(appId));
 			var app = $(this).data('links_app');
 			app.show();
@@ -36,10 +36,12 @@ $( function($) {
 	};
 	App.prototype = {
 		show : function() {
-			this.$elem.css('display', 'block');
+			// this.$elem.css('display', 'block');
+			this.$elem.fadeIn();
 		},
 		close : function() {
-			this.$elem.css('display', 'none');
+			// this.$elem.css('display', 'none');
+			this.$elem.fadeOut();
 		},
 		initStyle : function() {
 			this.w = this.$elem.outerWidth();
