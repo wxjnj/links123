@@ -31,10 +31,7 @@ $(function() {
 		});
 	}
 	_dosw();
-	$(window).on('resize', function(){
-		swapi.unbind();
-		_dosw();
-	});
+	
 	$('#J_ScrollBox').find('li').on('hover', function(){
 		$(this).toggleClass('hover');
 	});
@@ -46,35 +43,16 @@ $(function() {
 
 	// 切换宽屏
 	$('.screen-change-btn').on('click', 'a', function(){
-		var css;
-		var self = $(this);
-		if(self.attr('data-size') == 'wide'){
-			//self.html('窄 屏');
-			//强制切换图片大小
+		if($(this).attr('data-size') == 'wide'){
 			$('.pics .items li, .pics img').css('width', '310');
-			css = 'style-widescreen';
+			$('body').attr('class', 'widescreen');
 		}else{
-			//self.html('宽 屏');
-			//强制切换图片大小
-			css = 'style-960';
+			$('body').attr('class', '');
 			$('.pics .items li, .pics img').css('width', '250');
 		}
-
-		// ie8下 需要先remove掉respone.js，负责该js一直hold住mediaquery部分的css，无法完成切换
-		//$('#ie_respond_script').remove();
-		$('#screen-style-link').remove();
-		
-		var link = document.createElement("link");
-		link.id = "screen-style-link";
-		link.rel = "stylesheet";
-		link.type = "text/css";
-		link.href = PUBLIC + '/IndexV3/css/' + css + '.css';
-		document.getElementsByTagName("head")[0].appendChild(link);
-		
 		//强制切换宽窄屏 需要重新初始化今日焦点图控件
 		swapi.unbind();
 		_dosw();
-
 	});
 });
 
@@ -601,9 +579,6 @@ var MusicPlayer = {
 			self.Play($(this).data('url'), 2, $(this).closest('li').data('id'));
 			return false;	
 		})
-		$('#J_Music').find('.del').on('click', function(){
-			self.Stop();
-		});
 
 		var musicController = $('#music-controller');
 		var li;
