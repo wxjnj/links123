@@ -1,3 +1,4 @@
+
 	#header,
 	#container,
 	#footer,
@@ -78,10 +79,18 @@
 	.music .hot-music li.odd{
 		margin-left: 16px;
 	}
-	.pics{
+	.pics, .pics .items{
 		height: 473px;
 		width: 310px;
 	}
+	.slidesjs-container{
+		height: 473px!important;
+		width: 310px;
+	}
+	.slidesjs-pagination {
+		margin: -30px auto;
+  }
+
 	.pics .items li,
 	.pics img{
 		height: 448px;

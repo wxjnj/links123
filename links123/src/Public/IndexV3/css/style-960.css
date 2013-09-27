@@ -78,10 +78,19 @@
 		margin-left: 14px;
 	}
 
-	.pics{
+	.pics, .pics .items, .slidesjs-container{
 		height: 386px;
 		width: 250px;
 	}
+
+	.slidesjs-container{
+		height: 406px!important;
+		width: 250px;
+	}
+	.slidesjs-pagination {
+		margin: -50px auto;
+  }
+
 	.pics .items li,
 	.pics img{
 		height: 361px;

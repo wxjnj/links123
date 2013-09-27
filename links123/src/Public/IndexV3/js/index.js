@@ -20,20 +20,31 @@ $(function() {
 	// 幻灯
 	var swapi;
 	var _dosw = function(){
-		swapi = $('#J_ScrollBox').switchable({
-			putTriggers: 'appendTo',
-			triggersWrapCls: 'pg',
-			panels: '.items li',
-			effect: 'scrollLeft',
-			interval: 10,
-			loop: true,
-			autoplay: true
-		});
+		$('#J_ScrollBox').find('.items').slidesjs({
+        play: {
+          active: true,
+          auto: true,
+          interval: 10000,
+          swap: false
+        }
+     });
+		/*
+			swapi = $('#J_ScrollBox').switchable({
+				putTriggers: 'appendTo',
+				triggersWrapCls: 'pg',
+				panels: '.items li',
+				effect: 'scrollLeft',
+				interval: 1,
+				loop: true,
+				autoplay: true
+			});*/
 	}
+
 	_dosw();
+
 	$(window).on('resize', function(){
-		swapi.unbind();
-		_dosw();
+		//_dosw.unbind();
+		//_dosw();
 	});
 	$('#J_ScrollBox').find('li').on('hover', function(){
 		$(this).toggleClass('hover');
@@ -51,15 +62,15 @@ $(function() {
 		if(self.attr('data-size') == 'wide'){
 			//self.html('窄 屏');
 			//强制切换图片大小
-			$('.pics .items li, .pics img').css('width', '310');
+			$('.pics .items, .pics .items li, .pics img').css('width', '310');
 			css = 'style-widescreen';
 		}else{
 			//self.html('宽 屏');
 			//强制切换图片大小
 			css = 'style-960';
-			$('.pics .items li, .pics img').css('width', '250');
+			$('.pics .items, .pics .items li, .pics img').css('width', '250');
 		}
-
+		window.sladePlugin.update();
 		// ie8下 需要先remove掉respone.js，负责该js一直hold住mediaquery部分的css，无法完成切换
 		//$('#ie_respond_script').remove();
 		$('#screen-style-link').remove();
@@ -71,9 +82,8 @@ $(function() {
 		link.href = PUBLIC + '/IndexV3/css/' + css + '.css';
 		document.getElementsByTagName("head")[0].appendChild(link);
 		
-		//强制切换宽窄屏 需要重新初始化今日焦点图控件
-		swapi.unbind();
-		_dosw();
+		//_dosw();	
+		
 
 	});
 });

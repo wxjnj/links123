@@ -268,25 +268,19 @@
 										<volist name="songTopList" key="i" id="song">
 											<li <if condition="$i%2 eq 1">class="first"</if>>
 												<p class="img"><img src="{$song.img}" alt="" /></p>
+												<div class="music-controller" style="display:block">
+													<a class="volume" href="javascript:;"></a>
+													<a class="big go" href="javascript:;"></a>
+													<a class="small prev" href="javascript:;"></a>
+													<a class="small stop" href="javascript:;"></a>
+													<a class="small next" href="javascript:;"></a>
+												</div>
 												<p class="nm"><a href="javascript:;" data-url="{$song.url}" title="{$song.sname}">{$song.author} - {$song.sname}</a></p>
 											</li>
 										</volist>
 										</ul>
 
-										<div id="music-controller" style="display:none">
-												<div class="music-control control-layer">
-													<a class="big go" data-name="big" href="javascript:;"></a>
-													<a class="prev" data-name="prev" href="javascript:;"></a>
-													<a class="stop" data-name="stop" href="javascript:;"></a>
-													<a class="next" data-name="next" href="javascript:;"></a>
-												</div>
-												<div class="music-control control-layer-black">
-													<a class="big go" data-name="big" href="javascript:;"></a>
-													<a class="prev" data-name="prev" href="javascript:;"></a>
-													<a class="stop" data-name="stop" href="javascript:;"></a>
-													<a class="next" data-name="next" href="javascript:;"></a>
-												</div>
-										</div>
+										
 									</div>
 									<div class="hot-music">
 										<ul>
@@ -404,6 +398,7 @@
 	<script src="__PUBLIC__/IndexV3/js/common.js?2013092101"></script>
 	<script src="__PUBLIC__/IndexV3/js/widget.js?2013091801"></script>
 	<script src="__PUBLIC__/IndexV3/js/jquery.dropdown.js"></script>
+	<script src="__PUBLIC__/IndexV3/js/jquery.slides.js"></script>
 	
 </body>
 </html>
