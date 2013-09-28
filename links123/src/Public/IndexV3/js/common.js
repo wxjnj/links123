@@ -673,7 +673,7 @@ var Theme = {
 			var bg = obj.data('bg');
 			var theme = 'dark';
 			var id = obj.data('id');
-			console.debug( id, theme, bg )
+			
 			if(id && theme && bg) self.SetBackGround(id, theme, bg);
 		});
 		// $('#J_Styles li.skin_selection_li').on('click', function(){
@@ -719,7 +719,8 @@ var Theme = {
 	SetBackGround : function(id, tm, bg) {
 		var tmurl = $CONFIG['PUBLIC'] + '/IndexV3/skins/{0}/style.css';
 		$('#J_Skins').attr('href', tmurl.replace('{0}', tm));
-		$('#container').attr('style', bg);
+		
+		$('#container').css('background', bg.replace('background:', '').replace(';', ''));
 
 		$.post(URL + "/updateSkin", {
 			'skinId' : id
