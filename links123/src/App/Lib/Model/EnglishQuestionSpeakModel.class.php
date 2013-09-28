@@ -6,6 +6,14 @@
  * @author Adam $date2013-08-06$
  */
 class EnglishQuestionSpeakModel extends CommonModel {
+    
+    protected $_validate = array(
+        array("name", "require", "名称必须")
+    );
+    protected $_auto = array(
+        array("created", "time", 1, "function"),
+        array("updated", "time", 3, "function")
+    );
 
     /**
      * 获取题目到首页
@@ -19,9 +27,16 @@ class EnglishQuestionSpeakModel extends CommonModel {
      * @param int $voice [口音，1美音，2英音]
      * @param int $target [训练目标，1听力，2说力]
      * @param string $extend_condition [额外条件]
+     * @param array $user_ID_cache [用户身份信息缓存数据]
+     *        $user_ID_cache = array(C('MEMBER_AUTH_KEY') => $_SESSION[C('MEMBER_AUTH_KEY')],
+     *                               C('ENGLISH_TOURIST_ID') => cookie(C('ENGLISH_TOURIST_ID')));
      * return array [题目数组]
      */
-    public function getQuestionToIndex($viewType = 1, $object, $level, $subject, $recommend, $difficulty, $voice = 1, $pattern = 1, $extend_condition = "") {
+    public function getQuestionToIndex($viewType = 1, $object, $level, $subject, 
+                                        $recommend, $difficulty, $voice = 1, $pattern = 1, 
+                                        $extend_condition = "", 
+                                        $user_ID_cache
+                                    ) {
         $target = 2; //听力表指定训练对象
         $map = array();
         $englishRecordModel = D("EnglishRecord");
@@ -77,7 +92,16 @@ class EnglishQuestionSpeakModel extends CommonModel {
         }
         //
         //优先获取用户没看过的试题
-        $user_view_question_ids = D("EnglishViewRecord")->getUserViewQuestionIdList($object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern);
+        $user_view_question_ids = D("EnglishViewRecord")->getUserViewQuestionIdList($object, 
+                                                                                    $level, 
+                                                                                    $subject, 
+                                                                                    $recommend, 
+                                                                                    $difficulty, 
+                                                                                    $voice, 
+                                                                                    $target, 
+                                                                                    $pattern,
+                                                                                    $user_ID_cache
+                                                                                );
         if (!empty($user_view_question_ids)) {
             $map['question.id'] = array("not in", $user_view_question_ids);
             $count = $this->alias("question")->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media ON question.media_id=media.id")->where($map)->count();
@@ -100,7 +124,11 @@ class EnglishQuestionSpeakModel extends CommonModel {
             unset($map['question.id']);
             //
             //优先获取用户没做过的题目
-            $user_question_ids = $englishRecordModel->getUserTestQuestionIdList($object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern, $map['media.special_recommend']); //用户做过的题目id数组
+            $user_question_ids = $englishRecordModel->getUserTestQuestionIdList($object, $level, $subject, $recommend, 
+                                                                                $difficulty, $voice, $target, $pattern, 
+                                                                                $map['media.special_recommend'],
+                                                                                $user_ID_cache
+                                                                            ); //用户做过的题目id数组
             $map['question.id'] = array("not in", $user_question_ids);
             $count = $this->alias("question")->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media ON question.media_id=media.id")->where($map)->count();
             if ($count > 0) {
