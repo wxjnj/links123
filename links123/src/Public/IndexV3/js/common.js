@@ -1,67 +1,63 @@
 // Avoid `console` errors in browsers that lack a console.
-(function() {
-    var method;
-    var noop = function () {};
-    var methods = [
-        'assert', 'clear', 'count', 'debug', 'dir', 'dirxml', 'error',
-        'exception', 'group', 'groupCollapsed', 'groupEnd', 'info', 'log',
-        'markTimeline', 'profile', 'profileEnd', 'table', 'time', 'timeEnd',
-        'timeStamp', 'trace', 'warn'
-    ];
-    var length = methods.length;
-    var console = (window.console = window.console || {});
+( function() {
+		var method;
+		var noop = function() {
+		};
+		var methods = ['assert', 'clear', 'count', 'debug', 'dir', 'dirxml', 'error', 'exception', 'group', 'groupCollapsed', 'groupEnd', 'info', 'log', 'markTimeline', 'profile', 'profileEnd', 'table', 'time', 'timeEnd', 'timeStamp', 'trace', 'warn'];
+		var length = methods.length;
+		var console = (window.console = window.console || {});
 
-    while (length--) {
-        method = methods[length];
-        // Only stub undefined methods.
-        if (!console[method]) {
-            console[method] = noop;
-        }
-    }
-}());
+		while (length--) {
+			method = methods[length];
+			// Only stub undefined methods.
+			if (!console[method]) {
+				console[method] = noop;
+			}
+		}
+	}());
 
 // stop default link behavior
 $(document).on('click', '[href="#"],.disabled', function(e) {
-  e.preventDefault();
+	e.preventDefault();
 });
 
-$(function(){
+$(function() {
 	User.Init();
 	THL.Init();
 	Theme.Init();
 });
 
 var User = {
-	Init: function(){
+	Init : function() {
 		var self = this;
-		$('.uc-menu .nm').on('mouseenter', function(){
+		$('.uc-menu .nm').on('mouseenter', function() {
 			$(this).find('ul').show();
-		}).on('mouseleave', function(){
+		}).on('mouseleave', function() {
 			$(this).find('ul').hide();
 		});
-		$('.J_SignUp').on('click', function(){
+		$('.J_SignUp').on('click', function() {
 			self.Reg();
 			return false;
 		});
-		$('.J_SignIn').on('click', function(){
+		$('.J_SignIn').on('click', function() {
 			self.Login();
 			return false;
 		});
-		$(document).on('click', '.J_VerifyImg', function(){
-			$(this).attr("src", APP+'Verify?'+(+new Date()));
+		$(document).on('click', '.J_VerifyImg', function() {
+			$(this).attr("src", APP + 'Verify?' + (+new Date()));
 		});
 	},
-	CheckLogin: function(){
+	CheckLogin : function() {
 		var self = this;
-		if($CONFIG.IsLogin){
+		if ($CONFIG.IsLogin) {
 			self.Login('请先登录');
 			return false;
 		}
 		return true;
 	},
-	Reg: function(){
+	Reg : function() {
 		var self = this;
-		if(!$('#J_Reg').size()){
+		if (!$('#J_Reg').size()) {
 			var hl = '';
 			hl = hl + '<div class="lk-dialog lk-dialog-reg" id="J_Reg">';
 			hl = hl + '	<div class="lkd-hd">';
@@ -91,46 +87,50 @@ var User = {
 			obj.find('input').placeholder();
 
 			obj.dialog({
-				autoOpen: true,
-				width: 384,
-				modal: true,
-				resizable: false,
-				open: function(){
-					setTimeout(function(){obj.find('input[name="user"]').select();}, 20);
+				autoOpen : true,
+				width : 384,
+				modal : true,
+				resizable : false,
+				open : function() {
+					setTimeout(function() {
+						obj.find('input[name="user"]').select();
+					}, 20);
 				}
 			});
 
-			obj.find('.lkd-login').on('click', function(){
+			obj.find('.lkd-login').on('click', function() {
 				obj.dialog('close');
 				self.Login();
 			});
 
-			obj.find('.close').on('click', function(){
+			obj.find('.close').on('click', function() {
 				obj.dialog('close');
 				return false;
 			});
 
-			obj.find('input[name="vcode"]').on('keydown', function(event){
+			obj.find('input[name="vcode"]').on('keydown', function(event) {
 				if (event.keyCode == 13) {
 					obj.find('.lkd-reg').trigger('click');
 					return false;
 				}
 			});
 
-			obj.find('input[type="text"], input[type="password"]').on('focus', function(){
+			obj.find('input[type="text"], input[type="password"]').on('focus', function() {
 				$(this).css('background', '#fff');
-			}).on('blur', function(){
+			}).on('blur', function() {
 				$(this).css('background', '#eeefef');
 			});
 
-			$(document).on('mouseenter', '#J_Reg input[name="user"], #J_Reg input[name="password"], #J_Reg input[name="email"], #J_Reg input[name="vcode"]', function(){
+			$(document).on('mouseenter', '#J_Reg input[name="user"], #J_Reg input[name="password"], #J_Reg input[name="email"], #J_Reg input[name="vcode"]', function() {
 				$(this).select();
 			});
 
 			var _loading = false;
 
-			obj.find('.lkd-reg').on('click', function(){
-				if(_loading){ return false; }
+			obj.find('.lkd-reg').on('click', function() {
+				if (_loading) {
+					return false;
+				}
 
 				var objusername = obj.find('input[name="user"]');
 				var objpassword = obj.find('input[name="password"]');
@@ -142,51 +142,54 @@ var User = {
 				var password = objpassword.val();
 				var email = objemail.val();
 				var verify = objverify.val();
-				
+
 				if (!username || username == '昵称') {
 					objmsg.html('昵称不能为空');
 					objusername[0].focus();
 					return false;
 				}
 
-				if(!/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*$/.test(email)){
+				if (!/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*$/.test(email)) {
 					objmsg.html('email格式不正确');
 					objemail[0].focus();
 					return false;
 				}
-				
+
 				if (!password) {
 					objmsg.html('密码不能为空');
 					objpassword[0].focus();
 					return false;
 				}
-				
+
 				if (!verify) {
 					objmsg.html('验证码不能为空');
 					objverify[0].focus();
 					return false;
 				}
-				
+
 				objmsg.html('');
 				_loading = true;
 
-				var data = { "nickname": username, "email": email, "password": password, "verify": verify };
-				
-				$.post(APP + "Members/Register/saveReg", data, 
-					function(data){
-						if ( data.indexOf("regOK") >= 0 ) {
-							window.location.href = APP+"Members/Index/";
-						} else {
-							objmsg.html(data);
-						}
-						_loading = false;
+				var data = {
+					"nickname" : username,
+					"email" : email,
+					"password" : password,
+					"verify" : verify
+				};
+
+				$.post(APP + "Members/Register/saveReg", data, function(data) {
+					if (data.indexOf("regOK") >= 0) {
+						window.location.href = APP + "Members/Index/";
+					} else {
+						objmsg.html(data);
 					}
-				);
+					_loading = false;
+				});
 
 				return false;
 			});
 
-		}else{
+		} else {
 			var obj = $('#J_Reg');
 			obj.find('input[name="user"]').val('');
 			obj.find('input[name="password"]').val('');
@@ -196,9 +199,9 @@ var User = {
 			obj.dialog('open');
 		}
 	},
-	Login: function(msg){
+	Login : function(msg) {
 		var self = this;
-		if(!$('#J_Login').size()){
+		if (!$('#J_Login').size()) {
 			var hl = '';
 			hl = hl + '<div class="lk-dialog lk-dialog-login" id="J_Login">';
 			hl = hl + '	<div class="lkd-hd">';
@@ -227,70 +230,78 @@ var User = {
 			var obj = $('#J_Login');
 			var objmsg = obj.find('.msg');
 
-			if(msg){ objmsg.html(msg); }
+			if (msg) {
+				objmsg.html(msg);
+			}
 
 			obj.dialog({
-				autoOpen: true,
-				width: 384,
-				modal: true,
-				resizable: false,
-				open: function(){
-					setTimeout(function(){obj.find('input[name="user"]').select();}, 20);
+				autoOpen : true,
+				width : 384,
+				modal : true,
+				resizable : false,
+				open : function() {
+					setTimeout(function() {
+						obj.find('input[name="user"]').select();
+					}, 20);
 				}
 			});
 
-			obj.find('.close').on('click', function(){
+			obj.find('.close').on('click', function() {
 				obj.dialog('close');
 				return false;
 			});
-			obj.find('.fgpass').on('click', function(){
+			obj.find('.fgpass').on('click', function() {
 				obj.dialog('close');
 				self.FindPass();
 			});
-			obj.find('.reg').on('click', function(){
+			obj.find('.reg').on('click', function() {
 				obj.dialog('close');
 				self.Reg();
 			});
 
-			obj.find('input[name="password"]').on('keydown', function(event){
+			obj.find('input[name="password"]').on('keydown', function(event) {
 				if (event.keyCode == 13) {
 					obj.find('.lkd-reg').trigger('click');
 					return false;
 				}
 			});
 
-			obj.find('input[type="text"], input[type="password"]').on('focus', function(){
+			obj.find('input[type="text"], input[type="password"]').on('focus', function() {
 				$(this).css('background', '#fff');
-			}).on('blur', function(){
+			}).on('blur', function() {
 				$(this).css('background', '#eeefef');
 			});
 
-			$(document).on('mouseenter', '#J_Login input[name="user"], #J_Login input[name="password"]', function(){
+			$(document).on('mouseenter', '#J_Login input[name="user"], #J_Login input[name="password"]', function() {
 				$(this).select();
 			});
 
-			obj.find('.lkd-reg').on('click', function(){
+			obj.find('.lkd-reg').on('click', function() {
 				var objusername = obj.find('input[name="user"]');
 				var objpassword = obj.find('input[name="password"]');
 				var username = objusername.val();
 				var password = objpassword.val();
 				var verify = "";
 				var auto_login = obj.find('input[name="autologin"]').attr('checked');
-				
+
 				if (!username || username == '帐号') {
 					objmsg.html('帐号不能为空');
 					objusername[0].focus();
 					return false;
 				}
-				
+
 				if (!password) {
 					objmsg.html('密码不能为空');
 					objpassword[0].focus();
 					return false;
 				}
-				
-				var data = { "username": username, "password": password, "auto_login": (auto_login=='checked' ? 1 : 0) };
-                
+
+				var data = {
+					"username" : username,
+					"password" : password,
+					"auto_login" : (auto_login == 'checked' ? 1 : 0)
+				};
+
 				if ($('#J_Login').find('li.vcode').length !== 0) {
 					var objverify = obj.find('input[name="vcode"]');
 					verify = objverify.val();
@@ -303,77 +314,74 @@ var User = {
 
 					data["verify"] = verify;
 				}
-                
-				$.post(APP + "Members/Login/checkLogin", data, 
-					function(data){
-						var resp = eval('(' + data + ')');
-						var showmsg = function(obj, msg){
-							$(obj).val("");
-							$(obj).attr('placeholder', msg);
-							$(obj).focus();
-						};
-                        
-						switch(resp.code) {
-							case 200:
-								if(window.opener){
-									window.opener.location.reload();
-								}
-								window.location.href = APP+"Index";
-								break;
-							case 403:
-								$(objusername[0]).val("");
-								$(objpassword[0]).val("");
-								objmsg.html(resp.content);
-								break;
-							case 501:
-								showmsg(objusername[0], resp.content);
-								break;
-							case 502:
-								showmsg(objusername[0], resp.content);
-								break;
-							case 503:
-								showmsg(objpassword[0], resp.content);
-								break;
-							case 504:
-								showmsg(objpassword[0], resp.content);
-								break;
-							case 505:
-								var vcode = $('#J_Login').find('li.vcode');
-								if (vcode.length === 0) {
+
+				$.post(APP + "Members/Login/checkLogin", data, function(data) {
+					var resp = eval('(' + data + ')');
+					var showmsg = function(obj, msg) {
+						$(obj).val("");
+						$(obj).attr('placeholder', msg);
+						$(obj).focus();
+					};
+
+					switch(resp.code) {
+						case 200:
+							if (window.opener) {
+								window.opener.location.reload();
+							}
+							window.location.href = APP + "Index";
+							break;
+						case 403:
+							$(objusername[0]).val("");
+							$(objpassword[0]).val("");
+							objmsg.html(resp.content);
+							break;
+						case 501:
+							showmsg(objusername[0], resp.content);
+							break;
+						case 502:
+							showmsg(objusername[0], resp.content);
+							break;
+						case 503:
+							showmsg(objpassword[0], resp.content);
+							break;
+						case 504:
+							showmsg(objpassword[0], resp.content);
+							break;
+						case 505:
+							var vcode = $('#J_Login').find('li.vcode');
+							if (vcode.length === 0) {
 								$('<li class="vcode">\n\<input class="ipt" type="text" name="vcode" placeholder="验证码" value="" /><img src="/Verify" alt="验证码" class="J_VerifyImg" title="点击刷新" />\n\</li>').insertAfter($('#J_Login input[name="password"]').parent("li"));
-								}
-								else {
+							} else {
 								$('#J_Login').find('li.vcode img').click();
-								}
-								break;
-							case 506:
-								objmsg.html(resp.content);
-								obj.find('input[name="vcode"]').focus();
-								$('#J_Login').find('li.vcode img').click();
-								break;
-						}
-                        
+							}
+							break;
+						case 506:
+							objmsg.html(resp.content);
+							obj.find('input[name="vcode"]').focus();
+							$('#J_Login').find('li.vcode img').click();
+							break;
 					}
-				);
+
+				});
 
 				return false;
 			});
-		}else{
+		} else {
 			var obj = $('#J_Login');
 			obj.find('input[name="user"]').val('');
 			obj.find('input[name="password"]').val('');
 			obj.find('.msg').html('');
 			obj.find('input[name="autologin"]').attr('checked', true);
-			if(msg){
+			if (msg) {
 				obj.find('.msg').html(msg);
-			}else{
+			} else {
 				obj.find('.msg').html('');
 			}
 			$('#J_Login').dialog('open');
 		}
 	},
-	FindPass: function(){
-		if(!$('#J_FindPass').size()){
+	FindPass : function() {
+		if (!$('#J_FindPass').size()) {
 			var hl = '';
 			hl = hl + '<div class="lk-dialog lk-dialog-fpass" id="J_FindPass">';
 			hl = hl + '	<div class="lkd-hd">';
@@ -403,40 +411,42 @@ var User = {
 			var obj = $('#J_FindPass');
 
 			obj.dialog({
-				autoOpen: true,
-				width: 390,
-				modal: true,
-				resizable: false,
-				open: function(){
-					setTimeout(function(){obj.find('input[name="email"]').select();}, 20);
+				autoOpen : true,
+				width : 390,
+				modal : true,
+				resizable : false,
+				open : function() {
+					setTimeout(function() {
+						obj.find('input[name="email"]').select();
+					}, 20);
 				}
 			});
 
-			obj.find('.close').on('click', function(){
+			obj.find('.close').on('click', function() {
 				$('#J_FindPass').dialog('close');
 				return false;
 			});
 
-			obj.find('input[name="vcode"]').on('keydown', function(event){
+			obj.find('input[name="vcode"]').on('keydown', function(event) {
 				if (event.keyCode == 13) {
 					obj.find('.lkd-btn').trigger('click');
 					return false;
 				}
 			});
 
-			obj.find('input[type="text"], input[type="password"]').on('focus', function(){
+			obj.find('input[type="text"], input[type="password"]').on('focus', function() {
 				$(this).css('background', '#fff');
-			}).on('blur', function(){
+			}).on('blur', function() {
 				$(this).css('background', '#eeefef');
 			});
 
-			$(document).on('mouseenter', '#J_FindPass input[name="email"], #J_FindPass input[name="vcode"]', function(){
+			$(document).on('mouseenter', '#J_FindPass input[name="email"], #J_FindPass input[name="vcode"]', function() {
 				$(this).select();
 			});
 
 			var _loading = false;
 
-			obj.find('.lkd-btn').on('click', function(){
+			obj.find('.lkd-btn').on('click', function() {
 				var objemail = obj.find('input[name="email"]');
 				var objverify = obj.find('input[name="vcode"]');
 				var email = objemail.val();
@@ -459,24 +469,22 @@ var User = {
 					objverify[0].focus();
 					return false;
 				}
-				
+
 				$.post(APP + 'Members/Login/missPwd', {
-					email: email,
-					verify: verify
-					}, 
-					function(data){
-						if ( data.indexOf("sendOK") >= 0 ) {
-							var mailserver = data.split('|');
-							alert("请进入您的账户邮箱获取新密码");
-							window.open("http://" + mailserver[1]);
-						}else {
-							alert(data);
-						}
+					email : email,
+					verify : verify
+				}, function(data) {
+					if (data.indexOf("sendOK") >= 0) {
+						var mailserver = data.split('|');
+						alert("请进入您的账户邮箱获取新密码");
+						window.open("http://" + mailserver[1]);
+					} else {
+						alert(data);
 					}
-				);
+				});
 			});
 
-		}else{
+		} else {
 			var obj = $('#J_FindPass');
 			obj.find('input[name="email"]').val('');
 			obj.find('input[name="vcode"]').val('');
@@ -490,29 +498,32 @@ var THL = {
 		topnm : 32,
 		topex : 64
 	},
-	Init : function(){
+	Init : function() {
 		var self = this;
 
 		//重新加载页面清除keyword 清除浏览器未清除的文本框的值
 		$.cookies.set('keyword', '');
-		$("#search_text").val('').select(); //选中文本框
-		
-		$('.thl').mouseover( function(){ 
-		  $('#J_thl_div').show();
-		  $("#search_text").select();
-		});//移入糖葫芦区域 显示糖葫芦, 选中 文本
-		
-		$('.J_thl_area').mouseleave(function(){ 
-		  $('#J_thl_div').hide(); 
-		});//移除糖葫芦主区域 隐藏糖葫芦
-		
-		$(".J_thlz a").click(function(){ //糖葫芦籽点击
+		$("#search_text").val('').select();
+		//选中文本框
+
+		$('.thl').mouseover(function() {
+			$('#J_thl_div').show();
+			$("#search_text").select();
+		});
+		//移入糖葫芦区域 显示糖葫芦, 选中 文本
+
+		$('.J_thl_area').mouseleave(function() {
+			$('#J_thl_div').hide();
+		});
+		//移除糖葫芦主区域 隐藏糖葫芦
+
+		$(".J_thlz a").click(function() {//糖葫芦籽点击
 			$(this).addClass("on").siblings("a").removeClass("on");
 			$("#btn_search").trigger("click");
 			return false;
 		});
-		
-		$("#J_thl_div a").click(function(){ //糖葫芦点击
+
+		$("#J_thl_div a").click(function() {//糖葫芦点击
 			$(this).addClass("on").siblings("a").removeClass("on");
 			var index = $(this).index();
 			$(".J_thlz:eq(" + index + ")").show().siblings(".J_thlz").hide();
@@ -521,21 +532,21 @@ var THL = {
 			return false;
 		});
 
-		$("#search_text").blur(function(){ //文本框失去焦点 如 内容为空 清除keyword
+		$("#search_text").blur(function() {//文本框失去焦点 如 内容为空 清除keyword
 			if ($(this).val() == '') {
 				$.cookies.set('keyword', '');
 			}
 		});
-		
-		$("#search_text").keyup(function(event){ //文本框输入内容 设置糖葫芦 位置
+
+		$("#search_text").keyup(function(event) {//文本框输入内容 设置糖葫芦 位置
 			$('#J_thl_div').show();
 			self.setpos();
 		});
 
-		$('#search_text').on('click', function(){
+		$('#search_text').on('click', function() {
 			if (!$.cookies.get('keyword')) {
-				var key  = $.trim($("#search_text").val());
-				if(key != ''){
+				var key = $.trim($("#search_text").val());
+				if (key != '') {
 					$(this).data('key', key);
 					$(this).val(key);
 				}
@@ -544,45 +555,44 @@ var THL = {
 			}
 		});
 
-		$('#search_text').on('webkitspeechchange', function(){ //onwebkitspeechchange
+		$('#search_text').on('webkitspeechchange', function() {//onwebkitspeechchange
 			var key = $(this).data('key');
-			if(key && key != ''){
+			if (key && key != '') {
 				var v = $(this).val();
-				if(v.indexOf(key) == 0){
-					$(this).val(v.replace(key, key+' '));
+				if (v.indexOf(key) == 0) {
+					$(this).val(v.replace(key, key + ' '));
 					$(this).data('key', '');
 				}
 			}
 			self.setpos();
-		}); 
+		});
 
-		$(document).mouseup(function(ev){ // 搜索文本框始终获取焦点
-			if ( document.activeElement.tagName == "INPUT" 
-				|| document.activeElement.tagName == "TEXTAREA" 
-				|| document.activeElement.tagName == "IFRAME"
-				|| document.activeElement.id == "direct_text"
-				|| document.activeElement.id == "search_text"
-				|| document.activeElement.id == "search_text"
-			) {
+		$(document).mouseup(function(ev) {// 搜索文本框始终获取焦点
+			if (document.activeElement.tagName == "INPUT" || document.activeElement.tagName == "TEXTAREA" || document.activeElement.tagName == "IFRAME" || document.activeElement.id == "direct_text" || document.activeElement.id == "search_text" || document.activeElement.id == "search_text") {
 				return;
 			}
 			var txt = '';
-			if (window.getSelection){ // mozilla FF 
+			if (window.getSelection) {// mozilla FF
 				txt = window.getSelection();
-			}else if(document.getSelection){
+			} else if (document.getSelection) {
 				txt = document.getSelection();
-			}else if(document.selection){ //IE
+			} else if (document.selection) {//IE
 				txt = document.selection.createRange().text;
 			}
-			if (txt == '') { $("#search_text").select(); } //未划选文本 划选 文本框
-			if ($.cookies.get('keyword')){ $("#search_text").select(); } //有keyword时 直接划选 文本框
+			if (txt == '') {
+				$("#search_text").select();
+			}//未划选文本 划选 文本框
+			if ($.cookies.get('keyword')) {
+				$("#search_text").select();
+			} //有keyword时 直接划选 文本框
 		});
 
-		$("#btn_search").click(function() { //单击搜索按钮
+		$("#btn_search").click(function() {//单击搜索按钮
 			$("#search_text").select();
-			var keyword  = $.trim($("#search_text").val());
-			$.cookies.set('keyword', keyword); //保存keyword
-			keyword = keyword.replace('http://','');
+			var keyword = $.trim($("#search_text").val());
+			$.cookies.set('keyword', keyword);
+			//保存keyword
+			keyword = keyword.replace('http://', '');
 			keyword = encodeURIComponent(keyword);
 			var url = $(".J_thlz a.on").attr("url").replace('keyword', keyword);
 			var tid = $(".J_thlz a.on").attr("tid");
@@ -590,22 +600,25 @@ var THL = {
 			return false;
 		});
 	},
-	go : function(url, tid, keyword){
-		if (tid == '4' || tid == '26' || tid == '40' || tid == '58' || tid == '110' || tid == '117') { // 谷歌、美试、啪啪、PQuora
-			$.post(URL + "/thl_count", {tid : tid}, function() {});
+	go : function(url, tid, keyword) {
+		if (tid == '4' || tid == '26' || tid == '40' || tid == '58' || tid == '110' || tid == '117') {// 谷歌、美试、啪啪、PQuora
+			$.post(URL + "/thl_count", {
+				tid : tid
+			}, function() {
+			});
 			window.open("http://" + url);
-		} else if (tid == '10' || tid == '20') { // 另客、维修
+		} else if (tid == '10' || tid == '20') {// 另客、维修
 			window.open(url);
-		} else {	
+		} else {
 			url = APP + "Thl/index";
 			//window.open(url);
 			//因window.open会被浏览器阻止，所以才用表单提交
 			var searchFormObj = $('#searchForm');
-			
+
 			$('#J_thl').val($("#J_thl_div a.on").text());
 			$('#J_tid').val(tid);
 			$('#J_q').val(keyword);
-			
+
 			searchFormObj.attr('action', url);
 			searchFormObj.attr('target', '_blank');
 			searchFormObj.submit();
@@ -614,93 +627,118 @@ var THL = {
 			$("#search_text").select();
 		}
 	},
-	setpos : function(){
+	setpos : function() {
 		var top, self = this;
-		if($("#search_text").val() != ''){ //文本框有值调整位置
+		if ($("#search_text").val() != '') {//文本框有值调整位置
 			top = self.conf.topex;
-			$("#J_thl_div").css("top", top).removeClass('cate-in');	
-		}else{
+			$("#J_thl_div").css("top", top).removeClass('cate-in');
+		} else {
 			top = self.conf.topnm;
-			$('#J_thl_div').hide(); //没值隐藏
-			$("#J_thl_div").css("top", top).addClass('cate-in');	
-		}	
+			$('#J_thl_div').hide();
+			//没值隐藏
+			$("#J_thl_div").css("top", top).addClass('cate-in');
+		}
 	}
 };
 
-var Theme  = {
-	Init: function(){
+var Theme = {
+	Init : function() {
 		var self = this;
-		$('#J_Styles>ul>li:not(.add)').on('click', function(){
+		$('#J_Styles>ul>li:not(.skin_selection_li)').on('click', function() {
 			var obj = $(this).closest('li');
-			if(!obj.is('.on')){
+			if (!obj.is('.on')) {
 				obj.addClass('on').siblings().removeClass('on');
 				var bg = obj.data('bg');
 				var theme = obj.data('theme');
 				var id = obj.data('id');
-				
+
 				self.SetTheme(id, theme, bg);
 			}
 			return false;
 		});
-		$('#J_Styles li.add').on('click', function(){
-			//self.SetGlobal();
-			return false;
+		//皮肤items容器
+		var $skinPicsWrap = $("#J_skin_pics");
+		//点击皮肤分类的链接显示对应的皮肤图片
+		$('#J_skin_selection').on('click', '.J_link_skin_type', function() {
+			var $self = $(this);
+			if (!$self.hasClass('active')) {
+				$self.addClass('active').siblings().removeClass('active');
+				$skinPicsWrap.children().css('display', 'none');
+				$($self.data('href')).fadeIn();
+			}
 		});
-
-		$('.skins-style, .skins-all').on('mousemove', function(){
-			return false;
+		// 点击图片换肤
+		$skinPicsWrap.on('click', 'a', function() {
+			var obj = $(this);
+			var bg = obj.data('bg');
+			var theme = obj.data('theme');
+			var id = obj.data('id');
+			console.debug( obj )
+			if(id && theme && bg) self.SetTheme(id, theme, bg);
 		});
-
-		$('#J_Styles li.add').on('mousemove', function(){
-			$('.skins-style').show();
-		}).on('mouseleave', function(){
-			$('.skins-style').hide();
-			$('.skins-all dd').hide();
-		});
-		$('.skins-style li').on('mouseover', function(){
-			var id = $(this).data('id');
-			$(this).toggleClass('on');
-			$('.sa'+id).show().siblings().hide();
-		});
-		$('.skins-all li').on('click', function(){
-			var bg = $(this).data('bg');
-			var theme = $(this).data('theme');
-			var id = $(this).data('id');
-
-			self.SetBackGround(id, theme, bg);
-
-			$(this).addClass('added').siblings().removeClass('added');
-			$(this).find('.imgb').hide();
-			$(this).find('s').hide();
-			
-			return false;
-		}).on('mouseenter', function(){
-			$(this).find('.imgb').show();
-			$(this).find('s').show();
-		}).on('mouseleave', function(){
-			$(this).find('.imgb').hide();
-			$(this).find('s').hide();
-		});
+		// $('#J_Styles li.skin_selection_li').on('click', function(){
+		// //self.SetGlobal();
+		// return false;
+		// });
+		//
+		// $('.skins-style, .skins-all').on('mousemove', function(){
+		// return false;
+		// });
+		//
+		// $('#J_Styles li.add').on('mousemove', function(){
+		// $('.skins-style').show();
+		// }).on('mouseleave', function(){
+		// $('.skins-style').hide();
+		// $('.skins-all dd').hide();
+		// });
+		// $('.skins-style li').on('mouseover', function(){
+		// var id = $(this).data('id');
+		// $(this).toggleClass('on');
+		// $('.sa'+id).show().siblings().hide();
+		// });
+		// $('.skins-all li').on('click', function(){
+		// var bg = $(this).data('bg');
+		// var theme = $(this).data('theme');
+		// var id = $(this).data('id');
+		//
+		// self.SetBackGround(id, theme, bg);
+		//
+		// $(this).addClass('added').siblings().removeClass('added');
+		// $(this).find('.imgb').hide();
+		// $(this).find('s').hide();
+		//
+		// return false;
+		// }).on('mouseenter', function(){
+		// $(this).find('.imgb').show();
+		// $(this).find('s').show();
+		// }).on('mouseleave', function(){
+		// $(this).find('.imgb').hide();
+		// $(this).find('s').hide();
+		// });
 	},
-	SetBackGround: function(id, tm, bg){
-		var tmurl = $CONFIG['PUBLIC']+ '/IndexV3/skins/{0}/style.css';
+	SetBackGround : function(id, tm, bg) {
+		var tmurl = $CONFIG['PUBLIC'] + '/IndexV3/skins/{0}/style.css';
 		$('#J_Skins').attr('href', tmurl.replace('{0}', tm));
-		$('#container').css('background-image', 'url('+bg+')');
+		$('#container').css('background-image', 'url(' + bg + ')');
 
-		$.post(URL + "/updateSkin", {'skinId': id});
+		$.post(URL + "/updateSkin", {
+			'skinId' : id
+		});
 		return false;
 	},
-	SetTheme: function(id, tm, bg){
-		var tmurl = $CONFIG['PUBLIC']+ '/IndexV3/skins/{0}/style.css';
+	SetTheme : function(id, tm, bg) {
+		var tmurl = $CONFIG['PUBLIC'] + '/IndexV3/skins/{0}/style.css';
 		$('#J_Skins').attr('href', tmurl.replace('{0}', tm));
-		$('#container').css('background-image', 'url('+bg+')');
+		$('#container').css('background-image', 'url(' + bg + ')');
 
-		$.post(URL + "/updateSkinTheme", {'themeId': id});
+		$.post(URL + "/updateSkinTheme", {
+			'themeId' : id
+		});
 		return false;
 	},
-	SetGlobal: function(){
+	SetGlobal : function() {
 		var self = this;
-		if(!$('#J_StyleGlobal').size()){
+		if (!$('#J_StyleGlobal').size()) {
 			var hl = '';
 			hl = hl + '<div class="lk-dialog lk-dialog-settings" id="J_StyleGlobal">';
 			hl = hl + '	<div class="lkd-hd">';
@@ -714,7 +752,7 @@ var Theme  = {
 			hl = hl + '			<div class="settings-content">';
 			hl = hl + '				<div class="ttl">全局风格设置</div>';
 			hl = hl + '				<ul class="ct">';
-			hl = hl + '					<li class="on"><img src="'+PUBLIC+'/indexv3/skins/styleshot01.jpg" alt="" /></li>';
+			hl = hl + '					<li class="on"><img src="' + PUBLIC + '/indexv3/skins/styleshot01.jpg" alt="" /></li>';
 			hl = hl + '				</ul>';
 			hl = hl + '				<div class="ft">';
 			hl = hl + '					<em>板块不透明度调节</em>';
@@ -735,17 +773,17 @@ var Theme  = {
 
 			var obj = $('#J_StyleGlobal');
 
-			obj.find('.close').on('click', function(){
+			obj.find('.close').on('click', function() {
 				obj.dialog('close');
 				return false;
 			});
 
-			obj.find('.lkd-add').on('click', function(){
+			obj.find('.lkd-add').on('click', function() {
 				//TODO 确定按钮事件
 				return false;
 			});
 
-			obj.find('.J_SetBackGround').on('click', function(){
+			obj.find('.J_SetBackGround').on('click', function() {
 				obj.dialog('close');
 				self.SetCustom();
 				return false;
@@ -754,32 +792,32 @@ var Theme  = {
 			var xslider = obj.find('.process');
 
 			xslider.slider({
-				range: "min",
-				value: 0,
-				min: 0,
-				max: 100,
-				slide: function(event, ui){
-					$(xslider).next().html(ui.value+'%');
+				range : "min",
+				value : 0,
+				min : 0,
+				max : 100,
+				slide : function(event, ui) {
+					$(xslider).next().html(ui.value + '%');
 				}
 			});
 
 			obj.dialog({
-				autoOpen: true,
-				width: 502,
-				modal: true,
-				resizable: false
+				autoOpen : true,
+				width : 502,
+				modal : true,
+				resizable : false
 			});
 
 			return false;
-		}else{
+		} else {
 			var obj = $('#J_StyleGlobal');
 			obj.find('input[type="checkbox"]').attr('checked', false);
 			obj.dialog('open');
 		}
 	},
-	SetCustom: function(){
+	SetCustom : function() {
 		var self = this;
-		if(!$('#J_StyleCustom').size()){
+		if (!$('#J_StyleCustom').size()) {
 			var hl = '';
 			hl = hl + '<div class="lk-dialog lk-dialog-settings" id="J_StyleCustom">';
 			hl = hl + '	<div class="lkd-hd">';
@@ -856,56 +894,56 @@ var Theme  = {
 			var obj = $('#J_StyleCustom');
 
 			obj.find('.bg-cate').dropdown({
-				classNm: ".bg-cate-dropdown"
+				classNm : ".bg-cate-dropdown"
 			});
-			obj.find('.bg-cate').on('mouseenter', function(){
+			obj.find('.bg-cate').on('mouseenter', function() {
 				$(this).removeClass('bg-on');
-			}).on('mouseleave', function(){
+			}).on('mouseleave', function() {
 				$(this).addClass('bg-on');
 			});
 			obj.find('.bg-align').dropdown({
-				classNm: ".bg-align-dropdown"
+				classNm : ".bg-align-dropdown"
 			});
-			obj.find('.bg-align').on('mouseenter', function(){
+			obj.find('.bg-align').on('mouseenter', function() {
 				$(this).removeClass('bg-on');
-			}).on('mouseleave', function(){
+			}).on('mouseleave', function() {
 				$(this).addClass('bg-on');
 			});
 
-			obj.find('.close').on('click', function(){
+			obj.find('.close').on('click', function() {
 				obj.dialog('close');
 				return false;
 			});
 
-			obj.find('.bg-custom').on('click', function(){
+			obj.find('.bg-custom').on('click', function() {
 				obj.find('.upload-panel').show().siblings().hide();
 				$(this).addClass('bg-custom-on');
 				obj.find('.pg').hide();
 			});
 
-			obj.find('.lkd-add').on('click', function(){
+			obj.find('.lkd-add').on('click', function() {
 				//TODO 确定按钮事件
 				return false;
 			});
 
-			obj.find('.J_SetGlobal').on('click', function(){
+			obj.find('.J_SetGlobal').on('click', function() {
 				obj.dialog('close');
 				self.SetGlobal();
 				return false;
 			});
 
 			obj.dialog({
-				autoOpen: true,
-				width: 502,
-				modal: true,
-				resizable: false
+				autoOpen : true,
+				width : 502,
+				modal : true,
+				resizable : false
 			});
 
 			return false;
-		}else{
+		} else {
 			var obj = $('#J_StyleCustom');
 			obj.find('input[type="checkbox"]').attr('checked', false);
 			obj.dialog('open');
 		}
 	}
-};
+}; 

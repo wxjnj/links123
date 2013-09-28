@@ -30,31 +30,22 @@
 	display: block;
 }
 .links123-app-frame .links123-close-wrap{
-	position: relative;
+	width: 100%;
 	height: 0;
 	z-index: 1000;
 }
 .links123-app-frame > .links123-close-wrap > a{
-	background: transparent url(../imgs/app/links-app-frame/close.png) 0 -32px no-repeat;
+	background: transparent url(../imgs/app/links-app-frame/close.png) 0 -60px no-repeat;
 	width: 30px;
 	height: 30px;
 	position: absolute;
-	right: -24px;
-	top: -24px;
+	right: -16px;
+    top: -16px;
 	z-index: 1000;
 	font-size: 0;
 }
-.links123-app-frame > .links123-close-wrap > a:hover{
-    background-position: 0 -60px;
-}
 .links123-app-frame > .links123-close-wrap > a:active{
     background-position: 0 -2px;
-}
-/**复写app关闭按钮位置 **/
-#J_box_music .links123-close-wrap > a,
-.J_box_note .links123-close-wrap > a{
-    right: -16px;
-    top: -16px;
 }
 /** App Object Frame$ **/
 /** $box_note **/
@@ -140,6 +131,9 @@
 	border: 0;
 	margin: 0;
 	display: block;
+}
+.J_box_note textarea:focus{
+	outline: 0;
 }
 /** box_note$ **/
 /** $box_mail **/
@@ -782,7 +776,7 @@ div.gt-baf-translations {
 	background: #fff;
 }
 #J_music_wrap .with-submenu a{
-	width: 100%;
+	width: 75px;
 	height: 20px;
 	line-height: 20px;
 	display: block;
