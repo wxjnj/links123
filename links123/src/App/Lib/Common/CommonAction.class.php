@@ -334,7 +334,7 @@ class CommonAction extends Action {
 				
 				$skins['list'][$skin['categoryId']][] = $skin;
 				$skins['category'][$skin['categoryId']] = array('categoryId' => $skin['categoryId'], 'categoryName' => $skin['categoryName']);
-				$skins['skin'][$skin['skinId']] = $skin['skinStyle'];
+				$skins['skin'][$skin['skinId']] = $skin['skin'];
 			}
 		
 			S('skinsList', $skins);

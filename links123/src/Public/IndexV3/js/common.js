@@ -720,7 +720,7 @@ var Theme = {
 		var tmurl = $CONFIG['PUBLIC'] + '/IndexV3/skins/{0}/style.css';
 		$('#J_Skins').attr('href', tmurl.replace('{0}', tm));
 		
-		$('#container').css('background', bg.replace('background:', '').replace(';', ''));
+		$('#container').css('background-image', 'url(' + bg + ')');
 
 		$.post(URL + "/updateSkin", {
 			'skinId' : id
