@@ -22,6 +22,34 @@ $(function() {
         is_local_play = true;
         $(this).hide();
     })
+
+    //答题提示
+    var ansLayer = $('#answer-tip-layer');
+    getTipArea();
+    ansLayer.show();
+    $(window).on('resize', function(){
+        getTipArea();
+    });
+    function getTipArea(){
+        var docHeight = $(document).height();
+        var docWidth = $(document).width();
+        var ansLayer = $('#answer-tip-layer');
+        ansLayer.find('.layer').height(docHeight);
+        var btn = $('#J_answerButton');
+        var pos = btn.offset();
+        pos.top -= 10;
+        pos.left -= 20;
+        ansLayer.find('.tip').css({
+            left: pos.left - 210,
+            top: pos.top - 90
+        });
+        ansLayer.find('.layer-top').height(pos.top);
+        ansLayer.find('.layer-bottom').height(docHeight - pos.top - 60);
+        ansLayer.find('.layer-lft').width(pos.left);
+        ansLayer.find('.layer-rgt').width(docWidth - 110 - pos.left);
+    }
+
+
     //说力，上一句事件
     $("#J_preSentenceButton img").click(function() {
         $('#Links123Player')[0].prev();
