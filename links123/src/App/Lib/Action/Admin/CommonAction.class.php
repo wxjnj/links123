@@ -8,6 +8,7 @@
 class CommonAction extends BaseAction {
 
     function _initialize() {
+        parent::_initialize();
         import('@.ORG.Cookie');
         //根据cookie检查session是否过期
         $time = cookie(md5("manament_login_time"));
