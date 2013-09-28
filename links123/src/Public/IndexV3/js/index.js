@@ -16,7 +16,9 @@ $(function() {
 	});
 
 	$('#J_Apps').sortable();
-
+	if(!$('body').hasClass('widescreen')){
+		$('.items, .pics .items li, .pics img').css('width', '250');
+	}
 	// 幻灯
 	var swapi;
 	var _dosw = function(){
@@ -140,6 +142,7 @@ var Zld = { // 自留地
 				fstLineWidth = liWidth - $(v).width() - 5;
 			}
 		});
+		if(liWidth <= boxWidth) return;
 		if(boxWidth - fstLineWidth > 75){
 			var w = lis.eq(overIndex).width() + 5 - (boxWidth - fstLineWidth);
 			w = ~~Math.ceil(w / (overIndex + 1));
