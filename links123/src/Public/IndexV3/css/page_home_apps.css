@@ -752,7 +752,12 @@ div.gt-baf-translations {
 /** $music **/
 #J_box_music {
 	padding: 0;
-	transition : all .3s ease 0;
+	top: auto;
+	bottom: 10px;
+	transition : left .6s ease 0;
+	-webkit-transition: left .6s ease 0;
+	-moz-transitionn: left .6s ease 0;
+	box-shadow: 1px 2px 4px rgba(0,0,0,.5);
 }
 /** rewrite music app close style **/
 #J_box_music .links123-close-wrap{
@@ -766,17 +771,18 @@ div.gt-baf-translations {
 	border: 1px solid #ccc;
 	border-left: 0;
 	border-radius: 0 3px 3px 0;
+	box-shadow: 2px 2px 4px rgba(0,0,0,.5)
 }
 #J_box_music .links123-close-wrap > a{
 	position: static;
 	height: 100%;
 	border-left: 0;
 	display: block;
-	background: url(../imgs/app/links-app-frame/toggles.png) -1px center no-repeat;
+	background: url(../imgs/app/links-app-frame/toggles.png) -37px center no-repeat;
 	opacity: .8;
 }
 #J_box_music .links123-close-wrap > a.closed{
-	background: url(../imgs/app/links-app-frame/toggles.png) -37px center no-repeat;
+	background: url(../imgs/app/links-app-frame/toggles.png) -1px center no-repeat;
 }
 #J_box_music{
 	padding: 5px; 
