@@ -583,3 +583,39 @@ a.disabled {
 	right: 10px;
 	top: 6px;
 }
+
+
+#answer-tip-layer{
+	position:absolute;
+	z-index:2px;
+	width:100%;
+	top:0;
+}
+
+#answer-tip-layer .layer{
+	float: left;
+}
+
+#answer-tip-layer .tip{
+	width:222px;
+	height:97px;
+	background:url(../images/answer_back_tip.png) 0 0 no-repeat;
+	position: absolute;
+	z-index:1;
+}
+
+#answer-tip-layer .layer-focus{
+	width:110px;
+	height:60px;
+	background:url(../images/answer_back_focus.png) 0 0 no-repeat;
+}
+
+#answer-tip-layer .layer-lft, #answer-tip-layer .layer-rgt,
+#answer-tip-layer .layer-top, #answer-tip-layer .layer-bottom
+{
+	background:url(../images/answer_back_repeat.png) 0 0 repeat;
+}
+
+#answer-tip-layer .layer-center{
+	width:110px;
+}
