@@ -65,8 +65,9 @@ $( function($) {
 			var self = this;
 			if(self.$elem.children('.links123-close-wrap').length == 0){
 			  self.$elem.prepend('<div class="links123-close-wrap"><a href="#">x</a></div>');
+			  self.$closeBtn = self.$elem.children('.links123-close-wrap').children('a');
 			}
-			self.$elem.children('.links123-close-wrap').on('click', 'a', function() {
+			self.$closeBtn.bind('click', function() {
 				self.close();
 			});
 			self.$elem.bind('mousedown keydown', function() {
@@ -106,8 +107,9 @@ $( function($) {
 					var mT = parseInt(self.$elem[0].style.marginTop);
 					var left = cX - self._x - mL;
 					var top = cY - self._y - mT;
-					if( (top + mT) <= 0){
-						top = 0 - mT;
+					var headerH = $('#J_header').outerHeight();
+					if( (top + mT) <= headerH ){
+						top = headerH - mT;
 					}
 					if( (left) >= $(window).width()+mL ){
 					  left = $(window) - mL/2;
@@ -630,7 +632,39 @@ $( function($) {
 		
 		'#J_box_music' : function( app ){
 		  //启用拖动
-		  app.enableDrag('.box-header');
+		  //app.enableDrag('.box-header');
+		  //复写默认的点击关闭函数
+		  app.$closeBtn.unbind('click');
+		  app.$closeBtn.bind('click', function(){
+		  	if( $(this).hasClass('closed') ){
+		  		app.show();
+		  	}else{
+		  		app.close();
+		  	}
+		  });
+		  //音乐app的关闭效果跟常规不同，它是向左侧寻边收缩，所以重写音乐app的关闭函数
+		  app.close = function(){
+		  	var w = parseInt( app.$elem.outerWidth() );
+		  	var mL = parseInt( app.$elem[0].style.marginLeft );
+		  	app.$elem.css({
+		  		'position' : 'fixed',
+		  		'left' : 0 - w - mL + 'px'
+		  	});
+		  	app.$closeBtn.addClass('closed');
+		  }
+		  // 音乐app的打开效果跟常规也不同
+		  var appPositionReset = function(){
+		  	var mL = parseInt( app.$elem[0].style.marginLeft );
+		  	app.$elem.css({
+		  		'position' : 'fixed',
+		  		'left' : (0 - mL - 3) + 'px'
+		  	});
+		  };
+		  app.show = function(){
+		  	appPositionReset();
+		  	app.$elem.css('display' , 'block');
+		  	app.$closeBtn.removeClass('closed');
+		  }
 		  // 加载
 		  var $submenu = $('#J_with_submenu').find('.submenu');
 		  var $rootMenu = $('#J_with_submenu').children('a').children('.J_root_menu');
@@ -646,15 +680,17 @@ $( function($) {
 		  });
 		  
 		  var selectChannel = function( btn ){
-		    $('#J_music_iframe').attr({
-		      'src' : btn.data('href'),
-		      'width' : btn.data('width'),
-		      'height' : btn.data('height')
-		    });
+		  	var iframe = '<iframe scrolling="no" height="'+btn.data('height')+'" width="'+btn.data('width')+'" frameborder="0" style="overflow:hidden" allowtransparency="true" src="'+btn.data('href')+'"></iframe>'
 		    $("#J_box_music").css({
 		      'margin-left' : '-' + btn.data('width')/2 + 'px',
 		      'margin-top' : '-' + btn.data('height')/2 + 'px'
 		    });
+		    $('#J_music_iframe_wrap').css({
+		    	'width' : btn.data('width'),
+		    	'height' : btn.data('height')
+		    });
+		    $('#J_iframe').html( iframe );
+			appPositionReset();
 		  };
 		  
 		  // 默认加载第一个
