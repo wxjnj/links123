@@ -311,30 +311,35 @@ class CommonAction extends Action {
     /**
      * 获取皮肤列表
      * 
-     * @TODO 缓存使用
-     * 
      * @return skins: 皮肤列表数据
      * 
      * @author slate date:2013-08-29
      */
     public function getSkins() {
     	
-    	$skins = array();
-    	
-    	$model = new Model();
-		
-    	$sql = 'SELECT A.`categoryId`, A.`categoryName`, A.`categoryImg`, B.`skinId`, B.`skinName`, B.`smallSkin`, B.`middleSkin`, B.`skin`, B.`categoryId` AS cid '
-    	.'FROM `lnk_skin_category` A LEFT JOIN `lnk_skin` B ON A.`categoryId` = B.`categoryId`';
-		
-		$result = $model->query($sql);
-		
-		foreach ($result as $skin) {
+    	$skins = S('skinsList');
+    	 
+    	if (!$skins) {
+    		
+	    	$skins = array();
+	    	
+	    	$model = new Model();
 			
-			$skins['list'][$skin['categoryId']][] = $skin;
-			$skins['category'][$skin['categoryId']] = array('categoryId' => $skin['categoryId'], 'categoryImg' => $skin['categoryImg']);
-			$skins['skin'][$skin['skinId']] = $skin['skin'];
-		}
+	    	$sql = 'SELECT A.`categoryId`, A.`categoryName`, A.`categoryImg`, B.`skinId`, B.`skinName`, B.`smallSkin`, B.`middleSkin`, B.`skin`, B.`skinStyle`, B.`categoryId` AS cid '
+	    	.'FROM `lnk_skin_category` A LEFT JOIN `lnk_skin` B ON A.`categoryId` = B.`categoryId` WHERE A.`status` = 0 AND B.`status` = 0';
+			
+			$result = $model->query($sql);
+			
+			foreach ($result as $skin) {
+				
+				$skins['list'][$skin['categoryId']][] = $skin;
+				$skins['category'][$skin['categoryId']] = array('categoryId' => $skin['categoryId'], 'categoryName' => $skin['categoryName']);
+				$skins['skin'][$skin['skinId']] = $skin['skinStyle'];
+			}
 		
+			S('skinsList', $skins);
+    	}
+    	
 		return $skins;
     }
     

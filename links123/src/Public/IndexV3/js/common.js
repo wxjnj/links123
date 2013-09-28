@@ -664,17 +664,17 @@ var Theme = {
 			if (!$self.hasClass('active')) {
 				$self.addClass('active').siblings().removeClass('active');
 				$skinPicsWrap.children().css('display', 'none');
-				$($self.data('href')).fadeIn();
+				$('#link_skin_' + $self.data('id')).fadeIn();
 			}
 		});
 		// 点击图片换肤
 		$skinPicsWrap.on('click', 'a', function() {
 			var obj = $(this);
 			var bg = obj.data('bg');
-			var theme = obj.data('theme');
+			var theme = 'dark';
 			var id = obj.data('id');
-			console.debug( obj )
-			if(id && theme && bg) self.SetTheme(id, theme, bg);
+			console.debug( id, theme, bg )
+			if(id && theme && bg) self.SetBackGround(id, theme, bg);
 		});
 		// $('#J_Styles li.skin_selection_li').on('click', function(){
 		// //self.SetGlobal();
@@ -719,7 +719,7 @@ var Theme = {
 	SetBackGround : function(id, tm, bg) {
 		var tmurl = $CONFIG['PUBLIC'] + '/IndexV3/skins/{0}/style.css';
 		$('#J_Skins').attr('href', tmurl.replace('{0}', tm));
-		$('#container').css('background-image', 'url(' + bg + ')');
+		$('#container').attr('style', bg);
 
 		$.post(URL + "/updateSkin", {
 			'skinId' : id
