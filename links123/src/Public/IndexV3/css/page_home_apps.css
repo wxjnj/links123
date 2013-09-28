@@ -19,7 +19,7 @@
 	border-radius : 5px;
 	background: #fff;
 	border: 1px solid #ccc;
-	z-index: 900;
+	z-index: 1000;
 }
 .links123-app-frame iframe{
 	padding: 0;
@@ -750,32 +750,61 @@ div.gt-baf-translations {
 }
 /** box_translate$ **/
 /** $music **/
-#J_box_music{
+#J_box_music {
 	padding: 0;
+	transition : all .3s ease 0;
 }
-#J_music_wrap{
+/** rewrite music app close style **/
+#J_box_music .links123-close-wrap{
+	width: 21px;
+	background: #000;
+	height: 100%;
+	right: -20px;
+	top: -1px;
+	position: absolute;
+	background: #f3f3f3;
+	border: 1px solid #ccc;
+	border-left: 0;
+	border-radius: 0 3px 3px 0;
+}
+#J_box_music .links123-close-wrap > a{
+	position: static;
+	height: 100%;
+	border-left: 0;
+	display: block;
+	background: url(../imgs/app/links-app-frame/toggles.png) -1px center no-repeat;
+	opacity: .8;
+}
+#J_box_music .links123-close-wrap > a.closed{
+	background: url(../imgs/app/links-app-frame/toggles.png) -37px center no-repeat;
+}
+#J_box_music{
 	padding: 5px; 
 	background:#f3f3f3;
-	border-radius: 3px;
-	position: relative;
+	border-radius: 3px 0 0 3px;
 }
-#J_music_wrap .music_icon{width:88px;height:35px;background:url(../imgs/app/music_box_icon.png) 0 0 no-repeat;
-	margin-bottom:5px;}
-#J_music_wrap .channel-select-box{
+#J_box_music .music_icon{
+	width:88px;
+	height:35px;
+	background:url(../imgs/app/music_box_icon.png) 0 0 no-repeat;
+	margin-bottom:5px;
+}
+#J_box_music .channel-select-box{
 	position: absolute;
 	right: 7px;
-	top: 10px;
+	top: -30px;
 	line-height: 20px;
 	color: #222;
+	z-index: 1000;
 }
-#J_music_wrap .with-submenu{
+#J_box_music .with-submenu{
 	display: inline-block;
 	vertical-align: top;
 	border: 1px solid #e5e5e5;
 	border-radius: 5px;
 	background: #fff;
 }
-#J_music_wrap .with-submenu a{
+#J_box_music .with-submenu a{
 	width: 75px;
 	height: 20px;
 	line-height: 20px;
@@ -784,15 +813,15 @@ div.gt-baf-translations {
 	text-align: center;
 	cursor: pointer;
 }
-#J_music_wrap .with-submenu > a{
+#J_box_music .with-submenu > a{
 	border-radius: 5px 5px 0 0;
 	position: relative;
 }
-#J_music_wrap .with-submenu a:hover{
+#J_box_music .with-submenu a:hover{
 	color: #fff;
 	background: #238b3a;
 }
-#J_music_wrap .with-submenu .down-arrow{
+#J_box_music .with-submenu .down-arrow{
 	width: 0;
 	height: 0;
 	display: inline-block;
@@ -807,28 +836,32 @@ div.gt-baf-translations {
 	overflow:hidden;
 	transition: all .2s ease 0;
 }
-#J_music_wrap .submenu {
+#J_box_music .submenu {
 	width: 75px;
 	border-radius: 5px;
 	border-top: 0;
 }
-#J_music_wrap .submenu li.last a{
+#J_box_music .submenu li.last a{
 	border-radius: 0 0 5px 5px;
 }
-#J_music_wrap .submenu > .hide{
+#J_box_music .submenu > .hide{
 	display: none;
 }
-#J_music_wrap .submenu-wrap{
+#J_box_music .submenu-wrap{
 	max-height: 0;
 	overflow: hidden;
 	transition: all .3s ease 0;
 }
-#J_music_wrap .with-submenu:hover .down-arrow{
+#J_box_music .with-submenu:hover .down-arrow{
     border-top-width: 0;
     border-bottom: 4px solid black;
 }
-#J_music_wrap .with-submenu:hover > .submenu-wrap{
+#J_box_music .with-submenu:hover > .submenu-wrap{
 	max-height: 500px;
+}
+#J_box_music #J_iframe{
+	position: static;
+	z-index: 500;
 }
 /** music$ **/
 /** 登录 、设置框    **/
