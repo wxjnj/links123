@@ -351,21 +351,20 @@
 									<div class="top-mv">
 										<ul>
 										<volist name="songTopList" key="i" id="song">
-											<li data-id="{$i}" class="top{$i} <if condition="$i%2 eq 1">first</if>">
-												<p class="img"><img src="{$song.img}" alt="" /></p>
-												<p class="nm"><a href="javascript:;" data-url="{$song.url}" title="{$song.sname}">{$song.author} - {$song.sname}</a></p>
-											</li>
+                                            <li data-id="{$i}" class="top{$i} <if condition="$i%2 eq 1">first</if>">
+                                                <p class="img"><img src="{$song.img}" alt="" /></p>
+                                                <div data-id="{$i}" class="top{$i} music-controller" style="display:none">
+                                                    <a class="volume" href="javascript:;"></a>
+                                                    <a class="big go" href="javascript:;"></a>
+                                                    <a class="small prev" href="javascript:;"></a>
+                                                    <a class="small stop" href="javascript:;"></a>
+                                                    <a class="small next" href="javascript:;"></a>
+                                                </div>
+                                                <p class="nm"><a href="javascript:;" data-url="{$song.url}" title="{$song.sname}">{$song.author} - {$song.sname}</a></p>
+                                            </li>
 										</volist>
 										</ul>
 
-										<div id="music-controller" style="display:none">
-											<div class="music-control control-layer">
-												<a class="big go" data-name="big" href="javascript:;"></a>
-												<a class="prev" data-name="prev" href="javascript:;"></a>
-												<a class="stop" data-name="stop" href="javascript:;"></a>
-												<a class="next" data-name="next" href="javascript:;"></a>
-											</div>
-										</div>
 									</div>
 									<div class="hot-music">
 										<ul>
@@ -475,7 +474,6 @@
 	<script src="__PUBLIC__/IndexV3/js/jquery.placeholder.js"></script>
 	<script src="__PUBLIC__/skin/js/jquery.cookies.2.2.0.min.js"></script>
 	<!-- <script src="__PUBLIC__/skin/fancybox/jquery.fancybox.js"></script> -->
-	<script src="__PUBLIC__/IndexV3/js/jquery.switchable.js"></script>
 	<script src="__PUBLIC__/skin/js/jquery-ui.min.js"></script>
 	<script src="__PUBLIC__/skin/fancybox/jquery.bpopup-0.5.1.min.js"></script>
 	<script src="__PUBLIC__/skin/js/json2.js"></script>
@@ -484,6 +482,7 @@
 	<!-- <script src="__PUBLIC__/IndexV3/js/widget.js?2013091801"></script> -->
 	<script src="__PUBLIC__/IndexV3/js/jquery.dropdown.js"></script>
 	
+    <script src="__PUBLIC__/IndexV3/js/jquery.slides.js"></script>
 	<!-- 新增的 page_home_apps.js -->
 	<script src="__PUBLIC__/IndexV3/js/page_home_apps.js"></script>
 	

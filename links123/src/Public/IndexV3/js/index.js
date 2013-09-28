@@ -20,18 +20,28 @@ $(function() {
 	// 幻灯
 	var swapi;
 	var _dosw = function(){
-		swapi = $('#J_ScrollBox').switchable({
-			putTriggers: 'appendTo',
-			triggersWrapCls: 'pg',
-			panels: '.items li',
-			effect: 'scrollLeft',
-			interval: 10,
-			loop: true,
-			autoplay: true
-		});
+		$('#J_ScrollBox').find('.items').slidesjs({
+        play: {
+          active: true,
+          auto: true,
+          interval: 10000,
+          swap: false
+        }
+     });
+		/*
+			swapi = $('#J_ScrollBox').switchable({
+				putTriggers: 'appendTo',
+				triggersWrapCls: 'pg',
+				panels: '.items li',
+				effect: 'scrollLeft',
+				interval: 1,
+				loop: true,
+				autoplay: true
+			});*/
 	}
+
 	_dosw();
-	
+
 	$('#J_ScrollBox').find('li').on('hover', function(){
 		$(this).toggleClass('hover');
 	});
@@ -44,15 +54,16 @@ $(function() {
 	// 切换宽屏
 	$('.screen-change-btn').on('click', 'a', function(){
 		if($(this).attr('data-size') == 'wide'){
-			$('.pics .items li, .pics img').css('width', '310');
+			$('.items, .pics .items li, .pics img').css('width', '310');
 			$('body').attr('class', 'widescreen');
 		}else{
 			$('body').attr('class', '');
-			$('.pics .items li, .pics img').css('width', '250');
+			$('.items, .pics .items li, .pics img').css('width', '250');
 		}
+		window.sladePlugin.update();
+		Zld.Resize();
 		//强制切换宽窄屏 需要重新初始化今日焦点图控件
-		swapi.unbind();
-		_dosw();
+		//swapi.unbind();
 	});
 });
 
@@ -113,10 +124,36 @@ var ZhiDaLan = { // 直达框
 
 var Zld = { // 自留地
 	IsSortable: false, //是否为拖拽点击，true则不打开自留地网址
+	Resize: function(){
+		//自适应算法
+		var box = $('#J_sortable');
+		var boxWidth = box.width();
+		var lis = box.find('li');
+		lis.css('width', 'auto');
+		var liWidth = 0;
+		var overIndex = null;
+		var fstLineWidth = null;
+		$.each(lis, function(k, v){
+			liWidth += ($(v).width() + 5);
+			if(!overIndex && liWidth > boxWidth){
+				overIndex = k;
+				fstLineWidth = liWidth - $(v).width() - 5;
+			}
+		});
+		if(boxWidth - fstLineWidth > 75){
+			var w = lis.eq(overIndex).width() + 5 - (boxWidth - fstLineWidth);
+			w = ~~Math.ceil(w / (overIndex + 1));
+			var s = lis.filter(':lt(' + (overIndex+1) +')');
+			$.each(s, function(k, v){
+				var ow = $(v).width();
+				$(v).css('width', ow - w + 'px');
+			});
+		}
+	},
 	Init: function(){
 		var self = this;
 		var obj = $('#J_ZldList');
-
+		self.Resize();
 		$(document).on('click', '#J_ZldList .add', function(){
 			if(User.CheckLogin()){
 				self.Create();
@@ -200,6 +237,7 @@ var Zld = { // 自留地
 				);
 			},
 			stop: function(event, ui) {
+				self.Resize();
 				Zld.IsSortable = false;
 				$(ui.item).find('span').css('cursor', 'pointer');
 			}
@@ -580,72 +618,56 @@ var MusicPlayer = {
 			return false;	
 		})
 
-		var musicController = $('#music-controller');
-		var li;
-		$('#J_Music').find('.top-mv').on('mouseover', 'li', function(){
-			li = $(this);
-			li.find('.img').after(musicController);
-			musicController.show();
-		}).on('mouseout', 'li', function(){
-			if(musicController.find('.pause').length !=0) return;
-			musicController.hide();
+		$('#J_Music').on('mouseenter', '.top-mv li', function(){
+			$(this).find('.music-controller').show();
 		});
 
-		$('#J_Music').find('.music-control').on('mouseover', 'a', function(){
-			var name = $(this).attr('data-name');
-			musicController.find('.' + name).addClass('hover');
-		}).on('mouseout', 'a', function(){
-			var name = $(this).attr('data-name');
-			musicController.find('.' + name).removeClass('hover');
-		});
-
-		$('#J_Music').find('.music-control').on('click', 'a.big, a.stop', function(){
-			var st = $(this).hasClass('go') ? 'pause' : 'go';
-			$('#music-controller').find('.big').removeClass('go pause').addClass(st);
-			if(st == 'pause'){
-				var id = $(this).closest('li').data('id');
-				self.Play(li.find('.nm a').data('url'), 1);
-				$('.top'+id).siblings().find('a').removeClass('on');
-				$('.top'+id).find('a').addClass('on');
+		var ctrls = $('.music-controller');
+		ctrls.on('mouseleave', function(){
+			if($(this).find('.pause').length) return;
+			$(this).hide();
+		}).on('click', '.go', function(){
+			var b = $(this);
+			b.removeClass('go').addClass('pause');
+			$('.music .on').removeClass('on');
+			var url = b.parent('.music-controller').siblings('.nm').find('a').addClass('on').attr('data-url');
+			self.Play(url);
+			b.parents('li').siblings('li').find('.big').removeClass('pause').addClass('go').parent('.music-controller').hide();
+		}).on('click', '.pause, .stop', function(){
+			var b = $(this);
+			b.removeClass('pause').addClass('go');
+			$('.music .on').removeClass('on');
+			self.Stop();
+			b.parent('.music-controller').hide();
+		}).on('click', '.next', function(){
+			$(this).parent('.music-controller').show().find('.big').removeClass('go').addClass('pause')
+			var on = $('.music .on');
+			var id;
+			if(on.length == 0 || on.parents('.top-mv').length != 0){
+				id = 1;
 			}else{
-				self.Stop();
+				id = on.parent('li').attr('data-id') * 1 + 1;
 			}
-		});
-		$('#J_Music').find('.music-control').on('click', 'a.prev', function(){
-			var type = $('#J_MusicPlayer').data('type');
-			if(type == "1"){
-				var o = $('.hot-music>ul>li:last');
-				var url = o.find('a').data('url');
-				var id = o.data('id');
-				self.Play(url, 2, id);
-			}else if(type == "2"){
-				var currid = $('#J_MusicPlayer').data('currid');
-				var o = $('.song'+currid).prev();
-				if(o.size()){
-					self.Play(o.find('a').data('url'), 2, o.data('id'));
-				}else{
-					o = $('.hot-music>ul>li:last');
-					self.Play(o.find('a').data('url'), 2, o.data('id'));
-				}
+			on.removeClass('on');
+			if($('.song' + id).length == 0) id = 1;
+			var url = $('.song' + id).find('a').addClass('on').attr('data-url');
+			self.Play(url);
+			$(this).parents('li').siblings('li').find('.big').removeClass('pause').addClass('go').parent('.music-controller').hide();
+		}).on('click', '.prev', function(){
+			$(this).parent('.music-controller').show().find('.big').removeClass('go').addClass('pause');
+			var on = $('.music .on');
+			var id;
+			var last_id = $('.hot-music').find('li:last').attr('data-id');
+			if(on.length == 0 || on.parents('.top-mv').length != 0){
+				id = last_id;
+			}else{
+				id = on.parent('li').attr('data-id') * 1 - 1;
 			}
-		});
-		$('#J_Music').find('.music-control').on('click', 'a.next', function(){
-			var type = $('#J_MusicPlayer').data('type');
-			if(type == "1"){
-				var o = $('.hot-music>ul>li:first');
-				var url = o.find('a').data('url');
-				var id = o.data('id');
-				self.Play(url, 2, id);
-			}else if(type == "2"){
-				var currid = $('#J_MusicPlayer').data('currid');
-				var o = $('.song'+currid).next();
-				if(o.size()){
-					self.Play(o.find('a').data('url'), 2, o.data('id'));
-				}else{
-					o = $('.song1');
-					self.Play(o.find('a').data('url'), 2, o.data('id'));
-				}
-			}
+			on.removeClass('on');
+			if($('.song' + id).length == 0) id = last_id;
+			var url = $('.song' + id).find('a').addClass('on').attr('data-url');
+			self.Play(url);
+			$(this).parents('li').siblings('li').find('.big').removeClass('pause').addClass('go').parent('.music-controller').hide();
 		});
 
 	},
@@ -653,7 +675,11 @@ var MusicPlayer = {
 		$('#J_Music').find('.top-mv li').eq(0).trigger('mouseover');
 
 		var mc = $('#J_Music').find('.music-control');
-		$('#music-controller').find('.big').removeClass('go pause').addClass('pause');
+		//$('.music-controller').find('.big').removeClass('go').addClass('pause');
+		if(id){
+			$('.top' + 1).find('.music-controller').show().find('.big').removeClass('go').addClass('pause');
+			$('.top' + 2).find('.music-controller').hide().find('.big').removeClass('pause').addClass('go');
+		}
 
 		if(!$('#J_MusicPlayer').size()){
 			//兼容模式下iframe display:none 不播 包括父级 display:none 也不播
