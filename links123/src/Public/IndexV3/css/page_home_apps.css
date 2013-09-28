@@ -797,7 +797,7 @@ div.gt-baf-translations {
 }
 #J_box_music .channel-select-box{
 	position: absolute;
-	right: 7px;
+	right: 0;
 	top: -30px;
 	line-height: 20px;
 	color: #222;
