@@ -42,7 +42,7 @@
                 <tr>
                     <td></td>
                     <td class="center">
-                        <input type="submit" value="保 存" class="small submit">&nbsp;
+                        <input type="button" id="J_submitBtn" value="保 存" class="small submit" />&nbsp;
                         <input type="reset" class="submit small" value="清 空" >
                     </td>
                 </tr>
@@ -57,6 +57,13 @@
         })
         $(".J_delSentence").live("click",function(){
             $(this).parent("div").remove();
+        })
+        $("#J_submitBtn").click(function(){
+            if($("input[name='name']").val()==""){
+                alert("名称必须");
+                return false;
+            }
+            $("#form1").submit();
         })
     })
     function addSentence(){
