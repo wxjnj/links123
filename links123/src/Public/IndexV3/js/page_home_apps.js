@@ -65,8 +65,8 @@ $( function($) {
 			var self = this;
 			if(self.$elem.children('.links123-close-wrap').length == 0){
 			  self.$elem.prepend('<div class="links123-close-wrap"><a href="#">x</a></div>');
-			  self.$closeBtn = self.$elem.children('.links123-close-wrap').children('a');
 			}
+			self.$closeBtn = self.$elem.children('.links123-close-wrap').children('a');
 			self.$closeBtn.bind('click', function() {
 				self.close();
 			});
