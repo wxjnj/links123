@@ -868,7 +868,7 @@ li.skin_selection_li{
 }
 .pics .items li{	
 	overflow: hidden;
-	position: relative;
+	/*position: relative;*/
 	float: left;
 }
 .pics .pg{
@@ -1505,11 +1505,11 @@ li.skin_selection_li{
 /* pic slide */
 .slidesjs-pagination {
   list-style: none;
+  position:relative;
 }
 
 .slidesjs-pagination li {
   float: left;
-  margin: 0;
 }
 
 .slidesjs-pagination li a {
