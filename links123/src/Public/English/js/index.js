@@ -26,7 +26,7 @@ $(function() {
     //答题提示
     var ansLayer = $('#answer-tip-layer');
     getTipArea();
-    ansLayer.show()
+    //ansLayer.show()
     $(window).on('resize', function(){
         getTipArea();
     });
