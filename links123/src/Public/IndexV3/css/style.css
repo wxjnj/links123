@@ -917,9 +917,6 @@ li.skin_selection_li{
 	-moz-opacity: 0.7;
 	-khtml-opacity: 0.7;
 	opacity: 0.7;
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
-	border-radius: 3px;
 }
 .pics .items li .info{
 	color: #fff;

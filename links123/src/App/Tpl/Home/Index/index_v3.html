@@ -286,20 +286,19 @@
 									<div class="top-mv">
 										<ul>
 										<volist name="songTopList" key="i" id="song">
-                                            <li data-id="{$i}" class='<if condition="$i%2 eq 1"> first </if> top{$i}'>
-                                                <p class="img"><img src="{$song.img}" alt="" /></p>
-                                                <div data-id="{$i}" class="top{$i} music-controller" style="display:none">
-                                                    <a class="volume" href="javascript:;"></a>
-                                                    <a class="big go" href="javascript:;"></a>
-                                                    <a class="small prev" href="javascript:;"></a>
-                                                    <a class="small stop" href="javascript:;"></a>
-                                                    <a class="small next" href="javascript:;"></a>
-                                                </div>
-                                                <p class="nm"><a href="javascript:;" data-url="{$song.url}" title="{$song.sname}">{$song.author} - {$song.sname}</a></p>
-                                            </li>
+											<li data-id="{$i}" class='<if condition="$i%2 eq 1"> first </if> top{$i}'>
+												<p class="img"><img src="{$song.img}" alt="" /></p>
+												<div data-id="{$i}" class="top{$i} music-controller" style="display:none">
+													<a class="volume" href="javascript:;"></a>
+													<a class="big go" href="javascript:;"></a>
+													<a class="small prev" href="javascript:;"></a>
+													<a class="small stop" href="javascript:;"></a>
+													<a class="small next" href="javascript:;"></a>
+												</div>
+												<p class="nm"><a href="javascript:;" data-url="{$song.url}" title="{$song.sname}">{$song.author} - {$song.sname}</a></p>
+											</li>
 										</volist>
 										</ul>
-
 									</div>
 									<div class="hot-music">
 										<ul>
