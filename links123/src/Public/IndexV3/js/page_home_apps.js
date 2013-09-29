@@ -645,10 +645,10 @@ $( function($) {
 		  //音乐app的关闭效果跟常规不同，它是向左侧寻边收缩，所以重写音乐app的关闭函数
 		  app.close = function(){
 		  	var w = parseInt( app.$elem.outerWidth() );
-		  	var mL = parseInt( app.$elem[0].style.marginLeft );
+		  	var mL = parseInt( app.$elem.css("margin-left") );
 		  	app.$elem.css({
 		  		'position' : 'fixed',
-		  		'left' : 0 - w - mL + 'px'
+		  		'left' : 0 - w - mL + 5 + 'px'
 		  	});
 		  	app.$closeBtn.addClass('closed');
 		  }
