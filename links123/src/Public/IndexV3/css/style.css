@@ -1646,8 +1646,7 @@ li.skin_selection_li{
 	width: 118px;
 }
 .music .hot-music li{
-	padding-right: 15px;
-	width: 110px;
+	width: 118px;
 }
 .music .hot-music li.odd{
 	margin-left: 14px;
@@ -1759,8 +1758,7 @@ li.skin_selection_li{
 	width: 147px;
 }
 .widescreen .music .hot-music li{
-	padding-right: 15px;
-	width: 140px;
+	width: 147px;
 }
 .widescreen .music .hot-music li.odd{
 	margin-left: 16px;
@@ -1793,7 +1791,6 @@ li.skin_selection_li{
 .widescreen .pics .items li .info .p3 a:hover{
 	width: 110px;
 }
-
 .widescreen .music-controller{
 	width: 147px;
 	height: 128px;
