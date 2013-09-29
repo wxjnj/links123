@@ -88,87 +88,22 @@
 							<div class="subpanel-wrap">
 								<div class="subpanel">
 									<div class="skin-types">
-										<a data-href="#link_skin_1" class="J_link_skin_type active">清新简洁</a>
-										<a data-href="#link_skin_2" class="J_link_skin_type">木质纹理</a>
-										<a data-href="#link_skin_3" class="J_link_skin_type">爱情温馨</a>
-										<a data-href="#link_skin_4" class="J_link_skin_type">炫彩光晕</a>
-										<a data-href="#link_skin_5" class="J_link_skin_type">自然风景</a>
+										<volist name="skinCategory" id="vo" key="k">
+											<a data-id="{$vo.categoryId}" class='J_link_skin_type <if condition="$k eq 1">active</if>'>{$vo.categoryName}</a>
+										</volist>
 									</div>
 									<div id="J_skin_pics" class="skin-pics">
-										<div id="link_skin_1" class="item active">
-											<a><img src="__PUBLIC__/IndexV3/imgs/skins/them.png" alt="" /></a>
-											<a><img src="__PUBLIC__/IndexV3/imgs/skins/them.png" alt="" /></a>
-											<a><img src="__PUBLIC__/IndexV3/imgs/skins/them.png" alt="" /></a>
-											<a><img src="__PUBLIC__/IndexV3/imgs/skins/them.png" alt="" /></a>
-											<a><img src="__PUBLIC__/IndexV3/imgs/skins/them.png" alt="" /></a>
-											<a><img src="__PUBLIC__/IndexV3/imgs/skins/them.png" alt="" /></a>
-											<a><img src="__PUBLIC__/IndexV3/imgs/skins/them.png" alt="" /></a>
-											<a><img src="__PUBLIC__/IndexV3/imgs/skins/them.png" alt="" /></a>
-										</div>
-										<div id="link_skin_2" class="item">
-											<a data-id="link_skin_2_1" data-theme="dark" data-bg="__PUBLIC__/IndexV3/imgs/skins/wood/bg1.png"><img src="__PUBLIC__/IndexV3/imgs/skins/wood/wood1.png" alt="" /></a>
-											<a><img src="__PUBLIC__/IndexV3/imgs/skins/wood/wood2.png" alt="" /></a>
-											<a><img src="__PUBLIC__/IndexV3/imgs/skins/wood/wood3.png" alt="" /></a>
-											<a><img src="__PUBLIC__/IndexV3/imgs/skins/wood/wood4.png" alt="" /></a>
-											<a><img src="__PUBLIC__/IndexV3/imgs/skins/wood/wood5.png" alt="" /></a>
-											<a><img src="__PUBLIC__/IndexV3/imgs/skins/wood/wood6.png" alt="" /></a>
-										</div>
-										<div id="link_skin_3" class="item">
-											<a><img src="__PUBLIC__/IndexV3/imgs/skins/them.png" alt="" /></a>
-											<a><img src="__PUBLIC__/IndexV3/imgs/skins/them.png" alt="" /></a>
-											<a><img src="__PUBLIC__/IndexV3/imgs/skins/them.png" alt="" /></a>
-											<a><img src="__PUBLIC__/IndexV3/imgs/skins/them.png" alt="" /></a>
-											<a><img src="__PUBLIC__/IndexV3/imgs/skins/them.png" alt="" /></a>
-											<a><img src="__PUBLIC__/IndexV3/imgs/skins/them.png" alt="" /></a>
-											<a><img src="__PUBLIC__/IndexV3/imgs/skins/them.png" alt="" /></a>
-											<a><img src="__PUBLIC__/IndexV3/imgs/skins/them.png" alt="" /></a>
-										</div>
-										<div id="link_skin_4" class="item">
-											<a><img src="__PUBLIC__/IndexV3/imgs/skins/them.png" alt="" /></a>
-											<a><img src="__PUBLIC__/IndexV3/imgs/skins/them.png" alt="" /></a>
-											<a><img src="__PUBLIC__/IndexV3/imgs/skins/them.png" alt="" /></a>
-											<a><img src="__PUBLIC__/IndexV3/imgs/skins/them.png" alt="" /></a>
-											<a><img src="__PUBLIC__/IndexV3/imgs/skins/them.png" alt="" /></a>
-											<a><img src="__PUBLIC__/IndexV3/imgs/skins/them.png" alt="" /></a>
-											<a><img src="__PUBLIC__/IndexV3/imgs/skins/them.png" alt="" /></a>
-											<a><img src="__PUBLIC__/IndexV3/imgs/skins/them.png" alt="" /></a>
-										</div>
-										<div id="link_skin_5" class="item">
-											<a><img src="__PUBLIC__/IndexV3/imgs/skins/them.png" alt="" /></a>
-											<a><img src="__PUBLIC__/IndexV3/imgs/skins/them.png" alt="" /></a>
-											<a><img src="__PUBLIC__/IndexV3/imgs/skins/them.png" alt="" /></a>
-											<a><img src="__PUBLIC__/IndexV3/imgs/skins/them.png" alt="" /></a>
-											<a><img src="__PUBLIC__/IndexV3/imgs/skins/them.png" alt="" /></a>
-											<a><img src="__PUBLIC__/IndexV3/imgs/skins/them.png" alt="" /></a>
-											<a><img src="__PUBLIC__/IndexV3/imgs/skins/them.png" alt="" /></a>
-											<a><img src="__PUBLIC__/IndexV3/imgs/skins/them.png" alt="" /></a>
-										</div>
+										<volist name="skinList" id="vo">
+											<div id="link_skin_{$key}" class='item <if condition="$i eq 1">active</if>'>
+												<volist name="vo" id="skins">
+													<a data-bg="{$skins.skin}" data-theme="{$skins.theme}" data-id="{$skins.skinId}" class='<if condition="$skins.skinId eq $skinId">active</if>'><img src="{$skins.middleSkin}" alt="" /></a>
+												</volist>
+											</div>
+										</volist>
 									</div>
 								</div>
 							</div>
 						</div>
-						<!-- <div class="skins">
-							<ul class="skins-style">
-								<volist name="skinCategory" id="vo">
-									<li data-id="{$vo.categoryId}"><p><img src="{$vo.categoryImg}" alt="" /></p></li>
-								</volist>
-							</ul>
-							<dl class="skins-all">
-								<volist name="skinList" id="vo" key="k">
-									<dd class="sa{$k}">
-										<ul>
-											<volist name="vo" id="skins">
-												<li data-bg="{$skins.skin}" data-theme="dark" data-id="{$skins.skinId}" <if condition="$skins.skinId eq $skinId">class="added"</if>>
-													<p><img src="{$skins.smallSkin}" alt="" /></p>
-													<s></s>
-													<p class="imgb"><img src="{$skins.middleSkin}" /></p>
-												</li>
-											</volist>
-										</ul>
-									</dd>
-								</volist>
-							</dl>
-						</div> -->
 					</li>
 				</ul>
 			</div>
@@ -351,7 +286,7 @@
 									<div class="top-mv">
 										<ul>
 										<volist name="songTopList" key="i" id="song">
-                                            <li data-id="{$i}" class="top{$i} <if condition="$i%2 eq 1">first</if>">
+                                            <li data-id="{$i}" class='<if condition="$i%2 eq 1"> first </if> top{$i}'>
                                                 <p class="img"><img src="{$song.img}" alt="" /></p>
                                                 <div data-id="{$i}" class="top{$i} music-controller" style="display:none">
                                                     <a class="volume" href="javascript:;"></a>
@@ -389,7 +324,8 @@
 											<img src="__PUBLIC__/IndexV3/upload/02.jpg" alt="" />
 											<div class="mask"></div>
 											<div class="info">
-												<!-- <p class="p1">coming soon...</p> -->
+												<p class="p1">coming soon...</p>
+												<!-- 
 												<p class="p1">Title For This Item</p>
 												<p class="p2">
 													Content For This Item
@@ -398,6 +334,7 @@
 													<a href="#">豆瓣影评</a>
 													<a href="#">在线观看</a>
 												</p>
+												 -->
 											</div>
 										</li>
 										<li>
@@ -478,7 +415,7 @@
 	<script src="__PUBLIC__/skin/fancybox/jquery.bpopup-0.5.1.min.js"></script>
 	<script src="__PUBLIC__/skin/js/json2.js"></script>
 	<script src="__PUBLIC__/IndexV3/js/index.js?2013092101"></script>
-	<script src="__PUBLIC__/IndexV3/js/common.js?2013092101"></script>
+	<script src="__PUBLIC__/IndexV3/js/common.js?2013093001"></script>
 	<!-- <script src="__PUBLIC__/IndexV3/js/widget.js?2013091801"></script> -->
 	<script src="__PUBLIC__/IndexV3/js/jquery.dropdown.js"></script>
 	

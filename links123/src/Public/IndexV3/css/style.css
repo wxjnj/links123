@@ -125,15 +125,13 @@ li.skin_selection_li{
 	right: -120px;
 	top: 40px;
 	border-radius: 0 0 5px 5px;
-	background: transparent;
 	box-shadow: 0 4px 6px rgba(0,0,0,.5);
+    border: 1px solid #757575;
+    border-top: 0;
+    background: #fff;
 }
 #J_skin_selection .subpanel{
-	padding: 10px 15px 15px 15px;
-	border-radius: 0 0 5px 5px;
-	border: 1px solid #757575;
-	border-top: 0;
-	background: #fff;
+    margin: 10px 15px 15px 15px;
 }
 #J_skin_selection .subpanel-wrap a{
 	display: inline-block;
@@ -173,10 +171,12 @@ li.skin_selection_li{
 #J_skin_selection .subpanel .skin-pics .item.active{
 	display: block;
 }
+/*#J_skin_selection .subpanel-wrap,*/
 #J_skin_selection .subpanel-wrap{
 	max-height: 0;
+	border-bottom: 0;
 	overflow: hidden;
-	transition: max-height .5s;
+	transition: max-height .7s;
 }
 #J_skin_selection .subpanel-tangle{
 	opacity: 0;
@@ -189,6 +189,7 @@ li.skin_selection_li{
 }
 #J_skin_selection:hover .subpanel-wrap{
 	max-height: 500px;
+	border-bottom-width: 1px;
 }
 /* END new sking selection */
 
@@ -868,7 +869,7 @@ li.skin_selection_li{
 }
 .pics .items li{	
 	overflow: hidden;
-	position: relative;
+	/*position: relative;*/
 	float: left;
 }
 .pics .pg{
@@ -1505,11 +1506,11 @@ li.skin_selection_li{
 /* pic slide */
 .slidesjs-pagination {
   list-style: none;
+  position:relative;
 }
 
 .slidesjs-pagination li {
   float: left;
-  margin: 0;
 }
 
 .slidesjs-pagination li a {

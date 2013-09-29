@@ -48,9 +48,10 @@ class IndexAction extends CommonAction {
 		//快捷皮肤
 		
 		$skins = $this->getSkins();
-		
+		//print_r($skins);
 		if ($skinId) {
-			$skin = $skins['skin'][$skinId];
+			$skin = $skins['skin'][$skinId]['skinId'];
+			$themeId = $skins['skin'][$skinId]['themeId'];
 			$this->assign("skinId", $skinId);
 			$this->assign("skin", $skin);
 		}
@@ -86,6 +87,8 @@ class IndexAction extends CommonAction {
 			if (!$schedule_list[0]) {
 				$schedule_list = $scheduleModel->where(array('mid' => 0, 'status' => 0))->select();
 			}
+			
+			cookie(md5('schedule_list'), $schedule_list);
 		}
 		
 		if (!$schedule_list[0]['datetime']) {
@@ -93,7 +96,6 @@ class IndexAction extends CommonAction {
 			$schedule_list[0]['content'] = '快来创建第一个日程';
 		}
 		
-		cookie(md5('schedule_list'), $schedule_list);
 		$this->assign('schedule_list', $schedule_list);
 		
 		//热门音乐

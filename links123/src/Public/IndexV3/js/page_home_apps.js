@@ -65,8 +65,8 @@ $( function($) {
 			var self = this;
 			if(self.$elem.children('.links123-close-wrap').length == 0){
 			  self.$elem.prepend('<div class="links123-close-wrap"><a href="#">x</a></div>');
-			  self.$closeBtn = self.$elem.children('.links123-close-wrap').children('a');
 			}
+			self.$closeBtn = self.$elem.children('.links123-close-wrap').children('a');
 			self.$closeBtn.bind('click', function() {
 				self.close();
 			});
@@ -645,14 +645,14 @@ $( function($) {
 		  //音乐app的关闭效果跟常规不同，它是向左侧寻边收缩，所以重写音乐app的关闭函数
 		  app.close = function(){
 		  	var w = parseInt( app.$elem.outerWidth() );
-		  	var mL = parseInt( app.$elem[0].style.marginLeft );
+		  	var mL = parseInt( app.$elem.css("margin-left") );
 		  	app.$elem.css({
 		  		'position' : 'fixed',
-		  		'left' : 0 - w - mL + 'px'
+		  		'left' : 0 - w - mL + 5 + 'px'
 		  	});
 		  	app.$closeBtn.addClass('closed');
 		  }
-		  // 音乐app的打开效果跟常规也不同
+		  // 音乐app在切换提供商以后会进行大小重设
 		  var appPositionReset = function(){
 		  	var mL = parseInt( app.$elem[0].style.marginLeft );
 		  	app.$elem.css({
@@ -662,7 +662,7 @@ $( function($) {
 		  };
 		  app.show = function(){
 		  	appPositionReset();
-		  	app.$elem.css('display' , 'block');
+		  	//app.$elem.css('display' , 'block');
 		  	app.$closeBtn.removeClass('closed');
 		  }
 		  // 加载
@@ -678,23 +678,32 @@ $( function($) {
 		    // 选择音乐频道
 		    selectChannel( $(this) );
 		  });
-		  
-		  var selectChannel = function( btn ){
-		  	var iframe = '<iframe scrolling="no" height="'+btn.data('height')+'" width="'+btn.data('width')+'" frameborder="0" style="overflow:hidden" allowtransparency="true" src="'+btn.data('href')+'"></iframe>'
-		    $("#J_box_music").css({
-		      'margin-left' : '-' + btn.data('width')/2 + 'px',
-		      'margin-top' : '-' + btn.data('height')/2 + 'px'
+		  // 根据选中的提供商重设app大小
+		  var resetAppSizeByProvider = function( $providerBtn ){
+		  	$("#J_box_music").css({
+		      'margin-left' : '-' + $providerBtn.data('width')/2 + 'px',
+		      'margin-top' : '-' + $providerBtn.data('height')/2 + 'px'
 		    });
 		    $('#J_music_iframe_wrap').css({
-		    	'width' : btn.data('width'),
-		    	'height' : btn.data('height')
+		    	'width' : $providerBtn.data('width'),
+		    	'height' : $providerBtn.data('height')
 		    });
+		  };
+		  var musicAppInitOnlyOnce = function(){
+		  	var $firstProvider = $submenu.children(':first-child').children('a'); // 使用按钮关联提供商的尺寸
+		  	$firstProvider.data('width')
+		  };
+		  var selectChannel = function( btn ){
+		  	var iframe = '<iframe scrolling="no" height="'+btn.data('height')+'" width="'+btn.data('width')+'" frameborder="0" style="overflow:hidden" allowtransparency="true" src="'+btn.data('href')+'"></iframe>'
+		    resetAppSizeByProvider( btn );
 		    $('#J_iframe').html( iframe );
 			appPositionReset();
 		  };
 		  
 		  // 默认加载第一个
 		  $submenu.children(':first-child').children('a').click();
+		  app.close();
+		  app.$elem.fadeIn();
 		}
 	}
 

@@ -186,14 +186,15 @@
             //_this.stop(true);
             return _this.goto(($(e.currentTarget).attr("data-slidesjs-item") * 1) + 1);
           }).mouseover(function(e){
-            console.log(1);
+            //console.log(1);
             e.preventDefault();
             //_this.stop(true);
             return _this.goto(($(e.currentTarget).attr("data-slidesjs-item") * 1) + 1);
           });
         });
         //计算pagination的位置 居中
-        pagination.width(count * 13);
+        //pagination.width(count * 13);
+        pagination.css('width', count*13 + 'px');
       }
       $(window).bind("resize", function() {
         return _this.update();
