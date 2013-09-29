@@ -40,7 +40,7 @@ $(function() {
 			$.cookies.set('screenStyle', 'wide');
 			$('body').attr('class', 'widescreen');
 		}else{
-			$.cookies.set('screenStyle', '');
+			$.cookies.set('screenStyle', 'nml');
 			$('body').attr('class', '');
 		}
 		window.sladePlugin.update();
@@ -399,8 +399,8 @@ var Zld = { // 自留地
 	},
 	CreateItem: function(id, nm, url){
 		var hl = '<li id="'+ id +'" url="/Link/index.html?mod=myarea&amp;url='+ url +'" data-id="'+ id +'" data-url="'+ url +'">';
-		hl = hl + '<span class="nm"><i class="mask"></i><b>'+ nm +'</b></span>';
-		hl = hl + '<span class="ctl"><i class="mask"></i></span>';
+		hl = hl + '<i class="mask"></i><span class="nm"><b>'+ nm +'</b></span>';
+		hl = hl + '<span class="ctl"></span>';
 		hl = hl + '</li>';
 		return hl;
 	}
