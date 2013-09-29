@@ -325,16 +325,16 @@ class CommonAction extends Action {
 	    	
 	    	$model = new Model();
 			
-	    	$sql = 'SELECT A.`categoryId`, A.`categoryName`, A.`categoryImg`, B.`skinId`, B.`skinName`, B.`smallSkin`, B.`middleSkin`, B.`skin`, B.`skinStyle`, B.`categoryId` AS cid '
+	    	$sql = 'SELECT A.`categoryId`, A.`categoryName`, A.`categoryImg`, B.`skinId`, B.`skinName`, B.`smallSkin`, B.`middleSkin`, B.`skin`, B.`themeId`, B.`skinStyle`, B.`categoryId` AS cid '
 	    	.'FROM `lnk_skin_category` A LEFT JOIN `lnk_skin` B ON A.`categoryId` = B.`categoryId` WHERE A.`status` = 0 AND B.`status` = 0';
 			
 			$result = $model->query($sql);
 			
 			foreach ($result as $skin) {
-				
+				$skin['theme'] = $this->getTheme($skin['themeId']);
 				$skins['list'][$skin['categoryId']][] = $skin;
 				$skins['category'][$skin['categoryId']] = array('categoryId' => $skin['categoryId'], 'categoryName' => $skin['categoryName']);
-				$skins['skin'][$skin['skinId']] = $skin['skin'];
+				$skins['skin'][$skin['skinId']] = array('skinId' => $skin['skin'], 'themeId' => $skin['themeId']);
 			}
 		
 			S('skinsList', $skins);

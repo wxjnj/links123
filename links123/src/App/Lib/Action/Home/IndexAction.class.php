@@ -50,7 +50,8 @@ class IndexAction extends CommonAction {
 		$skins = $this->getSkins();
 		//print_r($skins);
 		if ($skinId) {
-			$skin = $skins['skin'][$skinId];
+			$skin = $skins['skin'][$skinId]['skinId'];
+			$themeId = $skins['skin'][$skinId]['themeId'];
 			$this->assign("skinId", $skinId);
 			$this->assign("skin", $skin);
 		}

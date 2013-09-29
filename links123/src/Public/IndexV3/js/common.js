@@ -671,7 +671,7 @@ var Theme = {
 		$skinPicsWrap.on('click', 'a', function() {
 			var obj = $(this);
 			var bg = obj.data('bg');
-			var theme = 'dark';
+			var theme = obj.data('theme');
 			var id = obj.data('id');
 			
 			if(id && theme && bg) self.SetBackGround(id, theme, bg);
