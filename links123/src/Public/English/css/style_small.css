@@ -625,3 +625,206 @@ a.disabled {
 #answer-tip-layer .layer-center{
 	width:110px;
 }
+
+/* 搜索框 */
+.video-search-box{
+	background:#fff;
+	border:1px solid #ddd;
+	margin-top:-2px;
+	height:20px;
+	line-height:20px;
+	border-radius:4px;
+}
+.video-search-box form{
+	width:210px;
+	overflow:hidden;
+}
+.video-search-box input{
+	float:left;
+	margin:0;
+	padding:0;
+	border:0;
+	width:190px;
+	padding:0 2px;
+	line-height:20px;
+}
+.video-search-box *:focus{
+	outline: 0;
+}
+.video-search-box button{
+	float:right;
+	width:16px;
+	height:16px;
+	margin-top:2px;
+	border:0;
+	background:url(../images/search-btn.png) 0 0 no-repeat;
+}
+
+/* 搜素结果 */
+.video-search-page .search-title{
+	padding-left:0;
+	font-size:16px;
+}
+.video-search-page .search-title b{
+	color:#d20015;
+}
+.video-search-page .results-wrap{
+	margin: 15px auto 0;
+	padding:20px;
+	width: 910px;
+	background:#fff;
+	border-radius:5px;
+	box-shadow: 0px 0px 8px #333;
+}
+.video-search-page .show-btns{
+	overflow:hidden;
+}
+.video-search-page .show-btns a{
+	margin-right:10px;
+	display:block;
+	float:left;
+	width:15px;
+	height:15px;
+	border:2px solid #fff;
+	background:url(../images/show_btns.png) no-repeat;
+}
+.video-search-page .show-btns .current-show{
+	border:2px solid #d20015;
+}
+.video-search-page .show-btns .square-show{
+	background-position:0 0;
+}
+.video-search-page .show-btns .list-show{
+	background-position:-15px 0;
+}
+.video-search-page .video-list{
+	color:#696969;
+	margin-top:20px;
+	overflow:hidden;
+	line-height:20px;
+}
+.video-search-page .video-list li{
+	width:200px;
+	height:190px;
+	margin:10px 13px 10px 14px;
+	overflow:hidden;
+	float:left;
+	background:#dfdfdf;
+}
+.video-search-page .video-list img{
+	width:200px;
+	height:110px;
+}
+.video-search-page .video-list .time-tip{
+	display:block;
+	background:#1d1c1b;
+	font-size:12px;
+	color:#fff;
+	width:56px;
+	height:22px;
+	line-height:22px;
+	text-align:center;
+	margin:-22px 0 0 144px;
+	position:relative;
+	z-index:1;
+}
+.video-search-page .video-list h5{
+	margin-top:5px;
+	padding-left:10px;
+}
+.video-search-page .video-list p{
+	padding-left:10px;
+}
+.video-search-page .video-list b{
+	display: block;
+	width: 13px;
+	height: 13px;
+	background: url(../images/clock_mini.png) 0 0 no-repeat;
+	margin: 0 0 -16px 0;
+}
+
+.video-search-page .video-list .upload-time{
+	float:right;
+	margin: -5px 5px 0 0;
+}
+.video-search-page .video-list .upload-time span{
+	margin-left:14px;
+}
+
+.video-search-page .pagination{
+	margin-top:20px;
+	padding: 8px;
+	height:22px;
+	line-height:22px;
+	border:1px solid #ddd;
+}
+.video-search-page .pagination ul{
+	float: right;
+}
+.video-search-page .pagination li{
+	float:left;
+	padding:0;
+	margin:0 2px;
+}
+.video-search-page .pagination a{
+	display: block;
+	width: 20px;
+	height: 20px;
+	line-height: 20px;
+	text-align: center;
+	border: 1px solid #acabab;
+	text-decoration: none;
+}
+.video-search-page .pagination .page-current a{
+	border-color: #d20015;
+}
+.video-search-page .pagination div{
+	float: right;
+	margin-left:20px;
+}
+.video-search-page .pagination input{
+	width:30px;
+	height:20px;
+	border:1px solid #ddd;
+}
+
+
+.video-search-page .video-list .video-box{
+	width:400px;
+	height:110px;
+	margin:10px 13px 10px 14px;
+	overflow:hidden;
+	background:#dfdfdf;
+	float:none;
+}
+
+.video-search-page .video-list .video-box img{
+	width:200px;
+	height:110px;
+}
+
+.video-search-page .video-list .time-tip{
+	display:block;
+	background:#1d1c1b;
+	font-size:12px;
+	color:#fff;
+	width:56px;
+	height:22px;
+	line-height:22px;
+	text-align:center;
+	margin:-22px 0 0 144px;
+	position:relative;
+	z-index:1;
+}
+.video-search-page .video-list .video-box h5{
+	margin:-100px 0 0 210px;
+}
+.video-search-page .video-list .video-box p{
+	margin-left:210px;
+}
+
+.video-search-page .video-list .video-box .upload-time{
+	float:right;
+	margin: 20px 5px 0 0;
+}
+

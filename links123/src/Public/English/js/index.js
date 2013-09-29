@@ -27,6 +27,9 @@ $(function() {
     var ansLayer = $('#answer-tip-layer');
     getTipArea();
     ansLayer.show()
+    ansLayer.click(function(){
+        $(this).hide();
+    });
     $(window).on('resize', function(){
         getTipArea();
     });
@@ -48,7 +51,6 @@ $(function() {
         ansLayer.find('.layer-lft').width(pos.left);
         ansLayer.find('.layer-rgt').width(docWidth - 110 - pos.left);
     }
-
 
     //说力，上一句事件
     $("#J_preSentenceButton img").click(function() {

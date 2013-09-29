@@ -1526,6 +1526,26 @@ class IndexAction extends EnglishAction {
         }
     }
 
+    public function autocomplete(){
+        // 搜索补全
+        // 关键字 $_GET['q']
+        //数据
+        $data = array(
+            "Great Bittern", "Little Grebe", "Black-necked Grebe",
+            "Great Bittern", "Little Grebe", "Black-necked Grebe",
+            "Great Bittern", "Little Grebe", "Black-necked Grebe",
+            "Great Bittern", "Little Grebe", "Black-necked Grebe",
+        );
+        echo json_encode($data);
+    }
+
+    // 搜索结果页
+    public function search(){
+
+        $this->assign('keyword', $_POST['keyword']);
+        $this->display();
+    }
+
 }
 
 ?>
