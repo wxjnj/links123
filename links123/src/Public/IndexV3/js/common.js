@@ -1,5 +1,5 @@
 // Avoid `console` errors in browsers that lack a console.
-( function() {
+(function() {
 		var method;
 		var noop = function() {
 		};
@@ -14,7 +14,7 @@
 				console[method] = noop;
 			}
 		}
-	}());
+}());
 
 // stop default link behavior
 $(document).on('click', '[href="#"],.disabled', function(e) {
@@ -676,50 +676,10 @@ var Theme = {
 			
 			if(id && theme && bg) self.SetBackGround(id, theme, bg);
 		});
-		// $('#J_Styles li.skin_selection_li').on('click', function(){
-		// //self.SetGlobal();
-		// return false;
-		// });
-		//
-		// $('.skins-style, .skins-all').on('mousemove', function(){
-		// return false;
-		// });
-		//
-		// $('#J_Styles li.add').on('mousemove', function(){
-		// $('.skins-style').show();
-		// }).on('mouseleave', function(){
-		// $('.skins-style').hide();
-		// $('.skins-all dd').hide();
-		// });
-		// $('.skins-style li').on('mouseover', function(){
-		// var id = $(this).data('id');
-		// $(this).toggleClass('on');
-		// $('.sa'+id).show().siblings().hide();
-		// });
-		// $('.skins-all li').on('click', function(){
-		// var bg = $(this).data('bg');
-		// var theme = $(this).data('theme');
-		// var id = $(this).data('id');
-		//
-		// self.SetBackGround(id, theme, bg);
-		//
-		// $(this).addClass('added').siblings().removeClass('added');
-		// $(this).find('.imgb').hide();
-		// $(this).find('s').hide();
-		//
-		// return false;
-		// }).on('mouseenter', function(){
-		// $(this).find('.imgb').show();
-		// $(this).find('s').show();
-		// }).on('mouseleave', function(){
-		// $(this).find('.imgb').hide();
-		// $(this).find('s').hide();
-		// });
 	},
 	SetBackGround : function(id, tm, bg) {
 		var tmurl = $CONFIG['PUBLIC'] + '/IndexV3/skins/{0}/style.css';
 		$('#J_Skins').attr('href', tmurl.replace('{0}', tm));
-		
 		$('#container').css('background-image', 'url(' + bg + ')');
 
 		$.post(URL + "/updateSkin", {
