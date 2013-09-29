@@ -6,6 +6,7 @@ a{ color: #333; }
 a:hover{ text-decoration: none; }
 #container{
 	background: #3f3a39 url(bg.jpg) top center fixed;
+	background-size: cover;
 }
 .box{ color: #333; }
 .box .box-hd{ border-top: 1px solid #333; }
