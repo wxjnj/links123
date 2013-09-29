@@ -3,10 +3,10 @@ return array(
     'URL_MODEL'                 =>  2,										// 如果你的环境不支持PATHINFO 请设置为3
     
     'DB_TYPE'                   =>  'mysqli',
-	'DB_HOST'                   =>  '127.0.0.1',
-	'DB_NAME'                   =>  'linkstest',
-	'DB_USER'                   =>  'linkstest',
-	'DB_PWD'                    =>  'linkstest7066',	
+	'DB_HOST'                   =>  'localhost',//'112.124.15.96',
+	'DB_NAME'                   =>  'links123_public',
+	'DB_USER'                   =>  'root',//'links123_public',
+	'DB_PWD'                    =>  '',//'links1230820',	
     'DB_PORT'                   =>  '3306',
     'DB_PREFIX'                 =>  'lnk_',
 
@@ -18,8 +18,8 @@ return array(
 	
 	'VAR_PAGE'					=>	'p',
 	
-	'URL_ROOT'					=>	'/links123',
-	'URL_HOMEPAGE'				=>	'/links123/homepage',
+	'URL_ROOT'					=>	'localhost/links123',
+	'URL_HOMEPAGE'				=>	'localhost/links123/homepage',
 
 	/**
 	 * 路由相关
@@ -34,8 +34,9 @@ return array(
 		'/^homepage\/search\/(.*)$/' 					=>	'Homepage/Search/index?search_type=:1',
 	),
 	'TMPL_PARSE_STRING'         =>array(
-		'__STATIC__'            => 'http://a.links123.net', // 更改默认的/Public 替换规则
+		'__PUBLIC__'						=> 'http://static.links123.cn/Public',
+		'__STATIC__'            => 'http://static.links123.cn',//'http://a.links123.net', // 更改默认的/Public 替换规则
 	),
-    "VIDEO_UPLOAD_PATH"         =>  "http://121.199.26.124/" //英语角视频存储路径
+    "VIDEO_UPLOAD_PATH" =>  "http://121.199.26.124/" //英语角视频存储路径
     ,"COOKIE_DOMAIN"            =>  ".links123.net"
 );

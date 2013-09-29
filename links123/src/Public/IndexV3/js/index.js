@@ -16,34 +16,15 @@ $(function() {
 	});
 
 	$('#J_Apps').sortable();
-	if(!$('body').hasClass('widescreen')){
-		$('.items, .pics .items li, .pics img').css('width', '250');
-	}
 	// 幻灯
-	var swapi;
-	var _dosw = function(){
-		$('#J_ScrollBox').find('.items').slidesjs({
-        play: {
-          active: true,
-          auto: true,
-          interval: 10000,
-          swap: false
-        }
-     });
-		/*
-			swapi = $('#J_ScrollBox').switchable({
-				putTriggers: 'appendTo',
-				triggersWrapCls: 'pg',
-				panels: '.items li',
-				effect: 'scrollLeft',
-				interval: 1,
-				loop: true,
-				autoplay: true
-			});*/
-	}
-
-	_dosw();
-
+	$('#J_ScrollBox').find('.items').slidesjs({
+		play: {
+			active: true,
+			auto: true,
+			interval: 10000,
+			swap: false
+		}
+	});
 	$('#J_ScrollBox').find('li').on('hover', function(){
 		$(this).toggleClass('hover');
 	});
@@ -56,16 +37,14 @@ $(function() {
 	// 切换宽屏
 	$('.screen-change-btn').on('click', 'a', function(){
 		if($(this).attr('data-size') == 'wide'){
-			$('.items, .pics .items li, .pics img').css('width', '310');
+			$.cookies.set('screenStyle', 'wide');
 			$('body').attr('class', 'widescreen');
 		}else{
+			$.cookies.set('screenStyle', 'nml');
 			$('body').attr('class', '');
-			$('.items, .pics .items li, .pics img').css('width', '250');
 		}
 		window.sladePlugin.update();
 		Zld.Resize();
-		//强制切换宽窄屏 需要重新初始化今日焦点图控件
-		//swapi.unbind();
 	});
 });
 
@@ -420,8 +399,8 @@ var Zld = { // 自留地
 	},
 	CreateItem: function(id, nm, url){
 		var hl = '<li id="'+ id +'" url="/Link/index.html?mod=myarea&amp;url='+ url +'" data-id="'+ id +'" data-url="'+ url +'">';
-		hl = hl + '<span class="nm"><i class="mask"></i><b>'+ nm +'</b></span>';
-		hl = hl + '<span class="ctl"><i class="mask"></i></span>';
+		hl = hl + '<i class="mask"></i><span class="nm"><b>'+ nm +'</b></span>';
+		hl = hl + '<span class="ctl"></span>';
 		hl = hl + '</li>';
 		return hl;
 	}
@@ -714,7 +693,6 @@ var HelpMouse = {
 	init: function(){
 		var self = this;
 		var isSearchTxtSelected = false;
-
 
 		//当页面翻过首屏时，通过坐标判断直达栏是否获取焦点的方法就不再适用，
 		//这里增加鼠标移至直达栏直接获取焦点
