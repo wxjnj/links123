@@ -250,6 +250,7 @@ class EnglishMediaAction extends CommonAction {
         $model = D("EnglishMedia");
         $id = intval($_REQUEST["id"]);
         $vo = $model->find($id);
+        $vo['name'] = htmlspecialchars($vo['name']);
         $this->assign('vo', $vo);
 
         //科目列表

@@ -267,6 +267,8 @@ class EnglishQuestionAction extends CommonAction {
         $id = intval($_REQUEST [$model->getPk()]);
 //        $vo = $model->getById($id);
         $vo = $model->alias("question")->field("question.*,media.name as media_name,media.media_source_url as media_source_url")->join(C("DB_PREFIX") . "english_media media on media.id=question.media_id")->where("question.id=" . intval($id))->find();
+        $vo['media_name'] = htmlspecialchars($vo['media_name']);
+        $vo['name'] = htmlspecialchars($vo['name']);
         $option_list = D("EnglishOptions")->getQuestionOptionList($id, false);
         $this->assign('option_list', $option_list);
         $this->assign('vo', $vo);
