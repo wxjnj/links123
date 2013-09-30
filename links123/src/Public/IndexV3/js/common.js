@@ -123,6 +123,10 @@ var User = {
 
 			$(document).on('mouseenter', '#J_Reg input[name="user"], #J_Reg input[name="password"], #J_Reg input[name="email"], #J_Reg input[name="vcode"]', function() {
 				$(this).select();
+			}).on('mousemove', '#J_Reg input[name="user"], #J_Reg input[name="password"], #J_Reg input[name="email"], #J_Reg input[name="vcode"]', function(){
+				//禁用冒泡 避免触发糖葫芦的焦点
+				e.stopPropagation();
+				return false;
 			});
 
 			var _loading = false;
@@ -274,6 +278,10 @@ var User = {
 
 			$(document).on('mouseenter', '#J_Login input[name="user"], #J_Login input[name="password"]', function() {
 				$(this).select();
+			}).on('mousemove', '#J_Login input[name="user"], #J_Login input[name="password"]', function(e){
+				//禁用冒泡 避免触发糖葫芦的焦点
+				e.stopPropagation();
+				return false;
 			});
 
 			obj.find('.lkd-reg').on('click', function() {

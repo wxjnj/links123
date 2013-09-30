@@ -19,7 +19,7 @@ input:focus{ outline: 0; }
 	background: #2e2a28;
 	height: 40px;
 	position: fixed;
-	z-index: 99999;
+	z-index: 999;
 }
 .footer{
 	background: #2e2a28;
@@ -1551,11 +1551,13 @@ li.skin_selection_li{
 }
 
 /*screen btn*/
+#J_Styles ul{
+	float:left;
+}
 .screen-change-btn{
-	position:absolute;
-	height:40px;
 	line-height:40px;
-	margin-left:-40px;
+	float:left;
+	margin-right:4px;
 }
 .screen-change-btn a{
 	color:#bbbaba;
@@ -1847,3 +1849,5 @@ li.skin_selection_li{
 .widescreen .music-controller .next:hover{
 	background-position: -95px -130px;
 }
+
+
