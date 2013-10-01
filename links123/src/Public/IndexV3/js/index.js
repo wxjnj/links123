@@ -693,6 +693,7 @@ var HelpMouse = {
 	init: function(){
 		var self = this;
 		var isSearchTxtSelected = false;
+		var mouseOnTopNavBar = 0;
 
 		//当页面翻过首屏时，通过坐标判断直达栏是否获取焦点的方法就不再适用，
 		//这里增加鼠标移至直达栏直接获取焦点
@@ -706,6 +707,15 @@ var HelpMouse = {
 				}
 				//在直达栏上移动鼠标，不冒泡，避免与ev坐标判断焦点方法冲突
 				return false;
+		});
+
+		//通过顶部nav给鼠标位置增加来源属性，强化ev位置获取焦点的判断能力
+		$(document).on('mouseenter', '#J_header', function(){
+			if(mouseOnTopNavBar == 0) mouseOnTopNavBar = 1;
+		}).on('mouseleave', '#J_header', function(){
+			mouseOnTopNavBar = 0;
+		}).on('mousemove', '#direct_text, #J_direct_submit', function(){
+			mouseOnTopNavBar = 2;
 		});
 
 		$(document).on('mousemove', function(ev){
@@ -729,6 +739,20 @@ var HelpMouse = {
 			var search_text_right_end_pos = search_text_left_end_pos + $search_text.width();
 			var direct_text_right_end_pos = $direct_text.offset().left + $direct_text.width() + 10;
 
+			//向下滚800px后不再判断焦点
+			if($(window).scrollTop() > 800) return;
+
+			if(mouseOnTopNavBar == 1){
+				if($('#direct_text').val() == $('#direct_text').attr('txt')){
+					$('#direct_text').select().removeClass('ipton');
+					isSearchTxtSelected = false;
+					if($.trim($('#search_text').val()) ==""){
+						$('#J_thl_div').hide();
+					}
+				}
+				return;
+			}
+
 			if((mousePos.y < 200) && (mousePos.x < search_text_left_end_pos)){
 				if($('#direct_text').val() == $('#direct_text').attr('txt')){
 					$('#direct_text').select().removeClass('ipton');
@@ -738,6 +762,7 @@ var HelpMouse = {
 					}
 				}
 			}//else{
+
 			if((mousePos.y < 200)  && (mousePos.x > search_text_left_end_pos)){
 				if($('#J_thl_div').is(':hidden') && $('#J_thl_div').attr('data-hide') == 'true'){
 					$('#J_thl_div').attr('data-hide', 'false').show();

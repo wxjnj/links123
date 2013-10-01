@@ -514,7 +514,8 @@ li.skin_selection_li{
 .zld ul li.add .ctl{
 	background: url(../imgs/sprite.png) -29px 3px no-repeat;
 	cursor: pointer;
-	text-indent: -999px;
+	/*text-indent: -999px; 360兼容模式出bug */
+	color: transparent;
 	overflow: hidden;
 }
 .zld ul li.add .ctl:hover{

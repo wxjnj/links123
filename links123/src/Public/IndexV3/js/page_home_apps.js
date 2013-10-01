@@ -297,6 +297,9 @@ $( function($) {
 				}, {
 					action : "https://login.yahoo.com/config/login_verify2?&.src=ym&.intl=us",
 					type : "link"
+				}, {
+					action : 'http://mail.links123.cn',
+					type : "link"
 				}]
 			}
 
@@ -650,8 +653,15 @@ $( function($) {
 		  		'position' : 'fixed',
 		  		'left' : 0 - w - mL + 5 + 'px'
 		  	});
+		  	app.$elem.find('.music-close-wrap').hide();
 		  	app.$closeBtn.addClass('closed');
 		  }
+		  //音乐app增加关闭&清除iframe.src的按钮
+		  app.$elem.find('.music-close-wrap a').on('click', function(){
+		  	app.$elem.fadeOut();
+		  	$('#J_iframe').find('iframe').removeAttr('src');
+		  });
+
 		  // 音乐app在切换提供商以后会进行大小重设
 		  var appPositionReset = function(){
 		  	var mL = parseInt( app.$elem[0].style.marginLeft );
@@ -661,7 +671,13 @@ $( function($) {
 		  	});
 		  };
 		  app.show = function(){
+		  	app.$elem.find('.music-close-wrap').show();
 		  	appPositionReset();
+		  	//完全关闭后再次打开，需要重新载入面板及频道
+		  	if(app.$elem.is(':hidden')){
+		  		app.$elem.show();
+		  		$submenu.children(':first-child').children('a').click();
+		  	}
 		  	//app.$elem.css('display' , 'block');
 		  	app.$closeBtn.removeClass('closed');
 		  }

@@ -29,12 +29,12 @@
 	vertical-align: top;
 	display: block;
 }
-.links123-app-frame .links123-close-wrap{
+.links123-app-frame .links123-close-wrap, .links123-app-frame .music-close-wrap{
 	width: 100%;
 	height: 0;
 	z-index: 1000;
 }
-.links123-app-frame > .links123-close-wrap > a{
+.links123-app-frame > .links123-close-wrap > a, .links123-app-frame > .music-close-wrap > a{
 	background: transparent url(../imgs/app/links-app-frame/close.png) 0 -60px no-repeat;
 	width: 30px;
 	height: 30px;
@@ -43,6 +43,12 @@
     top: -16px;
 	z-index: 1000;
 	font-size: 0;
+}
+.links123-app-frame .music-close-wrap{
+    z-index:1001;
+}
+.links123-app-frame > .music-close-wrap > a{
+    right: -33px;
 }
 .links123-app-frame > .links123-close-wrap > a:active{
     background-position: 0 -2px;
@@ -869,6 +875,7 @@ div.gt-baf-translations {
 	position: static;
 	z-index: 500;
 }
+
 /** music$ **/
 /** 登录 、设置框    **/
 .ui-dialog .ui-dialog-content {
