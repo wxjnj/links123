@@ -152,6 +152,17 @@ class IndexAction extends CommonAction {
 	}
 	
 	/**
+	 * @desc 另客导航3.0
+	 * 
+	 * @author slate date:2013-10-1
+	 */
+	public function hao() {
+		
+		$this->getHeaderInfo();
+		$this->display('hao');
+	}
+	
+	/**
 	 * @desc 首页2.0
 	 * @author slate date: 2013-08-20
 	 */
