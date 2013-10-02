@@ -3,13 +3,15 @@
 <head>
 	<meta charset="UTF-8" />
 	<title>{$title}</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<meta name="Keywords" content="{$keywords}" />
 	<meta name="Description" content="{$description}" />
-	<!-- 
-	css, js 引用写法
-	<link rel="stylesheet" href="__PUBLIC__/Hao/css/***.css" />
-	<script src="__PUBLIC__/Hao/js/***.js"></script>
-	 -->
+	<link rel="stylesheet" href="__PUBLIC__/Hao/css/base.css" />
+	<link rel="stylesheet" href="__PUBLIC__/Hao/css/style.css?111" />
+	<link rel="stylesheet" href="__PUBLIC__/Hao/css/jquery-ui.css" />
+	<script src="__PUBLIC__/skin/js/jquery-1.7.1.min.js"></script>
+	<script src="__PUBLIC__/skin/js/jquery.cookies.2.2.0.min.js"></script>
+	<!--script src="__PUBLIC__/Hao/js/***.js"></script-->
 	<script>
 		var $CONFIG = {
 			'APP' : '__APP__/',
@@ -20,13 +22,112 @@
 	</script>
 </head>
 <body>
-	<div id="J_header" class="header">
-			
-	</div><!--#header end-->
+	<script src="__PUBLIC__/Hao/js/init.js"></script>
+	<div id="header">
+		<div class="header-inner">
+			<ul class="nav">
+				<li><a href="/English/Index/index.html" target="_blank">首页</a></li>
+				<li><a href="/English/Index/index.html" target="_blank">另客英语</a></li>
+				<li><a href="/Home/Index/nav.html" target="_blank">另客导航</a></li>
+				<li><a href="/Suggestion.html" target="_blank">留言板</a></li>
+			</ul>
+			<div class="uc">
+				<a class="join J_SignUp" href="javascript:;">注&nbsp;册</a><a class="login J_SignIn" href="javascript:;">登&nbsp;录</a>
+			</div>
+		</div>
+	</div>
 	<div class="container" id="container">
-		
+		<div id="hao-page-header">
+			<div class="container-inner">
+				<div class="ci-hd J_thl_area">
+					<h1><a class="logo" href="/" rel="home">另客网</a></h1>
+					<div class="thl">
+						<form action="" id="searchForm">
+							<input name="thl" id="J_thl" type="hidden" value="">
+							<input name="tid" id="J_tid" type="hidden" value="">
+							<input name="q" id="J_q" type="hidden" value="">
+							<input type="text" value="" style="display:none;" />
+							<input type="hidden" id="tidNow" value="{$tidNow}" />
+							<div class="ctls">
+								<input type="text" id="search_text" class="ipt" x-webkit-speech lang="zh-CN" value="{$_COOKIE['keyword']}" autocomplete="off" placeholder="输入关键词搜索导航···" />
+								<input type="hidden" id="search_text_o" />
+								<input class="btn" type="submit" value="" id="btn_search" />
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="hao-page-header-after"></div>
 	</div><!--#container end-->
-	<div class="footer">
+	<div class="background-fixed"></div>
+	<div id="main-wrap">
+		<ul class="type-nav-list">
+			<li><a href="#">热门导航</a></li>
+			<li><a href="#">学习导航</a></li>
+			<li><a href="#">工作导航</a></li>
+			<li><a href="#">生活导航</a></li>
+			<li><a href="#">应用导航</a></li>
+			<li><a href="#">TED导航</a></li>
+			<li><a href="#">Linker分享的</a></li>
+			<li><a href="#">企业导航</a></li>
+		</ul>
+		<ul class="tags-nav-list">
+			<li><i class="mask"></i><span class="nm">设计</span></li>
+			<li><i class="mask"></i><span class="nm">设计</span></li>
+			<li><i class="mask"></i><span class="nm">设计</span></li>
+			<li><i class="mask"></i><span class="nm">设计</span></li>
+			<li><i class="mask"></i><span class="nm">设计</span></li>
+			<li><i class="mask"></i><span class="nm">设计</span></li>
+			<li><i class="mask"></i><span class="nm">设计</span></li>
+			<li><i class="mask"></i><span class="nm">设计</span></li>
+			<li><i class="mask"></i><span class="nm">设计</span></li>
+			<li><i class="mask"></i><span class="nm">设计</span></li>
+			<li><i class="mask"></i><span class="nm">设计</span></li>
+			<li><i class="mask"></i><span class="nm">设计</span></li>
+			<li><i class="mask"></i><span class="nm">设计</span></li>
+			<li><i class="mask"></i><span class="nm">设计</span></li>
+			<li><i class="mask"></i><span class="nm">设计</span></li>
+			<li><i class="mask"></i><span class="nm">设计</span></li>
+			<li><i class="mask"></i><span class="nm">设计</span></li>
+			<li><i class="mask"></i><span class="nm">设计</span></li>
+			<li><i class="mask"></i><span class="nm">设计</span></li>
+			<li><i class="mask"></i><span class="nm">设计</span></li>
+		</ul>
+		<ul class="type-nav-list">
+			<li><a class="current" href="#">新添精品导航</a></li>
+			<li><a href="#">按添加时间排列</a></li>
+			<li><a href="#">按点击数排列</a></li>
+			<li><a href="#">按被赞次数排列</a></li>
+			<li><a href="#">按收藏次数排列</a></li>
+		</ul>
+		<div class="waterfall-item-wrap" id="K_waterfall">
+		</div>
+	</div><!--#main-wrap end-->
+	<script type="text/x-handlebars-template" id="waterfall-tpl">
+	{{#result}}
+		<div class="item-box">
+			<img class="thum" src="__PUBLIC__/Hao/imgs/{{thumb}}" width="228" height="{{height}}" />
+			<div class="item-info">
+				<b>Segmentfault开发答疑网</b><br />
+				<p>Local professional website design & development for on-line websites, Hampshire based design agency creating fantastic business Websites for Winchester···</p>
+			</div>
+			<div class="like-bar">
+				<span class="like-num">10</span>
+				<b class="like-icon"></b>
+				<a class="like-text" href="#">赞</a>
+				<span class="collect-num">100</span>
+				<b class="collect-icon"></b>
+				<a class="collect-text" href="#">收藏到自留地</a>
+			</div>
+			<div class="tags-bar">
+				<p class="tags">标签：设计, 开发, Segentfalt</p>
+				<p class="from"><img src="__PUBLIC__/Hao/imgs/head-demo.png" />来自<a href="#">Elvis</a>的共享书签</p>
+			</div>
+		</div>
+	{{/result}}
+	</script>
+	<!--div class="footer">
 		<div class="footer-inner">
 			<div class="subnav">
 				<ul>
@@ -41,6 +142,13 @@
 				<script src="http://s96.cnzz.com/stat.php?id=4907803&web_id=4907803&show=pic1" type="text/javascript"></script>
 			</div>
 		</div>
-	</div><!--#footer end-->
+	</div--><!--#footer end-->
+	<script src="__PUBLIC__/IndexV3/js/jquery.placeholder.js"></script>
+	<script src="__PUBLIC__/skin/js/jquery-ui.min.js"></script>
+	<script src="__PUBLIC__/skin/js/json2.js"></script>
+	<script src="__PUBLIC__/Hao/js/handlebars.js"></script>
+	<script src="__PUBLIC__/Hao/js/waterfall.js"></script>
+	<script src="__PUBLIC__/Hao/js/index.js"></script>
+	<script src="__PUBLIC__/Hao/js/common.js?2013100201"></script>
 </body>
 </html>
