@@ -25,7 +25,9 @@ class IndexAction extends CommonAction {
 			$memberModel = M("Member");
 			$mbrNow = $memberModel->where(array('id' => $user_id))->find();
 			$_SESSION['myarea_sort'] = $mbrNow['myarea_sort'] ? explode(',', $mbrNow['myarea_sort']) : '';
+			$_SESSION['app_sort'] = $mbrNow['app_sort'];
 			
+			//取出皮肤ID和模板ID
 			$skinId = session('skinId');
 			if (!$skinId) {
 				$skinId = cookie('skinId');
@@ -36,6 +38,8 @@ class IndexAction extends CommonAction {
 				$themeId = cookie('themeId');
 			}
 		} else {
+			
+			//取出皮肤ID和模板ID
 			$skinId = session('skinId');
 			if (!$skinId) {
 				$skinId = cookie('skinId');
@@ -44,11 +48,15 @@ class IndexAction extends CommonAction {
 			if (!$themeId) {
 				$themeId = cookie('themeId');
 			}
+			
+			if (!$_SESSION['app_sort']) {
+				
+				$_SESSION['app_sort'] = cookie('app_sort');
+			}
 		}
-		//快捷皮肤
 		
+		//快捷皮肤
 		$skins = $this->getSkins();
-		//print_r($skins);
 		if ($skinId) {
 			$skin = $skins['skin'][$skinId]['skinId'];
 			$themeId = $skins['skin'][$skinId]['themeId'];
@@ -61,6 +69,7 @@ class IndexAction extends CommonAction {
 		$theme = $this->getTheme($themeId);
 		$this->assign('theme', $theme);
 		
+		//自留地数据
 		if ($user_id || !$_SESSION['arealist']) {	
 			$areaList = $myareaModel->where(array('mid' => $user_id))->select();
 			
@@ -99,7 +108,6 @@ class IndexAction extends CommonAction {
 		$this->assign('schedule_list', $schedule_list);
 		
 		//热门音乐
-		
 		$songList = $this->getDayhotMusic();
 		shuffle($songList['top']);
 		shuffle($songList['fair']);
@@ -146,6 +154,11 @@ class IndexAction extends CommonAction {
 		$this->assign('ted_list', $ted_list);
 		
 		//图片精选
+		
+		//APP应用
+		$app_list = $this->getApps($_SESSION['app_sort']);
+		$this->assign('app_list', $app_list);
+		
 		
 		$this->getHeaderInfo();
 		$this->display('index_v3');
@@ -1040,6 +1053,47 @@ class IndexAction extends CommonAction {
 				
 		} else {
 				
+			$result = 0;
+		}
+	
+		echo $result;
+	}
+	
+	/**
+	 * APP排序
+	 * 
+	 * @param appIds
+	 * 
+	 * @return void
+	 * 
+	 * @author slate date:2013-10-02
+	 */
+	public function sortApp() {
+	
+		$result = 1;
+	
+		$appIds = $this->_post('appIds');
+	
+		if ($this->isAjax() && $appIds) {
+	
+				
+			$_SESSION['app_sort'] = $app_sort = implode(',', $appIds);
+	
+			$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+	
+			$memberModel = M("Member");
+	
+			if ($user_id) {
+	
+				$memberModel->where(array('id' => $user_id))->save(array('app_sort' => $app_sort));
+					
+			} else {
+				
+				cookie('app_sort', $app_sort, array('expire' => 0));
+			}
+	
+		} else {
+	
 			$result = 0;
 		}
 	
