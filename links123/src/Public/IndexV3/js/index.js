@@ -226,6 +226,25 @@ var Zld = { // 自留地
 		});
 		$('#J_sortable').sortable('enable');
 		
+		$('#J_Apps').sortable({
+			update: function(event, ui){
+				$.post(
+					URL + '/sortApp', 
+					{'appIds' : $(this).sortable('toArray')},
+					function(data) {
+						if (data == 1) {
+							//成功
+						} else if (data == 0){
+							//失败
+						} else {
+							//失败
+						}
+					}
+				);
+			}
+		});
+		$('#J_Apps').sortable('enable');
+		
 		$(document).on('click', '#J_Zld .lkd-add, #J_Zld .lkd-edit', function(){
 
 			var o = $('#J_Zld');

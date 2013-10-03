@@ -519,6 +519,52 @@ class CommonAction extends Action {
     	return $theme ? $theme : 'dark';
     }
     
+    /**
+     * 获取APP应用数据
+     * 
+     * @param  $appIds: app排序结果
+     * 
+     * @return $apps: app排序后结果集
+     * 
+     * @author slate date:2013-10-02
+     */
+    public function getApps($appIds) {
+    	
+    	$apps = array();
+    	$appList = S('appList');
+    	 
+    	if (!$appList) {
+    	
+    		$appList = array();
+    	
+    		$appModel = M('App');
+    		 
+    		$result = $appModel->where(array('status' => 0))->select();
+    		 
+    		foreach ($result as $value) {
+    	
+    			$appList[$value['appId']] = $value;
+    		}
+    	
+    		S('appList', $appList);
+    	}
+    	
+    	if ($appIds) {
+    		
+    		$ids = explode(',', $appIds);
+    		foreach ($ids as $appId) {
+    			
+    			$apps[$appId] = $appList[$appId];
+    		}
+    		
+    	} else {
+    		
+    		$apps = $appList;
+    	}
+    	
+    	return $apps;
+    }
+    
     public function tp_match($pattern, $subject, $num = 1) {
     	$boolean = preg_match($pattern, $subject, $matches);
     	$str = '';
