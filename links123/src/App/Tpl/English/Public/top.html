@@ -1,12 +1,6 @@
 <div class="header">
     <a  target="_blank" href="{:U('Home/Index/index')}"><img src="__PUBLIC__/English/images/logo.png" width="192" height="38" id="logo"/></a>
     <ul>
-        <li class="video-search-box">
-            <form id="video-search-form" action="/English/Index/search.html" method="post">
-                <input id="video-search-input" name="keyword" type="text" placeholder="请输入视频关键字" />
-                <button type="submit"></button>
-            </form>
-        </li>
         <li><a target="_blank" href="__APP__/"><img src="__PUBLIC__/English/images/icon1.png" width="19" height="16" /> 首页</a></li>
         <empty name="_SESSION[C('MEMBER_AUTH_KEY')]">
             <li>
@@ -30,5 +24,11 @@
         <li><a target="_blank" href="{:U('./Recommend/index')}"><img src="__PUBLIC__/English/images/icon5.png" width="19" height="16" /> 推荐链接</a></li>
         <li><a href="#" class="J_feedback"><img src="__PUBLIC__/English/images/iconalert.png" width="19" height="16" /> 反馈报错</a></li>
         <li><a href="http://www.diaochapai.com/survey754810" target="_blank"><img src="__PUBLIC__/English/images/survey.png" width="19" height="16" /> 在线调查</a></li>
-    </ul>
+		<li class="video-search-box">
+            <form id="video-search-form" action="/English/Index/search.html" method="get">
+                <input id="video-search-input" name="keyword" type="text" placeholder="请输入视频关键字" />
+                <button type="submit"></button>
+            </form>
+        </li>
+	</ul>
 </div>

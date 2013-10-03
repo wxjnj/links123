@@ -1529,21 +1529,34 @@ class IndexAction extends EnglishAction {
     public function autocomplete(){
         // 搜索补全
         // 关键字 $_GET['q']
-        //数据
-        $data = array(
-            "Great Bittern", "Little Grebe", "Black-necked Grebe",
-            "Great Bittern", "Little Grebe", "Black-necked Grebe",
-            "Great Bittern", "Little Grebe", "Black-necked Grebe",
-            "Great Bittern", "Little Grebe", "Black-necked Grebe",
-        );
+        //数据 
+    	$prompt = $_REQUEST['prompt'];
+    	$englishMediaModel = D("EnglishMedia");
+    	$data = $englishMediaModel->getMediaPrompts($prompt);
         echo json_encode($data);
     }
-
     // 搜索结果页
     public function search(){
-
-        $this->assign('keyword', $_POST['keyword']);
-        $this->display();
+    	$pageNum = $_GET[C('var_page')] + 0;//current page
+    	$keyword = $_REQUEST['keyword'];
+    
+    	$englishMediaModel = D("EnglishMedia"); 
+    	$count = $englishMediaModel->getMediaSearchCount($keyword);
+    	import("@.ORG.Page");
+    	$p = new Page($count, 16);
+    	if($pageNum<1){
+    		$pageNum=1;
+    	}else if($pageNum>ceil($count/16)){
+    		$pageNum=ceil($count/16);
+    	}	
+    	$searchResult = $englishMediaModel->getMediasByKeyword($keyword, ($pageNum-1)*16, 16);
+    		
+    	$page = $p->getPaginationForVideoSearch("/English/Index/search?keyword=".$keyword, $pageNum);
+    	$this->assign('page', $page);
+    	$this->assign('resultCount', $count);
+    	$this->assign('videos', $searchResult);
+    	$this->assign('keyword', htmlentities($keyword));
+    	$this->display();	
     }
 
 }
