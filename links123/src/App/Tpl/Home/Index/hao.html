@@ -103,7 +103,30 @@
 		</ul>
 		<div class="waterfall-item-wrap" id="K_waterfall">
 		</div>
+		<div class="pagination-box">
+			<ul id="pagination" class="pagination" style="display:none"></ul>
+		</div>
+		<button type="button" id="K_top_btn"></button>
+		<div class="nav-menu-list">
+			<button type="button">导航菜单</button>
+		</div>
 	</div><!--#main-wrap end-->
+	<div class="footer" style="display:none">
+		<div class="footer-inner">
+			<div class="subnav">
+				<ul>
+					<li><a target="_blank" href="{:U('/About')}">关于我们</a></li>
+					<li><a target="_blank" href="{:U('/Suggestion')}">留言板</a></li>
+					<li><a target="_blank" href="{:U('/Blogroll')}">友情链接</a></li>
+					<li><a target="_blank" href="{:U('/Recommend')}">推荐链接</a></li>
+				</ul>
+			</div>
+			<div class="copyright">
+				沪ICP备12036721号 &copy; 另客 2013
+				<script src="http://s96.cnzz.com/stat.php?id=4907803&web_id=4907803&show=pic1" type="text/javascript"></script>
+			</div>
+		</div>
+	</div><!--#footer end-->
 	<script type="text/x-handlebars-template" id="waterfall-tpl">
 	{{#result}}
 		<div class="item-box">
@@ -127,27 +150,12 @@
 		</div>
 	{{/result}}
 	</script>
-	<!--div class="footer">
-		<div class="footer-inner">
-			<div class="subnav">
-				<ul>
-					<li><a target="_blank" href="{:U('/About')}">关于我们</a></li>
-					<li><a target="_blank" href="{:U('/Suggestion')}">留言板</a></li>
-					<li><a target="_blank" href="{:U('/Blogroll')}">友情链接</a></li>
-					<li><a target="_blank" href="{:U('/Recommend')}">推荐链接</a></li>
-				</ul>
-			</div>
-			<div class="copyright">
-				沪ICP备12036721号 &copy; 另客 2013
-				<script src="http://s96.cnzz.com/stat.php?id=4907803&web_id=4907803&show=pic1" type="text/javascript"></script>
-			</div>
-		</div>
-	</div--><!--#footer end-->
 	<script src="__PUBLIC__/IndexV3/js/jquery.placeholder.js"></script>
 	<script src="__PUBLIC__/Hao/js/jquery-ui.min.js"></script>
 	<script src="__PUBLIC__/Hao/js/json2.js"></script>
 	<script src="__PUBLIC__/Hao/js/handlebars.js"></script>
 	<script src="__PUBLIC__/Hao/js/waterfall.js"></script>
+	<script src="__PUBLIC__/Hao/js/pagination.js"></script>
 	<script src="__PUBLIC__/Hao/js/index.js"></script>
 	<script src="__PUBLIC__/Hao/js/common.js?2013100201"></script>
 </body>
