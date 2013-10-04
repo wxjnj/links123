@@ -523,7 +523,7 @@ class EnglishMediaModel extends CommonModel {
 	public function getMediaPrompts($keyword, $limit = "30") {
 		$model = new Model ();
 		$prompts = $model->query ( "select name from lnk_english_media
-    			where name like '%%%s%%' limit $limit;", $keyword );		
+    			where name like '%%%s%%' limit $limit;", $keyword );
 		return $prompts;
 	}
 }

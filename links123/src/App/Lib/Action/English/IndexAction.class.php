@@ -1525,11 +1525,8 @@ class IndexAction extends EnglishAction {
             redirect("http://dict.youdao.com/dictvoice?audio=" . $word . "type=" . $req_type);
         }
     }
-
+    // 搜索补全
     public function autocomplete(){
-        // 搜索补全
-        // 关键字 $_GET['q']
-        //数据 
     	$prompt = $_REQUEST['prompt'];
     	$englishMediaModel = D("EnglishMedia");
     	$data = $englishMediaModel->getMediaPrompts($prompt);
@@ -1537,10 +1534,12 @@ class IndexAction extends EnglishAction {
     }
     // 搜索结果页
     public function search(){
-    	$pageNum = $_GET[C('var_page')] + 0;//current page
+    	$pageNum = $_GET[C('var_page')] + 0;//获得当前页码，并把非数字强制转化为数字
     	$keyword = $_REQUEST['keyword'];
     
     	$englishMediaModel = D("EnglishMedia"); 
+		
+		//分页处理
     	$count = $englishMediaModel->getMediaSearchCount($keyword);
     	import("@.ORG.Page");
     	$p = new Page($count, 16);
@@ -1549,16 +1548,25 @@ class IndexAction extends EnglishAction {
     	}else if($pageNum>ceil($count/16)){
     		$pageNum=ceil($count/16);
     	}	
-    	$searchResult = $englishMediaModel->getMediasByKeyword($keyword, ($pageNum-1)*16, 16);
-    		
+		
+		//从Model获得视频搜索需要的结果集数组
+    	$searchResult = $englishMediaModel->getMediasByKeyword($keyword, ($pageNum-1)*16, 16);		
     	$page = $p->getPaginationForVideoSearch("/English/Index/search?keyword=".$keyword, $pageNum);
+				
+		//防XSS攻击处理
+		import("@.ORG.StringSanitization");
+		$stringSanitization = new StringSanitization();
+		$count = $stringSanitization->sanitize_html($count);
+		$searchResult = $stringSanitization->htmlEscapeRecursively($searchResult);
+		$keyword = $stringSanitization->sanitize_html($keyword);
+		
+		//为视图赋值
     	$this->assign('page', $page);
     	$this->assign('resultCount', $count);
     	$this->assign('videos', $searchResult);
-    	$this->assign('keyword', htmlentities($keyword));
+    	$this->assign('keyword',$keyword);
     	$this->display();	
     }
-
 }
 
 ?>
