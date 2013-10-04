@@ -79,37 +79,22 @@
                         <a class="square-show current-show" href="javascript:;"></a>
                         <a class="list-show" href="javascript:;"></a>
                     </div>
-                    <ul class="video-list">
-                        <?php
-                            for($i = 0; $i < 10; $i++){
-                        ?>
+				<ul class="video-list">
+                        <foreach name="videos" item="video">
                         <li>
-                            <img src="/Public/Uploads/English/Chrysanthemum.jpg" />
+                            <img src="{$video.media_thumb_img}" />
                             <span class="time-tip">19:00</span>
-                            <h5>视频标题</h5>
-                            <p>科目：体育</p>
-                            <p>等级：大三</p>
+                            <h5>{$video.name}</h5>
+                            <p>科目：{$video.subject}</p>
+                            <p>等级：{$video.level}</p>
                             <div class="upload-time">
                                 <b></b>
-                                <span>3天前</span>
+                                <span>{$video.created}</span>
                             </div>
                         </li>
-                        <?php
-                        }
-                        ?>
+                        </foreach>
                     </ul>
-                    <div class="pagination">
-                        <div>
-                            直达 <input type="text" /> 页
-                        </div>
-                        <ul>
-                            <li class="page-current"><a href="#">1</a></li>
-                            <li><a href="#">2</a></li>
-                            <li><a href="#">3</a></li>
-                            <li>……</li>
-                            <li><a href="#">10</a></li>
-                        </ul>
-                    </div>
+                  {$page} 
                 </div>
             </div>
             <include file='Public:footer' />

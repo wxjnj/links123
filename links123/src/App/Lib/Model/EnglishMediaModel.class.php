@@ -453,7 +453,79 @@ class EnglishMediaModel extends CommonModel {
         }
         return;
     }
-
+	/**
+	 * 通过关键字搜索视频，返回搜索结果
+	 *
+	 * @param $keyword string
+	 *       	 [搜索视频的关键词]
+	 * @param $start int
+	 *       	 [搜索结果集起始序号]
+	 * @param $limit int
+	 *       	 [搜索结果集最大数目]
+	 * @return array [视频搜索结果集]
+	 *        
+	 * @author Rachel $date2013.10.1$
+	 */
+	public function getMediasByKeyword($keyword, $start = 0, $limit = 16) {
+		$model = new Model ();
+		$searchResult = $model->query ( "select m.id, s.name as subject, m.name,l.name as level,
+    			m.updated, m.created, m.media_thumb_img
+    			from lnk_english_media as m left join lnk_english_media_subject as s
+    			on m.subject = s.id left join lnk_english_level as l on 
+				m.level=l.id where m.name like '%%%s%%' or
+    			s.name like '%%%s%%' limit $start, $limit;", $keyword, $keyword );
+		foreach ( $searchResult as $index => $video ) {
+			$timespan = time () - $video ['created'];
+			if ($timespan < 60) { // time unit is second
+				$searchResult [$index] ['created'] = $timespan . "秒前";
+			} else if ($timespan >= 60 && $timespan < 3600) { // time unit is minute
+				$timespan = ( int ) floor ( $timespan / 60 );
+				$searchResult [$index] ['created'] = $timespan . "分钟前";
+			} else if ($timespan >= 3600 && $timespan < 3600 * 24) { // time unit is hour
+				$timespan = ( int ) floor ( $timespan / 3600 );
+				$searchResult [$index] ['created'] = $timespan . "小时前";
+			} else { // time unit is day
+				$timespan = ( int ) floor ( $timespan / (3600 * 24) );
+				$searchResult [$index] ['created'] = $timespan . "天前";
+			}
+		}
+		return $searchResult;
+	}
+	
+	/**
+	 * 获得具有指定关键字的视频数
+	 *
+	 * @param $keyword string
+	 *       	 [搜索视频的关键词]
+	 * @return int [视频搜索结果数目]
+	 *        
+	 * @author Rachel $date2013.10.3$
+	 */
+	public function getMediaSearchCount($keyword) {
+		$model = new Model ();
+		$count = $model->query ( "select count(*) as count
+    			from lnk_english_media as m left join lnk_english_media_subject as s
+    			on m.subject = s.id where m.name like '%%%s%%';", $keyword );
+		return $count [0] ['count'];
+	}
+	
+	/**
+	 * 生成视频搜索下拉框即时提示列表数据
+	 *
+	 * @param $keyword string
+	 *       	 [搜索视频的关键词]
+	 * @param $limit int
+	 *       	 [搜索下拉框列表行数]
+	 * @return array [视频即时提示列表集]
+	 *        
+	 * @author Rachel $date2013.10.3$
+	 */
+	public function getMediaPrompts($keyword, $limit = "30") {
+		$model = new Model ();
+		$prompts = $model->query ( "select name from lnk_english_media
+    			where name like '%%%s%%' limit $limit;", $keyword );
+		return $prompts;
+	}
 }
 
 ?>

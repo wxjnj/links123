@@ -26,24 +26,21 @@ $(function() {
 	// 答题提示
 	var ansLayer = $('#answer-tip-layer');
 	getTipArea();
-
 	/*
-	 * 通过Cookie和id记录实现， 判断用户是否是第一次来英语角。 只有在用户是第一次英语角的情况下， 才显示英语答题提示。
+	 * 通过Cookie记录实现， 判断用户是否是第一次来英语角。 只有在用户是第一次英语角的情况下， 才显示英语答题提示。
 	 */
-	if(getCookie("user")==""){
+	if(!isCookieExists("user")){
 		ansLayer.show();
-		setCookie("user", "visited", 30);
 	} 
-	function setCookie(c_name, value, expiredays) {
-		var exdate = new Date()
-		exdate.setDate(exdate.getDate() + expiredays)
-		document.cookie = c_name
-				+ "="
-				+ escape(value)
-				+ ((expiredays == null) ? "" : ";expires="
-						+ exdate.toGMTString())
+	setCookie("user", "visited", 30);
+	function isCookieExists(c_name){
+			if (document.cookie.length > 0) {
+			c_start = document.cookie.indexOf(c_name + "=");
+			return (c_start != -1);
+		} else {
+			return false;
+		}
 	}
-
 	function getCookie(c_name) {
 		if (document.cookie.length > 0) {
 			c_start = document.cookie.indexOf(c_name + "=")
@@ -57,7 +54,15 @@ $(function() {
 		}
 		return ""
 	}
-	
+		function setCookie(c_name, value, expiredays) {
+		var exdate = new Date()
+		exdate.setDate(exdate.getDate() + expiredays)
+		document.cookie = c_name
+				+ "="
+				+ escape(value)
+				+ ((expiredays == null) ? "" : ";expires="
+						+ exdate.toGMTString())
+	}
 	ansLayer.click(function() {
 		$(this).hide();
 	});

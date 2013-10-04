@@ -757,6 +757,53 @@ class Page {
     	return $pageStr;
 
     }
+	/**
+	 * 生成并获得英语角视频搜索页面的分页导航
+	 *
+	 * @author Rachel
+	 */
+	public function getPaginationForVideoSearch($current_url, $pageNum) {
+		if ($pageNum < 1 || $pageNum > $this->totalPages) {
+			return "";
+		}
+		$currentPage = "<li class='page-current' ><a href='$current_url&".C('var_page')."=$pageNum'>" . $pageNum . "</a></li>";
+		$prePage = "<li><a  href='$current_url&".C('var_page')."=" . ($pageNum - 1) . "'>" . ($pageNum - 1) . "</a></li>";
+		$nextPage = "<li><a  href='$current_url&".C('var_page')."=" . ($pageNum + 1) . "'>" . ($pageNum + 1) . "</a></li>";
+		$firstPage = "<li><a  href='$current_url&".C('var_page')."=" . (1) . "'>" . (1) . "</a></li>";
+		$lastPage = "<li><a  href='$current_url&".C('var_page')."=" . ($this->totalPages) . "'>" . ($this->totalPages) . "</a></li>";
+		if ($this->totalPages <= 1) {
+			$pageStr = "";
+		} else if ($this->totalPages > 1) {
+			if ($pageNum == 1) {
+				$prePage = "";
+			}
+			if ($pageNum == $this->totalPages) {
+				$nextPage = "";
+			}
+			if ($pageNum <= 2) {
+				$firstPage = "";
+			}
+			if ($pageNum >= $this->totalPages - 1) {
+				$lastPage = "";
+			}
+			if ($pageNum > 3) {
+				$firstPage = $firstPage . "<li>……</li>";
+			}
+			if ($pageNum < $this->totalPages - 2) {
+				$lastPage = "<li>……</li>" . $lastPage;
+			}
+		}
+		//var_dump($nextPage); exit;
+		$pageStr = "<ul>$firstPage$prePage$currentPage$nextPage$lastPage</ul>";
+		
+		if ($this->totalPages > 1) {
+			
+			$pageStr = '<div class="pagination"><div>
+                            直达 <input type="text" /> 页
+                        </div>' . $pageStr . "</div>";
+		}
+		return $pageStr;
+	}
 
 ////////////////////////////// Andrew's Code for SEO ///////////////////////////////////////    
 public function getCurrentPage(){
