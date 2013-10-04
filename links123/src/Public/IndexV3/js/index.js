@@ -476,8 +476,12 @@ var Schedule = {
 			$(this).removeClass('on');
 			if($(this).val() == '' && $(this).data('tip')){
 				$(this).val('快来创建第一个日程');
+				$(this).parents('li').find('.sp').hide()
+				self.Del(this);
+			}else{
+				$(this).parents('li').find('.sp').show();
+				self.Save(this)
 			}
-			self.Save(this);
 		});
 		$(document).on('click', '#J_Schedule li .sp', function(){
 			self.Del(this);
@@ -597,7 +601,12 @@ var Schedule = {
 				if(data == 1){
 					var li = $('.task'+id);
 					li.next().addClass('first');
-					li.remove();
+					if($('.schedule').find('li').length > 1){
+						li.remove();
+					}else{
+						li.find('.t input').val('快来创建第一个日程').attr('data-tip', '快来创建第一个日程');
+						li.find('.sp').hide()
+					}
 				}else{
 					alert('操作失败');
 				}

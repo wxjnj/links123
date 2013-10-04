@@ -871,6 +871,20 @@ div.gt-baf-translations {
 #J_box_music .with-submenu:hover > .submenu-wrap{
 	max-height: 500px;
 }
+
+#K_ie_flash_overlayer{
+    height:0;
+    width:75px;
+    border-radius:4px;
+    position:absolute;
+    z-index:9;
+    right:0;
+    top:0
+}
+#J_box_music .with-submenu:hover + #K_ie_flash_overlayer{
+    height:82px;
+}
+
 #J_box_music #J_iframe{
 	position: static;
 	z-index: 500;

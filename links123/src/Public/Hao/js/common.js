@@ -3,7 +3,10 @@ $(function(){
 	THL.Init();
 //	Theme.Init();
 });
-
+// 登录注册dialog弹出后，阻止mousemove事件冒泡，避免焦点丢失
+$(document).on('mousemove', '.ui-widget-overlay', function(e){
+	e.stopPropagation();
+});
 var User = {
 	Init: function(){
 		var self = this;

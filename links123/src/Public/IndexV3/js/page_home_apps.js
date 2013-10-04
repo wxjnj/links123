@@ -3,6 +3,7 @@
  * @author: lpgray
  * @datetime: 2013-09-25 13:05
  */
+
 $( function($) {
 	/*
 	 * app开关触发器
@@ -99,7 +100,7 @@ $( function($) {
 			}, 'json');
 		},
 		enableDrag : function(selector) {
-			var self = this, $dragBar = this.$elem.find(selector), 
+			var self = this, $dragBar = this.$elem.find(selector),
 				move = function(e) {
 					var cX = parseInt(e.clientX);
 					var cY = parseInt(e.clientY);
@@ -629,13 +630,14 @@ $( function($) {
 			//解决safari禁用第三方cookie造成天气控件不显示的bug
 			if ($.browser.safari && navigator.userAgent.toLowerCase().match(/chrome/) == null) {
 				var weatherPlugin = '<iframe frameborder="0" scrolling="no" src="/Home/weather/index_new.html" ' + 'style="z-index: 99999; width: 380px; height: 220px; border: 0px;"></iframe>';
-				$('#J_box_weather').html(weatherPlugin);
+				$('#J_box_weather').find('.K_weather_box').remove().end().append(weatherPlugin);
 			}
 		},
 		
 		'#J_box_music' : function( app ){
 		  //启用拖动
-		  //app.enableDrag('.box-header');
+		  //app.enableDrag('.music_icon');
+
 		  //复写默认的点击关闭函数
 		  app.$closeBtn.unbind('click');
 		  app.$closeBtn.bind('click', function(){

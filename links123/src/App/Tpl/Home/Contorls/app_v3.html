@@ -776,8 +776,8 @@
 
 <!-- $天气 -->
 <div style="display:none" id="J_box_weather">
-    <div style="width: 380px; height: 220px;">
-	   <script type="text/javascript" src="http://ext.weather.com.cn/47111.101010100.js"></script>
+    <div class="K_weather_box" style="width: 380px; height: 220px;">
+	   <script type="text/javascript" src="http://ext.weather.com.cn/47111.js"></script>
 	</div>
 </div>
 <!-- 天气$ -->
@@ -788,22 +788,28 @@
 	<div id="J_music_iframe_wrap" style="position: relative;">
 		<div class="channel-select-box">
 			选择电台 :
-			<span id="J_with_submenu" class="with-submenu"> <a><span class="J_root_menu"></span> <span class="down-arrow"></span></a>
+			<span id="J_with_submenu" class="with-submenu" style="position:relative;z-index:10"> <a><span class="J_root_menu"></span> <span class="down-arrow"></span></a>
 				<div class="submenu-wrap">
 					<ul class="submenu">
 						<li>
 							<a data-href="http://web.kugou.com/default.html" data-width="320" data-height="140">酷狗音乐</a>
 						</li>
 						<li>
-							<a data-href="http://kuang.xiami.com/res/kuang/xiamikuang0709.swf" data-width="530" data-height="250">虾米音乐</a>
+							<!--a data-href="http://kuang.xiami.com/res/kuang/xiamikuang0709.swf" data-width="530" data-height="250">虾米音乐</a-->
+							<!--上面直接嵌入swf的方法 连iframe都盖不住 改成web页面嵌入-->
+							<a data-href="http://www.xiami.com/kuang/hao123/" data-width="530" data-height="280">虾米音乐</a>
 						</li>
-						<!-- <li><a data-href="http://y.qq.com/player/" data-width="" data-height="">QQ音乐</a></li> -->
+						<li>
+							<!--ff下qq音乐无法自主调节位置，所以把尺寸设大一点-->
+							<a data-href="http://y.qq.com/webplayer/" data-width="480" data-height="520">QQ音乐</a>
+						</li>
 						<li>
 							<a data-href="http://douban.fm/swf/53053/radioplayer.swf" data-width="450" data-height="170">豆瓣音乐</a>
 						</li>
 					</ul>
 				</div> 
 			</span>
+			<iframe id="K_ie_flash_overlayer" allowtransparency="true" frameborder="0" style=""></iframe>
 		</div>
 		<div id="J_iframe">
 			<iframe scrolling="no" frameborder="0" style="overflow:hidden" allowtransparency="true" src=""></iframe>

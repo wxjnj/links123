@@ -18,7 +18,10 @@ class WeatherAction extends CommonAction {
    		$cip = $_SERVER["REMOTE_ADDR"];  
 		else  
    		$cip = "无法获取！";  
-		$region = file_get_contents('http://ip.taobao.com/service/getIpInfo.php?ip=182.92.247.2');
+
+   		$cip = '60.26.75.239';
+		$region = file_get_contents('http://ip.taobao.com/service/getIpInfo.php?ip='.$cip);
+		$region = json_decode($region);
 		$this->assign('region', $region->data->city);
 		$this->display();
 	}

@@ -27,6 +27,10 @@ $(function() {
 	Theme.Init();
 });
 
+// 登录注册dialog弹出后，阻止mousemove事件冒泡，避免焦点丢失
+$(document).on('mousemove', '.ui-widget-overlay', function(e){
+	e.stopPropagation();
+});
 var User = {
 	Init : function() {
 		var self = this;
@@ -652,6 +656,11 @@ var THL = {
 var Theme = {
 	Init : function() {
 		var self = this;
+
+		//靠右的皮肤 图例靠右显示
+		$('#J_skin_pics').find('.item:eq(3)').css('text-align','center')
+			.end().find('.item:gt(3)').css('text-align', 'right');
+
 		$('#J_Styles>ul>li:not(.skin_selection_li)').on('click', function() {
 			var obj = $(this).closest('li');
 			if (!obj.is('.on')) {
@@ -667,7 +676,7 @@ var Theme = {
 		//皮肤items容器
 		var $skinPicsWrap = $("#J_skin_pics");
 		//点击皮肤分类的链接显示对应的皮肤图片
-		$('#J_skin_selection').on('click', '.J_link_skin_type', function() {
+		$('#J_skin_selection').on('mouseover', '.J_link_skin_type', function() {
 			var $self = $(this);
 			if (!$self.hasClass('active')) {
 				$self.addClass('active').siblings().removeClass('active');
