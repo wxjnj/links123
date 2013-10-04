@@ -109,6 +109,11 @@ $( function($) {
 					var left = cX - self._x - mL;
 					var top = cY - self._y - mT;
 					var headerH = $('#J_header').outerHeight();
+					if(selector == '.music_icon'){
+						self.$elem.css('bottom', 'auto');
+						left -= $(window).scrollLeft();
+						top -= $(window).scrollTop();
+					}
 					if( (top + mT) <= headerH ){
 						top = headerH - mT;
 					}
@@ -119,16 +124,21 @@ $( function($) {
 						'left' : left,
 						'top' : top
 					});
-	
+
 					$(document).bind('mouseup', stop);
 				}, stop = function() {
 					$(document).unbind('mousemove', move);
+					self.$elem.removeClass('K_box_music_move');
 				};
 				
 			$dragBar.css('cursor', 'move');
 			$dragBar.bind('mousedown', function(e) {
 				self._x = parseInt(e.clientX) - parseInt(self.$elem.offset().left);
 				self._y = parseInt(e.clientY) - parseInt(self.$elem.offset().top);
+				if(selector == '.music_icon'){
+					// 用.K_box_music_move覆盖css的transition，消除拖动时的延迟行为
+					self.$elem.addClass('K_box_music_move');
+				}
 				$(document).bind('mousemove', move);
 				$(document).bind('mouseup', stop);
 			});
@@ -428,8 +438,8 @@ $( function($) {
 
 		'#J_box_translate' : function() {
 			var translateLang = 0;
-
-			$('.J_translate_source').select();
+			//$('.J_translate_source').select();	=> 在pc的qq浏览器里会报错
+			$('.J_translate_source').focus();
 
 			$('.J_translate_clear').click(function() {
 				$('#gt-res-dict').html('');
@@ -636,15 +646,18 @@ $( function($) {
 		
 		'#J_box_music' : function( app ){
 		  //启用拖动
-		  //app.enableDrag('.music_icon');
-
+		  app.enableDrag('.music_icon');
 		  //复写默认的点击关闭函数
 		  app.$closeBtn.unbind('click');
 		  app.$closeBtn.bind('click', function(){
 		  	if( $(this).hasClass('closed') ){
 		  		app.show();
 		  	}else{
-		  		app.close();
+		  		app.$elem.css({
+		  			'bottom': '10px',
+		  			'top': 'auto'
+		  		});
+				app.close();
 		  	}
 		  });
 		  //音乐app的关闭效果跟常规不同，它是向左侧寻边收缩，所以重写音乐app的关闭函数
@@ -660,17 +673,24 @@ $( function($) {
 		  }
 		  //音乐app增加关闭&清除iframe.src的按钮
 		  app.$elem.find('.music-close-wrap a').on('click', function(){
-		  	app.$elem.fadeOut();
+		  	app.$elem.fadeOut(function(){
+		  		app.$elem.css({
+		  			'bottom': '10px',
+		  			'top': 'auto'
+		  		});
+		  	});
 		  	$('#J_iframe').find('iframe').removeAttr('src');
 		  });
 
 		  // 音乐app在切换提供商以后会进行大小重设
 		  var appPositionReset = function(){
 		  	var mL = parseInt( app.$elem[0].style.marginLeft );
-		  	app.$elem.css({
-		  		'position' : 'fixed',
-		  		'left' : (0 - mL - 3) + 'px'
-		  	});
+		  	if(app.$elem.css('bottom') == '10px'){
+		  		app.$elem.css({
+		  			'position' : 'fixed',
+		  			'left' : (0 - mL - 3) + 'px'
+		  		});
+		  	}
 		  };
 		  app.show = function(){
 		  	app.$elem.find('.music-close-wrap').show();

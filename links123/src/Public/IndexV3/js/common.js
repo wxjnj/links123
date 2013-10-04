@@ -337,8 +337,9 @@ var User = {
 
 					switch(resp.code) {
 						case 200:
-							if (window.opener) {
-								window.opener.location.reload();
+							if (window.opener && document.referrer) {
+								window.opener.location.href = document.referrer;
+								//window.opener.location.reload();
 							}
 							window.location.href = APP + "Index";
 							break;

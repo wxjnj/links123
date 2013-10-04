@@ -170,9 +170,13 @@ UL.tabs A.current.xl {
 .ranklist .idx{ width: 40px; text-align: center; }
 .ranklist .idx img{ vertical-align: middle; }
 .ranklist .nm{
-	margin-right: 28px;
+	margin-right: 8px;
 	overflow: hidden;
-	width: 42px;
+	width: 55px;
+	white-space: nowrap;      
+ 	overflow: ellipsis;
+    -o-text-overflow: ellipsis;    /* Opera */
+    text-overflow:    ellipsis;    /* IE, Safari (WebKit) */
 }
 .ranklist .sum{
 	background-position: 52px -34px;

@@ -801,10 +801,10 @@ var HelpMouse = {
 				if($('#J_thl_div').is(':hidden') && $('#J_thl_div').attr('data-hide') == 'true'){
 					return;
 				}
-				//if(!isSearchTxtSelected){
+				if(!isSearchTxtSelected){
 					$('#search_text').select().trigger('mouseenter');
 					isSearchTxtSelected = true;
-				//}
+				}
 			}
 			if(mousePos.y > 360){
 				$('#J_thl_div').attr('data-hide', 'true').hide();

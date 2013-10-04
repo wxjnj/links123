@@ -757,6 +757,7 @@ div.gt-baf-translations {
 /** box_translate$ **/
 /** $music **/
 #J_box_music {
+    position:fixed;
 	padding: 0;
 	top: auto;
 	bottom: 10px;
@@ -765,6 +766,13 @@ div.gt-baf-translations {
 	-moz-transitionn: left .6s ease 0;
 	box-shadow: 1px 2px 4px rgba(0,0,0,.5);
 }
+.K_box_music_move {
+    transition : none!important;
+    -webkit-transition: none!important;
+    -moz-transitionn: none!important;
+}
+
+
 /** rewrite music app close style **/
 #J_box_music .links123-close-wrap{
 	width: 21px;
@@ -796,7 +804,7 @@ div.gt-baf-translations {
 	border-radius: 3px 0 0 3px;
 }
 #J_box_music .music_icon{
-	width:88px;
+	width:100%; /* 触发拖动区域 */
 	height:35px;
 	background:url(../imgs/app/music_box_icon.png) 0 0 no-repeat;
 	margin-bottom:5px;
