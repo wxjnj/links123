@@ -792,23 +792,25 @@
 				<div class="submenu-wrap">
 					<ul class="submenu">
 						<li>
-							<a data-href="http://web.kugou.com/default.html" data-width="320" data-height="140">酷狗音乐</a>
+							<a class="kugou-source" data-href="http://web.kugou.com/default.html" data-width="320" data-height="140">酷狗音乐</a>
 						</li>
 						<li>
-							<!--a data-href="http://kuang.xiami.com/res/kuang/xiamikuang0709.swf" data-width="530" data-height="250">虾米音乐</a-->
-							<!--上面直接嵌入swf的方法 连iframe都盖不住 改成web页面嵌入-->
-							<a data-href="http://www.xiami.com/kuang/hao123/" data-width="530" data-height="280">虾米音乐</a>
+							<a class="xiami-source" data-href="http://www.xiami.com/kuang/hao123/" data-width="530" data-height="280">虾米音乐</a>
 						</li>
 						<li>
-							<a data-href="http://y.qq.com/player/" data-width="480" data-height="530">QQ音乐</a>
+							<a class="qq-source"  data-href="http://y.qq.com/player/" data-width="360" data-height="380">QQ音乐</a>
 						</li>
 						<li>
-							<a data-href="http://douban.fm/swf/53053/radioplayer.swf" data-width="450" data-height="170">豆瓣音乐</a>
+							<a class="douban-source"  data-href="http://douban.fm/swf/53053/radioplayer.swf" data-width="450" data-height="170">豆瓣音乐</a>
 						</li>
 					</ul>
 				</div> 
 			</span>
 			<iframe id="K_ie_flash_overlayer" allowtransparency="true" frameborder="0" style=""></iframe>
+		</div>
+		<div id="K_qq_music_browser_tip" style="display:none">
+			<iframe allowtransparency="true" frameborder="0" style=""></iframe>
+			<p>QQ播放器在当前浏览器中无法正常工作，建议更换为Chrome浏览器。</p>
 		</div>
 		<div id="J_iframe">
 			<iframe scrolling="no" frameborder="0" allowtransparency="true" src=""></iframe>

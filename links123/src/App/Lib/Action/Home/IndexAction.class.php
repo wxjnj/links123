@@ -1113,4 +1113,9 @@ class IndexAction extends CommonAction {
 		echo $val;
 		exit;
 	}
+
+	//MacQQBrowser载入定制的豆瓣音乐
+	public function dbfm(){
+		$this->display();
+	}
 }

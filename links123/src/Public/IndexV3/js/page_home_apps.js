@@ -5,6 +5,7 @@
  */
 
 $( function($) {
+
 	/*
 	 * app开关触发器
 	 */
@@ -645,6 +646,16 @@ $( function($) {
 		},
 		
 		'#J_box_music' : function( app ){
+
+		  //MacQQbrowser启用定制版豆瓣fm（iframe直接嵌入无法遮盖）
+		  //qq的web播放器一样不能被遮盖，所以这里嵌入ipad播放器
+		  //等MacQQbrowser升级的时候，需要重新检查这里
+		  var ua = detect.parse(navigator.userAgent);
+		  if(ua.browser.isMacQQBrowser){
+		  	app.$elem.find('.douban-source').attr('data-href', '/Index/dbfm.html');
+		  	app.$elem.find('.qq-source').attr('data-href', 'http://soso.music.qq.com/ipad/player.html').attr('data-height', '430');
+		  }
+
 		  //启用拖动
 		  app.enableDrag('.music_icon');
 		  //复写默认的点击关闭函数
@@ -732,6 +743,11 @@ $( function($) {
 		  	$firstProvider.data('width')
 		  };
 		  var selectChannel = function( btn ){
+		  	if(btn.hasClass('qq-source') && (ua.browser.family == 'Firefox' || ua.browser.family == 'IE')){
+		  		$('#K_qq_music_browser_tip').show();
+		  	}else{
+		  		$('#K_qq_music_browser_tip').hide();
+		  	}
 		  	var iframe = '<iframe scrolling="no" height="'+btn.data('height')+'" width="'+btn.data('width')+'" frameborder="0" style="overflow:hidden" allowtransparency="true" src="'+btn.data('href')+'"></iframe>'
 		    resetAppSizeByProvider( btn );
 		    $('#J_iframe').html( iframe );
