@@ -898,6 +898,25 @@ div.gt-baf-translations {
 	z-index: 500;
 }
 
+#K_qq_music_browser_tip{
+    width:100%;
+    height:80px;
+    margin-bottom:-80px;
+    background:#238b3a;
+    position:relative;
+}
+#K_qq_music_browser_tip p{
+    margin:-50px 10px 0;
+    position:relative;
+    z-index:20;
+}
+#K_qq_music_browser_tip iframe {
+    width:100%;
+    height:80px;
+    position:relative;
+    z-index:19;
+}
+
 /** music$ **/
 /** 登录 、设置框    **/
 .ui-dialog .ui-dialog-content {
