@@ -1,5 +1,4 @@
 $(function(){
-
     $('.show-btns').on('click', 'a', function(){
         var self = $(this);
         if(self.hasClass('current-show')) return;
@@ -52,5 +51,16 @@ $(function(){
             (RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,null])[1]
         );
     }
+
+    //标题过长截取
+    $('.video-list').find('h5').each(function(k, v){
+        //trim
+        var title =  $(v).html().replace(/^[\s(&nbsp;)]+/g,'').replace(/[\s(&nbsp;)]+$/g,'');
+        var st = title;
+        if(title.length > 22){
+            st = title.substring(0, 21) + '...';
+        }
+        $(v).html(st).attr('title', title);
+    });
 
 });
