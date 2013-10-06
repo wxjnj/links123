@@ -217,7 +217,18 @@ $(function() {
 								}).hide();
 							}
 							$("#J_answerButton").addClass("current");
-							$(".answer").slideDown("slow");
+							// 答题区域 如果内容过长 首先修改样式 减少行距。如果减少后还是太长 则给答题区加上滚动条
+							var limitHeight = media_height - parseInt($('.answercontent').css('margin-top'));
+							$(".answer").css('overflow-y', 'hidden').removeClass('soheight').slideDown("slow", function(){
+								var h = $('.answercontent').height();
+								if(h > limitHeight){
+									$('.answer').addClass('soheight');
+									h = $('.answercontent').height();
+									if(h > limitHeight){
+										$('.answer').css('overflow-y', 'scroll');				
+									}
+								}
+							});	
 
 							$(this).text(' 　视  频');
 						}

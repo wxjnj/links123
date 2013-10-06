@@ -391,6 +391,7 @@ ul.kecheng.J_recommend li {
 	font-size:14px;
 	/*cursor:pointer;*/
 }
+
 .J_option{
 	cursor: pointer;
 }
@@ -418,6 +419,14 @@ ul.kecheng.J_recommend li {
 	background:none;
 	color:#333;
 }
+
+.soheight .answercontent{
+	line-height:25px;
+}
+.soheight .gc, .soheight .right, .soheight .wrong{
+	margin-top:0;
+}
+
 .selectBox{width:320px;text-align:center;zoom:1;}
 .selectBox a{font-size:16px; text-decoration:none;
 			 display:block; background:url(../images/ubox-select.gif) left top;padding-left:10px; color:#333;
@@ -580,7 +589,7 @@ a.disabled {
 .videottl a{
 	margin-left:2px;
 	font-size:12px;
-	color:#fff;
+	color:#333;
 	text-decoration:none;
 	display:block;
 	width: 58px;
@@ -590,6 +599,7 @@ a.disabled {
 	float:left;
 }
 .videottl a:hover{
+	color:#fff;
 	background-position: 0 0;
 }
 
