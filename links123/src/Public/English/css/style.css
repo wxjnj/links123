@@ -92,8 +92,9 @@ a:hover, a:active, a:focus {
 }
 .menuleft {
 	width:192px;
-	height:164px;
+	height:161px;
 	background:url(../images/menubg1.png);
+	background-size:100% 100%;
 	float:left;margin-left:20px;
 }
 .menuright {
@@ -585,7 +586,7 @@ a.disabled {
 .videottl a{
 	margin-left:2px;
 	font-size:12px;
-	color:#fff;
+	color:#333;
 	text-decoration:none;
 	display:block;
 	width: 58px;
@@ -595,6 +596,7 @@ a.disabled {
 	float:left;
 }
 .videottl a:hover{
+	color:#ffe3d4;
 	background-position: 0 0;
 }
 
