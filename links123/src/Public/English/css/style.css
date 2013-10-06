@@ -573,15 +573,34 @@ a.disabled {
 	color: #4b2500;
 	font-style: normal;
 }
+
 .videottl a{
-	width: 130px;
-	height: 23px;
-	background: url(../images/videoquickload.png) 0 0 no-repeat;
-	text-indent: -999px;
-	overflow: hidden;
-	position: absolute;
-	right: 10px;
-	top: 6px;
+	margin-left:2px;
+	font-size:12px;
+	color:#fff;
+	text-decoration:none;
+	display:block;
+	width: 58px;
+	height: 25px;
+	line-height:25px;
+	background: url(../images/quickload.png) 0 -26px no-repeat;
+	float:left;
+}
+.videottl a:hover{
+	background-position: 0 0;
+}
+
+.local-play-button {
+	float:right;
+	margin:6px 4px 0 0;
+}
+
+.local-play-button span {
+	float:left;
+	display:block;
+	width:40px;
+	height:25px;
+	background:url(../images/quickload.png) -63px -14px no-repeat;
 }
 
 

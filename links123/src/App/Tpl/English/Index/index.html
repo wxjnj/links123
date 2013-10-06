@@ -227,11 +227,15 @@
                     <label id="J_mediaPath" style="display: none">{$question['media_info']['real_path']}</label>
                     <label id="J_mediaLocalPath" style="display: none">{$question['media_local_path']}</label>
                     <div class="videottl">
-                        <a id="J_mediaLocalPlayButton" href="javascript:;" 
-                           <if condition="(empty($question['media_local_path'])) || (!empty($question['media_local_path'])AND($question['priority_type'] eq 2))">style="display:none"</if> 
-                           >
+                        <div class="local-play-button">
+                            <span></span>
+                            <a id="J_mediaLocalPlayButton" href="javascript:;" 
+                            <if condition="(empty($question['media_local_path'])) || (!empty($question['media_local_path'])AND($question['priority_type'] eq 2))">style="display:none"</if> 
+                            >
                             快速加载
-                        </a>
+                            </a>
+                        </div>
+
                         <em id="J_mediaTitle" title="{$question.name}">{$question.name}</em>
                     </div>
                     <div class="videoplay">
