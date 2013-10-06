@@ -442,6 +442,62 @@ $( function($) {
 			//$('.J_translate_source').select();	=> 在pc的qq浏览器里会报错
 			$('.J_translate_source').focus();
 
+			var lns = {
+				"group-1" : [
+					["sq","阿尔巴尼亚语"],["ar","阿拉伯语"],["az","阿塞拜疆语"],["ga","爱尔兰语"],
+					["et","爱沙尼亚语"],["eu","巴斯克语"],["be","白俄罗斯语"],["bg","保加利亚语"],
+					["is","冰岛语"],["pl","波兰语"]
+				],
+				"group-2" : [
+					["bs","波斯尼亚语"],["fa","波斯语"],["af","布尔语(南非荷兰语)"],["da","丹麦语"],
+					["de","德语"],["ru","俄语"],["fr","法语"],["tl","菲律宾语"],
+					["fi","芬兰语"],["km","高棉语"],["ka","格鲁吉亚语"]
+				],
+				"group-3" : [
+					["gu","古吉拉特语"],["ht","海地克里奥尔语"],["ko","韩语"],["nl","荷兰语"],
+					["gl","加利西亚语"],["ca","加泰罗尼亚语"],["cs","捷克语"],["kn","卡纳达语"],
+					["hr","克罗地亚语"],["la","拉丁语"],["lv","拉脱维亚语"]
+				],
+				"group-4" : [
+					["lo","老挝语"],["lt","立陶宛语"],["ro","罗马尼亚语"],["mt","马耳他语"],
+					["mr","马拉地语"],["ms","马来语"],["mk","马其顿语"],["bn","孟加拉语"],
+					["hmn","苗语"],["no","挪威语"],["pt","葡萄牙语"]
+				],
+				"group-5" : [
+					["ja","日语"],["sv","瑞典语"],["sr","塞尔维亚语"],["eo","世界语"],
+					["sk","斯洛伐克语"],["sl","斯洛文尼亚语"],["sw","斯瓦希里语"],["ceb","宿务语"],
+					["te","泰卢固语"],["ta","泰米尔语"],["th","泰语"]
+				],
+				"group-6" : [
+					["tr","土耳其语"],["cy","威尔士语"],["ur","乌尔都语"],["uk","乌克兰语"],
+					["iw","希伯来语"],["el","希腊语"],["es","西班牙语"],["hu","匈牙利语"],
+					["hy","亚美尼亚语"],["it","意大利语"],["yi","意第绪语"]
+				],
+				"group-7" : [
+					["hi","印地语"],["id","印尼语"],["jw","印尼爪哇语"],["vi","越南语"],
+					["zh-TW","中文(繁体)"],["zh-CN","中文(简体)"],["en","英语"]
+				]
+			};
+
+			var totalHTML = '';
+			var groupHTML;
+			var curClass;
+			$.each(lns, function(idx, group){
+				groupHTML = idx == 'group-1' ? 
+					'<div class="goog-menuitem goog-option goog-option-selected goog-menuitem-highlight J_lang_auto"aria-selected="true" style="-moz-user-select: none;" data-id="auto" id=":2"><div class="goog-menuitem-content"><div class="goog-menuitem-checkbox"></div>检测语言</div></div><div class="goog-menuseparator" role="separator" style="-moz-user-select: none;" id=":3"></div>' : '';
+				$.each(group, function(k, v){
+					curClass = v[0] == 'en' ? 'goog-menuitem-emphasize-highlight' : '';
+					if(v[0] == 'zh-CN' || v[0] == 'en') v[1] = '<b>' + v[1] + '</b>';
+					groupHTML += '<div class="goog-menuitem goog-option ' + curClass + 
+						'" style="-moz-user-select: none;" data-id="' + v[0] + 
+						'"><div class="goog-menuitem-content"><div class="goog-menuitem-checkbox"></div>' + v[1] + 
+						'</div></div>';
+				});
+				groupHTML = '<td><div id="goog-menuitem-' + idx + '" class="goog-menuitem-group" style="width: 100%;">' + groupHTML + '</div></td>';
+				totalHTML += groupHTML;
+			});
+			$('#gt-sl-gms-menu').find('tr').html(totalHTML);
+
 			$('.J_translate_clear').click(function() {
 				$('#gt-res-dict').html('');
 				$('#result_box').html('');
