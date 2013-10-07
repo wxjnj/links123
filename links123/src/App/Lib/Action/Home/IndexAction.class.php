@@ -771,12 +771,25 @@ class IndexAction extends CommonAction {
 	 * @author Frank UPDATE 2013-08-17
 	 */
 	public function google_translate() {
+		//使用get，长文本翻译会出错，改为post
 		$srcLang = $this->_param('sl');
 		$tatLang =$this->_param('tl');
-		$q = rawurlencode(trim($_POST['q']));
-		
-		$url = 'http://translate.google.cn/translate_a/t?client=t&hl=zh-CN&sl=' . $srcLang . '&tl=' . $tatLang . '&ie=UTF-8&oe=UTF-8&multires=1&oc=1&prev=conf&psl=en&ptl=vi&otf=1&it=sel.166768%2Ctgtd.2118&ssel=4&tsel=4&sc=1&q=' . $q;
-		$result = file_get_contents($url);
+		//$q = rawurlencode(trim($_POST['q']));
+		$q = trim($_POST['q']);
+		$data = array ('q' => $q);
+		$data = http_build_query($data);
+		$opts = array (
+			'http' => array (
+			'method' => 'POST',
+			'header'=> "Content-type: application/x-www-form-urlencoded\r\n" .
+			"Content-Length: " . strlen($data) . "\r\n",
+			'content' => $data
+			)
+		);
+		$context = stream_context_create($opts);
+		//$html = file_get_contents('http://localhost/e/admin/test.html', false, $context);
+		$url = 'http://translate.google.cn/translate_a/t?client=t&hl=zh-CN&sl=' . $srcLang . '&tl=' . $tatLang . '&ie=UTF-8&oe=UTF-8&multires=1&oc=1&prev=conf&psl=en&ptl=vi&otf=1&it=sel.166768%2Ctgtd.2118&ssel=4&tsel=4&sc=1';//&q=' . $q;
+		$result = file_get_contents($url, false, $context);
 		$this->ajaxReturn($result, '', true);
 	}
 	

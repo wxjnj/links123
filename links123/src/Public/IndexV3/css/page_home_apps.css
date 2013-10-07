@@ -314,16 +314,23 @@
     color: #333333;
     display: block;
     resize: none;
+    overflow-y: auto; 
+    overflow-x: auto; 
+    padding-right: 20px;
 }
 #source, .gt-hl-layer {
     font-family: arial,sans-serif;
     font-size: 16px;
-    height: 105px;
     margin: 0;
     outline: medium none;
-    padding: 8px 8px 32px;
+    padding: 8px 20px 32px 8px;
     white-space: pre-wrap;
-    width: 100%;
+    -moz-box-sizing:content-box; 
+    width: 599px; 
+    height: 65px; 
+    left: 0px; 
+    top: 0px; 
+
 }
 .gt-hl-layer {
     border: 1px solid #FFFFFF;
@@ -521,6 +528,7 @@
 #gt-res-dict {
     overflow: hidden;
     width: 100%;
+    max-height:400px;
 }
 table.gt-baf-table {
     border-spacing: 0;
