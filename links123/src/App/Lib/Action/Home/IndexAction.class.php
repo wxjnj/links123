@@ -10,6 +10,17 @@ import("@.Common.CommonAction");
 class IndexAction extends CommonAction {
 	
 	/**
+	 * @desc index V4
+	 * 
+	 * @author slate date:2013-10-07
+	 */
+	public function indexV4() {
+		
+		$this->getHeaderInfo();
+		$this->display('index_v4');
+	}
+	
+	/**
 	 * @desc 新首页
 	 *
 	 * @author slate date:2013-09-06

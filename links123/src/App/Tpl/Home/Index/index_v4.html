@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<title>{$title}</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta name="Keywords" content="{$keywords}" />
+	<meta name="Description" content="{$description}" />
+	<!--script src="__PUBLIC__/IndexV4/js/***.js"></script-->
+	<script>
+		var $CONFIG = {
+			'APP' : '__APP__/',
+			'URL' : '__URL__',
+			'PUBLIC' : '__PUBLIC__',
+			'IsLogin' : <empty name="_SESSION[C('MEMBER_AUTH_KEY')]">1<else />0</empty>
+		};
+	</script>
+</head>
+<body>
+</body>
+</html>
