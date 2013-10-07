@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 <head>
 	<meta charset="UTF-8" />
@@ -6,7 +6,9 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<meta name="Keywords" content="{$keywords}" />
 	<meta name="Description" content="{$description}" />
-	<!--script src="__PUBLIC__/IndexV4/js/***.js"></script-->
+	<link rel="stylesheet" href="__PUBLIC__/IndexV4/src/css/base.css" />
+	<link rel="stylesheet/less" href="__PUBLIC__/IndexV4/src/css/style.less" />
+	<script src="__PUBLIC__/IndexV4/src/js/libs/less-1.4.2.min.js"></script>
 	<script>
 		var $CONFIG = {
 			'APP' : '__APP__/',
@@ -14,8 +16,63 @@
 			'PUBLIC' : '__PUBLIC__',
 			'IsLogin' : <empty name="_SESSION[C('MEMBER_AUTH_KEY')]">1<else />0</empty>
 		};
+
+		//调试用 - 清空 less cache
+		 if (typeof localStorage != "undefined") 
+		 	for(i in localStorage) 
+		 		if (i.indexOf('.less') != -1) delete localStorage[i];
 	</script>
 </head>
-<body>
+<body class="widescreen theme-purple">
+
+<div class="top-nav">
+	<div class="top-nav-inner">
+		<div class="zdl">
+			<form id="frm_drct" method="post" action="__APP__/Link/direct/" target="_blank">
+				<input class="ipt ipton" type="text" name="tag" id="direct_text" txt="{$directTip}" value="{$directTip}" autocomplete="on" />
+				<input class="btn J_direct_submit" type="submit" value="提交" />
+			</form>
+		</div>
+		<ul class="nav">
+			<li><a href="http://en.links123.cn/" target="_blank">另客英语</a></li>
+			<li><a href="{:U('Home/Index/nav')}" target="_blank">另客导航</a></li>
+			<li><a href="{:U('/Suggestion')}" target="_blank">留言板</a></li>
+		</ul>
+		<div class="uc">
+			<empty name="_SESSION[C('MEMBER_AUTH_KEY')]">
+			<a class="join J_SignUp" href="javascript:;">注&nbsp;册</a><a class="login J_SignIn" href="javascript:;">登&nbsp;录</a>
+			<else />
+			<img class="uc-avatar" src="__PUBLIC__/IndexV4/src/imgs/avatar-demo.png" />
+			<div class="uc-menu">
+				<div class="nm">
+					<p>Hi，{$Think.session.nickname} <em></em></p>
+					<ul>
+						<li><a target="_blank" href="/Members/Index">个人中心</a></li>
+						<li><a target="_blank" href="/Members/Collection">我的收藏</a></li>
+						<li><a target="_blank" href="/Members/Recommend">我的推荐</a></li>
+						<li><a target="_blank" href="/Members/Comment">我的说说</a></li>
+						<li><a href="/Members/Suggestion">留言板</a></li>
+						<li class="logout"><a href="/Members/Logout">退出登录</a></li>
+					</ul>
+				</div>
+			</div>
+			</empty>
+		</div>
+	</div>
+</div><!--// .top-nav-->
+<div class="header">
+	<div class="header-inner">
+		<h1>
+			<a class="logo" href="/" rel="home">另客网</a>
+		</h1>
+	</div><!--// .header-top-bar -->
+</div><!--// .header -->
+
+<div class="container" style="height:1000px">
+</div><!--// .container-->
+
+<div class="footer">
+</div><!--// .footer -->
+<script src="__PUBLIC__/IndexV4/src/js/libs/jquery-1.10.2.min.js"></script>
 </body>
 </html>
