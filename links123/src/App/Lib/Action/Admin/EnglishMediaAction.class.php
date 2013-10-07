@@ -73,6 +73,12 @@ class EnglishMediaAction extends CommonAction {
             }
             $param['ted'] = intval($_REQUEST['ted']);
         }
+        //omg
+        if (isset($_REQUEST['omg'])) {
+        	$omg = intval($this->_param('omg'));
+        	$map['englishMedia.omg'] = $omg;
+        	$param['omg'] = $omg;
+        }
         //媒体缩略图
         if (isset($_REQUEST['thumb'])) {
             if (intval($_REQUEST['thumb']) == 1) {
@@ -234,10 +240,16 @@ class EnglishMediaAction extends CommonAction {
             }
             $model->ted = intval($tedId);
         }
+        $media['media_id'] = $model->id;
+        $media['media_source_url'] = $model->media_source_url;
         //保存当前数据对象
         $list = $model->add();
         if ($list !== false) { //保存成功
             $model->commit();
+            
+            //TODO 推荐视频解析 @author slate date 20131001
+            $model->analysisMediaPlayCode($media);
+            
             $this->success('新增成功!', cookie('_currentUrl_'));
         } else {
             $model->rollback();
@@ -328,10 +340,19 @@ class EnglishMediaAction extends CommonAction {
                 $model->ted = $tedId;
             }
         }
+        $media['media_id'] = $model->id;
+        $media['media_source_url'] = $model->media_source_url;
         // 更新数据
         $list = $model->save();
         if (false !== $list) {
             $model->commit();
+            
+            //TODO 推荐视频解析 @author slate date 20131001
+            if (!$model->play_code) {
+	            
+	            $model->analysisMediaPlayCode($media);
+            }
+            
             //成功提示
             $this->success('编辑成功!', cookie('_currentUrl_'));
         } else {
@@ -465,6 +486,10 @@ class EnglishMediaAction extends CommonAction {
                     $data['special_recommend'] = 0;
                 }
             }
+            if (isset($_REQUEST['targetDifficulty'])) {
+            	$data['difficulty'] = intval($_REQUEST['targetDifficulty']);
+            }
+            
             if (isset($_REQUEST['targetTed'])) {
                 $data['ted'] = intval($_REQUEST['targetTed']);
             }
