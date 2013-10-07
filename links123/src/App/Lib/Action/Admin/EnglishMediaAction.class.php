@@ -73,6 +73,12 @@ class EnglishMediaAction extends CommonAction {
             }
             $param['ted'] = intval($_REQUEST['ted']);
         }
+        //omg
+        if (isset($_REQUEST['omg'])) {
+        	$omg = intval($this->_param('omg'));
+        	$map['englishMedia.omg'] = $omg;
+        	$param['omg'] = $omg;
+        }
         //媒体缩略图
         if (isset($_REQUEST['thumb'])) {
             if (intval($_REQUEST['thumb']) == 1) {
@@ -480,6 +486,10 @@ class EnglishMediaAction extends CommonAction {
                     $data['special_recommend'] = 0;
                 }
             }
+            if (isset($_REQUEST['targetDifficulty'])) {
+            	$data['difficulty'] = intval($_REQUEST['targetDifficulty']);
+            }
+            
             if (isset($_REQUEST['targetTed'])) {
                 $data['ted'] = intval($_REQUEST['targetTed']);
             }

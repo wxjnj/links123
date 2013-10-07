@@ -34,6 +34,14 @@
             <label style='float: left; margin: 5px 5px 0px 0px;'>TED:</label>
             <label style='float: left; margin: 5px 5px 0px 0px;'>是<input style='float: left; margin: 3px 2px 0px 0px;' type='checkbox' value="1" name="ted"/></label>
             <label style='float: left; margin: 5px 5px 0px 0px;'>否<input style='float: left; margin: 3px 2px 0px 0px;' type='checkbox' value="0" name="ted"/></label>
+            <label style='float: left; margin: 5px 5px 0px 0px;'>选择等级：</label>
+            <select id="selectDifficulty" style='float:left;margin:0 5px;'>
+                 <option value="0">全部</option>
+                 <option value="1" >初级</option>
+                 <option value="2" >中级</option>
+                 <option value="3">高级</option>
+            </select>
+             
             <html:imageBtn name="groupAct" click="groupAct()" style="hMargin fLeft" />
         </div>
 
@@ -121,6 +129,10 @@
                         <input class="checkbox" type="checkbox" value="0" name="ted" <eq name="param['ted']" value="0">checked="checked"</eq>>
                         否
                     </label>&nbsp;&nbsp;
+                    <label>
+                        <input class="checkbox" type="checkbox" value="1" name="omg" <eq name="param['omg']" value="1">checked="checked"</eq>>
+                        OMG
+                    </label>&nbsp;
                     状态：
                     <label>
                         <input class="checkbox" type="checkbox" value="1" name="status" <if condition="$param['status'] eq 1">checked="checked"</if>>
@@ -227,14 +239,15 @@
         var targetSubject = $("#selectSubjectSource").val();
         var targetRecommend = $("input[name='recommend']").filter(":checked").val();
         var targetSpecialRecommend = $("input[name='special_recommend']").filter(":checked").val();
-         var targetTed = $("input[name='ted']").filter(":checked").val();
-        if (parseInt(targetSubject) == -1 && typeof targetRecommend=="undefined" && typeof targetSpecialRecommend=="undefined"&& typeof targetTed=="undefined") {
+        var targetTed = $("input[name='ted']").filter(":checked").val();
+        var targetDifficulty = $("#selectDifficulty").val();
+        if (parseInt(targetSubject) == -1 && typeof targetRecommend=="undefined" && typeof targetSpecialRecommend=="undefined" && typeof targetTed=="undefined" && typeof targetDifficulty=="undefined") {
             alert("请选择需要设置成的参数！");
             return false;
         }
         if (confirm("注意！确认对所选项进行批量操作？")) {
             $("#load_dialog").window("open");
-            $.post("__URL__/groupSet", {id: id, targetSubject: targetSubject, targetRecommend: targetRecommend, targetSpecialRecommend: targetSpecialRecommend,targetTed:targetTed},
+            $.post("__URL__/groupSet", {id: id, targetSubject: targetSubject, targetRecommend: targetRecommend, targetSpecialRecommend: targetSpecialRecommend,targetTed:targetTed,targetDifficulty:targetDifficulty},
             function(msg) {
                 if (msg) {
                     alert(msg.info);
