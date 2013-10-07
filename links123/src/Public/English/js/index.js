@@ -2021,6 +2021,11 @@ function resetMediaTitle() {
 	text = text.substr(0, index);
 	if (text.length < length) {
 		text += "...";
+		$('.videottl').css('text-align', 'left');
+		$("#J_mediaTitle").css('margin-left', '10px');
+	}else{
+		$('.videottl').css('text-align', 'center');
+		$("#J_mediaTitle").css('margin-left', '0px');
 	}
 	$("#J_mediaTitle").text(text);
 	// $("#J_mediaTitle").tooltip();
