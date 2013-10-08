@@ -1,9 +1,9 @@
 /*
- * name: calender
- * author: lpgray
- * datetime: 2013-10-08 12:54
+ * @name: calender
+ * @author: lpgray
+ * @datetime: 2013-10-08 12:54
  * */
-(function($, exports){
+(function($){
   var weeks = ['日','一','二','三','四','五','六'];
   
   var Calender = function( tableId, chooserId, reqUrl ){
@@ -174,6 +174,4 @@
       });
     }
   }
-  
-  exports.Calender = Calender;
-}(jQuery, window));
+}(jQuery));

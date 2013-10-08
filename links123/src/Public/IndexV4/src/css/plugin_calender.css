@@ -20,6 +20,10 @@
     position: absolute;
     left: 20px;
 }
+.links123_calender .c_header .c_chooser_date span{
+    display: inline-block;
+    margin: 0 20px;
+}
 .links123_calender .c_header .c_chooser_view{
     position: absolute;
     right: 20px;
@@ -35,8 +39,59 @@
     line-height: 26px;
     text-align: center;
 }
+.links123_calender .c_header .c_chooser_view a.active,
 .links123_calender .c_header .c_chooser_view a:hover{
     background: #502D5C;                                     /* 502D5C */
     color: #fff;                                             /* fff */
     text-decoration: none;
 }
+.links123_calender .c_body{
+	height: 400px;
+	position: relative;
+	margin-top: 3px;
+}
+/* START day_view */
+.links123_calender.day_view .c_body .left_side{
+	position: absolute;
+	width: 40%;
+	height: 100%;
+	left: 0;
+	top: 0;
+}
+.links123_calender.day_view .c_body .right_side{
+	margin-left: 40%;
+	height: 100%;
+	position: relative;
+}
+.links123_calender.day_view .c_inner{
+	height: 100%;
+	margin-right: 3px;
+	background: #ECDADF;									/* ECDADF */
+}
+.links123_calender.day_view .left_side .small_calendar_wrap{
+	height: 60%;
+}
+.links123_calender.day_view .left_side .task_list_wrap{
+	padding-top: 3px;
+	-webkit-box-sizing: border-box;
+	   -moz-box-sizing: border-box;
+		    box-sizing: border-box;
+	height: 40%;
+}
+.links123_calender.day_view .main_task_list_wrap{
+	height: 100%;
+	width: 100%;
+	background: #ECDADF;									/* ECDADF */
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+.links123_calender.day_view .burn_down_chart{
+	position: absolute;
+	height: 50%;
+	width: 100%;
+	background: #906688;									/* 906688 */
+	top: 0;
+	left: 0;
+}
+/* END day_view */
