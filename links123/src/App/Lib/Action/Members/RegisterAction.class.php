@@ -99,6 +99,9 @@ class RegisterAction extends CommonAction
 			
 			$home_session_expire = intval(D("Variable")->getVariable("home_session_expire"));
 			cookie(md5("home_session_expire"), time(), $home_session_expire);
+            
+            $str = $_SESSION[C('MEMBER_AUTH_KEY')] . "|" . md5($data['password'] . $data['nickname']);
+            cookie(md5(C('MEMBER_AUTH_KEY')), $str, intval(D("Variable")->getVariable("home_session_expire")));//设置cookie记录用户登录信息，提供给英语角同步登录 Adam 2013.09.27 @todo 安全性，下一步进行单点登录优化 
 			
 			echo "regOK";
 		} else {
