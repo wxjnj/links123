@@ -8,14 +8,51 @@ input:focus {
 a:hover{
     text-decoration: none;
 }
-
 .border-radius (@radius) {
     border-radius: @radius;
     -moz-border-radius: @radius;
     -webkit-border-radius: @radius;
 }
 
+.mini-tip {
+    -webkit-text-size-adjust: none; 
+    font-size: 10px;
+    color: #7e6b5a;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    .mini-tip-l {
+        float: left;
+        width: 9px;
+        height: 14px;
+        background: url(../imgs/mini-tip-l.png) 0 0 no-repeat;
+    }
+    .mini-tip-c {
+        float: left;
+        height: 14px;
+        line-height: 14px;
+        background: url(../imgs/mini-tip-c.png) 0 0 repeat;
+    }
+    .mini-tip-r {
+        float: left;
+        width: 9px;
+        height: 14px;
+        background: url(../imgs/mini-tip-r.png) 0 0 no-repeat;
+    }
+}
+
+
+
+@import 'base.less';
 @import 'top-nav.less';
 @import 'header.less';
-@import 'theme.less';
+@import 'zld.less';
+@import 'apps.less';
+@import 'extra.less';
+@import 'extra-music.less';
+@import 'extra-movie.less';
+@import 'extra-calendar.less';
+@import 'extra-ted.less';
+@import 'footer.less';
 @import 'screen.less';

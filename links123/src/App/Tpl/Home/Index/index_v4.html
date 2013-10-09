@@ -6,9 +6,6 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<meta name="Keywords" content="{$keywords}" />
 	<meta name="Description" content="{$description}" />
-	<link rel="stylesheet" href="__PUBLIC__/IndexV4/src/css/base.css" />
-	<link rel="stylesheet/less" href="__PUBLIC__/IndexV4/src/css/style.less" />
-	<script src="__PUBLIC__/IndexV4/src/js/libs/less-1.4.2.min.js"></script>
 	<script>
 		var $CONFIG = {
 			'APP' : '__APP__/',
@@ -16,14 +13,11 @@
 			'PUBLIC' : '__PUBLIC__',
 			'IsLogin' : <empty name="_SESSION[C('MEMBER_AUTH_KEY')]">1<else />0</empty>
 		};
-
-		//调试用 - 清空 less cache
-		 if (typeof localStorage != "undefined") 
-		 	for(i in localStorage) 
-		 		if (i.indexOf('.less') != -1) delete localStorage[i];
 	</script>
+	<!-- 静态资源 dev or build -->
+	<include file="Contorls:statics_v4_dev" />
 </head>
-<body class="widescreen theme-purple">
+<body class="widescreen theme-purple theme-purple-bg-1">
 
 <div class="top-nav">
 	<div class="top-nav-inner">
@@ -32,12 +26,12 @@
 				<input class="ipt ipton" type="text" name="tag" id="direct_text" txt="{$directTip}" value="{$directTip}" autocomplete="on" />
 				<input class="btn J_direct_submit" type="submit" value="提交" />
 			</form>
-		</div>
+		</div><!-- // .zdl -->
 		<ul class="nav">
 			<li><a href="http://en.links123.cn/" target="_blank">另客英语</a></li>
 			<li><a href="{:U('Home/Index/nav')}" target="_blank">另客导航</a></li>
 			<li><a href="{:U('/Suggestion')}" target="_blank">留言板</a></li>
-		</ul>
+		</ul><!-- // .nav -->
 		<div class="uc">
 			<empty name="_SESSION[C('MEMBER_AUTH_KEY')]">
 			<a class="join J_SignUp" href="javascript:;">注&nbsp;册</a><a class="login J_SignIn" href="javascript:;">登&nbsp;录</a>
@@ -55,9 +49,9 @@
 						<li class="logout"><a href="/Members/Logout">退出登录</a></li>
 					</ul>
 				</div>
-			</div>
+			</div><!-- // .uc-menu -->
 			</empty>
-		</div>
+		</div><!-- // .uc -->
 	</div>
 </div><!--// .top-nav-->
 <div class="header">
@@ -65,14 +59,101 @@
 		<h1>
 			<a class="logo" href="/" rel="home">另客网</a>
 		</h1>
-	</div><!--// .header-top-bar -->
+
+		<div class="thl">
+			<form action="" id="searchForm">
+				<input name="thl" id="J_thl" type="hidden" value="">
+				<input name="tid" id="J_tid" type="hidden" value="">
+				<input name="q" id="J_q" type="hidden" value="">
+				<input type="text" value="" style="display:none;" />
+				<input type="hidden" id="tidNow" value="{$tidNow}" />
+				<div class="cate cate-in" id="J_thl_div" >
+					<volist name="thl_list" id="vo" key="m"><a <eq name="thlNow" value="$vo['thl']">class="on"</eq> href="#">{$vo['thl']}</a><if condition='$m neq 12'>&nbsp;-&nbsp;</if></volist>
+				</div>                  
+				<div class="subcate">
+					<dl>
+						<volist name="thl_list" id="vo" key="i">
+							<dd class="J_thlz" <neq name="vo['thl']" value="$thlNow">style="display:none;"</neq> >
+								<volist name="vo['thlz']" id="thlz" key="j"><a <if condition='$thlz["id"] eq $tidNow'>class="on"</if> href="#" title="{$thlz['tip']}" ndk="{$thlz['needkey']}" url="{$thlz['url']}" tid="{$thlz['id']}" tag_name="{$thlz['url_tag_name']}">{$thlz['name']}</a><neq name="vo['thlz_len']" value="$j">&nbsp;-&nbsp;</neq></volist>
+							</dd>
+						</volist>
+					</dl>
+				</div>
+				<div class="ctls">
+					<input type="text" id="search_text" class="ipt" x-webkit-speech lang="zh-CN" value="{$_COOKIE['keyword']}" autocomplete="off" />
+					<input type="hidden" id="search_text_o" />
+					<input class="btn" type="submit" value="" id="btn_search" />
+				</div>
+			</form>
+		</div><!-- // .thl -->
+
+		<div class="header-weather">
+			<span class="region">成都</span>
+			<span class="degree">23°</span>
+			<span class="info">多云转阴，空气质量良</span>
+		</div><!-- // .header-weather -->
+
+	</div><!--// .header-inner -->
 </div><!--// .header -->
 
-<div class="container" style="height:1000px">
+<div class="container">
+	<div class="zld">
+		<form action="{:U('Link/index')}?mod=myarea" id="J_MyAreaForm" target="_blank" method="post">
+			<input type="hidden" name="url" value="" />
+		</form>
+		<ul id="J_sortable">
+		<volist name="_SESSION['myarea_sort']" id="areaid">
+		<if condition="$_SESSION['arealist'][$areaid]['id'] neq ''">
+			<li id="{$_SESSION['arealist'][$areaid].id}" url="{:U('Link/index')}?mod=myarea&url={$_SESSION['arealist'][$areaid].url}" data-id="{$_SESSION['arealist'][$areaid].id}" data-url="{$_SESSION['arealist'][$areaid].url}">
+				<span>{$_SESSION['arealist'][$areaid]['web_name']}</span>
+			</li>
+		</if>
+		</volist>
+			<li class="add">
+				<span class="ctl">+</span>
+				<div class="mini-tip">
+					<div class="mini-tip-l"></div>
+					<div class="mini-tip-c">请登陆后添加网址</div>
+					<div class="mini-tip-r"></div>
+				</div>
+			</li>
+		</ul>
+	</div><!-- // .zld -->
+	<div class="apps">
+	</div><!-- // .apps -->
+	<div class="extra extra-double">
+		<!-- 两列： .extra-double -->
+		<!-- 三列： .extra-triple -->
+		<div class="extra-music">
+		</div><!-- // .box-music -->
+		<div class="extra-movie">
+		</div><!-- // .box-movie -->
+		<div class="extra-calendar">
+		</div><!-- // .box-canlendar -->
+		<div class="extra-ted">
+		</div><!-- // .box-ted -->
+	</div><!--// .extra -->
 </div><!--// .container-->
 
 <div class="footer">
+	<div class="footer-links">
+	</div><!-- .footer-links -->
+	<div class="footer-line"></div>
+	<div class="footer-nav">
+		<ul>
+			<li><a target="_blank" href="/About.html">关于</a></li>
+			<li><a target="_blank" href="/">帮助</a></li>
+			<li><a target="_blank" href="/">博客</a></li>
+			<li><a target="_blank" href="/">状态</a></li>
+			<li><a target="_blank" href="/">广告商</a></li>
+			<li><a target="_blank" href="/">企业</a></li>
+			<li><a target="_blank" href="/">媒体</a></li>
+			<li><a target="_blank" href="/">开发者</a></li>
+			<li><a target="_blank" href="/">资源</a></li>
+			<li><a target="_blank" href="/">目录</a></li>
+		</ul>
+		<p>沪ICP备12036721号 &copy; 2013 另客</p>
+	</div><!-- .footer-siteinfo -->
 </div><!--// .footer -->
-<script src="__PUBLIC__/IndexV4/src/js/libs/jquery-1.10.2.min.js"></script>
 </body>
 </html>
