@@ -1,0 +1,251 @@
+@wide_width: 1170px;
+
+.widescreen {
+    .top-nav-inner,
+    .header-inner,
+    .container,
+    .footer-links,
+    .footer-nav  {
+        width: @wide_width;
+    }
+    .thl {
+        width: 430px;
+    }
+
+    .extra-double {
+
+        @space: 14px;
+        @height_big: 425px;
+        @height_small: 235px;
+        @width_part: (@wide_width - @space) / 2;
+
+        .extra-music,
+        .extra-movie,
+        .extra-calendar,
+        .extra-ted {
+            width: @width_part;
+        }
+
+        .extra-music {
+            height: @height_small;
+            img {
+                width: 310px;
+                height: @height_small;
+            }
+
+            .music-info {
+                width: @width_part - 310 - 50;
+                height: @height_small - 50;
+                margin-top: -@height_small;
+                margin-left: 310px;
+                padding: 25px;
+
+                .lyrics {
+                    margin-top: 10px;
+                    .more-lyrics {
+                        display: none;
+                    }
+                }
+
+                .music-slide-btns {
+                    position: absolute;
+                    right: 25px;
+                    bottom: 15px;
+                }
+            }
+        }
+        .extra-movie {
+            margin-top: @space;
+            height: @height_big;
+            img {
+                width: 310px;
+                height: @height_big;
+            }
+            .rate {
+                color: #555;
+                margin: 10px 0;
+                line-height: 30px;
+            }
+            .movie-slide-btns {
+                width: 310px;
+                position: absolute;
+                bottom: 20px;
+                margin-left: 127px;
+                li {
+                    margin-right: 10px;
+                }
+            }
+            .movie-info {
+                margin-top: -@height_big;
+                margin-left: 310px;
+                height: @height_big - 40;
+                ul {
+                    position: absolute;
+                    bottom: 25px;
+                    margin-left: 6px;
+                }
+            }
+        }
+        .extra-calendar {
+            margin-top: -(@height_big + @height_small + @space);
+            margin-left: @width_part + @space;
+            height: @height_big;
+        }
+        .extra-ted {
+            margin-top: @space;
+            margin-left: @width_part + @space;;
+            height: @height_small;
+
+            ul {
+                width: 585px;
+            }
+
+            li {
+                float: left;
+                width: (@width_part - 14)/3;
+                height: 115px;
+                margin-right: 7px;
+                margin-bottom: 5px;
+            }
+
+            img, .ted-play-btn {
+                width: (@width_part - 14)/3;
+                height: 115px;
+            }
+            .ted-play-btn {
+                margin-top: -115px;
+            }
+        }
+    }
+    .extra-triple {
+
+        @width_big: 512px;
+        @width_small: 315px;
+        @space: 14px;
+        @height_all: 610px;
+        @height_calendar: 382px;
+        @height_ted: 214px;
+
+        .extra-music,
+        .extra-movie {
+            width: @width_small;
+        }
+
+        .extra-calendar,
+        .extra-ted {
+            width: @width_big;
+        }
+
+        .extra-movie {
+            margin-top: -@height_all;
+            margin-left: @width_big + @space;
+            height: @height_all;
+
+            img {
+                width: @width_small;
+                height: 442px;
+            }
+       
+
+            .movie-slide-btns {
+                position: absolute;
+                z-index: 1;
+                margin-top: 10px;
+                right: 10px;
+                li {
+                    margin: 2px;
+                    width: 18px;
+                    height: 18px; 
+                    background-repeat: no-repeat;
+                    background-size: auto 100%; 
+                }
+                .prev {
+                    background-position: 1px 0;
+                }
+                .next {
+                    background-position: -16px 0;
+                }
+            }
+
+            .movie-info {
+                padding: 10px 15px;
+                height: @height_all - 462px;
+
+                dt, dd {
+                    display: none;
+                }
+
+                .rate {
+                    color: #555;
+                    margin: 0;
+                    line-height: 30px;
+                }     
+
+                .main-desc {
+                    display: block;
+                }
+
+                ul {
+                    position: absolute;
+                    bottom: 15px;
+                    margin-left: -2px;
+                }
+            }
+
+        }
+        .extra-music {
+            margin-left: @width_big + @width_small + @space * 2;
+            height: @height_all;
+
+            img {
+                width: @width_small;
+                height: 239px;
+            }
+
+            .music-info {
+                height: @height_all - 239 - 30;
+                padding: 15px;
+
+                .lyrics {
+                    margin-top: 10px;
+                }
+
+                .music-slide-btns {
+                    position: absolute;
+                    left: 15px;
+                    bottom: 15px;
+                }
+            }
+        }
+
+        .extra-calendar {
+            margin-top: -@height_all;
+            height: @height_calendar;
+        }
+
+        .extra-ted {
+            margin-top: @space;
+            height: @height_ted;
+
+            ul {
+                width: @width_big + @space / 2;
+            }
+
+            li {
+                float: left;
+                width: (@width_big - @space) / 3;
+                height: (@height_ted - 8) / 2;
+                margin-right: @space / 2;
+                margin-bottom: 8px;
+            }
+
+            img, .ted-play-btn {
+                width: (@width_big - @space) / 3;
+                height: (@height_ted - 8) / 2;
+            }
+            .ted-play-btn {
+                margin-top: -(@height_ted - 8) / 2;
+            }
+        }
+    }
+}

@@ -1,3 +1,43 @@
 .extra-movie {
+    position: relative;
     background: url(../imgs/white_60.png) 0 0 repeat;
 }
+
+.movie-info {
+    padding: 20px;
+    overflow: hidden;
+    position: relative;
+    h5 {
+        font-size: 16px;
+    }
+    .rate {
+        color: #555;
+        margin: 10px 0;
+        line-height: 30px;
+    }
+    .desc {
+        color: #555;
+        margin-top: 5px;
+        line-height: 18px;
+        dt {
+            float: left;
+            margin-right: 5px;
+            overflow: hidden;
+            clear: left;
+            white-space: nowrap;
+        }
+    }
+    li {
+        float: left;
+        margin: 2px;
+    }
+    li a{
+        display: block;
+        text-align: center;
+        width: 102px;
+        height: 27px;
+        line-height: 27px;
+        .border-radius(5px);
+    }
+}
+

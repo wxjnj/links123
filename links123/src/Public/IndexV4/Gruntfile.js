@@ -28,7 +28,8 @@ module.exports = function(grunt) {
                         'src/js/libs/jquery-1.10.2.min.js',
                         'src/js/modules/es5-shim.js',
                         'src/js/modules/json2.js',
-                        'src/js/modules/jquery.cookies.2.2.0.min.js'
+                        'src/js/modules/jquery.cookies.2.2.0.min.js',
+                        'src/js/modules/jquery.rateit.js'
                     ]
                 }
             }
