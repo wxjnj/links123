@@ -204,6 +204,8 @@
 	padding: 0;
 	position: relative;
 	left: -2px;
+	border-spacing: 2px;
+	border-collapse: separate;
 }
 .links123_calender .c_body > table th, td, thead, tbody{
 	padding: 0;
@@ -223,6 +225,7 @@
 .links123_calender.month_view .c_body{
 	margin: 0;
 }
+
 /* START week_view */
 .links123_calender.week_view td{
 	height: 300px;

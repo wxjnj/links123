@@ -4,13 +4,17 @@
  * @datetime: 2013-10-08 12:54
  * */
 (function($){
-  var weeks = ['日','一','二','三','四','五','六'];
-  
-  var Calender = function( tableId, chooserId, reqUrl ){
-    this.$table = $('#' + tableId);
-    this.$chooser = $('#' + chooserId);
-    this.reqUrl = reqUrl;
-    this.data = {}
+  var config = {};
+  config.CHS_WEEKS = ['日','一','二','三','四','五','六'];
+  config.CHS_MONTHS = ['一','二','三','四','五','六','七','八','九','十','十一','十二'];
+  config.ENG_WEEKS = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+  config.ENG_MONTHS = [];
+
+  var weeks = config.CHS_WEEKS;
+
+  var Calender = function( elem, chooserId ){
+    this.$table = elem;
+    //this.$chooser = $('#' + chooserId);
     this.init();
   }
   
@@ -20,34 +24,28 @@
       
       this.current = {
         year : date.getFullYear(),
-        month : date.getMonth() + 1,
+        month : date.getMonth(),
         day : date.getDate(),
         week : date.getDay()
       }
       
       this.date = date;
       this.year = date.getFullYear();
-      this.month = date.getMonth() + 1;
+      this.month = date.getMonth();
       this.day = date.getDate();
       this.week = date.getDay();
       
       this.renderHeader();
-      
-      this.changeMonth();
-      
-      this.bindEventHandler();
+      //this.changeMonth();
+      //this.bindEventHandler();
     },
     renderHeader : function(){
-      this.$table.html('');
-      var $thead = $('<thead />');
-      $thead.html('<tr></tr>');
-      $thr = $thead.children('tr');
+      var back = "<tbody><tr>";
       for(var i in weeks){
-        $thr.append('<th>' + weeks[i] + '</th>');
+        back += '<th>' + weeks[i] + '</th>';
       }
-      this.$thead = $thead;
-      this.$table.html($thead);
-      this.$table.append('<tbody></tbody>');
+      back += "</tr></tbody>";
+      this.$table.html(back);
       this.$tbody = this.$table.children('tbody');
     },
     renderChooser : function(){
@@ -174,4 +172,15 @@
       });
     }
   }
+
+  /*
+   * 必须使用table调用
+   */
+  $.fn.linkscalender = function(){
+    var c = this.data('calender');
+    if(!c) this.data('calender', c = new Calender(this));
+    return this;
+  }
+
+  $('#J_dayViewCalender').linkscalender();
 }(jQuery));
