@@ -186,7 +186,8 @@ $(function() {
 			function(data){
 				if ( data.indexOf("loginOK") >= 0 ) {
                     if(window.opener){
-                        window.opener.location.reload();
+                    	window.opener.location.href = document.referrer;
+                        //window.opener.location.reload();
                     }
 					window.location.href = APP+"Index";
 				}else{
