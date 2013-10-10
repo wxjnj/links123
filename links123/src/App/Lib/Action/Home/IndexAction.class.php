@@ -15,7 +15,8 @@ class IndexAction extends CommonAction {
 	 * @author slate date:2013-10-07
 	 */
 	public function indexV4() {
-		
+		$app_list = $this->getApps($_SESSION['app_sort']);
+		$this->assign('app_list', $app_list);
 		$this->getHeaderInfo();
 		$this->display('index_v4');
 	}

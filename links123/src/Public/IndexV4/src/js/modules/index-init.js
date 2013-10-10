@@ -16,6 +16,10 @@
     }
 }());
 
+var APP = $CONFIG['APP'];
+var URL = $CONFIG['URL'];
+var PUBLIC = $CONFIG['PUBLIC'];
+
 $(function(){
 
     User.Init();

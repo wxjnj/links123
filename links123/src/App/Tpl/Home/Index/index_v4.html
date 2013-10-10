@@ -62,6 +62,12 @@
 			</div><!-- // .uc-menu -->
 			</empty>
 		</div><!-- // .uc -->
+		<div class="screen-theme">
+			<b></b>
+			<a class="change-theme-btn" href="#">换肤</a>
+			<span> | </span>
+			<a class="change-screen-btn" href="#">窄屏</a>
+		</div><!-- // .screen-theme -->
 	</div>
 </div><!--// .top-nav-->
 <div class="header">
@@ -130,6 +136,26 @@
 		</ul>
 	</div><!-- // .zld -->
 	<div class="apps">
+		<ul id="J_Apps">
+		<volist name="app_list" id="vo">
+			<li id="{$vo.appId}" <if condition="$vo.appClass neq ''">class="{$vo.appClass}"</if>>
+				<a data-href="{$vo.appLink}" <if condition="$vo.isTarget eq '1'">target="_blank"</if> class="{$vo.linkClass}">
+				<if condition="$vo.appName eq '日&nbsp;历'">
+					<p class="ct">
+						<b>{:date('D')}</b>
+						<i>{:date('d')}</i>
+					</p>
+				<else />
+					<p class="av"><img src="{$vo.appIcon}" /></p>
+					</if>
+					<p class="nm">{$vo.appName}</p>
+				</a>
+			</li>
+		</volist>
+			<li class="add">
+				<span class="ctl">+</span>
+			</li>
+		</ul>
 	</div><!-- // .apps -->
 	<div class="extra extra-double">
 		<!-- 两列： .extra-double -->
@@ -230,8 +256,44 @@
 	</div><!--// .extra -->
 </div><!--// .container-->
 
+<include file="Contorls:app_v3" />
+
 <div class="footer">
 	<div class="footer-links">
+		<table>
+			<tr>
+				<td width="16%">
+					<a href="#">另客英语</a> <br />
+					<a href="#">另客导航</a> <br />
+					<a href="#">TED发现</a>
+				</td>
+				<td width="16%">
+					<a href="#">另客英语</a> <br />
+					<a href="#">另客导航</a> <br />
+					<a href="#">TED发现</a>
+				</td>
+				<td width="16%">
+					<a>申请认证</a> <a>开放平台</a> <br />
+					<a>企业微博</a> <a>连接网站</a> <br />
+					<a>微博标识</a> <a>广告服务</a>
+				</td>
+				<td width="16%" >
+					<a href="#">另客英语</a> <br />
+					<a href="#">另客导航</a> <br />
+					<a href="#">TED发现</a>
+				</td>
+				<td width="16%">
+					<a href="#">另客英语</a> <br />
+					<a href="#">另客导航</a> <br />
+					<a href="#">TED发现</a>
+				</td>
+				<td width="16%">
+					<a>申请认证</a> <a>开放平台</a> <br />
+					<a>企业微博</a> <a>连接网站</a> <br />
+					<a>微博标识</a> <a>广告服务</a>
+				</td>
+			</tr>
+		</table>
 	</div><!-- .footer-links -->
 	<div class="footer-line"></div>
 	<div class="footer-nav">

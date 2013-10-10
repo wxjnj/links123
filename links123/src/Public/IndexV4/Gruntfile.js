@@ -34,8 +34,9 @@ module.exports = function(grunt) {
                         'src/js/modules/jquery.placeholder.js'
                     ],
                     '~temp/js/index.js': [
-                        'src/js/modeuls/index-init.js',
-                        'src/js/modeuls/index-user.js'
+                        'src/js/modules/index-init.js',
+                        'src/js/modules/index-user.js',
+                        'src/js/modules/index-apps.js'
                     ]
                 }
             }
