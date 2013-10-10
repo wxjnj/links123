@@ -13,7 +13,6 @@
 			'PUBLIC' : '__PUBLIC__',
 			'IsLogin' : <empty name="_SESSION[C('MEMBER_AUTH_KEY')]">1<else />0</empty>
 		};
-
 	</script>
 	<!-- 静态资源 dev or build -->
 	<include file="Contorls:statics_v4_dev" />
@@ -27,6 +26,8 @@
 	</script>
 </head>
 <body class="widescreen theme-purple theme-purple-bg-1">
+
+<include file="Contorls:user_dialog_v4" />
 
 <div class="top-nav">
 	<div class="top-nav-inner">
@@ -160,54 +161,12 @@
 						<a href="#">&#155;</a>
 					</p>
 					<ul>
+						<?php for($i=0;$i<12;$i++){ ?>
 						<li>
 							<b class="heart"></b>
 							<a href="#">Bitter Heart</a>
 						</li>
-						<li>
-							<b></b>
-							<a href="#">Bitter Heart</a>
-						</li>
-						<li>
-							<b class="heart"></b>
-							<a href="#">Bitter Heart</a>
-						</li>
-						<li>
-							<b class="heart"></b>
-							<a href="#">Bitter Heart</a>
-						</li>
-						<li>
-							<b></b>
-							<a href="#">Bitter Heart</a>
-						</li>
-						<li>
-							<b class="heart"></b>
-							<a href="#">Bitter Heart</a>
-						</li>
-						<li>
-							<b class="heart"></b>
-							<a href="#">Bitter Heart</a>
-						</li>
-						<li>
-							<b></b>
-							<a href="#">Bitter Heart</a>
-						</li>
-						<li>
-							<b class="heart"></b>
-							<a href="#">Bitter Heart</a>
-						</li>
-						<li>
-							<b class="heart"></b>
-							<a href="#">Bitter Heart</a>
-						</li>
-						<li>
-							<b></b>
-							<a href="#">Bitter Heart</a>
-						</li>
-						<li>
-							<b class="heart"></b>
-							<a href="#">Bitter Heart</a>
-						</li>
+						<?php } ?>
 					</ul>
     				<span class="ang"></span>
 				</div>
@@ -260,30 +219,12 @@
 		</div><!-- // .box-canlendar -->
 		<div class="extra-ted">
 			<ul>
+				<?php for($i=0;$i<6;$i++){ ?>
 				<li>
 					<img src="__PUBLIC__/IndexV4/src/imgs/ted-demo.jpeg">
 					<a class="ted-play-btn" href="#"></a>
 				</li>
-				<li>
-					<img src="__PUBLIC__/IndexV4/src/imgs/ted-demo.jpeg">
-					<a class="ted-play-btn" href="#"></a>
-				</li>
-				<li>
-					<img src="__PUBLIC__/IndexV4/src/imgs/ted-demo.jpeg">
-					<a class="ted-play-btn" href="#"></a>
-				</li>
-				<li>
-					<img src="__PUBLIC__/IndexV4/src/imgs/ted-demo.jpeg">
-					<a class="ted-play-btn" href="#"></a>
-				</li>
-				<li>
-					<img src="__PUBLIC__/IndexV4/src/imgs/ted-demo.jpeg">
-					<a class="ted-play-btn" href="#"></a>
-				</li>
-				<li>
-					<img src="__PUBLIC__/IndexV4/src/imgs/ted-demo.jpeg">
-					<a class="ted-play-btn" href="#"></a>
-				</li>
+				<?php } ?>
 			</ul>
 		</div><!-- // .box-ted -->
 	</div><!--// .extra -->

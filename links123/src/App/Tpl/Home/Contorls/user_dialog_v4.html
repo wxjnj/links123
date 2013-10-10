@@ -1,0 +1,70 @@
+<div class="user-dialog user-reg-dialog" style="display:none">
+    <b class="close-btn"></b>
+    <ul class="inputs">
+        <li>
+            <div class="input input-username">
+                <b class="icon icon-username"></b>
+                <input type="text" name="username" placeholder="输入用户名" />
+            </div>
+            <div class="msg msg-err msg-username"><span class="ang"></span><div>用户名错误</div></div>
+        </li>
+        <li>
+            <div class="input input-mail">
+                <b class="icon icon-mail"></b>
+                <input type="text" name="email" placeholder="输入注册邮箱" />
+            </div>
+            <div class="msg msg-err msg-email"><span class="ang"></span><div></div></div>
+        </li>
+        <li>
+            <div class="input input-password">
+                <b class="icon icon-password"></b>
+                <input type="password" name="password" placeholder="输入登录密码" />
+            </div>
+            <div class="msg msg-err msg-password"><span class="ang"></span><div>用户名错误</div></div>
+        </li>
+        <li>
+            <div class="input input-code">
+                <input type="text" name="vcode" placeholder="输入验证码" />
+            </div>
+            <img class="code-img" id="J_VerifyImg" src="/Verify" title="点击刷新" />
+            <div class="msg msg-err msg-vcode"><span class="ang"></span><div></div></div>
+        </li>
+    </ul>
+    <button class="submit-btn" type="button">注册</button>
+    <p>或</p>
+    <a class="social-btns-qq" href="#">用腾讯QQ账号登录</a>
+    <a class="social-btns-weibo" href="#">用新浪微博账号登录</a>
+</div><!-- // .user-reg-dialog -->
+
+<div class="user-dialog user-log-dialog" style="display:none;">
+    <b class="close-btn"></b>
+    <ul class="inputs">
+        <li>
+            <img style="display:block;margin:-20px auto 30px;" src="__PUBLIC__/IndexV4/src/imgs/bigavatar.png" />
+        </li>
+        <li>
+            <div class="input input-username">
+                <b class="icon icon-username"></b>
+                <input type="text" name="username" placeholder="用户名 / 手机号 / 邮箱" />
+            </div>
+            <div class="msg msg-err msg-username"><span class="ang"></span><div>用户名错误</div></div>
+        </li>
+        <li>
+            <div class="input input-password">
+                <b class="icon icon-password"></b>
+                <input type="password" name="password" placeholder="输入登录密码" />
+            </div>
+            <div class="msg msg-err msg-password"><span class="ang"></span><div>用户名错误</div></div>
+        </li>
+        <li class="login">
+            <button class="submit-btn" type="button">登录</button>
+            <div class="remember checked">
+                <em></em>
+                <b>记住密码</b>
+            </div>
+            <a class="forget_pass" href="#">忘记密码</a>
+        </li>
+    </ul>
+    <a class="social-btns-qq" href="#">用腾讯QQ账号登录</a>
+    <a class="social-btns-weibo" href="#">用新浪微博账号登录</a>
+</div><!-- // .user-log-dialog -->
