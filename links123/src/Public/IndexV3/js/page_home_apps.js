@@ -440,7 +440,9 @@ $( function($) {
 		'#J_box_translate' : function() {
 			var translateLang = 0;
 			//$('.J_translate_source').select();	=> 在pc的qq浏览器里会报错
-			$('.J_translate_source').focus();
+			setTimeout(function(){
+				$('.J_translate_source').select();
+			},0);
 
 			var lns = {
 				"group-1" : [
