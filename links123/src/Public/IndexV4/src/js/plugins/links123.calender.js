@@ -12,6 +12,11 @@
   var weeks = config.CHS_WEEKS;
   var months = config.CHS_MONTHS;
 
+  /*
+   * Calender Class Definition
+   * 1. 根据月份显示日历
+   * 2. 根据日加载任务列表
+   */
   var Calender = function( elem ){
     this.$table = elem;
     this.init();
@@ -36,6 +41,7 @@
       
       this.renderHeader();
       this.renderChooser();
+      this.renderCalender();
       //this.changeMonth();
       //this.bindEventHandler();
     },
@@ -51,75 +57,47 @@
     renderChooser : function(){
       $('.J_chooser').children('span').html( months[this.month] + '月 ' + this.year + '年 ' + this.day + '日' );
     },
-    renderBody : function(){
+    renderCalender : function(){
       var back = '';
-      var date = this.date;
-      
       var i = 1;
-      date.setDate(i);
-      
-      back += "<tr>";
-      for( var j = 0; j < 7; j++ ){
-        date.setMonth(this.month - 1);
-        date.setFullYear(this.year);
-        if( date.getDay() == j ){
-          
-          var k = this.isPassedCurrent(date);
-          
-          if( k === 1 ){
-            back += '<td class="ignore"><a href="#">' + date.getDate() + '</a></td>';
-          }else if( k === 2){
-            back += '<td class="' + this.data[date.getDate()] +'"><a href="#"><strong style="text-decoration: underline;">' + date.getDate() + '</strong></a></td>';
-          }else{
-            back += '<td class="' + this.data[date.getDate()] +'"><a href="#">' + date.getDate() + '</a></td>';
-          }
-          i++;
-          date.setDate(i);
-        }else{
-          back += '<td><a href="#">&nbsp;</a></td>';
-        }
+      this.date.setDate(i);
+      // 第一行开始
+      // 1号的星期数
+      var weekInFirstDay = this.date.getDay();
+      back += '<tr>';
+      if( weekInFirstDay != 0 ){
+        back += '<td colspan="'+ weekInFirstDay +'"></td>';
       }
-      back += "</tr>";
-      
-      var isNewMonth = false;
-      for( var x = 0; x < 35; x++ ){
-        date.setMonth(this.month - 1);
-        date.setFullYear(this.year);
-        date.setDate(i);
-        if( date.getDay() == 0 ){
-          back += "<tr>";
-        }
-        var k = this.isPassedCurrent(date);
-        if( k === 1 ){
-          back += '<td class="ignore"><a href="#">' + date.getDate() + '</a></td>';
-        }else if( k === 2){
-          back += '<td class="' + this.data[date.getDate()] +'"><a href="#"><strong style="text-decoration: underline;">' + date.getDate() + '</strong></a></td>';
-        }else{
-          back += '<td class="' + this.data[date.getDate()] +'"><a href="#">' + date.getDate() + '</a></td>';
-        }
-        
-        if( date.getDay() == 6 ){
-          back += "</tr>";
-        }
-        
+      for ( ; weekInFirstDay <=6 ; weekInFirstDay++ ){
+        back += '<td><a href="#">'+i+'</a></td>';
         i++;
       }
-      
-      this.$tbody.html(back);
-    },
-    isPassedCurrent : function( date ){ // 0 1 2
-      if( date.getFullYear() >= this.current.year ){
-        if( (date.getMonth() + 1) > this.current.month || (date.getMonth() + 1) > this.month ){
-          return 1;
-        }else if( (date.getMonth() + 1) == this.current.month ){
-          if( date.getDate() > this.current.day ){
-            return 1;
-          }else if( date.getDate() == this.current.day ){
-            return 2;
-          }
+      back += '</tr>';
+      // 第一行结束
+      // 第二行及以后开始
+      this.date.setDate(i);
+      while( true ){
+        back += '<tr>';
+        for( var j = 0; j < 7; j++ ){
+          back += '<td><a href="#">'+i+'</a></td>';
+          i++;
+          this.date.setDate(i);
+          if( this.date.getDate() == 1 ) break;
         }
+        if( this.date.getDate() == 1 ){
+          this.date.setMonth( this.date.getMonth() - 1);
+          this.date.setDate(--i);
+          var lastDay = 6 - this.date.getDay();
+          if( lastDay != 0 ){
+            back += '<td colspan="'+ lastDay +'"></td>';
+            break;
+          }
+        };
+        back += '</tr>';
       }
-      return 0;
+      // 第二行及以后结束
+      
+      this.$tbody.append(back);
     },
     changeMonth : function( month ){
       if( month ){
@@ -170,6 +148,19 @@
   }
 
   /*
+   * Clock Class Definition
+   * 燃尽图 +　计时
+   */
+   var Clock = function(){
+
+   }
+   Clock.prototype = {
+
+   }
+
+
+  /*
+   * linkscalender plugin definition
    * 必须使用table调用
    */
   $.fn.linkscalender = function(){
@@ -179,4 +170,5 @@
   }
 
   $('#J_dayViewCalender').linkscalender();
+  $('#J_weekViewCalender').linkscalender();
 }(jQuery));
