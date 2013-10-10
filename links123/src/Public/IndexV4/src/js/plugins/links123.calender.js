@@ -8,13 +8,12 @@
   config.CHS_WEEKS = ['日','一','二','三','四','五','六'];
   config.CHS_MONTHS = ['一','二','三','四','五','六','七','八','九','十','十一','十二'];
   config.ENG_WEEKS = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
-  config.ENG_MONTHS = [];
 
   var weeks = config.CHS_WEEKS;
+  var months = config.CHS_MONTHS;
 
-  var Calender = function( elem, chooserId ){
+  var Calender = function( elem ){
     this.$table = elem;
-    //this.$chooser = $('#' + chooserId);
     this.init();
   }
   
@@ -36,6 +35,7 @@
       this.week = date.getDay();
       
       this.renderHeader();
+      this.renderChooser();
       //this.changeMonth();
       //this.bindEventHandler();
     },
@@ -49,11 +49,7 @@
       this.$tbody = this.$table.children('tbody');
     },
     renderChooser : function(){
-      var s = '<a href="#" class="prevm"><</a>' + 
-              '<span class="year">' + this.year + '年</span>' +
-              '<span class="month">' + this.month + '月</span>' +
-              '<a href="#" class="nextm">></a>';
-      this.$chooser.html(s);
+      $('.J_chooser').children('span').html( months[this.month] + '月 ' + this.year + '年 ' + this.day + '日' );
     },
     renderBody : function(){
       var back = '';
