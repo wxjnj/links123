@@ -1,5 +1,5 @@
 /*
- * @name: calender
+ * @name: links123 日程组件
  * @author: lpgray
  * @datetime: 2013-10-08 12:54
  * */
@@ -13,49 +13,132 @@
   var months = config.CHS_MONTHS;
 
   /*
-   * Calender Class Definition
-   * 1. 根据月份显示日历
-   * 2. 根据日加载任务列表
+   * 视图切换
    */
-  var Calender = function( elem ){
+   $('#J_switches').children().bind('click', function(){
+    $(this).addClass('active').siblings().removeClass('active');
+    $($(this).data('href')).css('display','block').siblings().css('display','none');
+   });
+   $('#J_switches').children('.active').click();
+
+  //日级视图
+  var DayView = function(){
+    this.$clock = $('#J_dvClock');
+    this.$burnChart = $('#J_dvBurnChart');
+    this.$smallTaskList = $('#J_dvSmallTaskList');
+    this.$mainTaskList = $('#J_dvMainTaskList');
+    this.date = new Date();
+    this.renderCalender();
+    this.showClock();
+    this.renderBurnChart();
+    this.fetchTasks();
+  }
+  DayView.prototype = {
+    // 改变日期
+    changeDate : function( date ){
+      this.date = date;
+      this.renderCalender();
+    },
+    // 渲染小日历
+    renderCalender : function(){
+      $('#J_dayViewCalender').linkscalender(MonthCalender, this.date);
+    },
+    // 渲染燃尽图显示当前时间
+    renderBurnChart : function(){
+      var current = new Date();
+      this.$burnChart.css('height', (current.getHours()*60+current.getMinutes()) / (24*60) * 100 + '%');
+    },
+    showClock : function(){
+      var current = new Date();
+      this.$clock.html( current.getHours() + ':' + current.getMinutes() );
+    },
+    // 根据具体的日加载任务
+    fetchTasks : function(){
+      var self = this;
+      $.ajax({
+        url : 'src/json/one_day_task.json',
+        dataType : 'json',
+        type : 'get',
+        cache : false,
+        error : function(XMLHttpRequest, textStatus, errorThrown){
+          console.error(textStatus);
+        },
+        success : function( resp ){
+          var smallListStr = '<h4>全天事件 —— '+ resp.length +'件</h4><ul>';
+          var mainListStr = "";
+          for( var i in resp ){
+          	smallListStr += '<li>'+ resp[i].name +'</li>';
+          	mainListStr += '<div class="task_item"><strong>'+resp[i].planTime+'</strong> '+ resp[i].name +'</div>';
+          }
+          smallListStr += "</ul>";
+          self.$smallTaskList.html(smallListStr);
+          self.$mainTaskList.html(mainListStr);
+        }
+      });
+    }
+  }
+  //周级视图
+  var WeekView = function(){
+
+  }
+  WeekView.prototype = {
+    // 渲染周日历
+    renderCalender : function(){
+
+    },
+    // 渲染燃尽图显示当前时间
+    renderBurnChart : function(){
+
+    },
+    showClock : function(){
+
+    },
+    // 加载任务
+    fetchTasks : function(){
+      
+    }
+  }
+  //月级视图
+  var MonthView = function(){
+    this.date = new Date();
+    $('#J_weekViewCalender').linkscalender(MonthCalender, this.date);
+  }
+  MonthView.prototype = {
+    // 改变日期
+    changeDate : function(date){
+      this.date = date;
+      $('#J_weekViewCalender').linkscalender(MonthCalender, this.date);
+    },
+    // 渲染月日历
+    renderCalender : function(){
+      $('#J_weekViewCalender').linkscalender(MonthCalender, this.date);
+    },
+    // 加载月度任务
+    fetchTasks : function(){
+      
+    }
+  }
+  // MonthCalender Class Definition
+  var MonthCalender = function( elem, date ){
     this.$table = elem;
     this.init();
   }
   
-  Calender.prototype = {
+  MonthCalender.prototype = {
     init : function(){
-      var date = new Date();
-      
-      this.current = {
-        year : date.getFullYear(),
-        month : date.getMonth(),
-        day : date.getDate(),
-        week : date.getDay()
-      }
-      
-      this.date = date;
-      this.year = date.getFullYear();
-      this.month = date.getMonth();
-      this.day = date.getDate();
-      this.week = date.getDay();
-      
-      this.renderHeader();
-      this.renderChooser();
-      this.renderCalender();
-      //this.changeMonth();
-      //this.bindEventHandler();
+      this.current = new Date();
+      this.changeDate(new Date());
     },
     renderHeader : function(){
-      var back = "<tbody><tr>";
+      var back = "<tr>";
       for(var i in weeks){
         back += '<th>' + weeks[i] + '</th>';
       }
-      back += "</tr></tbody>";
+      back += "</tr>";
       this.$table.html(back);
-      this.$tbody = this.$table.children('tbody');
     },
     renderChooser : function(){
-      $('.J_chooser').children('span').html( months[this.month] + '月 ' + this.year + '年 ' + this.day + '日' );
+      $('.J_chooser').children('span').html( months[this.date.getMonth()] + '月 ' + this.date.getFullYear() + '年 ' + this.date.getDay() + '日' );
     },
     renderCalender : function(){
       var back = '';
@@ -69,8 +152,9 @@
         back += '<td colspan="'+ weekInFirstDay +'"></td>';
       }
       for ( ; weekInFirstDay <=6 ; weekInFirstDay++ ){
-        back += '<td><a href="#">'+i+'</a></td>';
+        back += '<td><a href="#" class="'+ this.dayStatus(this.date) +'">'+i+'</a></td>';
         i++;
+        this.date.setDate(i);
       }
       back += '</tr>';
       // 第一行结束
@@ -79,7 +163,7 @@
       while( true ){
         back += '<tr>';
         for( var j = 0; j < 7; j++ ){
-          back += '<td><a href="#">'+i+'</a></td>';
+          back += '<td><a href="#" class="'+ this.dayStatus(this.date) +'">'+i+'</a></td>';
           i++;
           this.date.setDate(i);
           if( this.date.getDate() == 1 ) break;
@@ -90,72 +174,42 @@
           var lastDay = 6 - this.date.getDay();
           if( lastDay != 0 ){
             back += '<td colspan="'+ lastDay +'"></td>';
-            break;
           }
+          break;
         };
         back += '</tr>';
       }
       // 第二行及以后结束
-      
-      this.$tbody.append(back);
+      this.$table.append(back);
     },
-    changeMonth : function( month ){
-      if( month ){
-        this.month = month;
-        this.date.setMonth( this.month - 1 );
+    changeDate : function( date ){
+      this.date = date;
+      this.renderHeader();
+      //this.renderChooser();
+      this.renderCalender();
+    },
+    dayStatus : function(date){ // active, passed , not
+      if( date.getFullYear() === this.current.getFullYear() && date.getMonth() === this.current.getMonth() && date.getDate() === this.current.getDate() ){
+        return 'active';
+      } else if( 
+        ( date.getFullYear() < this.current.getFullYear()) || 
+        ( date.getFullYear() === this.current.getFullYear() && date.getMonth() < this.current.getMonth() ) || 
+        date.getFullYear() === this.current.getFullYear() && date.getMonth() === this.current.getMonth() && date.getDate() < this.current.getDate() ){
+        return 'passed';
       }
-      
-      var self = this;
-      
-      this.fetch( function(){
-        self.renderChooser();
-        self.renderBody();
-      } );
-    },
-    bindEventHandler : function(){
-      var self = this;
-      this.$chooser.on('click', '.prevm', function(){
-        if( self.month == 1 ){
-          return;
-        }
-        self.changeMonth( self.month - 1 );
-      });
-      this.$chooser.on('click', '.nextm', function(){
-        if( self.month == self.current.month || self.month == 12 ){
-          return;
-        }
-        self.changeMonth( self.month + 1 );
-      });
-    },
-    fetch : function( success ){
-      var self = this;
-      $.ajax({
-        url : self.reqUrl,
-        dataType : 'json',
-        type : 'get',
-        cache : false,
-        error : function(XMLHttpRequest, textStatus, errorThrown){
-          console.error(XMLHttpRequest);
-          console.error(textStatus);
-          console.error(errorThrown);
-        },
-        success : function( resp ){
-          self.data = resp.result;
-          success && success();
-        }
-      });
+      return 'not';
     }
   }
 
   /*
-   * Clock Class Definition
-   * 燃尽图 +　计时
+   * Clock
+   * 分钟表
    */
    var Clock = function(){
 
    }
    Clock.prototype = {
-
+    
    }
 
 
@@ -163,12 +217,21 @@
    * linkscalender plugin definition
    * 必须使用table调用
    */
-  $.fn.linkscalender = function(){
+
+  $.fn.linkscalender = function(type, date){
     var c = this.data('calender');
-    if(!c) this.data('calender', c = new Calender(this));
+    if(!c){
+      this.data('calender', c = new type(this, date));
+    }else{
+      c.changeDate( date );
+    }
     return this;
   }
 
-  $('#J_dayViewCalender').linkscalender();
-  $('#J_weekViewCalender').linkscalender();
+  var dayView = new DayView();
+  var monthView = new MonthView();
+  var testDate = new Date();
+  testDate.setMonth(4);
+  monthView.changeDate( testDate );
+  
 }(jQuery));
