@@ -42,8 +42,15 @@ $( function($) {
 	};
 	App.prototype = {
 		show : function() {
+			var self = this;
 			// this.$elem.css('display', 'block');
-			this.$elem.fadeIn();
+			this.$elem.fadeIn(function(){
+				if(self.appId == '#J_box_translate'){
+					setTimeout(function(){
+						$('.J_translate_source').select();
+					},0);
+				}
+			});
 		},
 		close : function() {
 			// this.$elem.css('display', 'none');
@@ -439,10 +446,8 @@ $( function($) {
 
 		'#J_box_translate' : function() {
 			var translateLang = 0;
-			//$('.J_translate_source').select();	=> 在pc的qq浏览器里会报错
-			setTimeout(function(){
-				$('.J_translate_source').select();
-			},0);
+			//$('.J_translate_source').select();
+			
 
 			var lns = {
 				"group-1" : [
