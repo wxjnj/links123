@@ -19,6 +19,15 @@ var User = {
 			autoOpen: false,
 			modal : true,
 			resizable : false,
+			width: 460,
+			show: {
+				effect: "clip",
+				duration: 150
+			},
+			hide: {
+				effect: "clip",
+				duration: 150
+			},
 			open : function() {
 				setTimeout(function() {
 					self.r_Dialog.find('input[name="username"]').select();
@@ -29,6 +38,15 @@ var User = {
 			autoOpen: false,
 			modal : true,
 			resizable : false,
+			width: 460,
+			show: {
+				effect: "clip",
+				duration: 200
+			},
+			hide: {
+				effect: "clip",
+				duration: 200
+			},
 			open : function() {
 				setTimeout(function() {
 					self.l_Dialog.find('input[name="username"]').select();

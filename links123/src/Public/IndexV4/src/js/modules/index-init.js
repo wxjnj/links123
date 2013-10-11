@@ -22,6 +22,9 @@ var PUBLIC = $CONFIG['PUBLIC'];
 
 $(function(){
 
+	ZhiDaLan.Init();
     User.Init();
+	THL.Init();
+    Zld.Init();
 
 });

@@ -113,28 +113,38 @@
 </div><!--// .header -->
 
 <div class="container">
-	<div class="zld">
+	<div class="zld clearfix">
 		<form action="{:U('Link/index')}?mod=myarea" id="J_MyAreaForm" target="_blank" method="post">
 			<input type="hidden" name="url" value="" />
 		</form>
-		<ul id="J_sortable">
+		<ul id="J_ZldList">
 		<volist name="_SESSION['myarea_sort']" id="areaid">
 		<if condition="$_SESSION['arealist'][$areaid]['id'] neq ''">
-			<li id="{$_SESSION['arealist'][$areaid].id}" url="{:U('Link/index')}?mod=myarea&url={$_SESSION['arealist'][$areaid].url}" data-id="{$_SESSION['arealist'][$areaid].id}" data-url="{$_SESSION['arealist'][$areaid].url}">
-				<span>{$_SESSION['arealist'][$areaid]['web_name']}</span>
+			<li class="K_link_it" id="{$_SESSION['arealist'][$areaid].id}" url="{:U('Link/index')}?mod=myarea&url={$_SESSION['arealist'][$areaid].url}" data-id="{$_SESSION['arealist'][$areaid].id}" data-url="{$_SESSION['arealist'][$areaid].url}">
+				<b class="nm">{$_SESSION['arealist'][$areaid]['web_name']}</b>
 			</li>
 		</if>
 		</volist>
 			<li class="add">
 				<span class="ctl">+</span>
+				<empty name="_SESSION[C('MEMBER_AUTH_KEY')]">
 				<div class="mini-tip">
 					<div class="mini-tip-l"></div>
 					<div class="mini-tip-c">请登陆后添加网址</div>
 					<div class="mini-tip-r"></div>
 				</div>
+				</empty>
 			</li>
 		</ul>
+		<div class="link-custom-panel" style="display:none">
+			<div>
+				<a class="link-edit" href="javascript:;"></a>
+				<a class="link-remove" href="javascript:;"></a>
+			</div>
+    		<span class="ang"></span>
+		</div>
 	</div><!-- // .zld -->
+
 	<div class="apps">
 		<ul id="J_Apps">
 		<volist name="app_list" id="vo">
@@ -152,9 +162,9 @@
 				</a>
 			</li>
 		</volist>
-			<li class="add">
+			<!--li class="add">
 				<span class="ctl">+</span>
-			</li>
+			</li-->
 		</ul>
 	</div><!-- // .apps -->
 	<div class="extra extra-double">

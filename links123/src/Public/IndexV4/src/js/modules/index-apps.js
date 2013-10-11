@@ -18,11 +18,31 @@ $( function() {
 			return false;
 		});
 	}
-	console.log();
+
 	$('#J_Apps').links123_apptrigers('.J_app_trig');
 	$('#J_Apps').on('click', '.J_app_link', function(){
 	  window.open($(this).data('href'));
 	});
+
+	$('#J_Apps').sortable({
+		update: function(event, ui){
+			$.post(
+				URL + '/sortApp', 
+				{'appIds' : $(this).sortable('toArray')},
+				function(data) {
+					if (data == 1) {
+					//成功
+					} else if (data == 0){
+					//失败
+					} else {
+					//失败
+					}
+				}
+			);
+		}
+	});
+	$('#J_Apps').sortable('enable');
+
 
 	/*
 	 * 当前的 App集合

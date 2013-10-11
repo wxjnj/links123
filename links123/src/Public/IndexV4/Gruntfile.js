@@ -35,7 +35,10 @@ module.exports = function(grunt) {
                     ],
                     '~temp/js/index.js': [
                         'src/js/modules/index-init.js',
+	                    'src/js/modules/index-zhidalan.js',
+	                    'src/js/modules/index-thl.js',
                         'src/js/modules/index-user.js',
+                        'src/js/modules/index-zld.js',
                         'src/js/modules/index-apps.js'
                     ]
                 }
