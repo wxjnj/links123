@@ -6,15 +6,15 @@
 	<link rel="stylesheet" href="src/css/reset.css">
 	<link rel="stylesheet" href="src/css/plugin_calender.css">
 	<style>
-   html, body{
-       background: #000000 url(src/imgs/bg-purple1.png) 0 0 repeat-x;
-       background-attachment: fixed;
-   }
-   .calender_wrap{
-       width:575px;
-       margin: 10px;
-   }
-   </style>
+ html, body{
+     background: #000000;
+     background-attachment: fixed;
+ }
+ .calender_wrap{
+     width:575px;
+     margin: 10px;
+ }
+ </style>
 </head>
 <body>
     <div class="calender_wrap">
@@ -27,8 +27,8 @@
                 </div>
                 <div id="J_switches" class="c_chooser_view">
                     <a data-href="#monthView">月</a>
-                    <a data-href="#weekView">周</a>
-                    <a data-href="#dayView" class="active">日</a>
+                    <a data-href="#weekView" class="active">周</a>
+                    <a data-href="#dayView">日</a>
                 </div>
             </div><!-- c_header -->
             <div class="c_body_wrap">
@@ -131,8 +131,8 @@
                     </div><!-- right_side -->
                 </div>
 
-                <div id="weekView" class="c_body week_view">
-                    <table cellpadding="0" cellspacing="2">
+                <div id="weekView" class="c_body big_table week_view">
+                    <table id="J_weekViewCalender" cellpadding="0" cellspacing="2">
                         <tbody>
                             <tr>
                                 <th height="60">Mon</th>
@@ -193,8 +193,8 @@
                     </table>
                 </div>
 
-                <div id="monthView" class="c_body month_view">
-                    <table id="J_weekViewCalender" cellpadding="0" cellspacing="2">
+                <div id="monthView" class="c_body big_table month_view">
+                    <table id="J_monthViewCalender" cellpadding="0" cellspacing="2">
                         <tbody>
                             <tr>
                                 <th>Mon</th>
