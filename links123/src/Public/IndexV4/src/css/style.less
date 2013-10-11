@@ -5,6 +5,10 @@
 input:focus {
     outline: 0;
 }
+img {
+    margin: 0;
+    padding: 0;
+}
 a:hover{
     text-decoration: none;
 }
@@ -42,9 +46,30 @@ a:hover{
     }
 }
 
+.slide-btns {
+    li{
+        cursor: pointer;
+        width: 24px;
+        height: 24px;
+        float: left;
+        background-image: url(../imgs/slide-btns-white.png);
+        background-repeat: no-repeat;
+    }
+    .prev {
+        background-position: 0 0;
+    }
+    .next {
+        background-position: -23px 0;
+    }
+    .menu {
+        background-position: -46px 0;
+    }
+}
 
 
 @import 'base.less';
+@import 'jquery-ui.less';
+@import 'userdialog.less';
 @import 'top-nav.less';
 @import 'header.less';
 @import 'zld.less';
@@ -52,7 +77,10 @@ a:hover{
 @import 'extra.less';
 @import 'extra-music.less';
 @import 'extra-movie.less';
+@import 'rate.less';
 @import 'extra-calendar.less';
 @import 'extra-ted.less';
 @import 'footer.less';
-@import 'screen.less';
+@import 'screen-wide.less';
+@import 'screen-normal.less';
+

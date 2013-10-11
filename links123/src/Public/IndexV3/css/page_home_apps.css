@@ -977,3 +977,7 @@ div.gt-baf-translations {
     display: block;
 }
 /** 登录、设置框$ **/
+
+#gt-res-dict {
+    padding: 15px;
+}

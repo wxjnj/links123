@@ -16,8 +16,18 @@
 	</script>
 	<!-- 静态资源 dev or build -->
 	<include file="Contorls:statics_v4_dev" />
+	<script>
+		//待归位
+		$(function(){
+			$('.music-slide-btns').on('click', '.menu', function(){
+				$('.song-list').toggle(100);
+			});
+		});
+	</script>
 </head>
 <body class="widescreen theme-purple theme-purple-bg-1">
+
+<include file="Contorls:user_dialog_v4" />
 
 <div class="top-nav">
 	<div class="top-nav-inner">
@@ -52,6 +62,12 @@
 			</div><!-- // .uc-menu -->
 			</empty>
 		</div><!-- // .uc -->
+		<div class="screen-theme">
+			<b></b>
+			<a class="change-theme-btn" href="#">换肤</a>
+			<span> | </span>
+			<a class="change-screen-btn" href="#">窄屏</a>
+		</div><!-- // .screen-theme -->
 	</div>
 </div><!--// .top-nav-->
 <div class="header">
@@ -120,23 +136,164 @@
 		</ul>
 	</div><!-- // .zld -->
 	<div class="apps">
+		<ul id="J_Apps">
+		<volist name="app_list" id="vo">
+			<li id="{$vo.appId}" <if condition="$vo.appClass neq ''">class="{$vo.appClass}"</if>>
+				<a data-href="{$vo.appLink}" <if condition="$vo.isTarget eq '1'">target="_blank"</if> class="{$vo.linkClass}">
+				<if condition="$vo.appName eq '日&nbsp;历'">
+					<p class="ct">
+						<b>{:date('D')}</b>
+						<i>{:date('d')}</i>
+					</p>
+				<else />
+					<p class="av"><img src="{$vo.appIcon}" /></p>
+					</if>
+					<p class="nm">{$vo.appName}</p>
+				</a>
+			</li>
+		</volist>
+			<li class="add">
+				<span class="ctl">+</span>
+			</li>
+		</ul>
 	</div><!-- // .apps -->
 	<div class="extra extra-double">
 		<!-- 两列： .extra-double -->
 		<!-- 三列： .extra-triple -->
 		<div class="extra-music">
+			<img src="__PUBLIC__/IndexV4/src/imgs/taylor.png" />
+			<div class="music-info">
+				<h5>I Knew You Were Trouble</h5>
+				<p class="singer">——Taylor Swift</p>
+				<div class="lyrics">Once upon a time, a few mistakes ago,
+					I was in your sights, you got me all alone.
+					You found me.You found me.You found me.
+					<span class="more-lyrics">I guess you didn't care, and I guess I liked that,you got me all alone.
+					You found me.
+					You found me.You found me.
+					I guess you didn't carealone.
+					Once upon a time, a few mistakes ago,
+					I was in your sights, you got me all alone.
+					You found me.You found me.</span>
+				</div>
+				<ul class="slide-btns music-slide-btns">
+					<li class="menu"></li>
+					<li class="prev"></li>
+					<li class="next"></li>
+				</ul>
+				<div class="song-list" style="display:none">
+					<p>
+						<a href="#">&#139;</a>
+						<a href="#">&#155;</a>
+					</p>
+					<ul>
+						<?php for($i=0;$i<12;$i++){ ?>
+						<li>
+							<b class="heart"></b>
+							<a href="#">Bitter Heart</a>
+						</li>
+						<?php } ?>
+					</ul>
+    				<span class="ang"></span>
+				</div>
+			</div>
 		</div><!-- // .box-music -->
 		<div class="extra-movie">
+			<img src="__PUBLIC__/IndexV4/src/imgs/p475312074.jpg">
+			<ul class="slide-btns movie-slide-btns">
+				<li class="prev"></li>
+				<li class="next"></li>
+			</ul>
+			<div class="movie-info">
+				<h5>两小无猜 Jeux d'enfants</h5>
+				<div class="rate">
+					快速评分: 
+					<input type="range" value="4" step="0.5" id="backing4">
+					<div class="rateit" data-rateit-backingfld="#backing4" data-rateit-resetable="false"  data-rateit-ispreset="true"
+    					data-rateit-min="0" data-rateit-max="5"  data-rateit-readonly="false">
+					</div>
+				</div>
+				<dl class="desc">
+					<dt class="main-desc">IMDB评分: </dt>
+					<dd class="main-desc">7.6分</dd>
+					<dt class="main-desc">导演: </dt>
+					<dd class="main-desc">杨·塞谬尔</dd>
+					<dt>编剧: </dt>
+					<dd>杨·塞谬尔</dd>
+					<dt>主演: </dt>
+					<dd>吉约姆·卡内 / 玛丽昂·歌迪亚 / Thibault Verhaeghe / Joséphine Lebas-Joly / Emmanuelle Grönvold</dd>
+					<dt>类型: </dt>
+					<dd>剧情 / 喜剧 / 爱情</dd>
+					<dt>制片国家/地区: </dt>
+					<dd>法国 / 比利时</dd>
+					<dt>语言: </dt>
+					<dd>法语</dd>
+					<dt>上映日期: </dt>
+					<dd>2003-09-17(法国)</dd>
+					<dt>片长: </dt>
+					<dd>93 分钟</dd>
+					<dt>又名: </dt>
+					<dd>敢爱就来 / 宝贝游戏 / Love Me If You Dare</dd>
+				</dl>
+				<ul>
+					<li class="lft"><a href="#">豆瓣影评</a></li>
+					<li class="rgt"><a href="#">在线观看</a></li>
+				</ul>
+			</div>
 		</div><!-- // .box-movie -->
 		<div class="extra-calendar">
 		</div><!-- // .box-canlendar -->
 		<div class="extra-ted">
+			<ul>
+				<?php for($i=0;$i<6;$i++){ ?>
+				<li>
+					<img src="__PUBLIC__/IndexV4/src/imgs/ted-demo.jpeg">
+					<a class="ted-play-btn" href="#"></a>
+				</li>
+				<?php } ?>
+			</ul>
 		</div><!-- // .box-ted -->
 	</div><!--// .extra -->
 </div><!--// .container-->
 
+<include file="Contorls:app_v3" />
+
 <div class="footer">
 	<div class="footer-links">
+		<table>
+			<tr>
+				<td width="16%">
+					<a href="#">另客英语</a> <br />
+					<a href="#">另客导航</a> <br />
+					<a href="#">TED发现</a>
+				</td>
+				<td width="16%">
+					<a href="#">另客英语</a> <br />
+					<a href="#">另客导航</a> <br />
+					<a href="#">TED发现</a>
+				</td>
+				<td width="16%">
+					<a>申请认证</a> <a>开放平台</a> <br />
+					<a>企业微博</a> <a>连接网站</a> <br />
+					<a>微博标识</a> <a>广告服务</a>
+				</td>
+				<td width="16%" >
+					<a href="#">另客英语</a> <br />
+					<a href="#">另客导航</a> <br />
+					<a href="#">TED发现</a>
+				</td>
+				<td width="16%">
+					<a href="#">另客英语</a> <br />
+					<a href="#">另客导航</a> <br />
+					<a href="#">TED发现</a>
+				</td>
+				<td width="16%">
+					<a>申请认证</a> <a>开放平台</a> <br />
+					<a>企业微博</a> <a>连接网站</a> <br />
+					<a>微博标识</a> <a>广告服务</a>
+				</td>
+			</tr>
+		</table>
 	</div><!-- .footer-links -->
 	<div class="footer-line"></div>
 	<div class="footer-nav">

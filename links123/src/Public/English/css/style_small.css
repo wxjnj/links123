@@ -744,6 +744,7 @@ a.disabled {
 .video-search-page .video-list img{
 	width:200px;
 	height:110px;
+	display:block;
 }
 .video-search-page .video-list .time-tip{
 	display:block;

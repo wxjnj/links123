@@ -28,7 +28,15 @@ module.exports = function(grunt) {
                         'src/js/libs/jquery-1.10.2.min.js',
                         'src/js/modules/es5-shim.js',
                         'src/js/modules/json2.js',
-                        'src/js/modules/jquery.cookies.2.2.0.min.js'
+                        'src/js/modules/jquery.cookies.2.2.0.min.js',
+                        'src/js/modules/jquery.rateit.js',
+                        'src/js/modules/jquery-ui.min.js',
+                        'src/js/modules/jquery.placeholder.js'
+                    ],
+                    '~temp/js/index.js': [
+                        'src/js/modules/index-init.js',
+                        'src/js/modules/index-user.js',
+                        'src/js/modules/index-apps.js'
                     ]
                 }
             }
@@ -36,7 +44,8 @@ module.exports = function(grunt) {
         ,uglify: {
             main: {
                 files: {
-                    'dest/js/global.min.js' : ['~temp/js/global.js']
+                    'dest/js/global.min.js': ['~temp/js/global.js'],
+                    'dest/js/index.min.js': ['~temp/js/index.js']
                 }
             }
         }
@@ -66,5 +75,5 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
 
     grunt.registerTask('default', ['clean:build']);
-    grunt.registerTask('build', ['clean:beforeBuild', 'less', 'concat', 'uglify','copy', 'clean:build']);
+    grunt.registerTask('build', ['clean:beforeBuild', 'less', 'concat', 'uglify', 'copy', 'clean:build']);
 };

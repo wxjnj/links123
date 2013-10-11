@@ -1,0 +1,261 @@
+/* 重置dialog */
+.ui-dialog .ui-dialog-content {
+    padding: 0;
+    overflow: visible;
+}
+.ui-widget-content {}
+.ui-dialog {
+    padding: 0;
+    border: 0;
+    background: transparent;
+}
+.ui-dialog:focus{
+    outline: 0;
+}
+.ui-widget-header {
+    background: none repeat scroll 0 0 #EDEDED;
+    font-weight: 0;
+    border: 0;
+}
+.ui-dialog .ui-dialog-titlebar-close {
+    top: 12px;
+    width: 20px;
+}
+.ui-dialog .ui-dialog-titlebar {
+    padding-bottom: 2px;
+}
+.ui-draggable .ui-dialog-titlebar {
+    height: 15px;
+}
+.ui-dialog .ui-dialog-title {
+    display: none;
+}
+.ui-widget-overlay {
+    background: none repeat scroll 0 0 #fff;
+    opacity: 0.8;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+.ui-front{ z-index: 9; }
+.ui-draggable .ui-dialog-titlebar{
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    display: none;
+}
+.ui-stikynot .ui-dialog-titlebar{
+    display: block;
+}
+/** 登录、设置框$ **/
+.user-dialog {
+    position: absolute;
+    left: 50%;
+    margin-left: -195px;
+    z-index: 10;
+    width: 320px!important;
+    padding: 70px!important;
+    .border-radius(5px);
+    background: #fff;
+    -moz-box-shadow: 0 0 10px #666;
+    -webkit-box-shadow: 0 0 10px #666;
+    box-shadow: 0 0 10px #666;
+
+    .close-btn {
+        width: 11px;
+        height: 11px;
+        display: block;
+        cursor: pointer;
+        background-position: -37px -57px;
+        position: absolute;
+        top:10px;
+        right:10px;
+    }
+
+    .inputs {
+        position: relative;
+        width: 315px;
+        margin: 0 auto;
+
+        li {
+            position: relative;
+            margin: 10px 0;
+
+            .input {
+                width: 315px;
+                height: 46px;
+                background: #373240;
+                overflow: hidden;
+                .border-radius(4px);
+
+                .icon {
+                    display: block;
+                    width: 32px;
+                    height: 32px;
+                    margin: 7px 0 0 10px;
+                    background-image: url(../imgs/user-dialog-purple.png);
+                }
+                .icon-username {
+                    background-position: 0 0;
+                }
+                .icon-mail {
+                    background-position: -33px 0;
+                }
+                .icon-password {
+                    background-position: 0 -33px;
+                }
+
+                input {
+                    display: block;
+                    width: 240px;
+                    height: 42px;
+                    line-height: 42px;
+                    border: 0;
+                    color: #fff;
+                    background: transparent;
+                    margin-top: -38px;
+                    margin-left: 50px;
+                }
+            }
+            .input-code {
+                width: 185px;
+                input {
+                    width: 160px;
+                    margin-top: 2px;
+                    margin-left: 15px;
+                }
+            }
+            .code-img {
+                display: block;
+                margin-top: -46px;
+                margin-left: 190px;
+                width: 125px;
+                height: 44px;
+            }
+        }
+
+        .msg {
+            display: none;
+            position: absolute;
+            top: 7px;
+            left: 320px;
+            width: 155px;
+            padding: 0 10px;
+            height: 30px;
+            line-height: 30px;
+            color: #fff;
+            background: #fff;
+            box-shadow: 0 0 5px #666;
+            filter:alpha(opacity=80);
+            -moz-opacity: 0.8;
+            -khtml-opacity: 0.8;
+            opacity: 0.8;
+            .ang {
+                width: 0; 
+                height: 0; 
+                font-size: 0; 
+                overflow: hidden;
+                position: absolute;
+                border-width: 15px; 
+                border-style: solid dashed dashed; 
+                border-color: transparent #fff transparent transparent; 
+                left: -22px; 
+            }
+            div {
+                text-align: center;
+            }
+        }
+
+        .msg-err {
+            background: #ca2625;
+            .ang {
+                border-color: transparent #ca2625 transparent transparent; 
+            }
+        }
+        .msg-ok {
+            background: #07b076;
+            .ang {
+                border-color: transparent #07b076 transparent transparent;
+            }
+            div {
+                width: 16px;
+                height: 13px;
+                margin: 7px auto 0;
+                background: url(../imgs/user-dialog-purple.png) -55px -55px no-repeat;
+            }
+        }
+
+    }
+
+    .submit-btn {
+        display: block;
+        width: 140px;
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        color: #fff;
+        background: #55254f;
+        border:0;
+        margin: 50px auto 15px;
+        .border-radius(4px);
+    }
+
+    p {
+        font-size: 16px;
+        color:#fff;
+        text-align: center;
+    }
+
+    .social-btns-qq, .social-btns-weibo {
+        display: block;
+        margin: 10px auto;
+        line-height: 40px;
+        text-align: center;
+        color: #fff;
+        width: 219px;
+        height: 40px;
+        background-image: url(../imgs/social-btns.png);
+    }
+    a:hover {
+        text-decoration: none;
+    }
+    .social-btns-weibo {
+        background-position: 0 -40px;
+    }
+
+}
+
+.user-log-dialog {
+    ul .login {
+        margin-top: 15px;
+        margin-bottom: 40px;
+    }
+    .submit-btn {
+        margin: 0;
+    }
+    .remember {
+        cursor: pointer;
+        margin: -28px 0 0 150px;
+        em {
+            display: block;
+            width: 18px;
+            height: 18px;
+            background: url(../imgs/user-dialog-purple.png) -54px -35px no-repeat;
+        }
+        b {
+            display: block;
+            font-weight: 100;
+            margin: -18px 0 0 18px;
+            color: #fff;
+        }
+    }
+    .checked em {
+        background-position: -34px -35px;
+    }
+    a {
+        display: block;
+        color: #fff;
+        margin: -20px 0 0 250px;
+    }
+}
