@@ -8,14 +8,22 @@
   <link rel="stylesheet" href="/Public/IndexV3/css/jquery-ui.css" />
   <script src="__PUBLIC__/skin/js/jquery-1.7.1.min.js"></script>
   <script src="__PUBLIC__/skin/js/jquery.cookies.2.2.0.min.js"></script>
+  <script>
+		var $CONFIG = {
+			'APP' : '__APP__/',
+			'URL' : '__URL__',
+			'PUBLIC' : '__PUBLIC__',
+			'IsLogin' : <empty name="_SESSION[C('MEMBER_AUTH_KEY')]">1<else />0</empty>
+		};
+	</script>
 </head>
 <body>
 <script src="__PUBLIC__/Search_new/js/init.js"></script>
 <div id="header">
   <div class="header-inner">
     <ul class="nav">
-      <li><a href="http://en.links123.cn/" target="_blank">首页</a></li>
-      <li><a href="http://en.links123.cn/" target="_blank">另客英语</a></li>
+      <li><a href="/English/Index/index.html" target="_blank">首页</a></li>
+      <li><a href="/English/Index/index.html" target="_blank">另客英语</a></li>
       <li><a href="/Home/Index/nav.html" target="_blank">另客导航</a></li>
       <li><a href="/Suggestion.html" target="_blank">留言板</a></li>
     </ul>

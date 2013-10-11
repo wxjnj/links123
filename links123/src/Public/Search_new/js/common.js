@@ -468,9 +468,16 @@ var THL = {
 	Init : function(){
 		var self = this;
 
-		//重新加载页面清除keyword 清除浏览器未清除的文本框的值
-		$.cookies.set('keyword', '');
-		$("#search_text").val('').select(); //选中文本框
+		// F5清key
+		$(document).keydown(function(event){
+			if (event.keyCode == 116) {	// F5
+				$.cookies.set( 'keyword', '');
+				$("#search_text").val('');
+			}
+		});
+		
+		//$.cookies.set('keyword', '');
+		$("#search_text").select(); //选中文本框
 		
 		$('.thl').mouseover(function(){ $('#J_thl_div').show(); }); //移入糖葫芦区域 显示糖葫芦
 		$('.J_thl_area').mouseleave(function(){ $('#J_thl_div').hide(); }); //移除糖葫芦主区域 隐藏糖葫芦
@@ -556,8 +563,14 @@ var THL = {
 			$.cookies.set('keyword', keyword); //保存keyword
 			keyword = keyword.replace('http://','');
 			keyword = encodeURIComponent(keyword);
-			var url = $(".J_thlz a.on").attr("url").replace('keyword', keyword);
+			var url = $(".J_thlz a.on").attr("url");
 			var tid = $(".J_thlz a.on").attr("tid");
+			if (tid == 21) {
+				
+				url = url.replace('{keyword}', keyword);
+			} else {
+				url = url.replace('keyword', keyword);
+			}
 			self.go(url, tid, keyword);
 			return false;
 		});
@@ -569,22 +582,11 @@ var THL = {
 		} else if (tid == '10' || tid == '20') { // 另客、维修
 			window.open(url);
 		} else {	
-			url = APP + "Thl/index";
-			//window.open(url);
-			//因window.open会被浏览器阻止，所以才用表单提交
-			var searchFormObj = $('#searchForm');
-			
-			$('#J_thl').val($("#J_thl_div a.on").text());
-			$('#J_tid').val(tid);
-			$('#J_q').val(keyword);
-			
-			searchFormObj.attr('action', url);
-			searchFormObj.attr('target', '_blank');
-			searchFormObj.submit();
-			searchFormObj.attr('action', '');
-			searchFormObj.attr('target', '');
+			$.post(URL + "/thl_count", {tid : tid}, function() {});
+			parent.document.getElementById('main').src = "http://" + url;
 			$("#search_text").select();
 		}
+
 	},
 	setpos : function(){
 		var top, self = this;
