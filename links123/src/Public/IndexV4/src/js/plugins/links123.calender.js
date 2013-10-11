@@ -48,6 +48,81 @@
     var date = new Date(d[0],(d[1]-1),d[2],t[0],t[1]);
     return date;
   }
+  // 比较第二个时间在第一个时间的周中、周前、周后、同时获取第二个时间周一 - 周日的两个时间对象
+  UTILS.isOneWeek = function( date1, date2 ){
+  	date1.setHours(0);
+    date1.setMinutes(0);
+  	date1.setMilliseconds(0);
+    date1.setSeconds(0);
+    // 把date全部转换成上周日然后相减
+    var cha1;
+    if(date1.getDay() == 0){
+      cha1 = 7 * 24 * 60 * 60 * 1000;
+    }else{
+      cha1 = (date1.getDay() - 0) * 24 * 60 * 60 * 1000;
+    }
+    var cha1 = (date1.getDay() - 0) * 24 * 60 * 60 * 1000;
+    var date1Sun = new Date( date1.getTime() - cha1 );
+
+    date2.setHours(0);
+    date2.setMinutes(0);
+    date2.setMilliseconds(0);
+    date2.setSeconds(0);
+    var cha2;
+    if(date2.getDay() == 0){
+      cha2 = 7 * 24 * 60 * 60 * 1000;
+    }else{
+      cha2 = (date2.getDay() - 0) * 24 * 60 * 60 * 1000;
+    }
+    var date2Sun = new Date( date2.getTime() - cha2 );
+
+    // console.debug(date1);
+    // console.debug(date2);
+
+    var back = { 
+      'dates' : {
+        'monday'  : new Date( date2Sun.getTime() + 24 * 60 * 60 * 1000 ),
+        'tue' : new Date( date2Sun.getTime() + 2 * 24 * 60 * 60 * 1000 ),
+        'wed' : new Date( date2Sun.getTime() + 3 * 24 * 60 * 60 * 1000 ),
+        'thu' : new Date( date2Sun.getTime() + 4 * 24 * 60 * 60 * 1000 ),
+        'fri' : new Date( date2Sun.getTime() + 5 * 24 * 60 * 60 * 1000 ),
+        'sat' : new Date( date2Sun.getTime() + 6 * 24 * 60 * 60 * 1000 ), 
+        'sunday' : new Date( date2Sun.getTime() + 7 * 24 * 60 * 60 * 1000 )
+      }
+    }
+    if( date1Sun - date2Sun == 0 ){
+      back.klass = 'same';
+      // console.debug('周中');
+    }else if( date1Sun - date2Sun < 0 ){
+      back.klass =  'after';
+      // console.debug( '周后' );
+    }else{
+      back.klass =  'before';
+      // console.debug('周前');
+    }
+    return back;
+  }
+  UTILS.date2str = function(date){
+    var m = date.getMonth() + 1;
+    var d = date.getDate();
+    h = m < 10 ? '0' + m : m;
+    d = d < 10 ? '0' + d : d;
+    var y = date.getFullYear();
+    return y +'-'+m+'-'+d;
+  }
+  // var t1 = new Date();
+  // var t2 = new Date();
+  // t1.setMonth(6);
+  // t2.setMonth(6);
+  // t1.setDate(11);
+  // t2.setDate(12);
+  // UTILS.isOneWeek( t1, t2 );
+  // t1.setDate(1);
+  // t2.setDate(8);
+  // UTILS.isOneWeek( t1, t2 );
+  // t1.setDate(30);
+  // t2.setDate(23);
+  // UTILS.isOneWeek( t1, t2 );
 
 
   //日级视图
@@ -120,29 +195,83 @@
   }
 
   //周级视图
-  var WeekView = function(){
-    this.date = new Date();
-    this.renderCalender();
+  var WeekView = function( date ){
+    this.date = date || new Date();
+    this.$table = $('#J_weekViewCalender');
+    this.$table.linkscalender(WeekCalender);
+    this.fetchTasks();
+    var self = this;
+    this.autoRun = setInterval(function(){
+      self.showClock();
+    }, 1000);
   }
   WeekView.prototype = {
-    // 渲染周日历
-    renderCalender : function(){
-      $('#J_weekViewCalender').linkscalender(WeekCalender);
-    },
     // 渲染燃尽图显示当前时间
     renderBurnChart : function(){
-      // this date week
       var current = new Date();
+      var self = this;
+      this.$table.find('td').html('<div class="burn_down_chart"></div>');
+      var oneWeekObj = UTILS.isOneWeek( new Date(), this.date );
+      this.renderChooser(oneWeekObj['dates']);
+      this.$table.addClass( oneWeekObj['klass'] );
+      if( oneWeekObj['klass'] === 'same' ){
+        var day = current.getDay() === 0 ? 7 : current.getDay();
+        this.$table.find('tr:eq(1)').children('td').each(function(i){
+          if( i+1 < day ){
+            $(this).children('.burn_down_chart').height('100%');
+            return;
+          }else if( i+1 === day ){
+            self.$burnChart = $(this).children('.burn_down_chart');
+            self.$burnChart.html('<div class="relative_div"><h5 class="clock"></h5></div>');
+            
+            self.showClock();
+          }
+        });
+      }else{
+        self.$burnChart = null;
+      }
+
+      var z = 0;
+      for( var j in oneWeekObj['dates'] ){
+        var tsks = self.tasks[ UTILS.date2str( oneWeekObj['dates'][j] ) ];
+        // console.debug(UTILS.date2str( oneWeekObj['dates'][j] ) + tsk);
+        var $td = this.$table.find('tr:eq(1)').children('td:eq('+z+')');
+        if( tsks ){
+          var back = "";
+          for( var o in tsks ){
+            var planTime = UTILS.str2date( tsks[o].planTime );
+            var klass = UTILS.isPassed( planTime ) ? 'todo' : '';
+            var timeFmtd = UTILS.printTime( planTime );
+            var percent = UTILS.getTimePercent( planTime );
+            var percented = percent > 94.5 ? 94.5 : percent;
+
+            back += '<div class="task_item '+klass+'" style="top:'+percented+'%"><span>x</span>..................</div>';
+          }
+          $td.append(back);
+        }
+        z++;
+      }
     },
-    showClock : function( td ){
-      var current = new Date();
-      $(td).find('.clock').html( UTILS.printTime(current) );
+    showClock : function(){
+      if( this.$burnChart ){
+        var current = new Date();
+        var self = this;
+        this.$burnChart.height( UTILS.getTimePercent( current ) + '%');
+        this.$burnChart.find('.clock').html( UTILS.printTime( current ) );
+        this.$burnChart.parent().find('.task_item').each(function(){
+          if( parseInt($(this).css('top')) + $(this).outerHeight() <= self.$burnChart.outerHeight() ){
+            $(this).removeClass('todo');
+          }else{
+            $(this).addClass('todo');
+          }
+        });
+      }
     },
     // 加载任务
     fetchTasks : function(){
       var self = this;
       $.ajax({
-        url : 'src/json/month_task.json',
+        url : 'src/json/week_task.json',
         dataType : 'json',
         type : 'get',
         cache : false,
@@ -150,12 +279,15 @@
           console.error(textStatus);
         },
         success : function( resp ){
-          console.debug(resp);
+          self.tasks = resp.tasks;
+          self.renderBurnChart();
         }
       });
     },
-    renderChooser : function(){
-      $('#J_chooser').children('span').html( config.CHS_MONTHS[this.date.getMonth()] + '月 ' + config.ENG_MONTHS[this.date.getMonth()] + ' ' + this.date.getFullYear() + ' ' + this.date.getDate() + '日');
+    renderChooser : function( weekObj ){
+      $('#J_chooser').children('span').html( config.ENG_MONTHS[weekObj['sunday'].getMonth()] + ' ' + weekObj['sunday'].getFullYear() + '年 ' +
+        (weekObj['monday'].getMonth() + 1) + '.' + weekObj['monday'].getDate() + '-' +
+        (weekObj['sunday'].getMonth() + 1) + '.' + weekObj['sunday'].getDate());
     }
   }
 
@@ -297,7 +429,7 @@
     renderBody : function(){
       var back = "<tr>";
       for( i = 0 ; i < 7 ; i ++ ){
-        back += '<td><div class="burn_down_chart"></div></td>';
+        back += '<td></td>';
       }
       back += "</tr>";
       this.$table.append(back);
@@ -341,12 +473,17 @@
   });
   $('#J_switches').children('.active').click();
 
+
+
+
+  var testDate = new Date();
+  testDate.setMonth(9);
+  testDate.setDate(6);
   /* MAIN */
   var dayView = new DayView();
   var monthView = new MonthView();
   var weekView = new WeekView();
-  var testDate = new Date();
-  testDate.setMonth(4);
+  
   dayView.changeDate( testDate );
 
   
