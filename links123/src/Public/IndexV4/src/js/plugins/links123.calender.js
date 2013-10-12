@@ -464,15 +464,17 @@
     return this;
   }
 
-  /*
-   * 视图切换
-   */
-  $('#J_switches').children().bind('click', function(){
-    $(this).addClass('active').siblings().removeClass('active');
-    $($(this).data('href')).css('display','block').siblings().css('display','none');
+  $(document).ready(function(){
+    /*
+     * 视图切换
+     */
+    $('#J_switches').children().bind('click', function(){
+      $(this).addClass('active').siblings().removeClass('active');
+      $($(this).data('href')).css('display','block').siblings().css('display','none');
+    });
+    $('#J_switches').children('.active').click();    
   });
-  $('#J_switches').children('.active').click();
-
+  
 
 
 
