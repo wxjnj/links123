@@ -135,6 +135,7 @@ class PublicAction extends BaseAction {
 	 * @see PublicAction::login()
 	 */
     public function login() {
+        //@ TODO 登录成功后该session值仍是null
         if(!isset($_SESSION[C('USER_AUTH_KEY')])) {
             $this->display();
             return;
