@@ -1,6 +1,7 @@
 body{
 	font-family: \5FAE\8F6F\96C5\9ED1,Hiragino Sans GB,Hiragino Sans GB W3;
 	font-size: 12px;
+	overflow: hidden;
 }
 :focus{outline: 0}
 input:focus{ outline: 0; }
@@ -308,9 +309,11 @@ input:focus{ outline: 0; }
 	opacity: 1;
 }
 
+#search-result-page-header{margin: 0 auto;width: 960px; height:84px; background-color:#f3f3f3; border-bottom:1px solid #fff;}
+#search-result-page-header-after{margin: 0 auto;width: 960px; height:1px; background-color:#f3f3f3; border-bottom:1px solid #fff;}
+.widescreen #search-result-page-header{width: 1175px;}
+.widescreen #search-result-page-header-after{width: 1175px;}
 
-#search-result-page-header{margin: 0 auto;width: 1175px; height:84px; background-color:#f3f3f3; border-bottom:1px solid #fff;}
-#search-result-page-header-after{display: none;width:100%; height:1px; background-color:#f3f3f3; border-bottom:1px solid #fff;}
 a{color:#727171}
 .logo {
   background: url(../imgs/logo-search.png) 0 0 no-repeat;
