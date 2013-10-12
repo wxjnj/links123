@@ -40,7 +40,6 @@ input:focus{ outline: 0; }
 }
 #container{
 	position: relative;
-	padding-top: 40px;
 	background: url(../imgs/search_back_1.jpg) 0 0 repeat;
     background-size:100% 100%;
 } /* TODO skins */
@@ -310,13 +309,13 @@ input:focus{ outline: 0; }
 }
 
 
-#search-result-page-header{width:100%; height:84px; background-color:#f3f3f3; border-bottom:1px solid #fff;}
-#search-result-page-header-after{width:100%; height:1px;  display: block;background-color:#f3f3f3; border-bottom:1px solid #fff;}
+#search-result-page-header{margin: 0 auto;width: 1175px; height:84px; background-color:#f3f3f3; border-bottom:1px solid #fff;}
+#search-result-page-header-after{display: none;width:100%; height:1px; background-color:#f3f3f3; border-bottom:1px solid #fff;}
 a{color:#727171}
 .logo {
   background: url(../imgs/logo-search.png) 0 0 no-repeat;
   position: absolute;
-  left: 0;
+  left: 38px;
   top: 15px;
   height: 55px;
   overflow: hidden;
