@@ -162,7 +162,7 @@
     fetchTasks : function(){
       var self = this;
       $.ajax({
-        url : 'src/json/day_task.json',
+        url : $CONFIG.PUBLIC + '/IndexV4/src/json/day_task.json',
         dataType : 'json',
         type : 'get',
         cache : false,
@@ -271,7 +271,7 @@
     fetchTasks : function(){
       var self = this;
       $.ajax({
-        url : 'src/json/week_task.json',
+        url : $CONFIG.PUBLIC + '/IndexV4/src/json/week_task.json',
         dataType : 'json',
         type : 'get',
         cache : false,
@@ -311,7 +311,7 @@
     fetchTasks : function(){
       var self = this;
       $.ajax({
-        url : 'src/json/month_task.json',
+        url : $CONFIG.PUBLIC + '/IndexV4/src/json/month_task.json',
         dataType : 'json',
         type : 'get',
         cache : false,
