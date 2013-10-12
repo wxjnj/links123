@@ -4,7 +4,7 @@
 	<meta charset="UTF-8" />
 	<title>日历</title>
 	<link rel="stylesheet" href="src/css/reset.css">
-	<link rel="stylesheet" href="src/css/plugin_calender.css">
+	<link rel="stylesheet" href="src/css/links_calender.css">
 	<style>
  html, body{
      background: #000000;
@@ -26,8 +26,8 @@
                     <a href="#" class="next">&gt;</a>
                 </div>
                 <div id="J_switches" class="c_chooser_view">
-                    <a data-href="#monthView">月</a>
-                    <a data-href="#weekView" class="active">周</a>
+                    <a data-href="#monthView" class="active">月</a>
+                    <a data-href="#weekView">周</a>
                     <a data-href="#dayView">日</a>
                 </div>
             </div><!-- c_header -->
@@ -37,7 +37,7 @@
                         <div class="small_calendar_wrap">
                             <div class="c_inner">
                                 <table id="J_dayViewCalender">
-                                    <tbody>
+                                    <!-- <tbody>
                                         <tr>
                                             <th>一</th>
                                             <th>二</th>
@@ -99,33 +99,33 @@
                                             <td><a href="#">1</a></td>
                                             <td><a href="#">1</a></td>
                                         </tr>
-                                    </tbody>
+                                    </tbody> -->
                                 </table>
                             </div>
                         </div>
                         <div class="small_task_list_wrap">
                             <div id="J_dvSmallTaskList" class="c_inner">
-                                <h4>全天事件 —— 3件</h4>
+                                <!-- <h4>全天事件 —— 3件</h4>
                                 <ul>
                                     <li>英语角代码重构</li>
                                     <li>英语角代码重构</li>
                                     <li>英语角代码重构</li>
-                                </ul>
+                                </ul> -->
                             </div>
                         </div>
                     </div><!-- left_side -->
-                    <div class="right_side">
+                    <div id="J_taskMgr" class="right_side">
                         <div id="J_dvMainTaskList" class="main_task_list_wrap">
-                            <div class="task_item">
+                            <!-- <div class="task_item">
                                 <strong>00:00</strong> 英语角代码重构
                             </div>
                             <div class="task_item todo">
                                 <strong>22:00</strong> 英语角代码重构
-                            </div>
+                            </div> -->
                         </div>
                         <div id="J_dvBurnChart" class="burn_down_chart">
                             <div class="relative_div">
-                                <h2 id="J_dvClock" class="clock">17:23</h2>
+                                <h2 id="J_dvClock" class="clock">00:00</h2>
                             </div>
                         </div>
                     </div><!-- right_side -->
@@ -133,7 +133,7 @@
 
                 <div id="weekView" class="c_body big_table week_view">
                     <table id="J_weekViewCalender" cellpadding="0" cellspacing="2">
-                        <tbody>
+                        <!-- <tbody>
                             <tr>
                                 <th height="60">Mon</th>
                                 <th height="60">Tue</th>
@@ -189,13 +189,13 @@
                                     &nbsp;
                                 </td>
                             </tr>
-                        </tbody>
+                        </tbody> -->
                     </table>
                 </div>
 
                 <div id="monthView" class="c_body big_table month_view">
                     <table id="J_monthViewCalender" cellpadding="0" cellspacing="2">
-                        <tbody>
+                        <!-- <tbody>
                             <tr>
                                 <th>Mon</th>
                                 <th>Tue</th>
@@ -272,7 +272,7 @@
                                 <td><a href="#">1</a></td>
                                 <td colspan="5">&nbsp;</td>
                             </tr>
-                        </tbody>
+                        </tbody> -->
                     </table>
                 </div>
             </div><!-- c_body_wrap -->
@@ -285,5 +285,21 @@
     <script>
 
     </script>
+    <div id="J_pop" class="c_popover">
+        <div id="J_popCtn" class="c_pop_content">
+            <ul>
+                <li>测试测试丁是丁哦倒萨倒萨大看大声道(00:00)</li>
+                <li>测试测试丁是丁哦倒萨倒萨大看大声道(00:00)</li>
+                <li>测试测试丁是丁哦倒萨倒萨大看大声道(00:00)</li>
+                <li>测试测试丁是丁哦倒萨倒萨大看大声道(00:00)</li>
+                <li>测试测试丁是丁哦倒萨倒萨大看大声道(00:00)</li>
+                <li>测试测试丁是丁哦倒萨倒萨大看大声道(00:00)</li>
+                <li>测试测试丁是丁哦倒萨倒萨大看大声道(00:00)</li>
+            </ul>
+        </div>
+        <div class="relative_div">
+            <div class="c_pop_tangle">&nbsp;</div>
+        </div>
+    </div>
 </body>
 </html>
