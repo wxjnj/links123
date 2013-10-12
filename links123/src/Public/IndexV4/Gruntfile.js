@@ -8,13 +8,15 @@ module.exports = function(grunt) {
             compile: {
                 files: {
                     '~temp/css/style.css': ['src/css/style.less'],
-                    '~temp/css/theme-purple.css': ['src/css/theme-purple.less']
+                    '~temp/css/theme-purple.css': ['src/css/theme-purple.less'],
+	                '~temp/css/theme-black.css': ['src/css/theme-black.less']
                 }
             },
             yuicompress: {
                 files: {
                     'dest/css/style.css': ['~temp/css/style.css'],
-                    'dest/css/theme-purple.css': ['~temp/css/theme-purple.css']
+                    'dest/css/theme-purple.css': ['~temp/css/theme-purple.css'],
+	                'dest/css/theme-black.css': ['~temp/css/theme-black.css']
                 },
                 options: {
                     yuicompress: true
@@ -31,15 +33,19 @@ module.exports = function(grunt) {
                         'src/js/modules/jquery.cookies.2.2.0.min.js',
                         'src/js/modules/jquery.rateit.js',
                         'src/js/modules/jquery-ui.min.js',
-                        'src/js/modules/jquery.placeholder.js'
+                        'src/js/modules/jquery.placeholder.js',
+	                    'src/js/modules/detect.js'
                     ],
                     '~temp/js/index.js': [
                         'src/js/modules/index-init.js',
+	                    'src/js/modules/index-theme.js',
 	                    'src/js/modules/index-zhidalan.js',
 	                    'src/js/modules/index-thl.js',
                         'src/js/modules/index-user.js',
                         'src/js/modules/index-zld.js',
-                        'src/js/modules/index-apps.js'
+	                    'src/js/modules/index-helpmouse.js',
+                        'src/js/modules/index-apps.js',
+	                    'src/js/modules/index-ted.js'
                     ]
                 }
             }

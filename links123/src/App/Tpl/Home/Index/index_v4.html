@@ -25,7 +25,25 @@
 		});
 	</script>
 </head>
-<body class="widescreen theme-purple theme-purple-bg-1">
+<body class="widescreen" <if condition="$skinId">style="background-image:url({$skin})"</if>>
+<!--div class="subpanel-wrap">
+	<div class="subpanel">
+		<div class="skin-types">
+			<volist name="skinCategory" id="vo" key="k">
+				<a data-id="{$vo.categoryId}" class='J_link_skin_type <if condition="$k eq 1">active</if>'>{$vo.categoryName}</a>
+			</volist>
+		</div>
+		<div id="J_skin_pics" class="skin-pics">
+			<volist name="skinList" id="vo">
+				<div id="link_skin_{$key}" class='item <if condition="$i eq 1">active</if>'>
+					<volist name="vo" id="skins">
+						<a data-bg="{$skins.skin}" data-theme="{$skins.theme}" data-id="{$skins.skinId}" class='<if condition="$skins.skinId eq $skinId">active</if>'><img src="{$skins.middleSkin}" alt="" /></a>
+					</volist>
+				</div>
+			</volist>
+		</div>
+	</div>
+</div-->
 
 <include file="Contorls:user_dialog_v4" />
 
@@ -62,12 +80,13 @@
 			</div><!-- // .uc-menu -->
 			</empty>
 		</div><!-- // .uc -->
-		<div class="screen-theme">
-			<b></b>
-			<a class="change-theme-btn" href="#">换肤</a>
-			<span> | </span>
-			<a class="change-screen-btn" href="#">窄屏</a>
-		</div><!-- // .screen-theme -->
+		<ul class="screen-theme">
+			<li class="change-theme-btn theme-purple-btn" data-theme="1"></li>
+			<li class="change-theme-btn theme-black-btn" data-theme="2"></li>
+			<li class="change-back-btn">换肤</li>
+			<li> | </li>
+			<li class="change-screen-btn">窄屏</li>
+		</ul><!-- // .screen-theme -->
 	</div>
 </div><!--// .top-nav-->
 <div class="header">
@@ -259,9 +278,20 @@
 				<li>
 					<img src="__PUBLIC__/IndexV4/src/imgs/ted-demo.jpeg">
 					<a class="ted-play-btn" href="#"></a>
+					<div class="hide-content" style="display: none">
+						<h5>两小无猜 Jeux d'enfants</h5>
+						<p class="from">15:57 Posted Sep 2013</p>
+						<p class="info">It often seems like federal-level politicians care more about creating gridlock than solving.
+							It often seems like federal-level politicians care.</p>
+					</div>
 				</li>
 				<?php } ?>
 			</ul>
+			<div class="ted-detial-layer" style="display: none">
+				<img src="__PUBLIC__/IndexV4/src/imgs/ted-demo.jpeg" />
+				<div class="content">
+				</div>
+			</div>
 		</div><!-- // .box-ted -->
 	</div><!--// .extra -->
 </div><!--// .container-->

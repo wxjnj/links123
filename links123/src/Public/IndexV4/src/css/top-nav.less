@@ -169,18 +169,30 @@
     color: #c9c9c9;
 
     margin-right: 60px;
+    line-height: 38px;
 
-    b {
-        display: block;
-        margin: 10px 0 -20px -25px;
+    li {
+        float:left;
+        margin:0 2px;
+        cursor: pointer;
+    }
+    .change-theme-btn {
         width: 20px;
         height: 20px;
-        background: url(../imgs/sprite.png) 0px -56px no-repeat;
+        border: 2px solid #ccc;
+        .border-radius(20px);
+        margin: 5px 10px 0 0;
     }
-    a{
+    .theme-purple-btn {
+        background: url(../imgs/themes/purple-theme-preview.png) center center no-repeat;
+    }
+    .theme-black-btn {
+        background: url(../imgs/themes/black-theme-preview.png) center center no-repeat;
+    }
+    .change-back-btn, .change-screen-btn{
         color: #c9c9c9;
     }
-    a:hover {
+    .change-back-btn:hover, .change-screen-btn:hover {
         color: #edb4d9;
         text-decoration: none;
     }

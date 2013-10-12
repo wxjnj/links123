@@ -69,6 +69,39 @@
     <a class="social-btns-weibo" href="#">用新浪微博账号登录</a>
 </div><!-- // .user-log-dialog -->
 
+<div class="user-dialog user-reg-ok-dialog" style="display: none">
+	<b class="close-btn"></b>
+	<div class="ok-img"></div>
+	<div class="info">
+		<p>恭喜！您已注册成功</p>
+		<p>另客号：<b>1105742</b></p>
+		<p>本窗口将于 3 秒钟后自动关闭...</p>
+	</div>
+</div><!-- // .user-reg-ok-dialog -->
+
+
+<div class="user-dialog user-find-password-dialog" style="display: none">
+	<b class="close-btn"></b>
+	<ul class="inputs">
+		<li>
+			<div class="input input-mail">
+				<b class="icon icon-mail"></b>
+				<input type="text" name="email" placeholder="输入注册邮箱" />
+			</div>
+			<div class="msg msg-err msg-email"><span class="ang"></span><div></div></div>
+		</li>
+		<li>
+			<div class="input input-code">
+				<input type="text" name="vcode" placeholder="输入验证码" />
+			</div>
+			<img class="code-img" id="J_VerifyImg" src="/Verify" title="点击刷新" />
+			<div class="msg msg-err msg-vcode"><span class="ang"></span><div></div></div>
+		</li>
+	</ul>
+	<button class="submit-btn" type="button">发送验证邮件</button>
+</div><!-- // .user-reg-dialog -->
+
+
 <div id="J_Zld" class="user-dialog zld-dialog" style="display:none">
 	<b class="close-btn"></b>
 	<ul class="inputs">
@@ -95,3 +128,4 @@
 		</li>
 	</ul>
 </div><!-- // .zld-dialog -->
+

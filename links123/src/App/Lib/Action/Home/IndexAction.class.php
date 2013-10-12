@@ -15,6 +15,58 @@ class IndexAction extends CommonAction {
 	 * @author slate date:2013-10-07
 	 */
 	public function indexV4() {
+		//自留地
+		$myareaModel = M("Myarea");
+		$scheduleModel = M("Schedule");
+
+		$user_id = intval($this->_session(C('MEMBER_AUTH_KEY')));
+		if ($user_id) {
+			$memberModel = M("Member");
+			$mbrNow = $memberModel->where(array('id' => $user_id))->find();
+			$_SESSION['myarea_sort'] = $mbrNow['myarea_sort'] ? explode(',', $mbrNow['myarea_sort']) : '';
+			$_SESSION['app_sort'] = $mbrNow['app_sort'];
+
+			//取出皮肤ID和模板ID
+			$skinId = session('skinId');
+			if (!$skinId) {
+				$skinId = cookie('skinId');
+			}
+
+			$themeId = session('themeId');
+			if (!$themeId) {
+				$themeId = cookie('themeId');
+			}
+		} else {
+
+			//取出皮肤ID和模板ID
+			$skinId = session('skinId');
+			if (!$skinId) {
+				$skinId = cookie('skinId');
+			}
+			$themeId = session('themeId');
+			if (!$themeId) {
+				$themeId = cookie('themeId');
+			}
+
+			if (!$_SESSION['app_sort']) {
+
+				$_SESSION['app_sort'] = cookie('app_sort');
+			}
+		}
+
+		//快捷皮肤
+		$skins = $this->getSkins();
+		if ($skinId) {
+			$skin = $skins['skin'][$skinId]['skinId'];
+			if (!$skin) $skinId = '';
+			$this->assign("skinId", $skinId);
+			$this->assign("skin", $skin);
+		}
+		$this->assign("skinList", $skins['list']);
+		$this->assign("skinCategory", $skins['category']);
+
+		$this->assign('themeId', $themeId);
+
 		$app_list = $this->getApps($_SESSION['app_sort']);
 		$this->assign('app_list', $app_list);
 		$this->getHeaderInfo();
@@ -31,7 +83,7 @@ class IndexAction extends CommonAction {
 		//自留地
 		$myareaModel = M("Myarea");
 		$scheduleModel = M("Schedule");
-		
+
 		$user_id = intval($this->_session(C('MEMBER_AUTH_KEY')));
 		if ($user_id) {
 			$memberModel = M("Member");
@@ -245,24 +297,24 @@ class IndexAction extends CommonAction {
 	 * @author slate date:2013-08-29
 	 */
 	public function updateSkin() {
-		
+
 		$skinId = intval($this->_param('skinId'));
-		
+
 		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
-		
+
 		$result = true;
-		
+
 		if ($user_id) {
-			
+
 			$memberModel = M("member");
-					
+
 			if (!$memberModel->where(array('id' => $user_id))->setField('skin' , $skinId)) {
-				
+
 				$result = false;
 			}
-			
+
 		}
-		
+
 		if ($skinId) {
 			session('skinId', $skinId);
 			cookie('skinId', $skinId, array('expire' => 0));
@@ -270,10 +322,10 @@ class IndexAction extends CommonAction {
 			unset($_SESSION['skinId']);
 			cookie('skinId',null);
 		}
-		
+
 		$this->ajaxReturn(cookie('skinId'));
 	}
-	
+
 	/**
 	 * 更新首页主题
 	 *
@@ -284,31 +336,31 @@ class IndexAction extends CommonAction {
 	 * @author slate date:2013-09-21
 	 */
 	public function updateSkinTheme() {
-	
+
 		$themeId = intval($this->_param('themeId'));
-	
+
 		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
-	
+
 		$result = true;
-	
+
 		if ($user_id) {
-				
+
 			$memberModel = M("member");
-				
+
 			if (!$memberModel->where(array('id' => $user_id))->setField('theme' , $themeId)) {
-	
+
 				$result = false;
 			}
-				
+
 		}
-		
+
 		session('themeId', $themeId);
 		cookie('themeId', $themeId, array('expire' => 0));
-	
+
 		$this->updateSkin(0);
 		$this->ajaxReturn($result);
 	}
-	
+
 	/**
 	 * @desc 旧首页（导航）
 	 * @author Frank UPDATE 2013-08-16
