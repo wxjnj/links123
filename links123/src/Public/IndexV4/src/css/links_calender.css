@@ -58,13 +58,14 @@
 	width: 100%;
 	height: 100%;
 	position: relative;
+	z-index: 1000;
 }
 .links123_calender .burn_down_chart .relative_div .clock{
 	position: absolute;
 	bottom: 10px;
 	right: 10px;
 	color: #fff;											/* fff */
-	z-index: 400;
+	z-index: 1000;
 	margin: 0;
 }
 /* START colors */
@@ -192,8 +193,22 @@
 	top: 90%;
 	border-bottom: 1px dashed #B89BAF;							/* B89BAF */
 }
+.links123_calender .day_view .main_task_list_wrap .task_item .drag_bar{
+	display: inline-block;
+	width: 14px;
+	margin-right: 10px;
+	background: #ccc;											/* color */
+	cursor: move;
+}
 .links123_calender .day_view .main_task_list_wrap .task_item strong{
-	margin-left: 20px;
+	margin-left: 0;
+}
+.links123_calender .day_view .main_task_list_wrap .task_item span:hover{
+	background: #C07BB3;									/* Color */
+}
+.links123_calender .day_view .main_task_list_wrap .task_item input{
+	padding: 0;
+	margin: 0;
 }
 .links123_calender .day_view .right_side .relative_div .clock{
 	right: 40px;
@@ -239,6 +254,13 @@
 	color: #3C3B3D;									/* 3C3B3D */
 	position: relative;
 }
+.links123_calender .big_table table td > .relative_div{
+	width: 100%;
+	height: 100%;
+	height: 110%\9;
+	position: relative;
+	bottom: 0;
+}
 .links123_calender .week_view .c_body,
 .links123_calender .month_view .c_body{
 	margin: 0;
@@ -273,7 +295,7 @@
 	color: #3C3B3D;
 	top: 80%;
 }
-.links123_calender .week_view td .relative_div .clock{
+.links123_calender .week_view table td .relative_div .clock{
 	position: absolute;
 	text-align: left;
 	z-index: 300;
