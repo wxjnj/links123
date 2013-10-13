@@ -18,14 +18,23 @@ var Zld = { // 自留地
             }
         });
         if(liWidth <= boxWidth) return;
+
         if(boxWidth - fstLineWidth > 45){
             var w = lis.eq(overIndex).width() + 4 - (boxWidth - fstLineWidth);
             w = ~~Math.ceil(w / (overIndex + 1));
             var s = lis.filter(':lt(' + (overIndex+1) +')');
             $.each(s, function(k, v){
-                var ow = $(v).width();
-                $(v).css('width', ow - w + 'px');
+	            var ow = $(v).width();
+	            $(v).css('width', ow - w + 'px');
             });
+        }else if(boxWidth - fstLineWidth <= 45 && boxWidth - fstLineWidth > 10){
+	        var w = lis.eq(overIndex).width() + 4 - (boxWidth - fstLineWidth);
+	        w = ~~Math.ceil(w / overIndex);
+	        var s = lis.filter(':lt(' + overIndex +')');
+	        $.each(s, function(k, v){
+		        var ow = $(v).width();
+		        $(v).css('width', ow + w + 'px');
+	        });
         }
     },
     Init: function(){
@@ -58,12 +67,14 @@ var Zld = { // 自留地
 	        self.timer = setTimeout(function(){
 		        panel.fadeIn(100);
 	        }, 400);
+	        return false;
         }).on('mouseleave', '.K_link_it', function(){
 			clearTimeout(self.timer);
 			self.timer = null;
 		    self.timer = setTimeout(function(){
 			    $('.link-custom-panel').fadeOut(50);
 		    }, 300);
+			return false;
         });
 
         $(document).on('click',  '.link-edit', function(e){
