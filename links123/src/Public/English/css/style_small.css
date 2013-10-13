@@ -607,6 +607,7 @@ a.disabled {
 	margin:6px 4px 0 0;
 	position: absolute;
 	right:0;
+    top:0;
 }
 
 .local-play-button span {

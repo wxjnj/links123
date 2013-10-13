@@ -67,6 +67,8 @@
 
 .uc{
     float: right;
+    width: 150px;
+    text-align: right;
 }
 
 .uc {
@@ -195,6 +197,74 @@
     .change-back-btn:hover, .change-screen-btn:hover {
         color: #edb4d9;
         text-decoration: none;
+    }
+}
+
+
+.skin-list {
+    width: 540px;
+    height: 120px;
+    top: 40px;
+    position: absolute;
+    margin-left: -264px;
+    z-index: 11;
+    background: #68466d;
+    box-shadow: 0 0 5px #666;
+    filter:alpha(opacity=90);
+    -moz-opacity: 0.9;
+    -khtml-opacity: 0.9;
+    opacity: 0.9;
+    .border-radius(4px);
+    .ang {
+        width: 0;
+        height: 0;
+        font-size: 0;
+        overflow: hidden;
+        position: absolute;
+        border-width: 15px;
+        border-style: solid dashed dashed;
+        border-color: transparent transparent #68466d transparent;
+        left: 260px;
+        top: -25px;
+    }
+
+    .skin-type {
+        margin-top:10px;
+        text-align: center;
+        a {
+            color: #fff;
+            margin: 5px;
+        }
+        .active {
+            color: #efb6db;
+        }
+    }
+
+    .skin-pics .item {
+        overflow: hidden;
+        display: none;
+        text-align: center;
+    }
+    .skin-pics > .active {
+        display: block;
+    }
+
+    .skin-pics {
+    }
+
+    .skin-pics a {
+        display: inline-block;
+        width: 35px;
+        height: 35px;
+        overflow: hidden;
+        margin: 8px;
+        border: 2px solid #c8bbc9;
+        .border-radius(50px);
+    }
+
+    .skin-pics img {
+        width: 58px;
+        height: 38px;
     }
 }
 
