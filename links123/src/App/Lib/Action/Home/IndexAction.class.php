@@ -66,6 +66,23 @@ class IndexAction extends CommonAction {
 			}
 		}
         
+		//自留地数据
+		if ($user_id || !$_SESSION['arealist']) {
+			$areaList = $myareaModel->where(array('mid' => $user_id))->select();
+				
+			if ($areaList) {
+				$_SESSION['arealist'] = array();
+			}
+				
+			foreach ($areaList as $value) {
+				$_SESSION['arealist'][$value['id']] = $value;
+			}
+		}
+		if (!$_SESSION['myarea_sort']) {
+				
+			$_SESSION['myarea_sort'] = array_keys($_SESSION['arealist']);
+		}
+		
 		//快捷皮肤
 		$skins = $this->getSkins();
 		if ($skinId) {
