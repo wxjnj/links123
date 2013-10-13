@@ -154,7 +154,7 @@ class WeatherAction extends CommonAction {
             $cities = M('cities');
             $cityId = $cities->where("city = '%s'", $city)->getField('id');
         }
-        var_dump($cityId);
+        
         return $cityId;
     }
 
