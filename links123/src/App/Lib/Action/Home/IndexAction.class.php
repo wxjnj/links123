@@ -65,7 +65,7 @@ class IndexAction extends CommonAction {
 		$this->assign("skinList", $skins['list']);
 		$this->assign("skinCategory", $skins['category']);
 
-		if(!$themeId && $themeId > 2) { //暂时只有1和2
+		if(!$themeId || $themeId > 2) { //暂时只有1和2
 			$themeId = 1;
 		}
 
