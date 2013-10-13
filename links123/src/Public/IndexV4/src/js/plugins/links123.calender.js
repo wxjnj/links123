@@ -39,6 +39,19 @@
   UTILS.getTimePercent = function(datetime){
     return (datetime.getHours()*60 + datetime.getMinutes()) / (24*60) * 100;
   }
+  // 根据时间对象 date , 与 百分比 p 获取，date的百分比时间，时间精确到每10分钟
+  UTILS.getPercentDatetime = function(d1, p){
+    var datetime = new Date( d1.getTime() );
+    var day = datetime.getDate();
+    datetime.setHours(0);
+    datetime.setMinutes(0);
+    datetime.setSeconds(0);
+    datetime.setMilliseconds(0);
+    p = p == 0 ? 0.01 : p;
+    var back = new Date( datetime.getTime() + ( 24 * 60 * 60 * 1000 * p) );
+    // back.setMinutes( Math.floor( back.getMinutes()/10 ) * 10 );
+    return back;
+  }
   // string -> date
   UTILS.str2date = function(dateStr){
     //var dateStr="2011-08-03 09:15:11"; //returned from mysql timestamp/datetime field
@@ -61,7 +74,6 @@
     }else{
       cha1 = (date1.getDay() - 0) * 24 * 60 * 60 * 1000;
     }
-    var cha1 = (date1.getDay() - 0) * 24 * 60 * 60 * 1000;
     var date1Sun = new Date( date1.getTime() - cha1 );
 
     date2.setHours(0);
@@ -104,6 +116,8 @@
   }
   // 比较date2是date1的当天、之前、之后
   UTILS.isOneDay = function( date1, date2 ){
+    date1 = new Date( date1.getTime() );
+    date2 = new Date( date2.getTime() );
     date1.setHours(0);
     date1.setMinutes(0);
     date1.setMilliseconds(0);
@@ -113,9 +127,7 @@
     date2.setMinutes(0);
     date2.setMilliseconds(0);
     date2.setSeconds(0);
-
-    var back = {}
-
+    var back = {};
     if( date2.getTime() == date1.getTime() ){
       back.klass = 'same';
     }else if( date2.getTime() > date1.getTime() ){
@@ -168,14 +180,36 @@
       var popL = parseInt( btnL ) + parseInt( btnW )/2 - parseInt( popW )/2
 
       $('#J_pop').css({'top' : popT, 'left' : popL});
-      $('#J_pop').fadeIn(300);
+      $('#J_pop').fadeIn();
     }, 600);
   }
   // 展示pop提示框
   UTILS.hidePop = function(){
     clearTimeout(UTILS.popShowing);
-    $('#J_pop').fadeOut(300);
+    $('#J_pop').fadeOut();
   }
+  // 字符串前端校验
+  UTILS.checkString = function( string ){
+    // 非空、无注入
+    var notNull = /^\S+$/.test( string );
+    var notInject = !/^<script>*<\/script>+$/.test( string );
+    // d('非空' + notNull);
+    // d('无注入' + notInject);
+    return notNull && notInject;
+  }
+//   UTILS.sort = function(){
+//     length = array.length;
+// 　　　　for(i=0; i<=length-2; i++) {
+// 　　　　　　for(j=length-1; j>=1; j--) {
+// 　　　　　　　　//对两个元素进行交换
+// 　　　　　　　　if(array[j] < array[j-1]) {
+// 　　　　　　　　　　temp = array[j];
+// 　　　　　　　　　　array[j] = array[j-1];
+// 　　　　　　　　　　array[j-1] = temp;
+// 　　　　　　　　}
+// 　　　　　　}
+// 　　　　}
+//   }
   // var t1 = new Date();
   // var t2 = new Date();
   // t1.setMonth(6);
@@ -190,6 +224,7 @@
   // t2.setDate(23);
   // UTILS.isOneWeek( t1, t2 );
   // UTILS.isOneDay(t1, t2);
+  // UTILS.checkString('<script>dsdds</script>');
 
   //日级视图
   var DayView = function( date ){
@@ -199,6 +234,8 @@
     this.$calender = $('#J_dayViewCalender');
     this.date = date ? new Date(date.getTime()) : new Date();
     this.changeDate( this.date );
+    this.bindEditTaskItemHandler();
+    this.bindDragTaskItemHandler();
   }
   DayView.prototype = {
     // 改变日期
@@ -219,7 +256,7 @@
     },
     // 渲染燃尽图显示当前时间
     renderBurnChart : function(){
-      var klass = UTILS.isOneDay( new Date(), this.date )['klass'];
+      var klass = UTILS.isOneDay( new Date(), new Date( this.date.getTime() ) )['klass'];
       this.$taskMgr.removeClass('same after before').addClass(klass);
       if( klass === 'same' ){
         this.$clock = $('#J_dvClock');
@@ -233,22 +270,24 @@
     showClock : function(){
       var self = this;
       if( this.$clock && this.$burnChart ){
-        this.$burnChart.css('height', UTILS.getTimePercent(new Date()) + '%');
+        this.$burnChart.height(UTILS.getTimePercent(new Date()) + '%');
         this.$clock.html( UTILS.printTime(new Date()) );
         this.$mainTaskList.find('.task_item').each(function(){
-          if( parseInt($(this).css('top')) + $(this).outerHeight() <= self.$burnChart.outerHeight() ){
+          if( parseInt($(this).css('top')) + $(this).outerHeight() / 2 <= self.$burnChart.outerHeight() ){
             $(this).removeClass('todo');
           }else{
             $(this).addClass('todo');
           }
         });
+      } else {
+        clearInterval( self.autoRun );
       }
     },
     // 根据具体的日加载任务并按时间高度显示
     fetchTasks : function(){
       var self = this;
       $.ajax({
-        url : $CONFIG.PUBLIC + '/IndexV4/src/json/day_task.json',
+        url : 'src/json/day_task.json',
         dataType : 'json',
         data : {
           'datetime' : UTILS.datetime2str( self.date )
@@ -259,23 +298,7 @@
           console.error(textStatus);
         },
         success : function( response ){
-          var resp = response.task;
-          var smallListStr = '<h4>全天事件 —— '+ resp.length +'件</h4><ul>';
-          var mainListStr = "";
-          for( var i in resp ){
-          	smallListStr += '<li>'+ resp[i].name +'</li>';
-
-            var planTime = UTILS.str2date( resp[i].planTime );
-            var klass = UTILS.isPassed( planTime ) ? 'todo' : '';
-            var timeFmtd = UTILS.printTime( planTime );
-            var percent = UTILS.getTimePercent( planTime );
-            var percented = percent > 94.5 ? 94.5 : percent;
-          	mainListStr += '<a class="task_item '+klass+'" style="top:'+ percented +'%"><strong>'+ timeFmtd +'</strong> '+ resp[i].name +'</div>';
-          }
-          smallListStr += "</ul>";
-          self.$smallTaskList.html(smallListStr);
-
-          self.$mainTaskList.html(mainListStr);
+          self.renderAjaxResponse( response );
         }
       });
     },
@@ -284,6 +307,128 @@
         this.date.getFullYear() + '年 ' +
         (this.date.getMonth() + 1) + '月 ' +
         this.date.getDate() + '日 ');
+    },
+    renderAjaxResponse : function( response ){
+      var self = this;
+      var resp = response.task;
+      var smallListStr = '<h4>全天事件 —— '+ resp.length +'件</h4><ul>';
+      var mainListStr = "";
+      for( var i in resp ){
+        smallListStr += '<li>'+ resp[i].name +'</li>';
+
+        var planTime = UTILS.str2date( resp[i].planTime );
+        var klass = UTILS.isPassed( planTime ) ? 'todo' : '';
+        var timeFmtd = UTILS.printTime( planTime );
+        var percent = UTILS.getTimePercent( planTime );
+        var percented = parseInt( parseInt(self.$mainTaskList.height()) * percent/100 ) - 20;
+        mainListStr += '<a data-time="'+ resp[i].planTime +'" data-id="'+ resp[i].id +'" data-name="'+ resp[i].name +'" class="task_item '+klass+'" style="top:'+ percented +'px"><i class="drag_bar">&nbsp;</i><strong>'+ timeFmtd +'</strong>&nbsp;<span class="task_name">'+ resp[i].name +'</span></div>';
+      }
+      smallListStr += "</ul>";
+      self.$smallTaskList.html(smallListStr);
+
+      self.$mainTaskList.html(mainListStr);
+
+      // 解决密度过近的问题，先按高度降序排列
+      var taskDomArray = self.$mainTaskList.find('.task_item').get();
+      var length = taskDomArray.length;
+      var temp = null;
+      for( var tIdx = 0;  tIdx <= length-2 ; tIdx++ ){
+        for(var j=length-1; j >= 1; j--){
+          var $item = $(taskDomArray[j]);
+          var $item2 = $(taskDomArray[j - 1]);
+          if( parseInt( $item.css('top') ) > parseInt( $item2.css('top') ) ){
+            temp = taskDomArray[j];
+            taskDomArray[j] = taskDomArray[j - 1];
+            taskDomArray[j - 1] = temp;
+          }
+        }
+      }
+      for( var stdIdx = 1; stdIdx < length ; stdIdx++ ){
+        var prevT = parseInt($(taskDomArray[stdIdx - 1]).css('top'));
+        var $self = $(taskDomArray[stdIdx]);
+        if( prevT - parseInt($self.css('top')) < 20 ){
+          $self.css('top', prevT - 20);
+          continue;
+        }
+        if( parseInt( $self.css('top') ) < 0 ){
+          $self.css('top', 0);
+          continue;
+        }
+      }
+    },
+    bindEditTaskItemHandler : function(){
+      var self = this;
+      this.$mainTaskList.on('click', '.task_name', function(){
+        var $this = $(this);
+        if( !$this.children('input').length ){
+          $this.html('<input type="text" class="task_editor" value="'+$this.parent().data('name')+'"/>');
+          $this.children('input').focus().bind('keyup', function(e){
+            if (e.keyCode === 13){
+              $(this).blur();
+            }
+          });
+        }
+      });
+      this.$mainTaskList.on('blur', 'input.task_editor', function(){
+        var origin = $(this).parent().parent().data('name').replace(/\s/g, '');
+        var changed = $(this).val().replace(/\s/g, '');
+        var id = $(this).parent().parent().data('id');
+        if( origin !== changed ){
+          if( !UTILS.checkString( changed ) ){
+            alert('请输入你的内容');
+          }else{
+            $.post('src/json/day_task.json', {
+              'datetime' : UTILS.datetime2str( self.date ),
+              'changedId' : id,
+              'changed' : changed
+            }, function( response ){
+              self.renderAjaxResponse( response );
+              alert('提交成功，与后端整合后将会正确更新任务列表');
+            }, 'json');
+          }
+        }else{
+          // d('not change');
+          $(this).parent().html(origin);
+        }
+      });
+    },
+    bindDragTaskItemHandler : function(){
+      var self = this;
+      this.$mainTaskList.on('mousedown', '.drag_bar', function(e){
+        var $taskItem = $(this).parent();
+        var tH = parseInt($taskItem.height());
+        var left = $taskItem.css('left');
+        var top = $taskItem.css('top');
+        var ctnH = parseInt( self.$mainTaskList.outerHeight() );
+        var lastT = e.clientY;
+
+        $(document).bind('mousemove', function(e){
+          top = parseInt(top) + parseInt(e.clientY) - parseInt(lastT);
+          if( top > 0 && top < ctnH){
+            $taskItem.css('top', top);
+            var changedTime = UTILS.getPercentDatetime( self.date, top/ctnH );
+            $taskItem.children('strong').html( UTILS.printTime( changedTime ) );
+          }
+          lastT = e.clientY;
+        });
+        $(document).bind('mouseup', function(){
+          $.post('src/json/day_task.json', {
+            'datetime' : UTILS.datetime2str( self.date ),
+            'changedId' : $taskItem.data('id'),
+            'changedDatetime' : $taskItem.data('datetime')
+          }, function( response ){
+            self.renderAjaxResponse( response );
+            alert('提交成功，与后端整合后将会正确更新任务列表');
+          }, 'json');
+          $(document).unbind('mouseup mousemove');
+        });
+      });
+    },
+    bindAddTaskHandler : function(){
+
+    },
+    bindRmvTaskHandler : function(){
+
     }
   }
 
@@ -292,16 +437,16 @@
     this.date = date ? new Date(date.getTime()) : new Date();
     this.$table = $('#J_weekViewCalender');
     this.$table.linkscalender(WeekCalender);
-    this.fetchTasks();
-    var self = this;
-    this.autoRun = setInterval(function(){
-      self.showClock();
-    }, 1000);
+    this.changeDate( this.date );
   }
   WeekView.prototype = {
     changeDate : function( date ){
       var self = this;
       this.date = date ? new Date(date.getTime()) : new Date();
+      this.oneWeekObj = UTILS.isOneWeek( new Date(), new Date( this.date.getTime() ) );
+      this.dates = this.oneWeekObj['dates'];
+      this.renderChooser();
+      this.renderBurnChart();
       this.fetchTasks();
       clearInterval(this.autoRun);
       this.autoRun = setInterval(function(){
@@ -310,37 +455,79 @@
     },
     // 渲染燃尽图显示当前时间
     renderBurnChart : function(){
-      var current = new Date();
       var self = this;
-      this.$table.find('td').html('<div class="burn_down_chart"></div>');
-      var oneWeekObj = UTILS.isOneWeek( new Date(), this.date );
-      
-      this.renderChooser(oneWeekObj['dates']);
-      
-      this.$table.removeClass('same before after').addClass( oneWeekObj['klass'] );
-      if( oneWeekObj['klass'] === 'same' ){
+
+      this.$table.find('td').html('<div class="relative_div"><div class="burn_down_chart"></div></div>');
+
+      // this.renderChooser(oneWeekObj['dates']);
+      this.$table.removeClass('same before after').addClass( this.oneWeekObj['klass'] );
+
+      if( this.oneWeekObj['klass'] === 'same' ){
+        var current = new Date();
         var day = current.getDay() === 0 ? 7 : current.getDay();
         this.$table.find('tr:eq(1)').children('td').each(function(i){
           if( i+1 < day ){
-            $(this).children('.burn_down_chart').height('100%');
+            $(this).find('.burn_down_chart').height('100%');
             return;
           }else if( i+1 === day ){
-            self.$burnChart = $(this).children('.burn_down_chart');
+            self.$burnChart = $(this).find('.burn_down_chart');
             self.$burnChart.html('<div class="relative_div"><h5 class="clock"></h5></div>');
-            
-            self.showClock();
           }
         });
       }else{
         self.$burnChart = null;
       }
-
+    },
+    showClock : function(){
+      if( this.$burnChart ){
+        var current = new Date();
+        var self = this;
+        this.$burnChart.height( UTILS.getTimePercent( current ) + '%');
+        this.$burnChart.find('.clock').html( UTILS.printTime( current ) );
+        this.$burnChart.parent().find('.task_item').each(function(){
+          if( parseInt($(this).css('top')) + $(this).outerHeight() <= self.$burnChart.outerHeight() ){
+            $(this).removeClass('todo');
+          }else{
+            $(this).addClass('todo');
+          }
+        });
+      }
+    },
+    // 加载任务
+    fetchTasks : function(){
+      var self = this;
+      $.ajax({
+        url : 'src/json/week_task.json',
+        dataType : 'json',
+        data : {
+          'datetime' : UTILS.datetime2str( self.date )
+        },
+        type : 'get',
+        cache : false,
+        error : function(XMLHttpRequest, textStatus, errorThrown){
+          console.error(textStatus);
+        },
+        success : function( resp ){
+          self.tasks = resp.tasks;
+          self.renderTasks();
+        }
+      });
+    },
+    renderChooser : function(){
+      $('#J_chooser').children('span').html( config.ENG_MONTHS[this.dates['sunday'].getMonth()] + ' ' + this.dates['sunday'].getFullYear() + '年 ' +
+        (this.dates['monday'].getMonth() + 1) + '.' + this.dates['monday'].getDate() + '-' +
+        (this.dates['sunday'].getMonth() + 1) + '.' + this.dates['sunday'].getDate());
+    },
+    renderTasks : function(){
+      var self = this;
       var z = 0;
-      for( var j in oneWeekObj['dates'] ){
-        var tsks = self.tasks[ UTILS.date2str( oneWeekObj['dates'][j] ) ];
-        // console.debug(UTILS.date2str( oneWeekObj['dates'][j] ) + tsk);
+      for( var j in this.oneWeekObj['dates'] ){
+        var tsks = self.tasks[ UTILS.date2str( this.oneWeekObj['dates'][j] ) ];
+        
         var $td = this.$table.find('tr:eq(1)').children('td:eq('+z+')');
-        $td.attr('data-datetime', UTILS.date2str(oneWeekObj['dates'][j]) );
+
+        $td.attr('data-datetime', UTILS.date2str( this.oneWeekObj['dates'][j] ) );
+        
         if( tsks ){
           var back = "";
           for( var o in tsks ){
@@ -349,7 +536,6 @@
             var timeFmtd = UTILS.printTime( planTime );
             var percent = UTILS.getTimePercent( planTime );
             var percented = percent > 94.5 ? 94.5 : percent;
-
             back += '<div class="task_item '+klass+'" style="top:'+percented+'%"><span>x</span>..................</div>';
           }
           $td.append(back);
@@ -373,46 +559,6 @@
         }
         z++;
       }
-    },
-    showClock : function(){
-      if( this.$burnChart ){
-        var current = new Date();
-        var self = this;
-        this.$burnChart.height( UTILS.getTimePercent( current ) + '%');
-        this.$burnChart.find('.clock').html( UTILS.printTime( current ) );
-        this.$burnChart.parent().find('.task_item').each(function(){
-          if( parseInt($(this).css('top')) + $(this).outerHeight() <= self.$burnChart.outerHeight() ){
-            $(this).removeClass('todo');
-          }else{
-            $(this).addClass('todo');
-          }
-        });
-      }
-    },
-    // 加载任务
-    fetchTasks : function(){
-      var self = this;
-      $.ajax({
-        url : $CONFIG.PUBLIC + '/IndexV4/src/json/week_task.json',
-        dataType : 'json',
-        data : {
-          'datetime' : UTILS.datetime2str( self.date )
-        },
-        type : 'get',
-        cache : false,
-        error : function(XMLHttpRequest, textStatus, errorThrown){
-          console.error(textStatus);
-        },
-        success : function( resp ){
-          self.tasks = resp.tasks;
-          self.renderBurnChart();
-        }
-      });
-    },
-    renderChooser : function( weekObj ){
-      $('#J_chooser').children('span').html( config.ENG_MONTHS[weekObj['sunday'].getMonth()] + ' ' + weekObj['sunday'].getFullYear() + '年 ' +
-        (weekObj['monday'].getMonth() + 1) + '.' + weekObj['monday'].getDate() + '-' +
-        (weekObj['sunday'].getMonth() + 1) + '.' + weekObj['sunday'].getDate());
     }
   }
 
@@ -437,7 +583,7 @@
     fetchTasks : function(){
       var self = this;
       $.ajax({
-        url : $CONFIG.PUBLIC + '/IndexV4/src/json/month_task.json',
+        url : 'src/json/month_task.json',
         dataType : 'json',
         data : {
           'date' : UTILS.datetime2str(self.date)
@@ -462,7 +608,7 @@
             return '';
           }} );
           // 绑定悬浮事件
-          self.$table.find('td').children('a').each(function(){
+          self.$table.find('td').find('a').each(function(){
             var $this = $(this);
             if( $this.data('datetime') && self.tasks[ $this.data('datetime') ] ){
               $this.mouseenter(function(){
@@ -516,7 +662,7 @@
         back += '<td class="' + this.dayStatus(this.date) + '" colspan="'+ (weekInFirstDay-1) +'"></td>';
       }
       for ( ; weekInFirstDay <=7 ; weekInFirstDay++ ){
-        back += '<td class="'+ this.dayStatus(this.date) +'"><a data-datetime="'+ UTILS.date2str(this.date) +'" href="#">'+i+'</a>'+ this.option.cellCreatedCallback( this.date ) +'</td>';
+        back += '<td class="'+ this.dayStatus(this.date) +'"><div class="relative_div"><a data-datetime="'+ UTILS.date2str(this.date) +'" href="#">'+i+'</a>'+ this.option.cellCreatedCallback( this.date ) +'</div></td>';
         i++;
         this.date.setDate(i);
       }
@@ -527,7 +673,7 @@
       while( true ){
         back += '<tr>';
         for( var j = 0; j < 7; j++ ){
-          back += '<td class="'+ this.dayStatus(this.date) +'"><a data-datetime="'+ UTILS.date2str(this.date) +'" href="#">'+i+'</a>'+ this.option.cellCreatedCallback( this.date ) +'</td>';
+          back += '<td class="'+ this.dayStatus(this.date) +'"><div class="relative_div"><a data-datetime="'+ UTILS.date2str(this.date) +'" href="#">'+i+'</a>'+ this.option.cellCreatedCallback( this.date ) +'</td></div>';
           i++;
           this.date.setDate(i);
           if( this.date.getDate() == 1 ) break;
@@ -610,17 +756,7 @@
     return this;
   }
 
-  $(document).ready(function(){
-    /*
-     * 视图切换
-     */
-    $('#J_switches').children().bind('click', function(){
-      $(this).addClass('active').siblings().removeClass('active');
-      $($(this).data('href')).css('display','block').siblings().css('display','none');
-    });
-    $('#J_switches').children('.active').click();    
-  });
-
+  
 
   /*
    * 主要事件处理
@@ -668,37 +804,44 @@
   // });
   // <-- 未重构代码
 
-  var testDate = new Date();
-  testDate.setMonth(10);
-  testDate.setDate(1);
-  /* MAIN */
-  // var dayView = new DayView();
-  // setTimeout(function(){
-  //   dayView.changeDate( new Date() );
-  // }, 1000);
-  // setTimeout(function(){
-  //   testDate.setMonth(9);
-  //   testDate.setDate(13);
-  //   dayView.changeDate( testDate );
-  // }, 2000);
-  // d(testDate);
-  // var monthView = new MonthView();
-  var weekView = new WeekView();
+  // var testDate = new Date();
 
 
-  // setTimeout(function(){
-  //   weekView.changeDate( testDate );
-  // }, 4000);
-  // setTimeout(function(){
-  //   testDate.setMonth(8);
-  //   testDate.setDate(13);
-  //   weekView.changeDate( testDate );
-  // }, 8000);
-  // d(testDate);
-  
-  /* TEST */
-  // var testDate2 = new Date('2013-10-11 14:56');
-  // var testDate3 = new Date('2013-10-10 15:05');
-  // TEST.d( testDate2 + ' 是否已经超过当前时间 ' + UTILS.isPassed( testDate2 ) );
-  // TEST.d( testDate3 + ' 是否已经超过当前时间 ' + UTILS.isPassed( testDate3 ) );
+
+  var ViewMgr = {
+    constructors : {
+      'dayView' : DayView,
+      'weekView' : WeekView,
+      'monthView' : MonthView
+    },
+    weekView : null,
+    monthView : null,
+    dayView : null,
+    active : null,
+    openView : function( viewName, date ){
+      if( this.active === viewName ){
+        return;
+      } else if( this[viewName] ) {
+        if( date && UTILS.isOneDay( this[this.active].date, date )['klass'] !== "same" ){
+          this[viewName].changeDate( date );
+        } else {
+          this[viewName].renderChooser();
+        }
+      } else {
+        this[viewName] = new this.constructors[viewName]( date );
+      }
+      this.active = viewName;
+    }
+  }
+
+  /*
+   * 视图切换
+   */
+  $('#J_switches').children().bind('click', function(){
+    $(this).addClass('active').siblings().removeClass('active');
+    $($(this).data('href')).css('display','block').siblings().css('display','none');
+    ViewMgr.openView( $(this).data('viewname') );
+  });
+  $('#J_switches').children('.active').click();
+
 }(jQuery));

@@ -26,9 +26,9 @@
                     <a href="#" class="next">&gt;</a>
                 </div>
                 <div id="J_switches" class="c_chooser_view">
-                    <a data-href="#monthView" class="active">月</a>
-                    <a data-href="#weekView">周</a>
-                    <a data-href="#dayView">日</a>
+                    <a data-href="#monthView" data-viewname="monthView">月</a>
+                    <a data-href="#weekView" data-viewname="weekView">周</a>
+                    <a data-href="#dayView" class="active" data-viewname="dayView">日</a>
                 </div>
             </div><!-- c_header -->
             <div class="c_body_wrap">
@@ -133,7 +133,7 @@
 
                 <div id="weekView" class="c_body big_table week_view">
                     <table id="J_weekViewCalender" cellpadding="0" cellspacing="2">
-                        <!-- <tbody>
+                        <tbody>
                             <tr>
                                 <th height="60">Mon</th>
                                 <th height="60">Tue</th>
@@ -145,31 +145,35 @@
                             </tr>
                             <tr>
                                 <td>
-                                    <div class="task_item">
-                                        <span>x</span>..................
-                                    </div>
-                                    <div class="task_item" style="top: 20%">
-                                        <span>x</span>..................
-                                    </div>
-                                    <div class="task_item" style="top: 80%">
-                                        <span>x</span>..................
-                                    </div>
-                                    <div class="burn_down_chart" style="height: 100%">
+                                    <div class="relative_div">
+                                        <div class="task_item">
+                                            <span>x</span>..................
+                                        </div>
+                                        <div class="task_item" style="top: 20%">
+                                            <span>x</span>..................
+                                        </div>
+                                        <div class="task_item" style="top: 80%">
+                                            <span>x</span>..................
+                                        </div>
+                                        <div class="burn_down_chart" style="height: 100%">
+                                        </div>
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="task_item">
-                                        <span>x</span>..................
-                                    </div>
-                                    <div class="task_item" style="top: 20%">
-                                        <span>x</span>..................
-                                    </div>
-                                    <div class="task_item todo">
-                                        <span>x</span>..................
-                                    </div>
-                                    <div class="burn_down_chart" style="height: 60%">
-                                        <div class="relative_div">
-                                            <h5 class="clock">11:20</h5>
+                                    <div class="relative_div">
+                                        <div class="task_item">
+                                            <span>x</span>..................
+                                        </div>
+                                        <div class="task_item" style="top: 20%">
+                                            <span>x</span>..................
+                                        </div>
+                                        <div class="task_item todo">
+                                            <span>x</span>..................
+                                        </div>
+                                        <div class="burn_down_chart" style="height: 60%">
+                                            <div class="relative_div">
+                                                <h5 class="clock">11:20</h5>
+                                            </div>
                                         </div>
                                     </div>
                                 </td>
@@ -189,7 +193,7 @@
                                     &nbsp;
                                 </td>
                             </tr>
-                        </tbody> -->
+                        </tbody>
                     </table>
                 </div>
 

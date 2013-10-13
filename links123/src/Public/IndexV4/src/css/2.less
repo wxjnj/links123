@@ -1,4 +1,7 @@
 
+@normal_color: #474747;
+@hover_color: #ff2b06;
+
     .user-dialog {
         background: url(../imgs/white_80.png) 0 0 repeat;
         .close-btn {
@@ -10,7 +13,7 @@
         background: url(../imgs/black_70.png) 0 0 repeat;
 
         .uc-menu ul li a:hover{
-            background: #474747;
+            background: @normal_color;
         }
     }
     .header, .footer {
@@ -18,11 +21,11 @@
     }
 
     .nav li a:hover {
-        color: #ff2b06;
+        color: @hover_color;
     }
     .screen-theme {
         .change-back-btn:hover, .change-screen-btn:hover {
-            color: #ff2b06;
+            color: @hover_color;
             text-decoration: none;
         }
     }
@@ -38,22 +41,22 @@
 
     .thl .cate a.on, .thl .cate a.on:hover,
     .thl .subcate a.on, .thl .subcate a.on:hover {
-        color: #ff2b06;
+        color: @hover_color;
     }
 
     .movie-info {
         h5 {
-            color: #474747;
+            color: @normal_color;
         }
         li a {
             color: #fff;
-            background: #474747;
+            background: @normal_color;
         }
     }
 
     .music-info {
         h5, .singer {
-            color: #474747;
+            color: @normal_color;
         }
     }
 
@@ -81,11 +84,11 @@
 
     .zld-dialog li .lkd-add,
     .extra-music .song-list {
-        background: #474747;
+        background: @normal_color;
     }
 
     .extra-music .song-list .ang {
-        border-color: #474747 transparent transparent;
+        border-color: @normal_color transparent transparent;
     }
 
     .user-dialog .inputs li .input {
@@ -102,20 +105,20 @@
                 background: url(../imgs/user-dialog-black.png) -54px -35px no-repeat;
             }
             b {
-                color: #474747;
+                color: @normal_color;
             }
         }
         .checked em {
             background-position: -34px -35px;
         }
         .forget_pass {
-            color: #474747;
+            color: @normal_color;
         }
     }
 
     .zld-dialog .radio-li b,
     .user-dialog .inputs li .input input {
-        color: #474747;
+        color: @normal_color;
     }
 
     .zld-dialog .radio-li em,
@@ -124,13 +127,34 @@
     }
 
     .link-custom-panel {
-        background: #474747;
+        background: @normal_color;
         .ang {
-            border-color: #474747 transparent transparent;
+            border-color: @normal_color transparent transparent;
         }
     }
 
     body {
-        background-image:url('../imgs/wallpaper/bg-black.png');
+        background-image:url('../imgs/wallpaper/bg-black.jpg');
     }
 
+    .skin-list {
+        background: #fff;
+        .ang {
+            border-color: transparent transparent #fff transparent;
+        }
+
+        .skin-type {
+            a {
+                color: @normal_color;
+            }
+            .active {
+                color: @hover_color;
+            }
+        }
+
+
+        .skin-pics a {
+            border: 2px solid #ccc;
+        }
+
+    }
