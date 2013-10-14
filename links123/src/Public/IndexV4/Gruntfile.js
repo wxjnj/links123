@@ -19,7 +19,7 @@ module.exports = function(grunt) {
                     'dest/css/style.css': ['~temp/css/style.css'],
                     'dest/css/theme-purple.css': ['~temp/css/theme-purple.css'],
 	                'dest/css/theme-black.css': ['~temp/css/theme-black.css'],
-	                'dest/css/links123.calender.css': ['~temp/css/links123.calender-theme.css'],
+	                'dest/css/links123.calender.css': ['~temp/css/links123.calender.css'],
 	                'dest/css/links123.calender-theme.css': ['~temp/css/links123.calender-theme.css']
                 },
                 options: {
