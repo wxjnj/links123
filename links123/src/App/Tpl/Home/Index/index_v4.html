@@ -8,6 +8,7 @@
 	<meta name="Description" content="{$description}" />
 	<script>
 		var $CONFIG = {
+			theme : '{$themeId}',
 			'APP' : '__APP__/',
 			'URL' : '__URL__',
 			'PUBLIC' : '__PUBLIC__',
@@ -15,7 +16,7 @@
 		};
 	</script>
 	<!-- 静态资源 dev or build -->
-	<include file="Contorls:statics_v4_dev" />
+	<include file="Contorls:statics_v4_build" />
 	<script>
 		//待归位
 		$(function(){

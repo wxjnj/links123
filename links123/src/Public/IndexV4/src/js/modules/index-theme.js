@@ -16,11 +16,33 @@ var Theme = {
 			self.setTheme(target);
 		});
 
+		self.timer = null;
+
 		$('#K_change_skin_btn').on('mouseenter', function(){
 			$('.skin-list').fadeIn(150);
-		}).on('mouseleave', function(){
-			$('.skin-list').fadeOut(150);
+		}).on('mouseleave', '.skin-list',function(){
+			clearTimeout(self.timer);
+			self.timer = null;
+			self.timer = setTimeout(function(){
+				$('.skin-list').hide();
+			},500);
+		}).on('mouseover', '.skin-list', function(){
+			if(!$(this).is(':hidden')){
+				clearTimeout(self.timer);
+				self.timer = null;
+			}
 		});
+		self.loadBigBackground();
+
+	},
+
+	loadBigBackground: function(id){
+		var themeId = id || $CONFIG.theme;
+		var aImg = document.createElement('img');
+		aImg.src = PUBLIC + '/IndexV4/dest/imgs/' + themeId + '/bg.jpg';
+		aImg.onload = function(){
+			$('body').css('background-image', 'url('+aImg.src+')');
+		};
 	},
 
 	initPanel: function(){
@@ -45,6 +67,7 @@ var Theme = {
 		css.setAttribute('href', PUBLIC + '/IndexV4/dest/css/' + target + '.css');
 		html_doc.appendChild(css);
 		self.change('theme', target);
+		self.loadBigBackground(target);
 	},
 
 	change: function(type, target){
