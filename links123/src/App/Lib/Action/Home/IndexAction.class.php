@@ -15,6 +15,18 @@ class IndexAction extends CommonAction {
 	 * @author slate date:2013-10-07
 	 */
 	public function indexV4() {
+        
+        //气象数据
+        $weather = A('Home/Weather');
+        $data = json_decode($weather->getJsonData());
+        $weatherData = array(
+            'city' => $data->n,
+            'temp' => $data->t,
+            'sun'  => $data->s,
+            'air'  => $data->i->aq->label
+        );        
+        $this->assign('weatherData', $weatherData);
+        
 		//自留地
 		$myareaModel = M("Myarea");
 		$scheduleModel = M("Schedule");

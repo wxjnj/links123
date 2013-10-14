@@ -49,7 +49,7 @@
     text-decoration: none;
 }
 .links123_calender .c_body{
-	height: 380px;
+	height: 364px;
 	position: relative;
 	margin-top: 2px;
 	display: none;
@@ -68,26 +68,6 @@
 	z-index: 1000;
 	margin: 0;
 }
-/* START colors */
-.fc-purple{
-	color: #84577D;                                         /* 84577D */
-}
-.fc_white{
-	color: #fff;                                         	/* fff */
-}
-.fc_black{
-	color: #3C3B3D;                                         /* 3C3B3D */
-}
-.bg_purple_dark{
-	background: #84577D;                                     /* 84577D */
-}
-.bg_purple_lighter{
-	background: #906688;									/* 906688 */
-}
-.bg_purple_lightest{
-	background: #ECDADF;									/* ECDADF */
-}
-/* END colors */
 /* START day_view */
 .links123_calender .day_view .left_side{
 	position: absolute;
@@ -160,10 +140,14 @@
 .links123_calender .day_view .small_calendar_wrap table td.not a{
 	color: #888;												/* 888 */
 }
+.links123_calender .day_view .small_calendar_wrap table td.current a{
+	text-decoration: underline;
+	font-weight: bold;
+}
 .links123_calender .day_view .small_calendar_wrap table td.active a,
 .links123_calender .day_view .small_calendar_wrap table td a:hover{
 	background: #84577D;                                     /* 84577D */
-	color: #fff;												/* fff */
+	color: #fff;											 /* fff */
 }
 .links123_calender .day_view .small_task_list_wrap h4,
 .links123_calender .day_view .small_task_list_wrap ul{
@@ -180,13 +164,15 @@
 .links123_calender .day_view .main_task_list_wrap .task_item{
 	position: absolute;
 	z-index: 300;
-	color: #fff;											/* fff */
+	text-decoration: none;
 	top: 0;
 	left: 0;
 	width: 100%;
 	height: 20px;
 	line-height: 20px;
-	border-bottom: 1px dashed #C1A9BC;							/* C1A9BC */
+	cursor: move;
+	border-bottom: 1px dashed #C1A9BC;						/* C1A9BC */
+	color: #fff;											/* fff */
 }
 .links123_calender .day_view .main_task_list_wrap .task_item.todo{
 	color: #433F40;											/* 433F40 */
@@ -201,23 +187,47 @@
 	cursor: move;
 }
 .links123_calender .day_view .main_task_list_wrap .task_item strong{
-	margin-left: 0;
+	padding-left: 12px;
 }
-.links123_calender .day_view .main_task_list_wrap .task_item span:hover{
+.links123_calender .day_view .main_task_list_wrap .task_item .task_name{
+	cursor: text;
+}
+.links123_calender .day_view .main_task_list_wrap .task_item .task_name:hover{
 	background: #C07BB3;									/* Color */
 }
 .links123_calender .day_view .main_task_list_wrap .task_item input{
 	padding: 0;
 	margin: 0;
 }
-.links123_calender .day_view .right_side .relative_div .clock{
+.links123_calender .day_view .main_task_list_wrap .task_item .remove_task{
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	width: 12px;
+	height: 12px;
+	background: #000;
+	line-height: 6px;
+	display: none;
+	cursor: pointer;
+}
+.links123_calender .day_view .main_task_list_wrap .task_item:hover .remove_task{
+	display: block;
+}
+.links123_calender .day_view .right_side .clock{
+	position: absolute;
+	z-index: 1000;
+	padding: 0;
+	margin: 0;
 	right: 40px;
+	height: 30px;
 	bottom: 0;
+	top: 0;
 	font-size: 26px;
+	color: #fff;						/* color */
 }
 .links123_calender .day_view .after .burn_down_chart,
 .links123_calender .day_view .before .burn_down_chart{
-	background: transparent;
+	display: none;
 }
 .links123_calender .day_view .before .main_task_list_wrap{
 	background: #906688;											/* 906688 */
@@ -229,7 +239,7 @@
 /* END day_view */
 
 .links123_calender .big_table table{
-	width: 579px;
+	width: 582px;
 	height: 100%;
 	color: #fff;									/* fff */
 	text-align: center;
@@ -339,16 +349,16 @@
 	color: #fff;													/* fff */
 	background: #8D6285;											/* 8D6285 */
 }
-.links123_calender .month_view td.active,
+.links123_calender .month_view td.current,
 .links123_calender .month_view td.passed,
 .links123_calender .month_view td.passed a{
 	background: #8D6285;											/* 8D6285 */
 	color: #fff;													/* fff */
 }
 .links123_calender .month_view td.active a{
-	background: #8D6285;											/* 8D6285 */
 	color: #fff;													/* fff */
 	font-weight: bold;
+	text-decoration: underline;
 }
 .links123_calender .month_view td.passed .task_items span,
 .links123_calender .month_view td.active .task_items span{
@@ -359,7 +369,7 @@
 }
 /* END month_view */
 /* START POPOVER */
-.c_popover{
+.c_popover, .c_month_tip{
 	position: absolute;
 	font-size: 14px;
 	display: none;
@@ -374,6 +384,13 @@
 	border-radius: 3px;
 	padding: 10px;
 	box-shadow: 0 0 10px rgba(0,0,0,.5);
+}
+.c_month_tip .c_mt_ctn{
+	background: #fff;							/* fff */
+	border-radius: 2px;
+	padding: 1px;
+	border: 1px solid #ccc;
+	font-size: 12px;
 }
 .c_popover .relative_div{
 	position: relative;

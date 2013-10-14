@@ -61,42 +61,43 @@
     color: #fff;
 }
 .thl .cate{
+    color: #fff;
     position: absolute;
     top: 34px;
-    left: 45px;
+    left: 70px;
 }
-.thl .subcate a{
-    color: #fff;
-}
-.thl .subcate a:hover{
-    color: #efb6db;
-    text-decoration: underline;
-}
-.thl .cate a:hover{
-    color: #efb6db;
-    text-decoration: underline;
-}
-.thl .cate-in, .thl .cate-in a{
-    color: #191919; 
-}
-.thl .cate-in a:hover{
-    color: #9c63a4;
-}
-.thl .cate a.on,
-.thl .cate a.on:hover{
-    color: #9c63a4;
-    filter:alpha(opacity=100);
-    -moz-opacity: 1;
-    -khtml-opacity: 1;
-    opacity: 1;
-}
-.thl .subcate a.on,
-.thl .subcate a.on:hover{
-    color: #efb6db;
-    filter:alpha(opacity=100);
-    -moz-opacity: 1;
-    -khtml-opacity: 1;
-    opacity: 1;
+
+.thl {
+    a:hover{
+        text-decoration: underline;
+    }
+    .cate{
+         color: #fff;
+        a, a:hover{
+            color: #fff;
+        }
+        a.on, a.on:hover{
+            color: #efb6db;
+        }
+    }
+    .cate-in{
+        color: #191919;
+        a, a:hover{
+            color: #191919;
+        }
+        a.on, a.on:hover{
+            color: #9c63a4;
+        }
+    }
+    .subcate{
+        color: #fff;
+        a, a:hover{
+            color: #fff;
+        }
+        a.on, a.on:hover{
+            color: #efb6db;
+        }
+    }
 }
 
 .header-weather {
