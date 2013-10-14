@@ -9,16 +9,47 @@ $(document).on('mousemove', '.ui-widget-overlay', function(e){
 	e.stopPropagation();
 });
 
+$.fn.userMsg = function(op){
+	if(op == 'hide') {
+		this.hide();
+	} else {
+		this.show().find('div').html(op);
+	}
+};
+
 var User = {
 	Init : function() {
 		var self = this;
-		self.r_Dialog = $('.user-reg-dialog');
-		self.l_Dialog = $('.user-log-dialog');
+		var r_Dialog = self.r_Dialog = $('.user-reg-dialog');
+		var l_Dialog = self.l_Dialog = $('.user-log-dialog');
+
+		self.ok_dialog = $('.user-reg-ok-dialog');
+
+		self.msgs = $('.user-dialog').find('.msg');
+
+		self.r_msgs = r_Dialog.find('.msg');
+		self.r_msg_username = r_Dialog.find('.msg-username');
+		self.r_msg_password = r_Dialog.find('.msg-password');
+		self.r_msg_email = r_Dialog.find('.msg-email');
+		self.r_msg_vcode = r_Dialog.find('.msg-vcode');
+
+		self.l_msgs = l_Dialog.find('.msg');
+		self.l_msg_username = l_Dialog.find('.msg-username');
+		self.l_msg_password = l_Dialog.find('.msg-password');
 
 		self.r_Dialog.dialog({
 			autoOpen: false,
 			modal : true,
 			resizable : false,
+			width: 460,
+			show: {
+				effect: "clip",
+				duration: 150
+			},
+			hide: {
+				effect: "clip",
+				duration: 150
+			},
 			open : function() {
 				setTimeout(function() {
 					self.r_Dialog.find('input[name="username"]').select();
@@ -29,11 +60,42 @@ var User = {
 			autoOpen: false,
 			modal : true,
 			resizable : false,
+			width: 460,
+			show: {
+				effect: "clip",
+				duration: 200
+			},
+			hide: {
+				effect: "clip",
+				duration: 200
+			},
 			open : function() {
 				setTimeout(function() {
 					self.l_Dialog.find('input[name="username"]').select();
 				}, 20);
 			}
+		});
+		self.ok_dialog.dialog({
+			autoOpen: false,
+			modal : true,
+			resizable : false,
+			width: 340,
+			show: {
+				effect: "clip",
+				duration: 150
+			},
+			hide: {
+				effect: "clip",
+				duration: 150
+			},
+			open : function() {
+				setTimeout(function(){
+					window.location.href = APP + "Members/Index/";
+				}, 3000);
+			}
+		});
+		self.ok_dialog.on('click', '.close-btn', function(){
+			window.location.href = APP + "Members/Index/";
 		});
 
 		$('.J_SignUp').on('click', function() {
@@ -56,14 +118,16 @@ var User = {
 			}
 		});
 
-		$(document).on('mouseenter', 'input[name="username"], #J_Reg input[name="password"], #J_Reg input[name="email"], #J_Reg input[name="vcode"]', function() {
+		$(document).on('mouseenter', 'input[name="username"], input[name="password"], input[name="email"], input[name="vcode"]', function() {
 			$(this).select();
-		}).on('mousemove', '#J_Reg input[name="username"], #J_Reg input[name="password"], #J_Reg input[name="email"], #J_Reg input[name="vcode"]', function(){
+		}).on('mousemove', '#J_Reg input[name="username"], input[name="password"], input[name="email"], input[name="vcode"]', function(e){
 			//禁用冒泡 避免触发糖葫芦的焦点
-			e.stopPropagation();
 			return false;
-		}).on('keyup', 'input[name="username"], #J_Reg input[name="password"], #J_Reg input[name="email"], #J_Reg input[name="vcode"]', function(){
-			$('.user-dialog').find('.msg').hide().find('div').html('');
+		}).on('keyup', 'input[name="username"], input[name="password"], input[name="email"], input[name="vcode"]', function(){
+			var cur = $(this).attr('name');
+			self['r_msg_' + cur] && self['r_msg_' + cur].userMsg('hide');
+			self['l_msg_' + cur] && self['l_msg_' + cur].userMsg('hide');
+			self['f_msg_' + cur] && self['f_msg_' + cur].userMsg('hide');
 		});
 	},
 	CheckLogin : function() {
@@ -125,30 +189,30 @@ var User = {
 			var verify = objverify.val();
 
 			if (!username || username == objusername.attr('placeholder')) {
-				obj.find('.msg-username').show().find('div').html('昵称不能为空');
+				self.r_msg_username.userMsg('昵称不能为空');
 				objusername[0].focus();
 				return false;
 			}
 
 			if (!/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*$/.test(email)) {
-				obj.find('.msg-email').show().find('div').html('email格式不正确');
+				self.r_msg_email.userMsg('email格式不正确');
 				objemail[0].focus();
 				return false;
 			}
 
 			if (!password) {
-				obj.find('.msg-password').show().find('div').html('密码不能为空');
+				self.r_msg_password.userMsg('密码不能为空');
 				objpassword[0].focus();
 				return false;
 			}
 
 			if (!verify) {
-				obj.find('.msg-vcode div').show().find('div').html('验证码不能为空');
+				self.r_msg_vcode.userMsg('验证不能为空');
 				objverify[0].focus();
 				return false;
 			}
 
-			objmsg.html('');
+			//objmsg.html('');
 			_loading = true;
 
 			var data = {
@@ -160,10 +224,28 @@ var User = {
 
 			$.post(APP + "Members/Register/saveReg", data, function(data) {
 				if (data.indexOf("regOK") >= 0) {
-					window.location.href = APP + "Members/Index/";
+					obj.dialog('close');
+					self.ok_dialog.dialog('open');
+					//window.location.href = APP + "Members/Index/";
 				} else {
-					//TODO: 根据返回信息 判断弹出哪个msg
-					//objmsg.html(data);
+					_loading = false;
+					if(data.search(/用户名/) >= 0){
+						self.r_msg_username.userMsg(data);
+						return false;
+					}
+					if(data.search(/密码/) >= 0){
+						self.r_msg_password.userMsg(data);
+						return false;
+					}
+					if(data.search(/email/i) >= 0){
+						self.r_msg_email.userMsg(data);
+						return false;
+					}
+					if(data.search(/验证码/) >= 0){
+						self.r_msg_vcode.userMsg(data);
+						return false;
+					}
+					self.r_msg_username.userMsg(data);
 				}
 				_loading = false;
 			});
@@ -215,13 +297,13 @@ var User = {
 			var auto_login = obj.find('.remember').hasClass('checked');
 
 			if (!username || username == objusername.attr('placeholder')) {
-				obj.find('.msg-username').show().find('div').html('帐号不能为空');
+				self.l_msg_username.userMsg('用户名不能为空');
 				objusername[0].focus();
 				return false;
 			}
 
 			if (!password) {
-				obj.find('.msg-password').show().find('div').html('密码不能为空');
+				self.l_msg_password.userMsg('密码不能为空');
 				objpassword[0].focus();
 				return false;
 			}
@@ -242,43 +324,45 @@ var User = {
 				};
 				*/
 				// TODO: 根据msg不同 选择出现的位置
+				console.log(resp);
 				switch(resp.code) {
 					case 200:
 						if (window.opener && document.referrer) {
 							window.opener.location.href = document.referrer;
 							//window.opener.location.reload();
 						}
-						window.location.href = APP + "Index";
+						window.location.href = APP + "Index/indexV4.html";
 						break;
 					case 403:
 						$(objusername[0]).val("");
 						$(objpassword[0]).val("");
-						objmsg.html(resp.content);
+						self.l_msg_username.html(resp.content);
 						break;
 					case 501:
-						showmsg(objusername[0], resp.content);
+						self.l_msg_username.html(resp.content);
 						break;
 					case 502:
-						showmsg(objusername[0], resp.content);
+						self.l_msg_username.html(resp.content);
 						break;
 					case 503:
-						showmsg(objpassword[0], resp.content);
+						self.l_msg_username.html(resp.content);
 						break;
 					case 504:
-						showmsg(objpassword[0], resp.content);
+						self.l_msg_username.html(resp.content);
 						break;
 					case 505:
+						/*
 						var vcode = $('#J_Login').find('li.vcode');
 						if (vcode.length === 0) {
 							$('<li class="vcode">\n\<input class="ipt" type="text" name="vcode" placeholder="验证码" value="" /><img src="/Verify" alt="验证码" class="J_VerifyImg" title="点击刷新" />\n\</li>').insertAfter($('#J_Login input[name="password"]').parent("li"));
 						} else {
 							$('#J_Login').find('li.vcode img').click();
-						}
+						}*/
 						break;
 					case 506:
-						objmsg.html(resp.content);
-						obj.find('input[name="vcode"]').focus();
-						$('#J_Login').find('li.vcode img').click();
+						self.l_msg_username.html(resp.content);
+						//obj.find('input[name="vcode"]').focus();
+						//$('#J_Login').find('li.vcode img').click();
 						break;
 				}
 			});
@@ -286,35 +370,8 @@ var User = {
 		});
 	},
 	FindPass : function() {
-		if (!$('#J_FindPass').size()) {
-			var hl = '';
-			hl = hl + '<div class="lk-dialog lk-dialog-fpass" id="J_FindPass">';
-			hl = hl + '	<div class="lkd-hd">';
-			hl = hl + '		<a class="close" href="javascript:;">X</a>';
-			hl = hl + '	</div>';
-			hl = hl + '	<div class="lkd-bd">';
-			hl = hl + '		<div class="tabs">';
-			hl = hl + '			<a class="on" href="javascript:;">通过电子邮件</a><a style="display:none;" href="javascript:;">通过其他方式</a>';
-			hl = hl + '		</div>';
-			hl = hl + '		<div class="ct">';
-			hl = hl + '			<form action="">';
-			hl = hl + '			<ul>';
-			hl = hl + '				<li><input class="ipt" type="text" name="email" placeholder="请输入登录邮箱" /></li>';
-			hl = hl + '				<li class="vcode">';
-			hl = hl + '					<input class="ipt" type="text" name="vcode" id="" placeholder="验证码" /><img src="/Verify" alt="验证码" class="J_VerifyImg" title="点击刷新" />';
-			hl = hl + '				</li>';
-			hl = hl + '			</ul>';
-			hl = hl + '			</form>';
-			hl = hl + '		</div>';
-			hl = hl + '	</div>';
-			hl = hl + '	<div class="lkd-ft">';
-			hl = hl + '		<a class="lkd-btn" href="javascript:;">发送验证邮件</a>';
-			hl = hl + '	</div>';
-			hl = hl + '</div>';
-			$('body').append(hl);
-
-			var obj = $('#J_FindPass');
-
+		if (!self.f_Dialog) {
+			var obj = self.f_Dialog = $('.user-find-password-dialog');
 			obj.dialog({
 				autoOpen : true,
 				width : 390,
@@ -327,50 +384,47 @@ var User = {
 				}
 			});
 
-			obj.find('.close').on('click', function() {
-				$('#J_FindPass').dialog('close');
+			self.f_msg_email = self.f_Dialog.find('.msg-email');
+			self.f_msg_vcode = self.f_Dialog.find('.msg-vcode');
+
+			obj.find('.close-btn').on('click', function() {
+				obj.dialog('close');
 				return false;
 			});
 
 			obj.find('input[name="vcode"]').on('keydown', function(event) {
 				if (event.keyCode == 13) {
-					obj.find('.lkd-btn').trigger('click');
+					obj.find('.submit-btn').trigger('click');
 					return false;
 				}
 			});
 
-			obj.find('input[type="text"], input[type="password"]').on('focus', function() {
-				$(this).css('background', '#fff');
-			}).on('blur', function() {
-				$(this).css('background', '#eeefef');
-			});
-
-			$(document).on('mouseenter', '#J_FindPass input[name="email"], #J_FindPass input[name="vcode"]', function() {
+			$(document).on('mouseenter', 'input[name="email"], input[name="vcode"]', function() {
 				$(this).select();
 			});
 
 			var _loading = false;
 
-			obj.find('.lkd-btn').on('click', function() {
+			obj.find('.submit-btn').on('click', function() {
 				var objemail = obj.find('input[name="email"]');
 				var objverify = obj.find('input[name="vcode"]');
 				var email = objemail.val();
 				var verify = objverify.val();
 
 				if (!email) {
-					alert("请输入邮箱");
+					self.f_msg_email.userMsg('请输入邮箱');
 					objemail[0].focus();
 					return false;
 				}
 				var result = email.match(/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/);
 				if (result == null) {
-					alert("请正确输入邮箱");
+					self.f_msg_email.userMsg("请正确输入邮箱");
 					objemail[0].focus();
 					return false;
 				}
 
 				if (!verify) {
-					alert('验证码不能为空');
+					self.f_msg_vcode.userMsg('验证码不能为空');
 					objverify[0].focus();
 					return false;
 				}
@@ -390,10 +444,10 @@ var User = {
 			});
 
 		} else {
-			var obj = $('#J_FindPass');
+			var obj = self.f_Dialog;
 			obj.find('input[name="email"]').val('');
 			obj.find('input[name="vcode"]').val('');
-			$('#J_FindPass').dialog('open');
+			obj.dialog('open');
 		}
 	}
 };

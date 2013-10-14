@@ -31,8 +31,8 @@
     display: none;
 }
 .ui-widget-overlay {
-    background: none repeat scroll 0 0 #fff;
-    opacity: 0.8;
+    background: none repeat scroll 0 0 #fff!important;
+    opacity: 0.8!important;
     position: fixed;
     top: 0;
     left: 0;
@@ -51,8 +51,8 @@
 /** 登录、设置框$ **/
 .user-dialog {
     position: absolute;
-    left: 50%;
-    margin-left: -195px;
+    /*left: 50%;
+    margin-left: -195px;*/
     z-index: 10;
     width: 320px!important;
     padding: 70px!important;
@@ -110,7 +110,7 @@
                     display: block;
                     width: 240px;
                     height: 42px;
-                    line-height: 42px;
+                    /*line-height: 42px;*/
                     border: 0;
                     color: #fff;
                     background: transparent;
@@ -257,5 +257,30 @@
         display: block;
         color: #fff;
         margin: -20px 0 0 250px;
+    }
+}
+
+.user-reg-ok-dialog {
+    padding: 0!important;
+    width: 340px!important;
+    overflow: hidden;
+    .ok-img {
+        width: 340px;
+        height: 175px;
+        background: url(../imgs/ok-img.png) center center no-repeat;
+    }
+    .info {
+        background: #fff;
+        padding: 20px;
+        text-align: center;
+        p {
+            font-size: 12px;
+            line-height: 250%;
+            color: #000!important;
+        }
+        b {
+            font-size: 36px;
+            font-family: Arial;
+        }
     }
 }
