@@ -234,6 +234,9 @@ $(document).ready(function(){
       case 'W':
       return new Date( datetime.getTime() + number * 7 * 24 * 60 * 60 * 1000);
       break;
+      case 'D':
+      return new Date( datetime.getTime() + number * 24 * 60 * 60 * 1000);
+      break;
     }
   }
 
