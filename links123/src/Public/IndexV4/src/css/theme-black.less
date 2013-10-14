@@ -1,11 +1,12 @@
 
 @normal_color: #474747;
 @hover_color: #ff2b06;
+@url: "theme-black";
 
     .user-dialog {
         background: url(../imgs/white_80.png) 0 0 repeat;
         .close-btn {
-            background-image: url(../imgs/user-dialog-black.png);
+            background-image: url("../imgs/@{url}/user-dialog.png");
         }
     }
 
@@ -31,7 +32,7 @@
     }
 
     .logo {
-        background: url(../imgs/logo-black.png) 0 0 no-repeat;
+        background: url("../imgs/@{url}/logo.png") 0 0 no-repeat;
     }
 
     .thl .ctls,
@@ -61,7 +62,7 @@
     }
 
     .music-slide-btns li {
-        background-image: url(../imgs/slide-btns-black.png);
+        background-image: url("../imgs/@{url}/slide-btns.png");
     }
 
     .rateit .rateit-range,
@@ -71,13 +72,13 @@
     .rateit .rateit-selected-rtl,
     .rateit .rateit-preset,
     .rateit .rateit-preset-rtl{
-        background-image: url(../imgs/star-black.png);
+        background-image: url("../imgs/@{url}/star.png");
     }
 
     .extra-triple {
         .movie-slide-btns {
             li {
-                background-image: url(../imgs/slide-btns-black.png);
+                background-image: url("../imgs/@{url}/slide-btns.png");
             }
         }
     }
@@ -102,7 +103,7 @@
     .user-log-dialog {
         .remember {
             em {
-                background: url(../imgs/user-dialog-black.png) -54px -35px no-repeat;
+                background: url("../imgs/@{url}/user-dialog.png") -54px -35px no-repeat;
             }
             b {
                 color: @normal_color;
@@ -123,7 +124,7 @@
 
     .zld-dialog .radio-li em,
     .user-dialog .inputs li .input .icon {
-        background-image: url(../imgs/user-dialog-black.png);
+        background-image: url("../imgs/@{url}/user-dialog.png");
     }
 
     .link-custom-panel {
@@ -134,7 +135,7 @@
     }
 
     body {
-        background-image:url('../imgs/wallpaper/bg-black.jpg');
+        background-image:url("../imgs/@{url}/bg.jpg");
     }
 
     .skin-list {

@@ -25,7 +25,8 @@ var Ted = {
 			}
 
 			var content = li.find('.hide-content').html();
-			d_layer.hide().appendTo(li).find('.content').html(content);
+			var img = li.find('.ted-img').html();
+			d_layer.hide().appendTo(li).find('.content').html(content).end().find('.img').html(img);
 			d_layer.css('left', left).fadeIn(200);
 		}).on('mouseleave', function(){
 			d_layer.hide();
