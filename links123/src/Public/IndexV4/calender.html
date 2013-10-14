@@ -11,7 +11,8 @@
      background-attachment: fixed;
  }
  .calender_wrap{
-     width:575px;
+     width:578px;
+     height: 425px;
      margin: 10px;
  }
  </style>
@@ -21,9 +22,9 @@
         <div class="links123_calender">
             <div class="c_header">
                 <div id="J_chooser" class="c_chooser_date">
-                    <a href="#" class="prev">&lt;</a>
+                    <a id="J_prev_date" href="#" class="prev">&lt;</a>
                     <span></span>
-                    <a href="#" class="next">&gt;</a>
+                    <a id="J_next_date" href="#" class="next">&gt;</a>
                 </div>
                 <div id="J_switches" class="c_chooser_view">
                     <a data-href="#monthView" data-viewname="monthView">月</a>
@@ -123,11 +124,8 @@
                                 <strong>22:00</strong> 英语角代码重构
                             </div> -->
                         </div>
-                        <div id="J_dvBurnChart" class="burn_down_chart">
-                            <div class="relative_div">
-                                <h2 id="J_dvClock" class="clock">00:00</h2>
-                            </div>
-                        </div>
+                        <div id="J_dvBurnChart" class="burn_down_chart"></div>
+                        <h2 id="J_dvClock" class="clock">00:00</h2>
                     </div><!-- right_side -->
                 </div>
 
@@ -291,7 +289,7 @@
     </script>
     <div id="J_pop" class="c_popover">
         <div id="J_popCtn" class="c_pop_content">
-            <ul>
+            <!-- <ul>
                 <li>测试测试丁是丁哦倒萨倒萨大看大声道(00:00)</li>
                 <li>测试测试丁是丁哦倒萨倒萨大看大声道(00:00)</li>
                 <li>测试测试丁是丁哦倒萨倒萨大看大声道(00:00)</li>
@@ -299,11 +297,14 @@
                 <li>测试测试丁是丁哦倒萨倒萨大看大声道(00:00)</li>
                 <li>测试测试丁是丁哦倒萨倒萨大看大声道(00:00)</li>
                 <li>测试测试丁是丁哦倒萨倒萨大看大声道(00:00)</li>
-            </ul>
+            </ul> -->
         </div>
         <div class="relative_div">
             <div class="c_pop_tangle">&nbsp;</div>
         </div>
+    </div>
+    <div id="J_monthTip" class="c_month_tip">
+        <div class="c_mt_ctn"></div>
     </div>
 </body>
 </html>
