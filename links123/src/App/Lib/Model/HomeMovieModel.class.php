@@ -6,7 +6,7 @@ class HomeMovieModel extends CommonModel {
         );
 
     protected $_auto		=	array(
-        array('status',1,self::MODEL_INSERT,'string'),
+        array('status',0,self::MODEL_INSERT,'string'),
         array('create_time','time',self::MODEL_INSERT,'function'),
         );
     
