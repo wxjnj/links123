@@ -487,7 +487,7 @@ class EnglishQuestionSpeakAction extends CommonAction {
                     $time = time();
                     //
                     //获取媒体的id
-                    $media_info = $mediaModel->field("id,local_path,caption")->where(array("media_source_url" => array("like", $media_data['media_source_url'])))->find();
+                    $media_info = $mediaModel->field("id,local_path,caption,created")->where(array("media_source_url" => array("like", $media_data['media_source_url'])))->find();
                     $mediaId = intval($media_info['id']);
                     //
                     //来源地址未匹配到媒体，则添加媒体
@@ -599,8 +599,9 @@ class EnglishQuestionSpeakAction extends CommonAction {
                             @unlink($dest);
                             die(json_encode(array("info" => "导入失败，添加媒体到媒体表失败！", "status" => false)));
                         }
+                        $data['status'] = 0;//新增视频没有本地来源，试题不可用
                     } else {
-                        if ($media_info['caption'] != "") {
+                        if ($media_info['caption'] == "") {
                             $map = array("id" => $mediaId);
                             $ret = $mediaModel->where($map)->setField("caption", htmlentities($media_data['caption']));
                             if (false === $ret) {
@@ -609,6 +610,10 @@ class EnglishQuestionSpeakAction extends CommonAction {
                                 die(json_encode(array("info" => "导入失败，更新字幕到媒体表失败！", "status" => false)));
                             }
                         }
+                        if($media_info['local_path'] == ""){
+                            $data['status'] = 0;//视频没有本地来源，试题不可用
+                        }
+                        $media_data['created'] = $media_info['created'];
                     }
                     $data['media_id'] = intval($mediaId);
                     //没有媒体id，题目禁用
@@ -617,53 +622,6 @@ class EnglishQuestionSpeakAction extends CommonAction {
                     }
 
 
-                    //如果题目状态非停用，则进行视频来源是否可以解析检测 @author: slate
-                    if (!isset($data['status']) || $data['status'] != 0) {
-                        $supportWebsite = array(
-                            'iqiyi.com' => '_iqiyi',
-                            'cntv.cn' => '_cntv',
-                            'qq.com' => '_qq',
-                            'youku.com' => '_youku',
-                            'tudou.com' => '_tudou',
-                            'ku6.com' => '_ku6',
-                            'sina.com.cn' => '_sina',
-                            '56.com' => '_56',
-                            'letv.com' => '_letv',
-                            'sohu.com' => '_sohu',
-                            //'ted.com' => '_ted',
-                            '163.com' => '_163',
-                            'umiwi.com' => '_umiwi',
-                            'about.com' => '_about',
-                            'videojug.com' => '_videojug',
-                            'hujiang.com' => '_hujiang',
-                            // 'kizphonics.com' => '_kizphonics', //
-                            '1kejian.com' => '_1kejian',
-                            //'britishcouncil.org' => '_britishcouncil', //
-                            'ebigear.com' => '_ebigear',
-                            'bbc.co.uk' => '_bbc_co',
-                            'open.edu' => '_open_edu',
-                            'kekenet.com' => '_kekenet',
-                            'kumi.cn' => '_kumi',
-                            'wimp.com' => '_wimp',
-                            'youban.com' => '_youban',
-                            'hujiang.com' => '_hujiang',
-                            'literacycenter.net' => '_literacycenter',
-                            'peepandthebigwideworld.com' => '_peepandthebigwideworld',
-                            'ehow.co.uk' => '_ehow_co_uk',
-                            'starfall.com' => '_starfall',
-                            'kids.beva.com' => '_kids_beva',
-                            //'englishcentral.com' => '_englishcentral',
-                            'nationalgeographic.com' => '_nationalgeographic'
-                        );
-                        foreach ($supportWebsite as $k => $v) {
-                            if (false !== stripos($data['media_text_url'], $k)) {
-                                $data['status'] = 1;
-                                break;
-                            } else {
-                                $data['status'] = 0;
-                            }
-                        }
-                    }
                     $data['created'] = $time;
                     $data['updated'] = $data['created'];
 
@@ -687,9 +645,10 @@ class EnglishQuestionSpeakAction extends CommonAction {
                                     $temp['question_id'] = $list;
                                     $temp['created'] = $time;
                                     $temp['updated'] = $time;
-                                    $temp['content'] = $captions[$k]['en'] . "|" . $captions[$k]['zh'];
+                                    $temp['content'] = $captions[$k]['en'];
                                     $temp['start_time'] = intval($captions[$k]['start_time']);
                                     $temp['end_time'] = intval($captions[$k]['end_time']);
+                                    $temp['standard_audio'] = date("Ymd",$media_data['created']) . "/" . md5($media_data['media_source_url']) . "_" . ($k+1) . ".wav";
                                     array_push($datalist, $temp);
                                 }
                             }
