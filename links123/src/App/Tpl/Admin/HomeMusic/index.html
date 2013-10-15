@@ -1,0 +1,47 @@
+<tagLib name="html" />
+<include file="Public:header" />
+<load href="__PUBLIC__/Js/Jquery/jquery.js" />
+<div id="main" class="main" >
+	<div class="content" >
+
+		<div class="title">推荐音乐</div>
+
+		<div class="operate" >
+			<html:imageBtn name="add" click="add()" style="hMargin fLeft" />
+			<html:imageBtn name="edit" click="edit()" style="hMargin fLeft" />
+			<html:imageBtn name="delete" click="del()" style="hMargin fLeft" />
+			<html:imageBtn name="sort" click="sort()" style="hMargin fLeft" />
+		</div>
+
+		<form method='post' action="__URL__">
+			<div class="rSearch">
+				<div class="fLeft">名称查询：<span id="key"><input type="text" name="title" value="{$title}" class="medium" ></span></div>
+				<html:imageBtn type="submit" name="search" style="hMargin fLeft" />
+			</div>
+	
+			<div  id="searchM" class=" none search cBoth" >
+			</div>
+		</form>
+
+		<div class="list" >
+			<div id="result" class="result none"></div>
+			<html:list id="checkList" name="movie" style="list" checkbox="true" action="true" datasource="list" show="id:编号|10%,title:名称:edit,artist:演唱,sort:序号,create_time|toDate:添加日期,status|getStatus:状态" actionlist="status|showStatus=$movie['id']" />
+		</div>
+
+		<div class="page">{$page}</div>
+
+	</div>
+
+</div>
+<script type="text/javascript">
+    $(function() {
+        /* 直达 */
+        $(".page input").keydown(function(event) {
+            if (event.keyCode == 13) {	// 回车
+                if ($(this).val() != '' && !isNaN($(this).val())) {
+                    window.location.href = $(this).attr("url") + "&p=" + $(this).val();
+                }
+            }
+        });
+    })
+</script>

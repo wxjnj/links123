@@ -487,6 +487,9 @@ class EnglishQuestionAction extends CommonAction {
             foreach ($tedList as $value) {
                 $tedNameList[$value['name']] = intval($value['id']);
             }
+            //
+            $url_preg = "/^(http:\/\/)?([0-9a-z_!~*'()-]+\.)*([0-9a-z][0-9a-z-]{0,61})?[0-9a-z]\.[a-z]{2,6}/i";
+            //
             $tedSort = intval($recommendList[0]['sort']) + 1;
             $model->startTrans();
             $is_standard_excel = true;
@@ -686,7 +689,10 @@ class EnglishQuestionAction extends CommonAction {
                             }
                             $media_data['recommend'] = $recommend_id;
                         }
-                        
+                        //锁住URL不正常的视频
+                        if(!preg_match($url_preg, $media_data['media_source_url'],$match)){
+                            $media_data['status'] = 0;
+                        }
                         $mediaId = $mediaModel->add($media_data);
                         if (false === $recommend_id) {
                             $model->rollback();
@@ -753,6 +759,10 @@ class EnglishQuestionAction extends CommonAction {
                     if ($data['answer'] == 0 || (count($option_id) < 4 && !($is_double_false && $is_double_true))) {
                         $data['status'] = 0;
                         $data['answer'] = 0;
+                    }
+                    //锁住URL不正常的试题
+                    if(!preg_match($url_preg, $data['media_text_url'])){
+                        $data['status'] = 0;
                     }
 
                     //如果题目状态非停用，则进行视频来源是否可以解析检测 @author: slate
