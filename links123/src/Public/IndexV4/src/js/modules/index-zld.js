@@ -58,6 +58,7 @@ var Zld = { // 自留地
             return false;
         });
 
+	    /*
         $(document).on('mouseenter', '.K_link_it .nm', function(){
             var li = $(this).closest('li');
             var panel = $('.link-custom-panel');
@@ -76,7 +77,8 @@ var Zld = { // 自留地
 		    }, 300);
 			return false;
         });
-
+        */
+/*
         $(document).on('click',  '.link-edit', function(e){
             if(User.CheckLogin()){
                 if($(this).hasClass('add')){ return false; }
@@ -89,6 +91,7 @@ var Zld = { // 自留地
             }
 	        return false;
         });
+        */
 
         $('#J_ZldList').sortable({
             items: '> li:not(.add)',

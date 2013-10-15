@@ -57,22 +57,35 @@
 } 
 .zld ul li{
     color: #fff;
-    cursor: pointer;
     display: inline-block;
     float: left;
-    height: 45px;
-    line-height: 45px;
+    height: 40px;
+    line-height: 40px;
     margin: 6px 4px 0 0;
     white-space: nowrap;
     position: relative;
     vertical-align: middle;
     background: url(../imgs/white_20.png) 0 0 repeat;
+    overflow:hidden;
 }
 
 .K_link_it .nm {
-    display: block;
+    cursor: pointer;
+    display: inline-block;
     padding: 0 30px;
     font-weight: 100;
+}
+.K_link_it .nm:hover {
+    background: url(../imgs/purple_80.png) 0 0 repeat;
+    box-shadow: inset -2px 2px 10px #333;
+}
+
+.K_link_it .cs-btn {
+    cursor: pointer;
+    display: inline-block;
+    width: 35px;
+    height: 40px;
+    text-align: center;
 }
 
 .zld .add{
