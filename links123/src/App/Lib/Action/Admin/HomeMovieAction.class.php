@@ -10,28 +10,28 @@
 class HomeMovieAction extends CommonAction {
 
     /**
-     * @desc 分组管理查询条件
-     * @author Lee UPDATE 2013-09-05
+     * @desc 推荐查询条件
+     * @author Hiker UPDATE 2013-10-15
      * @param array $map SQL条件数组
      * @param array $param 参数数组
      * @return array    
      */
     protected function _filter(&$map, &$param) {
-        $name = $this->_param('name');
-        if (!empty($name)) {
-            $map['name'] = array('like', "%" . $name . "%");
+        $title = $this->_param('title');
+        if (!empty($title)) {
+            $map['title'] = array('like', "%" . $title . "%");
         }
-        $this->assign('name', $name);
-        $param['name'] = $name;
+        $this->assign('title', $title);
+        $param['title'] = $title;
     }
 
     /**
      * @desc 分组管理排序
-     * @author Lee UPDATE 2013-09-05 
+     * @author Hiker UPDATE 2013-10-15 
      */
     public function sort() {
         $sortId = $this->_param('sortId');
-        $model = M("Group");
+        $model = M("HomeMovie");
         $map = array();
         $map['status'] = 1;
         if (!empty($sortId)) {
@@ -52,7 +52,7 @@ class HomeMovieAction extends CommonAction {
         $this->assign("sortList", $sortList);
         $this->display("../Public/sort");
     }
-
+    
 }
 
 ?>
