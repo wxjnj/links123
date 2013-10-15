@@ -8,15 +8,19 @@ module.exports = function(grunt) {
             compile: {
                 files: {
                     '~temp/css/style.css': ['src/css/style.less'],
-                    '~temp/css/1.css': ['src/css/1.less'],
-	                '~temp/css/2.css': ['src/css/2.less']
+                    '~temp/css/theme-purple.css': ['src/css/theme-purple.less'],
+	                '~temp/css/theme-black.css': ['src/css/theme-black.less'],
+	                '~temp/css/links123.calender.css': ['src/css/links123.calender.css'],
+	                '~temp/css/links123.calender-theme.css': ['src/css/links123.calender-theme.css']
                 }
             },
             yuicompress: {
                 files: {
                     'dest/css/style.css': ['~temp/css/style.css'],
-                    'dest/css/1.css': ['~temp/css/1.css'],
-	                'dest/css/2.css': ['~temp/css/2.css']
+                    'dest/css/theme-purple.css': ['~temp/css/theme-purple.css'],
+	                'dest/css/theme-black.css': ['~temp/css/theme-black.css'],
+	                'dest/css/links123.calender.css': ['~temp/css/links123.calender.css'],
+	                'dest/css/links123.calender-theme.css': ['~temp/css/links123.calender-theme.css']
                 },
                 options: {
                     yuicompress: true
