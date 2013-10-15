@@ -38,12 +38,6 @@ class IndexAction extends CommonAction {
 			$_SESSION['myarea_sort'] = $mbrNow['myarea_sort'] ? explode(',', $mbrNow['myarea_sort']) : '';
 			$_SESSION['app_sort'] = $mbrNow['app_sort'];
 
-			//取出皮肤ID和模板ID
-			$skinId = session('skinId');
-			if (!$skinId) {
-				$skinId = cookie('skinId');
-			}
-
 			$themeId = session('themeId');
 			if (!$themeId) {
 				$themeId = cookie('themeId');
@@ -51,10 +45,6 @@ class IndexAction extends CommonAction {
 		} else {
 
 			//取出皮肤ID和模板ID
-			$skinId = session('skinId');
-			if (!$skinId) {
-				$skinId = cookie('skinId');
-			}
 			$themeId = session('themeId');
 			if (!$themeId) {
 				$themeId = cookie('themeId');
@@ -65,37 +55,9 @@ class IndexAction extends CommonAction {
 				$_SESSION['app_sort'] = cookie('app_sort');
 			}
 		}
-        
-		//自留地数据
-		if ($user_id || !$_SESSION['arealist']) {
-			$areaList = $myareaModel->where(array('mid' => $user_id))->select();
-				
-			if ($areaList) {
-				$_SESSION['arealist'] = array();
-			}
-				
-			foreach ($areaList as $value) {
-				$_SESSION['arealist'][$value['id']] = $value;
-			}
-		}
-		if (!$_SESSION['myarea_sort']) {
-				
-			$_SESSION['myarea_sort'] = array_keys($_SESSION['arealist']);
-		}
-		
-		//快捷皮肤
-		$skins = $this->getSkins();
-		if ($skinId) {
-			$skin = $skins['skin'][$skinId]['skinId'];
-			if (!$skin) $skinId = '';
-			$this->assign("skinId", $skinId);
-			$this->assign("skin", $skin);
-		}
-		$this->assign("skinList", $skins['list']);
-		$this->assign("skinCategory", $skins['category']);
 
-		if(!$themeId || $themeId > 2) { //暂时只有1和2
-			$themeId = 1;
+		if(!$themeId || strpos($themeId, 'theme')) { //暂时只有1和2
+			$themeId = 'theme-purple';
 		}
 
 		$this->assign('themeId', $themeId);
@@ -371,6 +333,38 @@ class IndexAction extends CommonAction {
 	public function updateSkinTheme() {
 
 		$themeId = intval($this->_param('themeId'));
+
+		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+
+		$result = true;
+
+		if ($user_id) {
+
+			$memberModel = M("member");
+
+			if (!$memberModel->where(array('id' => $user_id))->setField('theme' , $themeId)) {
+
+				$result = false;
+			}
+
+		}
+
+		session('themeId', $themeId);
+		cookie('themeId', $themeId, array('expire' => 0));
+
+		$this->updateSkin(0);
+		$this->ajaxReturn($result);
+	}
+
+	/**
+	 * 更新首页主题 V4
+	 *
+	 *  与v3版区别: themeId是字符串
+	 *
+	 */
+	public function updateThemeV4() {
+
+		$themeId = $this->_param('themeId');
 
 		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
 
