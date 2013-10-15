@@ -25,7 +25,7 @@
 
 		<div class="list" >
 			<div id="result" class="result none"></div>
-			<html:list id="checkList" name="group" style="list" checkbox="true" action="true" datasource="list" show="id:编号|10%,title:名称:edit,director:说明,writer:编剧,score:评分,sort:序号,status|getStatus:状态" actionlist="status|showStatus=$group['id']" />
+			<html:list id="checkList" name="movie" style="list" checkbox="true" action="true" datasource="list" show="id:编号|10%,title:名称:edit,director:说明,writer:编剧,score:另客评分,sort:序号,create_time|toDate:添加日期,status|getStatus:状态" actionlist="status|showStatus=$movie['id']" />
 		</div>
 
 		<div class="page">{$page}</div>
