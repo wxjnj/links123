@@ -47,7 +47,7 @@ class HomeMovieAction extends CommonAction {
         }
         $sortList = $model->where($map)->order('sort ASC')->select();
         foreach ($sortList as &$value) {
-            $value['txt_show'] = $value['name'];
+            $value['txt_show'] = $value['title'];
         }
         $this->assign("sortList", $sortList);
         $this->display("../Public/sort");
