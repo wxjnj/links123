@@ -1,8 +1,8 @@
 <?php
 /**
- * @name HomeMovieAction.class.php
+ * @name HomeMusicAction.class.php
  * @package Home
- * @desc 首页管理-推荐电影
+ * @desc 首页管理-推荐音乐
  * @author Hiker UPDATE 2013-10-15
  * @version 0.0.1
  */
