@@ -17,15 +17,13 @@ class IndexAction extends CommonAction {
 	public function indexV4() {
         
         //气象数据
-        $weather = A('Home/Weather');
-        $data = json_decode($weather->getJsonData());
-        $weatherData = array(
-            'city' => $data->n,
-            'temp' => $data->t,
-            'sun'  => $data->s,
-            'air'  => $data->i->aq->label
-        );        
-        $this->assign('weatherData', $weatherData);
+        $this->assign('weatherData', $this->getWeatherData());
+        
+        //推荐电影
+        $this->assign('homeMovies', $this->getHomeMovies());
+
+        //推荐音乐
+        $this->assign('homeMusics', $this->getHomeMusics());
         
 		//自留地
 		$myareaModel = M("Myarea");
@@ -1222,4 +1220,67 @@ class IndexAction extends CommonAction {
 	public function dbfm(){
 		$this->display();
 	}
+    
+    /**
+     * 获取当前访问用户所在地的天气数据
+     * 
+     * @author Hiker date:2013-10-16
+     * 
+     * @return array
+     */
+    protected function getWeatherData() {
+        
+        $weather = A('Home/Weather');
+        $data = json_decode($weather->getJsonData());
+        $weatherData = array(
+            'city' => $data->n,
+            'temp' => $data->t,
+            'sun'  => $data->s,
+            'air'  => $data->i->aq->label
+        );
+        
+        return $weatherData;
+    }
+    
+    /**
+     * 获取指定条数的数据推荐电影数据
+     * 
+     * @author Hiker date:2013-10-16
+     * 
+     * @param int $length
+     * @return array
+     */
+    protected function getHomeMovies($length = 10) {
+        
+        $result = S('HomeMovies'.$length);
+        if(!$result) {
+            $model = D('HomeMovie');
+            $result = $model->getList(array('status'=>1), 'sort', $length);
+            
+            S('HomeMovies'.$length, $result);
+        }
+        
+        return $result;
+    }
+    
+    /**
+     * 获取指定数目的推荐音乐数据
+     * 
+     * @author Hiker date:2013-10-16
+     * 
+     * @param int $length
+     * @return array
+     */
+    protected function getHomeMusics($length = 30) {
+        
+        $result = S('HomeMusics'.$length);
+        if(!$result) {
+            $model = D('HomeMusic');
+            $result = $model->getList(array('status'=>1), 'sort', $length);
+            
+            S('HomeMusics'.$length, $result);
+        }
+        
+        return $result;
+    }
 }
