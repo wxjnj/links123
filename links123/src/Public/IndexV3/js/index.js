@@ -121,6 +121,7 @@ var Zld = { // 自留地
 				fstLineWidth = liWidth - $(v).width() - 5;
 			}
 		});
+		lis.find('.nm').trigger('mouseout');
 		if(liWidth <= boxWidth) return;
 		if(boxWidth - fstLineWidth > 75){
 			var w = lis.eq(overIndex).width() + 5 - (boxWidth - fstLineWidth);

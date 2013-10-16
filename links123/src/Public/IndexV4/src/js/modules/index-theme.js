@@ -4,7 +4,7 @@ var Theme = {
 		var self = this;
 
 		self.themes = [
-			'purple', 'black'
+			'purple', 'black', 'green'
 		];
 
 		self.initPanel();

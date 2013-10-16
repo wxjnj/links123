@@ -1,0 +1,121 @@
+@double_1175_width: 578px;
+@font_purple: #502d5c;
+@font_black: #191919;
+@back_purple: #82557b;
+
+.extra-calendar {
+    .cal-header {
+        width: @double_1175_width;
+        height: 60px;
+        background: url(../imgs/white_60.png) repeat;
+        .tc {
+            text-align: center;
+        }
+        .tr {
+            text-align: right;
+        }
+        .pr20 {
+            padding-right: 20px;
+        }
+
+        td {
+            height: 60px;
+            line-height: 60px;
+        }
+        .cal-header-date-prev,
+        .cal-header-date-next {
+            width: 30px;
+            height: 30px;
+            display: block;
+        }
+        .cal-header-date-prev {
+            float:right;
+            background: url(../imgs/theme-purple/cal-prev.png) 0 0 no-repeat;
+        }
+        .cal-header-date-next {
+            float:left;
+            background: url(../imgs/theme-purple/cal-next.png) 0 0 no-repeat;
+        }
+        .cal-header-date-prev,
+        .cal-header-date-next,
+        .cal-header-date {
+            font-size: 16px;
+            font-weight: 800;
+            color: @font_purple;
+        }
+        button {
+            cursor: pointer;
+            color: @font_purple;
+            border: 0;
+            background-color: transparent;
+        }
+        .cal-view-select-btn {
+            display: inline-block;
+            width: 28px;
+            height: 28px;
+        }
+        .active {
+            color: #fff;
+            background: @back_purple;
+            .border-radius(28px);
+        }
+    }
+    .cal-body {
+        width: @double_1175_width;
+        height: 363px;
+        margin-top: 2px;
+    }
+    .cal-day {
+        width: @double_1175_width;
+        height: 363px;
+        .cal-mini-month-panel {
+            overflow: hidden;
+            width: 220px;
+            height: 190px;
+            background: url(../imgs/white_60.png) repeat;
+            table {
+                margin-left: 10px;
+                margin-top: 10px;
+            }
+            td, th {
+                text-align: center;
+                width: 28px;
+                height: 25px;
+                a {
+                    text-align: center;
+                    display: inline-block;
+                    width: 20px;
+                    height: 20px;
+                    line-height: 20px;
+                }
+
+                .active {
+                    background: @back_purple;
+                    color:#fff;
+                    .border-radius(27px);
+                }
+            }
+        }
+        .cal-day-note-list {
+            width: 190px;
+            height: 151px;
+            margin-top: 2px;
+            padding: 10px 15px;
+            background: url(../imgs/white_60.png) repeat;
+            line-height: 200%;
+            h6 {
+                color: @font_purple;
+            }
+            ul {
+                padding-left: 15px;
+                list-style: disc;
+            }
+        }
+        .cal-day-burn-down-chart {
+            width: 356px;
+            height: 363px;
+            margin: -363px 0 0 222px;
+            background: url(../imgs/white_60.png) repeat;
+        }
+    }
+}

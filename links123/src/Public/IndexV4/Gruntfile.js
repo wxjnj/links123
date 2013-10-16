@@ -10,6 +10,7 @@ module.exports = function(grunt) {
                     '~temp/css/style.css': ['src/css/style.less'],
                     '~temp/css/theme-purple.css': ['src/css/theme-purple.less'],
 	                '~temp/css/theme-black.css': ['src/css/theme-black.less'],
+	                '~temp/css/theme-green.css': ['src/css/theme-green.less'],
 	                '~temp/css/links123.calender.css': ['src/css/links123.calender.css'],
 	                '~temp/css/links123.calender-theme.css': ['src/css/links123.calender-theme.css']
                 }
@@ -19,6 +20,7 @@ module.exports = function(grunt) {
                     'dest/css/style.css': ['~temp/css/style.css'],
                     'dest/css/theme-purple.css': ['~temp/css/theme-purple.css'],
 	                'dest/css/theme-black.css': ['~temp/css/theme-black.css'],
+	                'dest/css/theme-green.css': ['~temp/css/theme-green.css'],
 	                'dest/css/links123.calender.css': ['~temp/css/links123.calender.css'],
 	                'dest/css/links123.calender-theme.css': ['~temp/css/links123.calender-theme.css']
                 },
@@ -32,13 +34,14 @@ module.exports = function(grunt) {
                 files: {
                     '~temp/js/global.js': [
                         'src/js/libs/jquery-1.10.2.min.js',
-                        'src/js/modules/es5-shim.js',
+                        'src/js/libs/es5-shim.js',
                         'src/js/modules/json2.js',
                         'src/js/modules/jquery.cookies.2.2.0.min.js',
                         'src/js/modules/jquery.rateit.js',
                         'src/js/modules/jquery-ui.min.js',
                         'src/js/modules/jquery.placeholder.js',
-	                    'src/js/modules/detect.js'
+	                    'src/js/modules/detect.js',
+	                    'src/js/libs/date.js'
                     ],
                     '~temp/js/index.js': [
                         'src/js/modules/index-init.js',
