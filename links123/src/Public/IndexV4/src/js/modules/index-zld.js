@@ -19,21 +19,34 @@ var Zld = { // 自留地
         });
         if(liWidth <= boxWidth) return;
 
-        if(boxWidth - fstLineWidth > 45){
+        if(boxWidth - fstLineWidth > 40){
             var w = lis.eq(overIndex).width() + 4 - (boxWidth - fstLineWidth);
-            w = ~~Math.ceil(w / (overIndex + 1));
+            w = ~~Math.ceil(w / (overIndex + 1) / 2);
             var s = lis.filter(':lt(' + (overIndex+1) +')');
             $.each(s, function(k, v){
 	            var ow = $(v).width();
-	            $(v).css('width', ow - w + 'px');
+	            var nm = $(v).find('.nm');
+	            var pl = nm.css('padding-left');
+	            var pr = nm.css('padding-right');
+	            nm.css({
+		            'padding-left': parseInt(pl) - w + 'px',
+		            'padding-right': parseInt(pr) - w + 'px'
+	            });
             });
-        }else if(boxWidth - fstLineWidth <= 45 && boxWidth - fstLineWidth > 10){
-	        var w = lis.eq(overIndex).width() + 4 - (boxWidth - fstLineWidth);
-	        w = ~~Math.ceil(w / overIndex);
+        }else if(boxWidth - fstLineWidth <= 40 && boxWidth - fstLineWidth > 10){
+	        var w = boxWidth - fstLineWidth + 4;//lis.eq(overIndex).width() + 4 - (boxWidth - fstLineWidth);
+	        w = ~~Math.floor(w / (overIndex-1) / 2);
 	        var s = lis.filter(':lt(' + overIndex +')');
 	        $.each(s, function(k, v){
 		        var ow = $(v).width();
-		        $(v).css('width', ow + w + 'px');
+		        //$(v).css('width', ow + w + 'px');
+		        var nm = $(v).find('.nm');
+		        var pl = nm.css('padding-left');
+		        var pr = nm.css('padding-right');
+		        nm.css({
+			        'padding-left': parseInt(pl) + w + 'px',
+			        'padding-right': parseInt(pr) + w + 'px'
+		        });
 	        });
         }
     },
@@ -58,6 +71,7 @@ var Zld = { // 自留地
             return false;
         });
 
+	    /*
         $(document).on('mouseenter', '.K_link_it .nm', function(){
             var li = $(this).closest('li');
             var panel = $('.link-custom-panel');
@@ -76,8 +90,8 @@ var Zld = { // 自留地
 		    }, 300);
 			return false;
         });
-
-        $(document).on('click',  '.link-edit', function(e){
+        */
+        $(document).on('click',  '.cs-btn', function(e){
             if(User.CheckLogin()){
                 if($(this).hasClass('add')){ return false; }
                 var o = $(this).closest('li');
@@ -182,7 +196,7 @@ var Zld = { // 自留地
             return false;
         });
         
-        $(document).on('click', '#J_Zld .lkd-del, .link-remove', function(){
+        $(document).on('click', '#J_Zld .lkd-del, .link-remove, .zld-remove-btn', function(){
 
 	        if($('#J_Zld').size()){
 		        var o = $('#J_Zld');
@@ -210,6 +224,7 @@ var Zld = { // 自留地
                         var li = licur();
                         li.remove();
 	                    self.Resize();
+                        o.dialog('close');
                     }else if(data == -1){
                         User.Login('请先登录');
                     }else{
@@ -257,31 +272,42 @@ var Zld = { // 自留地
 
 		obj.find('input[name="name"],input[name="url"]').on('keydown', function(event){
 			if (event.keyCode == 13) {
-				if(obj.find('.editp').is(":visible")){
-					obj.find('.lkd-edit').trigger('click');
+				if(!self.etimestamp){
+					self.etimestamp = event.timeStamp;
 				}else{
-					obj.find('.lkd-add').trigger('click');
+					if(self.etimestamp == event.timeStamp){
+						return false;
+					}
+					self.etimestamp = event.timeStamp
 				}
+				//if(obj.find('.editp').is(":visible")){
+				//	obj.find('.lkd-edit').trigger('click');
+				//}else{
+					obj.find('.lkd-add').trigger('click');
+				//}
+				return false;
 			}
 		});
         if(id){
             obj.find('input[name="id"]').val(id);
             obj.find('input[name="name"]').val(nm);
             obj.find('input[name="url"]').val(url);
-            obj.find('.editp').show();
-            obj.find('.addp').hide();
+	        obj.find('.zld-remove-btn').show();
+            //obj.find('.editp').show();
+            //obj.find('.addp').hide();
         }else{
+	        obj.find('.zld-remove-btn').hide();
             obj.find('input[name="id"]').val('');
             obj.find('input[name="name"]').val('');
             obj.find('input[name="url"]').val('');
-            obj.find('.editp').hide();
-            obj.find('.addp').show();
+            //obj.find('.editp').hide();
+            //obj.find('.addp').show();
         }
         obj.dialog('open');
     },
     CreateItem: function(id, nm, url){
         var hl = '<li class="K_link_it" id="'+ id +'" url="/Link/index.html?mod=myarea&amp;url='+ url +'" data-id="'+ id +'" data-url="'+ url +'">';
-        hl = hl + '<b class="nm">'+ nm +'</b>';
+        hl = hl + '<b class="nm">'+ nm +'</b><span class="cs-btn"></span>';
         hl = hl + '</li>';
         return hl;
     }

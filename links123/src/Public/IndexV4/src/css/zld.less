@@ -57,22 +57,39 @@
 } 
 .zld ul li{
     color: #fff;
-    cursor: pointer;
     display: inline-block;
     float: left;
-    height: 45px;
-    line-height: 45px;
+    height: 40px;
+    line-height: 40px;
     margin: 6px 4px 0 0;
     white-space: nowrap;
     position: relative;
     vertical-align: middle;
     background: url(../imgs/white_20.png) 0 0 repeat;
+    overflow:hidden;
 }
 
 .K_link_it .nm {
-    display: block;
-    padding: 0 30px;
+    cursor: pointer;
+    display: inline-block;
+    padding: 0 20px;
     font-weight: 100;
+    margin:0;
+    float:left;
+}
+.K_link_it .nm:hover {
+    background: url(../imgs/purple_80.png) 0 0 repeat;
+    box-shadow: inset 0 0 10px #333;
+}
+
+.K_link_it .cs-btn {
+    float:right;
+    cursor: pointer;
+    display: inline-block;
+    width: 35px;
+    height: 40px;
+    text-align: center;
+    background: url(../imgs/zld-custom-btn.png) center center no-repeat;
 }
 
 .zld .add{
@@ -157,6 +174,14 @@
                 background-position: -55px -55px;
                 background-repeat: no-repeat;
             }
+        }
+        .zld-remove-btn {
+            width: 100%;
+            height:40px;
+            background: #333;
+            border:0;
+            color:#fff;
+
         }
     }
 }

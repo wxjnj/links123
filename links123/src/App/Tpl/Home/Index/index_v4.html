@@ -28,7 +28,7 @@
 </head>
 <body class="widescreen">
 
-<include file="Contorls:user_dialog_build" />
+<include file="Contorls:user_dialog_v4" />
 
 <div class="top-nav">
 	<div class="top-nav-inner">
@@ -130,6 +130,7 @@
 		<if condition="$_SESSION['arealist'][$areaid]['id'] neq ''">
 			<li class="K_link_it" id="{$_SESSION['arealist'][$areaid].id}" url="{:U('Link/index')}?mod=myarea&url={$_SESSION['arealist'][$areaid].url}" data-id="{$_SESSION['arealist'][$areaid].id}" data-url="{$_SESSION['arealist'][$areaid].url}">
 				<b class="nm">{$_SESSION['arealist'][$areaid]['web_name']}</b>
+				<span class="cs-btn"></span>
 			</li>
 		</if>
 		</volist>
