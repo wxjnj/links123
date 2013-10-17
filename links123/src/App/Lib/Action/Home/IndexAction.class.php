@@ -144,6 +144,7 @@ class IndexAction extends CommonAction {
 		}else{
             cookie("arealist", cookie('arealist'), 24*3600*30);//延长过期时间
         }
+        var_dump(unserialize(cookie("arealist")));
         if($user_id){
             if(!empty($myarea_list)){
                 cookie('myarea_sort',$myarea_list , 24*3600*30) ;
