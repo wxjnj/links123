@@ -142,9 +142,8 @@ class IndexAction extends CommonAction {
 			}
             
 		}else{
-            cookie("arealist", cookie('arealist'), 24*3600*30);//延长过期时间
+            //cookie("arealist", cookie('arealist'), 24*3600*30);//延长过期时间
         }
-        var_dump(unserialize(cookie("arealist")));
         if($user_id){
             if(!empty($myarea_list)){
                 cookie('myarea_sort',$myarea_list , 24*3600*30) ;
@@ -154,7 +153,7 @@ class IndexAction extends CommonAction {
         }elseif(!cookie('myarea_sort')){
             cookie('myarea_sort', array_keys(unserialize(cookie('arealist'))), 24*3600*30);
         }else{
-            cookie('myarea_sort',cookie('myarea_sort'), 24*3600*30);//延长过期时间
+            //cookie('myarea_sort',cookie('myarea_sort'), 24*3600*30);//延长过期时间
         }
         $this->assign("myarea_sort", cookie('myarea_sort'));
         $this->assign("arealist", unserialize(cookie('arealist')));
