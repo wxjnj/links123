@@ -52,6 +52,7 @@ module.exports = function(grunt) {
                         'src/js/modules/index-zld.js',
 	                    'src/js/modules/index-helpmouse.js',
                         'src/js/modules/index-apps.js',
+	                    'src/js/modules/index-calendar.js',
 	                    'src/js/modules/index-ted.js'
                     ]
                 }

@@ -82,6 +82,7 @@
                 width: 28px;
                 height: 25px;
                 a {
+                    color: @font_purple;
                     text-align: center;
                     display: inline-block;
                     width: 20px;
@@ -116,6 +117,54 @@
             height: 363px;
             margin: -363px 0 0 222px;
             background: url(../imgs/white_60.png) repeat;
+            overflow: hidden;
+            position: relative;
+
+            .chart-body {
+                width: 356px;
+                height: 309px;
+                position: absolute;
+                bottom: 15px;
+            }
+
+            .cal-day-event-item {
+                position: absolute;
+                width: 346px;
+                padding: 0 5px;
+                height: 20px;
+                line-height: 20px;
+                border-bottom: 1px dashed @font_purple;
+                .dot {
+                    display: inline-block;
+                    width: 4px;
+                    height: 4px;
+                    background: @font_purple;
+                    position: relative;
+                    top: -2px;
+                    .border-radius(5px);
+                }
+                .time {
+                    margin-left:5px;
+                }
+                .desc {
+                    margin-left: 10px;
+                    margin-right: 10px;
+                }
+                .enter {
+                    display: none;
+                    color: @font_purple;
+                }
+                .del {
+                    color: @font_purple;
+                    float:right;
+                    display:none;
+                }
+            }
+            .cal-day-event-item:hover {
+                .del {
+                    display: inline;
+                }
+            }
         }
     }
 }
