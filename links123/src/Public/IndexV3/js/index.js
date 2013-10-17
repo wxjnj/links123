@@ -138,20 +138,20 @@ var Zld = { // 自留地
 		var obj = $('#J_ZldList');
 		self.Resize();
 		$(document).on('click', '#J_ZldList .add', function(){
-			if(User.CheckLogin()){
-				self.Create();
-			}
+			//if(User.CheckLogin()){
+            self.Create();
+			//}
 		});
 		$(document).on('click',  '#J_ZldList .ctl', function(){
-			if(User.CheckLogin()){
-				if($(this).hasClass('add')){ return false; }
-				var o = $(this).closest('li');
-				var id = o.data('id');
-				var nm = o.find('b').html();
-				var url = o.data('url');
-				self.Create(id, nm, url);
-				return false;
-			}
+//			if(User.CheckLogin()){
+            if($(this).hasClass('add')){ return false; }
+            var o = $(this).closest('li');
+            var id = o.data('id');
+            var nm = o.find('b').html();
+            var url = o.data('url');
+            self.Create(id, nm, url);
+            return false;
+//			}
 		});
 		$(document).on('click', '#J_ZldList .nm', function(){
 			if (!Zld.IsSortable) {

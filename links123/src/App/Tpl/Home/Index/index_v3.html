@@ -145,11 +145,11 @@
 				<div class="zld" id="J_ZldList">
 					<form action="{:U('Link/index')}?mod=myarea" id="J_MyAreaForm" target="_blank" method="post"><input type="hidden" name="url" value="" /></form>
 					<ul id="J_sortable">
-						<volist name="_SESSION['myarea_sort']" id="areaid">
-						<if condition="$_SESSION['arealist'][$areaid]['id'] neq ''">
-							<li id="{$_SESSION['arealist'][$areaid].id}" url="{:U('Link/index')}?mod=myarea&url={$_SESSION['arealist'][$areaid].url}" data-id="{$_SESSION['arealist'][$areaid].id}" data-url="{$_SESSION['arealist'][$areaid].url}">
+						<volist name="myarea_sort" id="areaid">
+						<if condition="$arealist[$areaid]['id'] neq ''">
+							<li id="{$arealist[$areaid].id}" url="{:U('Link/index')}?mod=myarea&url={$arealist[$areaid].url}" data-id="{$arealist[$areaid].id}" data-url="{$arealist[$areaid].url}">
 								<i class="mask"></i>
-								<span class="nm" ><b>{$_SESSION['arealist'][$areaid]['web_name']}</b></span>
+								<span class="nm" ><b>{$arealist[$areaid]['web_name']}</b></span>
 								<span class="ctl"></span>
 							</li>
 						</if>

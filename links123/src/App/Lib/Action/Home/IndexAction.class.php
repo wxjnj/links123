@@ -81,7 +81,7 @@ class IndexAction extends CommonAction {
 		if ($user_id) {
 			$memberModel = M("Member");
 			$mbrNow = $memberModel->where(array('id' => $user_id))->find();
-			$_SESSION['myarea_sort'] = $mbrNow['myarea_sort'] ? explode(',', $mbrNow['myarea_sort']) : '';
+            $myarea_list = $mbrNow['myarea_sort'] ? explode(',', $mbrNow['myarea_sort']) : '';
 			$_SESSION['app_sort'] = $mbrNow['app_sort'];
 			
 			//取出皮肤ID和模板ID
@@ -128,21 +128,35 @@ class IndexAction extends CommonAction {
 		$this->assign('theme', $theme);
 		
 		//自留地数据
-		if ($user_id || !$_SESSION['arealist']) {	
-			$areaList = $myareaModel->where(array('mid' => $user_id))->select();
+        //自留地改成cookie记录 @adam 2013.10.17
+		if ($user_id || !cookie('arealist')) {	
+			$areaList = $myareaModel->field("id,web_name,url")->where(array('mid' => $user_id))->select();
 			
 			if ($areaList) {
-				$_SESSION['arealist'] = array();
+				//$_SESSION['arealist'] = array();
+                $arealist_arr = array();
+                foreach ($areaList as $value) {
+                    $arealist_arr[$value['id']] = $value;
+                }
+                cookie("arealist", serialize($arealist_arr), 24*3600*30);
 			}
-			
-			foreach ($areaList as $value) {
-				$_SESSION['arealist'][$value['id']] = $value;
-			}
-		}
-		if (!$_SESSION['myarea_sort']) {
-			
-			$_SESSION['myarea_sort'] = array_keys($_SESSION['arealist']);
-		}
+            
+		}else{
+            cookie("arealist", cookie('arealist'), 24*3600*30);//延长过期时间
+        }
+        if($user_id){
+            if(!empty($myarea_list)){
+                cookie('myarea_sort',$myarea_list , 24*3600*30) ;
+            }else{
+                cookie('myarea_sort', array_keys(unserialize(cookie('arealist'))), 24*3600*30);
+            }
+        }elseif(!cookie('myarea_sort')){
+            cookie('myarea_sort', array_keys(unserialize(cookie('arealist'))), 24*3600*30);
+        }else{
+            cookie('myarea_sort',cookie('myarea_sort'), 24*3600*30);//延长过期时间
+        }
+        $this->assign("myarea_sort", cookie('myarea_sort'));
+        $this->assign("arealist", unserialize(cookie('arealist')));
 	
 		//日程表
 		if ($user_id) {
@@ -1038,6 +1052,8 @@ class IndexAction extends CommonAction {
 		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
 	
 		$result = 0;
+        $area_list = unserialize(cookie("arealist"));
+        $myarea_sort = cookie("myarea_list");
 	
 		if ($id) {
 			if ($user_id) {
@@ -1049,15 +1065,21 @@ class IndexAction extends CommonAction {
 				if (false !== $myarea->where(array('id' => $id, 'mid' => $user_id))->delete()) {
 	
 					$result = 1;
-						
-					unset($_SESSION['myarea_sort'][array_search($id, $_SESSION['myarea_sort'])]);
-					$memberModel->where(array('id' => $user_id))->save(array('myarea_sort' => implode(',', $_SESSION['myarea_sort'])));
+					
+                    unset($area_list[$id]);
+                    unset($myarea_sort[array_search($id, $myarea_sort)]);
+					//unset($_SESSION['myarea_sort'][array_search($id, $_SESSION['myarea_sort'])]);
+					$memberModel->where(array('id' => $user_id))->save(array('myarea_sort' => implode(',', $myarea_sort)));
 				}
 	
 			} else {
-					
-				$result = -1;
+				unset($area_list[$id]);
+                unset($myarea_sort[array_search($id, $myarea_sort)]);
+                
+				$result = 1;
 			}
+            cookie("arealist", serialize($area_list), 3600*24*30);
+            cookie("myarea_sort", $myarea_sort, 3600*24*30);
 		}
 	
 		echo $result;
@@ -1081,6 +1103,8 @@ class IndexAction extends CommonAction {
 		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
 	
 		$result = 0;
+        $area_list = unserialize(cookie("arealist"));
+        $myarea_sort = cookie("myarea_sort");
 	
 		if ($user_id) {
 			$myarea = M("Myarea");
@@ -1101,9 +1125,10 @@ class IndexAction extends CommonAction {
 	
 					$saveData['id'] = $result = $id;
 						
-					$_SESSION['arealist'][$id] = $saveData;
-					array_push($_SESSION['myarea_sort'], $id);
-					$memberModel->where(array('id' => $user_id))->save(array('myarea_sort' => implode(',', $_SESSION['myarea_sort'])));
+					$area_list[$id] = $saveData;
+					array_push($myarea_sort, $id);
+					$memberModel->where(array('id' => $user_id))->save(array('myarea_sort' => implode(',', $myarea_sort)));
+                    $result = 2; 
 				}
 			} else {
 				if (false !== $myarea->where(array('id' => $id, 'mid' => $user_id))->save($saveData)) {
@@ -1115,14 +1140,25 @@ class IndexAction extends CommonAction {
 			if ($result) {
 	
 				if ($id) {
-					$_SESSION['arealist'][$id]['url'] = $url;
-					$_SESSION['arealist'][$id]['web_name'] = $webname;
+                    $area_list[$id]['url'] = $url;
+                    $area_list[$id]['web_name'] = $webname;
 				}
 			}
 		} else {
-				
-			$result = -1;
+			if (!$id) {
+                $id = end($myarea_sort) + 1;
+                array_push($myarea_sort, end($myarea_sort) + 1);
+                $result = 3; 
+            }else{
+                $result = 1;
+            }
+            $area_list[$id]['id'] = $id;
+            $area_list[$id]['url'] = $url;
+            $area_list[$id]['web_name'] = $webname;
+            
 		}
+        cookie("arealist", serialize($area_list), 3600*24*30);
+        cookie("myarea_sort", $myarea_sort, 3600*24*30);
 	
 		echo $result;
 	}
@@ -1141,8 +1177,7 @@ class IndexAction extends CommonAction {
 	
 		if ($this->isAjax() && $area_list) {
 				
-			
-			$_SESSION['myarea_sort'] = $area_list;
+			cookie("myarea_sort", $area_list, 3600*24*30);
 				
 			$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
 				
