@@ -1050,13 +1050,15 @@ class IndexAction extends CommonAction {
 	
 					$result = 1;
 						
+                    unset($_SESSION['arealist'][$id]);
 					unset($_SESSION['myarea_sort'][array_search($id, $_SESSION['myarea_sort'])]);
 					$memberModel->where(array('id' => $user_id))->save(array('myarea_sort' => implode(',', $_SESSION['myarea_sort'])));
 				}
 	
 			} else {
-					
-				$result = -1;
+                unset($_SESSION['arealist'][$id]);
+				unset($_SESSION['myarea_sort'][array_search($id, $_SESSION['myarea_sort'])]);
+				$result = 1;
 			}
 		}
 	
@@ -1120,8 +1122,17 @@ class IndexAction extends CommonAction {
 				}
 			}
 		} else {
+            $result = 1;
+            if (!$id) {
+                $id = end($_SESSION['myarea_sort']) + 1;
+                array_push($_SESSION['myarea_sort'], $id);
+                $_SESSION['arealist'][$id]['id'] = $id;
+                $result = $id;
+            }
+            $_SESSION['arealist'][$id]['url'] = $url;
+            $_SESSION['arealist'][$id]['web_name'] = $webname;
 				
-			$result = -1;
+			
 		}
 	
 		echo $result;
