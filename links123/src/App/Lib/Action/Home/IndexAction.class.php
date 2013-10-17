@@ -138,7 +138,6 @@ class IndexAction extends CommonAction {
                 foreach ($areaList as $value) {
                     $arealist_arr[$value['id']] = $value;
                 }
-                var_dump($areaList);
                 cookie("arealist", serialize($arealist_arr), 24*3600*30);
 			}
             
