@@ -1040,12 +1040,24 @@ class IndexAction extends CommonAction {
 		$result = 0;
 	
 		if ($id) {
+            //判断session是否为空
+            if(!$_SESSION['arealist']){
+                $_SESSION['arealist'] = D("Myarea")->where(array("mid" => $user_id))->select();
+            }
 			if ($user_id) {
 	
 				$memberModel = M("Member");
 	
 				$myarea = M("Myarea");
-					
+				//判断session是否为空
+                if(!$_SESSION['myarea_sort']){
+                    $myarea_sort = $memberModel->where(array('id' => $user_id))->getField("myarea_sort");
+                    if(false !== $myarea_sort && !empty($myarea_sort)){
+                        $_SESSION['myarea_sort'] = explode(",", $myarea_sort);
+                    }else{
+                        $_SESSION['myarea_sort'] = array_keys($_SESSION['arealist']);
+                    }
+                }
 				if (false !== $myarea->where(array('id' => $id, 'mid' => $user_id))->delete()) {
 	
 					$result = 1;
@@ -1056,6 +1068,10 @@ class IndexAction extends CommonAction {
 				}
 	
 			} else {
+                //判断session是否为空
+                if(!$_SESSION['myarea_sort']){
+                    $_SESSION['myarea_sort'] = array_keys($_SESSION['arealist']);
+                }
                 unset($_SESSION['arealist'][$id]);
 				unset($_SESSION['myarea_sort'][array_search($id, $_SESSION['myarea_sort'])]);
 				$result = 1;
@@ -1083,11 +1099,22 @@ class IndexAction extends CommonAction {
 		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
 	
 		$result = 0;
-	
+        //判断session是否为空
+        if(!$_SESSION['arealist']){
+            $_SESSION['arealist'] = D("Myarea")->where(array("mid" => $user_id))->select();
+        }
 		if ($user_id) {
 			$myarea = M("Myarea");
 			$memberModel =  M("Member");
-	
+            //判断session是否为空
+            if(!$_SESSION['myarea_sort']){
+                $myarea_sort = $memberModel->where(array('id' => $user_id))->getField("myarea_sort");
+                if(false !== $myarea_sort && !empty($myarea_sort)){
+                    $_SESSION['myarea_sort'] = explode(",", $myarea_sort);
+                }else{
+                    $_SESSION['myarea_sort'] = array_keys($_SESSION['arealist']);
+                }
+            }
 			$now = time();
 	
 			$saveData = array(
@@ -1122,6 +1149,10 @@ class IndexAction extends CommonAction {
 				}
 			}
 		} else {
+            //判断session是否为空
+            if(!$_SESSION['myarea_sort']){
+                $_SESSION['myarea_sort'] = array_keys($_SESSION['arealist']);
+            }
             $result = 1;
             if (!$id) {
                 $id = end($_SESSION['myarea_sort']) + 1;
