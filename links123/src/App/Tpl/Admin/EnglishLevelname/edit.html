@@ -1,0 +1,69 @@
+<include file="Public:header" />
+
+<div id="main" class="main" >
+	<div class="content">
+		<div class="title">
+			修改
+			分类:
+			{$category.name}
+			[
+			<a href="__URL__/index/type/{$type}">
+				返回
+				列表
+			</a>
+			]
+		</div>
+		<form method='post'  id="form1" >
+			<table cellpadding=3 cellspacing=3 >
+			<tr>
+				<td class="tRight" >名称：</td>
+				<td class="tLeft" >
+					<input type="text" class="medium bLeftRequire" check='Require' warning="显示名称必须"  name="name" value="{$category.name}"/>
+					<input type="hidden" value="{$category.id}" name="id">
+					<input type="hidden" value="{$type}" name="type">
+				</td>
+			</tr>
+			<tr>
+				<td class="tRight" >等级：</td>
+				<td class="tLeft" >
+					<SELECT class="medium bLeft" name="level">
+						<option value="1" <eq name="category.level" value="1">selected=true</eq>>1</option>
+						<option value="2" <eq name="category.level" value="2">selected=true</eq>>2</option>
+						<option value="3" <eq name="category.level" value="3">selected=true</eq>>3</option>
+					</SELECT>
+				</td>
+			</tr>
+			<tr>
+				<td class="tRight" >排序：</td>
+				<td class="tLeft" >
+					<input type="text" class="medium"  name="sort" value="{$category.sort}"/>
+				</td>
+			</tr>
+			<tr>
+				<td class="tRight">状　态：</td>
+				<td class="tLeft">
+					<SELECT class="small bLeft"  name="status">
+						<option value="1" <eq name="category.status" value="1">selected=true</eq>>启用</option>
+						<option value="0" <eq name="category.status" value="0">selected=true</eq>>禁用</option>
+					</SELECT>
+				</td>
+			</tr>
+			<tr>
+				<td class="tRight tTop">描　述：</td>
+				<td class="tLeft">
+					<TEXTAREA class="large bLeft" name="remark"  rows="5" cols="57"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td class="center">
+					<input type="hidden" name="ajax" value="1" />
+					<input type="button" value="修 改" class="small submit" onclick="ThinkAjax.sendForm('form1','__URL__/update/','tips')" />
+					&nbsp;
+					<input type="reset" value="取 消" class="submit small" onclick="history.back(-1)" />
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>
+</div>

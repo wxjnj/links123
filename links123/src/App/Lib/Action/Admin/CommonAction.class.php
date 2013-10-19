@@ -12,6 +12,8 @@ class CommonAction extends BaseAction {
         import('@.ORG.Cookie');
         //根据cookie检查session是否过期
         $time = cookie(md5("manament_login_time"));
+        //@@@ 临时绕过超时验证
+        $time = 1;
         if (empty($time)) {
             unset($_SESSION[C('ADMIN_AUTH_KEY')]);
             unset($_SESSION['menu' . $_SESSION[C('USER_AUTH_KEY')]]);
@@ -25,6 +27,7 @@ class CommonAction extends BaseAction {
                 //检查认证识别号
                 if (!$_SESSION[C('USER_AUTH_KEY')]) {
                     //跳转到认证网关
+                    
                     redirect(PHP_FILE . C('USER_AUTH_GATEWAY'));
                 }
                 // 没有权限 抛出错误
