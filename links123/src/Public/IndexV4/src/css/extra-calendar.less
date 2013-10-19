@@ -127,6 +127,23 @@
                 bottom: 15px;
             }
 
+            .chart {
+                width: 356px;
+                height: 39px;
+                position: absolute;
+                top: 0;
+                background: @back_purple;
+
+                .time-show {
+                    color: #fff;
+                    font-size: 18px;
+                    font-weight: 100;
+                    position: absolute;
+                    right: 5px;
+                    bottom: 2px;
+                }
+            }
+
             .cal-day-event-item {
                 position: absolute;
                 width: 346px;
@@ -163,6 +180,19 @@
             .cal-day-event-item:hover {
                 .del {
                     display: inline;
+                }
+            }
+            .cal-day-event-item-pass {
+                color: #fff;
+                border-bottom: 1px dashed #fff;
+                .dot {
+                    background: #fff;
+                }
+                .enter {
+                    color: #fff;
+                }
+                .del {
+                    color: #fff;
                 }
             }
         }
