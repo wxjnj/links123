@@ -806,7 +806,7 @@ $( function($) {
 		  	$firstProvider.data('width')
 		  };
 		  var selectChannel = function( btn ){
-		  	if(btn.hasClass('qq-source') && (ua.browser.family == 'Firefox' || ua.browser.family == 'IE')){
+		  	if(btn.hasClass('qq-source') && (ua.browser.family == 'Firefox' || ua.browser.family == 'IE' || navigator.userAgent.search('OPR'))){
 		  		$('#K_qq_music_browser_tip').show();
 		  	}else{
 		  		$('#K_qq_music_browser_tip').hide();
@@ -814,7 +814,7 @@ $( function($) {
 		  	var iframe = '<iframe scrolling="no" height="'+btn.data('height')+'" width="'+btn.data('width')+'" frameborder="0" style="overflow:hidden" allowtransparency="true" src="'+btn.data('href')+'"></iframe>'
 		    resetAppSizeByProvider( btn );
 		    $('#J_iframe').html( iframe );
-			appPositionReset();
+        appPositionReset();
 		  };
 		  
 		  // 默认加载第一个
