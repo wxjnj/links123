@@ -1,7 +1,12 @@
 <?php
 class EnglishLevelnameModel extends CommonModel {
-	public function getCategoryLevelListBy($type, $title) {
-		$condition = array("level" => $type);
+	public function getCategoryLevelListBy($type = '', $title = '') {
+		$condition = array();
+		if (!empty($type)) {
+			$condition = array("level" => $type);
+		} else {
+			$condition = array("level" => array("neq", "-1"));
+		}
 		if (!empty($title)) {
 			$condition["name"] = array('like','%' . $title . '%');
 		}

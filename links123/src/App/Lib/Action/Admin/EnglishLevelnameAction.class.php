@@ -71,9 +71,9 @@ class EnglishLevelnameAction extends CommonAction {
 	public function resume() {
 		$ret = $this->cEnglishLevelnameLogic->resumeCategoryById($_GET['id']);
 		if ($ret !== false) {
-            $this->success('状态禁用成功', __URL__ . "/index/type/" . $_GET['type']);
+            $this->success('状态恢复成功', __URL__ . "/index/type/" . $_GET['type']);
         } else {
-            $this->error('状态禁用失败！');
+            $this->error('状态恢复失败！');
         }
 	}
 

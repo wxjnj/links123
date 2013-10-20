@@ -566,14 +566,53 @@ class EnglishQuestionAction extends CommonAction {
             //声明模型类
             $model = D("EnglishQuestion");
             $optionModel = D("EnglishOptions");
+            $levelModel = D("EnglishLevel");
             $mediaModel = D("EnglishMedia");
-
-            //@ 建立类目字典
-            $level_name_list = array();
-            $levelnames = D('EnglishLevelname')->select();
-            foreach($levelnames as $each_lv) {
-                $level_name_list[$each_lv["name"]] = $each_lv["id"];
+            $recommendModel = D("EnglishMediaRecommend");
+            //
+            //提取等级列表备用
+            $levels = $levelModel->order("`sort` ASC")->select();
+            foreach ($levels as $key => $value) {
+                $level_list[$value['name']] = $value['id'];
+                $level_name_list_info[$value['name']] = $value;
             }
+            foreach ($levels as $key => $value) {
+                if ($value['sort'] <= $level_name_list_info['小六']['sort']) {
+                    $difficulty_list[$value['name']] = 1;
+                } else if ($value['sort'] >= $level_name_list_info['大一']['sort']) {
+                    $difficulty_list[$value['name']] = 3;
+                } else {
+                    $difficulty_list[$value['name']] = 2;
+                }
+            }
+            //
+            //读取科目列表备用
+            $objectModel = D("EnglishObject");
+            $objects = $objectModel->select();
+            foreach ($objects as $key => $value) {
+                $object_list[$value['name']] = $value['id'];
+            }
+            //
+            //读取专题列表
+            $subjectModel = D("EnglishMediaSubject");
+            $subjects = $subjectModel->select();
+            foreach ($subjects as $key => $value) {
+                $subject_list[$value['name']] = $value['id'];
+            }
+            //推荐列表备用
+            $recommendList = $recommendModel->field("id,name,`sort`")->order("`sort` desc")->select();
+            foreach ($recommendList as $value) {
+                $recommendNameList[$value['name']] = intval($value['id']);
+            }
+            $recommendSort = intval($recommendList[0]['sort']) + 1;
+
+            //TED列表备用
+            $tedModel=D("EnglishMediaTed");
+            $tedList = $tedModel->field("id,name,`sort`")->order("`sort` desc")->select();
+            foreach ($tedList as $value) {
+                $tedNameList[$value['name']] = intval($value['id']);
+            }
+            $tedSort = intval($recommendList[0]['sort']) + 1;
             $model->startTrans();
             $is_standard_excel = true;
             //
@@ -612,29 +651,32 @@ class EnglishQuestionAction extends CommonAction {
                                 } else if ($cell->getColumn() == "D") {
                                     $data['target'] = $cell->getCalculatedValue(); //目标，听力，说力
                                 } else if ($cell->getColumn() == "E") {
-                                    $media_data['level_one'] = ftrim($cell->getCalculatedValue()); // level_one
+                                    $media_data['level_name'] = ftrim($cell->getCalculatedValue()); //等级
                                 } else if ($cell->getColumn() == "F") {
-                                    $media_data['level_two'] = ftrim($cell->getCalculatedValue()); //level_two
+                                    $media_data['object_name'] = ftrim($cell->getCalculatedValue()); //科目
                                 } else if ($cell->getColumn() == "G") {
-                                    $media_data['level_thr'] = ftrim($cell->getCalculatedValue()); //level_thr
+                                    $media_data['subject_name'] = ftrim($cell->getCalculatedValue()); //专题
                                 } else if ($cell->getColumn() == "H") {
-                                    $media_data['special_recommend'] = intval($cell->getCalculatedValue()); //是否特别推荐
+                                    //$media_data['difficulty'] = intval($cell->getCalculatedValue()); //难度
+                                    $media_data['recommend'] = intval($cell->getCalculatedValue()); //推荐
                                 } else if ($cell->getColumn() == "I") {
-                                    $data['media_text_url'] = $media_data['media_source_url'] = ftrim($cell->getCalculatedValue()); //媒体内容地址
+                                    $media_data['special_recommend'] = intval($cell->getCalculatedValue()); //是否特别推荐
                                 } else if ($cell->getColumn() == "J") {
-                                    $data['content'] = ftrim($cell->getCalculatedValue()); //题目内容
+                                    $media_data['ted'] = intval($cell->getCalculatedValue()); //是否特别推荐
                                 } else if ($cell->getColumn() == "K") {
-                                    $data['answer'] = intval($cell->getCalculatedValue()); //题目答案
+                                    $data['media_text_url'] = $media_data['media_source_url'] = ftrim($cell->getCalculatedValue()); //媒体内容地址
                                 } else if ($cell->getColumn() == "L") {
-                                    $data['option'][0] = ftrim($cell->getCalculatedValue()); //题目选项一
+                                    $data['content'] = ftrim($cell->getCalculatedValue()); //题目内容
                                 } else if ($cell->getColumn() == "M") {
-                                    $data['option'][1] = ftrim($cell->getCalculatedValue()); //题目选项二
+                                    $data['answer'] = intval($cell->getCalculatedValue()); //题目答案
                                 } else if ($cell->getColumn() == "N") {
-                                    $data['option'][2] = ftrim($cell->getCalculatedValue()); //题目选项三
+                                    $data['option'][0] = ftrim($cell->getCalculatedValue()); //题目选项一
                                 } else if ($cell->getColumn() == "O") {
-                                    $data['option'][3] = ftrim($cell->getCalculatedValue()); //题目选项四
+                                    $data['option'][1] = ftrim($cell->getCalculatedValue()); //题目选项二
                                 } else if ($cell->getColumn() == "P") {
-                                    $data['local_url'] = ftrim($cell->getCalculatedValue());
+                                    $data['option'][2] = ftrim($cell->getCalculatedValue()); //题目选项三
+                                } else if ($cell->getColumn() == "Q") {
+                                    $data['option'][3] = ftrim($cell->getCalculatedValue()); //题目选项四
                                 }
                             }
                         }
@@ -646,40 +688,11 @@ class EnglishQuestionAction extends CommonAction {
                         }
                         continue;
                     }
-
-                    //@ 检查类目是否存在，不存在则添加
-                    if (!isset($level_name_list[$media_data['level_one']])) {
-                        $data = array("name" => $media_data['level_one'], "level" => "1", "created" => time(), "default" => "0", "sort" => "10");
-                        D("EnglishLevelname")->data($data)->add();
-                        $level_name_list[$media_data['level_one']] = D("EnglishLevelname")->getLastInsID();
-                    }
-
-                    if (!isset($level_name_list[$media_data['level_two']])) {
-                        $data = array("name" => $media_data['level_two'], "level" => "2", "created" => time(), "default" => "0", "sort" => "10");
-                        D("EnglishLevelname")->data($data)->add();
-                        $level_name_list[$media_data['level_two']] = D("EnglishLevelname")->getLastInsID();
-                    }
-
-                    if (!isset($level_name_list[$media_data['level_thr']])) {
-                        $data = array("name" => $media_data['level_thr'], "level" => "3", "created" => time(), "default" => "0", "sort" => "10");
-                        D("EnglishLevelname")->data($data)->add();
-                        $level_name_list[$media_data['level_thr']] = D("EnglishLevelname")->getLastInsID();
-                    }
-                    //@ 检查类目串是否存在，不存在则添加
-                    $cat_attr_id = bindec($media_data['voice'] . $data['target'] . $media_data['pattern']);
-                    $data = array("cat_attr_id" => $cat_attr_id, "level_one" => $media_data['level_one'], "level_two" => $media_data['level_two'], "level_thr" => $media_data['level_thr']);
-                    $chk_cat_exists = D('EnglishCategory')->where($data)->select();
-                    if (!isset($cate_ret[0]["cat_id"])) {
-                        $data["status"]  = 1;
-                        $data["created"] = time();
-                        D('EnglishCategory')->data($data)->add();
-                        $new_cat_id = D('EnglishCategory')->getLastInsID();
-                    } else {
-                        $new_cat_id = $cate_ret[0]["cat_id"];
-                    }
                     //根据问题内容、视频、科目、等级以及答案内容查询是否有重复
                     $condition['question.content'] = array("like", $data['content']);
                     $condition['media.media_source_url'] = array("like", $media_data['media_source_url']);
+                    $condition['media.object'] = $object_list[$media_data['object_name']];
+                    $condition['media.level'] = $level_list[$media_data['level_name']];
                     $condition['english_options.content'] = array("like", $data['option'][$data['answer'] - 1]);
                     $repeat_ret = $model->alias("question")
                             ->join(C("DB_PREFIX") . "english_media media on media.id=question.media_id")
@@ -928,11 +941,6 @@ class EnglishQuestionAction extends CommonAction {
                                 die(json_encode(array("info" => "导入失败，更新选项和试题关联失败！", "status" => false)));
                             }
                         }
-                        
-                        //@ 添加类目id和题目id到对应表
-                        $data = array("cat_id" => $new_cat_id, "question_id" => $list, "created" => time(), "status" => 1);
-                        D('EnglishCatquestion')->data($data)->add();
-
                     } else {
                         $model->rollback();
                         @unlink($dest);

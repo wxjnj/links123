@@ -87,6 +87,7 @@ class PHPExcel_Shared_CodePage
 			case 32769:	throw new Exception('Code page 32769 not supported.');
 											break;	//	ANSI Latin I (BIFF2-BIFF3)
 			case 65001:	return 'UTF-8';		break;	//	Unicode (UTF-8)
+			case 10008:	return 'MAC';		break;
 		}
 
 		throw new Exception('Unknown codepage: ' . $codePage);

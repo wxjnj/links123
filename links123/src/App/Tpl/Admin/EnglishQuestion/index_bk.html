@@ -11,9 +11,6 @@
 <div id="main" class="main" >
     <div class="content" >
         <div class="title">英语角试题列表</div>
-        <div>
-        注：点击题目名称进入类目属性管理页面
-        </div>
         <div class="operate" >
             <html:imageBtn name="add" click="add()" style="hMargin fLeft" />
             <html:imageBtn name="edit" click="edit()" style="hMargin fLeft" />
@@ -157,14 +154,12 @@
                         无
                     </label>
                 </div>
-                
             </div>
-
         </form>
 
+
         <div class="list" >
-            
-            <html:list id="checkList" name="category" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,name|htmlspecialchars:名称:child|id|target,created|toDateShort:发布时间,voice|getVoiceName:语音,target|getTargetName:训练,pattern|getPatternName:形式,status|getStatus:状态" actionlist="edit:编辑" />
+            <html:list id="checkList" name="category" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,name|htmlspecialchars:名称:edit,created|toDateShort:发布时间,voice|getVoiceName:语音,target|getTargetName:训练,pattern|getPatternName:形式,object_name|default=无:科目:selectObject|media_id,level_name|default=无:等级:selectLevel|media_id,subject_name|default=无:专题:selectSubject|media_id,difficulty|getMediaDifficultyName:难度,recommend|getMediaRecommendYorN:推荐:recommend|media_id,special_recommend|getYorN:特别推荐:special_recommend|media_id,ted|getMediaRecommendYorN:TED:ted|media_id,status|getStatus:状态" actionlist="edit:编辑" />
         </div>
 
         <div class="page">{$page}</div>
@@ -555,15 +550,6 @@
                 $("#load_dialog").window("close");
             }, "json")
         })
-    }
-
-    function child(id, target) {
-        var target = window.location.href;
-        var page   = 1;
-        if (target.match(/p=([^&]+)/) != null) {
-            page   = target.match(/p=([^&]+)/)[1];
-        }
-        location.href = URL + "/property/qid/" + id + "/page/" + page;
     }
 </script>
 </body>
