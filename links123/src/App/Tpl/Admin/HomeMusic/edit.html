@@ -35,7 +35,7 @@
 	function showResponse(responseText, statusText)  {
 		//alert('status: ' + statusText + '\n\nresponseText: \n' + responseText'); 
 		var tempary = responseText.split("|");
-		$("#img_"+tempary[0]).attr("src", PUBLIC+"/Uploads/HomeMovies/"+tempary[1]).css("display", "inline-block");
+		$("#img_"+tempary[0]).attr("src", PUBLIC+"/Uploads/HomeMusics/"+tempary[1]).css("display", "inline-block");
 		$("#"+tempary[0]).val(tempary[1]);
 		$("#file_"+tempary[0]).blur();
 		setTimeout("setPointer()",500);
@@ -61,19 +61,20 @@
 					<td class="tRight" >名称：</td>
 					<td class="tLeft" ><input type="text" class="medium bLeftRequire" check='^\S+$' warning="不能为空,且不能含有空格" name="title" value="{$vo.title}" /></td>
 				</tr>
-                <tr>
+                                <tr>
 					<td class="tRight">音乐封面：</td>
 					<td class="tLeft">
-						<img id="img_pic" src="__PUBLIC__/Uploads/HomeMusics/{$vo.album}" style="border:1px dotted #DDD;vertical-align:middle;width:116px;">
 						<input type="text" class="medium bLeftRequire" id="pic" name='album' style="vertical-align:middle" readonly value="{$vo.album}" />&nbsp;
 						<a>上传图片</a>　<span style='color:#C00;'>（尺寸：310×235）</span>
+                                                <br/>
+                                                <img id="img_pic" src="__PUBLIC__/Uploads/HomeMusics/{$vo.album}" style="border:1px dotted #DDD;vertical-align:middle;width:116px;"/>
 					</td>
 				</tr>
 				<tr>
 					<td class="tRight tTop">演唱：</td>
 					<td class="tLeft"><input type="text" class="medium bLeftRequire" name="artist" value="{$vo.artist}" /></td>
 				</tr>
-                <tr>
+                                <tr>
 					<td class="tRight tTop">歌词：</td>
 					<td class="tLeft"><textarea cols="57" rows="10" name="lyric" class="large bLeftRequire">{$vo.lyric}</textarea></td>
 				</tr>
@@ -81,9 +82,9 @@
 					<td class="tRight">状态：</td>
 					<td class="tLeft">
 						<SELECT class="small bLeft" name="status">
-                            <option value="0" <eq name="vo.status" value="0">selected</eq>>禁用</option>
+                                                        <option value="0" <eq name="vo.status" value="0">selected</eq>>禁用</option>
 							<option value="1" <eq name="vo.status" value="1">selected</eq>>启用</option>
-                            <option value="-1" <eq name="vo.status" value="-1">selected</eq>>删除</option>
+                                                        <option value="-1" <eq name="vo.status" value="-1">selected</eq>>删除</option>
 						</SELECT>
 					</td>
 				</tr>
@@ -98,9 +99,9 @@
 			</table>
 		</form>
         
-        <form method='post' id="frm_pic" class="file_frm" action="__GROUP__/Public/uploadPic/" enctype="multipart/form-data">
+                <form method='post' id="frm_pic" class="file_frm" action="__GROUP__/Public/uploadPic/" enctype="multipart/form-data">
 			<input name="image" id="file_pic" type="file" style="position:absolute; width:230px; top:0px; left:0px; height:28px; filter:alpha(opacity:0);opacity:0;" />
-			<input type="hidden" id="folder" name="folder" value="HomeMovies" />
+			<input type="hidden" id="folder" name="folder" value="HomeMusics" />
 			<input type="hidden" name="width" value="116" />
 		</form>
         
