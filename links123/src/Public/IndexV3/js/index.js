@@ -255,7 +255,7 @@ var Zld = { // 自留地
 			var id = o.find('input[name="id"]').val();
 			var name = objname.val();
 			var url = objurl.val();
-
+                        
 			if (!name) {
 				alert("请输入网站名称");
 				objname[0].focus();
@@ -266,6 +266,16 @@ var Zld = { // 自留地
 				objurl[0].focus();
 				return false;
 			}
+                        
+                        
+                        var reg = /^((https|http|ftp|rtsp|mms)?:\/\/)?(([0-9A-Za-z_!~*'().&=+$%-]+: )?[0-9A-Za-z_!~*'().&=+$%-]+@)?(([0-9]{1,3}.){3}[0-9]{1,3}|([0-9A-Za-z_!~*'()-]+\.)*([0-9A-Za-z][0-9A-Za-z-]{0,61})?[0-9A-Za-z]\.[a-zA-Z]{2,6})(:[0-9]{1,4})?((\/?)|(\/[0-9A-Za-z_!~*'().;?:@&=+$,%#-]+)+\/?)$/;
+                        if(reg.test(url)){
+                            
+                        }else {
+                            alert("输入的网址有误");
+                            objurl[0].focus();
+                            return false;
+                        }
 			
 			$.post(
 				URL + '/updateArea', 
