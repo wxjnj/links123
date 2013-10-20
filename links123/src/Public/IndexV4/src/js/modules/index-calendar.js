@@ -103,6 +103,9 @@
 
 		changeType: function(targetType){
 			this.type = targetType;
+			$('.cal-view-select-btn').removeClass('active');
+			$('.cal-view-select-btn-' + targetType.toLowerCase()).addClass('active');
+			this.showDate();
 		},
 
 		prevView: function(){
@@ -222,6 +225,8 @@
 		Init: function(){
 			var self = Calendar.DateView;
 
+			self.mainPanel = $('.cal-day');
+
 			self.miniMonthElement = $('.cal-mini-month-panel').find('tbody');
 			self.marksListElement = $('.cal-day-note-list');
 			self.burnDownElement = $('.cal-day-burn-down-chart');
@@ -319,6 +324,21 @@
 		}
 	};
 
+
+	Calendar.MonthView = {
+		Init: function(){
+			var self = this;
+			self.mainPanel = $('.cal-month');
+			self.tableElement = self.mainPanel.find('table');
+			self.tableView = new MonthTable;
+		},
+		renderMarks: function(){
+
+		}
+	};
+
+	Calendar.WeekView = {};
+
 	//月级视图 - 基础
 	var MonthView = new Class;
 	MonthView.include({
@@ -397,8 +417,24 @@
 		}
 	});
 
-	//周级视图
-	var WeekView = new Class;
+	//月级视图的月历
+	var MonthTable = new Class(MonthView);
+	MonthTable.include({
+		render: function(wrap){
+			var self = this;
+			//console.log(Calendar.MonthView.tableElement);
+			wrap = wrap || Calendar.MonthView.tableElement.find('tbody');
+			var table = self.buildTable();
+			if(wrap instanceof $){
+				wrap.html(table);
+			}else{
+				$(wrap).html(table);
+			}
+			wrap.find('.td_' + Calendar.currentDate).addClass('active');
+
+		}
+	});
+
 
 	//事件
 	var MarkClass = new Class;
@@ -502,8 +538,17 @@ $(function(){
 	var DateView = Calendar.DateView;
 	DateView.Init();
 	DateView.miniMonthView.render();
+	DateView.mainPanel.show();
+
+	var MonthView = Calendar.MonthView;
+	MonthView.Init();
+	MonthView.tableView.render();
+	//MonthView.mainPanel.show();
+
+	var WeekView = Calendar.WeekView;
 
 	Calendar.loadMarks();
+	//Calendar.changeType('Month');
 
 });
 
