@@ -61,19 +61,20 @@
 					<td class="tRight" >名称：</td>
 					<td class="tLeft" ><input type="text" class="medium bLeftRequire" check='^\S+$' warning="不能为空,且不能含有空格" name="title" /></td>
 				</tr>
-                <tr>
+                                <tr>
 					<td class="tRight">电影海报：</td>
 					<td class="tLeft">
-						<img id="img_pic" src="#" style="border:1px dotted #DDD;vertical-align:middle;width:116px;display:none;">
 						<input type="text" class="medium bLeftRequire" id="pic" name='cover' style="vertical-align:middle" readonly />&nbsp;
 						<a>上传图片</a>　<span style='color:#C00;'>（尺寸：427×600）</span>
+                                                <br/>
+                                                <img id="img_pic" src="#" style="border:1px dotted #DDD;vertical-align:middle;width:116px;display:none;"/>
 					</td>
 				</tr>
-                <tr>
+                                <tr>
 					<td class="tRight tTop">另客评分：</td>
 					<td class="tLeft"><input type="text" class="medium bLeftRequire" name="score" /></td>
 				</tr>
-                <tr>
+                                <tr>
 					<td class="tRight tTop">IMDB评分：</td>
 					<td class="tLeft"><input type="text" class="medium bLeftRequire" name="imdb" /></td>
 				</tr>
@@ -81,47 +82,47 @@
 					<td class="tRight tTop">导演：</td>
 					<td class="tLeft"><input type="text" class="medium bLeftRequire" name="director" /></td>
 				</tr>
-                <tr>
+                                <tr>
 					<td class="tRight tTop">编剧：</td>
 					<td class="tLeft"><input type="text" class="medium bLeftRequire" name="writer" /></td>
 				</tr>
-                <tr>
+                                <tr>
 					<td class="tRight tTop">主演：</td>
 					<td class="tLeft"><textarea cols="57" rows="2" name="cast" class="large bLeftRequire"></textarea></td>
 				</tr>
-                <tr>
+                                <tr>
 					<td class="tRight tTop">类型：</td>
 					<td class="tLeft"><input type="text" class="medium bLeftRequire" name="type" /></td>
 				</tr>
-                <tr>
+                                <tr>
 					<td class="tRight tTop">制片国家：</td>
 					<td class="tLeft"><input type="text" class="medium bLeftRequire" name="country" /></td>
 				</tr>
-                <tr>
+                                <tr>
 					<td class="tRight tTop">制片地区：</td>
 					<td class="tLeft"><input type="text" class="medium" name="region" /></td>
 				</tr>
-                <tr>
+                                <tr>
 					<td class="tRight tTop">语言：</td>
 					<td class="tLeft"><input type="text" class="medium bLeftRequire" name="lang" /></td>
 				</tr>
-                <tr>
+                                <tr>
 					<td class="tRight tTop">上映日期：</td>
 					<td class="tLeft"><input type="text" class="medium bLeftRequire" name="date" /></td>
 				</tr>
-                <tr>
+                                <tr>
 					<td class="tRight tTop">片长：</td>
 					<td class="tLeft"><input type="text" class="medium bLeftRequire" name="duration" /></td>
 				</tr>
-                <tr>
+                                <tr>
 					<td class="tRight tTop">又名：</td>
 					<td class="tLeft"><input type="text" class="medium bLeftRequire" name="alias" /></td>
 				</tr>
-                <tr>
+                                <tr>
 					<td class="tRight tTop">豆瓣影评网址：</td>
 					<td class="tLeft"><input type="text" class="medium bLeftRequire" name="review_url" /></td>
 				</tr>
-                <tr>
+                                <tr>
 					<td class="tRight tTop">在线播放网址：</td>
 					<td class="tLeft"><input type="text" class="medium bLeftRequire" name="play_url" /></td>
 				</tr>
@@ -130,7 +131,7 @@
 					<td class="tRight">状态：</td>
 					<td class="tLeft">
 						<SELECT class="small bLeft" name="status">
-                            <option value="0">禁用</option>
+                                                        <option value="0">禁用</option>
 							<option value="1">启用</option>
 						</SELECT>
 					</td>
@@ -146,7 +147,7 @@
 			</table>
 		</form>
         
-        <form method='post' id="frm_pic" class="file_frm" action="__GROUP__/Public/uploadPic/" enctype="multipart/form-data">
+                <form method='post' id="frm_pic" class="file_frm" action="__GROUP__/Public/uploadPic/" enctype="multipart/form-data">
 			<input name="image" id="file_pic" type="file" style="position:absolute; width:230px; top:0px; left:0px; height:28px; filter:alpha(opacity:0);opacity:0;" />
 			<input type="hidden" id="folder" name="folder" value="HomeMovies" />
 			<input type="hidden" name="width" value="116" />
