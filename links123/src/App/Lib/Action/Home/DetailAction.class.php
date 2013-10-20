@@ -12,6 +12,11 @@ class DetailAction extends CommonAction
 		
 		$links = M("Links");
 		$linkNow = $links->getById($id);
+        //如果没有对应记录，则转到404页面@author Adam 2013.10.20
+        if(empty($linkNow)){
+            $this->_empty();
+            return;
+        }
 		
 		$GLOBALS['_title'] = $linkNow['title'];
 		$linkNow['intro'] = nl2br($linkNow['intro']);
