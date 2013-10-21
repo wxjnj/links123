@@ -15,7 +15,7 @@
 			</a>
 			]
 		</div>
-		<form method='post'  id="form1" >
+		<form method='post'  id="form1"  action="__URL__/insert/" >
 			<table cellpadding=3 cellspacing=3 >
 			<tr>
 				<td class="tRight" >名称：</td>
@@ -58,10 +58,8 @@
 			<tr>
 				<td></td>
 				<td class="center">
-					<input type="hidden" name="ajax" value="1" />
-					<input type="button" value="保 存" class="small submit" onclick="ThinkAjax.sendForm('form1','__URL__/insert/','tips')" />
-					&nbsp;
-					<input type="reset" value="取 消" class="submit small" onclick="history.back(-1)" />
+					<input type="submit" value="保 存" class="small submit">&nbsp;
+					<input type="reset" class="submit small" value="清 空" >
 				</td>
 			</tr>
 		</table>
