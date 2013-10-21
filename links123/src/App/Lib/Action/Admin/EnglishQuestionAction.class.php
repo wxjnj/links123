@@ -754,7 +754,7 @@ class EnglishQuestionAction extends CommonAction {
                         }
                     }
                     //答案id
-                    $data['answer'] = $option_id[$data['answer'] - 1];
+                    $data['answer'] = intval($option_id[$data['answer'] - 1]);
                     //没有答案或者不是双选下选项小于4
                     if ($data['answer'] == 0 || (count($option_id) < 4 && !($is_double_false && $is_double_true))) {
                         $data['status'] = 0;
