@@ -183,7 +183,7 @@ $( function($) {
 			});
 			// 删除
 			$note.on('click', '.btn_clear', function() {
-				$textarea.val('');
+				$textarea.val('').select();
 				remember();
 			});
 			// remember
