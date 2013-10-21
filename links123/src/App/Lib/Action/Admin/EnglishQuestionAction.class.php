@@ -16,63 +16,65 @@ class EnglishQuestionAction extends CommonAction {
         if (isset($_REQUEST['name'])) {
             $name = ftrim($_REQUEST['name']);
         }
+        $category_map = array();
+        $attr_one = -1;
+        $attr_two = 1;
+        $attr_thr = -1;
         //媒体口音
-        if (intval($_REQUEST['voice']) > 0) {
-            $map['englishMedia.voice'] = intval($_REQUEST['voice']);
+        if (isset($_REQUEST['voice'])) {
+            $attr_one = intval($_REQUEST['voice']) == 1 ? 1 : 0;
             $param['voice'] = intval($_REQUEST['voice']);
         }
-        //试题目标
-        if (intval($_REQUEST['target']) > 0) {
-            $map['englishQuestion.target'] = intval($_REQUEST['target']);
-            $param['target'] = intval($_REQUEST['target']);
-        }
         //视频类型
-        if (intval($_REQUEST['pattern']) > 0) {
-            $map['englishMedia.pattern'] = intval($_REQUEST['pattern']);
+        if (isset($_REQUEST['pattern'])) {
+            $attr_thr = intval($_REQUEST['pattern']) == 1 ? 1 : 0;
             $param['pattern'] = intval($_REQUEST['pattern']);
         }
-        //视频科目
-        if (intval($_REQUEST['object']) > 0) {
-            $map['englishMedia.object'] = intval($_REQUEST['object']);
-            $object_info = D("EnglishObject")->find($map['englishMedia.object']);
-            if ($object_info['name'] == "综合") {
-                unset($map['englishMedia.object']);
+        if($attr_one > -1 && $attr_thr > -1){
+            $category_map['category.cat_attr_id'] = bindec($attr_one.$attr_two.$attr_thr);
+        }elseif($attr_one > -1 && $attr_thr == -1){
+            $category_map['cat_attr_id'] =array(
+                bindec($attr_one.$attr_two.'1'),
+                bindec($attr_one.$attr_two.'0'),
+                "OR") ;
+        }elseif($attr_one == -1 && $attr_thr > -1){
+            $category_map['category.cat_attr_id'] =array(
+                bindec('1'.$attr_two.$attr_thr),
+                bindec('0'.$attr_two.$attr_thr),
+                "OR") ;
+        }else{
+            $category_map['category.cat_attr_id'] = array(
+                bindec('1'.$attr_two.'1'),
+                bindec('0'.$attr_two.'0'),
+                bindec('1'.$attr_two.'0'),
+                bindec('0'.$attr_two.'1'),
+                "or") ;
+        }
+        
+        if(intval($_REQUEST['level_one']) > 0){
+            $category_map['category.level_one'] = intval($_REQUEST['level_one']);
+            $param['level_one'] = intval($_REQUEST['level_one']);
+        }
+        if(intval($_REQUEST['level_two']) > 0){
+            $category_map['category.level_two'] = intval($_REQUEST['level_two']);
+            $param['level_two'] = intval($_REQUEST['level_two']);
+        }
+        if(intval($_REQUEST['level_thr']) > 0){
+            $category_map['category.level_thr'] = intval($_REQUEST['level_thr']);
+            $param['level_thr'] = intval($_REQUEST['level_thr']);
+        }
+        $englishCategoryModel = D("EnglishCategory");
+        $category_map['catquestion.type'] = 1;//听力
+        $ret = $englishCategoryModel->alias("category")->field("catquestion.question_id")->join(C("DB_PREFIX")."english_catquestion catquestion on catquestion.cat_id=category.cat_id")->where($category_map)->group("catquestion.question_id")->select();
+        if(false !== $ret){
+            $question_id_list = array(0);
+            foreach($ret as $value){
+                $question_id_list[] = $value['question_id'];
             }
-            $param['object'] = intval($_REQUEST['object']);
+            $map['englishQuestion.id'] = array("in", $question_id_list);
         }
-        //视频等级
-        if (intval($_REQUEST['level']) > 0) {
-            $map['englishMedia.level'] = intval($_REQUEST['level']);
-            $param['level'] = intval($_REQUEST['level']);
-        }
-        //视频专题
-        if (intval($_REQUEST['subject']) > 0) {
-            $map['englishMedia.subject'] = intval($_REQUEST['subject']);
-            $param['subject'] = intval($_REQUEST['subject']);
-        }
-        //视频难度值
-        if (intval($_REQUEST['difficulty']) > 0) {
-            $map['englishMedia.difficulty'] = intval($_REQUEST['difficulty']);
-            $param['difficulty'] = intval($_REQUEST['difficulty']);
-        }
-        //视频推荐
-        if (isset($_REQUEST['recommend'])) {
-            if (intval($_REQUEST['recommend']) == 0) {
-                $map['englishMedia.recommend'] = 0;
-            } else {
-                $map['englishMedia.recommend'] = array("neq", 0);
-            }
-            $param['recommend'] = intval($_REQUEST['recommend']);
-        }
-        //是否TED
-        if (isset($_REQUEST['ted'])) {
-            if (intval($_REQUEST['ted']) == 0) {
-                $map['englishMedia.ted'] = 0;
-            } else {
-                $map['englishMedia.ted'] = array("neq", 0);
-            }
-            $param['ted'] = intval($_REQUEST['ted']);
-        }
+        
+        
         //视频特别推荐
         if (isset($_REQUEST['special_recommend'])) {
             $map['englishMedia.special_recommend'] = intval($_REQUEST['special_recommend']);
@@ -129,7 +131,88 @@ class EnglishQuestionAction extends CommonAction {
         $this->assign('name', $name);
         $param['name'] = $name;
     }
-
+    
+    protected function _list($model, $map, $param, $sortBy = '', $asc = false) {
+        //排序字段 默认为主键名
+        if (isset($_REQUEST ['_order'])) {
+            $order = $_REQUEST ['_order'];
+        } else {
+            $order = !empty($sortBy) ? $sortBy : $model->getPk();
+        }
+        $param['order'] = $order;
+        //排序方式默认按照倒序排列
+        //接受 sost参数 0 表示倒序 非0都 表示正序
+        if (isset($_REQUEST ['_sort'])) {
+            $sort = $_REQUEST ['_sort'] ? 'asc' : 'desc';
+        } else {
+            $sort = $asc ? 'desc' : 'asc';
+        }
+        $param['sort'] = $sort;
+//        dump($param);
+        //取得满足条件的记录数
+        if ($model->getModelName() == 'NewsView') {
+            $count = $model->where($map)->count('news.id');
+        } elseif ($model->getModelName() == 'ProductView') {
+            $count = $model->where($map)->count('product.id');
+        } elseif ($model->getModelName() == 'CasesView') {
+            $count = $model->where($map)->count('cases.id');
+        } elseif ($model->getModelName() == 'CategoryView') {
+            $count = $model->where($map)->count('cat1.id');
+        } elseif ($model->getModelName() == 'LinksView') {
+            $count = $model->where($map)->count('links.id');
+        } elseif ($model->getModelName() == 'AnnouncementView') {
+            $count = $model->where($map)->count('announcement.id');
+        } elseif ($model->getModelName() == 'SuggestionView') {
+            $count = $model->where($map)->count('suggestion.id');
+        } elseif ($model->getModelName() == 'CatPicView') {
+            $count = $model->where($map)->count('catPic.id');
+        } elseif ($model->getModelName() == 'EnglishQuestionView') {
+            $count = $model->where($map)->count('englishQuestion.id');
+        }elseif ($model->getModelName() == 'EnglishQuestionSpeakView') {
+            $count = $model->where($map)->count('englishQuestionSpeak.id');
+        } elseif ($model->getModelName() == 'EnglishMediaView') {
+            $count = $model->where($map)->count('englishMedia.id');
+        } else {
+            $count = $model->where($map)->count('id');
+        }
+        //echo $model->getlastsql()."<br />";
+        if ($count > 0) {
+            import("@.ORG.Page");
+            //创建分页对象
+            if (!empty($_REQUEST ['listRows'])) {
+                $listRows = $_REQUEST ['listRows'];
+            } else {
+                $listRows = '20';
+            }
+            $p = new Page($count, $listRows);
+            //分页查询数据
+            $voList = $model->where($map)->order("`" . $order . "` " . $sort)->limit($p->firstRow . ',' . $p->listRows)->group("englishQuestion.id")->select();
+//            echo $model->getlastsql();
+            //分页跳转的时候保证查询条件
+            foreach ($param as $key => $val) {
+                //$p->parameter .= "$key=" . urlencode ( $val ) . "&";
+                $p->parameter .= "$key=" . $val . "&";
+            }
+            $this->assign('param', $p->parameter);
+            $_SESSION[C('SEARCH_PARAMS_KEY')] = $p->parameter . "p=" . $_REQUEST['p'];
+            //分页显示
+            $page = $p->show();
+            //列表排序显示
+            $sortImg = $sort; //排序图标
+            $sortAlt = $sort == 'desc' ? '升序排列' : '倒序排列'; //排序提示
+            $sort = $sort == 'desc' ? 1 : 0; //排序方式
+            //模板赋值显示
+            $this->assign('list', $voList);
+            $this->assign('sort', $sort);
+            $this->assign('order', $order);
+            $this->assign('sortImg', $sortImg);
+            $this->assign('sortType', $sortAlt);
+            $this->assign("page", $page);
+        }
+        cookie('_currentUrl_', __URL__ . '/index?' . $_SESSION[C('SEARCH_PARAMS_KEY')]);
+        return;
+    }
+    
     public function index() {
         //列表过滤器，生成查询Map对象
         $map = array();
@@ -142,17 +225,14 @@ class EnglishQuestionAction extends CommonAction {
             $this->_list($model, $map, $param, 'id', false);
             //lTrace('Log/lastSql', $this->getActionName(), $model->getLastSql());
         }
-        //科目列表
-        $object_list = D("EnglishObject")->getList("status=1");
-        $this->assign("object_list", $object_list);
-        //科目列表
-        $level_list = D("EnglishLevel")->getList("status=1", "`sort` ASC");
-        $num = intval(D("Variable")->getVariable("english_click_num"));
-        $this->assign("english_click_num", $num);
-        $this->assign("level_list", $level_list);
-        //专题列表
-        $subject_list = D("EnglishMediaSubject")->getList("status=1", "`sort` ASC");
-        $this->assign("subject_list", $subject_list);
+        //@ 一级类目
+        $category["level_one"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("1");
+        //@ 二级类目
+        $category["level_two"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("2");
+        //@ 三级类目
+        $category["level_thr"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("3");
+
+        $this->assign("category", $category);
 
         $this->assign("param", $param);
         foreach ($param as $key => $value) {
@@ -214,7 +294,7 @@ class EnglishQuestionAction extends CommonAction {
     * 添加题目所属类目的属性
     * author reasono
     */
-    public function saveProperty() {
+    public function insertProperty() {
         $question_id = isset($_REQUEST["question_id"]) ? intval($_REQUEST["question_id"]) : 0;
         
         $voice       = isset($_REQUEST["voice"])     ? intval($_REQUEST["voice"])     : 1;
@@ -245,38 +325,8 @@ class EnglishQuestionAction extends CommonAction {
         $this->success('添加分类属性成功');
     }
 
-    public function foreverdel() {
-        $cat_id = $_REQUEST['id'];
-        $question_id = $_REQUEST["qid"];
-        $ret = $this->cEnglishQuestionLogic->foreverdelCatquestion($cat_id, $question_id);
-        if ($ret !== false) {
-            $this->success('删除成功');
-        } else {
-            $this->error('删除失败！');
-        }
-    }
 
-    public function forbid() {
-        $cat_id = $_REQUEST['id'];
-        $question_id = $_REQUEST["qid"];
-        $ret = $this->cEnglishQuestionLogic->forbidCatetoryOfQuestion($cat_id, $question_id);
-        if ($ret !== false) {
-            $this->success('状态禁用成功');
-        } else {
-            $this->error('状态禁用失败！');
-        }
-    }
 
-    public function resume() {
-        $cat_id = $_REQUEST['id'];
-        $question_id = $_REQUEST["qid"];
-        $ret = $this->cEnglishQuestionLogic->resumeCatetoryOfQuestion($cat_id, $question_id);
-        if ($ret !== false) {
-            $this->success('状态恢复成功');
-        } else {
-            $this->error('状态恢复失败！');
-        }
-    }
 
     public function add() {
         $object_list = D("EnglishObject")->where("`status`=1")->order("sort")->select();

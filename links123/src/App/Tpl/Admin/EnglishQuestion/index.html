@@ -12,7 +12,6 @@
     <div class="content" >
         <div class="title">英语角试题列表</div>
         <div>
-        注：点击题目名称进入类目属性管理页面
         </div>
         <div class="operate" >
             <html:imageBtn name="add" click="add()" style="hMargin fLeft" />
@@ -50,14 +49,6 @@
                         英音
                     </label>&nbsp;&nbsp;
                     <label>
-                        <input class="checkbox" type="checkbox" value="1" name="target" <eq name="param['target']" value="1">checked="checked"</eq>>
-                        听力
-                    </label>
-                    <label>
-                        <input class="checkbox" type="checkbox" value="2" name="target" <eq name="param['target']" value="2">checked="checked"</eq>>
-                        说力
-                    </label>&nbsp;&nbsp;
-                    <label>
                         <input class="checkbox" type="checkbox" value="1" name="pattern" <eq name="param['pattern']" value="1">checked="checked"</eq>>
                         视频
                     </label>
@@ -65,47 +56,29 @@
                         <input class="checkbox" type="checkbox" value="2" name="pattern" <eq name="param['pattern']" value="2">checked="checked"</eq>>
                         音频
                     </label>&nbsp;&nbsp;
-                    科目：
-                    <select name="object" id="opeartObjectSelect">
-                        <volist name="object_list" id="object">
-                            <option value="{$object.id}"  <eq name="param['object']" value="$object['id']">selected="true"</eq>>{$object.name}</option>
-                        </volist>
-                    </select>&nbsp;&nbsp;
-                    <select name="level" id="opeartLevelSelect">
-                        <option value="0">全部</option>
-                        <volist name="level_list" id="level">
-                            <option value="{$level.id}" <eq name="param['level']" value="$level['id']">selected="true"</eq>>{$level.name}</option>
-                        </volist>
-                    </select>
-                    &nbsp;&nbsp;
-                    专题：
-                    <select name="subject">
-                        <option value="0">全部</option>
-                        <volist name="subject_list" id="subject">
-                            <option value="{$subject.id}" <eq name="param['subject']" value="$subject['id']">selected="true"</eq>>{$subject.name}</option>
-                        </volist>
-                    </select>
-                    <select name="difficulty">
-                        <option value="0">全部</option>
-                        <option value="1" <eq name="param['difficulty']" value="1">selected="true"</eq>>初级</option>
-                        <option value="2" <eq name="param['difficulty']" value="2]">selected="true"</eq>>中级</option>
-                        <option value="3" <eq name="param['difficulty']" value="3">selected="true"</eq>>高级</option>
-                    </select>
-                    &nbsp;&nbsp;
                     添加时间：
                     <input type="text" id="J_createTime" name="created" value="{$param['created']}" />
                     &nbsp;&nbsp;
+                    分类：
+                    <select name="level_one">
+                        <volist name="category['level_one']" id="level_one">
+                            <option value="{$level_one.id}" <eq name="param['level_one']" value="$level_one['id']">selected="true"</eq>>{$level_one.name}</option>
+                        </volist>
+                    </select>&nbsp;&nbsp;
+                    <select name="level_two">
+                        <option value="0">全部</option>
+                        <volist name="category['level_two']" id="level_two">
+                            <option value="{$level_two.id}" <eq name="param['level_two']" value="$level_two['id']">selected="true"</eq>>{$level_two.name}</option>
+                        </volist>
+                    </select>&nbsp;&nbsp;
+                    <select name="level_thr">
+                        <option value="0">全部</option>
+                        <volist name="category['level_thr']" id="level_thr">
+                            <option value="{$level_thr.id}" <eq name="param['level_thr']" value="$level_thr['id']">selected="true"</eq>>{$level_thr.name}</option>
+                        </volist>
+                    </select>
                 </div>
                 <div style="margin-top: 10px;">
-                    推荐：
-                    <label>
-                        <input class="checkbox" type="checkbox" value="1" name="recommend" <if condition="$param['recommend'] eq 1">checked="checked"</if>>
-                        是
-                    </label>&nbsp;
-                    <label>
-                        <input class="checkbox" type="checkbox" value="0" name="recommend" <eq name="param['recommend']" value="0">checked="checked"</eq>>
-                        否
-                    </label>
                     &nbsp;&nbsp;
                     特别推荐：
                     <label>
@@ -114,15 +87,6 @@
                     </label>&nbsp;
                     <label>
                         <input class="checkbox" type="checkbox" value="0" name="special_recommend" <eq name="param['special_recommend']" value="0">checked="checked"</eq>>
-                        否
-                    </label>&nbsp;&nbsp;
-                    TED：
-                    <label>
-                        <input class="checkbox" type="checkbox" value="1" name="ted" <eq name="param['ted']" value="1">checked="checked"</eq>>
-                        是
-                    </label>&nbsp;
-                    <label>
-                        <input class="checkbox" type="checkbox" value="0" name="ted" <eq name="param['ted']" value="0">checked="checked"</eq>>
                         否
                     </label>&nbsp;&nbsp;
                     状态：
@@ -164,7 +128,7 @@
 
         <div class="list" >
             
-            <html:list id="checkList" name="category" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,name|htmlspecialchars:名称:child|id|target,created|toDateShort:发布时间,voice|getVoiceName:语音,target|getTargetName:训练,pattern|getPatternName:形式,status|getStatus:状态" actionlist="edit:编辑" />
+            <html:list id="checkList" name="category" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,name|htmlspecialchars:名称:edit,created|toDateShort:发布时间,cat_attr_id|getVoiceNameFromAttrId:语音,cat_attr_id|getPatternNameFromAttrId:形式,special_recommend|getYorN:特别推荐:special_recommend,status|getStatus:状态" actionlist="property:分类,edit:编辑" />
         </div>
 
         <div class="page">{$page}</div>
@@ -220,7 +184,7 @@
             $("[name='"+$(this).attr("name")+"']").not("[value='"+$(this).val()+"']").removeAttr("checked");
             $("[name='search']").click();
         })
-        $("[name='object'],[name='level'],[name='subject'],[name='difficulty']").change(function() {
+        $("[name='level_one'],[name='level_two'],[name='level_thr']").change(function() {
             $("[name='search']").click();
         })
         $(".operate input[name='special_recommend']").click(function() {
@@ -557,7 +521,7 @@
         })
     }
 
-    function child(id, target) {
+    function property(id) {
         var target = window.location.href;
         var page   = 1;
         if (target.match(/p=([^&]+)/) != null) {

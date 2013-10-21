@@ -15,15 +15,16 @@ class EnglishQuestionLogic {
 	public function getQuestionAndProperty($question_id, $question_type = 1) {
 		$dic = array();
 		if ($question_type == 1) {
-			$question = D('EnglishQuestionSpeak')->where(array("id" => $question_id))->select();	
+			$question = D('EnglishQuestionSpeak')->find($question_id);	
 		} else {
-			$question = D('EnglishQuestion')->where(array("id" => $question_id))->select();	
+			$question = D('EnglishQuestion')->find($question_id);
 		}
 		$ret = D('EnglishLevelname')->getCategoryLevelListBy();
 		foreach($ret as $each_lvname) {
 			$dic[$each_lvname["id"]] = $each_lvname["name"];
 		}
 		$ret   = D('EnglishCatquestion')->getQuestionProperty($question_id);
+        
 		for($i = 0; $i < count($ret); $i++) {
 			$cat_attr_id = decbin($ret[$i]["cat_attr_id"]);
 			$ret[$i]["voice"]   = substr($cat_attr_id, 0, 1);
@@ -70,7 +71,7 @@ class EnglishQuestionLogic {
         $data["level_one"]   = $level_one;
         $data["level_two"]   = $level_two;
         $data["level_thr"]   = $level_thr;
-
+        
         $cate_ret = D('EnglishCategory')->where($data)->select();
         if (!isset($cate_ret[0]["cat_id"])) {
             $data["status"]  = $status;

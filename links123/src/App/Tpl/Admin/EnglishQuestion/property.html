@@ -34,7 +34,7 @@
 		<div class="operate" >
 			<html:imageBtn name="add" click="add()" style="hMargin fLeft" />
 			
-			<eq name="is_recommend" value="true">
+<!--			<eq name="is_recommend" value="true">
 				[<a href="__URL__/cancelSpecRecommend/qid/{$question[0].id}">
 				取消特别推荐
 				</a>]
@@ -42,12 +42,12 @@
 				[<a href="__URL__/setSpecRecommend/qid/{$question[0].id}">
 				设置为特别推荐
 				</a>]
-			</eq>
+			</eq>-->
 		</div>
 
 		<div class="list" >
 			<div id="result" class="result none"></div>
-			<html:list id="checkList" name="node" style="list" checkbox="true" action="true" datasource="property" show="id:编号|10%,voice_name:语音,target_name:训练,pattern_name:形式,level_one_name:一级类目,level_two_name:二级类目,level_thr_name:三级类目,status|getStatus:状态" actionlist="status|showStatus=$node['id'],foreverdel:删除" />
+			<html:list id="checkList" name="node" style="list" checkbox="true" action="true" datasource="property" show="id:编号|10%,voice_name:语音,target_name:训练,pattern_name:形式,level_one_name:一级类目,level_two_name:二级类目,level_thr_name:三级类目" actionlist="foreverdel:删除" />
 		</div>
 	</div>
 </div>
