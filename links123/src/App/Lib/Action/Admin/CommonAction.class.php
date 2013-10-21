@@ -12,8 +12,6 @@ class CommonAction extends BaseAction {
         import('@.ORG.Cookie');
         //根据cookie检查session是否过期
         $time = cookie(md5("manament_login_time"));
-        //@@@ 临时绕过超时验证
-        $time = 1;
         if (empty($time)) {
             unset($_SESSION[C('ADMIN_AUTH_KEY')]);
             unset($_SESSION['menu' . $_SESSION[C('USER_AUTH_KEY')]]);
