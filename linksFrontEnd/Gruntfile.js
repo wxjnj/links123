@@ -48,6 +48,32 @@ module.exports = function(grunt) {
 					'~temp/DD_belatedPNG.js' : 'src/v2/js/DD_belatedPNG.js'
 				}
 			}
+			,v3: {
+				files: {
+					'~temp/css.css' : [
+						'src/v3/css/jquery-ui.css', 
+						'src/v3/css/style.css',
+						'src/v3/css/slide.css',
+						'src/v3/css/page_home_apps.css'
+					],
+					'~temp/jquery.plugins.js' : [
+						'src/v3/js/jquery.placeholder.js',
+						'src/v3/js/jquery-ui.min.js',
+						'src/v3/js/json2.js',
+						'src/v3/js/jquery.dropdown.js',
+						'src/v3/js/jquery.slides.js'
+					],
+					'~temp/index.js' : [
+						'src/v3/js/common.js',
+						'src/v3/js/index.js',
+						'src/v3/js/detect.js',
+						'src/v3/js/page_home_apps.js'
+					],
+					'dest/v3/css/base.css' : 'src/v3/css/base.css',
+					'dest/v3/js/init.js' : 'src/v3/js/init.js',
+					'dest/v3/js/jquery.cookies.2.2.0.min.js' : 'src/v3/js/jquery.cookies.2.2.0.min.js'
+				}
+			}
 		}
 		,copy: {
 			v2: {
@@ -81,11 +107,29 @@ module.exports = function(grunt) {
 					}
 				]
 			}
+			,v3: {
+				files: [
+					{
+						'dest/v3/js/jquery-1.7.1.min.js' : 'src/v3/js/jquery-1.7.1.min.js'
+					}
+					,{
+					 	expand: true,
+					 	cwd: 'src/v3/imgs',
+					 	src: ['**'],
+					 	dest: 'dest/v3/imgs/'
+					}
+				]
+			}
 		}
 		,cssmin: {
 			v2: {
 				files: {
 					'dest/v2/css/css.min.css' : ['~temp/css.css']
+				}
+			}
+			,v3: {
+				files: {
+					'dest/v3/css/css.min.css' : ['~temp/css.css']
 				}
 			}
 		}
@@ -95,6 +139,12 @@ module.exports = function(grunt) {
 					'dest/v2/js/jquery.plugins.js' : ['~temp/jquery.plugins.js'],
 					'dest/v2/js/global.min.js' : ['~temp/global.js'],
 					'dest/v2/js/DD_belatedPNG.js' : ['~temp/DD_belatedPNG.js']
+				}
+			}
+			,v3: {
+				files: {
+					'dest/v3/js/jquery.plugins.js' : ['~temp/jquery.plugins.js'],
+					'dest/v3/js/index.js' : ['~temp/index.js']
 				}
 			}
 		}
@@ -112,5 +162,6 @@ module.exports = function(grunt) {
 
 	// 注册任务
 	grunt.registerTask('default', ['clean']);
-	grunt.registerTask('build', ['concat', 'copy', 'cssmin', 'uglify', 'clean:build']);
+	grunt.registerTask('build', ['concat:v2', 'copy:v2', 'cssmin:v2', 'uglify:v2', 'clean:build']);
+	grunt.registerTask('buildv3', ['concat:v3', 'copy:v3', 'cssmin:v3', 'uglify:v3', 'clean:build']);
 };
