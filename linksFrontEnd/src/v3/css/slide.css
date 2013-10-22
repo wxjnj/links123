@@ -1,0 +1,64 @@
+/* style.css first and then slide */
+.slidesjs-pagination{
+	list-style: none;
+	position:relative;
+}
+.slidesjs-pagination li{
+	float: left;
+}
+.slidesjs-pagination li a{
+	display: block;
+	width: 13px;
+	height: 0;
+	background:#fff;
+	cursor: pointer;
+	*display: inline;
+	*zoom: 1;
+	float: left;
+	height: 5px;
+	margin: 0 5px;
+	overflow: hidden;
+	text-indent: -999px;
+	vertical-align: middle;
+	width: 5px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	filter:alpha(opacity=30);
+	-moz-opacity: 0.3;
+	-khtml-opacity: 0.3;
+	opacity: 0.3;
+}
+.slidesjs-pagination .slidesjs-pagination-item{
+	width:13px!important; height:13px!important;
+}
+.slidesjs-pagination li a:hover{
+	filter:alpha(opacity=60);
+	-moz-opacity: 0.6;
+	-khtml-opacity: 0.6;
+	opacity: 0.6;
+}
+.slidesjs-pagination li a.active{
+	filter:alpha(opacity=100);
+	-moz-opacity: 1;
+	-khtml-opacity: 1;
+	opacity: 1;
+}
+.slidesjs-container{
+	height: 386px;
+	width: 250px;
+}
+.slidesjs-container{
+	height: 406px!important;
+	width: 250px;
+}
+.slidesjs-pagination{
+	margin: -50px auto;
+}
+.widescreen .slidesjs-container{
+	height: 473px!important;
+	width: 310px;
+}
+.widescreen .slidesjs-pagination {
+	margin: -30px auto;
+}

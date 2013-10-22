@@ -7,13 +7,10 @@
 	<meta name="Keywords" content="{$keywords}" />
 	<meta name="Description" content="{$description}" />
 	<link rel="stylesheet" href="__PUBLIC__/IndexV3/css/base.css" />
-	<link rel="stylesheet" href="__PUBLIC__/IndexV3/css/jquery-ui.css" />
-	<link rel="stylesheet" href="__PUBLIC__/IndexV3/css/style.css" />
-	<link rel="stylesheet" href="__PUBLIC__/IndexV3/css/slide.css" />
+	<load href="__STATIC__/v3/css/css.min.css" />
 	<link rel="stylesheet" href="__PUBLIC__/IndexV3/skins/{$theme}/style.css" id="J_Skins" />
-	<link rel="stylesheet" href="__PUBLIC__/IndexV3/css/page_home_apps.css" />
-	<script src="__PUBLIC__/skin/js/jquery-1.7.1.min.js"></script>
-	<script src="__PUBLIC__/skin/js/jquery.cookies.2.2.0.min.js"></script>
+	<load href="__STATIC__/v3/js/jquery-1.7.1.min.js" />
+	<load href="__STATIC__/v3/js/jquery.cookies.2.2.0.min.js" />
 	<script>
 		var $CONFIG = {
 			'APP' : '__APP__/',
@@ -22,10 +19,9 @@
 			'IsLogin' : <empty name="_SESSION[C('MEMBER_AUTH_KEY')]">1<else />0</empty>
 		};
 	</script>
-								
 </head>
 <body>
-	<script src="__PUBLIC__/IndexV3/js/init.js"></script>
+	<load href="__STATIC__/v3/js/init.js" />
 	<div id="J_header" class="header">
 		<div class="header-inner">
 			<div class="zdl">
@@ -365,16 +361,7 @@
 
 	<include file="Contorls:app_v3" />
 
-	<script src="__PUBLIC__/IndexV3/js/jquery.placeholder.js"></script>
-	<script src="__PUBLIC__/skin/js/jquery-ui.min.js"></script>
-	<script src="__PUBLIC__/skin/js/json2.js"></script>
-	<script src="__PUBLIC__/IndexV3/js/index.js?2013100201"></script>
-	<script src="__PUBLIC__/IndexV3/js/common.js?2013093001"></script>
-	<script src="__PUBLIC__/IndexV3/js/jquery.dropdown.js"></script>
-	<script src="__PUBLIC__/IndexV3/js/jquery.slides.js"></script>
-	<script src="__PUBLIC__/IndexV3/js/detect.js"></script>
-	<script src="__PUBLIC__/IndexV3/js/page_home_apps.js"></script>
-
-
+	<load href="__STATIC__/v3/js/jquery.plugins.js" />
+	<load href="__STATIC__/v3/js/index.js" />
 </body>
 </html>
