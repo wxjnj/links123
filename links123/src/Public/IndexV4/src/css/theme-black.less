@@ -172,3 +172,167 @@ body {
 .zld-dialog li .lkd-add i {
     background-image: url("../imgs/theme-purple/user-dialog.png");
 }
+
+@double_1175_width: 578px;
+@font_purple: #474747;
+@font_black: #474747;
+@back_purple: #474747;
+
+.extra-calendar {
+    .cal-header {
+        width: @double_1175_width;
+        background: url(../imgs/white_60.png) repeat;
+        .cal-header-date-prev {
+            float:right;
+            background: url(../imgs/theme-purple/cal-prev.png) 0 0 no-repeat;
+        }
+        .cal-header-date-next {
+            float:left;
+            background: url(../imgs/theme-purple/cal-next.png) 0 0 no-repeat;
+        }
+        .cal-header-date-prev,
+        .cal-header-date-next,
+        .cal-header-date {
+            color: @font_purple;
+        }
+        button {
+            color: @font_purple;
+            background-color: transparent;
+        }
+        .active {
+            color: #fff;
+            background: @back_purple;
+        }
+    }
+    .cal-day {
+        .cal-mini-month-panel {
+            background: url(../imgs/white_60.png) repeat;
+            td, th {
+                a {
+                    color: @font_purple;
+                }
+
+                .active {
+                    background: @back_purple;
+                    color:#fff;
+                }
+            }
+        }
+        .cal-day-note-list {
+            background: url(../imgs/white_60.png) repeat;
+            line-height: 200%;
+            h6 {
+                color: @font_purple;
+            }
+        }
+        .cal-day-burn-down-chart {
+            background: url(../imgs/white_60.png) repeat;
+
+            .chart {
+                background: @back_purple;
+
+                .time-show {
+                    color: #fff;
+                }
+            }
+
+            .cal-day-event-item {
+                border-bottom: 1px dashed @font_purple;
+                .dot {
+                    background: @font_purple;
+                }
+                .enter {
+                    color: @font_purple;
+                }
+                .del {
+                    color: @font_purple;
+                }
+            }
+            .cal-day-event-item-pass {
+                color: #fff;
+                border-bottom: 1px dashed #fff;
+                .dot {
+                    background: #fff;
+                }
+                .enter {
+                    color: #fff;
+                }
+                .del {
+                    color: #fff;
+                }
+            }
+        }
+    }
+    .cal-month, .cal-week {
+        table {
+            a,
+            a:active,
+            a:hover{
+                color: @font_purple;
+            }
+            td {
+                background: url(../imgs/white_60.png) 0 0 repeat;
+                .month_task_dot {
+                    background: @back_purple;
+                }
+
+                .week-mark-line {
+                    b {
+                        background: @back_purple;
+                    }
+
+                    span {
+                        border-bottom: 1px dashed @font_purple;
+                    }
+                }
+
+                .week-mark-line-pass {
+                    b {
+                        background: #fff;
+                    }
+                    span {
+                        border-bottom: 1px dashed #fff;
+                    }
+                }
+
+                .chart {
+                    background: @back_purple;
+
+                    .time-show {
+                        color: #fff;
+                    }
+                }
+
+            }
+
+            th {
+                color: #fff;
+                background: url(../imgs/white_20.png) 0 0 repeat;
+            }
+
+        }
+        .month_pass_date {
+            color: #fff;
+            background: @back_purple;
+            .month_task_dot {
+                background-color: #fff;
+            }
+            a,
+            a:active,
+            a:hover {
+                color:#fff;
+            }
+
+            .week-mark-line {
+
+                b {
+                    background: #fff;
+                }
+
+                span {
+                    border-color: #fff;
+                }
+            }
+        }
+    }
+}
