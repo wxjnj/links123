@@ -8,6 +8,7 @@ return array(
 		
 	'COOKIE_EXPIRE'				=>	86400,
 	'COOKIE_PREFIX'				=>	'lnk',
+	
 
 	'404_PAGE'             		=>	'Public:404' ,    						//网站404页面模板文件
 	'UPDATE_PAGE'             	=>	'Public:updating' ,						//网站升级维护页面模板文件
