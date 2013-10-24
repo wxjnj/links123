@@ -560,7 +560,7 @@ li.skin_selection_li{
 }
 .box-apps,
 .box-find{
-	margin-top: 35px;
+	margin-top: 26px;
 }
 /*apps*/
 .apps{
@@ -568,7 +568,7 @@ li.skin_selection_li{
 }
 .apps ul{
 	*zoom: 1;
-	margin-left: -35px;
+	margin-left: -26px;
 }
 .apps ul:after{
 	content: '\0020';
@@ -579,7 +579,7 @@ li.skin_selection_li{
 .apps ul li{
 	cursor: pointer;
 	display: inline;
-	margin-left: 35px;
+	margin-left: 30px;
 	float: left;
 	width: 72px;
 	height: 100px;

@@ -1,4 +1,4 @@
-/*! Links123CN - v4.0.0 - 2013-10-23 */
+/*! Links123CN - v4.0.0 - 2013-10-25 */
 Shadowbox.init();
 $(function() {
 	initIndexEvent();
