@@ -1,4 +1,4 @@
-/*! Links123CN - v4.0.0 - 2013-10-22 */
+/*! Links123CN - v4.0.0 - 2013-10-24 */
 var screenStyle = '';
 if(screen.width >= 1280){ screenStyle = 'widescreen'; }
 if($.cookies.get('screenStyle') == 'wide'){

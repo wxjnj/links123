@@ -1552,6 +1552,50 @@ li.skin_selection_li{
 	background-position: -85px -255px;
 }
 
+
+.cal_v303 {
+	width: 410px;
+	height: 210px;
+	border-top: 1px solid #e1e0e2;
+}
+.cal_v303_head {
+	height: 38px;
+	line-height: 38px;
+	border-bottom: 1px solid #999;
+
+}
+.cal_v303_show_date_box a,
+.cal_v303_show_date_box span {
+	display: inline-block;
+	float: left;
+}
+
+.cal_v303_prev_btn {
+	width: 15px;
+	height: 38px;
+	background: url(../imgs/cal-arrow.png) 0 11px no-repeat;
+}
+.cal_v303_next_btn {
+	width: 15px;
+	height: 38px;
+	background: url(../imgs/cal-arrow.png) -15px 11px no-repeat;
+}
+.cal_v303_show_date {
+	margin: auto 15px;
+}
+
+.cal_v303_show_date_box {
+	float: left;
+}
+.cal_show_pop_btns_box {
+	float: right;
+}
+.cal_show_pop_btn {
+	margin: auto 0 auto 10px;
+}
+
+
+
 /*screen btn*/
 #J_Styles ul{
 	float:left;
