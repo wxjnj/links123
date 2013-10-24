@@ -65,6 +65,7 @@ module.exports = function(grunt) {
 					],
 					'~temp/index.js' : [
 						'src/v3/js/common.js',
+            'src/v3/js/date.js',
 						'src/v3/js/index.js',
 						'src/v3/js/detect.js',
 						'src/v3/js/page_home_apps.js'

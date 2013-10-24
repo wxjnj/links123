@@ -241,21 +241,16 @@
 			return d;
 		},
 		compare: function(a, b){
-			if(a.getFullYear() < b.getFullYear){
-				return -1;
-			}else if(a.getFullYear() > b.getFullYear()){
-				return 1;
-			}else if(a.getMonth() < b.getMonth()){
-				return -1;
-			}else if(a.getMonth() > b.getMonth()){
-				return 1;
-			}else if(a.getDate() < b.getDate()){
-				return -1;
-			}else if(a.getDate() > b.getDate()){
-				return 1;
-			}else{
-				return 0;
+			if(a.getFullYear() != b.getFullYear){
+				return a.getFullYear() - b.getFullYear();
 			}
+      if(a.getMonth() != b.getMonth()){
+				return a.getMonth() - b.getMonth();
+			}
+      if(a.getDate() != b.getDate()){
+				return a.getDate() - b.getDate();
+			}
+      return 0;
 		},
 		//获取日期是星期几
 		posInWeek: function(y, m, d){
@@ -517,7 +512,7 @@
 				td = self.tableElement.find('td:eq(' + i + ')');
 				op = Calendar.compare(tem, today);
 				td.removeClass('month_pass_date');
-				if(op == -1) td.addClass('month_pass_date');
+				if(op < 0) td.addClass('month_pass_date');
 				if(op == 0) burndown = true;
 				$.each(marks, function(k, v){
 					line = $('<div class="week-mark-line"><b></b><span></span></div>');

@@ -6,22 +6,13 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<meta name="Keywords" content="{$keywords}" />
 	<meta name="Description" content="{$description}" />
-	<link rel="stylesheet" href="__PUBLIC__/IndexV3/css/base.css" />
-	<load href="__STATIC__/v3/css/css.min.css" />
+	<link rel="stylesheet" href="__STATIC__/min/?b=v3/css&f=base.css,css.min.css" />
+	<script src="__STATIC__/min/?b=v3/js&f=jquery-1.7.1.min.js,jquery.cookies.2.2.0.min.js"></script>
 	<link rel="stylesheet" href="__PUBLIC__/IndexV3/skins/{$theme}/style.css" id="J_Skins" />
-	<load href="__STATIC__/v3/js/jquery-1.7.1.min.js" />
-	<load href="__STATIC__/v3/js/jquery.cookies.2.2.0.min.js" />
-	<script>
-		var $CONFIG = {
-			'APP' : '__APP__/',
-			'URL' : '__URL__',
-			'PUBLIC' : '__PUBLIC__',
-			'IsLogin' : <empty name="_SESSION[C('MEMBER_AUTH_KEY')]">1<else />0</empty>
-		};
-	</script>
+	<script>var $CONFIG = { 'APP' : '__APP__/', 'URL' : '__URL__', 'PUBLIC' : '__PUBLIC__', 'IsLogin' : <empty name="_SESSION[C('MEMBER_AUTH_KEY')]">1<else />0</empty> };</script>
 </head>
 <body>
-	<load href="__STATIC__/v3/js/init.js" />
+	<script src="__STATIC__/v3/js/init.js"></script>
 	<div id="J_header" class="header">
 		<div class="header-inner">
 			<div class="zdl">
@@ -154,9 +145,7 @@
 					</ul>
 				</div><!--.zld end-->
 				<div class="box box-apps">
-					<div class="box-hd">
-						<h2>我的应用</h2>
-					</div>
+					<div class="box-hd"></div>
 					<div class="box-bd">
 						<div class="apps">
 							<ul id="J_Apps">
@@ -181,65 +170,53 @@
 				</div><!-- app-box end -->
 				<div class="extra">
 					<div class="extra-col1">
-
+						<div class="extra-calendar">
+							<include file="Contorls:calendar" />
+						</div>
+						<div class="extra-calendar-overlayer"></div>
 						<div class="cal_v303">
 							<div class="cal_v303_head">
 								<div class="cal_v303_show_date_box">
 									<a class="cal_v303_prev_btn" href="javascript:;"></a>
-									<span class="cal_v303_show_date">2012年11月</span>
+									<span class="cal_v303_show_date"></span>
 									<a class="cal_v303_next_btn" href="javascript:;"></a>
 								</div>
 								<div class="cal_show_pop_btns_box">
-									<a class="cal_show_pop_btn " data-type="month" href="javascript:;">月</a>
-									<a class="cal_show_pop_btn " data-type="week" href="javascript:;">周</a>
-									<a class="cal_show_pop_btn " data-type="date" href="javascript:;">日</a>
+									<a class="cal_show_pop_btn " data-type="Month" href="javascript:;">月</a>
+									<a class="cal_show_pop_btn " data-type="Week" href="javascript:;">周</a>
+									<a class="cal_show_pop_btn " data-type="Date" href="javascript:;">日</a>
 								</div>
 							</div>
 							<div class="cal_v303_body">
 								<table class="cal_v303_mini_cal">
+									<thead>
 									<tr>
 										<th>一</th><th>二</th><th>三</th>
 										<th>四</th><th>五</th><th>六</th>
 										<th>日</th>
 									</tr>
-									<tr>
-										<td>1</td>
-										<td>2</td>
-										<td>3</td>
-										<td>4</td>
-										<td>5</td>
-										<td>6</td>
-										<td>7</td>
-									</tr>
+									</thead>
+									<tbody>
+									</tbody>
 								</table>
+								<div class="cal_v303_mark_list_wrap">
+									<ul>
+									</ul>
+									<div class="cal_v303_mark_bottom_btns">
+										<a class="cal_v303_more" href="javascript:;">查看更多</a>
+										<a class="cal_v303_new_mark" href="javascript:;"><b>+</b><span>添加新日程</span></a>
+									</div>
+								</div>
 							</div>
 						</div>
 
-						<div class="box box-schedule" id="J_Schedule">
-							<div class="box-hd">
-								<span class="new"></span>
-								<h2>我的日程表</h2>
-							</div>
-							<div class="box-bd">
-								<div class="schedule">
-									<ul>
-									<volist name="schedule_list" key="i" id="schedule">
-									<li class='<if condition="$i eq 1">first</if> task{$schedule.id}' data-id="{$schedule.id}">
-											<if condition="$i eq 1 AND $schedule.mid eq 0"><span class="sp" style="display:none">取消日程</span><else /><span class="sp">取消日程</span></if>
-											<div class="info">
-												<span data-d='{$schedule.datetime|date="m月d日",###}' class="d"><input type="text" value='{$schedule.datetime|date="m月d日",###}' /></span>
-												<span class="s"> - </span>
-												<span class="t"><input type="text" value="{$schedule.content}" data-tip="<if condition="$schedule.id lt 2">快来创建第一个日程</if>"/></span>
-											</div>
-										</li>
-									</volist>
-									</ul>
-								</div><!--.schedule end-->
-							</div>
-						</div>
+						<!--div class="box box-schedule" id="J_Schedule">
+							<div class="box-hd"></div>
+							<div class="box-bd">Schedule</div>
+						</div-->
 						<div class="box box-find" id="J_Find">
 							<div class="box-hd">
-								<h2>TED发现</h2>
+								<h2>TED精选</h2>
 							</div>
 							<div class="box-bd">
 								<div class="find">
@@ -257,9 +234,6 @@
 										</li>
 										</if>
 									</volist>
-										<li class="more">
-											<a href="{:U('Index/nav')}?cid=5" target="_blank">发现更多...</a>
-										</li>
 									</ul>
 								</div><!--.find end-->
 							</div>
@@ -272,30 +246,7 @@
 							</div>
 							<div class="box-bd">
 								<div class="music">
-									<div class="top-mv">
-										<ul>
-										<volist name="songTopList" key="i" id="song">
-											<li data-id="{$i}" class='<if condition="$i%2 eq 1"> first </if> top{$i}'>
-												<p class="img"><img src="{$song.img}" alt="" /></p>
-												<div data-id="{$i}" class="top{$i} music-controller" style="display:none">
-													<a class="volume" href="javascript:;"></a>
-													<a class="big go" href="javascript:;"></a>
-													<a class="small prev" href="javascript:;"></a>
-													<a class="small stop" href="javascript:;"></a>
-													<a class="small next" href="javascript:;"></a>
-												</div>
-												<p class="nm"><a href="javascript:;" data-url="{$song.url}" title="{$song.sname}">{$song.author} - {$song.sname}</a></p>
-											</li>
-										</volist>
-										</ul>
-									</div>
-									<div class="hot-music">
-										<ul>
-										<volist name="songFairList" key="i" id="song">
-											<li class='<if condition="$i%2 neq 1">odd </if> song{$i}' data-id="{$i}"><a href="javascript:;" data-url="{$song.url}" title="{$song.sname}">{$song.author} - {$song.sname}</a></li>
-										</volist>
-										</ul>
-									</div>
+									MUSIC
 								</div><!--.music end-->
 							</div>
 						</div>
@@ -303,7 +254,7 @@
 					<div class="extra-col3">
 						<div class="box box-pics">
 							<div class="box-hd">
-								<h2>图片精选</h2>
+								<h2>每周电影精选</h2>
 							</div>
 							<div class="box-bd">
 								<div class="pics" id="J_ScrollBox">
@@ -312,8 +263,8 @@
 											<img src="__PUBLIC__/IndexV3/upload/02.jpg" alt="" />
 											<div class="mask"></div>
 											<div class="info">
-												<p class="p1">coming soon...</p>
-												<!-- 
+												<!-- <p class="p1">coming soon...</p> -->
+												
 												<p class="p1">Title For This Item</p>
 												<p class="p2">
 													Content For This Item
@@ -322,7 +273,7 @@
 													<a href="#">豆瓣影评</a>
 													<a href="#">在线观看</a>
 												</p>
-												 -->
+												
 											</div>
 										</li>
 										<li>
@@ -394,8 +345,6 @@
 	</div><!--#footer end-->
 
 	<include file="Contorls:app_v3" />
-
-	<load href="__STATIC__/v3/js/jquery.plugins.js" />
-	<load href="__STATIC__/v3/js/index.js" />
+	<script src="__STATIC__/min/?b=v3/js&f=jquery.plugins.js,index.js"></script>
 </body>
 </html>
