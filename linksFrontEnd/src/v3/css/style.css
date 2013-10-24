@@ -552,12 +552,15 @@ li.skin_selection_li{
 .box .box-hd{
 	padding-top: 10px;
 }
-.box .box-bd{
+.box-apps .box-bd,
+.box-music .box-bd,
+.box-pics .box-bd,
+.box-find .box-bd{
 	padding-top: 20px;
 }
 .box-apps,
 .box-find{
-	margin-top: 45px;
+	margin-top: 35px;
 }
 /*apps*/
 .apps{
@@ -719,7 +722,6 @@ li.skin_selection_li{
 	display: inline;
 	float: left;
 	position: relative;
-	overflow: hidden;
 }
 .find li.more{
 	margin: 0 0 0 5px;
@@ -750,12 +752,10 @@ li.skin_selection_li{
 	width: 159px;
 }
 .find li .go{
+	background: url(../imgs/icon-player.png) 1000px 1000px no-repeat;
 	display: block;
 	text-indent: -999px;
 	overflow: hidden;
-}
-.find li .go:hover{
-	background: url(../imgs/icon-player.png) 1000px 1000px no-repeat;
 }
 .find li.hover .mask{
 	background: #000;
@@ -765,8 +765,13 @@ li.skin_selection_li{
 	-khtml-opacity: 0.75;
 	opacity: 0.75;
 }
+.find li.hover .go{
+	z-index: 3;
+}
 .find li.hover .info{
+	background: #fff;
 	display: block;
+	z-index: 2;
 }
 .find li.hover .info .p1{
 	color: #fff;
@@ -788,70 +793,7 @@ li.skin_selection_li{
 	height: 0;
 	clear: both;
 }
-.music .top-mv{}
-.music .top-mv ul{
-	*zoom: 1;
-}
-.music .top-mv ul:after{
-	content: '\0020';
-	display: block;
-	height: 0;
-	clear: both;
-}
-.music .top-mv ul li{
-	display: inline;
-	float: left;
-	margin-left: 16px;
-}
-.music .top-mv ul li.first{
-	margin-left: 0;
-}
-.music .top-mv ul li img{
-	vertical-align: middle;
-}
-.music .top-mv ul li .nm{
-	margin-top: 3px;
-}
-.music .hot-music{
-	padding-top: 20px;
-}
-.music .hot-music ul{
-	*zoom: 1;
-}
-.music .hot-music ul:after{
-	content: '\0020';
-	display: block;
-	height: 0;
-	clear: both;
-}
-.music .hot-music li{
-	float: left;
-	padding: 5px 0 5px 0;
-	height: 22px;
-	overflow: hidden;
-	line-height: 24px;
-}
-.music .top-mv .nm a:hover,
-.music .hot-music li a:hover,
-.music .top-mv .nm a.on,
-.music .hot-music li a.on{
-	color: #fc2a06;
-	text-decoration: underline;
-}
-
-.music-controller{
-	overflow: hidden;
-	position: absolute;
-	z-index: 2;
-	background: url(../imgs/opacity_white.png) 0 0 no-repeat;
-}
-.music-controller a{
-	display: block;
-	position: relative;
-	background: url(../imgs/music_new.png) no-repeat;
-}
-
-
+/*TODO MUSIC*/
 
 /*pics*/
 .pics{
@@ -860,11 +802,11 @@ li.skin_selection_li{
 }
 .pics img{
 	vertical-align: middle;
-	width: 310px;
-	height: 448px;
+	width: 306px;
+	height: 442px;
 }
 .pics .items{
-	height: 468px;
+	height: 462px;
 }
 .pics .items li{	
 	overflow: hidden;
@@ -908,17 +850,17 @@ li.skin_selection_li{
 	opacity: 1;
 }
 .pics .items li .mask{
-	background: #000;
+	background: #fff;
 	display: none;
 	height: 100%;
 	left: 0;
 	position: absolute;
 	top: 0;
 	width: 100%;
-	filter:alpha(opacity=70);
-	-moz-opacity: 0.7;
-	-khtml-opacity: 0.7;
-	opacity: 0.7;
+	filter:alpha(opacity=85);
+	-moz-opacity: 0.85;
+	-khtml-opacity: 0.85;
+	opacity: 0.85;
 }
 .pics .items li .info{
 	color: #fff;
@@ -933,15 +875,13 @@ li.skin_selection_li{
 	display: block;
 }
 .pics .items li .info .p1{
+	color: #000;
 	font-size: 14px;
 }
 .pics .items li .info .p2{
+	color: #727171;
 	font-size: 12px;
 	line-height: 20px;
-	filter:alpha(opacity=60);
-	-moz-opacity: 0.6;
-	-khtml-opacity: 0.6;
-	opacity: 0.6;
 }
 .pics .items li .info .p3{
 	position: absolute;
@@ -951,7 +891,7 @@ li.skin_selection_li{
 }
 .pics .items li .info .p3 a,
 .pics .items li .info .p3 a:hover{
-	border: 1px dotted #fff;
+	background: #4daf7b;
 	color: #fff;
 	display: block;
 	float: left;
@@ -1495,62 +1435,6 @@ li.skin_selection_li{
 	width: 4px;
 	overflow: hidden;
 }
-.music-controller{
-	width: 118px;
-	height: 102px;
-	margin-top: -102px;
-}
-.music-controller .volume{
-	width: 17px;
-	height: 17px;
-	margin: 5px 0 0 95px;
-	background-position: -106px -189px;
-}
-.music-controller .volume:hover{
-	background-position: -106px -206px;
-}
-.music-controller .big{
-	width: 53px;
-	height: 53px;
-	margin: -5px 0 0 32px;
-}
-.music-controller .go{
-	background-position: -53px -149px;
-}
-.music-controller .go:hover{
-	background-position: -53px -202px;
-}
-.music-controller .pause{
-	background-position: 0 -149px;
-}
-.music-controller .pause:hover{
-	background-position: 0 -202px;
-}
-.music-controller .small{
-	width: 17px;
-	height: 17px;
-}
-.music-controller .prev{
-	margin: 5px 0 0 18px;
-	background-position: 0 -255px;
-}
-.music-controller .prev:hover{
-	background-position: -51px -255px;
-}
-.music-controller .stop{
-	margin: -17px 0 0 50px;
-	background-position: -17px -255px;
-}
-.music-controller .stop:hover{
-	background-position: -68px -255px;
-}
-.music-controller .next{
-	margin: -17px 0 0 84px;
-	background-position: -34px -255px;
-}
-.music-controller .next:hover{
-	background-position: -85px -255px;
-}
 
 /*screen btn*/
 #J_Styles ul{
@@ -1624,9 +1508,7 @@ li.skin_selection_li{
 }
 .find li.more{ width: 410px; margin: 0 0 0 7px;} 
 .find li.hover .info{
-	padding: 15px 10px 0 10px;
-	width: 110px;
-	height: 67px;
+	
 }
 .find li .mask,
 .find li .info,
@@ -1634,26 +1516,9 @@ li.skin_selection_li{
 	height: 82px;
 	width: 132px;
 }
-.find li .go:hover{
-	background-position: 40px 15px;
-}
 .find li img{
 	height: 82px;
 	width: 133px;
-}
-.music .top-mv ul li img{
-	height: 102px;
-	width: 118px;
-}
-.music .top-mv ul li{
-	margin-left: 14px;
-	width: 118px;
-}
-.music .hot-music li{
-	width: 118px;
-}
-.music .hot-music li.odd{
-	margin-left: 14px;
 }
 .pics{
 	height: 386px;
@@ -1700,11 +1565,11 @@ li.skin_selection_li{
 }
 .widescreen .extra .extra-col1,
 .widescreen .extra .extra-col2{
-	margin-right: 25px;
+	margin-right: 28px;
 }
 .widescreen .extra .extra-col1{ width: 500px; }
-.widescreen .extra .extra-col2{ width: 310px; }
-.widescreen .extra .extra-col3{ width: 310px; }
+.widescreen .extra .extra-col2{ width: 308px; }
+.widescreen .extra .extra-col3{ width: 306px; }
 
 .widescreen .screen-change-btn .s-wide{
 	display: none;
@@ -1733,48 +1598,35 @@ li.skin_selection_li{
 .widescreen .find li{
 	height: 98px;
 	margin: 0 0 10px 10px;
-	width: 159px;
+	width: 160px;
 }
 .widescreen .find li.more{ width: 500px; margin: 0 0 0 10px;}
 .widescreen .find li.hover .info{
-	padding: 30px 15px 0 15px;
-	width: 129px;
-	height: 68px;
+	height: 116px;
+	padding: 7px;
+	width: 391px;
 }
 .widescreen .find li .mask,
 .widescreen .find li .info,
 .widescreen .find li .go{
 	height: 98px;
-	width: 159px;
+	width: 160px;
 }
-.widescreen .find li .go:hover{
+.widescreen .find li .go{
 	background-position: 55px 25px;
 }
 .widescreen .find li img{
 	height: 98px;
-	width: 159px;
-}
-.widescreen .music .top-mv ul li img{
-	height: 128px;
-	width: 147px;
-}
-.widescreen .music .top-mv ul li{
-	width: 147px;
-}
-.widescreen .music .hot-music li{
-	width: 147px;
-}
-.widescreen .music .hot-music li.odd{
-	margin-left: 16px;
+	width: 160px;
 }
 .widescreen .pics{
 	height: 473px;
-	width: 310px;
+	width: 306px;
 }
 .widescreen .pics .items li,
 .widescreen .pics img{
-	height: 448px;
-	width: 310px;
+	height: 442px;
+	width: 306px;
 }
 .widescreen .pics .items li .info .p2{
 	margin-top: 20px;
@@ -1795,61 +1647,4 @@ li.skin_selection_li{
 .widescreen .pics .items li .info .p3 a:hover{
 	width: 110px;
 }
-.widescreen .music-controller{
-	width: 147px;
-	height: 128px;
-	margin-top: -128px;
-}
-.widescreen .music-controller .volume{
-	width: 20px;
-	height: 20px;
-	margin: 8px 0 0 118px;
-	background-position: -106px -150px;
-}
-.widescreen .music-controller .volume:hover{
-	background-position: -106px -170px;
-}
-.widescreen .music-controller .big{
-	width: 65px;
-	height: 65px;
-	margin: -8px auto 0;
-}
-.widescreen .music-controller .go{
-	background-position: -65px -0px;
-}
-.widescreen .music-controller .go:hover{
-	background-position: -65px -65px;
-}
-.widescreen .music-controller .pause{
-	background-position: 0 0;
-}
-.widescreen .music-controller .pause:hover{
-	background-position: 0 -65px;
-}
-.widescreen .music-controller .small{
-	width: 19px;
-	height: 19px;
-}
-.widescreen .music-controller .prev{
-	margin: 8px 0 0 28px;
-	background-position: 0 -130px;
-}
-.widescreen .music-controller .prev:hover{
-	background-position: -57px -130px;
-}
-.widescreen .music-controller .stop{
-	margin: -19px auto 0;
-	background-position: -19px -130px;
-}
-.widescreen .music-controller .stop:hover{
-	background-position: -76px -130px;
-}
-.widescreen .music-controller .next{
-	margin: -19px 0 0 102px;
-	background-position: -38px -130px;
-}
-.widescreen .music-controller .next:hover{
-	background-position: -95px -130px;
-}
-
 
