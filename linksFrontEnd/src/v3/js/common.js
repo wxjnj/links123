@@ -513,7 +513,7 @@ var User = {
 
 var THL = {
 	conf : {
-		topnm : 32,
+		topnm : 34,
 		topex : 64
 	},
 	Init : function() {
