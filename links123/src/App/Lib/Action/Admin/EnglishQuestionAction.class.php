@@ -995,6 +995,8 @@ class EnglishQuestionAction extends CommonAction {
             date_default_timezone_set('Asia/Shanghai');
 
             vendor('PHPExcel.Classes.PHPExcel.IOFactory');
+            ob_end_clean();
+            ob_start();
             @header('Content-type: text/html;charset=UTF-8');
             $path = str_replace('uploads.txt', 'Temp', realpath('./Public/Uploads/uploads.txt'));
             $objPHPExcel = new PHPExcel();
@@ -1063,6 +1065,8 @@ class EnglishQuestionAction extends CommonAction {
         } else {
             $fo = fopen($path . $file_name, "rb");
             // 输入文件标签
+            ob_end_clean();
+            ob_start();
             Header("Content-type: application/octet-stream");
             Header("Accept-Ranges: bytes");
             Header("Accept-Length: " . filesize($path . $file_name));
