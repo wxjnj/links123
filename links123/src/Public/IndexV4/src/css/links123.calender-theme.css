@@ -1,0 +1,121 @@
+.links123_calender{
+    color: #3C3B3D;                                         /* 3C3B3D */
+}
+.links123_calender .c_header,
+.links123_calender .day_view .c_inner,
+.links123_calender .day_view .main_task_list_wrap{
+    background: #E4D2D3;                                    /* E4D2D3 */
+}
+.links123_calender .c_header a,
+.links123_calender .c_header span,
+.links123_calender .day_view .small_calendar_wrap table th,
+.links123_calender .day_view .small_task_list_wrap h4{
+    color: #84577D;                                         /* 84577D */
+}
+.links123_calender .c_header .c_chooser_view a.active,
+.links123_calender .c_header .c_chooser_view a:hover,
+.links123_calender .month_view td a:hover{
+    background: #84577D;                                     /* 84577D */
+    color: #fff;                                             /* fff */
+    text-decoration: none;
+}
+.links123_calender .burn_down_chart .relative_div .clock,
+.links123_calender .day_view .right_side .clock{
+	color: #fff;											/* fff */
+}
+/*.links123_calender .day_view .c_inner{
+	background: #ECDADF;									
+}
+.links123_calender .day_view .main_task_list_wrap{
+	background: #ECDADF;									
+}*/
+.links123_calender .day_view .burn_down_chart,
+.links123_calender .week_view td .burn_down_chart,
+.links123_calender .day_view .before .main_task_list_wrap{
+	background: #906688;									/* 906688 */
+}
+/*.links123_calender .day_view .small_calendar_wrap table th{
+	color: #755779;                                         
+}*/
+.links123_calender .day_view .small_calendar_wrap table td a{
+	color: #3C3B3D;											/* 3C3B3D */
+}
+.links123_calender .day_view .small_calendar_wrap table td.not a{
+	color: #888;												/* 888 */
+}
+.links123_calender .day_view .small_calendar_wrap table td.active a,
+.links123_calender .day_view .small_calendar_wrap table td a:hover{
+	background: #84577D;                                     /* 84577D */
+	color: #fff;											 /* fff */
+}
+/*.links123_calender .day_view .small_task_list_wrap h4{
+	color: #84577D;                                         
+}*/
+.links123_calender .day_view .main_task_list_wrap .task_item{
+	border-bottom: 1px dashed #C1A9BC;						/* C1A9BC */
+	color: #fff;											/* fff */
+}
+.links123_calender .day_view .main_task_list_wrap .task_item.todo{
+	color: #433F40;												/* 433F40 */
+	border-bottom: 1px dashed #B89BAF;							/* B89BAF */
+}
+.links123_calender .day_view .main_task_list_wrap .task_item .drag_bar{
+	background: #ccc;											/* color */
+}
+.links123_calender .day_view .main_task_list_wrap .task_item .task_name:hover{
+	background: #C07BB3;									/* Color */
+}
+/*.links123_calender .day_view .right_side .clock{
+	color: #fff;						
+}*/
+/*.links123_calender .day_view .before .main_task_list_wrap{
+	background: #906688;											
+}*/
+.links123_calender .big_table table{
+	color: #fff;									/* fff */
+}
+.links123_calender .big_table table th{
+	background: #CBA3B5;						/* CBA3B5 */
+	height: 60px;
+	width: 14.284%;
+}
+.links123_calender .big_table table td{
+	background: #EED7D9;							/* EED7D9 */
+	color: #3C3B3D;									/* 3C3B3D */
+}
+/*.links123_calender .week_view td .burn_down_chart{
+	background: #906688;									
+}*/
+.links123_calender .week_view td .task_item{
+	color: #fff;											/* fff */
+}
+.links123_calender .month_view td a{
+	color: #3C3B3D;													/* 3C3B3D */
+}
+/*.links123_calender .month_view td a:hover{
+	color: #fff;													
+	background: #8D6285;											
+}*/
+.links123_calender .month_view td.current,
+.links123_calender .month_view td.passed,
+.links123_calender .month_view td.passed a{
+	background: #8D6285;											/* 8D6285 */
+	color: #fff;													/* fff */
+}
+.links123_calender .month_view td.active a{
+	color: #fff;													/* fff */
+}
+.links123_calender .month_view td.passed .task_items span,
+.links123_calender .month_view td.active .task_items span{
+	background-color: #fff;											/* fff */
+}
+.links123_calender .month_view td.not .task_items span{
+	background-color: #888;											/* 888 */
+}
+.c_popover .c_pop_content{
+	background: #fff;							/* fff */
+}
+.c_month_tip .c_mt_ctn{
+	background: #fff;							/* fff */
+	border: 1px solid #ccc;
+}

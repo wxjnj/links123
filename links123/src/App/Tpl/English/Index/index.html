@@ -522,12 +522,23 @@
                     </div>
 
                           <else />
+                          <style>
+                            .loading{
+                                background-image: url(__PUBLIC__/English/images/loading_3.gif);
+                                background-position: center center;
+                                background-repeat: no-repeat;
+                                background-color: #fff;
+                            }
+                          </style>
                           <volist name="special_media" id="media" mod="6">
                             <eq name="mod" value="0">
                                 <div>
                                 <ul>
                             </eq>
-                                <li><img title='{$media.name}' media_id="{$media.id}" src="{$media.media_thumb_img}" /></li>
+                                <li class="loading">
+                                    <img style="display:none" onload="this.style.display='block';" 
+                                        title='{$media.name}' media_id="{$media.id}" src="{$media.media_thumb_img}" />
+                                </li>
                             <if condition="$mod eq 5 or $key eq $special_media_num">
                                 </ul>
                                 </div>

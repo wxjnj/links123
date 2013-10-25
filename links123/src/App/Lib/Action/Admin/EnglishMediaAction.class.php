@@ -350,7 +350,7 @@ class EnglishMediaAction extends CommonAction {
             //TODO 推荐视频解析 @author slate date 20131001
             if (!$model->play_code) {
 	            
-	            $model->analysisMediaPlayCode($media);
+	            $this->analysisMediaPlayCode($media['media_id'] );
             }
             
             //成功提示
@@ -360,6 +360,63 @@ class EnglishMediaAction extends CommonAction {
             //错误提示
             $this->error('编辑失败!');
         }
+    }
+    private function analysisMediaPlayCode($media_id) {
+        $model = D("EnglishMedia");
+        $media = $model->find($media_id);
+        $saveData = array();
+        $saveData['id'] = $media['id'];
+        $saveData['priority_type'] = empty($media['priority_type'])? 1 : $media['priority_type'];
+        if (strpos($media['media_source_url'], 'http://www.youtube.com') !== FALSE && $media['local_path']) {
+            $saveData['priority_type'] = 2;
+        }
+        //优先播放本地，且本地视频存在
+        if ($saveData['priority_type'] == 2 && $media['local_path']) {
+            $saveData['play_code'] = $media['local_path'];
+            if (strtolower(end(explode(".", $media['local_path']))) == "swf") {
+                $saveData['play_type'] = 0;
+            } else {
+                $saveData['play_type'] = 4;
+            }
+        } else {
+            //play_code为空，则进行视频解析
+            if (!$media['play_code']) {
+                //视频解析库
+                import("@.ORG.VideoHooks");
+                $videoHooks = new VideoHooks();
+
+                $media['media_source_url'] = trim(str_replace(' ', '', $media['media_source_url']));
+                $videoInfo = $videoHooks->analyzer($media['media_source_url']);
+
+                $play_code = $videoInfo['swf'];
+
+                $media_thumb_img = $videoInfo['img'];
+
+                //解析成功，保存视频解析地址
+                if (!$videoHooks->getError() && $play_code) {
+
+                    $play_type = $videoInfo['media_type'];
+                    $saveData['media_thumb_img'] = $media_thumb_img;
+                    $saveData['play_code'] = $play_code;
+                    $saveData['play_type'] = $play_type;
+                } else {
+                    if ($media['media_local_path']) {
+                        $saveData['priority_type'] = 2;
+                        $saveData['play_type'] = 4;
+                        $saveData['play_code'] = $media['local_path'];
+                    } else {
+                        $saveData['status'] = 0;
+                    }
+                }
+            } else {
+                if (strpos($media['media_source_url'], 'britishcouncil.org') !== FALSE) {
+                    $saveData['play_code'] = preg_replace('/<!--<!\[endif\]-->(.*)/is', '</object></object>', $media['play_code']);
+                    $saveData['play_code'] = str_replace('width=585&amp;height=575', 'width=100%&amp;height=100%', $media['play_code']);
+                }
+                $saveData['play_code'] = preg_replace(array('/width="(.*?)"/is', '/height="(.*?)"/is', '/width=300 height=280/is', '/width=600 height=400/is'), array('width="100%"', 'height="100%"', 'width="100%" height="100%"', 'width="100%" height="100%"'), $media['play_code']);
+            }
+        }
+        $model->save($saveData);
     }
 
     public function pointSubject() {

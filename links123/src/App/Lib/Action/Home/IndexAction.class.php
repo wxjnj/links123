@@ -15,6 +15,51 @@ class IndexAction extends CommonAction {
 	 * @author slate date:2013-10-07
 	 */
 	public function indexV4() {
+        
+        //气象数据
+        $this->assign('weatherData', $this->getWeatherData());
+        
+        //推荐电影
+        $this->assign('homeMovies', $this->getHomeMovies());
+
+        //推荐音乐
+        $this->assign('homeMusics', $this->getHomeMusics());
+        
+		//自留地
+		$myareaModel = M("Myarea");
+		$scheduleModel = M("Schedule");
+
+		$user_id = intval($this->_session(C('MEMBER_AUTH_KEY')));
+		if ($user_id) {
+			$memberModel = M("Member");
+			$mbrNow = $memberModel->where(array('id' => $user_id))->find();
+			$_SESSION['myarea_sort'] = $mbrNow['myarea_sort'] ? explode(',', $mbrNow['myarea_sort']) : '';
+			$_SESSION['app_sort'] = $mbrNow['app_sort'];
+
+			$themeId = session('themeId');
+			if (!$themeId) {
+				$themeId = cookie('themeId');
+			}
+		} else {
+
+			//取出皮肤ID和模板ID
+			$themeId = session('themeId');
+			if (!$themeId) {
+				$themeId = cookie('themeId');
+			}
+
+			if (!$_SESSION['app_sort']) {
+
+				$_SESSION['app_sort'] = cookie('app_sort');
+			}
+		}
+
+		if(!$themeId || strpos($themeId, 'theme')) { //暂时只有1和2
+			$themeId = 'theme-purple';
+		}
+
+		$this->assign('themeId', $themeId);
+
 		$app_list = $this->getApps($_SESSION['app_sort']);
 		$this->assign('app_list', $app_list);
 		$this->getHeaderInfo();
@@ -31,7 +76,7 @@ class IndexAction extends CommonAction {
 		//自留地
 		$myareaModel = M("Myarea");
 		$scheduleModel = M("Schedule");
-		
+
 		$user_id = intval($this->_session(C('MEMBER_AUTH_KEY')));
 		if ($user_id) {
 			$memberModel = M("Member");
@@ -245,24 +290,24 @@ class IndexAction extends CommonAction {
 	 * @author slate date:2013-08-29
 	 */
 	public function updateSkin() {
-		
+
 		$skinId = intval($this->_param('skinId'));
-		
+
 		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
-		
+
 		$result = true;
-		
+
 		if ($user_id) {
-			
+
 			$memberModel = M("member");
-					
+
 			if (!$memberModel->where(array('id' => $user_id))->setField('skin' , $skinId)) {
-				
+
 				$result = false;
 			}
-			
+
 		}
-		
+
 		if ($skinId) {
 			session('skinId', $skinId);
 			cookie('skinId', $skinId, array('expire' => 0));
@@ -270,10 +315,10 @@ class IndexAction extends CommonAction {
 			unset($_SESSION['skinId']);
 			cookie('skinId',null);
 		}
-		
+
 		$this->ajaxReturn(cookie('skinId'));
 	}
-	
+
 	/**
 	 * 更新首页主题
 	 *
@@ -284,31 +329,63 @@ class IndexAction extends CommonAction {
 	 * @author slate date:2013-09-21
 	 */
 	public function updateSkinTheme() {
-	
+
 		$themeId = intval($this->_param('themeId'));
-	
+
 		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
-	
+
 		$result = true;
-	
+
 		if ($user_id) {
-				
+
 			$memberModel = M("member");
-				
+
 			if (!$memberModel->where(array('id' => $user_id))->setField('theme' , $themeId)) {
-	
+
 				$result = false;
 			}
-				
+
 		}
-		
+
 		session('themeId', $themeId);
 		cookie('themeId', $themeId, array('expire' => 0));
-	
+
 		$this->updateSkin(0);
 		$this->ajaxReturn($result);
 	}
-	
+
+	/**
+	 * 更新首页主题 V4
+	 *
+	 *  与v3版区别: themeId是字符串
+	 *
+	 */
+	public function updateThemeV4() {
+
+		$themeId = $this->_param('themeId');
+
+		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+
+		$result = true;
+
+		if ($user_id) {
+
+			$memberModel = M("member");
+
+			if (!$memberModel->where(array('id' => $user_id))->setField('theme' , $themeId)) {
+
+				$result = false;
+			}
+
+		}
+
+		session('themeId', $themeId);
+		cookie('themeId', $themeId, array('expire' => 0));
+
+		$this->updateSkin(0);
+		$this->ajaxReturn($result);
+	}
+
 	/**
 	 * @desc 旧首页（导航）
 	 * @author Frank UPDATE 2013-08-16
@@ -963,23 +1040,41 @@ class IndexAction extends CommonAction {
 		$result = 0;
 	
 		if ($id) {
+            //判断session是否为空
+            if(!$_SESSION['arealist']){
+                $_SESSION['arealist'] = D("Myarea")->where(array("mid" => $user_id))->select();
+            }
 			if ($user_id) {
 	
 				$memberModel = M("Member");
 	
 				$myarea = M("Myarea");
-					
+				//判断session是否为空
+                if(!$_SESSION['myarea_sort']){
+                    $myarea_sort = $memberModel->where(array('id' => $user_id))->getField("myarea_sort");
+                    if(false !== $myarea_sort && !empty($myarea_sort)){
+                        $_SESSION['myarea_sort'] = explode(",", $myarea_sort);
+                    }else{
+                        $_SESSION['myarea_sort'] = array_keys($_SESSION['arealist']);
+                    }
+                }
 				if (false !== $myarea->where(array('id' => $id, 'mid' => $user_id))->delete()) {
 	
 					$result = 1;
 						
+                    unset($_SESSION['arealist'][$id]);
 					unset($_SESSION['myarea_sort'][array_search($id, $_SESSION['myarea_sort'])]);
 					$memberModel->where(array('id' => $user_id))->save(array('myarea_sort' => implode(',', $_SESSION['myarea_sort'])));
 				}
 	
 			} else {
-					
-				$result = -1;
+                //判断session是否为空
+                if(!$_SESSION['myarea_sort']){
+                    $_SESSION['myarea_sort'] = array_keys($_SESSION['arealist']);
+                }
+                unset($_SESSION['arealist'][$id]);
+				unset($_SESSION['myarea_sort'][array_search($id, $_SESSION['myarea_sort'])]);
+				$result = 1;
 			}
 		}
 	
@@ -1004,11 +1099,22 @@ class IndexAction extends CommonAction {
 		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
 	
 		$result = 0;
-	
+        //判断session是否为空
+        if(!$_SESSION['arealist']){
+            $_SESSION['arealist'] = D("Myarea")->where(array("mid" => $user_id))->select();
+        }
 		if ($user_id) {
 			$myarea = M("Myarea");
 			$memberModel =  M("Member");
-	
+            //判断session是否为空
+            if(!$_SESSION['myarea_sort']){
+                $myarea_sort = $memberModel->where(array('id' => $user_id))->getField("myarea_sort");
+                if(false !== $myarea_sort && !empty($myarea_sort)){
+                    $_SESSION['myarea_sort'] = explode(",", $myarea_sort);
+                }else{
+                    $_SESSION['myarea_sort'] = array_keys($_SESSION['arealist']);
+                }
+            }
 			$now = time();
 	
 			$saveData = array(
@@ -1043,8 +1149,21 @@ class IndexAction extends CommonAction {
 				}
 			}
 		} else {
+            //判断session是否为空
+            if(!$_SESSION['myarea_sort']){
+                $_SESSION['myarea_sort'] = array_keys($_SESSION['arealist']);
+            }
+            $result = 1;
+            if (!$id) {
+                $id = end($_SESSION['myarea_sort']) + 1;
+                array_push($_SESSION['myarea_sort'], $id);
+                $_SESSION['arealist'][$id]['id'] = $id;
+                $result = $id;
+            }
+            $_SESSION['arealist'][$id]['url'] = $url;
+            $_SESSION['arealist'][$id]['web_name'] = $webname;
 				
-			$result = -1;
+			
 		}
 	
 		echo $result;
@@ -1143,4 +1262,67 @@ class IndexAction extends CommonAction {
 	public function dbfm(){
 		$this->display();
 	}
+    
+    /**
+     * 获取当前访问用户所在地的天气数据
+     * 
+     * @author Hiker date:2013-10-16
+     * 
+     * @return array
+     */
+    protected function getWeatherData() {
+        
+        $weather = A('Home/Weather');
+        $data = json_decode($weather->getJsonData());
+        $weatherData = array(
+            'city' => $data->n,
+            'temp' => $data->t,
+            'sun'  => $data->s,
+            'air'  => $data->i->aq->label
+        );
+        
+        return $weatherData;
+    }
+    
+    /**
+     * 获取指定条数的数据推荐电影数据
+     * 
+     * @author Hiker date:2013-10-16
+     * 
+     * @param int $length
+     * @return array
+     */
+    protected function getHomeMovies($length = 10) {
+        
+        $result = S('HomeMovies'.$length);
+        if(!$result) {
+            $model = D('HomeMovie');
+            $result = $model->getList(array('status'=>1), 'sort', $length);
+            
+            S('HomeMovies'.$length, $result);
+        }
+        
+        return $result;
+    }
+    
+    /**
+     * 获取指定数目的推荐音乐数据
+     * 
+     * @author Hiker date:2013-10-16
+     * 
+     * @param int $length
+     * @return array
+     */
+    protected function getHomeMusics($length = 30) {
+        
+        $result = S('HomeMusics'.$length);
+        if(!$result) {
+            $model = D('HomeMusic');
+            $result = $model->getList(array('status'=>1), 'sort', $length);
+            
+            S('HomeMusics'.$length, $result);
+        }
+        
+        return $result;
+    }
 }

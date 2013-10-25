@@ -25,7 +25,6 @@ class CommonAction extends BaseAction {
                 //检查认证识别号
                 if (!$_SESSION[C('USER_AUTH_KEY')]) {
                     //跳转到认证网关
-                    
                     redirect(PHP_FILE . C('USER_AUTH_GATEWAY'));
                 }
                 // 没有权限 抛出错误

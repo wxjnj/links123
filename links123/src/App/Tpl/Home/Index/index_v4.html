@@ -8,6 +8,7 @@
 	<meta name="Description" content="{$description}" />
 	<script>
 		var $CONFIG = {
+			theme : '{$themeId}',
 			'APP' : '__APP__/',
 			'URL' : '__URL__',
 			'PUBLIC' : '__PUBLIC__',
@@ -15,7 +16,7 @@
 		};
 	</script>
 	<!-- 静态资源 dev or build -->
-	<include file="Contorls:statics_v4_dev" />
+	<include file="Contorls:statics_v4_build" />
 	<script>
 		//待归位
 		$(function(){
@@ -25,7 +26,7 @@
 		});
 	</script>
 </head>
-<body class="widescreen theme-purple theme-purple-bg-1">
+<body class="widescreen">
 
 <include file="Contorls:user_dialog_v4" />
 
@@ -44,7 +45,8 @@
 		</ul><!-- // .nav -->
 		<div class="uc">
 			<empty name="_SESSION[C('MEMBER_AUTH_KEY')]">
-			<a class="join J_SignUp" href="javascript:;">注&nbsp;册</a><a class="login J_SignIn" href="javascript:;">登&nbsp;录</a>
+				<a class="login J_SignIn" href="javascript:;">登&nbsp;录</a>
+				<a class="join J_SignUp" href="javascript:;">注&nbsp;册</a>
 			<else />
 			<img class="uc-avatar" src="__PUBLIC__/IndexV4/src/imgs/avatar-demo.png" />
 			<div class="uc-menu">
@@ -62,12 +64,18 @@
 			</div><!-- // .uc-menu -->
 			</empty>
 		</div><!-- // .uc -->
-		<div class="screen-theme">
-			<b></b>
-			<a class="change-theme-btn" href="#">换肤</a>
-			<span> | </span>
-			<a class="change-screen-btn" href="#">窄屏</a>
-		</div><!-- // .screen-theme -->
+		<ul class="screen-theme">
+			<li class="change-theme-btn theme-purple-btn"></li>
+			<li id="K_change_skin_btn" class="change-back-btn">
+				换肤
+				<div class="skin-list" style="display: none">
+					<span class="ang"></span>
+					<div id="J_skin_pics" class="skin-pics"></div>
+				</div>
+			</li>
+			<li> | </li>
+			<li class="change-screen-btn">窄屏</li>
+		</ul><!-- // .screen-theme -->
 	</div>
 </div><!--// .top-nav-->
 <div class="header">
@@ -104,9 +112,9 @@
 		</div><!-- // .thl -->
 
 		<div class="header-weather">
-			<span class="region">成都</span>
-			<span class="degree">23°</span>
-			<span class="info">多云转阴，空气质量良</span>
+			<span class="region">{$weatherData['city']}</span>
+			<span class="degree">{$weatherData['temp']}°</span>
+			<span class="info">{$weatherData['sun']}，空气质量{$weatherData['air']}</span>
 		</div><!-- // .header-weather -->
 
 	</div><!--// .header-inner -->
@@ -122,6 +130,7 @@
 		<if condition="$_SESSION['arealist'][$areaid]['id'] neq ''">
 			<li class="K_link_it" id="{$_SESSION['arealist'][$areaid].id}" url="{:U('Link/index')}?mod=myarea&url={$_SESSION['arealist'][$areaid].url}" data-id="{$_SESSION['arealist'][$areaid].id}" data-url="{$_SESSION['arealist'][$areaid].url}">
 				<b class="nm">{$_SESSION['arealist'][$areaid]['web_name']}</b>
+				<span class="cs-btn"></span>
 			</li>
 		</if>
 		</volist>
@@ -252,16 +261,29 @@
 			</div>
 		</div><!-- // .box-movie -->
 		<div class="extra-calendar">
+			<include file="Contorls:calendar" />
 		</div><!-- // .box-canlendar -->
 		<div class="extra-ted">
 			<ul>
 				<?php for($i=0;$i<6;$i++){ ?>
 				<li>
-					<img src="__PUBLIC__/IndexV4/src/imgs/ted-demo.jpeg">
-					<a class="ted-play-btn" href="#"></a>
+					<div class="ted-img">
+						<img src="__PUBLIC__/IndexV4/src/imgs/ted-demo.jpeg">
+						<a class="ted-play-btn" href="#"></a>
+					</div>
+					<div class="hide-content" style="display: none">
+						<h5>两小无猜 Jeux d'enfants</h5>
+						<p class="from">15:57 Posted Sep 2013</p>
+						<p class="info">It often seems like federal-level politicians care more about creating gridlock than solving.
+							It often seems like federal-level politicians care.</p>
+					</div>
 				</li>
 				<?php } ?>
 			</ul>
+			<div class="ted-detial-layer" style="display: none">
+				<div class="img"></div>
+				<div class="content"></div>
+			</div>
 		</div><!-- // .box-ted -->
 	</div><!--// .extra -->
 </div><!--// .container-->
@@ -322,5 +344,15 @@
 		<p>沪ICP备12036721号 &copy; 2013 另客</p>
 	</div><!-- .footer-siteinfo -->
 </div><!--// .footer -->
+
+<div id="J_pop" class="c_popover">
+	<div id="J_popCtn" class="c_pop_content"></div>
+    <div class="relative_div">
+    	<div class="c_pop_tangle">&nbsp;</div>
+    </div>
+</div>
+<div id="J_monthTip" class="c_month_tip">
+    <div class="c_mt_ctn"></div>
+</div>
 </body>
 </html>

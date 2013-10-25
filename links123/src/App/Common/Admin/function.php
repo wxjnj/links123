@@ -150,48 +150,5 @@ function getMediaRecommendYorN($recommend, $info) {
     }
     return $str;
 }
-function getVoiceNameFromAttrId($attr_id) {
-    $voice = substr(decbin($attr_id), 0, 1);
-    switch ($voice) {
-        case 1:
-            return "美音";
 
-            break;
-        case 0:
-            return "英音";
-        default:
-            return "未知";
-            break;
-    }
-}
-
-function getTargetNameFromAttrId($attr_id) {
-    $target = substr(decbin($attr_id), 1, 1);
-    switch ($target) {
-        case 1:
-            return "听力";
-
-            break;
-        case 0:
-            return "说力";
-        default:
-            return "未知";
-            break;
-    }
-}
-
-function getPatternNameFromAttrId($attr_id) {
-    $pattern = substr(decbin($attr_id), 2, 1);
-    switch ($pattern) {
-        case 1:
-            return "视频";
-
-            break;
-        case 0:
-            return "音频";
-        default:
-            return "未知";
-            break;
-    }
-}
 ?>

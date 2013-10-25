@@ -135,7 +135,6 @@ class PublicAction extends BaseAction {
 	 * @see PublicAction::login()
 	 */
     public function login() {
-        //@ TODO 登录成功后该session值仍是null
         if(!isset($_SESSION[C('USER_AUTH_KEY')])) {
             $this->display();
             return;
@@ -157,7 +156,7 @@ class PublicAction extends BaseAction {
 	 * @see PublicAction::logout()
 	 */
     public function logout() {
-        if(session(C('USER_AUTH_KEY'))) {
+        if(isset($_SESSION[C('USER_AUTH_KEY')])) {
             unset($_SESSION[C('ADMIN_AUTH_KEY')]);
             unset($_SESSION['menu'.$_SESSION[C('USER_AUTH_KEY')]]);
             unset($_SESSION[C('USER_AUTH_KEY')]);
@@ -212,7 +211,7 @@ class PublicAction extends BaseAction {
 	            if($authInfo['password'] != md5($password)) {
 	                $this->error('密码错误！');
 	            }
-                $_SESSION[C('USER_AUTH_KEY')] = $authInfo['id'];
+	            $_SESSION[C('USER_AUTH_KEY')] = $authInfo['id'];
 	            $_SESSION['email'] = $authInfo['email'];
 	            $_SESSION['loginUserName'] = $authInfo['nickname'];
 	            $_SESSION['lastLoginTime'] = $authInfo['last_login_time'];

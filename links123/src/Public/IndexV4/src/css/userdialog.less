@@ -62,6 +62,13 @@
     -webkit-box-shadow: 0 0 10px #666;
     box-shadow: 0 0 10px #666;
 
+    .bigavatar-img {
+        display: block;
+        margin: -20px auto 30px;
+        width: 140px;
+        height: 140px;
+        .border-radius(140px);
+    }
     .close-btn {
         width: 11px;
         height: 11px;
@@ -94,7 +101,7 @@
                     width: 32px;
                     height: 32px;
                     margin: 7px 0 0 10px;
-                    background-image: url(../imgs/user-dialog-purple.png);
+                    background-image: url(../imgs/theme-purple/user-dialog.png);
                 }
                 .icon-username {
                     background-position: 0 0;
@@ -182,7 +189,7 @@
                 width: 16px;
                 height: 13px;
                 margin: 7px auto 0;
-                background: url(../imgs/user-dialog-purple.png) -55px -55px no-repeat;
+                background: url(../imgs/theme-purple/user-dialog.png) -55px -55px no-repeat;
             }
         }
 
@@ -241,7 +248,7 @@
             display: block;
             width: 18px;
             height: 18px;
-            background: url(../imgs/user-dialog-purple.png) -54px -35px no-repeat;
+            background: url(../imgs/theme-purple/user-dialog.png) -54px -35px no-repeat;
         }
         b {
             display: block;
@@ -257,5 +264,30 @@
         display: block;
         color: #fff;
         margin: -20px 0 0 250px;
+    }
+}
+
+.user-reg-ok-dialog {
+    padding: 0!important;
+    width: 340px!important;
+    overflow: hidden;
+    .ok-img {
+        width: 340px;
+        height: 175px;
+        background: url(../imgs/ok-img.png) center center no-repeat;
+    }
+    .info {
+        background: #fff;
+        padding: 20px;
+        text-align: center;
+        p {
+            font-size: 12px;
+            line-height: 250%;
+            color: #000!important;
+        }
+        b {
+            font-size: 36px;
+            font-family: Arial;
+        }
     }
 }
