@@ -995,6 +995,8 @@ class EnglishQuestionAction extends CommonAction {
             date_default_timezone_set('Asia/Shanghai');
 
             vendor('PHPExcel.Classes.PHPExcel.IOFactory');
+            ob_end_clean();
+            ob_start();
             @header('Content-type: text/html;charset=UTF-8');
             $path = str_replace('uploads.txt', 'Temp', realpath('./Public/Uploads/uploads.txt'));
             $objPHPExcel = new PHPExcel();
