@@ -44,33 +44,33 @@
 		</div>
 	</div>
 	<div class="cal-week" style="display:none">
-		<table cellpadding="0" cellspacing="2">
+		<table>
 			<thead>
 			<tr>
-				<th>一</th>
-				<th>二</th>
-				<th>三</th>
-				<th>四</th>
-				<th>五</th>
-				<th>六</th>
-				<th>日</th>
+				<th class="th_1">一</th>
+				<th class="th_2">二</th>
+				<th class="th_3">三</th>
+				<th class="th_4">四</th>
+				<th class="th_5">五</th>
+				<th class="th_6">六</th>
+				<th class="th_7">日</th>
 			</tr>
 			</thead>
 			<tbody>
 			<tr>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
+				<td class="td_1"></td>
+				<td class="td_2"></td>
+				<td class="td_3"></td>
+				<td class="td_4"></td>
+				<td class="td_5"></td>
+				<td class="td_6"></td>
+				<td class="td_7"></td>
 			</tr>
 			</tbody>
 		</table>
 	</div>
 	<div class="cal-month" style="display:none">
-		<table cellpadding="0" cellspacing="2">
+		<table>
 			<thead>
 			<tr>
 				<th>一</th>
@@ -94,4 +94,63 @@
 </div>
 
 
+<style>
+@-moz-document url-prefix() {
+.extra-calendar .cal-month table td,
+.extra-calendar .cal-week table td {
+	display: block;
+}
+.extra-calendar .cal-week table tbody{
+	width: 594px;
+}
+.extra-calendar .cal-month table th,
+.extra-calendar .cal-week table th {
+	width: 78px;
+}
+.extra-calendar .cal-week table td {
+	width: 80px;
+	height: 293px;
+	position: absolute;
+}
+.extra-calendar .cal-month table .op-td-1,
+.extra-calendar .cal-week table .td_2 {
+	width: 81px;
+	margin-left: 82px;
+}
+.extra-calendar .cal-month table .op-td-2,
+.extra-calendar .cal-week table .td_3 {
+	width: 80px;
+	margin-left: 165px;
+}
+.extra-calendar .cal-month table .op-td-3,
+.extra-calendar .cal-week table .td_4 {
+	width: 80px;
+	margin-left: 247px;
+}
+.extra-calendar .cal-month table .op-td-4,
+.extra-calendar .cal-week table .td_5 {
+	width: 80px;
+	margin-left: 329px;
+}
+.extra-calendar .cal-month table .op-td-5,
+.extra-calendar .cal-week table .td_6 {
+	width: 81px;
+	margin-left: 411px;
+}
+.extra-calendar .cal-month table .op-td-6,
+.extra-calendar .cal-week table .td_7 {
+	width: 80px;
+	margin-left: 494px;
+}
 
+.extra-calendar .cal-month table td {
+	float: left;
+	position: absolute;
+	width: 80px;
+	height: 57px;
+	line-height: 57px;
+}
+
+}
+
+</style>

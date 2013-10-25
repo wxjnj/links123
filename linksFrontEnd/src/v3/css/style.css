@@ -1461,6 +1461,7 @@ input:focus{ outline: 0; }
     float: right;
 }
 .cal_v303_mark_bottom_btns {
+	width: 239px;
     height: 30px;
     line-height: 30px;
 }
@@ -1794,11 +1795,12 @@ input:focus{ outline: 0; }
 .extra-calendar .cal-week table a:hover {
     color:#502d5c
 }
+
 .extra-calendar .cal-month table td,
 .extra-calendar .cal-week table td {
     background:#fff;
     color:#333;
-    position:relative
+    position:relative;
 }
 
 .extra-calendar .cal-week table td {
@@ -2120,7 +2122,8 @@ input:focus{ outline: 0; }
     width: 500px;
     height: 270px;
 }
-.widescreen .cal_v303_mark_list_wrap {
+.widescreen .cal_v303_mark_list_wrap,
+.widescreen .cal_v303_mark_bottom_btns {
     width: 329px;
     height: 200px;
 }

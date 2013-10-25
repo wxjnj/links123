@@ -1108,12 +1108,15 @@ var HelpMouse = {
 				self.burnDownChartElement.height(height).show();
 				self.burnDownChartTimeElement.html(now.toString('HH:mm')).show();
 
-				var baseLine = self.burnDownChartElement.offset().top + self.burnDownChartElement.height();
-				self.burnDownElement.find('.cal-day-event-item').each(function() {
-					if ($(this).offset().top + $(this).height() <= baseLine) {
-						$(this).addClass('cal-day-event-item-pass');
-					}
-				});
+				setTimeout(function(){
+					var baseLine = self.burnDownChartElement.offset().top + self.burnDownChartElement.height();
+					self.burnDownElement.find('.cal-day-event-item').each(function() {
+						if ($(this).offset().top + $(this).height() <= baseLine) {
+							$(this).addClass('cal-day-event-item-pass');
+						}
+					});	
+				}, 0);
+
 				Calendar.timer = setTimeout(function() {
 					Calendar.DateView.renderBurnDownChart();
 				},
@@ -1326,9 +1329,9 @@ var HelpMouse = {
 			for (var i = 0, len = baseArray.length; i < len; i++) {
 				o = baseArray[i];
 				if (o == 0 || o == - 1) {
-					o = '<td><a data-date="' + o + '" style="display:none"></a></td>';
+					o = '<td class="op-td-'+i%7+'"><a data-date="' + o + '" style="display:none"></a></td>';
 				} else {
-					o = '<td><a class="td_' + o + '" href="javascript:;" data-date="' + o + '">' + o + '</a></td>';
+					o = '<td class="op-td-'+i%7+'"><a class="td_' + o + '" href="javascript:;" data-date="' + o + '">' + o + '</a></td>';
 				}
 				if ((i + 1) % 7 == 0) {
 					o += '</tr>'
