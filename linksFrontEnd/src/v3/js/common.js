@@ -35,9 +35,14 @@ var User = {
 	Init : function() {
 		var self = this;
 		$('.uc-menu .nm').on('mouseenter', function() {
-			$(this).find('ul').show();
+            clearTimeout(self.menuTimer);
+            self.menuTimer = null;
+			$(this).find('ul, .ang').show();
 		}).on('mouseleave', function() {
-			$(this).find('ul').hide();
+            var cur = $(this);
+            self.menuTimer = setTimeout(function(){
+                cur.find('ul, .ang').hide();
+            }, 500);
 		});
 		$('.J_SignUp').on('click', function() {
 			self.Reg();
@@ -658,6 +663,21 @@ var Theme = {
 	Init : function() {
 		var self = this;
 
+		$('#K_change_skin_btn').on('mouseenter', function(){
+			$('.skin-list').fadeIn(150);
+		}).on('mouseleave', '.skin-list',function(){
+			clearTimeout(self.timer);
+			self.timer = null;
+			self.timer = setTimeout(function(){
+				$('.skin-list').hide();
+			},500);
+		}).on('mouseover', '.skin-list', function(){
+			if(!$(this).is(':hidden')){
+				clearTimeout(self.timer);
+				self.timer = null;
+			}
+		});
+
 		//靠右的皮肤 图例靠右显示
 		$('#J_skin_pics').find('.item:eq(3)').css('text-align','center')
 			.end().find('.item:gt(3)').css('text-align', 'right');
@@ -669,14 +689,14 @@ var Theme = {
 				var bg = obj.data('bg');
 				var theme = obj.data('theme');
 				var id = obj.data('id');
-
 				self.SetTheme(id, theme, bg);
 			}
 			return false;
 		});
 		//皮肤items容器
-		var $skinPicsWrap = $("#J_skin_pics");
+		//var $skinPicsWrap = $("#J_skin_pics");
 		//点击皮肤分类的链接显示对应的皮肤图片
+		/*
 		$('#J_skin_selection').on('mouseover', '.J_link_skin_type', function() {
 			var $self = $(this);
 			if (!$self.hasClass('active')) {
@@ -694,7 +714,9 @@ var Theme = {
 			
 			if(id && theme && bg) self.SetBackGround(id, theme, bg);
 		});
+		*/
 	},
+	/*
 	SetBackGround : function(id, tm, bg) {
 		var tmurl = $CONFIG['PUBLIC'] + '/IndexV3/skins/{0}/style.css';
 		$('#J_Skins').attr('href', tmurl.replace('{0}', tm));
@@ -705,11 +727,12 @@ var Theme = {
 		});
 		return false;
 	},
+	*/
 	SetTheme : function(id, tm, bg) {
 		var tmurl = $CONFIG['PUBLIC'] + '/IndexV3/skins/{0}/style.css';
 		$('#J_Skins').attr('href', tmurl.replace('{0}', tm));
 		$('#container').css('background-image', 'url(' + bg + ')');
-
+		console.log(id);
 		$.post(URL + "/updateSkinTheme", {
 			'themeId' : id
 		});
