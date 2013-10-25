@@ -1065,6 +1065,8 @@ class EnglishQuestionAction extends CommonAction {
         } else {
             $fo = fopen($path . $file_name, "rb");
             // 输入文件标签
+            ob_end_clean();
+            ob_start();
             Header("Content-type: application/octet-stream");
             Header("Accept-Ranges: bytes");
             Header("Accept-Length: " . filesize($path . $file_name));
