@@ -31,19 +31,19 @@ class EnglishQuestionAction extends CommonAction {
             $param['pattern'] = intval($_REQUEST['pattern']);
         }
         if($attr_one > -1 && $attr_thr > -1){
-            $category_map['category.cat_attr_id'] = bindec($attr_one.$attr_two.$attr_thr);
+            $map['englishCategory.cat_attr_id'] = bindec($attr_one.$attr_two.$attr_thr);
         }elseif($attr_one > -1 && $attr_thr == -1){
-            $category_map['cat_attr_id'] =array(
+            $map['englishCategory.cat_attr_id'] =array(
                 bindec($attr_one.$attr_two.'1'),
                 bindec($attr_one.$attr_two.'0'),
                 "OR") ;
         }elseif($attr_one == -1 && $attr_thr > -1){
-            $category_map['category.cat_attr_id'] =array(
+            $map['englishCategory.cat_attr_id'] =array(
                 bindec('1'.$attr_two.$attr_thr),
                 bindec('0'.$attr_two.$attr_thr),
                 "OR") ;
         }else{
-            $category_map['category.cat_attr_id'] = array(
+            $map['englishCategory.cat_attr_id'] = array(
                 bindec('1'.$attr_two.'1'),
                 bindec('0'.$attr_two.'0'),
                 bindec('1'.$attr_two.'0'),
@@ -52,26 +52,16 @@ class EnglishQuestionAction extends CommonAction {
         }
         
         if(intval($_REQUEST['level_one']) > 0){
-            $category_map['category.level_one'] = intval($_REQUEST['level_one']);
             $param['level_one'] = intval($_REQUEST['level_one']);
+            $map['englishCategory.level_one'] = intval($_REQUEST['level_one']);
         }
         if(intval($_REQUEST['level_two']) > 0){
-            $category_map['category.level_two'] = intval($_REQUEST['level_two']);
             $param['level_two'] = intval($_REQUEST['level_two']);
+            $map['englishCategory.level_two'] = intval($_REQUEST['level_two']);
         }
         if(intval($_REQUEST['level_thr']) > 0){
-            $category_map['category.level_thr'] = intval($_REQUEST['level_thr']);
             $param['level_thr'] = intval($_REQUEST['level_thr']);
-        }
-        $englishCategoryModel = D("EnglishCategory");
-        $category_map['catquestion.type'] = 1;//听力
-        $ret = $englishCategoryModel->alias("category")->field("catquestion.question_id")->join(C("DB_PREFIX")."english_catquestion catquestion on catquestion.cat_id=category.cat_id")->where($category_map)->group("catquestion.question_id")->select();
-        if(false !== $ret){
-            $question_id_list = array(0);
-            foreach($ret as $value){
-                $question_id_list[] = $value['question_id'];
-            }
-            $map['englishQuestion.id'] = array("in", $question_id_list);
+            $map['englishCategory.level_thr'] = intval($_REQUEST['level_thr']);
         }
         
         
@@ -167,7 +157,7 @@ class EnglishQuestionAction extends CommonAction {
         } elseif ($model->getModelName() == 'CatPicView') {
             $count = $model->where($map)->count('catPic.id');
         } elseif ($model->getModelName() == 'EnglishQuestionView') {
-            $count = $model->where($map)->count('englishQuestion.id');
+            $count = $model->where($map)->count('DISTINCT(englishQuestion.id)');
         }elseif ($model->getModelName() == 'EnglishQuestionSpeakView') {
             $count = $model->where($map)->count('englishQuestionSpeak.id');
         } elseif ($model->getModelName() == 'EnglishMediaView') {
