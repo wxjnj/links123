@@ -5,6 +5,18 @@
 	function add() {
 		location.href = URL + "/add/type/" + document.getElementById('type').value;
 	}
+	function forbid(id) {
+		location.href = URL + "/forbid/id/" + id + "/type/" +document.getElementById('type').value;
+	}
+	function resume(id) {
+		location.href = URL + "/resume/id/" + id + "/type/" +document.getElementById('type').value;
+	}
+	function edit(id) {
+		location.href = URL + "/edit/id/" + id + "/type/" +document.getElementById('type').value;
+	}
+	function foreverdelete(id) {
+		location.href = URL + "/foreverdelete/id/" + id + "/type/" +document.getElementById('type').value;	
+	}
 </script>
 
 <div id="main" class="main" >
@@ -12,30 +24,35 @@
 
 		<div class="title">
 			类目：
-            <if condition="$type eq 3">
-                [三级类目]
-            <elseif condition="$type eq 2" />
-                [二级类目]
-            <else />
-                [一级类目]
-            </if>
-            &nbsp;&nbsp;选择：[<a href="__URL__/index/type/1">一级类目</a>&nbsp;&nbsp;<a href="__URL__/index/type/2">二级类目</a>&nbsp;&nbsp;<a href="__URL__/index/type/3">三级类目</a>]
+			<eq name="type" value="1">
+				一级类目
+			<else/>
+				[<a href="__URL__/index/type/1">一级类目</a> ]
+			</eq>
+			
+			<eq name="type" value="2">
+				二级类目
+			<else/>
+				[<a href="__URL__/index/type/2">二级类目</a> ]
+			</eq>
+
+			<eq name="type" value="3">
+				三级类目
+			<else/>
+				[<a href="__URL__/index/type/3">三级类目</a> ]
+			</eq>
 
 		</div>
 
 		<div class="operate" >
 			<html:imageBtn name="add" click="add()" style="hMargin fLeft" />
-            <!--<html:imageBtn name="sort" click="sort()" style="hMargin fLeft" />-->
-            <html:imageBtn name="forbid" click="forbid()" style="hMargin fLeft" />
-            <html:imageBtn name="delete" click="foreverdel()" style="hMargin fLeft" />
-            <html:imageBtn name="resume" click="resume()" style="hMargin fLeft" />
 		</div>
 
 		<form method='post' action="__URL__/index">
 			<div class="rSearch">
 				<div class="fLeft">按照名称查询：
 					<span id="key">
-						<input type="text" name="name" value="{$name}" class="medium" />
+						<input type="text" name="title" value="{$title}" class="medium" />
 					</span>
 				</div>
 				<html:imageBtn type="submit" name="search" style="hMargin fLeft" />
@@ -53,9 +70,8 @@
 			<input type="hidden" id="lv_one" value="{$lv_one}"/>
 			<input type="hidden" id="lv_two" value="{$lv_two}"/>
 
-			<html:list id="checkList" name="node" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,name:名称:edit,sort:序号,level:等级,status|getStatus:状态" actionlist="status|showStatus=$node['id'],edit:编辑:id,foreverdel:删除" />
-            <div class="page">{$page}</div>
-        </div>
+			<html:list id="checkList" name="node" style="list" checkbox="true" action="true" datasource="category" show="id:编号|10%,name:名称,sort:序号,level:等级,status|getStatus:状态" actionlist="status|showStatus=$node['id'],edit:编辑:id,foreverdel:删除" />
+		</div>
 	</div>
 
 	<div>
@@ -69,13 +85,6 @@
 </div>
 <script type="text/javascript">
     $(function() {
-        /* 直达 */
-        $(".page input").keydown(function(event) {
-            if (event.keyCode == 13) {	// 回车
-                if ($(this).val() != '' && !isNaN($(this).val())) {
-                    window.location.href = $(this).attr("url") + "&p=" + $(this).val();
-                }
-            }
-        });
+        
     })
 </script>
