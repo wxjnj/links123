@@ -1942,6 +1942,7 @@ body .ui-tooltip {
     color:#edb4d9;
     text-decoration:none
 }
+/*
 .uc {
     float:right;
     width:150px
@@ -2038,6 +2039,7 @@ body .ui-tooltip {
     background:#717071;
     color:#fff
 }
+*/
 .screen-theme {
     float:right;
     color:#c9c9c9;
@@ -2057,9 +2059,6 @@ body .ui-tooltip {
     -moz-border-radius:20px;
     -webkit-border-radius:20px;
     margin:5px 10px 0 0
-}
-.screen-theme .theme-purple-btn {
-    background:url(../imgs/theme-preview.png) center center no-repeat
 }
 .screen-theme .change-back-btn,.screen-theme .change-screen-btn {
     color:#c9c9c9
