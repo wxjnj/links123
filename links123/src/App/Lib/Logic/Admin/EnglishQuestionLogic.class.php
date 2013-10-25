@@ -119,29 +119,21 @@ class EnglishQuestionLogic {
                 return false;
             }
         }
-        $cache = Cache::getInstance('Redis');
-        $cache->clear();
         return true;
 	}
 
 	public function forbidCatetoryOfQuestion($cat_id, $question_id) {
 		$ret = D('EnglishCatquestion')->forbidCatQuestionById($cat_id, $question_id, 0);
-		$cache = Cache::getInstance('Redis');
-        $cache->clear();
 		return $ret;
 	}
 
 	public function resumeCatetoryOfQuestion($cat_id, $question_id) {
 		$ret = D('EnglishCatquestion')->forbidCatQuestionById($cat_id, $question_id, 1);
-		$cache = Cache::getInstance('Redis');
-        $cache->clear();
 		return $ret;
 	}
 
 	public function foreverdelCatquestion($cat_id, $question_id) {
 		$ret = D('EnglishCatquestion')->foreverdelCatquestion($cat_id, $question_id);
-		$cache = Cache::getInstance('Redis');
-        $cache->clear();
 		return $ret;
 	}
 
@@ -153,16 +145,12 @@ class EnglishQuestionLogic {
 	public function setQuestionSpecRecommendBy($question_id) {
 		$spec_recommend_id = D('EnglishCategory')->getQuestionSpecRecommend();
 		$ret = D('EnglishCatquestion')->setQuestionSpecRecommendBy($question_id, $spec_recommend_id);
-		$cache = Cache::getInstance('Redis');
-        $cache->clear();
 		return $ret;
 	}
 
 	public function cancelQuestionSpecRecommendBy($question_id) {
 		$spec_recommend_id = D('EnglishCategory')->getQuestionSpecRecommend();
 		$ret = D('EnglishCatquestion')->cancelQuestionSpecRecommendBy($question_id, $spec_recommend_id);
-		$cache = Cache::getInstance('Redis');
-        $cache->clear();
 		return $ret;
 	}
 
