@@ -58,6 +58,7 @@ module.exports = function(grunt) {
 						'src/v3/css/index-ted.css',
 						'src/v3/css/g-theme.css',
 						'src/v3/css/index-calendar.css',
+						'src/v3/css/index-music.css',
 						'src/v3/css/g-dialog.css'
 					],
 					'~temp/jquery.plugins.js' : [

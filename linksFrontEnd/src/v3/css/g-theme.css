@@ -10,6 +10,9 @@
 	cursor:pointer
 }
 /*screen btn*/
+#J_Styles ul{
+	float:left;
+}
 .screen-change-btn{
 	line-height:40px;
 	float:left;
