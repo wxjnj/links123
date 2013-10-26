@@ -1,0 +1,81 @@
+<tagLib name="html" />
+<include file="Public:header" />
+<load href="__PUBLIC__/Js/Jquery/jquery.js" />
+<script language="javascript">
+	function add() {
+		location.href = URL + "/add/type/" + document.getElementById('type').value;
+	}
+</script>
+
+<div id="main" class="main" >
+	<div class="content" >
+
+		<div class="title">
+			类目：
+            <if condition="$type eq 3">
+                [三级类目]
+            <elseif condition="$type eq 2" />
+                [二级类目]
+            <else />
+                [一级类目]
+            </if>
+            &nbsp;&nbsp;选择：[<a href="__URL__/index/type/1">一级类目</a>&nbsp;&nbsp;<a href="__URL__/index/type/2">二级类目</a>&nbsp;&nbsp;<a href="__URL__/index/type/3">三级类目</a>]
+
+		</div>
+
+		<div class="operate" >
+			<html:imageBtn name="add" click="add()" style="hMargin fLeft" />
+            <!--<html:imageBtn name="sort" click="sort()" style="hMargin fLeft" />-->
+            <html:imageBtn name="forbid" click="forbid()" style="hMargin fLeft" />
+            <html:imageBtn name="delete" click="foreverdel()" style="hMargin fLeft" />
+            <html:imageBtn name="resume" click="resume()" style="hMargin fLeft" />
+		</div>
+
+		<form method='post' action="__URL__/index">
+			<div class="rSearch">
+				<div class="fLeft">按照名称查询：
+					<span id="key">
+						<input type="text" name="name" value="{$name}" class="medium" />
+					</span>
+				</div>
+				<html:imageBtn type="submit" name="search" style="hMargin fLeft" />
+				<input type="hidden" id="type" name="type" value="{$type}" />
+			</div>
+	
+			<div id="searchM" class="none search cBoth" />
+			</div>
+		</form>
+
+		<div class="list" >
+			<div id="result" class="result none"></div>
+
+			<input type="hidden" id="next_lv" value="{$next_lv}"/>
+			<input type="hidden" id="lv_one" value="{$lv_one}"/>
+			<input type="hidden" id="lv_two" value="{$lv_two}"/>
+
+			<html:list id="checkList" name="node" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,name:名称:edit,sort:序号,level:等级,status|getStatus:状态" actionlist="status|showStatus=$node['id'],edit:编辑:id,foreverdel:删除" />
+            <div class="page">{$page}</div>
+        </div>
+	</div>
+
+	<div>
+	<span>
+		注：<br/>
+			&nbsp;&nbsp;一级类目代表：选择课程，选择专题，精选TED等<br/>
+			&nbsp;&nbsp;二级类目代表：语文，数学等<br/>
+			&nbsp;&nbsp;三级类目代表：等级或者难度，比如幼儿园，小一等<br/>
+	</span>
+	</div>
+</div>
+<script type="text/javascript">
+    $(function() {
+        /* 直达 */
+        $(".page input").keydown(function(event) {
+            if (event.keyCode == 13) {	// 回车
+                if ($(this).val() != '' && !isNaN($(this).val())) {
+                    window.location.href = $(this).attr("url") + "&p=" + $(this).val();
+                }
+            }
+        });
+    })
+</script>

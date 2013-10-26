@@ -38,7 +38,7 @@
 	height: 400px;
 	overflow: hidden;
 	position: relative;
-}		
+}       
 .music img {
 	width: 100%;
 	filter:alpha(opacity=50);

@@ -49,6 +49,9 @@ input:focus{ outline: 0; }
 .footer-inner{
 	margin: 0 auto;
 }
+.header-inner {
+	position: relative;
+}
 .ci-hd{
 	padding-top: 35px;
 	height: 115px;
@@ -531,9 +534,6 @@ input:focus{ outline: 0; }
 	width: 306px;
 	height: 442px;
 }
-.pics .items{
-	height: 465px;
-}
 .pics .items li{    
 	overflow: hidden;
 	float: left;
@@ -628,6 +628,74 @@ input:focus{ outline: 0; }
 	-webkit-border-radius: 5px;
 	border-radius: 5px;
 }
+/*app-icon-list*/
+.app-icon-list{
+	display: none;
+	height: 18px;
+	position: relative;
+	z-index: 9999;
+}
+.app-icon-list em{
+	float: right;
+}
+.app-icon-list .app-more{
+	position: relative;
+	float: right;
+	cursor: pointer;
+	z-index: 3;
+	position: relative;
+}
+.app-icon-list .app-more-box{
+	display: none;
+	top: 30px;
+	width: 320px;
+	position: absolute;
+	z-index: 2;
+	right: -20px;
+	background: #fff;
+	box-shadow: 0 0 5px #666;
+	filter: alpha(opacity=90);
+	-moz-opacity: .9;
+	-khtml-opacity: .9;
+	opacity: .9;
+	border-radius: 4px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+}
+.app-icon-list .ang{
+	width: 0;
+	height: 0;
+	font-size: 0;
+	overflow: hidden;
+	position: absolute;
+	border-width: 15px;
+	border-style: dashed dashed solid;
+	border-color: transparent transparent #fff;
+	right: 15px;
+	margin-left: -15px;
+	top: -25px;
+}
+.app-icon-list ul{
+	padding: 25px;
+	*zoom: 1;
+}
+.app-icon-list ul:after{
+	content: '\0020';
+	display: block;
+	height: 0;
+	clear: both;
+}
+.app-icon-list ul li{
+	text-align: center;
+	width: 90px;
+	float: right;
+	height: 100px;
+	cursor: pointer;
+}
+.app-icon-list ul li a,
+.app-icon-list ul li a:hover{
+	color: #0c0b0b;
+}
 
 /*960*/
 .header,
@@ -698,6 +766,9 @@ input:focus{ outline: 0; }
 .pics .items li .info .p3 a:hover{
 	width: 82px;
 }
+.pics .items{
+	height: 390px;
+}
 
 
 /*1175*/
@@ -765,6 +836,9 @@ input:focus{ outline: 0; }
 .widescreen .pics .items li .info .p3 a,
 .widescreen .pics .items li .info .p3 a:hover{
 	width: 110px;
+}
+.widescreen .pics .items{
+	height: 465px;
 }
 .widescreen .uc-avatar {
 	float:right;
