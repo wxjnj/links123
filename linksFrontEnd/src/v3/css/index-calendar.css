@@ -396,12 +396,12 @@
     display:none;
     color:#502d5c
 }
-.extra-calendar .cal-day .cal-day-burn-down-chart .cal-day-event-item .del {
+.extra-calendar .cal-day .cal-day-burn-down-chart .cal-day-event-item .delete {
     color:#502d5c;
     float:right;
     display:none
 }
-.extra-calendar .cal-day .cal-day-burn-down-chart .cal-day-event-item:hover .del {
+.extra-calendar .cal-day .cal-day-burn-down-chart .cal-day-event-item:hover .delete {
     display:inline
 }
 .extra-calendar .cal-day .cal-day-burn-down-chart .cal-day-event-item-pass {
@@ -414,7 +414,7 @@
 .extra-calendar .cal-day .cal-day-burn-down-chart .cal-day-event-item-pass .enter {
     color:#fff
 }
-.extra-calendar .cal-day .cal-day-burn-down-chart .cal-day-event-item-pass .del {
+.extra-calendar .cal-day .cal-day-burn-down-chart .cal-day-event-item-pass .delete {
     color:#fff
 }
 .extra-calendar .cal-month,.extra-calendar .cal-week {

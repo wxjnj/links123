@@ -747,6 +747,13 @@ var HelpMouse = {
 				$('.extra-calendar').hide();
 			});
 
+			$(document).on('keydown', function(e){
+				if (e.keyCode == 27) {
+					$('.extra-calendar-overlayer').hide();
+					$('.extra-calendar').hide();
+				}
+			});
+
 			$(document).on('click', '.cal_show_pop_btn', function() {
 				var type = $(this).attr('data-type');
 				self.changeType(type);
@@ -1135,12 +1142,17 @@ var HelpMouse = {
 			var count = 0;
 			var chartBody = self.burnDownElement.find('.chart-body');
 			chartBody.empty();
-			$.each(marks, function(k, v) {
-				lis += '<li>' + k + ' : ' + v.desc + '</li>';
+
+			var len = marks.length > 5 ? 5 : marks.length;
+			var mark;
+			var v;
+			for(var i = 0; i < len; i++){
+				v = marks[i];
+				lis += '<li>' + v.id + ' : ' + v.desc + '</li>';
 				count++;
-				var mark = new MarkClass(v);
+				mark = new MarkClass(v);
 				mark.appendTo(chartBody);
-			});
+			}
 			self.marksListElement.find('.cal-day-ul').html(lis);
 			self.marksListElement.find('.marks-count').html(count);
 			self.renderBurnDownChart();
@@ -1390,7 +1402,7 @@ var HelpMouse = {
 			self.date = date;
 			self.baseTime = + new Date(year, month, date, 0);
 			var showtime = time.toString('HH:mm');
-			var html = '<div class="cal-day-event-item">' + '<b class="dot"></b>' + '<span class="time">' + showtime + '</span>' + '<span class="desc">' + desc + '</span>' + '<a class="enter" href="javascript:;">确定</a>' + '<a class="del" href="javascript:;">×</a>' + '</div>';
+			var html = '<div class="cal-day-event-item">' + '<b class="dot"></b>' + '<span class="time">' + showtime + '</span>' + '<span class="desc">' + desc + '</span>' + '<a class="enter" href="javascript:;">确定</a>' + '<a class="delete" href="javascript:;">×</a>' + '</div>';
 			self.html = $(html).css('top', hour * 4 * 3 + minute / 15 * 3);
 			self.html.find('.desc').dblclick(function() {
 				var desc = $(this).html();
