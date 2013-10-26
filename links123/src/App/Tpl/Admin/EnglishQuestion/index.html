@@ -527,7 +527,7 @@
         if (target.match(/p=([^&]+)/) != null) {
             page   = target.match(/p=([^&]+)/)[1];
         }
-        location.href = URL + "/property/qid/" + id + "/page/" + page;
+        location.href = URL + "/property/type/{$type}/qid/" + id + "/page/" + page;
     }
 </script>
 </body>
