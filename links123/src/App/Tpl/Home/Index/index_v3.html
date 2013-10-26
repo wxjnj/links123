@@ -30,71 +30,54 @@
 				<empty name="_SESSION[C('MEMBER_AUTH_KEY')]">
 					<a class="join J_SignUp" href="javascript:;">注&nbsp;册</a><a class="login J_SignIn" href="javascript:;">登&nbsp;录</a>
 				<else />
+					<img class="uc-avatar" src="__STATIC__/v3/imgs/avatar-demo.png" />
 					<div class="uc-menu">
 						<div class="nm">
-							<p>Hi，{$Think.session.nickname}</p>
+							<p>Hi，{$Think.session.nickname} <em></em></p>
+							<span class="ang"></span>
 							<ul>
-								<li><a target="_blank" href="/Members/Index">个人中心</a></li>
-								<li><a target="_blank" href="/Members/Collection">我的收藏</a></li>
-								<li><a target="_blank" href="/Members/Recommend">我的推荐</a></li>
-								<li><a target="_blank" href="/Members/Comment">我的说说</a></li>
-								<li><a href="/Members/Suggestion">留言板</a></li>
-								<li class="logout"><a href="/Members/Logout">退出登录</a></li>
+								<li class="person"><a target="_blank" href="#"><i class="person-icon"></i>个人信息</a></li>
+								<li><a target="_blank" href="#"><i class="private-icon"></i>隐私设置</a></li>
+								<li><a target="_blank" href="#"><i class="safe-icon"></i>安全信息设置</a></li>
+								<li class="logout"><a target="_blank" href="/Members/Logout"><i class="logout-icon"></i>退出登录</a></li>
 							</ul>
 						</div>
 					</div>
 				</empty>
 			</div>
-			<div class="styles" id="J_Styles">
-				<div class="screen-change-btn">
+			<ul class="screen-theme">
+				<li class="change-theme-btn theme-purple-btn"></li>
+				<li id="K_change_skin_btn" class="change-back-btn">
+					换 肤
+					<div class="skin-list" style="display:none">
+						<span class="ang"></span>
+						<div id="J_Styles" class="skin-pics">
+							<ul>
+								<li data-id="1" data-theme="dark" data-bg="__PUBLIC__/IndexV3/skins/q/01_b.jpg">
+									<a href="javascript:;">
+										<img class="m" src="__PUBLIC__/IndexV3/skins/q/01_m.jpg" alt="" />
+									</a>
+								</li>
+								<li data-id="2" data-theme="light" data-bg="__PUBLIC__/IndexV3/skins/q/02_b.jpg">
+									<a href="javascript:;">
+										<img class="m" src="__PUBLIC__/IndexV3/skins/q/02_m.jpg" alt="" />
+									</a>
+								</li>
+								<li data-id="3" data-theme="dark_ext" data-bg="__PUBLIC__/IndexV3/skins/q/03_b.jpg">
+									<a href="javascript:;">
+										<img class="m" src="__PUBLIC__/IndexV3/skins/q/03_m.jpg" alt="" />
+									</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</li>
+				<li> | </li>
+				<li class="screen-change-btn">
 					<a class="s-wide" data-size="wide" href="javascript:;">宽 屏</a>
 					<a class="s-960" data-size="960" href="javascript:;">窄 屏</a>
-				</div>
-				<ul>
-					<li data-id="1" data-theme="dark" data-bg="__PUBLIC__/IndexV3/skins/q/01_b.jpg">
-						<a href="javascript:;">
-							<img src="__PUBLIC__/IndexV3/skins/q/01_s.jpg" alt="" />
-							<img class="m" src="__PUBLIC__/IndexV3/skins/q/01_m.jpg" alt="" />
-						</a>
-					</li>
-					<li data-id="2" data-theme="light" data-bg="__PUBLIC__/IndexV3/skins/q/02_b.jpg">
-						<a href="javascript:;">
-							<img src="__PUBLIC__/IndexV3/skins/q/02_s.jpg" alt="" />
-							<img class="m" src="__PUBLIC__/IndexV3/skins/q/02_m.jpg" alt="" />
-						</a>
-					</li>
-					<li data-id="3" data-theme="dark_ext" data-bg="__PUBLIC__/IndexV3/skins/q/03_b.jpg">
-						<a href="javascript:;">
-							<img src="__PUBLIC__/IndexV3/skins/q/03_s.jpg" alt="" />
-							<img class="m" src="__PUBLIC__/IndexV3/skins/q/03_m.jpg" alt="" />
-						</a>
-					</li>
-					<li class="skin_selection_li">
-						<div id="J_skin_selection" class="with-subpanel">
-							<a class="btn_plus">+</a>
-							<div class="subpanel-tangle"></div>
-							<div class="subpanel-wrap">
-								<div class="subpanel">
-									<div class="skin-types">
-										<volist name="skinCategory" id="vo" key="k">
-											<a data-id="{$vo.categoryId}" class='J_link_skin_type <if condition="$k eq 1">active</if>'>{$vo.categoryName}</a>
-										</volist>
-									</div>
-									<div id="J_skin_pics" class="skin-pics">
-										<volist name="skinList" id="vo">
-											<div id="link_skin_{$key}" class='item <if condition="$i eq 1">active</if>'>
-												<volist name="vo" id="skins">
-													<a data-bg="{$skins.skin}" data-theme="{$skins.theme}" data-id="{$skins.skinId}" class='<if condition="$skins.skinId eq $skinId">active</if>'><img src="{$skins.middleSkin}" alt="" /></a>
-												</volist>
-											</div>
-										</volist>
-									</div>
-								</div>
-							</div>
-						</div>
-					</li>
-				</ul>
-			</div>
+				</li>
+			</ul><!-- // .screen-theme -->
 		</div>
 	</div><!--#header end-->
 	<div class="container" id="container" <if condition="$skinId">style="background-image:url({$skin})"</if>>
@@ -209,11 +192,6 @@
 								</div>
 							</div>
 						</div>
-
-						<!--div class="box box-schedule" id="J_Schedule">
-							<div class="box-hd"></div>
-							<div class="box-bd">Schedule</div>
-						</div-->
 						<div class="box box-find" id="J_Find">
 							<div class="box-hd">
 								<h2>TED精选</h2>
@@ -227,8 +205,10 @@
 											<img src="{$ted.link_cn_img}" alt="" />
 											<div class="mask"></div>
 											<div class="info">
+												<img src="{$ted.link_cn_img}" alt="" />
 												<p class="p1">{$ted.title}</p>
-												<p class="p2"></p>
+												<p class="p2">15:57 Posted Sep 2013</p>
+												<p class="p3">It often seems like federal-level politicians care more about creating gridlock than solving.</p>
 											</div>
 											<a class="go" href="{:U('Detail/index')}?id={$ted.id}" target="_blank">查看</a>
 										</li>
@@ -343,7 +323,6 @@
 			</div>
 		</div>
 	</div><!--#footer end-->
-
 	<include file="Contorls:app_v3" />
 	<script src="__STATIC__/min/?b=v3/js&f=jquery.plugins.js,index.js"></script>
 </body>
