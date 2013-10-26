@@ -1,0 +1,121 @@
+.screen-theme {
+	float:right;
+	color:#c9c9c9;
+	margin-right:60px;
+	line-height:40px
+}
+.screen-theme li {
+	float:left;
+	margin:0 2px;
+	cursor:pointer
+}
+/*screen btn*/
+#J_Styles ul{
+	float:left;
+}
+.screen-change-btn{
+	line-height:40px;
+	float:left;
+	margin-right:20px;
+}
+.screen-change-btn a{
+	color:#c9c9c9;
+}
+.screen-change-btn a:hover{
+	color:red;
+}
+.screen-change-btn .s-wide{
+	font-size:12px;
+}
+.screen-change-btn .s-960{
+	font-size:14px;
+}
+
+/*screen-theme*/
+.screen-theme .change-theme-btn {
+	width:20px;
+	height:20px;
+	border:2px solid #ccc;
+	border-radius:20px;
+	-moz-border-radius:20px;
+	-webkit-border-radius:20px;
+	margin:7px 5px 0 0;
+	cursor: auto;
+}
+
+.screen-theme .change-back-btn,.screen-theme .change-screen-btn {
+	color:#c9c9c9
+}
+.screen-theme .change-back-btn:hover,.screen-theme .change-screen-btn:hover {
+	color:#fc2a06;
+	text-decoration:none
+}
+.skin-list {
+	height:120px;
+	top:40px;
+	position:absolute;
+	margin-left:-155px;
+	*margin-left: -185px;
+	z-index:11;
+	background:#fff;
+	box-shadow:0 0 5px #666;
+	filter:alpha(opacity=90);
+	-moz-opacity:.9;
+	-khtml-opacity:.9;
+	opacity:.9;
+	border-radius:4px;
+	-moz-border-radius:4px;
+	-webkit-border-radius:4px
+}
+.skin-list .ang {
+	width:0;
+	height:0;
+	font-size:0;
+	overflow:hidden;
+	position:absolute;
+	border-width:15px;
+	border-style:dashed dashed solid;
+	border-color:transparent transparent #fff;
+	left:50%;
+	margin-left: -15px;
+	top:-25px
+}
+.skin-list .skin-pics {
+	padding: 0 20px;
+}
+.skin-list .skin-pics .item {
+	overflow:hidden;
+	display:none;
+	text-align:center
+}
+.skin-list .skin-pics>.active {
+	display:block
+}
+.skin-list .skin-pics {
+	text-align:center
+}
+.skin-list .skin-pics a {
+	display:inline-block;
+	width:70px;
+	height:70px;
+	overflow:hidden;
+	margin:20px 10px;
+	border:2px solid #c8bbc9;
+	border-radius:70px;
+	-moz-border-radius:70px;
+	-webkit-border-radius:70px
+}
+.skin-list .skin-pics img {
+	width:70px;
+	height:70px
+}
+
+.widescreen .screen-change-btn .s-wide{
+	display: none;
+}
+.widescreen .screen-change-btn .s-960{
+	display: inline;
+}
+.widescreen .screen-theme .change-back-btn {
+	font-size: 14px;
+}

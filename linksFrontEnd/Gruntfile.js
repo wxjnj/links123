@@ -54,7 +54,12 @@ module.exports = function(grunt) {
 						'src/v3/css/jquery-ui.css', 
 						'src/v3/css/style.css',
 						'src/v3/css/slide.css',
-						'src/v3/css/page_home_apps.css'
+						'src/v3/css/index-apps.css',
+						'src/v3/css/index-ted.css',
+						'src/v3/css/g-theme.css',
+						'src/v3/css/index-calendar.css',
+						'src/v3/css/index-music.css',
+						'src/v3/css/g-dialog.css'
 					],
 					'~temp/jquery.plugins.js' : [
 						'src/v3/js/jquery.placeholder.js',
@@ -65,10 +70,10 @@ module.exports = function(grunt) {
 					],
 					'~temp/index.js' : [
 						'src/v3/js/common.js',
-            'src/v3/js/date.js',
+						'src/v3/js/date.js',
 						'src/v3/js/index.js',
 						'src/v3/js/detect.js',
-						'src/v3/js/page_home_apps.js'
+						'src/v3/js/index-apps.js'
 					],
 					'dest/v3/css/base.css' : 'src/v3/css/base.css',
 					'dest/v3/js/init.js' : 'src/v3/js/init.js',
