@@ -16,7 +16,6 @@ class EnglishQuestionAction extends CommonAction {
         if (isset($_REQUEST['name'])) {
             $name = ftrim($_REQUEST['name']);
         }
-        $category_map = array();
         $attr_one = -1;
         $attr_two = 1;
         $attr_thr = -1;
@@ -223,6 +222,7 @@ class EnglishQuestionAction extends CommonAction {
         $category["level_thr"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("3");
 
         $this->assign("category", $category);
+        $this->assign("type", 1);//听力
 
         $this->assign("param", $param);
         foreach ($param as $key => $value) {
@@ -994,8 +994,8 @@ class EnglishQuestionAction extends CommonAction {
                         //@ 添加类目id和题目id到对应表
                         if(!empty($data['cat_id'])){
                             foreach ($data['cat_id'] as $value){
-                                $data = array("cat_id" => $value, "question_id" => $list, "created" => $time,"type" => 1, "status" => 1);
-                                $new_cat_question = $englishCatquestionModel->add($data);
+                                $cat_question_data = array("cat_id" => $value, "question_id" => $list, "created" => $time,"type" => 1, "status" => 1);
+                                $new_cat_question = $englishCatquestionModel->add($cat_question_data);
                                 if($new_cat_question === false){
                                     $model->rollback();
                                     Log::write("导入失败，添加分类和试题关联失败:".$englishCatquestionModel->getLastSql(), Log::ERR);
@@ -1012,6 +1012,34 @@ class EnglishQuestionAction extends CommonAction {
                                 }
                                 Log::write("新增:".$categoryModel->getLastSql(), Log::INFO);
                             }
+                        }
+                        //如果拥有科目，则添加试题关联到综合
+                        if(!empty($data['category'][$object_level_one_id])){
+                            //查找分类id
+                            $new_cat = array();
+                            $new_cat['cat_attr_id'] = $data['cat_attr_id'];
+                            $new_cat['level_one'] = $object_level_one_id;
+                            $new_cat['level_two'] = $level_name_list['综合'];
+                            $new_cat['level_thr'] = $data['category'][$object_level_one_id]['level_thr'];
+                            $new_cat_id = D("EnglishCategory")->where($new_cat)->getField("cat_id");
+                            //关联分类
+                            $data = array("cat_id" => $new_cat_id, "question_id" => $list, "created" => $time,"type" => 1, "status" => 1);
+                            $new_cat_question = $englishCatquestionModel->add($data);
+                            if($new_cat_question === false){
+                                $model->rollback();
+                                Log::write("导入失败，添加分类和试题关联失败:".$englishCatquestionModel->getLastSql(), Log::ERR);
+                                die(json_encode(array("info" => "导入失败，更新分类和试题关联失败！", "status" => false)));
+                            }
+                            Log::write("新增:".$categoryModel->getLastSql(), Log::INFO);
+                            //更新分类下的有效试题数量
+                            if($data['status'] == 1 && $media_data['status'] == 1){
+                                if(false === $categoryModel->where(array("cat_id"=>$new_cat_id))->setInc("question_num")){
+                                    $model->rollback();
+                                    Log::write("导入失败，更新分类题目数量失败:".$categoryModel->getLastSql(), Log::ERR);
+                                    die(json_encode(array("info" => "导入失败，更新分类题目数量失败！", "status" => false)));
+                                }
+                            }
+                            Log::write("新增:".$categoryModel->getLastSql(), Log::INFO);
                         }
 
                     } else {
