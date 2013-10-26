@@ -23,3 +23,29 @@ a:hover{ text-decoration: none; }
 .edit{ background-position: -6px -6px; }
 .del{ background-position: -37px -6px; }
 .new{ background-position: -66px -6px; }
+.cal_v303 {
+    border-top: 1px solid #333;
+}
+.cal_v303_mini_cal a,
+.cal_v303_mini_cal a:active,
+.cal_v303_mini_cal a:hover,
+.cal_v303_mark_list_wrap li span
+ {
+    color:#333;
+}
+
+.cal_v303_mark_list_wrap li b {
+    background: #333;
+}
+.cal_v303_mini_cal .active{
+    color: #fff;
+}
+.cal_v303_new_mark b{
+    color: #fff;
+}
+.cal_v303_prev_btn {
+    background: url(../imgs/cal-arrow-black.png) 0 11px no-repeat;
+}
+.cal_v303_next_btn {
+    background: url(../imgs/cal-arrow-black.png) -15px 11px no-repeat;
+}

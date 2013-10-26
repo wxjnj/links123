@@ -49,6 +49,9 @@ input:focus{ outline: 0; }
 .footer-inner{
 	margin: 0 auto;
 }
+.header-inner {
+	position: relative;
+}
 .ci-hd{
 	padding-top: 35px;
 	height: 115px;

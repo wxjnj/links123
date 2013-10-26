@@ -54,8 +54,9 @@
 	height:120px;
 	top:40px;
 	position:absolute;
-	margin-left:-155px;
-	*margin-left: -185px;
+	/*margin-left:-155px;
+	*margin-left: -185px;*/
+	right: 0;
 	z-index:11;
 	background:#fff;
 	box-shadow:0 0 5px #666;
@@ -76,10 +77,24 @@
 	border-width:15px;
 	border-style:dashed dashed solid;
 	border-color:transparent transparent #fff;
-	left:50%;
-	margin-left: -15px;
+	right: 272px;
 	top:-25px
 }
+.skin-theme-split {
+	color: #333!important;
+}
+.J_link_skin_type {
+	margin: auto 2px;
+	color: #333;
+}
+.skin-types {
+	margin: auto 15px;
+	text-align: center;
+}
+.skin-types .active {
+	color: #fc2a06;
+}
+
 .skin-list .skin-pics {
 	padding: 0 20px;
 }
@@ -96,14 +111,14 @@
 }
 .skin-list .skin-pics a {
 	display:inline-block;
-	width:70px;
-	height:70px;
+	width:40px;
+	height:40px;
 	overflow:hidden;
-	margin:20px 10px;
+	margin:10px 5px;
 	border:2px solid #c8bbc9;
-	border-radius:70px;
-	-moz-border-radius:70px;
-	-webkit-border-radius:70px
+	border-radius:40px;
+	-moz-border-radius:40px;
+	-webkit-border-radius:40px
 }
 .skin-list .skin-pics img {
 	width:70px;

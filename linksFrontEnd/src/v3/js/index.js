@@ -17,6 +17,11 @@ $(function() {
 
 	$('#J_Apps').sortable();
 	// 幻灯
+
+	$('#J_ScrollBox').find('img').each(function(k, v){
+		var src = $(v).data('src')
+		$(v).attr('src', src);
+	});		
 	$('#J_ScrollBox').find('.items').slidesjs({
 		play: {
 			active: true,
@@ -25,6 +30,7 @@ $(function() {
 			swap: false
 		}
 	});
+
 	$('#J_ScrollBox').find('li').on('hover', function() {
 		$(this).toggleClass('hover');
 	});
@@ -669,7 +675,7 @@ var HelpMouse = {
 		for (i in o) count++;
 		return count;
 	}
-	Date.prototype.add = function(days) {
+	Date.prototype.add_day = function(days) {
 		return new Date(this * 1 + days * 86400000);
 	};
 	//oo
@@ -763,12 +769,7 @@ var HelpMouse = {
 				self.changeType('Date');
 				$('.extra-calendar, .extra-calendar-overlayer').show();
 			});
-			$(document).on('click', '.cal_v303_mark_list_wrap li a', function() {
-				var li = $(this).parent('li');
-				var id = li.attr('data-id');
-				li.remove();
-				//delete task api
-			});
+
 			/*
        $('.cal-body').on('mouseover', '.cal-month td', function(){
        var td = $(this);
@@ -979,13 +980,14 @@ var HelpMouse = {
 			self.currentDate = day.getDate();
 			self.currentMonth = day.getMonth();
 			self.currentYear = day.getFullYear();
-			self.currentWeekStart = day.getDate() - (day.getDay() - Calendar.weekStart);
+			self.currentWeekStart = day.getDate() - (day.getDay() == 0 ? 7 : day.getDay() ) + Calendar.weekStart;
 			self.currentWeekEnd = self.currentWeekStart + 6;
 			self.currentWeekStartObject = new Date(self.currentYear, self.currentMonth, self.currentWeekStart);
 			self.currentWeekEndObject = new Date(self.currentYear, self.currentMonth, self.currentWeekEnd);
 			self.currentMarkId = self.currentYear + '-' + (self.currentMonth);
 			self.showDate();
 		},
+		//获取数据接口
 		loadMarks: function(callBack) {
 			var self = this;
 			var year = self.currentYear;
@@ -1029,6 +1031,48 @@ var HelpMouse = {
 					self.MainView.renderMarks();
 				});
 			}
+		},
+	
+		//新建和更新日程: id==null为新建，有id值为更新
+		update: function(id, time, desc){
+			var self = this;
+			var url, data;
+			/*
+			if(id == 'null') {
+				url = '/addSchedule';
+				data = {
+					datetime: time,
+					content: desc
+				};
+			}else{
+				url = '/updateSchedule';
+				data = {
+					data-theme: time,
+					content: desc,
+					id: id
+				};
+			}
+			self.request({
+				url: url,
+				data: data
+			}).fail(function(c, e){
+			}).done(function(d){
+			});
+			*/
+		},
+		//删除任务
+		delete: function(id){
+			/*
+			var self = this;
+			self.request({
+				url: '/delSchedule',
+				data: {
+					id: id
+				}
+			}).fail(function(c, e){
+			}).done(function(d){
+			});
+			*/
 		}
 	};
 
@@ -1040,11 +1084,123 @@ var HelpMouse = {
 			self.monthView = new MiniMonthView;
 			self.listElement = $('.cal_v303_mark_list_wrap').find('ul');
 			self.renderMonthView();
+			self.listElement.on('click', '.cal_v303_time_span', function(){
+
+			});
+			self.listElement.on('click', '.cal_v303_mark_content', function(){
+				if($(this).find('input').size()) return false;
+				var c = $(this).attr('title');
+				var it = $('<input type="text" class="input-content" maxlength="30" />')
+				it.val(c);
+				$(this).html(it);
+				it.select();
+				$(this).siblings('.delete-mark').removeClass('delete-mark').addClass('enter-mark').html('确定');
+			});
+
+			self.listElement.on('click', '.enter-mark', function(){
+				$(this).removeClass('enter-mark').addClass('delete-mark').html('×');
+				var o = $(this).siblings('.cal_v303_mark_content');
+				var c = o.find('.input-content').val();
+				o.html(c).attr('title', c);
+				
+				var desc = c;
+				var hm = o.siblings('.cal_v303_time_span').val();
+				var ymd = $('.cal_v303_show_date').html().replace(/\D\b/g, '-').replace(/\D\B/g, '');
+				var time = Date.parse(ymd + ' ' + hm);
+				var id = $(this).parent('li').attr('data-id');
+				self.format();
+				Calendar.update(id, time, desc);
+
+			});
+
+			self.listElement.on('keydown', '.input-content', function(e){
+				if(e.keyCode == 13){
+					var c = $(this).val();
+					var o = $(this).parent('.cal_v303_mark_content');
+					o.html(c).attr('title', c).siblings('.enter-mark').removeClass('.enter-mark').addClass('delete-mark').html('×')
+					self.format();
+					return false;
+				}
+			});
+
+			self.listElement.on('click', '.cal_v303_time_enter', function(){
+				var self = this;
+				setTimeout(function(){
+					var h = Calendar.tooltip.find('.cal_v303_time_hour_select').val();
+					var m = Calendar.tooltip.find('.cal_v303_time_minute_select').val();
+					Calendar.tooltip.parent('.cal_v303_time_span').html(h + ':' + m);
+					Calendar.tooltip.hide();
+					var desc = self.siblings('.cal_v303_mark_content').html();
+					var hm = h + ':' + m;
+					var ymd = $('.cal_v303_show_date').html().replace(/\D\b/g, '-').replace(/\D\B/g, '');
+					var time = Date.parse(ymd + ' ' + hm);
+					var id = self.parent('li').attr('data-id');
+					Calendar.update(id, time, desc);
+				},0)
+			});
+
+			self.listElement.on('click', '.cal_v303_time_span', function(){
+				if($(this).find('select').size()) return false;
+				var h = '';
+				var tem;
+				for(var i = 0; i < 24; i++){
+					tem = i < 10 ?  '0' + i : i;
+					h += '<option value="' + tem + '">' + tem + '</option>';
+				}
+				h = '<select class="cal_v303_time_hour_select">' + h + '</select>'
+
+				var m = '<select class="cal_v303_time_minute_select">' + 
+					'<option value="00">00</option>' +
+					'<option value="15">15</option>' +
+					'<option value="30">30</option>' +
+					'<option value="45">45</option>' +
+					'</select>';
+
+				h = $(h);
+				m = $(m);
+				var cur = $(this).html().split(':');
+				h.val(cur[0]);
+				m.val(cur[1]);
+
+				Calendar.tooltip.find('.content').empty()
+					.append(h).append(':').append(m)
+					.append('<a class="cal_v303_time_enter" href="javascript:;">确定</a>');
+
+				Calendar.tooltip.appendTo($(this)).show();
+
+			});
+
+			self.listElement.on('click', '.delete-mark', function() {
+				var li = $(this).parent('li');
+				var id = li.attr('data-id');
+				li.remove();
+				Calendar.delete(id);
+			});
+
+			$(document).on('click', '.cal_v303_new_mark', function(){
+				var li = '<li data-id="null"><b></b><span class="cal_v303_time_span">00:00</span>'+
+					'<span class="cal_v303_mark_content">输入日程</span><a class="delete-mark" href="javascript:;">×</a></li>'
+				li = $(li);
+				if(self.listElement.find('li').size() == 4){
+					self.listElement.find('li:last').remove();
+				}
+				self.listElement.prepend(li);
+				li.find('.cal_v303_mark_content').trigger('click');
+			});
 		},
 		renderMonthView: function() {
 			var self = this;
 			self.monthView.render(self.monthPanelElement.find('tbody'));
 			self.renderMarks();
+		},
+		format: function(){
+			var self = this;
+			self.listElement.find('li').each(function(k, v){
+				var c = $(v).find('.cal_v303_mark_content');
+				if(c.find('input').size()) return;
+				var h = c.html().length > 15 ? c.html().substring(0, 15) + '...' : c.html();
+				c.html(h); 
+			});
 		},
 		renderMarks: function() {
 			var self = this;
@@ -1054,11 +1210,16 @@ var HelpMouse = {
 			} else {
 				var marks = self.marks = [];
 			}
+			marks.sort(function(a, b){
+				return a.time - b.time;
+			});
 			var lis = '';
 			var v;
 			for (var i = 0, len = marks.length < 4 ? marks.length: 4; i < len; i++) {
 				v = marks[i];
-				lis += '<li data-id="' + v.id + '"><b></b><span class="cal_v303_time_span">' + (new Date(v.time*1000)).toString('HH:mm') + '</span><span>' + v.desc + '</span><a href="javascript:;">×</a></li>';
+				lis += '<li data-id="' + v.id + '"><b></b><span class="cal_v303_time_span">' + 
+					(new Date(v.time*1000)).toString('HH:mm') + '</span><span class="cal_v303_mark_content" title="' + v.desc + '">' + 
+					v.desc + '</span><a class="delete-mark" href="javascript:;">×</a></li>';
 			}
 			self.listElement.html(lis);
 		}
@@ -1092,7 +1253,7 @@ var HelpMouse = {
 				if (mark.html.offset().top + mark.html.height() <= baseLine) {
 					mark.html.addClass('cal-day-event-item-pass');
 				}
-				mark.html.find('.desc').trigger('dblclick');
+				mark.html.find('.desc').trigger('click');
 			});
 		},
 		renderBurnDownChart: function() {
@@ -1229,11 +1390,13 @@ var HelpMouse = {
 		},
 		renderBurnDownChart: function() {
 			clearTimeout(Calendar.timer);
+
 			var self = this;
 			var start = Calendar.currentWeekStartObject;
 			var today = Calendar.today;
 			self.burnDownChartElement = $('<div class="chart"><h5 class="time-show">00:00</h5></div>');
 			var todayIndex = today.getDay() - Calendar.weekStart;
+			if(today.getDay() == 0) todayIndex = 6;
 			var today_td = self.tableElement.find('td:eq(' + todayIndex + ')');
 			self.burnDownChartElement.appendTo(today_td);
 			var now = new Date();
@@ -1264,7 +1427,7 @@ var HelpMouse = {
 			self.tableElement.find('td').empty();
 			var burndown = false;
 			for (i = 0; i <= 6; i++) {
-				tem = start.add(i);
+				tem = start.add_day(i);
 				year = tem.getFullYear();
 				month = tem.getMonth();
 				date = tem.getDate();
@@ -1403,8 +1566,12 @@ var HelpMouse = {
 			self.baseTime = + new Date(year, month, date, 0);
 			var showtime = time.toString('HH:mm');
 			var html = '<div class="cal-day-event-item">' + '<b class="dot"></b>' + '<span class="time">' + showtime + '</span>' + '<span class="desc">' + desc + '</span>' + '<a class="enter" href="javascript:;">确定</a>' + '<a class="delete" href="javascript:;">×</a>' + '</div>';
+
 			self.html = $(html).css('top', hour * 4 * 3 + minute / 15 * 3);
-			self.html.find('.desc').dblclick(function() {
+			self.html.find('.desc').click(function() {
+				if($(this).find('input').size()){
+					return false;
+				}
 				var desc = $(this).html();
 				$(this).html('<input class="input_desc" type="text" maxlength="30" value="' + desc + '" >');
 				self.html.find('.input_desc').select();
@@ -1422,31 +1589,9 @@ var HelpMouse = {
 				self.html.remove();
 			});
 		},
-		update: function() {
-			var self = this;
-			if (self.id !== undefined) {
-				//修改一条记录
-				/*
-         post数据
-         {
-         id: xxx,
-         desc: xxx,
-         time: xxx
-         }
-         */
-			} else {
-				//创建一条记录
-				/*
-         post数据
-         {
-         desc: xxx,
-         time: xxx
-         }
-         */
-			}
-		},
 		removeElement: function() {
 			this.html.remove();
+			Calendar.delete(this.id)
 		},
 		appendTo: function(el) {
 			var self = this;
@@ -1474,11 +1619,10 @@ var HelpMouse = {
 					}
 				},
 				stop: function(event, ui) {
-					self.update();
+					Calendar.update(self.id, self.time, self.desc);
 				}
 			});
 		}
 	});
 	window.Calendar = Calendar;
 })();
-

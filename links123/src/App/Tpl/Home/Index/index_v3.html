@@ -44,31 +44,43 @@
 						</div>
 					</div>
 				</empty>
-			</div>
+			</div>		
 			<ul class="screen-theme">
 				<li class="change-theme-btn theme-purple-btn"></li>
 				<li id="K_change_skin_btn" class="change-back-btn">
 					换 肤
 					<div class="skin-list" style="display:none">
 						<span class="ang"></span>
-						<div id="J_Styles" class="skin-pics">
-							<ul>
-								<li data-id="1" data-theme="dark" data-bg="__PUBLIC__/IndexV3/skins/q/01_b.jpg">
-									<a href="javascript:;">
-										<img class="m" src="__PUBLIC__/IndexV3/skins/q/01_m.jpg" alt="" />
-									</a>
-								</li>
-								<li data-id="2" data-theme="light" data-bg="__PUBLIC__/IndexV3/skins/q/02_b.jpg">
-									<a href="javascript:;">
-										<img class="m" src="__PUBLIC__/IndexV3/skins/q/02_m.jpg" alt="" />
-									</a>
-								</li>
-								<li data-id="3" data-theme="dark_ext" data-bg="__PUBLIC__/IndexV3/skins/q/03_b.jpg">
-									<a href="javascript:;">
-										<img class="m" src="__PUBLIC__/IndexV3/skins/q/03_m.jpg" alt="" />
-									</a>
-								</li>
-							</ul>
+						<div class="skin-content">
+							<div class="subpanel" id="J_skin_selection">
+								<div class="skin-types">
+									<a data-id="themes" class="J_link_skin_type">最近使用过的主题</a>
+									<volist name="skinCategory" id="vo" key="k">
+									<span class="skin-theme-split"> | </span>
+									<a data-id="{$vo.categoryId}" class='J_link_skin_type <if condition="$k eq 1">active</if>'>{$vo.categoryName}</a>
+									</volist>
+								</div>
+								<div id="J_skin_pics" class="skin-pics">
+									<div id="link_skin_themes" class="item">
+										<a data-id="1" data-theme="dark" data-bg="__PUBLIC__/IndexV3/skins/q/01_b.jpg">
+											<img class="m" src="__PUBLIC__/IndexV3/skins/q/01_m.jpg" alt="" />
+										</a>
+										<a data-id="2" data-theme="light" data-bg="__PUBLIC__/IndexV3/skins/q/02_b.jpg">
+											<img class="m" src="__PUBLIC__/IndexV3/skins/q/02_m.jpg" alt="" />
+										</a>
+										<a data-id="3" data-theme="dark_ext" data-bg="__PUBLIC__/IndexV3/skins/q/03_b.jpg">
+											<img class="m" src="__PUBLIC__/IndexV3/skins/q/03_m.jpg" alt="" />
+										</a>
+									</div>
+									<volist name="skinList" id="vo">
+									<div id="link_skin_{$key}" class='item <if condition="$i eq 1">active</if>'>
+										<volist name="vo" id="skins">
+										<a class="skin-link-btn" data-bg="{$skins.skin}" data-theme="{$skins.theme}" data-id="{$skins.skinId}" class='<if condition="$skins.skinId eq $skinId">active</if>'><img src="{$skins.middleSkin}" alt="" /></a>
+										</volist>
+									</div>
+									</volist>
+								</div>
+							</div>
 						</div>
 					</div>
 				</li>
@@ -282,7 +294,7 @@
 								<div class="pics" id="J_ScrollBox">
 									<ul class="items">
 										<li>
-											<img src="__PUBLIC__/IndexV3/upload/02.jpg" alt="" />
+											<img data-src="__PUBLIC__/IndexV3/upload/02.jpg" alt="" />
 											<div class="mask"></div>
 											<div class="info">
 												<!-- <p class="p1">coming soon...</p> -->
@@ -299,42 +311,42 @@
 											</div>
 										</li>
 										<li>
-											<img src="__PUBLIC__/IndexV3/upload/03.jpg" alt="" />
+											<img data-src="__PUBLIC__/IndexV3/upload/03.jpg" alt="" />
 											<div class="mask"></div>
 											<div class="info">
 												<p class="p1">coming soon...</p>
 											</div>
 										</li>
 										<li>
-											<img src="__PUBLIC__/IndexV3/upload/04.jpg" alt="" />
+											<img data-src="__PUBLIC__/IndexV3/upload/04.jpg" alt="" />
 											<div class="mask"></div>
 											<div class="info">
 												<p class="p1">coming soon...</p>
 											</div>
 										</li>
 										<li>
-											<img src="__PUBLIC__/IndexV3/upload/05.jpg" alt="" />
+											<img data-src="__PUBLIC__/IndexV3/upload/05.jpg" alt="" />
 											<div class="mask"></div>
 											<div class="info">
 												<p class="p1">coming soon...</p>
 											</div>
 										</li>
 										<li>
-											<img src="__PUBLIC__/IndexV3/upload/06.jpg" alt="" />
+											<img data-src="__PUBLIC__/IndexV3/upload/06.jpg" alt="" />
 											<div class="mask"></div>
 											<div class="info">
 												<p class="p1">coming soon...</p>
 											</div>
 										</li>
 										<li>
-											<img src="__PUBLIC__/IndexV3/upload/07.jpg" alt="" />
+											<img data-src="__PUBLIC__/IndexV3/upload/07.jpg" alt="" />
 											<div class="mask"></div>
 											<div class="info">
 												<p class="p1">coming soon...</p>
 											</div>
 										</li>
 										<li>
-											<img src="__PUBLIC__/IndexV3/upload/08.jpg" alt="" />
+											<img data-src="__PUBLIC__/IndexV3/upload/08.jpg" alt="" />
 											<div class="mask"></div>
 											<div class="info">
 												<p class="p1">coming soon...</p>
@@ -366,6 +378,7 @@
 		</div>
 	</div><!--#footer end-->
 	<include file="Contorls:app_v3" />
+
 	<script src="__STATIC__/min/?b=v3/js&f=jquery.plugins.js,index.js"></script>
 </body>
 </html>

@@ -77,11 +77,9 @@
     border-left: 1px solid #aaa;
 }
 .cal_v303_mark_list_wrap ul {
-    overflow: hidden;
     height: 120px;
 }
 .cal_v303_mark_list_wrap li {
-    overflow: hidden;
     height: 29px;
     line-height: 29px;
     border-bottom: 1px solid #aaa;
@@ -137,8 +135,18 @@
 }
 .cal_v303_time_span {
     margin-right:10px;
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
 }
-
+.cal_v303_mark_content {
+    cursor: pointer;
+}
+.cal_v303_time_enter,
+.cal_v303_time_enter:hover {
+    color: #333;
+    margin-right: 10px;
+}
 
 .extra-calendar {
     position: absolute;
@@ -164,14 +172,14 @@
     opacity:.5
 }
 
-.extra-calendar .calendar-tip {
+.calendar-tip {
     display:none;
     width:150px;
     padding:5px;
     position:absolute;
     background:#fff;
     box-shadow:0 0 5px #666;
-    bottom:85%;
+    bottom:100%;
     left:50%;
     margin-left:-80px;
     color:#82c7a2;
@@ -180,7 +188,7 @@
     -moz-border-radius:5px;
     -webkit-border-radius:5px
 }
-.extra-calendar .calendar-tip .ang {
+.calendar-tip .ang {
     width:0;
     height:0;
     font-size:0;
@@ -386,6 +394,7 @@
     -webkit-border-radius:5px
 }
 .extra-calendar .cal-day .cal-day-burn-down-chart .cal-day-event-item .time {
+    float:left;
     margin-left:5px
 }
 .extra-calendar .cal-day .cal-day-burn-down-chart .cal-day-event-item .desc {
@@ -399,11 +408,9 @@
 .extra-calendar .cal-day .cal-day-burn-down-chart .cal-day-event-item .delete {
     color:#502d5c;
     float:right;
-    display:none
+    display:inline;
 }
-.extra-calendar .cal-day .cal-day-burn-down-chart .cal-day-event-item:hover .delete {
-    display:inline
-}
+
 .extra-calendar .cal-day .cal-day-burn-down-chart .cal-day-event-item-pass {
     color:#fff;
     border-bottom:1px dashed #fff
@@ -425,7 +432,8 @@
     border-spacing:2px;
     border-collapse:separate;
     text-align:center;
-    width:100%;
+    width:582px;
+    margin-left: -2px;
     height:100%;
     *height: auto;
     *text-align: left;
