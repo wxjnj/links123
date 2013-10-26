@@ -7,9 +7,8 @@
 	<meta name="Keywords" content="{$keywords}" />
 	<meta name="Description" content="{$description}" />
 	<link rel="stylesheet" href="__STATIC__/min/?b=v3/css&f=base.css,css.min.css" />
-	<script src="__STATIC__/min/?b=v3/js&f=jquery-1.7.1.min.js,jquery.cookies.2.2.0.min.js"></script>
 	<link rel="stylesheet" href="__PUBLIC__/IndexV3/skins/{$theme}/style.css" id="J_Skins" />
-	<script>var $CONFIG = { 'APP' : '__APP__/', 'URL' : '__URL__', 'PUBLIC' : '__PUBLIC__', 'IsLogin' : <empty name="_SESSION[C('MEMBER_AUTH_KEY')]">1<else />0</empty> };</script>
+	<script>var $CONFIG = { 'STATIC': '__STATIC__','APP' : '__APP__/', 'URL' : '__URL__', 'PUBLIC' : '__PUBLIC__', 'IsLogin' : <empty name="_SESSION[C('MEMBER_AUTH_KEY')]">1<else />0</empty> };</script>
 </head>
 <body>
 	<script src="__STATIC__/v3/js/init.js"></script>
@@ -128,7 +127,89 @@
 					</ul>
 				</div><!--.zld end-->
 				<div class="box box-apps">
-					<div class="box-hd"></div>
+					<div class="box-hd">
+						<div class="app-icon-list">
+							<div class="app-more">
+								<a href="javascript:" class="more"></a><em>更多应用</em>
+								<div class="app-more-box">
+									<b class="ang"></b>
+									<div class="amb-bd">
+										<ul></ul>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<style>
+							.app-icon-list{
+								display: none;
+								height: 18px;
+								position: relative;
+								z-index: 9999;
+							}
+							.app-icon-list em{
+								float: right;
+							}
+							.app-icon-list .app-more{
+								position: relative;
+								float: right;
+								cursor: pointer;
+								z-index: 3;
+								position: relative;
+							}
+							.app-icon-list .app-more-box{
+								display: none;
+								top: 30px;
+								width: 320px;
+								position: absolute;
+								z-index: 2;
+								right: -20px;
+								background: #fff;
+								box-shadow: 0 0 5px #666;
+								filter: alpha(opacity=90);
+								-moz-opacity: .9;
+								-khtml-opacity: .9;
+								opacity: .9;
+								border-radius: 4px;
+								-moz-border-radius: 4px;
+								-webkit-border-radius: 4px;
+							}
+							.app-icon-list .ang{
+								width: 0;
+								height: 0;
+								font-size: 0;
+								overflow: hidden;
+								position: absolute;
+								border-width: 15px;
+								border-style: dashed dashed solid;
+								border-color: transparent transparent #fff;
+								right: 15px;
+								margin-left: -15px;
+								top: -25px;
+							}
+							.app-icon-list ul{
+								padding: 25px;
+								*zoom: 1;
+							}
+							.app-icon-list ul:after{
+								content: '\0020';
+								display: block;
+								height: 0;
+								clear: both;
+							}
+							.app-icon-list ul li{
+								text-align: center;
+								width: 90px;
+								float: right;
+								height: 100px;
+								cursor: pointer;
+							}
+							.app-icon-list ul li a,
+							.app-icon-list ul li a:hover{
+								color: #0c0b0b;
+							}
+						</style>
+					</div>
 					<div class="box-bd">
 						<div class="apps">
 							<ul id="J_Apps">
@@ -151,6 +232,7 @@
 						</div><!--.apps end-->
 					</div><!-- app-box-body end -->
 				</div><!-- app-box end -->
+				
 				<div class="extra">
 					<div class="extra-col1">
 						<div class="extra-calendar">
@@ -219,7 +301,6 @@
 							</div>
 						</div>
 					</div><!--.extra-col1 end-->
-		
 					<div class="extra-col2">
 						<div class="box box-music" id="J_Music">
 							<div class="box-hd">
@@ -365,7 +446,6 @@
 			</div>
 		</div>
 	</div><!--#footer end-->
-	<include file="Contorls:app_v3" />
-	<script src="__STATIC__/min/?b=v3/js&f=jquery.plugins.js,index.js"></script>
+	<script src="__STATIC__/min/?b=v3/js&f=jquery-1.7.1.min.js,jquery.cookies.2.2.0.min.js,jquery.plugins.js,index.js"></script>
 </body>
 </html>

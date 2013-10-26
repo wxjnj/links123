@@ -12,6 +12,10 @@ $( function($) {
 	$.fn.links123_apptrigers = function(selector) {
 		this.on('click', selector, function() {
 			var appId = $(this).data('href');
+			if(!$(appId).size()){
+				console.log($(appId));
+				$('body').append(AppsTpl[appId]);
+			}
 			$(this).data('links_app') || $(this).data('links_app', new App(appId));
 			var app = $(this).data('links_app');
 			app.show();
