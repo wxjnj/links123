@@ -1,68 +1,69 @@
 <?php
-
+import("App.Logic.Admin.EnglishQuestionLogic");
+import("App.Logic.Admin.EnglishLevelnameLogic");
 class EnglishQuestionAction extends CommonAction {
+
+    protected $cEnglishQuestionLogic  = null;
+    protected $cEnglishLevelnameLogic = null;
+
+    public function _initialize() {
+        $this->cEnglishQuestionLogic  = new EnglishQuestionLogic();
+        $this->cEnglishLevelnameLogic = new EnglishLevelnameLogic();
+        parent::_initialize();
+    }
 
     public function _filter(&$map, &$param) {
         if (isset($_REQUEST['name'])) {
             $name = ftrim($_REQUEST['name']);
         }
+        $attr_one = -1;
+        $attr_two = 1;
+        $attr_thr = -1;
         //媒体口音
-        if (intval($_REQUEST['voice']) > 0) {
-            $map['englishMedia.voice'] = intval($_REQUEST['voice']);
+        if (isset($_REQUEST['voice'])) {
+            $attr_one = intval($_REQUEST['voice']) == 1 ? 1 : 0;
             $param['voice'] = intval($_REQUEST['voice']);
         }
-        //试题目标
-        if (intval($_REQUEST['target']) > 0) {
-            $map['englishQuestion.target'] = intval($_REQUEST['target']);
-            $param['target'] = intval($_REQUEST['target']);
-        }
         //视频类型
-        if (intval($_REQUEST['pattern']) > 0) {
-            $map['englishMedia.pattern'] = intval($_REQUEST['pattern']);
+        if (isset($_REQUEST['pattern'])) {
+            $attr_thr = intval($_REQUEST['pattern']) == 1 ? 1 : 0;
             $param['pattern'] = intval($_REQUEST['pattern']);
         }
-        //视频科目
-        if (intval($_REQUEST['object']) > 0) {
-            $map['englishMedia.object'] = intval($_REQUEST['object']);
-            $object_info = D("EnglishObject")->find($map['englishMedia.object']);
-            if ($object_info['name'] == "综合") {
-                unset($map['englishMedia.object']);
-            }
-            $param['object'] = intval($_REQUEST['object']);
+        if($attr_one > -1 && $attr_thr > -1){
+            $map['englishCategory.cat_attr_id'] = bindec($attr_one.$attr_two.$attr_thr);
+        }elseif($attr_one > -1 && $attr_thr == -1){
+            $map['englishCategory.cat_attr_id'] =array(
+                bindec($attr_one.$attr_two.'1'),
+                bindec($attr_one.$attr_two.'0'),
+                "OR") ;
+        }elseif($attr_one == -1 && $attr_thr > -1){
+            $map['englishCategory.cat_attr_id'] =array(
+                bindec('1'.$attr_two.$attr_thr),
+                bindec('0'.$attr_two.$attr_thr),
+                "OR") ;
+        }else{
+            $map['englishCategory.cat_attr_id'] = array(
+                bindec('1'.$attr_two.'1'),
+                bindec('0'.$attr_two.'0'),
+                bindec('1'.$attr_two.'0'),
+                bindec('0'.$attr_two.'1'),
+                "or") ;
         }
-        //视频等级
-        if (intval($_REQUEST['level']) > 0) {
-            $map['englishMedia.level'] = intval($_REQUEST['level']);
-            $param['level'] = intval($_REQUEST['level']);
+        
+        if(intval($_REQUEST['level_one']) > 0){
+            $param['level_one'] = intval($_REQUEST['level_one']);
+            $map['englishCategory.level_one'] = intval($_REQUEST['level_one']);
         }
-        //视频专题
-        if (intval($_REQUEST['subject']) > 0) {
-            $map['englishMedia.subject'] = intval($_REQUEST['subject']);
-            $param['subject'] = intval($_REQUEST['subject']);
+        if(intval($_REQUEST['level_two']) > 0){
+            $param['level_two'] = intval($_REQUEST['level_two']);
+            $map['englishCategory.level_two'] = intval($_REQUEST['level_two']);
         }
-        //视频难度值
-        if (intval($_REQUEST['difficulty']) > 0) {
-            $map['englishMedia.difficulty'] = intval($_REQUEST['difficulty']);
-            $param['difficulty'] = intval($_REQUEST['difficulty']);
+        if(intval($_REQUEST['level_thr']) > 0){
+            $param['level_thr'] = intval($_REQUEST['level_thr']);
+            $map['englishCategory.level_thr'] = intval($_REQUEST['level_thr']);
         }
-        //视频推荐
-        if (isset($_REQUEST['recommend'])) {
-            if (intval($_REQUEST['recommend']) == 0) {
-                $map['englishMedia.recommend'] = 0;
-            } else {
-                $map['englishMedia.recommend'] = array("neq", 0);
-            }
-            $param['recommend'] = intval($_REQUEST['recommend']);
-        }
-        //是否TED
-        if (isset($_REQUEST['ted'])) {
-            if (intval($_REQUEST['ted']) == 0) {
-                $map['englishMedia.ted'] = 0;
-            } else {
-                $map['englishMedia.ted'] = array("neq", 0);
-            }
-            $param['ted'] = intval($_REQUEST['ted']);
-        }
+        
+        
         //视频特别推荐
         if (isset($_REQUEST['special_recommend'])) {
             $map['englishMedia.special_recommend'] = intval($_REQUEST['special_recommend']);
@@ -119,7 +120,88 @@ class EnglishQuestionAction extends CommonAction {
         $this->assign('name', $name);
         $param['name'] = $name;
     }
-
+    
+    protected function _list($model, $map, $param, $sortBy = '', $asc = false) {
+        //排序字段 默认为主键名
+        if (isset($_REQUEST ['_order'])) {
+            $order = $_REQUEST ['_order'];
+        } else {
+            $order = !empty($sortBy) ? $sortBy : $model->getPk();
+        }
+        $param['order'] = $order;
+        //排序方式默认按照倒序排列
+        //接受 sost参数 0 表示倒序 非0都 表示正序
+        if (isset($_REQUEST ['_sort'])) {
+            $sort = $_REQUEST ['_sort'] ? 'asc' : 'desc';
+        } else {
+            $sort = $asc ? 'desc' : 'asc';
+        }
+        $param['sort'] = $sort;
+//        dump($param);
+        //取得满足条件的记录数
+        if ($model->getModelName() == 'NewsView') {
+            $count = $model->where($map)->count('news.id');
+        } elseif ($model->getModelName() == 'ProductView') {
+            $count = $model->where($map)->count('product.id');
+        } elseif ($model->getModelName() == 'CasesView') {
+            $count = $model->where($map)->count('cases.id');
+        } elseif ($model->getModelName() == 'CategoryView') {
+            $count = $model->where($map)->count('cat1.id');
+        } elseif ($model->getModelName() == 'LinksView') {
+            $count = $model->where($map)->count('links.id');
+        } elseif ($model->getModelName() == 'AnnouncementView') {
+            $count = $model->where($map)->count('announcement.id');
+        } elseif ($model->getModelName() == 'SuggestionView') {
+            $count = $model->where($map)->count('suggestion.id');
+        } elseif ($model->getModelName() == 'CatPicView') {
+            $count = $model->where($map)->count('catPic.id');
+        } elseif ($model->getModelName() == 'EnglishQuestionView') {
+            $count = $model->where($map)->count('DISTINCT(englishQuestion.id)');
+        }elseif ($model->getModelName() == 'EnglishQuestionSpeakView') {
+            $count = $model->where($map)->count('englishQuestionSpeak.id');
+        } elseif ($model->getModelName() == 'EnglishMediaView') {
+            $count = $model->where($map)->count('englishMedia.id');
+        } else {
+            $count = $model->where($map)->count('id');
+        }
+        //echo $model->getlastsql()."<br />";
+        if ($count > 0) {
+            import("@.ORG.Page");
+            //创建分页对象
+            if (!empty($_REQUEST ['listRows'])) {
+                $listRows = $_REQUEST ['listRows'];
+            } else {
+                $listRows = '20';
+            }
+            $p = new Page($count, $listRows);
+            //分页查询数据
+            $voList = $model->where($map)->order("`" . $order . "` " . $sort)->limit($p->firstRow . ',' . $p->listRows)->group("englishQuestion.id")->select();
+//            echo $model->getlastsql();
+            //分页跳转的时候保证查询条件
+            foreach ($param as $key => $val) {
+                //$p->parameter .= "$key=" . urlencode ( $val ) . "&";
+                $p->parameter .= "$key=" . $val . "&";
+            }
+            $this->assign('param', $p->parameter);
+            $_SESSION[C('SEARCH_PARAMS_KEY')] = $p->parameter . "p=" . $_REQUEST['p'];
+            //分页显示
+            $page = $p->show();
+            //列表排序显示
+            $sortImg = $sort; //排序图标
+            $sortAlt = $sort == 'desc' ? '升序排列' : '倒序排列'; //排序提示
+            $sort = $sort == 'desc' ? 1 : 0; //排序方式
+            //模板赋值显示
+            $this->assign('list', $voList);
+            $this->assign('sort', $sort);
+            $this->assign('order', $order);
+            $this->assign('sortImg', $sortImg);
+            $this->assign('sortType', $sortAlt);
+            $this->assign("page", $page);
+        }
+        cookie('_currentUrl_', __URL__ . '/index?' . $_SESSION[C('SEARCH_PARAMS_KEY')]);
+        return;
+    }
+    
     public function index() {
         //列表过滤器，生成查询Map对象
         $map = array();
@@ -132,17 +214,15 @@ class EnglishQuestionAction extends CommonAction {
             $this->_list($model, $map, $param, 'id', false);
             //lTrace('Log/lastSql', $this->getActionName(), $model->getLastSql());
         }
-        //科目列表
-        $object_list = D("EnglishObject")->getList("status=1");
-        $this->assign("object_list", $object_list);
-        //科目列表
-        $level_list = D("EnglishLevel")->getList("status=1", "`sort` ASC");
-        $num = intval(D("Variable")->getVariable("english_click_num"));
-        $this->assign("english_click_num", $num);
-        $this->assign("level_list", $level_list);
-        //专题列表
-        $subject_list = D("EnglishMediaSubject")->getList("status=1", "`sort` ASC");
-        $this->assign("subject_list", $subject_list);
+        //@ 一级类目
+        $category["level_one"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("1");
+        //@ 二级类目
+        $category["level_two"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("2");
+        //@ 三级类目
+        $category["level_thr"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("3");
+
+        $this->assign("category", $category);
+        $this->assign("type", 1);//听力
 
         $this->assign("param", $param);
         foreach ($param as $key => $value) {
@@ -152,6 +232,92 @@ class EnglishQuestionAction extends CommonAction {
         $this->display();
         return;
     }
+
+    public function setSpecRecommend() {
+        $question_id = intval($_REQUEST["qid"]);
+        $ret = $this->cEnglishQuestionLogic->setQuestionSpecRecommendBy($question_id);
+        if ($ret !== false) {
+            $this->success('设置特别推荐成功');
+        } else {
+            $this->error('设置特别推荐失败！');
+        }
+    }
+
+    public function cancelSpecRecommend() {
+        $question_id = intval($_REQUEST["qid"]);
+        $ret = $this->cEnglishQuestionLogic->cancelQuestionSpecRecommendBy($question_id);
+        if ($ret !== false) {
+            $this->success('取消特别推荐成功');
+        } else {
+            $this->error('取消特别推荐失败！');
+        }
+    }
+
+    public function property () {
+        $question_id = intval($_REQUEST["qid"]);
+        $type = intval($_REQUEST["type"]);
+        $page = intval($_REQUEST["page"]);
+        $question_property = $this->cEnglishQuestionLogic->getQuestionAndProperty($question_id, $type);
+        $is_recommend = $this->cEnglishQuestionLogic->isQuestionSpecRecommend($question_id);
+        $this->assign("question", $question_property["question"]);
+        $this->assign("property", $question_property["property"]);
+        $this->assign("is_recommend", $is_recommend);
+        $this->assign("page", $page);
+        $this->display();
+    }
+
+    public function addProperty() {
+        
+        //@ 一级类目
+        $category["level_one"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("1");
+        //@ 二级类目
+        $category["level_two"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("2");
+        //@ 三级类目
+        $category["level_thr"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("3");
+
+        $this->assign("category", $category);
+        $this->assign("qid", intval($_REQUEST["qid"]));
+        $this->display();
+    }
+
+    /**
+    * 添加题目所属类目的属性
+    * author reasono
+    */
+    public function insertProperty() {
+        $question_id = isset($_REQUEST["question_id"]) ? intval($_REQUEST["question_id"]) : 0;
+        
+        $voice       = isset($_REQUEST["voice"])     ? intval($_REQUEST["voice"])     : 1;
+        //$target      = isset($_REQUEST["target"])    ? intval($_REQUEST["target"])    : 1;
+        $pattern     = isset($_REQUEST["pattern"])   ? intval($_REQUEST["pattern"])   : 1;
+        $level_one   = isset($_REQUEST["level_one"]) ? intval($_REQUEST["level_one"]) : 0;
+        $level_two   = isset($_REQUEST["level_two"]) ? intval($_REQUEST["level_two"]) : 0;
+        $level_thr   = isset($_REQUEST["level_thr"]) ? intval($_REQUEST["level_thr"]) : 0;
+        $status      = isset($_REQUEST["status"])    ? intval($_REQUEST["status"])    : 0;
+        $type        = isset($_REQUEST["type"])      ? intval($_REQUEST["type"])      : 1;
+        $target      = $type == 0 ? 0 : 1;
+
+
+        $ret = $this->cEnglishQuestionLogic->saveProperty(
+                                                    $question_id, 
+                                                    $voice, 
+                                                    $target, 
+                                                    $pattern, 
+                                                    $level_one, 
+                                                    $level_two, 
+                                                    $level_thr, 
+                                                    $status, 
+                                                    $type
+                                                );
+        if ($ret === false) {
+            $this->error($this->cEnglishQuestionLogic->getErrorMessage());
+            return;
+        }
+        $this->success('添加分类属性成功');
+    }
+
+
+
 
     public function add() {
         $object_list = D("EnglishObject")->where("`status`=1")->order("sort")->select();
@@ -401,6 +567,8 @@ class EnglishQuestionAction extends CommonAction {
     //excel导入
     public function excel_insert() {
         if ($this->isPost()) {
+            /**$上传excel文件 开始*/
+            //
             import("@.ORG.UploadFile");
             $upload = new UploadFile();
             //设置上传文件大小
@@ -419,7 +587,9 @@ class EnglishQuestionAction extends CommonAction {
                 //取得成功上传的文件信息
                 $uploadList = $upload->getUploadFileInfo();
             }
+            /*上传excel文件 结束$**/
 
+            
             //引入类
             error_reporting(E_ALL);
             date_default_timezone_set('Asia/Shanghai');
@@ -435,64 +605,64 @@ class EnglishQuestionAction extends CommonAction {
             }
             $path = realpath('./Public/Uploads/uploads.txt');
             $dest = str_replace('uploads.txt', 'Excels/' . $uploadList[0]['savename'], $path);
+            
+            Log::write("导入听力试题，excel表为:".$dest, Log::INFO);
 
             $objPHPExcel = $objReader->load($dest);
+            
+            /**$数据准备 开始*/
             //
             //声明模型类
             $model = D("EnglishQuestion");
             $optionModel = D("EnglishOptions");
-            $levelModel = D("EnglishLevel");
             $mediaModel = D("EnglishMedia");
-            $recommendModel = D("EnglishMediaRecommend");
-            //
-            //提取等级列表备用
-            $levels = $levelModel->order("`sort` ASC")->select();
-            foreach ($levels as $key => $value) {
-                $level_list[$value['name']] = $value['id'];
-                $level_name_list_info[$value['name']] = $value;
-            }
-            foreach ($levels as $key => $value) {
-                if ($value['sort'] <= $level_name_list_info['小六']['sort']) {
-                    $difficulty_list[$value['name']] = 1;
-                } else if ($value['sort'] >= $level_name_list_info['大一']['sort']) {
-                    $difficulty_list[$value['name']] = 3;
-                } else {
-                    $difficulty_list[$value['name']] = 2;
+            $categoryModel =D("EnglishCategory");
+            $levelnameModel = D("EnglishLevelname");
+            $englishCatquestionModel = D('EnglishCatquestion');
+
+            //@ 建立类目字典
+            $level_name_list = array();
+            $levelnames = D('EnglishLevelname')->select();
+            $level_one_list = array();
+            $excel_level_one_list =array();
+            $level_two_max_sort = 0;
+            $object_level_one_id = 0;//选择课程 分类的id
+            $target = 1;//听力
+            $difficulty_list = array();//新分类的默认难度id
+            foreach($levelnames as $each_lv) {
+                $level_name_list[$each_lv["name"]] = $each_lv["id"];
+                if($each_lv['level'] == 1){
+                    $level_one_list[$each_lv["name"]] = $each_lv["id"];
+                    if($each_lv['default'] == 1){
+                        $object_level_one_id = $each_lv['id'];
+                    }
+                }else if($each_lv['level'] == 2){
+                    $level_two_max_sort = $level_two_max_sort > $each_lv['sort'] ? $level_two_max_sort : $each_lv['sort'];
+                }else if($each_lv['level'] == 3){
+                    if($each_lv['name'] == "初级"){
+                        $difficulty_list["初级"] = $each_lv['id'];
+                    }else if($each_lv['name'] == "中级"){
+                        $difficulty_list["中级"] = $each_lv['id'];
+                    }else if($each_lv['name'] == "高级"){
+                        $difficulty_list["高级"] = $each_lv['id'];
+                    }
                 }
             }
-            //
-            //读取科目列表备用
-            $objectModel = D("EnglishObject");
-            $objects = $objectModel->select();
-            foreach ($objects as $key => $value) {
-                $object_list[$value['name']] = $value['id'];
-            }
-            //
-            //读取专题列表
-            $subjectModel = D("EnglishMediaSubject");
-            $subjects = $subjectModel->select();
-            foreach ($subjects as $key => $value) {
-                $subject_list[$value['name']] = $value['id'];
-            }
-            //推荐列表备用
-            $recommendList = $recommendModel->field("id,name,`sort`")->order("`sort` desc")->select();
-            foreach ($recommendList as $value) {
-                $recommendNameList[$value['name']] = intval($value['id']);
-            }
-            $recommendSort = intval($recommendList[0]['sort']) + 1;
-
-            //TED列表备用
-            $tedModel=D("EnglishMediaTed");
-            $tedList = $tedModel->field("id,name,`sort`")->order("`sort` desc")->select();
-            foreach ($tedList as $value) {
-                $tedNameList[$value['name']] = intval($value['id']);
-            }
-            //
-            $url_preg = "/^(http:\/\/)?([0-9a-z_!~*'()-]+\.)*([0-9a-z][0-9a-z-]{0,61})?[0-9a-z]\.[a-z]{2,6}/i";
-            //
-            $tedSort = intval($recommendList[0]['sort']) + 1;
+            //年级列表
+            $level_map = array(
+                "cat_attr_id"=>7,
+                "level_one"=>$object_level_one_id,
+                "level_two"=>array("gt",0),
+                "level_thr"=>array("gt",0)
+            );
+            $grade_list = $categoryModel->field("level_thr as id")->where($level_map)->group("level_thr")->select();
+            
+            
             $model->startTrans();
+            $time = time();
+            Log::write("导入听力试题，时间戳：".$time, Log::INFO);
             $is_standard_excel = true;
+            /**数据准备 结束$*/
             //
             //循环读取所有表,表迭代器
             foreach ($objPHPExcel->getWorksheetIterator() as $worksheet) {
@@ -500,77 +670,165 @@ class EnglishQuestionAction extends CommonAction {
                     //行迭代器
                     $cellIterator = $row->getCellIterator();
                     $data = array(); //保存试题数据的数组
+                    $data['status'] = 1;
                     $media_data = array(); //保存媒体数据的数组
+                    $media_data['status'] = 1;
                     $repeat_ret = false; //题目是否重复
                     $cellIterator->setIterateOnlyExistingCells(false); //单元格为空也迭代
                     foreach ($cellIterator as $cell) {
                         //单元格迭代器
                         if (!is_null($cell)) {
-                            //验证表头，验证表格是否符合标准
+                            //表头
                             if($cell->getRow() == 1){
+                                //验证表格是否符合标准
                                 if ($cell->getColumn() == "A") {
                                     if(ftrim($cell->getCalculatedValue())!="试题名称"){
                                         $is_standard_excel = false;
                                         break;
                                     }
-                                }  else if ($cell->getColumn() == "Q") {
+                                }  else if ($cell->getColumn() == "D") {
+                                    if(ftrim($cell->getCalculatedValue())!="视频来源地址"){
+                                        $is_standard_excel = false;
+                                        break;
+                                    }
+                                } else if ($cell->getColumn() == "J") {
                                     if(ftrim($cell->getCalculatedValue())!="选项D内容"){
                                         $is_standard_excel = false;
                                         break;
                                     }
                                 }
+                                //根据excel的表头对应到一级分类id
+                                if(intval($level_one_list[ftrim($cell->getCalculatedValue())]) > 0){
+                                    $excel_level_one_list[$cell->getColumn()] = intval($level_one_list[ftrim($cell->getCalculatedValue())]);
+                                }
                             }else{
                                 if ($cell->getColumn() == "A") {
                                     $data['name'] = ftrim($cell->getCalculatedValue()); //名称
                                 } else if ($cell->getColumn() == "B") {
-                                    $media_data['voice'] = $cell->getCalculatedValue(); //语种，英音，美音
+                                    $data['voice'] = intval($cell->getCalculatedValue()) == 2 ? 0 : 1; //语种，英音，美音
                                 } else if ($cell->getColumn() == "C") {
-                                    $media_data['pattern'] = $cell->getCalculatedValue(); //类型，视频，音频
+                                    $data['pattern'] = intval($cell->getCalculatedValue()) == 2 ? 0 : 1; //类型，视频，音频
                                 } else if ($cell->getColumn() == "D") {
-                                    $data['target'] = $cell->getCalculatedValue(); //目标，听力，说力
-                                } else if ($cell->getColumn() == "E") {
-                                    $media_data['level_name'] = ftrim($cell->getCalculatedValue()); //等级
-                                } else if ($cell->getColumn() == "F") {
-                                    $media_data['object_name'] = ftrim($cell->getCalculatedValue()); //科目
-                                } else if ($cell->getColumn() == "G") {
-                                    $media_data['subject_name'] = ftrim($cell->getCalculatedValue()); //专题
-                                } else if ($cell->getColumn() == "H") {
-                                    //$media_data['difficulty'] = intval($cell->getCalculatedValue()); //难度
-                                    $media_data['recommend'] = intval($cell->getCalculatedValue()); //推荐
-                                } else if ($cell->getColumn() == "I") {
-                                    $media_data['special_recommend'] = intval($cell->getCalculatedValue()); //是否特别推荐
-                                } else if ($cell->getColumn() == "J") {
-                                    $media_data['ted'] = intval($cell->getCalculatedValue()); //是否特别推荐
-                                } else if ($cell->getColumn() == "K") {
                                     $data['media_text_url'] = $media_data['media_source_url'] = ftrim($cell->getCalculatedValue()); //媒体内容地址
-                                } else if ($cell->getColumn() == "L") {
+                                } else if ($cell->getColumn() == "E") {
                                     $data['content'] = ftrim($cell->getCalculatedValue()); //题目内容
-                                } else if ($cell->getColumn() == "M") {
+                                } else if ($cell->getColumn() == "F") {
                                     $data['answer'] = intval($cell->getCalculatedValue()); //题目答案
-                                } else if ($cell->getColumn() == "N") {
+                                } else if ($cell->getColumn() == "G") {
                                     $data['option'][0] = ftrim($cell->getCalculatedValue()); //题目选项一
-                                } else if ($cell->getColumn() == "O") {
+                                } else if ($cell->getColumn() == "H") {
                                     $data['option'][1] = ftrim($cell->getCalculatedValue()); //题目选项二
-                                } else if ($cell->getColumn() == "P") {
+                                } else if ($cell->getColumn() == "I") {
                                     $data['option'][2] = ftrim($cell->getCalculatedValue()); //题目选项三
-                                } else if ($cell->getColumn() == "Q") {
+                                } else if ($cell->getColumn() == "J") {
                                     $data['option'][3] = ftrim($cell->getCalculatedValue()); //题目选项四
+                                } else if ($cell->getColumn() == "K") {
+                                    $media_data['special_recommend'] = intval($cell->getCalculatedValue()); //特别推荐
+                                } else if ($cell->getColumn() == "L") {
+                                    $data['grade'] = ftrim($cell->getCalculatedValue()); //二级分类，年级，选择课程顶级分类使用
+                                } else if ($cell->getColumn() == "M") {
+                                    $data['difficulty'] = ftrim($cell->getCalculatedValue()); //二级分类，难度值，其他等级分类使用
+                                } else if (intval($excel_level_one_list[$cell->getColumn()]) > 0) {
+                                    //收集分类信息，存在多个分类情况
+                                    $level_one = intval($excel_level_one_list[$cell->getColumn()]);
+                                    $data['category'][$level_one]['level_one'] = $level_one;//一级分类id
+                                    $data['category'][$level_one]['level_two_name'] = ftrim($cell->getCalculatedValue());//二级分类名称
+                                    if($level_one == $object_level_one_id){
+                                        $data['category'][$level_one]['level_thr'] = intval($level_name_list[$data['grade']]);//三级分类
+                                    }else{
+                                        $data['category'][$level_one]['level_thr'] = intval($level_name_list[$data['difficulty']]);//三级分类
+                                    }
                                 }
                             }
                         }
                     }
+                    $data['cat_attr_id'] = bindec($data['voice']."".$target."".$data['pattern']);//分类顶级分类id
+                    //跳过第一行，并判断表格是否标准
                     if (empty($data['name']) || $row->getRowIndex()==1) {
                         if(false == $is_standard_excel){
-                            @unlink($dest);
+                            Log::write("导入失败，表格格式错误！：", Log::ERR);
                             die(json_encode(array("info" => "导入失败，表格格式错误！", "status" => false)));
                         }
                         continue;
                     }
+                    //处理分类信息
+                    if(!empty($data['category'])){
+                        foreach ($data['category'] as $key=>$value){
+                            $cat_id = 0;//本次对应的分类id
+                            //@ 检查二级分类是否存在，不存在则添加类目，并添加到category表
+                            if (intval($level_name_list[$value['level_two_name']]) == 0) {
+                                $new_levelname_data = array(
+                                    "name" => $value['level_two_name'], 
+                                    "level" => 2,
+                                    "created" => $time, 
+                                    "updated" => $time, 
+                                    "default" => "0", 
+                                    "sort" => ++$level_two_max_sort
+                                );
+                                $new_id = $levelnameModel->add($new_levelname_data);
+                                if(FALSE === $new_id){
+                                    $model->rollback();
+                                    Log::write("导入失败，新增分类名称失败！：".$levelnameModel->getLastSql(), Log::ERR, true);
+                                    die(json_encode(array("info" => "导入失败，新增分类名称失败！", "status" => false)));
+                                }
+                                Log::write("新增levelname:".$levelnameModel->getLastSql(), Log::INFO);
+                                $level_name_list[$value['level_two_name']] = $new_id;
+                                //逐一添加新增二级分类下的三级分类
+                                //默认三级分类列表为难度列表
+                                $level_thr_list = $difficulty_list;
+                                if($value['level_one'] == $object_level_one_id){
+                                    $level_thr_list = $grade_list;//如果是选择课程的新分类，逐一增加年级
+                                }
+                                foreach ($level_thr_list as $level_thr){
+                                    $cat_data = array();
+                                    $cat_data['cat_attr_id'] = $data['cat_attr_id'];
+                                    $cat_data['level_one'] = $value['level_one'];
+                                    $cat_data['level_two'] = $level_name_list[$value['level_two_name']];
+                                    $cat_data['level_thr'] = $level_thr;
+                                    $cat_data['updated'] = $cat_data['created'] = $time;
+                                    $new_id = $categoryModel->add($cat_data);
+                                    if(FALSE === $new_id){
+                                        $model->rollback();
+                                        Log::write("导入失败，新增分类失败！：".$categoryModel->getLastSql(), Log::ERR, true);
+                                        die(json_encode(array("info" => "导入失败，新增分类失败！", "status" => false)));
+                                    }
+                                    Log::write("新增:".$categoryModel->getLastSql(), Log::INFO);
+                                    //获取本次试题对应的分类id
+                                    if($value['level_thr'] == $level_thr){
+                                        $cat_id = $new_id;
+                                    }
+                                }
+                            }else{
+                                $cat_map = array();
+                                $cat_map['cat_attr_id'] = $data['cat_attr_id'];
+                                $cat_map['level_one'] = $value['level_one'];
+                                $cat_map['level_two'] = $level_name_list[$value['level_two_name']];
+                                $cat_map['level_thr'] = $value['level_thr'];
+                                $cat_id = $categoryModel->where($cat_map)->getField("cat_id");
+                                Log::write("查找分类：".$categoryModel->getLastSql(), Log::ERR);
+                                if(intval($cat_id) == 0){
+                                    $cat_data = $cat_map;
+                                    $cat_data['updated'] = $cat_data['created'] = $time;
+                                    $new_id = $categoryModel->add($cat_data);
+                                    if(FALSE === $new_id){
+                                        $model->rollback();
+                                        Log::write("导入失败，新增分类失败！：".$categoryModel->getLastSql(), Log::ERR);
+                                        die(json_encode(array("info" => "导入失败，新增分类失败！", "status" => false)));
+                                    }
+                                    Log::write("新增:".$categoryModel->getLastSql(), Log::INFO);
+                                    $cat_id = $new_id;
+                                }
+                            }
+                            //保存分类id，用于后面更新分类下的试题数量
+                            $data['cat_id'][] = $cat_id;
+                        }   
+                    }else{
+                        $data['status'] = 0;//分类信息为空，试题锁住
+                    }
+
                     //根据问题内容、视频、科目、等级以及答案内容查询是否有重复
                     $condition['question.content'] = array("like", $data['content']);
                     $condition['media.media_source_url'] = array("like", $media_data['media_source_url']);
-                    $condition['media.object'] = $object_list[$media_data['object_name']];
-                    $condition['media.level'] = $level_list[$media_data['level_name']];
                     $condition['english_options.content'] = array("like", $data['option'][$data['answer'] - 1]);
                     $repeat_ret = $model->alias("question")
                             ->join(C("DB_PREFIX") . "english_media media on media.id=question.media_id")
@@ -579,192 +837,9 @@ class EnglishQuestionAction extends CommonAction {
                             ->count();
                     //重复则跳过
                     if (false != $repeat_ret && $repeat_ret > 0) {
+                        Log::write("导入听力试题，跳过重复的记录：".$data['name'], Log::INFO);
                         continue;
                     }
-                    $time = time();
-                    //
-                    //获取媒体的id
-                    $media_info = $mediaModel->field("id,local_path")->where(array("media_source_url" => array("like", $media_data['media_source_url'])))->find();
-                    $mediaId = intval($media_info['id']);
-                    //
-                    //来源地址未匹配到媒体，则添加媒体
-                    if ($mediaId == 0) {
-                        $media_data['name'] = $data['name'];
-                        $media_data['updated'] = $time;
-                        $media_data['created'] = $time;
-                        //等级、科目、专题的名称换成对应的id
-                        $media_data['object'] = intval($object_list[$media_data['object_name']]);
-                        $media_data['difficulty'] = intval($difficulty_list[$media_data['level_name']]);
-                        $media_data['level'] = intval($level_list[$media_data['level_name']]);
-                        $media_data['subject'] = intval($subject_list[$media_data['subject_name']]);
-                        if ($media_data['special_recommend'] == 1) {
-                            $media_data['recommend'] = 1;
-                        }
-                        //是推荐
-                        if ($media_data['ted'] == 1) {
-                            $ted_id = 0;
-                            //专题存在
-                            if ($media_data['subject'] > 0) {
-                                $ted_id = $tedNameList[$media_data['subject_name']];
-                                //推荐类存在专题名
-                                if (intval($ted_id) == 0) {
-                                    $ted_data['sort'] = $tedSort;
-                                    $ted_data['name'] = $media_data['subject_name'];
-                                    $ted_data['created'] = $time;
-                                    $ted_data['updated'] = $time;
-                                    $ted_id = $tedModel->add($ted_data);
-                                    if (false === $ted_id) {
-                                        $model->rollback();
-                                        @unlink($dest);
-                                        die(json_encode(array("info" => "导入失败，添加专题名到TED失败！", "status" => false)));
-                                    }
-                                    $tedNameList[$media_data['subject_name']] = $ted_id;
-                                    $tedSort++;
-                                }
-                            } else {
-                                //科目存在
-                                if ($media_data['object'] > 0) {
-                                    $ted_id = $tedNameList[$media_data['object_name']];
-                                    //推荐类存在科目名
-                                    if (intval($ted_id) == 0) {
-                                        $ted_data['sort'] = $tedSort;
-                                        $ted_data['name'] = $media_data['object_name'];
-                                        $ted_data['created'] = $time;
-                                        $ted_data['updated'] = $time;
-                                        $ted_id = $tedModel->add($ted_data);
-                                        if (false === $ted_id) {
-                                            $model->rollback();
-                                            @unlink($dest);
-                                            die(json_encode(array("info" => "导入失败，添加科目名到TED失败！", "status" => false)));
-                                        }
-                                        $tedNameList[$media_data['object_name']] = $ted_id;
-                                        $tedSort++;
-                                    }
-                                }
-                            }
-                            $media_data['ted'] = $ted_id;
-                        }
-                        
-                        //是推荐
-                        if ($media_data['recommend'] == 1) {
-                            $recommend_id = 0;
-                            //专题存在
-                            if ($media_data['subject'] > 0) {
-                                $recommend_id = $recommendNameList[$media_data['subject_name']];
-                                //推荐类存在专题名
-                                if (intval($recommend_id) == 0) {
-                                    $recommend_data['sort'] = $recommendSort;
-                                    $recommend_data['name'] = $media_data['subject_name'];
-                                    $recommend_data['created'] = $time;
-                                    $recommend_data['updated'] = $time;
-                                    $recommend_id = $recommendModel->add($recommend_data);
-                                    if (false === $recommend_id) {
-                                        $model->rollback();
-                                        @unlink($dest);
-                                        die(json_encode(array("info" => "导入失败，添加专题名到推荐失败！", "status" => false)));
-                                    }
-                                    $recommendNameList[$media_data['subject_name']] = $recommend_id;
-                                    $recommendSort++;
-                                }
-                            } else {
-                                //科目存在
-                                if ($media_data['object'] > 0) {
-                                    $recommend_id = $recommendNameList[$media_data['object_name']];
-                                    //推荐类存在科目名
-                                    if (intval($recommend_id) == 0) {
-                                        $recommend_data['sort'] = $recommendSort;
-                                        $recommend_data['name'] = $media_data['object_name'];
-                                        $recommend_data['created'] = $time;
-                                        $recommend_data['updated'] = $time;
-                                        $recommend_id = $recommendModel->add($recommend_data);
-                                        if (false === $recommend_id) {
-                                            $model->rollback();
-                                            @unlink($dest);
-                                            die(json_encode(array("info" => "导入失败，添加科目名到推荐失败！", "status" => false)));
-                                        }
-                                        $recommendNameList[$media_data['object_name']] = $recommend_id;
-                                        $recommendSort++;
-                                    }
-                                }
-                            }
-                            $media_data['recommend'] = $recommend_id;
-                        }
-                        //锁住URL不正常的视频
-                        if(!preg_match($url_preg, $media_data['media_source_url'],$match)){
-                            $media_data['status'] = 0;
-                        }
-                        $mediaId = $mediaModel->add($media_data);
-                        if (false === $recommend_id) {
-                            $model->rollback();
-                            @unlink($dest);
-                            die(json_encode(array("info" => "导入失败，添加媒体到媒体表失败！", "status" => false)));
-                        }
-                    }
-                    $data['media_id'] = intval($mediaId);
-                    //没有媒体id，题目禁用
-                    if ($data['media_id'] == 0) {
-                        $data['status'] = 0;
-                    }
-
-                    //插入答案
-                    $option_id = array();
-                    //判断题目是否是判断题
-                    $is_double_true = false; //是否为True文字选项
-                    $is_double_false = false; //是否为False文字选项
-                    foreach ($data['option'] as $key => $value) {
-                        if (preg_match("/True.?/i", $value)) {
-                            $is_double_true = true;
-                        }
-                        if (preg_match("/False.?/i", $value)) {
-                            $is_double_false = true;
-                        }
-                    }
-                    //选项是否有重复，有则题目停用
-                    if (count(array_unique($data['option'])) < count($data['option']) && !($is_double_false && $is_double_true)) {
-                        $data['status'] = 0;
-                    }
-                    //
-                    //依次存入选项，不知道问题id
-                    $option_data['created'] = $time;
-                    $index = array(1, 2, 3, 4); //选择序号数组
-                    foreach ($data['option'] as $key => $value) {
-                        if (!empty($value)) {
-                            $d_1 = preg_match("/all(\s)+of(\s)+the(\s+)above.?/i", $value);
-                            $d_2 = preg_match("/none(\s)+of(\s)+the(\s)+above.?/i", $value);
-                            $d_3 = preg_match("/either(\s)+B(\s)+or(\s)+C.?/i", $value);
-                            $d_4 = preg_match("/(both(\s)+)?B(\s)+and(\s)+C.?/i", $value);
-                            $c_1 = preg_match("/(both(\s)+A)?(\s)+and(\s)+B.?/i", $value);
-                            $c_2 = preg_match("/either(\s)+A(\s)+or(\s)+B.?/i", $value);
-                            $option_data['content'] = $value;
-                            $option_data['sort'] = current($index); //选项排序等于当前最前面序号
-                            if ($d_1 || $d_2 || $d_3 || $d_4) {
-                                $option_data['sort'] = 4; //D
-                            } else if ($c_1 || $c_2) {
-                                $option_data['sort'] = 3; //C
-                            }
-                            unset($index[array_search($option_data['sort'], $index)]); //已排序的序号删除
-
-                            $ret = $optionModel->add($option_data);
-                            if (false === $ret) {
-                                $model->rollback();
-                                @unlink($dest);
-                                die(json_encode(array("info" => "导入失败，添加试题选项失败！", "status" => false)));
-                            }
-                            array_push($option_id, $ret); //保存增加的id数组，用于更新选项对应的问题id
-                        }
-                    }
-                    //答案id
-                    $data['answer'] = intval($option_id[$data['answer'] - 1]);
-                    //没有答案或者不是双选下选项小于4
-                    if ($data['answer'] == 0 || (count($option_id) < 4 && !($is_double_false && $is_double_true))) {
-                        $data['status'] = 0;
-                        $data['answer'] = 0;
-                    }
-                    //锁住URL不正常的试题
-                    if(!preg_match($url_preg, $data['media_text_url'])){
-                        $data['status'] = 0;
-                    }
-
                     //如果题目状态非停用，则进行视频来源是否可以解析检测 @author: slate
                     if (!isset($data['status']) || $data['status'] != 0) {
                         $supportWebsite = array(
@@ -806,36 +881,178 @@ class EnglishQuestionAction extends CommonAction {
                         foreach ($supportWebsite as $k => $v) {
                             if (false !== stripos($data['media_text_url'], $k)) {
                                 $data['status'] = 1;
+                                $media_data['status'] = 1;
                                 break;
                             } else {
                                 $data['status'] = 0;
+                                $media_data['status'] = 0;
                             }
                         }
                     }
+                    //
+                    //获取媒体的id
+                    $media_info = $mediaModel->field("id,local_path")->where(array("media_source_url" => array("like", $media_data['media_source_url'])))->find();
+                    $mediaId = intval($media_info['id']);
+                    //
+                    //来源地址未匹配到媒体，则添加媒体
+                    if ($mediaId == 0) {
+                        $media_data['name'] = $data['name'];
+                        $media_data['updated'] = $time;
+                        $media_data['created'] = $time;
+                        //等级、科目、专题的名称换成对应的id
+                        if ($media_data['special_recommend'] == 1) {
+                            $media_data['recommend'] = 1;
+                        }
+                        
+                        $mediaId = $mediaModel->add($media_data);
+                        if (false === $mediaId) {
+                            $model->rollback();
+                            Log::write("导入失败，添加媒体到媒体表失败：".$mediaModel->getLastSql(), Log::ERR);
+                            die(json_encode(array("info" => "导入失败，添加媒体到媒体表失败！", "status" => false)));
+                        }
+                    }
+                    $data['media_id'] = intval($mediaId);
+                    //没有媒体id，题目禁用
+                    if ($data['media_id'] == 0) {
+                        $data['status'] = 0;
+                        Log::write("导入听力试题，未找到对应的媒体：".$media_data['media_source_url'], Log::INFO);
+                    }
+
+                    //插入答案
+                    $option_id = array();
+                    //判断题目是否是判断题
+                    $is_double_true = false; //是否为True文字选项
+                    $is_double_false = false; //是否为False文字选项
+                    foreach ($data['option'] as $key => $value) {
+                        if (preg_match("/True.?/i", $value)) {
+                            $is_double_true = true;
+                        }
+                        if (preg_match("/False.?/i", $value)) {
+                            $is_double_false = true;
+                        }
+                    }
+                    //选项是否有重复，有则题目停用
+                    if (count(array_unique($data['option'])) < count($data['option']) && !($is_double_false && $is_double_true)) {
+                        $data['status'] = 0;
+                        Log::write("导入听力试题，有重复选项，锁住：".$data['name'], Log::INFO);
+                    }
+                    //
+                    //依次存入选项，不知道问题id
+                    $option_data['created'] = $time;
+                    $index = array(1, 2, 3, 4); //选择序号数组
+                    foreach ($data['option'] as $key => $value) {
+                        if (!empty($value)) {
+                            $d_1 = preg_match("/all(\s)+of(\s)+the(\s+)above.?/i", $value);
+                            $d_2 = preg_match("/none(\s)+of(\s)+the(\s)+above.?/i", $value);
+                            $d_3 = preg_match("/either(\s)+B(\s)+or(\s)+C.?/i", $value);
+                            $d_4 = preg_match("/(both(\s)+)?B(\s)+and(\s)+C.?/i", $value);
+                            $c_1 = preg_match("/(both(\s)+A)?(\s)+and(\s)+B.?/i", $value);
+                            $c_2 = preg_match("/either(\s)+A(\s)+or(\s)+B.?/i", $value);
+                            $option_data['content'] = $value;
+                            $option_data['sort'] = current($index); //选项排序等于当前最前面序号
+                            if ($d_1 || $d_2 || $d_3 || $d_4) {
+                                $option_data['sort'] = 4; //D
+                            } else if ($c_1 || $c_2) {
+                                $option_data['sort'] = 3; //C
+                            }
+                            unset($index[array_search($option_data['sort'], $index)]); //已排序的序号删除
+
+                            $ret = $optionModel->add($option_data);
+                            if (false === $ret) {
+                                $model->rollback();
+                                Log::write("导入失败，添加试题选项失败：".$optionModel->getLastSql(), Log::ERR);
+                                die(json_encode(array("info" => "导入失败，添加试题选项失败！", "status" => false)));
+                            }
+                            array_push($option_id, $ret); //保存增加的id数组，用于更新选项对应的问题id
+                        }
+                    }
+                    //答案id
+                    $data['answer'] = $option_id[$data['answer'] - 1];
+                    //没有答案或者不是双选下选项小于4
+                    if ($data['answer'] == 0 || (count($option_id) < 4 && !($is_double_false && $is_double_true))) {
+                        $data['status'] = 0;
+                        $data['answer'] = 0;
+                        Log::write("导入听力试题，选项小于四个或没有答案，锁住：".$data['name'], Log::INFO);
+                    }
+
+                    
                     $data['created'] = $time;
                     $data['updated'] = $data['created'];
 
                     //保存当前数据对象
                     $list = $model->add($data);
+                    Log::write("新增:".$model->getLastSql(), Log::INFO);
                     if ($list !== false) { //保存成功
                         if (!empty($option_id)) {
                             if (false === $optionModel->where("id in (" . implode(",", $option_id) . ")")->setField("question_id", $list)) {
                                 //更新答案对应的题目id
                                 $model->rollback();
-                                @unlink($dest);
+                                Log::write("导入失败，更新选项和试题关联失败:".$optionModel->getLastSql(), Log::ERR);
                                 die(json_encode(array("info" => "导入失败，更新选项和试题关联失败！", "status" => false)));
                             }
                         }
+                        
+                        //@ 添加类目id和题目id到对应表
+                        if(!empty($data['cat_id'])){
+                            foreach ($data['cat_id'] as $value){
+                                $cat_question_data = array("cat_id" => $value, "question_id" => $list, "created" => $time,"type" => 1, "status" => 1);
+                                $new_cat_question = $englishCatquestionModel->add($cat_question_data);
+                                if($new_cat_question === false){
+                                    $model->rollback();
+                                    Log::write("导入失败，添加分类和试题关联失败:".$englishCatquestionModel->getLastSql(), Log::ERR);
+                                    die(json_encode(array("info" => "导入失败，更新分类和试题关联失败！", "status" => false)));
+                                }
+                                Log::write("新增:".$englishCatquestionModel->getLastSql(), Log::INFO);
+                                //更新分类下的有效试题数量
+                                if($data['status'] == 1 && $media_data['status'] == 1){
+                                    if(false === $categoryModel->where(array("cat_id"=>$value))->setInc("question_num")){
+                                        $model->rollback();
+                                        Log::write("导入失败，更新分类题目数量失败:".$categoryModel->getLastSql(), Log::ERR);
+                                        die(json_encode(array("info" => "导入失败，更新分类题目数量失败！", "status" => false)));
+                                    }
+                                }
+                                Log::write("新增:".$categoryModel->getLastSql(), Log::INFO);
+                            }
+                        }
+                        //如果拥有科目，则添加试题关联到综合
+                        if(!empty($data['category'][$object_level_one_id])){
+                            //查找分类id
+                            $new_cat = array();
+                            $new_cat['cat_attr_id'] = $data['cat_attr_id'];
+                            $new_cat['level_one'] = $object_level_one_id;
+                            $new_cat['level_two'] = $level_name_list['综合'];
+                            $new_cat['level_thr'] = $data['category'][$object_level_one_id]['level_thr'];
+                            $new_cat_id = D("EnglishCategory")->where($new_cat)->getField("cat_id");
+                            //关联分类
+                            $data = array("cat_id" => $new_cat_id, "question_id" => $list, "created" => $time,"type" => 1, "status" => 1);
+                            $new_cat_question = $englishCatquestionModel->add($data);
+                            if($new_cat_question === false){
+                                $model->rollback();
+                                Log::write("导入失败，添加分类和试题关联失败:".$englishCatquestionModel->getLastSql(), Log::ERR);
+                                die(json_encode(array("info" => "导入失败，更新分类和试题关联失败！", "status" => false)));
+                            }
+                            Log::write("新增:".$categoryModel->getLastSql(), Log::INFO);
+                            //更新分类下的有效试题数量
+                            if($data['status'] == 1 && $media_data['status'] == 1){
+                                if(false === $categoryModel->where(array("cat_id"=>$new_cat_id))->setInc("question_num")){
+                                    $model->rollback();
+                                    Log::write("导入失败，更新分类题目数量失败:".$categoryModel->getLastSql(), Log::ERR);
+                                    die(json_encode(array("info" => "导入失败，更新分类题目数量失败！", "status" => false)));
+                                }
+                            }
+                            Log::write("新增:".$categoryModel->getLastSql(), Log::INFO);
+                        }
+
                     } else {
                         $model->rollback();
-                        @unlink($dest);
                         //失败提示
+                        Log::write("导入失败，保存试题信息失败:".$model->getLastSql(), Log::ERR);
                         die(json_encode(array("info" => "导入失败，保存试题信息失败！", "status" => false)));
                     }
                 }
             }
             $model->commit();
-            @unlink($dest);
+            Log::write("导入成功", Log::INFO);
             die(json_encode(array("info" => "导入成功", "status" => true)));
         }
     }
