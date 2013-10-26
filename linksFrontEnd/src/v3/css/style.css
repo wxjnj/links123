@@ -577,9 +577,15 @@ input:focus{ outline: 0; }
 .extra .extra-col1{}
 .extra .extra-col2{}
 .extra .extra-col3{}
+
+
 /*music*/
 .music{
 	*zoom: 1;
+	width: 250px;
+	height: 400px;
+	background: url(../imgs/music-back.png) 0 0 no-repeat;
+	background-size: 100% 100%;
 }
 .music:after{
 	content: '\0020';
@@ -587,7 +593,156 @@ input:focus{ outline: 0; }
 	height: 0;
 	clear: both;
 }
-/*TODO MUSIC*/
+.music .music-menu {
+	margin: 10px;
+	display: block;
+	position: absolute;
+	width: 30px;
+	height: 30px;
+	background: url(../imgs/sprite.png) -270px -30px no-repeat;
+}
+.music .music-process .ctl-btn {
+	width: 16px;
+	height: 16px;
+	background: url(../imgs/sprite.png) -246px -67px no-repeat;
+}
+.music .ctl-box a{
+	display: block;
+	float: left;
+	width: 30px;
+	height: 30px;
+	background: url(../imgs/sprite.png) 0 0 no-repeat;
+}
+
+.music{
+	width: 100%;
+	height: 400px;
+	overflow: hidden;
+	position: relative;
+}		
+.music img {
+	width: 100%;
+	filter:alpha(opacity=50);
+	-moz-opacity: 0.5;
+	-khtml-opacity: 0.5;
+	opacity: 0.5;
+	position: absolute;
+}
+.music h3 {
+	font-size: 18px;
+	margin-top: 50px;
+	position: relative;
+	text-align: center;
+	margin-right: auto;
+	margin-left: auto;
+}
+.music h4 {
+	font-size: 12px;
+	position: relative;
+	margin-right: auto;
+	margin-left: auto;
+	text-align: center;
+}
+.music .lyrics-box {
+	margin: 20px auto 0;
+	position: relative;
+	height: 155px;
+	overflow: hidden;
+}
+.music .lyrics-content {
+	position: absolute;
+	text-align: center;
+	padding: 0 30px;
+	color: #aaa;
+	top: -10px;
+}
+.music .lyrics-content .active {
+	color: #4daf7b;
+}
+.music .music-time {
+	position: relative;
+	text-align: center;
+	font-size: 16px;
+	color: #aaa;
+	margin-top: 20px;
+}
+.music .music-process {
+	position: relative;
+	width: 180px;
+	margin: 20px auto;
+	height: 3px;
+	background: #c1c1c1;
+}
+.music .music-process .pass {
+	width:40px;
+	height:3px;
+	background: #4daf7b;
+}
+.music .music-process .ctl-btn {
+	top: -7px;
+	left: -7px;
+	margin-left: 40px;
+	position: absolute;
+}
+.music .ctl-box {
+	width: 200px;
+	overflow: hidden;
+	margin: -5px auto 0;
+}
+.music .ctl-box a{
+	margin:0 5px;
+}
+.music .ctl-box .repeat-btn {
+	background-position: 0 -120px;
+}
+.music .ctl-box .prev-btn {
+	background-position: -30px -120px;
+}
+.music .ctl-box .pause-btn {
+	background-position: -60px -120px;
+}
+.music .ctl-box .next-btn {
+	background-position: -90px -120px;
+}
+.music .ctl-box .volume-btn {
+	background-position: -120px -120px;
+}
+.music .ctl-box .repeat-btn:hover {
+	background-position: 0 -150px;
+}
+.music .ctl-box .prev-btn:hover {
+	background-position: -30px -150px;
+}
+.music .ctl-box .pause-btn:hover {
+	background-position: -60px -150px;
+}
+.music .ctl-box .next-btn:hover {
+	background-position: -90px -150px;
+}
+.music .ctl-box .volume-btn:hover {
+	background-position: -120px -150px;
+}
+
+.widescreen .music{
+	height: 500px;
+}
+.widescreen .music .lyrics-box {
+	height: 205px;
+}
+
+.widescreen .music .music-process {
+	width: 230px;
+	margin-top:30px
+}
+.widescreen .music .ctl-box {
+	width: 250px;
+	overflow: hidden;
+	margin: 30px auto 0;
+}
+.widescreen .music .ctl-box a{
+	margin:0 10px;
+}
+
 
 /*pics*/
 .pics{
