@@ -1,0 +1,155 @@
+/*find*/
+
+							
+
+.find{ position: relative; }
+.find ul{
+	*zoom: 1;
+}
+.find ul:after{
+	content: '\0020';
+	display: block;
+	height: 0;
+	clear: both;
+}
+.find li{
+	display: inline;
+	float: left;
+	position: relative;
+}
+.find li.more{
+	margin: 0 0 0 5px;
+	height: 28px;
+}
+.find li.more a{
+	display: block;
+	height: 26px;
+	text-align: center;
+	line-height: 26px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+}
+.find li.more a:hover{
+	border: 1px dotted #fc2a06;
+	color: #fc2a06;
+	text-decoration: none;
+}
+.find li .mask,
+.find li .info,
+.find li .go{
+	display: none;
+	height: 98px;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 159px;
+}
+.find li .go{
+	background: url(../imgs/icon-player.png) 1000px 1000px no-repeat;
+	display: block;
+	text-indent: -999px;
+	overflow: hidden;
+}
+.find li.hover .mask{
+	background: #000;
+	display: block;
+	filter:alpha(opacity=75);
+	-moz-opacity: 0.75;
+	-khtml-opacity: 0.75;
+	opacity: 0.75;
+}
+.find li.hover .go{
+	z-index: 3;
+}
+.find li.hover .info{
+	background: #fff;
+	display: block;
+	z-index: 2;
+}
+.find li.hover .info .p1{
+	font-size: 14px;
+	font-weight: bold;
+}
+.find li.hover .info .p2{
+	font-size: 12px;
+}
+.find .info .p1{ font-size: 14px; color: #502d5c; }
+.find .info .p2{
+	color: #68466d;
+	padding-bottom: 3px;
+}
+.find .info .p3{
+	color: #727171;
+	line-height: 14px;
+}
+
+.find ul{ margin-left: -7px; }
+.find li{
+	height: 82px;
+	margin: 0 0 7px 7px;
+	width: 132px;
+}
+.find li.more{ width: 410px; margin: 0 0 0 7px;} 
+.find li .mask,
+.find li .info,
+.find li .go{
+	height: 82px;
+	width: 132px;
+}
+.find li img{
+	height: 82px;
+	width: 133px;
+}
+.find .info img{
+	float: left;
+	margin-right: 10px;
+}
+.find li.hover .info{
+	height: 82px;
+	padding: 7px;
+	width: 360px;
+}
+.find li .go{
+	background-position: 45px 15px;
+}
+.find li.hover .go{
+	background-position: 52px 22px;
+}
+
+
+
+.widescreen .find ul{ margin-left: -10px; }
+.widescreen .find li{
+	height: 98px;
+	margin: 0 0 10px 10px;
+	width: 160px;
+}
+.widescreen .find li.more{ width: 500px; margin: 0 0 0 10px;}
+.widescreen .find li.hover .info{
+	height: 98px;
+	padding: 7px;
+	width: 391px;
+}
+.widescreen .find .info .p2{
+	padding-bottom: 5px;
+}
+.widescreen .find .info .p3{
+	line-height: 18px;
+}
+.widescreen .find li .mask,
+.widescreen .find li .info,
+.widescreen .find li .go{
+	height: 98px;
+	width: 160px;
+}
+.widescreen .find li .go{
+	background-position: 55px 25px;
+}
+.widescreen .find li.hover .go{
+	background-position: 62px 32px;
+}
+.widescreen .find li img{
+	height: 98px;
+	width: 160px;
+}
