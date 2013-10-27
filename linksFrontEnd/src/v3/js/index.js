@@ -43,15 +43,53 @@ $(function() {
 	// 切换宽屏
 	$('.screen-change-btn').on('click', 'a', function() {
 		if ($(this).attr('data-size') == 'wide') {
-			$.cookies.set('screenStyle', 'wide');
+			createCookie('screenStyle', 'wide', 30);
 			$('body').attr('class', 'widescreen');
 		} else {
-			$.cookies.set('screenStyle', 'nml');
+			createCookie('screenStyle', 'nml', 30);
 			$('body').attr('class', '');
 		}
+		$('body').trigger('screenchange'); //触发body上自定义的方法screenchange
+
 		window.sladePlugin.update();
 		Zld.Resize();
 	});
+
+	(function(){ //app图标相关
+		var nmlLen = 9, wideLen = 11;
+		var appsList = $('#J_Apps>li');
+		var appsListLen = appsList.size();
+
+		var appPkg = function(){
+			var isWide = $('body').is('.widescreen');
+			var needLen = nmlLen;
+			if(isWide){
+				needLen = wideLen;
+			}
+			if(appsListLen<= needLen){ 
+				$('.app-icon-list').hide();
+				return;
+			}
+			$('.app-icon-list').show();
+
+			var panel = $('.app-icon-list').find('ul');
+			panel.empty();
+			appsList.each(function(index, el){
+				if(index>needLen - 1){
+					panel.append($(el).clone());
+				}
+			});
+		}
+		appPkg();
+		$('body').on('screenchange', function(){
+			appPkg();
+		});
+		$('.app-more').on('mouseenter', function(){
+			$('.app-more-box').show();
+		}).on('mouseleave', function(){
+			$('.app-more-box').hide();
+		});
+	})();
 });
 
 var ZhiDaLan = { // 直达框

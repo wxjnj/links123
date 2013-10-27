@@ -10,42 +10,39 @@ a:hover{ text-decoration: none; }
 }
 .box{ color: #333; }
 .box .box-hd{ border-top: 1px solid #333; }
+.box .app-more{ color: #333; }
 .zld ul li .nm{ color: #fff; }
 .apps ul li{ color: #333; }
 .zld ul li .mask{ background: #333; }
-.schedule li{ border-top: 1px solid #333; }
-.schedule li input{ color: #333; }
-.schedule li .sp{ color: #333; }
-.music .hot-music li{ border-bottom: 1px solid #333; }
 .find li.more a{ border: 1px dotted #333; }
 .pics .pg li{ background: #333; }
-.edit, .del, .new{ background: url(sprite.png); }
+.edit, .del, .new, .more{ background: url(sprite.png); }
 .edit{ background-position: -6px -6px; }
 .del{ background-position: -37px -6px; }
 .new{ background-position: -66px -6px; }
+.more{ background-position: -96px -6px; }
+
 .cal_v303 {
-    border-top: 1px solid #333;
+	border-top: 1px solid #333;
 }
 .cal_v303_mini_cal a,
 .cal_v303_mini_cal a:active,
 .cal_v303_mini_cal a:hover,
-.cal_v303_mark_list_wrap li span
- {
-    color:#333;
+.cal_v303_mark_list_wrap li span{
+	color:#333;
 }
-
-.cal_v303_mark_list_wrap li b {
-    background: #333;
+.cal_v303_mark_list_wrap li b{
+	background: #333;
 }
 .cal_v303_mini_cal .active{
-    color: #fff;
+	color: #fff;
 }
 .cal_v303_new_mark b{
-    color: #fff;
+	color: #fff;
 }
-.cal_v303_prev_btn {
-    background: url(../imgs/cal-arrow-black.png) 0 11px no-repeat;
+.cal_v303_prev_btn{
+	background: url(../imgs/cal-arrow-black.png) 0 11px no-repeat;
 }
-.cal_v303_next_btn {
-    background: url(../imgs/cal-arrow-black.png) -15px 11px no-repeat;
+.cal_v303_next_btn{
+	background: url(../imgs/cal-arrow-black.png) -15px 11px no-repeat;
 }

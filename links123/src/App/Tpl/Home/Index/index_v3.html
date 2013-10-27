@@ -7,9 +7,8 @@
 	<meta name="Keywords" content="{$keywords}" />
 	<meta name="Description" content="{$description}" />
 	<link rel="stylesheet" href="__STATIC__/min/?b=v3/css&f=base.css,css.min.css" />
-	<script src="__STATIC__/min/?b=v3/js&f=jquery-1.7.1.min.js,jquery.cookies.2.2.0.min.js"></script>
 	<link rel="stylesheet" href="__PUBLIC__/IndexV3/skins/{$theme}/style.css" id="J_Skins" />
-	<script>var $CONFIG = { 'APP' : '__APP__/', 'URL' : '__URL__', 'PUBLIC' : '__PUBLIC__', 'IsLogin' : <empty name="_SESSION[C('MEMBER_AUTH_KEY')]">1<else />0</empty> };</script>
+	<script>var $CONFIG = { 'STATIC': '__STATIC__','APP' : '__APP__/', 'URL' : '__URL__', 'PUBLIC' : '__PUBLIC__', 'IsLogin' : <empty name="_SESSION[C('MEMBER_AUTH_KEY')]">1<else />0</empty> };</script>
 </head>
 <body>
 	<script src="__STATIC__/v3/js/init.js"></script>
@@ -140,7 +139,19 @@
 					</ul>
 				</div><!--.zld end-->
 				<div class="box box-apps">
-					<div class="box-hd"></div>
+					<div class="box-hd">
+						<div class="app-icon-list">
+							<div class="app-more">
+								<a href="javascript:" class="more"></a><em>更多应用</em>
+								<div class="app-more-box">
+									<b class="ang"></b>
+									<div class="amb-bd">
+										<ul></ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 					<div class="box-bd">
 						<div class="apps">
 							<ul id="J_Apps">
@@ -163,6 +174,7 @@
 						</div><!--.apps end-->
 					</div><!-- app-box-body end -->
 				</div><!-- app-box end -->
+				
 				<div class="extra">
 					<div class="extra-col1">
 						<div class="extra-calendar">
@@ -231,7 +243,6 @@
 							</div>
 						</div>
 					</div><!--.extra-col1 end-->
-		
 					<div class="extra-col2">
 						<div class="box box-music" id="J_Music">
 							<div class="box-hd">
@@ -377,8 +388,6 @@
 			</div>
 		</div>
 	</div><!--#footer end-->
-	<include file="Contorls:app_v3" />
-
-	<script src="__STATIC__/min/?b=v3/js&f=jquery.plugins.js,index.js"></script>
+	<script src="__STATIC__/min/?b=v3/js&f=jquery-1.7.1.min.js,jquery.cookies.2.2.0.min.js,jquery.plugins.js,index.js"></script>
 </body>
 </html>

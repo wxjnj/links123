@@ -446,7 +446,8 @@ input:focus{ outline: 0; }
 .edit,
 .del,
 .close,
-.new{
+.new,
+.more{
 	display: block;
 	cursor: pointer;
 	height: 18px;
@@ -458,7 +459,7 @@ input:focus{ outline: 0; }
 }
 .edit{} /* TODO skins */
 .del{} /* TODO skins */
-.new{}  /* TODO skins */
+.new{} /* TODO skins */
 .close{
 	background: url(../imgs/sprite.png) -125px -6px no-repeat;
 }
@@ -466,6 +467,7 @@ input:focus{ outline: 0; }
 .close:hover{
 	background-position: -125px -36px;
 }
+.more{} /* TODO skins */
 .box{} /* TODO skins */
 .box h2{
 	font-size: 14px;
@@ -483,66 +485,7 @@ input:focus{ outline: 0; }
 .box-find{
 	margin-top: 26px;
 }
-/*apps*/
-.apps{
-	overflow: hidden;
-}
-.apps ul{
-	*zoom: 1;
-	margin-left: -26px;
-}
-.apps ul:after{
-	content: '\0020';
-	display: block;
-	height: 0;
-	clear: both;
-}
-.apps ul li{
-	cursor: pointer;
-	display: inline;
-	margin-left: 26px;
-	float: left;
-	width: 72px;
-	height: 100px;
-	text-align: center;
-}
-.apps ul li:hover,
-.apps ul li:hover a,
-.apps ul li:hover a:hover{
-	color: #fc2a06;
-}
-.apps ul li img{
-	vertical-align: middle;
-}
-.apps ul li .av,
-.apps ul li .ct{
-	margin-bottom: 7px;
-}
-.apps ul li.today{
-	background: url(../imgs/app/app-date.png) 0 0 no-repeat;
-}
-.apps ul li.today .ct{
-	height: 72px;
-	width: 72px;
-}
-.apps ul li.today b{
-	color: #000;
-	font-size: 12px;
-	padding-top: 10px;
-}
-.apps ul li.today i{
-	color: #cb2d40;
-	font-size: 40px;
-	font-weight: bold;
-	font-style: normal;
-	font-family: arial;
-	margin-top: -5px;
-}
-.apps ul li.today b,
-.apps ul li.today i{
-	display: block;
-	text-align: center;
-}
+
 /*footer*/
 .subnav{
 
@@ -581,8 +524,6 @@ input:focus{ outline: 0; }
 .extra .extra-col2{}
 .extra .extra-col3{}
 
-
-
 /*pics*/
 .pics{
 	text-align: center;
@@ -592,9 +533,6 @@ input:focus{ outline: 0; }
 	vertical-align: middle;
 	width: 306px;
 	height: 442px;
-}
-.pics .items{
-	height: 462px;
 }
 .pics .items li{    
 	overflow: hidden;
@@ -690,6 +628,74 @@ input:focus{ outline: 0; }
 	-webkit-border-radius: 5px;
 	border-radius: 5px;
 }
+/*app-icon-list*/
+.app-icon-list{
+	display: none;
+	height: 18px;
+	position: relative;
+	z-index: 9999;
+}
+.app-icon-list em{
+	float: right;
+}
+.app-icon-list .app-more{
+	position: relative;
+	float: right;
+	cursor: pointer;
+	z-index: 3;
+	position: relative;
+}
+.app-icon-list .app-more-box{
+	display: none;
+	top: 30px;
+	width: 320px;
+	position: absolute;
+	z-index: 2;
+	right: -20px;
+	background: #fff;
+	box-shadow: 0 0 5px #666;
+	filter: alpha(opacity=90);
+	-moz-opacity: .9;
+	-khtml-opacity: .9;
+	opacity: .9;
+	border-radius: 4px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+}
+.app-icon-list .ang{
+	width: 0;
+	height: 0;
+	font-size: 0;
+	overflow: hidden;
+	position: absolute;
+	border-width: 15px;
+	border-style: dashed dashed solid;
+	border-color: transparent transparent #fff;
+	right: 15px;
+	margin-left: -15px;
+	top: -25px;
+}
+.app-icon-list ul{
+	padding: 25px;
+	*zoom: 1;
+}
+.app-icon-list ul:after{
+	content: '\0020';
+	display: block;
+	height: 0;
+	clear: both;
+}
+.app-icon-list ul li{
+	text-align: center;
+	width: 90px;
+	float: right;
+	height: 100px;
+	cursor: pointer;
+}
+.app-icon-list ul li a,
+.app-icon-list ul li a:hover{
+	color: #0c0b0b;
+}
 
 /*960*/
 .header,
@@ -760,29 +766,33 @@ input:focus{ outline: 0; }
 .pics .items li .info .p3 a:hover{
 	width: 82px;
 }
+.pics .items{
+	height: 390px;
+}
 
 
 /*1175*/
 .widescreen .header,
 .widescreen .container,
 .widescreen .footer{
-	min-width: 1175px;
+	min-width: 1172px;
 	width: 100%;
 }
 .widescreen .header-inner,
 .widescreen .container-inner,
 .widescreen .footer-inner{
-	width: 1175px;
+	width: 1172px;
 	margin: 0 auto;
 }
-.widescreen .extra .extra-col1,
+.widescreen .extra .extra-col1{
+	margin-right: 27px;
+}
 .widescreen .extra .extra-col2{
-	margin-right: 28px;
+	margin-right: 26px;
 }
 .widescreen .extra .extra-col1{ width: 500px; }
 .widescreen .extra .extra-col2{ width: 308px; }
 .widescreen .extra .extra-col3{ width: 306px; }
-
 .widescreen .thl{
 	margin-left: 400px; 
 	width: 460px;
@@ -827,7 +837,9 @@ input:focus{ outline: 0; }
 .widescreen .pics .items li .info .p3 a:hover{
 	width: 110px;
 }
-
+.widescreen .pics .items{
+	height: 465px;
+}
 .widescreen .uc-avatar {
 	float:right;
 }
