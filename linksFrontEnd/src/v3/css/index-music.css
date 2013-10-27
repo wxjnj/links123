@@ -191,7 +191,7 @@
 	padding-top: 15px;
 }
 .jp-playlist li{
-	padding: 5px 0 5px 30px;
+	padding: 2px 0 2px 30px;
 }
 .jp-playlist-current a{
 	color: #fc2a06;
@@ -202,4 +202,7 @@
 }
 .jp-no-solution{
 	display: none;
+}
+.widescreen .jp-playlist li{
+	padding: 5px 0 5px 30px;
 }
