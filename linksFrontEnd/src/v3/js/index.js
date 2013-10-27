@@ -2,19 +2,6 @@ var APP = $CONFIG['APP'];
 var URL = $CONFIG['URL'];
 var PUBLIC = $CONFIG['PUBLIC'];
 
-var musicReady = function(list){
-	new jPlayerPlaylist({
-		jPlayer: "#jquery_jplayer_1",
-		cssSelectorAncestor: "#jp_container_1"
-	}, list, {
-		swfPath: $CONFIG.STATIC+"/v3/jplayer",
-		supplied: "mp3",
-		wmode: "window",
-		smoothPlayBar: true,
-		keyEnabled: false
-	});
-};
-
 $(function() {
 
 	Zld.Init();
@@ -22,6 +9,21 @@ $(function() {
 	MusicPlayer.Init();
 	HelpMouse.init();
 	Calendar.Init()
+
+	var musicReady = function(list){
+		new jPlayerPlaylist({
+			jPlayer: "#jquery_jplayer_1",
+			cssSelectorAncestor: "#jp_container_1"
+		}, list, {
+			swfPath: $CONFIG.STATIC+"/v3/jplayer",
+			supplied: "mp3",
+			wmode: "window",
+			smoothPlayBar: true,
+			keyEnabled: false
+		});
+	};
+
+	if(mlist){ musicReady(mlist); }
 
 	// 弹出页
 	$(".newWin").on('click', function() {
