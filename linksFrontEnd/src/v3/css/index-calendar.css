@@ -79,9 +79,9 @@
 	height: 120px;
 }
 .cal_v303_mark_list_wrap li {
-	height: 29px;
-	line-height: 29px;
-	border-bottom: 1px solid #aaa;
+    height: 29px;
+    line-height: 29px;
+    border-bottom: 1px solid #aaa;
 }
 .cal_v303_mark_list_wrap li b {
 	display: inline-block;
@@ -579,7 +579,7 @@
 	display: inline-block;
 }
 .widescreen .cal_v303_new_mark b {
-	margin-top: 11px;
+    margin-top: 11px;
 }
 
 /* 针对Firefox不支持table中的absolute进行修正 */
