@@ -62,19 +62,19 @@
 								<div id="J_skin_pics" class="skin-pics">
 									<div id="link_skin_themes" class="item">
 										<a data-id="1" data-theme="dark" data-bg="__PUBLIC__/IndexV3/skins/q/01_b.jpg">
-											<img class="m" src="__PUBLIC__/IndexV3/skins/q/01_m.jpg" alt="" />
+											<img class="m" data-src="__PUBLIC__/IndexV3/skins/q/01_m.jpg" src="" alt="" />
 										</a>
 										<a data-id="2" data-theme="light" data-bg="__PUBLIC__/IndexV3/skins/q/02_b.jpg">
-											<img class="m" src="__PUBLIC__/IndexV3/skins/q/02_m.jpg" alt="" />
+											<img class="m" data-src="__PUBLIC__/IndexV3/skins/q/02_m.jpg" src="" alt="" />
 										</a>
 										<a data-id="3" data-theme="dark_ext" data-bg="__PUBLIC__/IndexV3/skins/q/03_b.jpg">
-											<img class="m" src="__PUBLIC__/IndexV3/skins/q/03_m.jpg" alt="" />
+											<img class="m" data-src="__PUBLIC__/IndexV3/skins/q/03_m.jpg" src="" alt="" />
 										</a>
 									</div>
 									<volist name="skinList" id="vo">
 									<div id="link_skin_{$key}" class='item <if condition="$i eq 1">active</if>'>
 										<volist name="vo" id="skins">
-										<a class="skin-link-btn" data-bg="{$skins.skin}" data-theme="{$skins.theme}" data-id="{$skins.skinId}" class='<if condition="$skins.skinId eq $skinId">active</if>'><img src="{$skins.middleSkin}" alt="" /></a>
+										<a class="skin-link-btn" data-bg="{$skins.skin}" data-theme="{$skins.theme}" data-id="{$skins.skinId}" class='<if condition="$skins.skinId eq $skinId">active</if>'><img data-src="{$skins.middleSkin}" src=""  alt="" /></a>
 										</volist>
 									</div>
 									</volist>
@@ -415,7 +415,6 @@
 			</div>
 		</div>
 	</div><!--#footer end-->
-	<!-- <link rel="stylesheet" href="http://www.jplayer.org/latest/skin/pink.flag/jplayer.pink.flag.css" /> -->
 	<script src="__STATIC__/min/?b=v3/js&f=jquery-1.7.1.min.js,jquery.cookies.2.2.0.min.js,jquery.plugins.js,index.js"></script>
 </body>
 </html>
