@@ -711,6 +711,8 @@ var HelpMouse = {
 	}
 };
 
+
+
 /*
  *   Calendar
  */
@@ -1135,9 +1137,6 @@ var HelpMouse = {
 			self.monthView = new MiniMonthView;
 			self.listElement = $('.cal_v303_mark_list_wrap').find('ul');
 			self.renderMonthView();
-			self.listElement.on('click', '.cal_v303_time_span', function(){
-
-			});
 			self.listElement.on('click', '.cal_v303_mark_content', function(){
 				if($(this).find('input').size()) return false;
 				var c = $(this).attr('title');
@@ -1153,7 +1152,6 @@ var HelpMouse = {
 				var o = $(this).siblings('.cal_v303_mark_content');
 				var c = o.find('.input-content').val();
 				o.html(c).attr('title', c);
-				
 				var desc = c;
 				var hm = o.siblings('.cal_v303_time_span').val();
 				var ymd = $('.cal_v303_show_date').html().replace(/\D\b/g, '-').replace(/\D\B/g, '');
@@ -1161,7 +1159,6 @@ var HelpMouse = {
 				var id = $(this).parent('li').attr('data-id');
 				self.format();
 				Calendar.update(id, time, desc);
-
 			});
 
 			self.listElement.on('keydown', '.input-content', function(e){
@@ -1175,23 +1172,27 @@ var HelpMouse = {
 			});
 
 			self.listElement.on('click', '.cal_v303_time_enter', function(){
-				var self = this;
+				var $self = $(this);
 				setTimeout(function(){
 					var h = Calendar.tooltip.find('.cal_v303_time_hour_select').val();
 					var m = Calendar.tooltip.find('.cal_v303_time_minute_select').val();
-					Calendar.tooltip.parent('.cal_v303_time_span').html(h + ':' + m);
+					var o = Calendar.tooltip.parent('.cal_v303_time_span');
+					Calendar.tooltip.appendTo('body');
+					o.html(h + ':' + m);
 					Calendar.tooltip.hide();
-					var desc = self.siblings('.cal_v303_mark_content').html();
+					var desc = $self.siblings('.cal_v303_mark_content').html();
 					var hm = h + ':' + m;
 					var ymd = $('.cal_v303_show_date').html().replace(/\D\b/g, '-').replace(/\D\B/g, '');
 					var time = Date.parse(ymd + ' ' + hm);
-					var id = self.parent('li').attr('data-id');
+					var id = $self.parent('li').attr('data-id');
 					Calendar.update(id, time, desc);
 				},0)
 			});
 
 			self.listElement.on('click', '.cal_v303_time_span', function(){
-				if($(this).find('select').size()) return false;
+				if($(this).find('select').size()){
+					return false;
+				}
 				var h = '';
 				var tem;
 				for(var i = 0; i < 24; i++){
@@ -1199,26 +1200,21 @@ var HelpMouse = {
 					h += '<option value="' + tem + '">' + tem + '</option>';
 				}
 				h = '<select class="cal_v303_time_hour_select">' + h + '</select>'
-
 				var m = '<select class="cal_v303_time_minute_select">' + 
 					'<option value="00">00</option>' +
 					'<option value="15">15</option>' +
 					'<option value="30">30</option>' +
 					'<option value="45">45</option>' +
 					'</select>';
-
 				h = $(h);
 				m = $(m);
 				var cur = $(this).html().split(':');
 				h.val(cur[0]);
 				m.val(cur[1]);
-
 				Calendar.tooltip.find('.content').empty()
 					.append(h).append(':').append(m)
 					.append('<a class="cal_v303_time_enter" href="javascript:;">确定</a>');
-
 				Calendar.tooltip.appendTo($(this)).show();
-
 			});
 
 			self.listElement.on('click', '.delete-mark', function() {
