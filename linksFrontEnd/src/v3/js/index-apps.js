@@ -13,7 +13,6 @@ $( function($) {
 		this.on('click', selector, function() {
 			var appId = $(this).data('href');
 			if(!$(appId).size()){
-				console.log($(appId));
 				$('body').append(AppsTpl[appId]);
 			}
 			$(this).data('links_app') || $(this).data('links_app', new App(appId));
