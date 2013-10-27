@@ -22,9 +22,13 @@ $( function($) {
 		});
 	}
 	$('#J_Apps').links123_apptrigers('.J_app_trig');
+	$('#J_AppsMore').links123_apptrigers('.J_app_trig');
 	
 	$('#J_Apps').on('click', '.J_app_link', function(){
-	  window.open($(this).data('href'));
+		window.open($(this).data('href'));
+	});
+	$(document).on('click', '#J_AppsMore .J_app_link', function(){
+		window.open($(this).data('href'));
 	});
 
 	/*
