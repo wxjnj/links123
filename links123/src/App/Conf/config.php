@@ -3,7 +3,7 @@ return array(
     'URL_MODEL'                 =>  2,										// 如果你的环境不支持PATHINFO 请设置为3
     
     'DB_TYPE'                   =>  'mysqli',
-	'DB_HOST'                   =>  '127.0.0.1',	 
+	'DB_HOST'                   =>  '10.160.8.46',
 	'DB_NAME'                   =>  'linkstest',	 
 	'DB_USER'                   =>  'root',	 
 	'DB_PWD'                    =>  'linksWsX7066',
