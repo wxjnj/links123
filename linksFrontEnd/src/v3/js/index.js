@@ -729,7 +729,6 @@ var HelpMouse = {
 
 
 
-
 /*
  *   Calendar
  */
@@ -1558,6 +1557,11 @@ var HelpMouse = {
 					marks = [];
 				}
 				td = self.tableElement.find('td:eq(' + i + ')');
+				td.attr({
+					'data-date': date,
+					'data-month': month,
+					'data-year': year
+				});
 				op = Calendar.compare(tem, today);
 				td.removeClass('month_pass_date');
 				if (op < 0) td.addClass('month_pass_date');
@@ -1569,11 +1573,7 @@ var HelpMouse = {
 					hour = time.getHours();
 					minute = time.getMinutes();
 					line.css('top', hour * 4 * 3 + minute / 15 * 3);
-					td.attr({
-						'data-date': date,
-						'data-month': month,
-						'data-year': year
-					}).append(line);
+					td.append(line);
 				});
 			}
 			if (burndown) {
@@ -1721,7 +1721,7 @@ var HelpMouse = {
 				self.html.find('.show').hide();
 				Calendar.update(self.id, self.time, self.desc, self.html);
 			});
-			self.html.find('.del').click(function() {
+			self.html.find('.delete').click(function() {
 				Calendar.delete(self.id);
 				self.html.remove();
 			});
@@ -1764,3 +1764,4 @@ var HelpMouse = {
 	});
 	window.Calendar = Calendar;
 })();
+
