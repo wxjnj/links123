@@ -61,13 +61,20 @@
 					<td class="tRight" >名称：</td>
 					<td class="tLeft" ><input type="text" class="medium bLeftRequire" check='^\S+$' warning="不能为空,且不能含有空格" name="title" /></td>
 				</tr>
-                                <tr>
+                <tr>
 					<td class="tRight">音乐封面：</td>
 					<td class="tLeft">
 						<input type="text" class="medium bLeftRequire" id="pic" name='album' style="vertical-align:middle" readonly />&nbsp;
 						<a>上传图片</a>　<span style='color:#C00;'>（尺寸：310×235）</span>
                                                 <br/>
                                                 <img id="img_pic" src="#" style="border:1px dotted #DDD;vertical-align:middle;width:116px;display:none;"/>
+					</td>
+				</tr>
+				<tr>
+					<td class="tRight">音乐mp3：</td>
+					<td class="tLeft">
+						<input type="text" class="medium bLeftRequire" id="att" name='mp3' style="vertical-align:middle" readonly />&nbsp;
+						<a>上传mp3</a>　<span style='color:#C00;'>（格式：Mp3）</span>
 					</td>
 				</tr>
 				<tr>
@@ -98,11 +105,15 @@
 			</table>
 		</form>
         
-                <form method='post' id="frm_pic" class="file_frm" action="__GROUP__/Public/uploadPic/" enctype="multipart/form-data">
+        <form method='post' id="frm_pic" class="file_frm" action="__GROUP__/Public/uploadPic/" enctype="multipart/form-data">
 			<input name="image" id="file_pic" type="file" style="position:absolute; width:230px; top:0px; left:0px; height:28px; filter:alpha(opacity:0);opacity:0;" />
 			<input type="hidden" id="folder" name="folder" value="HomeMusics" />
 			<input type="hidden" name="width" value="116" />
 		</form>
-        
+		
+        <form method='post' id="frm_att" class="file_frm" action="__GROUP__/Public/uploadAtt/" enctype="multipart/form-data">
+			<input name="image" id="file_att" type="file" style="position:absolute; width:230px; top:0px; left:0px; height:28px; filter:alpha(opacity:0);opacity:0;" />
+			<input type="hidden" id="folder" name="folder" value="HomeMusics" />
+		</form>
 	</div>
 </div>

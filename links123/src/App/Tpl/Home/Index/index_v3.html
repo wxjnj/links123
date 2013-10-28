@@ -7,9 +7,8 @@
 	<meta name="Keywords" content="{$keywords}" />
 	<meta name="Description" content="{$description}" />
 	<link rel="stylesheet" href="__STATIC__/min/?b=v3/css&f=base.css,css.min.css" />
-	<script src="__STATIC__/min/?b=v3/js&f=jquery-1.7.1.min.js,jquery.cookies.2.2.0.min.js"></script>
 	<link rel="stylesheet" href="__PUBLIC__/IndexV3/skins/{$theme}/style.css" id="J_Skins" />
-	<script>var $CONFIG = { 'APP' : '__APP__/', 'URL' : '__URL__', 'PUBLIC' : '__PUBLIC__', 'IsLogin' : <empty name="_SESSION[C('MEMBER_AUTH_KEY')]">1<else />0</empty> };</script>
+	<script>var $CONFIG = { 'STATIC': '__STATIC__','APP' : '__APP__/', 'URL' : '__URL__', 'PUBLIC' : '__PUBLIC__', 'IsLogin' : <empty name="_SESSION[C('MEMBER_AUTH_KEY')]">1<else />0</empty> };</script>
 </head>
 <body>
 	<script src="__STATIC__/v3/js/init.js"></script>
@@ -36,39 +35,59 @@
 							<p>Hi，{$Think.session.nickname} <em></em></p>
 							<span class="ang"></span>
 							<ul>
+								<li><a target="_blank" href="/Members/Index"><i></i>个人中心</a></li>
+								<li><a target="_blank" href="/Members/Collection"><i></i>我的收藏</a></li>
+								<li><a target="_blank" href="/Members/Recommend"><i></i>我的推荐</a></li>
+								<li><a target="_blank" href="/Members/Comment"><i></i>我的说说</a></li>
+								<li><a href="/Members/Suggestion"><i></i>留言板</a></li>
+								<li class="logout"><a href="/Members/Logout"><i></i>退出登录</a></li>
+							<!-- 
 								<li class="person"><a target="_blank" href="#"><i class="person-icon"></i>个人信息</a></li>
 								<li><a target="_blank" href="#"><i class="private-icon"></i>隐私设置</a></li>
 								<li><a target="_blank" href="#"><i class="safe-icon"></i>安全信息设置</a></li>
 								<li class="logout"><a target="_blank" href="/Members/Logout"><i class="logout-icon"></i>退出登录</a></li>
+							 -->
 							</ul>
 						</div>
 					</div>
 				</empty>
-			</div>
+			</div>		
 			<ul class="screen-theme">
 				<li class="change-theme-btn theme-purple-btn"></li>
 				<li id="K_change_skin_btn" class="change-back-btn">
 					换 肤
 					<div class="skin-list" style="display:none">
 						<span class="ang"></span>
-						<div id="J_Styles" class="skin-pics">
-							<ul>
-								<li data-id="1" data-theme="dark" data-bg="__PUBLIC__/IndexV3/skins/q/01_b.jpg">
-									<a href="javascript:;">
-										<img class="m" src="__PUBLIC__/IndexV3/skins/q/01_m.jpg" alt="" />
-									</a>
-								</li>
-								<li data-id="2" data-theme="light" data-bg="__PUBLIC__/IndexV3/skins/q/02_b.jpg">
-									<a href="javascript:;">
-										<img class="m" src="__PUBLIC__/IndexV3/skins/q/02_m.jpg" alt="" />
-									</a>
-								</li>
-								<li data-id="3" data-theme="dark_ext" data-bg="__PUBLIC__/IndexV3/skins/q/03_b.jpg">
-									<a href="javascript:;">
-										<img class="m" src="__PUBLIC__/IndexV3/skins/q/03_m.jpg" alt="" />
-									</a>
-								</li>
-							</ul>
+						<div class="skin-content">
+							<div class="subpanel" id="J_skin_selection">
+								<div class="skin-types">
+									<a data-id="themes" class="J_link_skin_type">最近使用过的主题</a>
+									<volist name="skinCategory" id="vo" key="k">
+									<span class="skin-theme-split"> | </span>
+									<a data-id="{$vo.categoryId}" class='J_link_skin_type <if condition="$k eq 1">active</if>'>{$vo.categoryName}</a>
+									</volist>
+								</div>
+								<div id="J_skin_pics" class="skin-pics">
+									<div id="link_skin_themes" class="item">
+										<a data-id="1" data-theme="dark" data-bg="__PUBLIC__/IndexV3/skins/q/01_b.jpg">
+											<img class="m" data-src="__PUBLIC__/IndexV3/skins/q/01_m.jpg" src="" alt="" />
+										</a>
+										<a data-id="2" data-theme="light" data-bg="__PUBLIC__/IndexV3/skins/q/02_b.jpg">
+											<img class="m" data-src="__PUBLIC__/IndexV3/skins/q/02_m.jpg" src="" alt="" />
+										</a>
+										<a data-id="3" data-theme="dark_ext" data-bg="__PUBLIC__/IndexV3/skins/q/03_b.jpg">
+											<img class="m" data-src="__PUBLIC__/IndexV3/skins/q/03_m.jpg" src="" alt="" />
+										</a>
+									</div>
+									<volist name="skinList" id="vo">
+									<div id="link_skin_{$key}" class='item <if condition="$i eq 1">active</if>'>
+										<volist name="vo" id="skins">
+										<a class="skin-link-btn" data-bg="{$skins.skin}" data-theme="{$skins.theme}" data-id="{$skins.skinId}" class='<if condition="$skins.skinId eq $skinId">active</if>'><img data-src="{$skins.middleSkin}" src=""  alt="" /></a>
+										</volist>
+									</div>
+									</volist>
+								</div>
+							</div>
 						</div>
 					</div>
 				</li>
@@ -128,7 +147,19 @@
 					</ul>
 				</div><!--.zld end-->
 				<div class="box box-apps">
-					<div class="box-hd"></div>
+					<div class="box-hd">
+						<div class="app-icon-list">
+							<div class="app-more">
+								<a href="javascript:" class="more"></a><em>更多应用</em>
+								<div class="app-more-box" id="J_AppsMore">
+									<b class="ang"></b>
+									<div class="amb-bd">
+										<ul></ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 					<div class="box-bd">
 						<div class="apps">
 							<ul id="J_Apps">
@@ -151,6 +182,7 @@
 						</div><!--.apps end-->
 					</div><!-- app-box-body end -->
 				</div><!-- app-box end -->
+				
 				<div class="extra">
 					<div class="extra-col1">
 						<div class="extra-calendar">
@@ -207,8 +239,8 @@
 											<div class="info">
 												<img src="{$ted.link_cn_img}" alt="" />
 												<p class="p1">{$ted.title}</p>
-												<p class="p2">15:57 Posted Sep 2013</p>
-												<p class="p3">It often seems like federal-level politicians care more about creating gridlock than solving.</p>
+												<p class="p2">{$ted.create_time}</p>
+												<p class="p3">{$ted.sintro}</p>
 											</div>
 											<a class="go" href="{:U('Detail/index')}?id={$ted.id}" target="_blank">查看</a>
 										</li>
@@ -219,57 +251,51 @@
 							</div>
 						</div>
 					</div><!--.extra-col1 end-->
-		
 					<div class="extra-col2">
-						<div class="box box-music" id="J_Music">
+						<div class="box box-music">
 							<div class="box-hd">
 								<h2>每周音乐专辑推荐</h2>
 							</div>
 							<div class="box-bd">
-								<div class="music">
+								<div class="music" id="jp_container_1">
+								<script>
+								var mlist = [ //请后台连续输出不要换行并删除此备注
+								    <volist name="homeMusics" id="music">
+									{
+										title:{$key} + 1 + '. {$music.title}',
+										mp3: '__PUBLIC__/Uploads/HomeMusics/{$music.mp3}'
+									}
+									,
+									</volist>
+									
+								];
+								</script>
 									<img src="__STATIC__/v3/imgs/app/music-demo.png" />
-									<a class="music-menu" href="#"></a>
-									<h3>Imagine Dragons</h3>
-									<h4>On top of the world</h4>
-
-									<div class="lyrics-box">
-										<div class="lyrics-content">
-											<p>If you love somebody<br />
-											<p>Better tell them why they’re here ’cause</p>
-											<p>They may just run away from you</p>
-											<p>You’ll never know quite when, well</p>
-											<p class="active">Then again it just depends on</p>
-											<p>How long of time is left for you</p>
-											<p>I’ve had the highest mountains</p>
-											<p>I’ve had the deepest rivers</p>
-											<p>You can have it all but life keeps moving</p>
-											<p>Take it in but don’t look down</p>
-											<p>‘Cause I’m on top of the world, hey</p>
-											<p>I’m on top of the world, hey</p>
-											<p>Waiting on this for a while now</p>
-											<p>Paying my dues to the dirt</p>
-											<p>I’ve been waiting to smile, hey</p>
-											<p>Been holding it in for a while, hey</p>
-											<p>Take you with me if I can</p>
+									<div class="jp-type-playlist">
+										<!-- <a class="music-menu" href="#"></a>-->
+										<h3>专辑名称</h3> 
+										<div class="jp-playlist"><ul><li></li></ul></div>
+										<p class="music-time jp-current-time">2:10</p>
+										<div class="music-process jp-progress"><div class="pass jp-seek-bar"><div class="ctl-btn jp-play-bar"></div><em></em></div></div>
+										<div class="jp-gui jp-interface">
+											<ul class="ctl-box">
+												<li><a href="javascript:;" class="repeat-btn jp-repeat">repeat</a></li>
+												<li><a href="javascript:;" class="norepeat-btn jp-repeat-off">norepeat</a></li>
+												<li><a href="javascript:;" class="prev-btn jp-previous">previous</a></li>
+												<li><a href="javascript:;" class="play-btn jp-play">play</a></li>
+												<li><a href="javascript:;" class="pause-btn jp-pause">pause</a></li>
+												<li><a href="javascript:;" class="next-btn jp-next">next</a></li>
+												<li><a href="javascript:;" class="volume-btn jp-mute">mute</a></li>
+												<li><a href="javascript:;" class="unvolume-btn jp-unmute">mute</a></li>
+											</ul>
+										</div>
+										<div class="jp-no-solution">
+											<span>Update Required</span>
+											To play the media you will need to either update your browser to a recent version or update your <a href="http://get.adobe.com/flashplayer/" target="_blank">Flash plugin</a>.
 										</div>
 									</div>
-
-									<p class="music-time">2:10</p>
-
-									<div class="music-process">
-										<div class="pass"></div>
-										<div class="ctl-btn"></div>
-									</div>
-
-									<div class="ctl-box">
-										<a class="repeat-btn" href="javascript:;"></a>
-										<a class="prev-btn" href="javascript:;"></a>
-										<a class="pause-btn" href="javascript:;"></a>
-										<a class="next-btn" href="javascript:;"></a>
-										<a class="volume-btn" href="javascript:;"></a>
-									</div>
-
 								</div><!--.music end-->
+								<div id="jquery_jplayer_1" class="jp-jplayer"></div>
 							</div>
 						</div>
 					</div><!--.extra-col2 end-->
@@ -281,65 +307,32 @@
 							<div class="box-bd">
 								<div class="pics" id="J_ScrollBox">
 									<ul class="items">
+									<volist name="homeMovies" id="movies">
 										<li>
-											<img src="__PUBLIC__/IndexV3/upload/02.jpg" alt="" />
+											<img data-src="__PUBLIC__/Uploads/HomeMovies/{$movies.cover}" alt="" />
 											<div class="mask"></div>
 											<div class="info">
 												<!-- <p class="p1">coming soon...</p> -->
 												
-												<p class="p1">Title For This Item</p>
+												<p class="p1">{$movies.title}</p>
 												<p class="p2">
-													Content For This Item
+													IDMB评分：{$movies.imdb}/10<br />
+													导演: {$movies.director}<br />
+													编剧: {$movies.writer}<br />
+													主演: {$movies.cast} <br />
+													又名: {$movies.alias}<br />
+													上映日期: {$movies.date}<br />
+													片长: {$movies.duration} 分钟<br />
+													语言: {$movies.lang}
 												</p>
 												<p class="p3">
-													<a href="#">豆瓣影评</a>
-													<a href="#">在线观看</a>
+													<a href="{$movies.review_url}" target="_blank">豆瓣影评</a>
+													<a href="{$movies.play_url}" target="_blank">在线观看</a>
 												</p>
 												
 											</div>
 										</li>
-										<li>
-											<img src="__PUBLIC__/IndexV3/upload/03.jpg" alt="" />
-											<div class="mask"></div>
-											<div class="info">
-												<p class="p1">coming soon...</p>
-											</div>
-										</li>
-										<li>
-											<img src="__PUBLIC__/IndexV3/upload/04.jpg" alt="" />
-											<div class="mask"></div>
-											<div class="info">
-												<p class="p1">coming soon...</p>
-											</div>
-										</li>
-										<li>
-											<img src="__PUBLIC__/IndexV3/upload/05.jpg" alt="" />
-											<div class="mask"></div>
-											<div class="info">
-												<p class="p1">coming soon...</p>
-											</div>
-										</li>
-										<li>
-											<img src="__PUBLIC__/IndexV3/upload/06.jpg" alt="" />
-											<div class="mask"></div>
-											<div class="info">
-												<p class="p1">coming soon...</p>
-											</div>
-										</li>
-										<li>
-											<img src="__PUBLIC__/IndexV3/upload/07.jpg" alt="" />
-											<div class="mask"></div>
-											<div class="info">
-												<p class="p1">coming soon...</p>
-											</div>
-										</li>
-										<li>
-											<img src="__PUBLIC__/IndexV3/upload/08.jpg" alt="" />
-											<div class="mask"></div>
-											<div class="info">
-												<p class="p1">coming soon...</p>
-											</div>
-										</li>
+									</volist>
 									</ul>
 								</div><!--.pics end-->
 							</div>
@@ -365,7 +358,6 @@
 			</div>
 		</div>
 	</div><!--#footer end-->
-	<include file="Contorls:app_v3" />
-	<script src="__STATIC__/min/?b=v3/js&f=jquery.plugins.js,index.js"></script>
+	<script src="__STATIC__/min/?b=v3/js&f=jquery-1.7.1.min.js,jquery.cookies.2.2.0.min.js,jquery.plugins.js,index.js"></script>
 </body>
 </html>
