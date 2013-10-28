@@ -340,11 +340,18 @@
 												
 												<p class="p1">{$movies.title}</p>
 												<p class="p2">
-													Content For This Item
+													IDMB评分：{$movies.imdb}/10<br />
+													导演: {$movies.director}<br />
+													编剧: {$movies.writer}<br />
+													主演: {$movies.cast} <br />
+													又名: {$movies.alias}<br />
+													上映日期: {$movies.date}<br />
+													片长: {$movies.duration} 分钟<br />
+													语言: {$movies.lang}
 												</p>
 												<p class="p3">
-													<a href="#">豆瓣影评</a>
-													<a href="#">在线观看</a>
+													<a href="{$movies.review_url}" target="_blank">豆瓣影评</a>
+													<a href="{$movies.play_url}" target="_blank">在线观看</a>
 												</p>
 												
 											</div>

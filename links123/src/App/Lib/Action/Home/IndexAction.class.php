@@ -935,7 +935,7 @@ class IndexAction extends CommonAction {
 					'update_time' => $now,
 					'year' => date('Y', $datetime),
 					'month' => date('m', $datetime),
-					'd' => date('d', $datetime)
+					'day' => date('d', $datetime)
 			);
 	
 			$id = $scheduleModel->add($saveData);
@@ -986,7 +986,7 @@ class IndexAction extends CommonAction {
 					'update_time' => $now,
 					'year' => date('Y', $datetime),
 					'month' => date('m', $datetime),
-					'd' => date('d', $datetime)
+					'day' => date('d', $datetime)
 			);
 				
 			$result = 1;
