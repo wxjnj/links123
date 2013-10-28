@@ -360,10 +360,10 @@
 		</div>
 	</div><!--#footer end-->
 	<script src="__STATIC__/min/?b=v3/js&f=jquery-1.7.1.min.js,jquery.cookies.2.2.0.min.js,jquery.plugins.js,index.js"></script>
-	<div id="J_box_weather"><div class="K_weather_box" style="width: 380px; height: 220px;"><script type="text/javascript" src="http://ext.weather.com.cn/47111.js"></script></div></div>
+	<div id="J_box_weather"><div class="K_weather_box" style="width: 380px; height: 220px;"></div></div>
 </body>
 </html>
 <script>
-	// var html = '<div class="K_weather_box" style="width: 380px; height: 220px;"></div>';
-	// $('#J_box_weather').find('.K_weather_box').remove().end().html(html);
+	var html = '<script type="text/javascript" src="http://ext.weather.com.cn/47111.js"></script>';
+	$('#J_box_weather').find('.K_weather_box').html(html);
 </script>
