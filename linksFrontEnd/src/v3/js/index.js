@@ -728,7 +728,6 @@ var HelpMouse = {
 };
 
 
-
 /*
  *   Calendar
  */
@@ -994,7 +993,7 @@ var HelpMouse = {
 			var self = this;
 			//self.ajaxOverlayer.find('.content').html('').end().show();
 			var defaultConfig = {
-				type: 'GET',
+				type: 'POST',
 				dataType: 'json'
 			};
 			params = $.extend(defaultConfig, params);
@@ -1070,10 +1069,12 @@ var HelpMouse = {
 			//周有跨年和跨月
 			if (self.type == 'Week' && year1 != year2 || month1 != month2) {
 				var o1 = self.request({
-					url: PUBLIC + '/IndexV4/src/json/' + year1 + '/' + (month1 + 1) + '.json'
+					url: URL + '/getSchedule?year=' + year1 + '&month=' + (month1 + 1),
+					type: 'GET'
 				});
 				var o2 = self.request({
-					url: PUBLIC + '/IndexV4/src/json/' + year2 + '/' + (month2 + 1) + '.json'
+					url: URL + '/getSchedule?year=' + year2 + '&month=' + (month2 + 1),
+					type: 'GET'
 				});
 
 				$.when(o1, o2).fail(function(c, e) {
@@ -1089,7 +1090,8 @@ var HelpMouse = {
 				});
 			} else {
 				self.request({
-					url: PUBLIC + '/IndexV4/src/json/' + year + '/' + (month + 1) + '.json'
+					url: URL + '/getSchedule?year=' + year + '&month=' + (month + 1),
+					type: 'GET'
 				}).fail(function(c, e) {
 					self[self.type + 'View'].renderMarks();
 				}).done(function(d) {
@@ -1104,20 +1106,20 @@ var HelpMouse = {
 	
 		//新建和更新日程: id==null为新建，有id值为更新
 		update: function(id, time, desc){
+			User.CheckLogin();
 			var self = this;
 			var url, data;
-			/*
 			if(id == 'null') {
-				url = '/addSchedule';
+				url = URL + '/addSchedule';
 				data = {
-					datetime: time,
-					content: desc
+					time: time/1000,
+					desc: desc
 				};
 			}else{
-				url = '/updateSchedule';
+				url = URL + '/updateSchedule';
 				data = {
-					data-theme: time,
-					content: desc,
+					time: time,
+					desc: desc/1000,
 					id: id
 				};
 			}
@@ -1126,22 +1128,21 @@ var HelpMouse = {
 				data: data
 			}).fail(function(c, e){
 			}).done(function(d){
+				console.log(d)
 			});
-			*/
 		},
 		//删除任务
 		delete: function(id){
-			/*
 			var self = this;
 			self.request({
-				url: '/delSchedule',
+				url: URL + '/delSchedule',
 				data: {
 					id: id
 				}
 			}).fail(function(c, e){
 			}).done(function(d){
+				console.log(d);
 			});
-			*/
 		}
 	};
 
@@ -1689,3 +1690,5 @@ var HelpMouse = {
 	});
 	window.Calendar = Calendar;
 })();
+
+
