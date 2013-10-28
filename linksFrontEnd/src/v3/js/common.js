@@ -662,8 +662,15 @@ var THL = {
 var Theme = {
 	Init : function() {
 		var self = this;
+		var isImgSrc = false;
 
 		$('#K_change_skin_btn').on('mouseenter', function(){
+			if(!isImgSrc){
+				isImgSrc = true;
+				$(this).find('img').each(function(){
+					$(this).attr('src', $(this).data('src'));
+				});
+			}
 			$('.skin-list').fadeIn(150);
 		}).on('mouseleave', '.skin-list',function(){
 			clearTimeout(self.timer);

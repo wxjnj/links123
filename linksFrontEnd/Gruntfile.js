@@ -76,7 +76,9 @@ module.exports = function(grunt) {
 						'src/v3/js/index.js',
 						'src/v3/js/detect.js',
 						'src/v3/js/index-apps-tpl.js',
-						'src/v3/js/index-apps.js'
+						'src/v3/js/index-apps.js',
+						'src/v3/jplayer/jquery.jplayer.min.js',
+						'src/v3/jplayer/jplayer.playlist.min.js'
 					],
 					'dest/v3/css/base.css' : 'src/v3/css/base.css',
 					'dest/v3/js/init.js' : 'src/v3/js/init.js',

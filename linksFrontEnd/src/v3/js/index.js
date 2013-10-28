@@ -10,6 +10,21 @@ $(function() {
 	HelpMouse.init();
 	Calendar.Init()
 
+	var musicReady = function(list){
+		new jPlayerPlaylist({
+			jPlayer: "#jquery_jplayer_1",
+			cssSelectorAncestor: "#jp_container_1"
+		}, list, {
+			swfPath: $CONFIG.STATIC+"/v3/jplayer",
+			supplied: "mp3",
+			wmode: "window",
+			smoothPlayBar: true,
+			keyEnabled: false
+		});
+	};
+
+	if(mlist){ musicReady(mlist); }
+
 	// 弹出页
 	$(".newWin").on('click', function() {
 		window.open($(this).attr('url'));

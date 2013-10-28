@@ -13,7 +13,6 @@ $( function($) {
 		this.on('click', selector, function() {
 			var appId = $(this).data('href');
 			if(!$(appId).size()){
-				console.log($(appId));
 				$('body').append(AppsTpl[appId]);
 			}
 			$(this).data('links_app') || $(this).data('links_app', new App(appId));
@@ -23,9 +22,13 @@ $( function($) {
 		});
 	}
 	$('#J_Apps').links123_apptrigers('.J_app_trig');
+	$('#J_AppsMore').links123_apptrigers('.J_app_trig');
 	
 	$('#J_Apps').on('click', '.J_app_link', function(){
-	  window.open($(this).data('href'));
+		window.open($(this).data('href'));
+	});
+	$(document).on('click', '#J_AppsMore .J_app_link', function(){
+		window.open($(this).data('href'));
 	});
 
 	/*

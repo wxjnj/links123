@@ -20,15 +20,12 @@
 	height: 30px;
 	background: url(../imgs/sprite.png) -270px -30px no-repeat;
 }
-.music .music-process .ctl-btn {
-	width: 16px;
-	height: 16px;
-	background: url(../imgs/sprite.png) -246px -67px no-repeat;
-}
 .music .ctl-box a{
 	display: block;
 	float: left;
 	width: 30px;
+	text-indent: -999px;
+	overflow: hidden;
 	height: 30px;
 	background: url(../imgs/sprite.png) 0 0 no-repeat;
 }
@@ -46,10 +43,13 @@
 	-khtml-opacity: 0.5;
 	opacity: 0.5;
 	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 0;
 }
 .music h3 {
 	font-size: 18px;
-	margin-top: 50px;
+	padding-top: 30px;
 	position: relative;
 	text-align: center;
 	margin-right: auto;
@@ -83,10 +83,9 @@
 	text-align: center;
 	font-size: 16px;
 	color: #aaa;
-	margin-top: 20px;
+	margin-top: 10px;
 }
 .music .music-process {
-	position: relative;
 	width: 180px;
 	margin: 20px auto;
 	height: 3px;
@@ -95,13 +94,21 @@
 .music .music-process .pass {
 	width:40px;
 	height:3px;
-	background: #4daf7b;
 }
 .music .music-process .ctl-btn {
-	top: -7px;
-	left: -7px;
-	margin-left: 40px;
-	position: absolute;
+	background: #4daf7b;
+	height: 3px;
+	float: left;
+	position: relative;
+}
+.music .music-process em{
+	display: block;
+	overflow: hidden;
+	float: left;
+	width: 16px;
+	height: 16px;
+	margin: -7px -9px 0 -7px;
+	background: url(../imgs/sprite.png) -246px -67px no-repeat;
 }
 .music .ctl-box {
 	width: 200px;
@@ -126,6 +133,15 @@
 .music .ctl-box .volume-btn {
 	background-position: -120px -120px;
 }
+.music .ctl-box .play-btn {
+	background-position: -150px -120px;
+}
+.music .ctl-box .unvolume-btn {
+	background-position: -180px -120px;
+}
+.music .ctl-box .norepeat-btn {
+	background-position: -210px -120px;
+}
 .music .ctl-box .repeat-btn:hover {
 	background-position: 0 -150px;
 }
@@ -140,6 +156,15 @@
 }
 .music .ctl-box .volume-btn:hover {
 	background-position: -120px -150px;
+}
+.music .ctl-box .play-btn:hover {
+	background-position: -150px -150px;
+}
+.music .ctl-box .unvolume-btn:hover {
+	background-position: -180px -150px;
+}
+.music .ctl-box .norepeat-btn:hover {
+	background-position: -210px -150px;
 }
 
 .widescreen .music{
@@ -160,4 +185,24 @@
 }
 .widescreen .music .ctl-box a{
 	margin:0 10px;
+}
+
+.jp-playlist{
+	padding-top: 15px;
+}
+.jp-playlist li{
+	padding: 2px 0 2px 30px;
+}
+.jp-playlist-current a{
+	color: #fc2a06;
+}
+.jp-type-playlist{
+	position: relative;
+	z-index: 1;
+}
+.jp-no-solution{
+	display: none;
+}
+.widescreen .jp-playlist li{
+	padding: 5px 0 5px 30px;
 }
