@@ -288,9 +288,6 @@
                         if (msg.data.special_recommend == 0) {
                             $("a[href=\"javascript:special_recommend('" + id + "')\"]").text("否");
                         } else {
-                            if (msg.data.recommend) {
-                                $("a[href^=\"javascript:recommend('" + id + "'\"]").text("是");
-                            }
                             $("a[href=\"javascript:special_recommend('" + id + "')\"]").text("是");
                         }
                     }

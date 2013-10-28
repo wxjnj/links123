@@ -233,25 +233,6 @@ class EnglishQuestionAction extends CommonAction {
         return;
     }
 
-    public function setSpecRecommend() {
-        $question_id = intval($_REQUEST["qid"]);
-        $ret = $this->cEnglishQuestionLogic->setQuestionSpecRecommendBy($question_id);
-        if ($ret !== false) {
-            $this->success('设置特别推荐成功');
-        } else {
-            $this->error('设置特别推荐失败！');
-        }
-    }
-
-    public function cancelSpecRecommend() {
-        $question_id = intval($_REQUEST["qid"]);
-        $ret = $this->cEnglishQuestionLogic->cancelQuestionSpecRecommendBy($question_id);
-        if ($ret !== false) {
-            $this->success('取消特别推荐成功');
-        } else {
-            $this->error('取消特别推荐失败！');
-        }
-    }
 
     public function property () {
         $question_id = intval($_REQUEST["qid"]);
@@ -1195,6 +1176,14 @@ class EnglishQuestionAction extends CommonAction {
             }
         }
         $model = new EnglishQuestionViewModel();
+        $categoryModel = D("EnglishCategory");
+        $catquestionModel = D("EnglishCatquestion");
+        $level_one_list = D("EnglishLevelname")->field("name,id,default")->where("level=1")->order("sort asc")->select();
+        foreach ($level_one_list as $value){
+            if($value['default'] == 1){
+                $object_level_one_id = $value['id'];
+            }
+        }
         $ret = $model->where($map)->select();
         $optionsModel = D("EnglishOptions");
         foreach ($ret as $key => $value) {
@@ -1205,6 +1194,23 @@ class EnglishQuestionAction extends CommonAction {
                 }
                 $ret[$key]['option'][$k] = $v['content'];
             }
+            $cate_map = array(
+                "catquestion.question_id"=>$value['id'],
+                "catquestion.type"=>1,
+                "b.default"=>0
+                );
+            $ret[$key]['categorys'] = $catquestionModel
+                    ->alias("catquestion")
+                    ->field("category.cat_attr_id,category.level_one,a.name as level_one_name,b.name as level_two_name,c.name as level_thr_name")
+                    ->join(C("DB_PREFIX")."english_category category on category.cat_id=catquestion.cat_id")
+                    ->join(C("DB_PREFIX")."english_levelname a on a.id=category.level_one")
+                    ->join(C("DB_PREFIX")."english_levelname b on b.id=category.level_two")
+                    ->join(C("DB_PREFIX")."english_levelname c on c.id=category.level_thr")
+                    ->where($cate_map)
+                    ->select();
+            $ret[$key]['cat_attr_id'] = decbin(intval($ret[$key]['categorys'][0]['cat_attr_id']));
+            $ret[$key]['voice'] = substr($ret[$key]['cat_attr_id'], 0,1);
+            $ret[$key]['pattern'] = substr($ret[$key]['cat_attr_id'], 2,1);
         }
         if (!empty($ret)) {
             //引入类
@@ -1227,19 +1233,22 @@ class EnglishQuestionAction extends CommonAction {
             $objSheet->setCellValue("C1", "1表示美音， 2表示英音");
             $objSheet->setCellValue("D1", "1表示视频， 2表示音频");
             $objSheet->setCellValue("E1", "1表示听力， 2表示说力");
-            $objSheet->setCellValue("F1", "年级");
-            $objSheet->setCellValue("G1", "学科");
-            $objSheet->setCellValue("H1", "专题");
-            $objSheet->setCellValue("I1", "推荐");
-            $objSheet->setCellValue("J1", "特别推荐");
-            $objSheet->setCellValue("K1", "视频源地址");
-            $objSheet->setCellValue("L1", "问题");
-            $objSheet->setCellValue("M1", "正确答案序号，1对应A ，2对应B等");
-            $objSheet->setCellValue("N1", "选项A内容");
-            $objSheet->setCellValue("O1", "选项B内容");
-            $objSheet->setCellValue("P1", "选项C内容");
-            $objSheet->setCellValue("Q1", "选项D内容");
-            $objSheet->setCellValue("R1", "视频本地地址");
+            $objSheet->setCellValue("F1", "特别推荐");
+            $objSheet->setCellValue("G1", "视频源地址");
+            $objSheet->setCellValue("H1", "问题");
+            $objSheet->setCellValue("I1", "正确答案序号，1对应A ，2对应B等");
+            $objSheet->setCellValue("J1", "选项A内容");
+            $objSheet->setCellValue("K1", "选项B内容");
+            $objSheet->setCellValue("L1", "选项C内容");
+            $objSheet->setCellValue("M1", "选项D内容");
+            $objSheet->setCellValue("N1", "本地视频地址");
+            $objSheet->setCellValue("O1", "年级");
+            $objSheet->setCellValue("P1", "难度");
+            foreach ($level_one_list as $key=>$value){
+                $level_one_list[$value['name']]['column'] = PHPExcel_Cell::stringFromColumnIndex(PHPExcel_Cell::columnIndexFromString("P")+(1+$key));
+                $column = $level_one_list[$value['name']]['column']."1";
+                $objSheet->setCellValue($column, $value['name']);
+            }
             //存入数据
             foreach ($ret as $k => $v) {
                 $key = $k + 2;
@@ -1249,19 +1258,26 @@ class EnglishQuestionAction extends CommonAction {
                 $objSheet->setCellValue("C" . $key, $v['voice']);
                 $objSheet->setCellValue("D" . $key, $v['pattern']);
                 $objSheet->setCellValue("E" . $key, $v['target']);
-                $objSheet->setCellValue("F" . $key, $v['level_name']);
-                $objSheet->setCellValue("G" . $key, $v['object_name']);
-                $objSheet->setCellValue("H" . $key, $v['subject_name']);
-                $objSheet->setCellValue("I" . $key, $v['recommend'] == 0 ? 0 : 1);
-                $objSheet->setCellValue("J" . $key, intval($v['special_recommend']));
-                $objSheet->setCellValue("K" . $key, $v['media_source_url']);
-                $objSheet->setCellValue("L" . $key, $v['content']);
-                $objSheet->setCellValue("M" . $key, intval($v['answer_index']));
-                $objSheet->setCellValue("N" . $key, $v['option'][0]);
-                $objSheet->setCellValue("O" . $key, $v['option'][1]);
-                $objSheet->setCellValue("P" . $key, $v['option'][2]);
-                $objSheet->setCellValue("Q" . $key, $v['option'][3]);
-                $objSheet->setCellValue("R" . $key, $v['local_path']);
+                $objSheet->setCellValue("F" . $key, intval($v['special_recommend']));
+                $objSheet->setCellValue("G" . $key, $v['media_source_url']);
+                $objSheet->setCellValue("H" . $key, $v['content']);
+                $objSheet->setCellValue("I" . $key, intval($v['answer_index']));
+                $objSheet->setCellValue("J" . $key, $v['option'][0]);
+                $objSheet->setCellValue("K" . $key, $v['option'][1]);
+                $objSheet->setCellValue("L" . $key, $v['option'][2]);
+                $objSheet->setCellValue("M" . $key, $v['option'][3]);
+                $objSheet->setCellValue("N" . $key, $v['local_path']);
+                foreach ($v['categorys'] as $category) {
+                    $col = $level_one_list[$category['level_one_name']]['column'];
+                    if(!empty($col)){
+                        if($category['level_one'] == $object_level_one_id){
+                            $objSheet->setCellValue("O" . $key, $category['level_thr_name']);
+                        }else{
+                            $objSheet->setCellValue("P" . $key, $category['level_thr_name']);
+                        }
+                        $objSheet->setCellValue($col . $key, $category['level_two_name']);
+                    }
+                }
             }
             $file_name = uniqid() . '.xls';
             if (!is_dir($path)) {
@@ -1301,6 +1317,94 @@ class EnglishQuestionAction extends CommonAction {
             echo $contents;
             @unlink($path . $file_name);
             exit;
+        }
+    }
+    public function forbid() {
+        $name = $this->getActionName();
+        $model = D($name);
+        $categoryModel = D("EnglishCategory");
+        $catquestionModel =  D("EnglishCatquestion");
+        $pk = $model->getPk();
+        $id = $_REQUEST [$pk];
+        $condition = array($pk => array('in', $id));
+        $q_map = array(
+            "question.status"=>1,
+            "media.status"=>1
+        );
+        $q_map['question.id'] = array('in',$id);
+        $q_list = $model->alias("question")->join(C("DB_PREFIX")."english_media media on media.id=question.media_sid")->field("question.id")->where($q_map)->select();
+        $model->startTrans();
+        $time = time();
+        $list = $model->forbid($condition);
+        
+        if ($list !== false) {
+            foreach ($q_list as $value){
+                $cat_question_map = array(
+                    "question_id"=>$value['id'],
+                    "type"=>1,
+                    "status"=>1
+                );
+                $cat_list = $catquestionModel->where($cat_question_map)->select();
+                foreach($cat_list as $v){
+                    $data['question_num'] = array('exp','question_num-1');
+                    $data['updated'] = $time;
+                    $ret = $categoryModel->where(array("cat_id"=>$v['cat_id']))->save($data);
+                    if(false === $ret){
+                        $model->rollback();
+                        $this->error('状态禁用失败！');
+                    }
+                }
+            }
+            $model->commit();
+            $this->success('状态禁用成功', $this->getReturnUrl());
+        } else {
+            $model->rollback();
+            $this->error('状态禁用失败！');
+        }
+    }
+    
+    public function resume() {
+        $name = $this->getActionName();
+        $model = D($name);
+        $categoryModel = D("EnglishCategory");
+        $catquestionModel =  D("EnglishCatquestion");
+        $pk = $model->getPk();
+        $id = $_REQUEST [$pk];
+        //获取被禁用的试题列表，为更新分类下的试题数量准备
+        $condition = array($pk => array('in', $id));
+        $q_map = array(
+            "question.status"=>0,
+            "media.status"=>0
+        );
+        $q_map['question.id'] = array('in',$id);
+        $q_list = $model->alias("question")->join(C("DB_PREFIX")."english_media media on media.id=question.media_id")->field("question.id")->where($q_map)->select();
+        $model->startTrans();
+        $time = time();
+        $list = $model->resume($condition);
+        
+        if ($list !== false) {
+            foreach ($q_list as $value){
+                $cat_question_map = array(
+                    "question_id"=>$value['id'],
+                    "type"=>1,
+                    "status"=>1
+                );
+                $cat_list = $catquestionModel->where($cat_question_map)->select();
+                foreach($cat_list as $v){
+                    $data['question_num'] = array('exp','question_num+1');
+                    $data['updated'] = $time;
+                    $ret = $categoryModel->where(array("cat_id"=>$v['cat_id']))->save($data);
+                    if(false === $ret){
+                        $model->rollback();
+                        $this->error('状态启用失败！');
+                    }
+                }
+            }
+            $model->commit();
+            $this->success('状态启用成功', $this->getReturnUrl());
+        } else {
+            $model->rollback();
+            $this->error('状态启用失败！');
         }
     }
 

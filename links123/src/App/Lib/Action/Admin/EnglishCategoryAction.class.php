@@ -65,16 +65,18 @@ class EnglishCategoryAction extends CommonAction{
                 $listRows = '20';
             }
             $p = new Page($count, $listRows);
+//            $map['a.default'] = array("neq",1);
             //分页查询数据
             $voList = $model->alias("category")
                     ->field($field)
                     ->join("RIGHT JOIN ".C("DB_PREFIX")."english_levelname levelname on levelname.id=category.".$flag)
+                    ->join("left JOIN ".C("DB_PREFIX")."english_levelname a on a.id=category.level_two")
 					->where($map)
 					->group($group)
                     ->order("`" . $order . "` " . $sort)
                     ->limit($p->firstRow . ',' . $p->listRows)
 					->select();
-            //echo $model->getlastsql();
+//            echo $model->getlastsql();
             //分页跳转的时候保证查询条件
             foreach ($param as $key => $val) {
                 //$p->parameter .= "$key=" . urlencode ( $val ) . "&";
