@@ -636,8 +636,29 @@ class EnglishQuestionAction extends CommonAction {
                 "level_two"=>array("gt",0),
                 "level_thr"=>array("gt",0)
             );
-            $grade_list = $categoryModel->field("level_thr as id")->where($level_map)->group("level_thr")->select();
-            
+            $level_thr_ret = $categoryModel
+                    ->alias("cat")
+                    ->join(C("DB_PREFIX")."english_levelname b on cat.level_thr=b.id")
+                    ->field("cat.level_thr as id,b.name,cat.level_thr_sort as sort")
+                    ->where($level_map)
+                    ->group("cat.level_thr")
+                    ->order("cat.level_thr_sort asc")
+                    ->select();
+            $grade_name_list = array();
+            foreach($level_thr_ret as $value){
+                $grade_list[] = $value['id'];
+                $grade_name_list[$value['name']] = $value;
+            }
+            $difficulty_from_grade_list = array();
+            foreach ($grade_name_list as $value) {
+                if ($value['sort'] <= $grade_name_list['小六']['sort']) {
+                    $difficulty_from_grade_list[$value['name']] = "初级";
+                } else if ($value['sort'] >= $grade_name_list['大一']['sort']) {
+                    $difficulty_from_grade_list[$value['name']] = "高级";
+                } else {
+                    $difficulty_from_grade_list[$value['name']] = "中级";
+                }
+            }
             
             $model->startTrans();
             $time = time();
@@ -709,15 +730,25 @@ class EnglishQuestionAction extends CommonAction {
                                     $data['grade'] = ftrim($cell->getCalculatedValue()); //二级分类，年级，选择课程顶级分类使用
                                 } else if ($cell->getColumn() == "M") {
                                     $data['difficulty'] = ftrim($cell->getCalculatedValue()); //二级分类，难度值，其他等级分类使用
+                                    if($difficulty_from_grade_list[$data['grade']]){
+                                        $data['difficulty'] = $difficulty_from_grade_list[$data['grade']];
+                                    }
                                 } else if (intval($excel_level_one_list[$cell->getColumn()]) > 0) {
-                                    //收集分类信息，存在多个分类情况
-                                    $level_one = intval($excel_level_one_list[$cell->getColumn()]);
-                                    $data['category'][$level_one]['level_one'] = $level_one;//一级分类id
-                                    $data['category'][$level_one]['level_two_name'] = ftrim($cell->getCalculatedValue());//二级分类名称
-                                    if($level_one == $object_level_one_id){
-                                        $data['category'][$level_one]['level_thr'] = intval($level_name_list[$data['grade']]);//三级分类
-                                    }else{
-                                        $data['category'][$level_one]['level_thr'] = intval($level_name_list[$data['difficulty']]);//三级分类
+                                    if(!empty(ftrim($cell->getCalculatedValue()))){
+                                        //收集分类信息，存在多个分类情况
+                                        $level_one = intval($excel_level_one_list[$cell->getColumn()]);
+                                        $data['category'][$level_one]['level_one'] = $level_one;//一级分类id
+                                        $data['category'][$level_one]['level_two_name'] = ftrim($cell->getCalculatedValue());//二级分类名称
+                                        if($level_one == $object_level_one_id){
+                                            $data['category'][$level_one]['level_thr'] = intval($level_name_list[$data['grade']]);//三级分类
+                                        }else{
+                                            $data['category'][$level_one]['level_thr'] = intval($level_name_list[$data['difficulty']]);//三级分类
+                                        }
+                                        //如果二级分类名为1，则分类名和选择课程的名称一样
+                                        if(intval($data['category'][$level_one]['level_two_name']) == 1){
+                                            $data['category'][$level_one]['level_two_name'] = $data[$object_level_one_id]['level_two_name'];
+                                            $data['category'][$level_one]['level_thr'] = intval($level_name_list[$data['difficulty']]);//三级分类
+                                        }
                                     }
                                 }
                             }
