@@ -29,7 +29,7 @@
 				<empty name="_SESSION[C('MEMBER_AUTH_KEY')]">
 					<a class="join J_SignUp" href="javascript:;">注&nbsp;册</a><a class="login J_SignIn" href="javascript:;">登&nbsp;录</a>
 				<else />
-					<img class="uc-avatar" src="__STATIC__/v3/imgs/app/avatar-demo.png" />
+					<img class="uc-avatar" src="__PUBLIC__/Uploads/Faces/{$Think.session.face}" />
 					<div class="uc-menu">
 						<div class="nm">
 							<p>Hi，{$Think.session.nickname} <em></em></p>
@@ -260,18 +260,7 @@
 							<div class="box-bd">
 								<div class="music" id="jp_container_1">
 								<script>
-								var mlist = [ //请后台连续输出不要换行并删除此备注
-								    <volist name="homeMusics" id="music">
-									{
-										title:{$i} + '. {$music.title}',
-										mp3: '__PUBLIC__/Uploads/HomeMusics/{$music.mp3}'
-									}
-									<if condition="$i lt 10">
-									,
-									</if>
-									</volist>
-									
-								];
+								var mlist = [ <volist name="homeMusics" id="music"> { title: '{$i}. {$music.title}',mp3: '__PUBLIC__/Uploads/HomeMusics/{$music.mp3}' }  <if condition="$i lt 10">,</if> </volist> ];
 								</script>
 									<img src="__STATIC__/v3/imgs/app/music-demo.png" />
 									<div class="jp-type-playlist">
