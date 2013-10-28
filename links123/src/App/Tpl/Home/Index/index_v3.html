@@ -331,13 +331,14 @@
 							<div class="box-bd">
 								<div class="pics" id="J_ScrollBox">
 									<ul class="items">
+									<volist name="homeMovies" id="movies">
 										<li>
-											<img data-src="__PUBLIC__/IndexV3/upload/02.jpg" alt="" />
+											<img data-src="__PUBLIC__/Uploads/HomeMovies/{$movies.cover}" alt="" />
 											<div class="mask"></div>
 											<div class="info">
 												<!-- <p class="p1">coming soon...</p> -->
 												
-												<p class="p1">Title For This Item</p>
+												<p class="p1">{$movies.title}</p>
 												<p class="p2">
 													Content For This Item
 												</p>
@@ -348,48 +349,7 @@
 												
 											</div>
 										</li>
-										<li>
-											<img data-src="__PUBLIC__/IndexV3/upload/03.jpg" alt="" />
-											<div class="mask"></div>
-											<div class="info">
-												<p class="p1">coming soon...</p>
-											</div>
-										</li>
-										<li>
-											<img data-src="__PUBLIC__/IndexV3/upload/04.jpg" alt="" />
-											<div class="mask"></div>
-											<div class="info">
-												<p class="p1">coming soon...</p>
-											</div>
-										</li>
-										<li>
-											<img data-src="__PUBLIC__/IndexV3/upload/05.jpg" alt="" />
-											<div class="mask"></div>
-											<div class="info">
-												<p class="p1">coming soon...</p>
-											</div>
-										</li>
-										<li>
-											<img data-src="__PUBLIC__/IndexV3/upload/06.jpg" alt="" />
-											<div class="mask"></div>
-											<div class="info">
-												<p class="p1">coming soon...</p>
-											</div>
-										</li>
-										<li>
-											<img data-src="__PUBLIC__/IndexV3/upload/07.jpg" alt="" />
-											<div class="mask"></div>
-											<div class="info">
-												<p class="p1">coming soon...</p>
-											</div>
-										</li>
-										<li>
-											<img data-src="__PUBLIC__/IndexV3/upload/08.jpg" alt="" />
-											<div class="mask"></div>
-											<div class="info">
-												<p class="p1">coming soon...</p>
-											</div>
-										</li>
+									</volist>
 									</ul>
 								</div><!--.pics end-->
 							</div>
