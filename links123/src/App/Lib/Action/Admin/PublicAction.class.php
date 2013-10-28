@@ -135,6 +135,7 @@ class PublicAction extends BaseAction {
 	 * @see PublicAction::login()
 	 */
     public function login() {
+        //@ TODO 登录成功后该session值仍是null
         if(!isset($_SESSION[C('USER_AUTH_KEY')])) {
             $this->display();
             return;
@@ -156,7 +157,7 @@ class PublicAction extends BaseAction {
 	 * @see PublicAction::logout()
 	 */
     public function logout() {
-        if(isset($_SESSION[C('USER_AUTH_KEY')])) {
+        if(session(C('USER_AUTH_KEY'))) {
             unset($_SESSION[C('ADMIN_AUTH_KEY')]);
             unset($_SESSION['menu'.$_SESSION[C('USER_AUTH_KEY')]]);
             unset($_SESSION[C('USER_AUTH_KEY')]);
@@ -211,7 +212,7 @@ class PublicAction extends BaseAction {
 	            if($authInfo['password'] != md5($password)) {
 	                $this->error('密码错误！');
 	            }
-	            $_SESSION[C('USER_AUTH_KEY')] = $authInfo['id'];
+                $_SESSION[C('USER_AUTH_KEY')] = $authInfo['id'];
 	            $_SESSION['email'] = $authInfo['email'];
 	            $_SESSION['loginUserName'] = $authInfo['nickname'];
 	            $_SESSION['lastLoginTime'] = $authInfo['last_login_time'];
@@ -363,7 +364,7 @@ class PublicAction extends BaseAction {
     	//设置上传文件大小
     	//$upload->maxSize = 3292200;
     	//设置上传文件类型
-    	$upload->allowExts = explode(',', 'pdf,doc,docx,zip,rar,xlsx');
+    	$upload->allowExts = explode(',', 'pdf,doc,docx,zip,rar,xlsx','mp3');
     	//设置附件上传目录
     	$path = realpath('./Public/Uploads/uploads.txt');
     	$upload->savePath = str_replace('uploads.txt', $folder, $path).'/';

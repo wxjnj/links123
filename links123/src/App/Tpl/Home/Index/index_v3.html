@@ -35,10 +35,18 @@
 							<p>Hi，{$Think.session.nickname} <em></em></p>
 							<span class="ang"></span>
 							<ul>
+								<li><a target="_blank" href="/Members/Index"><i></i>个人中心</a></li>
+								<li><a target="_blank" href="/Members/Collection"><i></i>我的收藏</a></li>
+								<li><a target="_blank" href="/Members/Recommend"><i></i>我的推荐</a></li>
+								<li><a target="_blank" href="/Members/Comment"><i></i>我的说说</a></li>
+								<li><a href="/Members/Suggestion"><i></i>留言板</a></li>
+								<li class="logout"><a href="/Members/Logout"><i></i>退出登录</a></li>
+							<!-- 
 								<li class="person"><a target="_blank" href="#"><i class="person-icon"></i>个人信息</a></li>
 								<li><a target="_blank" href="#"><i class="private-icon"></i>隐私设置</a></li>
 								<li><a target="_blank" href="#"><i class="safe-icon"></i>安全信息设置</a></li>
 								<li class="logout"><a target="_blank" href="/Members/Logout"><i class="logout-icon"></i>退出登录</a></li>
+							 -->
 							</ul>
 						</div>
 					</div>
@@ -231,8 +239,8 @@
 											<div class="info">
 												<img src="{$ted.link_cn_img}" alt="" />
 												<p class="p1">{$ted.title}</p>
-												<p class="p2">15:57 Posted Sep 2013</p>
-												<p class="p3">It often seems like federal-level politicians care more about creating gridlock than solving.</p>
+												<p class="p2">{$ted.create_time}</p>
+												<p class="p3">{$ted.sintro}</p>
 											</div>
 											<a class="go" href="{:U('Detail/index')}?id={$ted.id}" target="_blank">查看</a>
 										</li>
@@ -252,46 +260,14 @@
 								<div class="music" id="jp_container_1">
 								<script>
 								var mlist = [ //请后台连续输出不要换行并删除此备注
+								    <volist name="homeMusics" id="music">
 									{
-										title:"1、Say I Love You",
-										mp3:"http://mp3.9ku.com/file2/515/514100.mp3"
+										title:{$key} + 1 + '. {$music.title}',
+										mp3: '__PUBLIC__/Uploads/HomeMusics/{$music.mp3}'
 									}
-									,{
-										title:"2、雨蝶",
-										mp3:"http://mp3.9ku.com/file2/2/1903.mp3"
-									}
-									,{
-										title:"3、突然的自我",
-										mp3:"http://mp3.9ku.com/file2/60/59930.mp3"
-									}
-									,{
-										title:"4、天路",
-										mp3:"http://mp3.9ku.com/file2/65/64541.mp3"
-									}
-									,{
-										title:"5、男人真命苦",
-										mp3:"http://mp3.9ku.com/file2/3/2776.mp3"
-									}
-									,{
-										title:"6、Say I Love You",
-										mp3:"http://mp3.9ku.com/file2/515/514100.mp3"
-									}
-									,{
-										title:"7、雨蝶",
-										mp3:"http://mp3.9ku.com/file2/2/1903.mp3"
-									}
-									,{
-										title:"8、突然的自我",
-										mp3:"http://mp3.9ku.com/file2/60/59930.mp3"
-									}
-									,{
-										title:"9、天路",
-										mp3:"http://mp3.9ku.com/file2/65/64541.mp3"
-									}
-									,{
-										title:"10、男人真命苦",
-										mp3:"http://mp3.9ku.com/file2/3/2776.mp3"
-									}
+									,
+									</volist>
+									
 								];
 								</script>
 									<img src="__STATIC__/v3/imgs/app/music-demo.png" />

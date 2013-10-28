@@ -71,6 +71,13 @@
 					</td>
 				</tr>
 				<tr>
+					<td class="tRight">音乐mp3：</td>
+					<td class="tLeft">
+						<input type="text" class="medium bLeftRequire" id="att" name='mp3' style="vertical-align:middle" readonly value="{$vo.mp3}"  />&nbsp;
+						<a>上传mp3</a>　<span style='color:#C00;'>（格式：Mp3）</span>
+					</td>
+				</tr>
+				<tr>
 					<td class="tRight tTop">演唱：</td>
 					<td class="tLeft"><input type="text" class="medium bLeftRequire" name="artist" value="{$vo.artist}" /></td>
 				</tr>
@@ -99,11 +106,14 @@
 			</table>
 		</form>
         
-                <form method='post' id="frm_pic" class="file_frm" action="__GROUP__/Public/uploadPic/" enctype="multipart/form-data">
+        <form method='post' id="frm_pic" class="file_frm" action="__GROUP__/Public/uploadPic/" enctype="multipart/form-data">
 			<input name="image" id="file_pic" type="file" style="position:absolute; width:230px; top:0px; left:0px; height:28px; filter:alpha(opacity:0);opacity:0;" />
 			<input type="hidden" id="folder" name="folder" value="HomeMusics" />
 			<input type="hidden" name="width" value="116" />
 		</form>
-        
+        <form method='post' id="frm_att" class="file_frm" action="__GROUP__/Public/uploadAtt/" enctype="multipart/form-data">
+			<input name="image" id="file_att" type="file" style="position:absolute; width:230px; top:0px; left:0px; height:28px; filter:alpha(opacity:0);opacity:0;" />
+			<input type="hidden" id="folder" name="folder" value="HomeMusics" />
+		</form>
 	</div>
 </div>

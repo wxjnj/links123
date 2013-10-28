@@ -72,7 +72,7 @@ class IndexAction extends CommonAction {
 	 * @author slate date:2013-09-06
 	 */
 	public function index() {
-		
+		import("@.ORG.String");
 		//自留地
 		$myareaModel = M("Myarea");
 		$scheduleModel = M("Schedule");
@@ -166,16 +166,7 @@ class IndexAction extends CommonAction {
 		$this->assign('schedule_list', $schedule_list);
 		
 		//热门音乐
-		$songList = $this->getDayhotMusic();
-		shuffle($songList['top']);
-		shuffle($songList['fair']);
-		$songTopList = array_chunk($songList['top'], 2, true);
-		$songTopList = $songTopList[0];
-		$songFairList = array_chunk($songList['fair'], 20, true);
-		$songFairList = $songFairList[0];
-		
-		$this->assign('songTopList', $songTopList);
-		$this->assign('songFairList', $songFairList);
+		$this->assign('homeMusics', $this->getHomeMusics());
 		
 		//推荐电影
         $this->assign('homeMovies', $this->getHomeMovies());
@@ -202,7 +193,14 @@ class IndexAction extends CommonAction {
 			$ted_list = array();
 			foreach ($result as $value) {
 				
-				$ted_list[$value['id']] = array('id' => $value['id'], 'title' => $value['title'], 'link_cn_img' => $value['link_cn_img'], 'status' => $home_ted_hot_list[$value['id']]);
+				$ted_list[$value['id']] = array(
+						'id' => $value['id'], 
+						'title' => $value['title'], 
+						'link_cn_img' => $value['link_cn_img'], 
+						'status' => $home_ted_hot_list[$value['id']], 
+						'sintro' => String::msubstr($value["intro"], 0, 68),
+						'create_time' => date('Y-m-d H:i:s', $value['create_time']),
+				);
 			}
 					
 			S('ted_list', $ted_list);
