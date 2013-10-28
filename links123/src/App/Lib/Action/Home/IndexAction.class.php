@@ -177,10 +177,8 @@ class IndexAction extends CommonAction {
 		$this->assign('songTopList', $songTopList);
 		$this->assign('songFairList', $songFairList);
 		
-		//豆瓣电影信息 0正在上映 1即将上映
-// 		$movieList = $this->getDoubanMovieInfo();
-// 		$nowplayingmovie = $movieList[0];
-//      $latermovie = $movieList[1];
+		//推荐电影
+        $this->assign('homeMovies', $this->getHomeMovies());
         
 		//TED 发现
 		$ted_list = S('ted_list');
@@ -872,19 +870,52 @@ class IndexAction extends CommonAction {
 	}
 	
 	/**
+	 * @desc 获取日程
+	 * 
+	 * @param String year
+	 * @param String month
+	 * @return
+	 * @author slate date:2013-10-27
+	 */
+	public function getSchedule() {
+		$year = intval($this->_param('year'));
+		$month = intval($this->_param('month'));
+		
+		$user_id = intval(session(C('MEMBER_AUTH_KEY')));
+		
+		$stauts = 1;
+		$data  = array();
+		
+		if ($user_id) {
+			$scheduleModel = M("Schedule");
+		
+			$result = $scheduleModel->where(array('mid' => $user_id,'status' =>0 , 'year' => $year, 'month' => $month))->select();
+		
+			foreach ($result as $k => $v) {
+				$data[$v['day']][] = $v;
+			}
+			
+		} else {
+		
+			$stauts = 0;
+		}
+		
+		$this->ajaxReturn($data, '', $stauts);
+	}
+	/**
 	 * @name addSchedule
 	 * @desc 添加日程
-	 * @param string content
-	 * @param string datetime
+	 * @param string desc
+	 * @param string time
 	 * @return 成功:1; 失败:0; 未登录或登录已失效: -1
 	 * @author slate date:2013-09-14
 	 */
 	public function addSchedule() {
 	
-		$content = $this->_param('content');
-		$datetime = $this->_param('datetime');
+		$content = $this->_param('desc');
+		$datetime = intval($this->_param('time'));
 	
-		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+		$user_id = intval(session(C('MEMBER_AUTH_KEY')));
 	
 		$result = 0;
 	
@@ -893,14 +924,7 @@ class IndexAction extends CommonAction {
 	
 			$now = time();
 				
-			if ($datetime) {
-	
-				$datetime = str_replace(array('月','日'), '-', $datetime);
-	
-				$datetime = strtotime('2013-' . $datetime);
-	
-				$datetime = $datetime ? $datetime : $now;
-			}
+			$datetime = $datetime ? $datetime : $now;
 	
 			$saveData = array(
 					'mid' => $user_id,
@@ -908,7 +932,10 @@ class IndexAction extends CommonAction {
 					'datetime' => $datetime,
 					'status' => 0,
 					'create_time' => $now,
-					'update_time' => $now
+					'update_time' => $now,
+					'year' => date('Y', $datetime),
+					'month' => date('m', $datetime),
+					'd' => date('d', $datetime)
 			);
 	
 			$id = $scheduleModel->add($saveData);
@@ -932,18 +959,18 @@ class IndexAction extends CommonAction {
 	 * @name updateSchedule
 	 * @desc 更新日程表
 	 * @param int id
-	 * @param String content
-	 * @param String datetime
+	 * @param String desc
+	 * @param String time
 	 * @return 成功:1; 失败:0;
 	 * @author slate date:2013-09-14
 	 */
 	public function updateSchedule() {
 	
 		$id = $this->_param('id');
-		$content = $this->_param('content');
-		$datetime = $this->_param('datetime');
+		$content = $this->_param('desc');
+		$datetime = $this->_param('time');
 	
-		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+		$user_id = intval(session(C('MEMBER_AUTH_KEY')));
 	
 		$result = 0;
 	
@@ -951,19 +978,15 @@ class IndexAction extends CommonAction {
 				
 			$now = time();
 				
-			if ($datetime) {
-	
-				$datetime = str_replace(array('月','日'), '-', $datetime);
-	
-				$datetime = strtotime('2013-' . $datetime);
-	
-				$datetime = $datetime ? $datetime : $now;
-			}
+			$datetime = $datetime ? $datetime : $now;
 	
 			$saveData = array(
 					'content' => $content,
 					'datetime' => $datetime,
-					'update_time' => $now
+					'update_time' => $now,
+					'year' => date('Y', $datetime),
+					'month' => date('m', $datetime),
+					'd' => date('d', $datetime)
 			);
 				
 			$result = 1;
@@ -996,7 +1019,7 @@ class IndexAction extends CommonAction {
 	
 		$id = $this->_param('id');
 	
-		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+		$user_id = intval(session(C('MEMBER_AUTH_KEY')));
 	
 		$result = 0;
 	
