@@ -728,6 +728,7 @@ var HelpMouse = {
 };
 
 
+
 /*
  *   Calendar
  */
@@ -826,6 +827,11 @@ var HelpMouse = {
 					$('.extra-calendar-overlayer').hide();
 					$('.extra-calendar').hide();
 				}
+			});
+
+			$(document).on('click', '.cal-close', function(){
+				$('.extra-calendar-overlayer').hide();
+				$('.extra-calendar').hide();
 			});
 
 			$(document).on('click', '.cal_show_pop_btn', function() {
@@ -999,6 +1005,10 @@ var HelpMouse = {
 			params = $.extend(defaultConfig, params);
 			var defer = $.Deferred();
 			var ajax = $.ajax(params).done(function(json) {
+				//defer.resolveWith(ajax, [json]);
+				if(typeof json.status == 'undefined') {
+					defer.resolveWith(ajax, [json]);
+				}
 				if (json['status'] === 1) {
 					defer.resolveWith(ajax, [json['data']]);
 				} else {
@@ -1083,6 +1093,24 @@ var HelpMouse = {
 					self.ajaxOverlayer.hide();
 					d1 = d1 === null ? [] : d1;
 					d2 = d2 === null ? [] : d2;
+
+					if(d1.length != 0) {
+						$.each(d1, function(k, v){
+							$.each(v, function(i, c){
+								c.desc = c.content;
+								c.time = c.datetime;
+							});
+						});
+					}
+					if(d2.length != 0) {
+						$.each(d2, function(k, v){
+							$.each(v, function(i, c){
+								c.desc = c.content;
+								c.time = c.datetime;
+							});
+						});
+					}
+
 					self.marksStore[year1 + '-' + month1] = d1;
 					self.marksStore[year2 + '-' + month2] = d2;
 					self[self.type + 'View'].renderMarks();
@@ -1097,6 +1125,14 @@ var HelpMouse = {
 				}).done(function(d) {
 					self.ajaxOverlayer.hide();
 					d = d === null ? [] : d;
+					if(d.length != 0) {
+						$.each(d, function(k, v){
+							$.each(v, function(i, c){
+								c.desc = c.content;
+								c.time = c.datetime;
+							});
+						});
+					}
 					self.marksStore[self.currentMarkId] = d;
 					self[self.type + 'View'].renderMarks();
 					self.MainView.renderMarks();
@@ -1105,7 +1141,7 @@ var HelpMouse = {
 		},
 	
 		//新建和更新日程: id==null为新建，有id值为更新
-		update: function(id, time, desc){
+		update: function(id, time, desc, element){
 			User.CheckLogin();
 			var self = this;
 			var url, data;
@@ -1118,8 +1154,8 @@ var HelpMouse = {
 			}else{
 				url = URL + '/updateSchedule';
 				data = {
-					time: time,
-					desc: desc/1000,
+					time: time/1000,
+					desc: desc,
 					id: id
 				};
 			}
@@ -1128,7 +1164,11 @@ var HelpMouse = {
 				data: data
 			}).fail(function(c, e){
 			}).done(function(d){
-				console.log(d)
+				if(id != 'null'){
+					element.attr('data-id', d);
+				}
+				self.marksStore = {};
+				self.loadMarks();
 			});
 		},
 		//删除任务
@@ -1141,7 +1181,8 @@ var HelpMouse = {
 				}
 			}).fail(function(c, e){
 			}).done(function(d){
-				console.log(d);
+				self.marksStore = {};
+				self.loadMarks();
 			});
 		}
 	};
@@ -1170,39 +1211,51 @@ var HelpMouse = {
 				var c = o.find('.input-content').val();
 				o.html(c).attr('title', c);
 				var desc = c;
-				var hm = o.siblings('.cal_v303_time_span').val();
+				var hm = o.siblings('.cal_v303_time_span').html();
 				var ymd = $('.cal_v303_show_date').html().replace(/\D\b/g, '-').replace(/\D\B/g, '');
 				var time = Date.parse(ymd + ' ' + hm);
 				var id = $(this).parent('li').attr('data-id');
 				self.format();
-				Calendar.update(id, time, desc);
+				Calendar.update(id, time, desc, $(this).parent('li'));
 			});
 
 			self.listElement.on('keydown', '.input-content', function(e){
 				if(e.keyCode == 13){
 					var c = $(this).val();
 					var o = $(this).parent('.cal_v303_mark_content');
-					o.html(c).attr('title', c).siblings('.enter-mark').removeClass('.enter-mark').addClass('delete-mark').html('×')
+					var li = $(this).closest('li');
+					var id = li.attr('data-id');
+					o.html(c).attr('title', c).siblings('.enter-mark').removeClass('.enter-mark').addClass('delete-mark').html('×');
+					var desc = c;
+					var hm = o.siblings('.cal_v303_time_span').html();
+					var ymd = $('.cal_v303_show_date').html().replace(/\D\b/g, '-').replace(/\D\B/g, '');
+					var time = Date.parse(ymd + ' ' + hm);
 					self.format();
+					Calendar.update(id, time, desc, li);
 					return false;
 				}
 			});
 
 			self.listElement.on('click', '.cal_v303_time_enter', function(){
 				var $self = $(this);
-				setTimeout(function(){
+				
+					var li = $self.parents('li');
+
 					var h = Calendar.tooltip.find('.cal_v303_time_hour_select').val();
 					var m = Calendar.tooltip.find('.cal_v303_time_minute_select').val();
 					var o = Calendar.tooltip.parent('.cal_v303_time_span');
-					Calendar.tooltip.appendTo('body');
+					
 					o.html(h + ':' + m);
-					Calendar.tooltip.hide();
-					var desc = $self.siblings('.cal_v303_mark_content').html();
+					
+					var desc = li.find('.cal_v303_mark_content').attr('title');
 					var hm = h + ':' + m;
 					var ymd = $('.cal_v303_show_date').html().replace(/\D\b/g, '-').replace(/\D\B/g, '');
 					var time = Date.parse(ymd + ' ' + hm);
-					var id = $self.parent('li').attr('data-id');
-					Calendar.update(id, time, desc);
+					var id = li.attr('data-id');
+					Calendar.update(id, time, desc, li);
+				setTimeout(function(){	
+					Calendar.tooltip.appendTo('body');
+					Calendar.tooltip.hide();
 				},0)
 			});
 
@@ -1310,7 +1363,8 @@ var HelpMouse = {
 				var time = + Date.today() + pos / 3 * 15 * 60 * 1000
 				var mark = new MarkClass({
 					time: time / 1000,
-					desc: ''
+					desc: '',
+					id: 'null'
 				});
 				mark.appendTo($(this));
 				var baseLine = self.burnDownChartElement.offset().top + self.burnDownChartElement.height();
@@ -1373,7 +1427,7 @@ var HelpMouse = {
 			var v;
 			for(var i = 0; i < len; i++){
 				v = marks[i];
-				lis += '<li>' + v.id + ' : ' + v.desc + '</li>';
+				lis += '<li>' + v.desc + '</li>';
 				count++;
 				mark = new MarkClass(v);
 				mark.appendTo(chartBody);
@@ -1469,10 +1523,11 @@ var HelpMouse = {
 			var height = pass / 1000 / sec_px - 6;
 			self.burnDownChartElement.height(height).show();
 			self.burnDownChartElement.find('.time-show').html(now.toString('HH:mm'));
-			var baseLine = self.burnDownChartElement.offset().top + self.burnDownChartElement.height();
+			//var baseLine = self.burnDownChartElement.offset().top + self.burnDownChartElement.height();
+			var baseLine =  self.burnDownChartElement.height();
 			setTimeout(function(){
 				today_td.find('.week-mark-line').each(function() {
-					if ($(this).offset().top + $(this).height() <= baseLine) {
+					if (parseInt($(this).css('top')) + $(this).height() <= baseLine) {
 						$(this).addClass('week-mark-line-pass');
 					}
 				});
@@ -1490,18 +1545,23 @@ var HelpMouse = {
 			var year, month, date, marks, tem, td, op, i, line, time, desc, hour, minute;
 			self.tableElement.find('td').empty();
 			var burndown = false;
+
 			for (i = 0; i <= 6; i++) {
 				tem = start.add_day(i);
 				year = tem.getFullYear();
 				month = tem.getMonth();
 				date = tem.getDate();
-
 				if (Calendar.marksStore[year + '-' + month] && Calendar.marksStore[year + '-' + month][date]) {
 					marks = Calendar.marksStore[year + '-' + month][date];
 				} else {
 					marks = [];
 				}
 				td = self.tableElement.find('td:eq(' + i + ')');
+				td.attr({
+					'data-date': date,
+					'data-month': month,
+					'data-year': year
+				});
 				op = Calendar.compare(tem, today);
 				td.removeClass('month_pass_date');
 				if (op < 0) td.addClass('month_pass_date');
@@ -1513,11 +1573,7 @@ var HelpMouse = {
 					hour = time.getHours();
 					minute = time.getMinutes();
 					line.css('top', hour * 4 * 3 + minute / 15 * 3);
-					td.attr({
-						'data-date': date,
-						'data-month': month,
-						'data-year': year
-					}).append(line);
+					td.append(line);
 				});
 			}
 			if (burndown) {
@@ -1627,6 +1683,8 @@ var HelpMouse = {
 			var minute = time.getMinutes();
 			self.id = m.id;
 			self.date = date;
+			self.time = time;
+			self.desc = desc;
 			self.baseTime = + new Date(year, month, date, 0);
 			var showtime = time.toString('HH:mm');
 			var html = '<div class="cal-day-event-item">' + '<b class="dot"></b>' + '<span class="time">' + showtime + '</span>' + '<span class="desc">' + desc + '</span>' + '<a class="enter" href="javascript:;">确定</a>' + '<a class="delete" href="javascript:;">×</a>' + '</div>';
@@ -1639,17 +1697,32 @@ var HelpMouse = {
 				var desc = $(this).html();
 				$(this).html('<input class="input_desc" type="text" maxlength="30" value="' + desc + '" >');
 				self.html.find('.input_desc').select();
+				self.html.find('.delete').hide();
 				self.html.find('.enter').show();
 				return false;
+			});
+			self.html.on('keydown', '.input_desc', function(e){
+				if(e.keyCode == 13){
+					var d = $(this).closest('.desc')
+					var v = $(this).val();
+					d.html(v);
+					self.desc = v;
+					$(this).hide();
+					self.html.find('.show').hide();
+					Calendar.update(self.id, self.time, self.desc, self.html);
+				}
 			});
 			self.html.find('.enter').click(function() {
 				var d = $(this).siblings('.desc')
 				var v = d.find('.input_desc').val();
 				d.html(v);
+				self.desc = v;
 				$(this).hide();
-				self.update();
+				self.html.find('.show').hide();
+				Calendar.update(self.id, self.time, self.desc, self.html);
 			});
-			self.html.find('.del').click(function() {
+			self.html.find('.delete').click(function() {
+				Calendar.delete(self.id);
 				self.html.remove();
 			});
 		},
@@ -1674,6 +1747,7 @@ var HelpMouse = {
 					} else {
 						time = time.toString('HH:mm');
 					}
+					self.time = Date.parse(time);
 					$(this).find('.time').html(time);
 					baseLine = Calendar.DateView.burnDownChartElement.offset().top + Calendar.DateView.burnDownChartElement.height();
 					if ($(this).offset().top + $(this).height() <= baseLine) {
@@ -1683,12 +1757,11 @@ var HelpMouse = {
 					}
 				},
 				stop: function(event, ui) {
-					Calendar.update(self.id, self.time, self.desc);
+					Calendar.update(self.id, self.time, self.desc, self.html);
 				}
 			});
 		}
 	});
 	window.Calendar = Calendar;
 })();
-
 

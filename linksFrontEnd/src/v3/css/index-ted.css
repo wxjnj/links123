@@ -83,6 +83,8 @@
 .find .info .p3{
 	color: #727171;
 	line-height: 14px;
+	word-wrap: break-word;
+	word-break: break-all;
 }
 .find ul{ margin-left: -7px; }
 .find li{

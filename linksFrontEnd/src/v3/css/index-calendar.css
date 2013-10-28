@@ -199,6 +199,16 @@
 	left:65px;
 	bottom:-25px
 }
+.extra-calendar .cal-close {
+	background: transparent url(/v3/imgs/app/links-app-frame/close.png) 0 -60px no-repeat;
+	width: 30px;
+	height: 30px;
+	position: absolute;
+	right: -16px;
+	top: -16px;
+	z-index: 1000;
+	font-size: 0;
+}
 .extra-calendar .cal-ajax-overlayer {
 	position:absolute;
 	top:0;
@@ -393,7 +403,6 @@
 	-webkit-border-radius:5px
 }
 .extra-calendar .cal-day .cal-day-burn-down-chart .cal-day-event-item .time {
-	float:left;
 	margin-left:5px
 }
 .extra-calendar .cal-day .cal-day-burn-down-chart .cal-day-event-item .desc {
@@ -402,7 +411,8 @@
 }
 .extra-calendar .cal-day .cal-day-burn-down-chart .cal-day-event-item .enter {
 	display:none;
-	color:#502d5c
+	color:#502d5c;
+	float:right;
 }
 .extra-calendar .cal-day .cal-day-burn-down-chart .cal-day-event-item .delete {
 	color:#502d5c;

@@ -61,7 +61,7 @@
 						<div class="skin-content">
 							<div class="subpanel" id="J_skin_selection">
 								<div class="skin-types">
-									<a data-id="themes" class="J_link_skin_type">最近使用过的主题</a>
+									<a data-id="themes" class="J_link_skin_type">快捷主题</a>
 									<volist name="skinCategory" id="vo" key="k">
 									<span class="skin-theme-split"> | </span>
 									<a data-id="{$vo.categoryId}" class='J_link_skin_type <if condition="$k eq 1">active</if>'>{$vo.categoryName}</a>
@@ -187,6 +187,7 @@
 					<div class="extra-col1">
 						<div class="extra-calendar">
 							<include file="Contorls:calendar" />
+							<a id="cal-close-btn" class="cal-close" href="javascript:;"></a>
 						</div>
 						<div class="extra-calendar-overlayer"></div>
 						<div class="cal_v303">
@@ -262,10 +263,12 @@
 								var mlist = [ //请后台连续输出不要换行并删除此备注
 								    <volist name="homeMusics" id="music">
 									{
-										title:{$key} + 1 + '. {$music.title}',
+										title:{$i} + '. {$music.title}',
 										mp3: '__PUBLIC__/Uploads/HomeMusics/{$music.mp3}'
 									}
+									<if condition="$i lt 10">
 									,
+									</if>
 									</volist>
 									
 								];
@@ -351,7 +354,7 @@
 					<li><a target="_blank" href="{:U('/Blogroll')}">友情链接</a></li>
 					<li><a target="_blank" href="{:U('/Recommend')}">推荐链接</a></li>
 				</ul>
-			</div>
+			</div>		
 			<div class="copyright">
 				沪ICP备12036721号 &copy; 另客 2013
 				<script src="http://s96.cnzz.com/stat.php?id=4907803&web_id=4907803&show=pic1" type="text/javascript"></script>

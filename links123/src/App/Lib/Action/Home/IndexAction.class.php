@@ -198,7 +198,7 @@ class IndexAction extends CommonAction {
 						'title' => $value['title'], 
 						'link_cn_img' => $value['link_cn_img'], 
 						'status' => $home_ted_hot_list[$value['id']], 
-						'sintro' => String::msubstr($value["intro"], 0, 68),
+						'sintro' => String::msubstr($value["intro"], 0, 50),
 						'create_time' => date('Y-m-d H:i:s', $value['create_time']),
 				);
 			}
