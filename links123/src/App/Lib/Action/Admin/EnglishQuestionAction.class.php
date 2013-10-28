@@ -734,7 +734,8 @@ class EnglishQuestionAction extends CommonAction {
                                         $data['difficulty'] = $difficulty_from_grade_list[$data['grade']];
                                     }
                                 } else if (intval($excel_level_one_list[$cell->getColumn()]) > 0) {
-                                    if(!empty(ftrim($cell->getCalculatedValue()))){
+                                    $calculatedValue = ftrim($cell->getCalculatedValue());
+                                    if(!empty($calculatedValue)){
                                         //收集分类信息，存在多个分类情况
                                         $level_one = intval($excel_level_one_list[$cell->getColumn()]);
                                         $data['category'][$level_one]['level_one'] = $level_one;//一级分类id
