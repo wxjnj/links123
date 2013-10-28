@@ -592,29 +592,18 @@ class EnglishMediaAction extends CommonAction {
         if ($this->isAjax()) {
             $model = D("EnglishMedia");
             $data = array();
-            $data['id'] = $_REQUEST['id'];
-            $info = $model->field("special_recommend,recommend,subject,object")->find($data['id']);
-            if (empty($info)) {
-                $this->ajaxReturn("", "操作记录不存在", false);
+            $map['id'] = $_REQUEST['id'];
+            $now_special_recommend = $model->where($map)->getField("special_recommend");
+            if($now_special_recommend == 1){
+                $special_recommend = 0;
+            }else{
+                $special_recommend = 1;
             }
-            if (intval($info['special_recommend']) == 0) {
-                //如果不是推荐，自动设置为推荐
-                if (intval($info['recommend']) == 0) {
-                    $model->startTrans();
-                    $data['recommend'] = D("EnglishMediaRecommend")->getRecommendIdByObjectOrSubject($info['object'], $info['subject']);
-                }
-                $data['special_recommend'] = 1;
-            } else {
-                $data['special_recommend'] = 0;
-            }
-            $ret = $model->save($data);
-            if (false === $ret) {
-                $model->rollback();
+            if(false === $model->where($map)->setField("special_recommend",$special_recommend)){
                 $this->ajaxReturn("", "操作失败", false);
-            } else {
-                $model->commit();
-                $this->ajaxReturn($data, "操作成功", true);
             }
+            $data['special_recommend'] = $special_recommend;
+            $this->ajaxReturn($data, "操作成功", true);
         }
     }
 

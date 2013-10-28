@@ -18,6 +18,7 @@
             <html:imageBtn name="forbid" click="forbid()" style="hMargin fLeft" />
             <html:imageBtn name="delete" click="del()" style="hMargin fLeft" />
             <html:imageBtn name="resume" click="resume()" style="hMargin fLeft" />
+            <!--
             <select id="selectSubjectSource" style='float:left;margin:0 5px;'>
                 <option value='-1'>选择专题</option>
                 <option value='0'>无专题</option>
@@ -43,6 +44,7 @@
             </select>
              
             <html:imageBtn name="groupAct" click="groupAct()" style="hMargin fLeft" />
+            -->
         </div>
 
         <form method='post' action="__URL__">
@@ -50,8 +52,9 @@
                 <div class="fLeft">媒体查询：<span id="key"><input type="text" autocomplete="off" name="name" value="{$name}" class="medium" /></span></div>
                 <html:imageBtn type="submit" name="search" style="hMargin fLeft" />
             </div>
-            <div class="search cBoth" style="height: 60px;">
+            <div class="search cBoth" style="height: 30px;">
                 <div>
+                    <!--
                     <label>
                         <input class="checkbox" type="checkbox" value="1" name="pattern" <eq name="param['pattern']" value="1">checked="checked"</eq>>
                         视频
@@ -95,22 +98,7 @@
                         <option value="3" <eq name="param['difficulty']" value="3">selected="true"</eq>>高级</option>
                     </select>
                     &nbsp;&nbsp;
-                    添加时间：
-                    <input type="text" id="J_createTime" name="created" value="{$param['created']}" />
-                    &nbsp;&nbsp;
-                    
-                </div>
-                <div style="margin-top: 10px;">
-                    推荐：
-                    <label>
-                        <input class="checkbox" type="checkbox" value="1" name="recommend" <if condition="$param['recommend'] eq 1">checked="checked"</if>>
-                        是
-                    </label>&nbsp;
-                    <label>
-                        <input class="checkbox" type="checkbox" value="0" name="recommend" <eq name="param['recommend']" value="0">checked="checked"</eq>>
-                        否
-                    </label>
-                    &nbsp;&nbsp;
+                    -->
                     特别推荐：
                     <label>
                         <input class="checkbox" type="checkbox" value="1" name="special_recommend" <if condition="$param['special_recommend'] eq 1">checked="checked"</if>>
@@ -120,19 +108,9 @@
                         <input class="checkbox" type="checkbox" value="0" name="special_recommend" <eq name="param['special_recommend']" value="0">checked="checked"</eq>>
                         否
                     </label>&nbsp;&nbsp;
-                    TED：
-                    <label>
-                        <input class="checkbox" type="checkbox" value="1" name="ted" <eq name="param['ted']" value="1">checked="checked"</eq>>
-                        是
-                    </label>&nbsp;
-                    <label>
-                        <input class="checkbox" type="checkbox" value="0" name="ted" <eq name="param['ted']" value="0">checked="checked"</eq>>
-                        否
-                    </label>&nbsp;&nbsp;
-                    <label>
-                        <input class="checkbox" type="checkbox" value="1" name="omg" <eq name="param['omg']" value="1">checked="checked"</eq>>
-                        OMG
-                    </label>&nbsp;
+                    添加时间：
+                    <input type="text" id="J_createTime" name="created" value="{$param['created']}" />
+                    &nbsp;&nbsp;
                     状态：
                     <label>
                         <input class="checkbox" type="checkbox" value="1" name="status" <if condition="$param['status'] eq 1">checked="checked"</if>>
@@ -164,12 +142,40 @@
                         <input class="checkbox" type="checkbox" value="0" name="has_local_path" <eq name="param['has_local_path']" value="0">checked="checked"</eq>>
                         无
                     </label>
+                    
                 </div>
+                <!--
+                <div style="margin-top: 10px;">
+                    推荐：
+                    <label>
+                        <input class="checkbox" type="checkbox" value="1" name="recommend" <if condition="$param['recommend'] eq 1">checked="checked"</if>>
+                        是
+                    </label>&nbsp;
+                    <label>
+                        <input class="checkbox" type="checkbox" value="0" name="recommend" <eq name="param['recommend']" value="0">checked="checked"</eq>>
+                        否
+                    </label>
+                    &nbsp;&nbsp;
+                    TED：
+                    <label>
+                        <input class="checkbox" type="checkbox" value="1" name="ted" <eq name="param['ted']" value="1">checked="checked"</eq>>
+                        是
+                    </label>&nbsp;
+                    <label>
+                        <input class="checkbox" type="checkbox" value="0" name="ted" <eq name="param['ted']" value="0">checked="checked"</eq>>
+                        否
+                    </label>&nbsp;&nbsp;
+                    <label>
+                        <input class="checkbox" type="checkbox" value="1" name="omg" <eq name="param['omg']" value="1">checked="checked"</eq>>
+                        OMG
+                    </label>&nbsp;
+                    
+                </div>-->
             </div>
         </form>
 
         <div class="list" >
-            <html:list id="checkList" name="category" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,name:名称:edit,object_name|default=无:科目:selectObject,level_name|default=无:等级:selectLevel,subject_name|default=无:专题:selectSubject,difficulty|getMediaDifficultyName:难度,recommend|getMediaRecommendYorN:推荐:recommend,special_recommend|getYorN:特别推荐:special_recommend,ted|getMediaRecommendYorN:TED:ted,voice|getVoiceName:语音,pattern|getMediaPatternName:格式类型,play_type|getMediaPlayTypeName:播放类型,priority_type|getMediaPriorityTypeName:优先播放:setMediaPriorityType,media_source_url|getLinkToHrefWithOutHttp:来源地址,created|toDate:发布时间,status|getStatus:状态" actionlist="edit:编辑" />
+            <html:list id="checkList" name="category" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,name:名称:edit,special_recommend|getYorN:特别推荐:special_recommend|id,play_type|getMediaPlayTypeName:播放类型,priority_type|getMediaPriorityTypeName:优先播放:setMediaPriorityType,media_source_url|getLinkToHrefWithOutHttp:来源地址,created|toDate:发布时间,status|getStatus:状态" actionlist="edit:编辑" />
         </div>
 
         <div class="page">{$page}</div>
@@ -259,7 +265,7 @@
             }, "json");
         }
     }
-    /**
+ /**
      * 特别推荐
      * @param {int} id 操作对象id
      * @returns {void}
@@ -267,15 +273,12 @@
     function special_recommend(id) {
         if (id > 0) {
             $("#load_dialog").window("open");
-            $.post("__URL__/setSpecialRecommend", {id: id}, function(msg) {
+            $.post("{:U('Admin/EnglishMedia/setSpecialRecommend')}", {id: id}, function(msg) {
                 if (msg) {
                     if (msg.status) {
                         if (msg.data.special_recommend == 0) {
                             $("a[href=\"javascript:special_recommend('" + id + "')\"]").text("否");
                         } else {
-                            if (msg.data.recommend) {
-                                $("a[href^=\"javascript:recommend('" + id + "'\"]").text("是");
-                            }
                             $("a[href=\"javascript:special_recommend('" + id + "')\"]").text("是");
                         }
                     }
