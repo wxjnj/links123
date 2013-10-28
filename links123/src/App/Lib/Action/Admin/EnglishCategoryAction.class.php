@@ -76,7 +76,7 @@ class EnglishCategoryAction extends CommonAction{
                     ->order("`" . $order . "` " . $sort)
                     ->limit($p->firstRow . ',' . $p->listRows)
 					->select();
-            echo $model->getlastsql();
+//            echo $model->getlastsql();
             //分页跳转的时候保证查询条件
             foreach ($param as $key => $val) {
                 //$p->parameter .= "$key=" . urlencode ( $val ) . "&";
