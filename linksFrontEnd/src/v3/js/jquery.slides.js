@@ -476,7 +476,7 @@
 					left: value * this.options.width,
 					zIndex: 10
 				});
-				this.options.callback.start(currentSlide + 1);
+				this.options.callback.start(currentSlide + 1, next);
 				if (this.data.vendorPrefix) {
 					prefix = this.data.vendorPrefix;
 					transform = prefix + "Transform";
@@ -556,7 +556,7 @@
 					left: 0,
 					zIndex: 10
 				});
-				this.options.callback.start(currentSlide + 1);
+				this.options.callback.start(currentSlide + 1, next);
 				if (this.options.effect.fade.crossfade) {
 					slidesControl.children(":eq(" + this.data.current + ")").stop().fadeOut(this.options.effect.fade.speed);
 					return slidesControl.children(":eq(" + next + ")").stop().fadeIn(this.options.effect.fade.speed, (function() {

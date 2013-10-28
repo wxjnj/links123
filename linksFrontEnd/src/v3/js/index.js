@@ -16,19 +16,33 @@ $(function() {
 	});
 
 	$('#J_Apps').sortable();
-	// 幻灯
 
-	$('#J_ScrollBox').find('img').each(function(k, v){
-		var src = $(v).data('src')
-		$(v).attr('src', src);
-	});		
+	// 幻灯
 	$('#J_ScrollBox').find('.items').slidesjs({
 		play: {
 			active: true,
 			auto: true,
 			interval: 10000,
 			swap: false
-		}
+		},
+    	//异步加载幻灯片
+    	//初始化加载0
+    	callback: {
+      		loaded: function(){
+        		var cur = $('#J_ScrollBox').find('li:eq(' + 0 + ')').find('img');
+        		if(!cur.attr('src')){
+          			var path = cur.data('src');
+          			cur.attr('src', path);
+        		}
+      		},
+      		start: function(cur, next) {
+        		var target = $('#J_ScrollBox').find('li:eq(' + next + ')').find('img');
+        		if(!target.attr('src')){
+          			var path = target.data('src');
+          			target.attr('src', path);
+        		}
+      		}
+   		}
 	});
 
 	$('#J_ScrollBox').find('li').on('hover', function() {
