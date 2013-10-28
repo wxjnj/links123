@@ -709,10 +709,10 @@ $( function($) {
 
 		'#J_box_weather' : function() {
 			//解决safari禁用第三方cookie造成天气控件不显示的bug
-			if ($.browser.safari && navigator.userAgent.toLowerCase().match(/chrome/) == null) {
+			//if ($.browser.safari && navigator.userAgent.toLowerCase().match(/chrome/) == null) {
 				var weatherPlugin = '<iframe frameborder="0" scrolling="no" src="/Home/weather/index_new.html" ' + 'style="z-index: 99999; width: 380px; height: 220px; border: 0px;"></iframe>';
 				$('#J_box_weather').find('.K_weather_box').remove().end().append(weatherPlugin);
-			}
+			//}
 		},
 		
 		'#J_box_music' : function( app ){
