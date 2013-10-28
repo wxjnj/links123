@@ -944,6 +944,51 @@ class EnglishQuestionSpeakAction extends CommonAction {
         }
         $this->success('添加分类属性成功');
     }
+    public function forbid() {
+        $name = $this->getActionName();
+        $model = D($name);
+        $categoryModel = D("EnglishCategory");
+        $catquestionModel =  D("EnglishCatquestion");
+        $pk = $model->getPk();
+        $id = $_REQUEST [$pk];
+        $condition = array($pk => array('in', $id));
+        $q_map = array(
+            "question.status"=>1,
+            "media.status"=>1
+        );
+        $q_map['question.id'] = array('in',$id);
+        $q_list = $model->alias("question")->join(C("DB_PREFIX")."english_media media on media.id=question.media_id")->field("question.id")->where($q_map)->select();
+        $model->startTrans();
+        $time = time();
+        $list = $model->forbid($condition);
+        
+        if ($list !== false) {
+            foreach ($q_list as $value){
+                if($value['status'] == 1){
+                    $cat_question_map = array(
+                        "question_id"=>$value['id'],
+                        "type"=>0,
+                        "status"=>1
+                    );
+                    $cat_list = $catquestionModel->where($cat_question_map)->select();
+                    foreach($cat_list as $v){
+                        $data['question_num'] = array('exp','question_num-1');
+                        $data['updated'] = $time;
+                        $ret = $categoryModel->where(array("cat_id"=>$v['cat_id']))->save($data);
+                        if(false === $ret){
+                            $model->rollback();
+                            $this->error('状态禁用失败！');
+                        }
+                    }
+                }
+            }
+            $model->commit();
+            $this->success('状态禁用成功', $this->getReturnUrl());
+        } else {
+            $model->rollback();
+            $this->error('状态禁用失败！');
+        }
+    }
 }
 
 ?>

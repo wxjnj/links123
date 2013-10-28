@@ -592,29 +592,18 @@ class EnglishMediaAction extends CommonAction {
         if ($this->isAjax()) {
             $model = D("EnglishMedia");
             $data = array();
-            $data['id'] = $_REQUEST['id'];
-            $info = $model->field("special_recommend,recommend,subject,object")->find($data['id']);
-            if (empty($info)) {
-                $this->ajaxReturn("", "操作记录不存在", false);
+            $map['id'] = $_REQUEST['id'];
+            $now_special_recommend = $model->where($map)->getField("special_recommend");
+            if($now_special_recommend == 1){
+                $special_recommend = 0;
+            }else{
+                $special_recommend = 1;
             }
-            if (intval($info['special_recommend']) == 0) {
-                //如果不是推荐，自动设置为推荐
-                if (intval($info['recommend']) == 0) {
-                    $model->startTrans();
-                    $data['recommend'] = D("EnglishMediaRecommend")->getRecommendIdByObjectOrSubject($info['object'], $info['subject']);
-                }
-                $data['special_recommend'] = 1;
-            } else {
-                $data['special_recommend'] = 0;
-            }
-            $ret = $model->save($data);
-            if (false === $ret) {
-                $model->rollback();
+            if(false === $model->where($map)->setField("special_recommend",$special_recommend)){
                 $this->ajaxReturn("", "操作失败", false);
-            } else {
-                $model->commit();
-                $this->ajaxReturn($data, "操作成功", true);
             }
+            $data['special_recommend'] = $special_recommend;
+            $this->ajaxReturn($data, "操作成功", true);
         }
     }
 
@@ -695,6 +684,64 @@ class EnglishMediaAction extends CommonAction {
                 $model->commit();
                 $this->ajaxReturn($data['ted'], "操作成功", true);
             }
+        }
+    }
+     public function forbid() {
+        $name = $this->getActionName();
+        $model = D($name);
+        $categoryModel = D("EnglishCategory");
+        $catquestionModel =  D("EnglishCatquestion");
+        $questionModel = D("EnglishQuestion");
+        $questionSpeakModel = D("EnglishQuestionSpeak");
+        $pk = $model->getPk();
+        $id = $_REQUEST [$pk];
+        $condition = array($pk => array('in', $id));
+        $old_media_list = $model->field("id,status")->where($condition)->select();
+        $model->startTrans();
+        $time = time();
+        $list = $model->forbid($condition);
+        
+        if ($list !== false) {
+            foreach($old_media_list as $value){
+                if($value['status'] == 0){
+                    continue;
+                }
+                $media_ids[] = $value['id'];
+            }
+            $q_map['media_id'] = array("in", $media_ids);
+            $q_map['status'] = 1;
+            $question_list = $questionModel->field("id,1 as type")->where($q_map)->select();
+            $question_speak_list = $questionSpeakModel->field("id,0 as type")->where($q_map)->select();
+            if(empty($question_speak_list)){
+                $q_list = $question_list;
+            }elseif(empty($question_list)){
+                $q_list = $question_speak_list;
+            }else{
+                $q_list = array_merge($question_speak_list,$question_list);
+            }
+            
+            foreach ($q_list as $question){
+                $cat_question_map = array(
+                    "question_id"=>$question['id'],
+                    "type"=>$question['type'],
+                    "status"=>1
+                );
+                $cat_list = $catquestionModel->where($cat_question_map)->select();
+                foreach($cat_list as $v){
+                    $data['question_num'] = array('exp','question_num-1');
+                    $data['updated'] = $time;
+                    $ret = $categoryModel->where(array("cat_id"=>$v['cat_id']))->save($data);
+                    if(false === $ret){
+                        $model->rollback();
+                        $this->error('状态禁用失败！');
+                    }
+                }
+            }
+            $model->commit();
+            $this->success('状态禁用成功', $this->getReturnUrl());
+        } else {
+            $model->rollback();
+            $this->error('状态禁用失败！');
         }
     }
 
