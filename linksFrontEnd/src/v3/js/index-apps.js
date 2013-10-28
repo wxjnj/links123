@@ -712,9 +712,6 @@ $( function($) {
 			if ($.browser.safari && navigator.userAgent.toLowerCase().match(/chrome/) == null) {
 				var weatherPlugin = '<iframe frameborder="0" scrolling="no" src="/Home/weather/index_new.html" ' + 'style="z-index: 99999; width: 380px; height: 220px; border: 0px;"></iframe>';
 				$('#J_box_weather').find('.K_weather_box').remove().end().append(weatherPlugin);
-			}else{
-				var html = '<div class="K_weather_box" style="width: 380px; height: 220px;"><script type="text/javascript" src="http://ext.weather.com.cn/47111.js"></script></div>';
-				$('#J_box_weather').find('.K_weather_box').remove().end().html(html);
 			}
 		},
 		
