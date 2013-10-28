@@ -172,7 +172,7 @@ var AppsTpl = {
 				</div> \
 			</div>',
 	'#J_box_weather': '<div style="display:none" id="J_box_weather"> \
-				<div class="K_weather_box" style="width: 380px; height: 220px;"></div> \
+				<div class="K_weather_box" style="width: 380px; height: 220px;"><script type="text/javascript" src="http://ext.weather.com.cn/47111.js"></script></div> \
 			</div>',
 	'#J_box_music':  '<div style="display:none;"  id="J_box_music"> \
 			<div class="music_icon"></div> \
