@@ -1105,7 +1105,7 @@ var HelpMouse = {
 		},
 	
 		//新建和更新日程: id==null为新建，有id值为更新
-		update: function(id, time, desc){
+		update: function(id, time, desc, element){
 			User.CheckLogin();
 			var self = this;
 			var url, data;
@@ -1175,7 +1175,7 @@ var HelpMouse = {
 				var time = Date.parse(ymd + ' ' + hm);
 				var id = $(this).parent('li').attr('data-id');
 				self.format();
-				Calendar.update(id, time, desc);
+				Calendar.update(id, time, desc, $(this).parent('li'));
 			});
 
 			self.listElement.on('keydown', '.input-content', function(e){
@@ -1202,7 +1202,7 @@ var HelpMouse = {
 					var ymd = $('.cal_v303_show_date').html().replace(/\D\b/g, '-').replace(/\D\B/g, '');
 					var time = Date.parse(ymd + ' ' + hm);
 					var id = $self.parent('li').attr('data-id');
-					Calendar.update(id, time, desc);
+					Calendar.update(id, time, desc, $self.parent('li'));
 				},0)
 			});
 
@@ -1310,7 +1310,8 @@ var HelpMouse = {
 				var time = + Date.today() + pos / 3 * 15 * 60 * 1000
 				var mark = new MarkClass({
 					time: time / 1000,
-					desc: ''
+					desc: '',
+					id: 'null'
 				});
 				mark.appendTo($(this));
 				var baseLine = self.burnDownChartElement.offset().top + self.burnDownChartElement.height();
@@ -1647,7 +1648,7 @@ var HelpMouse = {
 				var v = d.find('.input_desc').val();
 				d.html(v);
 				$(this).hide();
-				self.update();
+				self.update(self.id, self.time, self.desc, self.html);
 			});
 			self.html.find('.del').click(function() {
 				self.html.remove();
@@ -1683,7 +1684,7 @@ var HelpMouse = {
 					}
 				},
 				stop: function(event, ui) {
-					Calendar.update(self.id, self.time, self.desc);
+					Calendar.update(self.id, self.time, self.desc, self.html);
 				}
 			});
 		}
