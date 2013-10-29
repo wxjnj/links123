@@ -922,9 +922,31 @@ class EnglishQuestionSpeakAction extends CommonAction {
         //@ 一级类目
         $category["level_one"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("1");
         //@ 二级类目
-        $category["level_two"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("2");
+        $categoryModel = D("EnglishCategory");
+        $map = array();
+        $map['category.level_one'] = $category["level_one"][0]['id'];
+        $group = 'category.level_two';
+        $flag = "level_two";
+        $category["level_two"] = $categoryModel->alias("category")
+                    ->field("category.".$flag." as id,levelname.name")
+                    ->join("RIGHT JOIN ".C("DB_PREFIX")."english_levelname levelname on levelname.id=category.".$flag)
+                    ->where($map)
+                    ->group($group)
+                    ->order("category.".$flag."_sort asc")
+                    ->select();
         //@ 三级类目
-        $category["level_thr"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("3");
+        $map = array();
+        $map['category.level_one'] = $category["level_one"][0]['id'];
+        $map['category.level_two'] = $category["level_two"][0]['id'];
+        $group = 'category.level_thr';
+        $flag = "level_thr";
+        $category["level_thr"] = $categoryModel->alias("category")
+                    ->field("category.".$flag." as id,levelname.name")
+                    ->join("RIGHT JOIN ".C("DB_PREFIX")."english_levelname levelname on levelname.id=category.".$flag)
+                    ->where($map)
+                    ->group($group)
+                    ->order("category.".$flag."_sort asc")
+                    ->select();
 
         $this->assign("category", $category);
         $this->assign("qid", intval($_REQUEST["qid"]));
@@ -1010,6 +1032,72 @@ class EnglishQuestionSpeakAction extends CommonAction {
             $model->rollback();
             $this->error('状态禁用失败！');
         }
+    }
+    public function delProperty(){
+        $id = $_REQUEST['id'];
+        $question_id = intval($_REQUEST['question_id']);
+        if($question_id == 0 || empty($id)){
+            $this->error("非法操作");
+        }
+        $ids = explode(",", $id);
+        //删除指定记录
+        $model = D("EnglishCatquestion");
+        $cat_condition = array(
+            "cat_id" => array('in', $ids),
+            );
+        $categoryModel = D("EnglishCategory");
+        $cat_list = $categoryModel->where($cat_condition)->select();
+        foreach($cat_list as $value){
+            $level_one_ids[] = $value['level_one'];
+        }
+            
+        //删除默认的,例如 综合
+        $map = array(
+            "catquestion.question_id"=>$question_id,
+            "catquestion.type"=>0,
+            "category.level_one"=>array("in",$level_one_ids),
+            "level_two_table.default"=>1,
+        );
+        $ret = $model->alias("catquestion")
+                ->field("catquestion.cat_id as cat_id")
+                ->join(C("DB_PREFIX")."english_category category on category.cat_id=catquestion.cat_id")
+                ->join(C("DB_PREFIX")."english_levelname level_two_table on category.level_two=level_two_table.id")
+                ->where($map)->select();
+        if(!empty($ret)){
+            foreach($ret as $value){
+                $ids[] = $value['cat_id'];
+            }
+        }
+        $condition = array(
+            "cat_id" => array('in', $ids),
+            "question_id"=>$question_id,
+            "type"=>0
+        );
+        $model->startTrans();
+        if (false !== $model->where($condition)->delete()) {
+            $question_map = array(
+                "media.status"=>1,
+                "question.status"=> 1,
+                "question.id"=>$question_id
+            );
+            $questionModel = D("EnglishQuestionSpeak");
+            $question_info = $questionModel->alias("question")->join(C("DB_PREFIX")."english_media media on media.id=question.media_id")->where($question_map)->find();
+            if(!empty($question_info)){
+                $cat_map = array(
+                    "cat_id" => array('in', $ids)
+                );
+                if(false === D("EnglishCategory")->where($cat_map)->setDec("question_num")){
+                    $model->rollback();
+                    $this->error('删除失败！');
+                }
+            }
+            $model->commit();
+            $this->success('删除成功！', cookie('_currentUrl_'));
+        } else {
+            $model->rollback();
+            $this->error('删除失败！');
+        }
+                
     }
 }
 

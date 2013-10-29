@@ -1,5 +1,5 @@
 <include file="Public:header" />
-
+<load href="__PUBLIC__/Js/Jquery/jquery.js" />
 <div id="main" class="main" >
 	<div class="content">
 		<div class="title">
@@ -44,7 +44,7 @@
 			<tr>
 				<td class="tRight" >一级类目：</td>
 				<td class="tLeft" >
-					<SELECT class="medium bLeft" name="level_one">
+					<SELECT class="medium bLeft" name="level_one" id="level_one_select">
 						<volist name="category.level_one" id="each_lv_one">
 						<option value="{$each_lv_one.id}">{$each_lv_one.name}</option>
 						</volist>
@@ -54,7 +54,7 @@
 			<tr>
 				<td class="tRight" >二级类目：</td>
 				<td class="tLeft" >
-					<SELECT class="medium bLeft" name="level_two">
+					<SELECT class="medium bLeft" name="level_two" id="level_two_select">
 						<volist name="category.level_two" id="each_lv_two">
 						<option value="{$each_lv_two.id}">{$each_lv_two.name}</option>
 						</volist>
@@ -64,7 +64,7 @@
 			<tr>
 				<td class="tRight" >三级类目：</td>
 				<td class="tLeft" >
-					<SELECT class="medium bLeft" name="level_thr">
+					<SELECT class="medium bLeft" name="level_thr" id="level_thr_select">
 						<volist name="category.level_thr" id="each_lv_thr">
 						<option value="{$each_lv_thr.id}">{$each_lv_thr.name}</option>
 						</volist>
@@ -91,3 +91,44 @@
 	</form>
 </div>
 </div>
+<script type="text/javascript">
+    $(function(){
+        $("#level_one_select").change(function(){
+            getLevelList(2);
+        })
+        $("#level_two_select").change(function(){
+            getLevelList(3);
+        })
+    })
+    function getLevelList(level){
+        var  postData = new Object();
+        postData.level = level;
+        if(level == 2){
+            postData.level_one = $("#level_one_select").val();
+        }else if(level == 3){
+            postData.level_one = $("#level_one_select").val();
+            postData.level_two = $("#level_two_select").val();
+        }
+        $.post("{:U('Admin/EnglishQuestion/getLevelList')}",postData,function(msg){
+            if(msg){
+                if(msg.status){
+                    var str = "";
+                    var data = msg.data;
+                    for(var i = 0;i<data.length;i++){
+                        str+="<option value='"+data[i]['id']+"'>"+data[i]['name']+"</option>";
+                    }
+                    if(level == 2){
+                        if(str){
+                            $("#level_two_select").html(str);
+                        }
+                        getLevelList(3);
+                    }else if(level == 3){
+                        if(str){
+                            $("#level_thr_select").html(str);
+                        }
+                    }
+                }
+            }
+        },"json")
+    }
+</script>
