@@ -747,7 +747,7 @@ class EnglishQuestionAction extends CommonAction {
                                         }
                                         //如果二级分类名为1，则分类名和选择课程的名称一样
                                         if(intval($data['category'][$level_one]['level_two_name']) == 1){
-                                            $data['category'][$level_one]['level_two_name'] = $data[$object_level_one_id]['level_two_name'];
+                                            $data['category'][$level_one]['level_two_name'] = $data['category'][$object_level_one_id]['level_two_name'];
                                             $data['category'][$level_one]['level_thr'] = intval($level_name_list[$data['difficulty']]);//三级分类
                                         }
                                     }
@@ -782,7 +782,7 @@ class EnglishQuestionAction extends CommonAction {
                                 if(FALSE === $new_id){
                                     $model->rollback();
                                     Log::write("导入失败，新增分类名称失败！：".$levelnameModel->getLastSql(), Log::ERR, true);
-                                    die(json_encode(array("info" => "导入失败，新增分类名称失败！", "status" => false)));
+                                    die(json_encode(array("info" => "导入失败，新增分类名称失败！","status" => false)));
                                 }
                                 Log::write("新增levelname:".$levelnameModel->getLastSql(), Log::INFO);
                                 $level_name_list[$value['level_two_name']] = $new_id;
@@ -1004,7 +1004,6 @@ class EnglishQuestionAction extends CommonAction {
                                 die(json_encode(array("info" => "导入失败，更新选项和试题关联失败！", "status" => false)));
                             }
                         }
-                        
                         //@ 添加类目id和题目id到对应表
                         if(!empty($data['cat_id'])){
                             foreach ($data['cat_id'] as $value){
