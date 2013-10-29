@@ -131,6 +131,22 @@
 				</div>
 			</div>
 			<div class="ci-bd">
+				<div class="banner"><img src="__PUBLIC__/IndexV3/1175.jpg" alt="" /></div>
+				<style>
+					.banner{
+						width: 960px;
+						overflow: hidden;
+						margin: -30px 0 20px 0;
+						height: 342px;
+					}
+					.banner img{ width: 960px; }
+					.widescreen .banner{
+						width: 1172px;
+						overflow: hidden;
+						margin: -30px 0 20px 0;
+						height: 418px;
+					}
+				</style>
 				<div class="zld" id="J_ZldList">
 					<form action="{:U('Link/index')}?mod=myarea" id="J_MyAreaForm" target="_blank" method="post"><input type="hidden" name="url" value="" /></form>
 					<ul id="J_sortable">
@@ -351,5 +367,22 @@
 		</div>
 	</div><!--#footer end-->
 	<script src="__STATIC__/min/?b=v3/js&f=jquery-1.7.1.min.js,jquery.cookies.2.2.0.min.js,jquery.plugins.js,index.js"></script>
+	<script>
+	setTimeout(function(){
+		var o = $('.banner');
+		var pos = $('.J_app_link').position();
+		o.css({border: '1px dotted #ccc', position: 'absolute'});
+		console.log(pos.top);
+		o.animate({
+			width: 0,
+			height: 0,
+			top: pos.top-o.height()+40+36,
+			left: pos.left+36
+		}, 1000, function(){
+			o.remove();
+		});
+
+	}, 1000);
+	</script>
 </body>
 </html>
