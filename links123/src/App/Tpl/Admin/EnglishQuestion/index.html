@@ -60,18 +60,18 @@
                     <input type="text" id="J_createTime" name="created" value="{$param['created']}" />
                     &nbsp;&nbsp;
                     分类：
-                    <select name="level_one">
+                    <select name="level_one" id="level_one_select">
                         <volist name="category['level_one']" id="level_one">
                             <option value="{$level_one.id}" <eq name="param['level_one']" value="$level_one['id']">selected="true"</eq>>{$level_one.name}</option>
                         </volist>
                     </select>&nbsp;&nbsp;
-                    <select name="level_two">
+                    <select name="level_two" id="level_two_select">
                         <option value="0">全部</option>
                         <volist name="category['level_two']" id="level_two">
                             <option value="{$level_two.id}" <eq name="param['level_two']" value="$level_two['id']">selected="true"</eq>>{$level_two.name}</option>
                         </volist>
                     </select>&nbsp;&nbsp;
-                    <select name="level_thr">
+                    <select name="level_thr" id="level_thr_select">
                         <option value="0">全部</option>
                         <volist name="category['level_thr']" id="level_thr">
                             <option value="{$level_thr.id}" <eq name="param['level_thr']" value="$level_thr['id']">selected="true"</eq>>{$level_thr.name}</option>
@@ -185,7 +185,7 @@
             $("[name='search']").click();
         })
         $("[name='level_one'],[name='level_two'],[name='level_thr']").change(function() {
-            $("[name='search']").click();
+            //$("[name='search']").click();
         })
         $(".operate input[name='special_recommend']").click(function() {
             if ($(this).val() == 1) {
@@ -220,6 +220,13 @@
                 }
             }
         });
+        $("#level_one_select").change(function(){
+            getLevelList(2);
+        })
+        $("#level_two_select").change(function(){
+            getLevelList(3);
+        })
+        //getLevelList(2);
     })
     function showRequest(formData, jqForm, options) {
         $("#dialog").window({title: "导入视频中"});
@@ -525,6 +532,37 @@
             page   = target.match(/p=([^&]+)/)[1];
         }
         location.href = URL + "/property/type/{$type}/qid/" + id + "/page/" + page;
+    }
+    function getLevelList(level){
+        var  postData = new Object();
+        postData.level = level;
+        if(level == 2){
+            postData.level_one = $("#level_one_select").val();
+        }else if(level == 3){
+            postData.level_one = $("#level_one_select").val();
+            postData.level_two = $("#level_two_select").val();
+        }
+        $.post("__URL__/getLevelList",postData,function(msg){
+            if(msg){
+                if(msg.status){
+                    var str = "";
+                    var data = msg.data;
+                    for(var i = 0;i<data.length;i++){
+                        str+="<option value='"+data[i]['id']+"'>"+data[i]['name']+"</option>";
+                    }
+                    if(level == 2){
+                        if(str){
+                            $("#level_two_select").html(str);
+                        }
+                        getLevelList(3);
+                    }else if(level == 3){
+                        if(str){
+                            $("#level_thr_select").html(str);
+                        }
+                    }
+                }
+            }
+        },"json")
     }
 </script>
 </body>
