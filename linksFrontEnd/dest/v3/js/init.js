@@ -1,4 +1,4 @@
-/*! Links123CN - v4.0.0 - 2013-10-28 */
+/*! Links123CN - v4.0.0 - 2013-10-29 */
 function createCookie(c, d, f, e) {
 	var e = (e) ? e : "/";
 	if (f) {
