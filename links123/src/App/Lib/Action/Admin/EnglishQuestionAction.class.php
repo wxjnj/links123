@@ -755,6 +755,7 @@ class EnglishQuestionAction extends CommonAction {
                             }
                         }
                     }
+                    var_dump($data);exit;
                     $data['cat_attr_id'] = bindec($data['voice']."".$target."".$data['pattern']);//分类顶级分类id
                     //跳过第一行，并判断表格是否标准
                     if (empty($data['name']) || $row->getRowIndex()==1) {
