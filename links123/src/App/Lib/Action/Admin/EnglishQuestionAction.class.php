@@ -787,32 +787,7 @@ class EnglishQuestionAction extends CommonAction {
                                 }
                                 Log::write("新增levelname:".$levelnameModel->getLastSql(), Log::INFO);
                                 $level_name_list[$value['level_two_name']] = $new_id;
-                                //逐一添加新增二级分类下的三级分类
-                                //默认三级分类列表为难度列表
-                                $level_thr_list = $difficulty_list;
-                                if($value['level_one'] == $object_level_one_id){
-                                    $level_thr_list = $grade_list;//如果是选择课程的新分类，逐一增加年级
-                                }
-                                foreach ($level_thr_list as $level_thr){
-                                    $cat_data = array();
-                                    $cat_data['cat_attr_id'] = $data['cat_attr_id'];
-                                    $cat_data['level_one'] = $value['level_one'];
-                                    $cat_data['level_two'] = $level_name_list[$value['level_two_name']];
-                                    $cat_data['level_thr'] = $level_thr;
-                                    $cat_data['updated'] = $cat_data['created'] = $time;
-                                    $new_id = $categoryModel->add($cat_data);
-                                    if(FALSE === $new_id){
-                                        $model->rollback();
-                                        Log::write("导入失败，新增分类失败！：".$categoryModel->getLastSql(), Log::ERR, true);
-                                        die(json_encode(array("info" => "导入失败，新增分类失败！", "status" => false)));
-                                    }
-                                    Log::write("新增:".$categoryModel->getLastSql(), Log::INFO);
-                                    //获取本次试题对应的分类id
-                                    if($value['level_thr'] == $level_thr){
-                                        $cat_id = $new_id;
-                                    }
-                                }
-                            }else{
+                            }/*else{
                                 $cat_map = array();
                                 $cat_map['cat_attr_id'] = $data['cat_attr_id'];
                                 $cat_map['level_one'] = $value['level_one'];
@@ -832,10 +807,41 @@ class EnglishQuestionAction extends CommonAction {
                                     Log::write("新增:".$categoryModel->getLastSql(), Log::INFO);
                                     $cat_id = $new_id;
                                 }
+                            }*/
+                            //逐一添加二级分类下的三级分类
+                            //默认三级分类列表为难度列表
+                            $level_thr_list = $difficulty_list;
+                            if($value['level_one'] == $object_level_one_id){
+                                $level_thr_list = $grade_list;//如果是选择课程的新分类，逐一增加年级
+                            }
+                            foreach ($level_thr_list as $key=>$level_thr){
+                                $cat_data = array();
+                                $cat_data['cat_attr_id'] = $data['cat_attr_id'];
+                                $cat_data['level_one'] = $value['level_one'];
+                                $cat_data['level_two'] = $level_name_list[$value['level_two_name']];
+                                $cat_data['level_thr'] = $level_thr;
+                                $cat_data['level_thr_sort'] = $key;
+                                $this_cat_id = $categoryModel->where($cat_data)->getField("cat_id");
+                                if(intval($this_cat_id) == 0){
+                                    $cat_data['updated'] = $cat_data['created'] = $time;
+                                    $new_cat_id = $categoryModel->add($cat_data);
+                                    if(FALSE === $new_cat_id){
+                                        $model->rollback();
+                                        Log::write("导入失败，新增分类失败！：".$categoryModel->getLastSql(), Log::ERR, true);
+                                        die(json_encode(array("info" => "导入失败，新增分类失败！", "status" => false)));
+                                    }
+                                    Log::write("新增:".$categoryModel->getLastSql(), Log::INFO);
+                                    //获取本次试题对应的分类id
+                                    if($value['level_thr'] == $level_thr){
+                                        $cat_id = $new_cat_id;
+                                    }
+                                }else{
+                                    $cat_id = $this_cat_id;
+                                }
                             }
                             //保存分类id，用于后面更新分类下的试题数量
                             $data['cat_id'][] = $cat_id;
-                        }   
+                        } 
                     }else{
                         $data['status'] = 0;//分类信息为空，试题锁住
                     }
