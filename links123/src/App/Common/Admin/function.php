@@ -151,7 +151,7 @@ function getMediaRecommendYorN($recommend, $info) {
     return $str;
 }
 function getVoiceNameFromAttrId($attr_id) {
-    $voice = substr(decbin($attr_id), 0, 1);
+    $voice = substr(sprintf("%03d", decbin($attr_id)), 0, 1);
     switch ($voice) {
         case 1:
             return "美音";
@@ -166,7 +166,7 @@ function getVoiceNameFromAttrId($attr_id) {
 }
 
 function getTargetNameFromAttrId($attr_id) {
-    $target = substr(decbin($attr_id), 1, 1);
+    $target = substr(sprintf("%03d", decbin($attr_id)), 1, 1);
     switch ($target) {
         case 1:
             return "听力";
@@ -181,7 +181,7 @@ function getTargetNameFromAttrId($attr_id) {
 }
 
 function getPatternNameFromAttrId($attr_id) {
-    $pattern = substr(decbin($attr_id), 2, 1);
+    $pattern = substr(sprintf("%03d", decbin($attr_id)), 2, 1);
     switch ($pattern) {
         case 1:
             return "视频";

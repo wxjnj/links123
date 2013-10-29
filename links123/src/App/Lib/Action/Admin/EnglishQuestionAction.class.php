@@ -293,10 +293,10 @@ class EnglishQuestionAction extends CommonAction {
         $type = intval($_REQUEST["type"]);
         $page = intval($_REQUEST["page"]);
         $question_property = $this->cEnglishQuestionLogic->getQuestionAndProperty($question_id, $type);
-        $is_recommend = $this->cEnglishQuestionLogic->isQuestionSpecRecommend($question_id);
+        //$is_recommend = $this->cEnglishQuestionLogic->isQuestionSpecRecommend($question_id);
         $this->assign("question", $question_property["question"]);
         $this->assign("property", $question_property["property"]);
-        $this->assign("is_recommend", $is_recommend);
+        //$this->assign("is_recommend", $is_recommend);
         $this->assign("page", $page);
         $this->display();
     }
@@ -346,6 +346,94 @@ class EnglishQuestionAction extends CommonAction {
         
         $voice       = isset($_REQUEST["voice"])     ? intval($_REQUEST["voice"])     : 1;
         //$target      = isset($_REQUEST["target"])    ? intval($_REQUEST["target"])    : 1;
+        $pattern     = isset($_REQUEST["pattern"])   ? intval($_REQUEST["pattern"])   : 1;
+        $level_one   = isset($_REQUEST["level_one"]) ? intval($_REQUEST["level_one"]) : 0;
+        $level_two   = isset($_REQUEST["level_two"]) ? intval($_REQUEST["level_two"]) : 0;
+        $level_thr   = isset($_REQUEST["level_thr"]) ? intval($_REQUEST["level_thr"]) : 0;
+        $status      = isset($_REQUEST["status"])    ? intval($_REQUEST["status"])    : 0;
+        $type        = isset($_REQUEST["type"])      ? intval($_REQUEST["type"])      : 1;
+        $target      = $type == 0 ? 0 : 1;
+
+
+        $ret = $this->cEnglishQuestionLogic->saveProperty(
+                                                    $question_id, 
+                                                    $voice, 
+                                                    $target, 
+                                                    $pattern, 
+                                                    $level_one, 
+                                                    $level_two, 
+                                                    $level_thr, 
+                                                    $status, 
+                                                    $type
+                                                );
+        if ($ret === false) {
+            $this->error($this->cEnglishQuestionLogic->getErrorMessage());
+            return;
+        }
+        $this->success('添加分类属性成功');
+    }
+    function editProperty(){
+        $model = D("EnglishCategory");
+        $cat_id = intval($_REQUEST['id']);
+        $question_id = intval($_REQUEST['question_id']);
+        if($cat_id == 0 || $question_id == 0){
+            $this->error("非法操作");
+        }
+        $cat_info = $model->find($cat_id);
+        $ret = D('EnglishLevelname')->getCategoryLevelListBy();
+        $cat_attr_id = sprintf("%03d", decbin($cat_info["cat_attr_id"]));
+        $cat_info["voice"]   = substr($cat_attr_id, 0, 1);
+        $cat_info["pattern"] = substr($cat_attr_id, 2, 1);
+
+        $this->assign("info",$cat_info);
+        $this->assign("question_id",$question_id);
+        
+        //@ 一级类目
+        $category["level_one"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("1");
+        //@ 二级类目
+        $categoryModel = D("EnglishCategory");
+        $map = array();
+        $map['category.level_one'] = $cat_info["level_one"];
+        $group = 'category.level_two';
+        $flag = "level_two";
+        $category["level_two"] = $categoryModel->alias("category")
+                    ->field("category.".$flag." as id,levelname.name")
+                    ->join("RIGHT JOIN ".C("DB_PREFIX")."english_levelname levelname on levelname.id=category.".$flag)
+                    ->where($map)
+                    ->group($group)
+                    ->order("category.".$flag."_sort asc")
+                    ->select();
+        //@ 三级类目
+        $map = array();
+        $map['category.level_one'] = $cat_info["level_one"];
+        $map['category.level_two'] = $cat_info["level_two"];
+        $group = 'category.level_thr';
+        $flag = "level_thr";
+        $category["level_thr"] = $categoryModel->alias("category")
+                    ->field("category.".$flag." as id,levelname.name")
+                    ->join("RIGHT JOIN ".C("DB_PREFIX")."english_levelname levelname on levelname.id=category.".$flag)
+                    ->where($map)
+                    ->group($group)
+                    ->order("category.".$flag."_sort asc")
+                    ->select();
+
+        $this->assign("category", $category);
+        
+        $this->display();
+    }
+    
+    /**
+    * 添加题目所属类目的属性
+    * author reasono
+    */
+    public function updateProperty() {
+        $question_id = intval(($_REQUEST["question_id"]));
+        if($question_id == 0){
+            $this->error("非法操作");
+        }
+        
+        
+        $voice       = isset($_REQUEST["voice"])     ? intval($_REQUEST["voice"])     : 1;
         $pattern     = isset($_REQUEST["pattern"])   ? intval($_REQUEST["pattern"])   : 1;
         $level_one   = isset($_REQUEST["level_one"]) ? intval($_REQUEST["level_one"]) : 0;
         $level_two   = isset($_REQUEST["level_two"]) ? intval($_REQUEST["level_two"]) : 0;
