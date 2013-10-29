@@ -594,60 +594,60 @@
 
 /* 针对Firefox不支持table中的absolute进行修正 */
 @-moz-document url-prefix() {
+
+	.extra-calendar .cal-header {
+		width: 579px;
+	}
+	.extra-calendar .cal-month table,
+	.extra-calendar .cal-week table {
+		width: 597px;
+		height: 50px;
+	}
+
 	.extra-calendar .cal-month table td,
 	.extra-calendar .cal-week table td {
-		display: block;
+		display: inline-block;
 	}
 	.extra-calendar .cal-week table tbody{
-		width: 594px;
+		width: 597px;
 	}
 	.extra-calendar .cal-month table th,
 	.extra-calendar .cal-week table th {
-		width: 78px;
+		width: 79px;
+		display: block;
+		float: left;
+		line-height: 50px;
+		position: relative;
+		margin-right: 2px;
 	}
 
+	.extra-calendar .cal-month table td,
 	.extra-calendar .cal-week table td {
 		width: 81px;
 		height: 293px;
-		position: absolute;
-	}
-
-	.extra-calendar .cal-month table .op-td-1,
-	.extra-calendar .cal-week table .td_2 {
-		width: 81px;
-		margin-left: 83px;
-	}
-	.extra-calendar .cal-month table .op-td-2,
-	.extra-calendar .cal-week table .td_3 {
-		width: 81px;
-		margin-left: 166px;
-	}
-	.extra-calendar .cal-month table .op-td-3,
-	.extra-calendar .cal-week table .td_4 {
-		width: 80px;
-		margin-left: 249px;
-	}
-	.extra-calendar .cal-month table .op-td-4,
-	.extra-calendar .cal-week table .td_5 {
-		width: 81px;
-		margin-left: 331px;
-	}
-	.extra-calendar .cal-month table .op-td-5,
-	.extra-calendar .cal-week table .td_6 {
-		width: 81px;
-		margin-left: 414px;
-	}
-	.extra-calendar .cal-month table .op-td-6,
-	.extra-calendar .cal-week table .td_7 {
-		width: 81px;
-		margin-left: 497px;
-	}
-
-	.extra-calendar .cal-month table td {
+		display: block;
+		position: relative;
 		float: left;
-		position: absolute;
-		width: 81px;
-		height: 57px;
-		line-height: 57px;
+		margin-right: 2px;
 	}
+	.extra-calendar .cal-month table td {
+		height: 60px;
+		line-height: 60px;
+	}
+
+	.extra-calendar .cal-day .cal-day-burn-down-chart {
+		width:357px;
+	}
+	.extra-calendar .cal-day .cal-day-burn-down-chart .chart-body {
+		width:357px;
+	}
+	.extra-calendar .cal-day .cal-day-burn-down-chart .chart {
+		width:357px;
+	}
+	.extra-calendar .cal-day .cal-day-burn-down-chart .cal-day-event-item {
+		width:347px;
+		padding:0 5px;
+	}
+
 }
+
