@@ -296,6 +296,73 @@ class EnglishQuestionAction extends CommonAction {
         }
         $this->success('添加分类属性成功');
     }
+    
+    public function delProperty(){
+        $id = $_REQUEST['id'];
+        $question_id = intval($_REQUEST['question_id']);
+        if($question_id == 0 || empty($id)){
+            $this->error("非法操作");
+        }
+        $ids = explode(",", $id);
+        //删除指定记录
+        $model = D("EnglishCatquestion");
+        $cat_condition = array(
+            "cat_id" => array('in', $ids),
+            );
+        $categoryModel = D("EnglishCategory");
+        $cat_list = $categoryModel->where($cat_condition)->select();
+        foreach($cat_list as $value){
+            $level_one_ids[] = $value['level_one'];
+        }
+            
+        //删除默认的,例如 综合
+        $map = array(
+            "catquestion.question_id"=>$question_id,
+            "catquestion.type"=>1,
+            "category.level_one"=>array("in",$level_one_ids),
+            "level_two_table.default"=>1,
+        );
+        $ret = $model->alias("catquestion")
+                ->field("catquestion.cat_id as cat_id")
+                ->join(C("DB_PREFIX")."english_category category on category.cat_id=catquestion.cat_id")
+                ->join(C("DB_PREFIX")."english_levelname level_two_table on category.level_two=level_two_table.id")
+                ->where($map)->select();
+        if(!empty($ret)){
+            foreach($ret as $value){
+                $ids[] = $value['cat_id'];
+            }
+        }
+        $condition = array(
+            "cat_id" => array('in', $ids),
+            "question_id"=>$question_id,
+            "type"=>1
+        );
+        $model->startTrans();
+        if (false !== $model->where($condition)->delete()) {
+            $question_map = array(
+                "media.status"=>1,
+                "question.status"=> 1,
+                "question.id"=>$question_id
+            );
+            $questionModel = D("EnglishQuestion");
+            $question_info = $questionModel->alias("question")->join(C("DB_PREFIX")."english_media media on media.id=question.media_id")->where($question_map)->find();
+            if(!empty($question_info)){
+                $cat_map = array(
+                    "cat_id" => array('in', $ids)
+                );
+                if(false === D("EnglishCategory")->where($cat_map)->setDec("question_num")){
+                    $model->rollback();
+                    $this->error('删除失败！');
+                }
+            }
+            $model->commit();
+            $this->success('删除成功！', cookie('_currentUrl_'));
+        } else {
+            $model->rollback();
+            $this->error('删除失败！');
+        }
+                
+    }
 
 
 

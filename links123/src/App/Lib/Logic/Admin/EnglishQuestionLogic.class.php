@@ -9,12 +9,12 @@ class EnglishQuestionLogic {
 
 	/**
 	* @param [Integer] $question_id 题目ID
-	* @param [Integer] $question_type 题目类型 1=说力 0=听力
+	* @param [Integer] $question_type 题目类型 0=说力 1=听力
 	* @return [Array] question and property
 	*/
 	public function getQuestionAndProperty($question_id, $question_type = 1) {
 		$dic = array();
-		if ($question_type == 1) {
+		if ($question_type == 0) {
 			$question = D('EnglishQuestionSpeak')->find($question_id);	
 		} else {
 			$question = D('EnglishQuestion')->find($question_id);
