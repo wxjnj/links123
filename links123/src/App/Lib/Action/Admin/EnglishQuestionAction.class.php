@@ -688,12 +688,12 @@ class EnglishQuestionAction extends CommonAction {
                                         $is_standard_excel = false;
                                         break;
                                     }
-                                }  else if ($cell->getColumn() == "D") {
+                                }  else if ($cell->getColumn() == "N") {
                                     if(ftrim($cell->getCalculatedValue())!="视频来源地址"){
                                         $is_standard_excel = false;
                                         break;
                                     }
-                                } else if ($cell->getColumn() == "J") {
+                                } else if ($cell->getColumn() == "T") {
                                     if(ftrim($cell->getCalculatedValue())!="选项D内容"){
                                         $is_standard_excel = false;
                                         break;
@@ -711,28 +711,29 @@ class EnglishQuestionAction extends CommonAction {
                                 } else if ($cell->getColumn() == "C") {
                                     $data['pattern'] = intval($cell->getCalculatedValue()) == 2 ? 0 : 1; //类型，视频，音频
                                 } else if ($cell->getColumn() == "D") {
-                                    $data['media_text_url'] = $media_data['media_source_url'] = ftrim($cell->getCalculatedValue()); //媒体内容地址
+                                    //说力听力，无用
                                 } else if ($cell->getColumn() == "E") {
-                                    $data['content'] = ftrim($cell->getCalculatedValue()); //题目内容
-                                } else if ($cell->getColumn() == "F") {
-                                    $data['answer'] = intval($cell->getCalculatedValue()); //题目答案
-                                } else if ($cell->getColumn() == "G") {
-                                    $data['option'][0] = ftrim($cell->getCalculatedValue()); //题目选项一
-                                } else if ($cell->getColumn() == "H") {
-                                    $data['option'][1] = ftrim($cell->getCalculatedValue()); //题目选项二
-                                } else if ($cell->getColumn() == "I") {
-                                    $data['option'][2] = ftrim($cell->getCalculatedValue()); //题目选项三
-                                } else if ($cell->getColumn() == "J") {
-                                    $data['option'][3] = ftrim($cell->getCalculatedValue()); //题目选项四
-                                } else if ($cell->getColumn() == "K") {
-                                    $media_data['special_recommend'] = intval($cell->getCalculatedValue()); //特别推荐
-                                } else if ($cell->getColumn() == "L") {
+                                    //年级
                                     $data['grade'] = ftrim($cell->getCalculatedValue()); //二级分类，年级，选择课程顶级分类使用
-                                } else if ($cell->getColumn() == "M") {
-                                    $data['difficulty'] = ftrim($cell->getCalculatedValue()); //二级分类，难度值，其他等级分类使用
                                     if($difficulty_from_grade_list[$data['grade']]){
                                         $data['difficulty'] = $difficulty_from_grade_list[$data['grade']];
                                     }
+                                } else if ($cell->getColumn() == "I") {
+                                    $media_data['special_recommend'] = intval($cell->getCalculatedValue()); //特别推荐
+                                } else if ($cell->getColumn() == "N") {
+                                    $data['media_text_url'] = $media_data['media_source_url'] = ftrim($cell->getCalculatedValue()); //媒体内容地址
+                                } else if ($cell->getColumn() == "O") {
+                                    $data['content'] = ftrim($cell->getCalculatedValue()); //题目内容
+                                } else if ($cell->getColumn() == "P") {
+                                    $data['answer'] = intval($cell->getCalculatedValue()); //题目答案
+                                } else if ($cell->getColumn() == "Q") {
+                                    $data['option'][0] = ftrim($cell->getCalculatedValue()); //题目选项一
+                                } else if ($cell->getColumn() == "R") {
+                                    $data['option'][1] = ftrim($cell->getCalculatedValue()); //题目选项一
+                                } else if ($cell->getColumn() == "S") {
+                                    $data['option'][2] = ftrim($cell->getCalculatedValue()); //题目选项一
+                                } else if ($cell->getColumn() == "T") {
+                                    $data['option'][3] = ftrim($cell->getCalculatedValue()); //题目选项一
                                 } else if (intval($excel_level_one_list[$cell->getColumn()]) > 0) {
                                     $calculatedValue = ftrim($cell->getCalculatedValue());
                                     if(!empty($calculatedValue)){
