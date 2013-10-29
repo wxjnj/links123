@@ -217,10 +217,32 @@ class EnglishQuestionAction extends CommonAction {
         //@ 一级类目
         $category["level_one"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("1");
         //@ 二级类目
-        $category["level_two"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("2");
+        $categoryModel = D("EnglishCategory");
+        $map = array();
+        $map['category.level_one'] = $param['level_one'] ? $param['level_one'] : $category["level_one"][0]['id'];
+        $group = 'category.level_two';
+        $flag = "level_two";
+        $category["level_two"] = $categoryModel->alias("category")
+                    ->field("category.".$flag." as id,levelname.name")
+                    ->join("RIGHT JOIN ".C("DB_PREFIX")."english_levelname levelname on levelname.id=category.".$flag)
+                    ->where($map)
+                    ->group($group)
+                    ->order("category.".$flag."_sort asc")
+                    ->select();
         //@ 三级类目
-        $category["level_thr"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("3");
-
+        $map = array();
+        $map['category.level_one'] = $param['level_one'] ? $param['level_one'] : $category["level_one"][0]['id'];
+        $map['category.level_two'] = $param['level_two'] ? $param['level_two'] : $category["level_two"][0]['id'];
+        $group = 'category.level_thr';
+        $flag = "level_thr";
+        $category["level_thr"] = $categoryModel->alias("category")
+                    ->field("category.".$flag." as id,levelname.name")
+                    ->join("RIGHT JOIN ".C("DB_PREFIX")."english_levelname levelname on levelname.id=category.".$flag)
+                    ->where($map)
+                    ->group($group)
+                    ->order("category.".$flag."_sort asc")
+                    ->select();
+        
         $this->assign("category", $category);
         $this->assign("type", 1);//听力
 
@@ -232,6 +254,38 @@ class EnglishQuestionAction extends CommonAction {
         $this->display();
         return;
     }
+    public function getLevelList(){
+        if($this->isAjax()){
+            $level = intval($_REQUEST['level']) > 0 ? intval($_REQUEST['level']) : 1;
+            $level_one = intval($_REQUEST['level_one']);
+            $level_two = intval($_REQUEST['level_two']);
+            
+            if($level == 1){
+                $ret = D("EnglishLevelname")->where("level=1 and status=1")->order("sort asc")->select();
+            }elseif ($level == 2) {
+                $map['category.level_one'] = $level_one;
+                $group = 'category.level_two';
+                $flag = "level_two";
+            }elseif ($level == 3) {
+                $map['category.level_one'] = $level_one;
+                $map['category.level_two'] = $level_two;
+                $group = 'category.level_thr';
+                $flag = "level_thr";
+            }
+            if(!empty($map)){
+                $model = D("EnglishCategory");
+                $ret = $model->alias("category")
+                        ->field("category.".$flag." as id,levelname.name")
+                        ->join("RIGHT JOIN ".C("DB_PREFIX")."english_levelname levelname on levelname.id=category.".$flag)
+                        ->where($map)
+                        ->group($group)
+                        ->order("category.".$flag."_sort asc")
+                        ->select();
+                
+            }
+            $this->ajaxReturn($ret,$model->getLastSql(),true);
+        }
+    }
 
 
     public function property () {
@@ -239,10 +293,10 @@ class EnglishQuestionAction extends CommonAction {
         $type = intval($_REQUEST["type"]);
         $page = intval($_REQUEST["page"]);
         $question_property = $this->cEnglishQuestionLogic->getQuestionAndProperty($question_id, $type);
-        $is_recommend = $this->cEnglishQuestionLogic->isQuestionSpecRecommend($question_id);
+        //$is_recommend = $this->cEnglishQuestionLogic->isQuestionSpecRecommend($question_id);
         $this->assign("question", $question_property["question"]);
         $this->assign("property", $question_property["property"]);
-        $this->assign("is_recommend", $is_recommend);
+        //$this->assign("is_recommend", $is_recommend);
         $this->assign("page", $page);
         $this->display();
     }
@@ -252,9 +306,31 @@ class EnglishQuestionAction extends CommonAction {
         //@ 一级类目
         $category["level_one"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("1");
         //@ 二级类目
-        $category["level_two"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("2");
+        $categoryModel = D("EnglishCategory");
+        $map = array();
+        $map['category.level_one'] = $category["level_one"][0]['id'];
+        $group = 'category.level_two';
+        $flag = "level_two";
+        $category["level_two"] = $categoryModel->alias("category")
+                    ->field("category.".$flag." as id,levelname.name")
+                    ->join("RIGHT JOIN ".C("DB_PREFIX")."english_levelname levelname on levelname.id=category.".$flag)
+                    ->where($map)
+                    ->group($group)
+                    ->order("category.".$flag."_sort asc")
+                    ->select();
         //@ 三级类目
-        $category["level_thr"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("3");
+        $map = array();
+        $map['category.level_one'] = $category["level_one"][0]['id'];
+        $map['category.level_two'] = $category["level_two"][0]['id'];
+        $group = 'category.level_thr';
+        $flag = "level_thr";
+        $category["level_thr"] = $categoryModel->alias("category")
+                    ->field("category.".$flag." as id,levelname.name")
+                    ->join("RIGHT JOIN ".C("DB_PREFIX")."english_levelname levelname on levelname.id=category.".$flag)
+                    ->where($map)
+                    ->group($group)
+                    ->order("category.".$flag."_sort asc")
+                    ->select();
 
         $this->assign("category", $category);
         $this->assign("qid", intval($_REQUEST["qid"]));
@@ -295,6 +371,161 @@ class EnglishQuestionAction extends CommonAction {
             return;
         }
         $this->success('添加分类属性成功');
+    }
+    function editProperty(){
+        $model = D("EnglishCategory");
+        $cat_id = intval($_REQUEST['id']);
+        $question_id = intval($_REQUEST['question_id']);
+        if($cat_id == 0 || $question_id == 0){
+            $this->error("非法操作");
+        }
+        $cat_info = $model->find($cat_id);
+        $ret = D('EnglishLevelname')->getCategoryLevelListBy();
+        $cat_attr_id = sprintf("%03d", decbin($cat_info["cat_attr_id"]));
+        $cat_info["voice"]   = substr($cat_attr_id, 0, 1);
+        $cat_info["pattern"] = substr($cat_attr_id, 2, 1);
+
+        $this->assign("info",$cat_info);
+        $this->assign("question_id",$question_id);
+        
+        //@ 一级类目
+        $category["level_one"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("1");
+        //@ 二级类目
+        $categoryModel = D("EnglishCategory");
+        $map = array();
+        $map['category.level_one'] = $cat_info["level_one"];
+        $group = 'category.level_two';
+        $flag = "level_two";
+        $category["level_two"] = $categoryModel->alias("category")
+                    ->field("category.".$flag." as id,levelname.name")
+                    ->join("RIGHT JOIN ".C("DB_PREFIX")."english_levelname levelname on levelname.id=category.".$flag)
+                    ->where($map)
+                    ->group($group)
+                    ->order("category.".$flag."_sort asc")
+                    ->select();
+        //@ 三级类目
+        $map = array();
+        $map['category.level_one'] = $cat_info["level_one"];
+        $map['category.level_two'] = $cat_info["level_two"];
+        $group = 'category.level_thr';
+        $flag = "level_thr";
+        $category["level_thr"] = $categoryModel->alias("category")
+                    ->field("category.".$flag." as id,levelname.name")
+                    ->join("RIGHT JOIN ".C("DB_PREFIX")."english_levelname levelname on levelname.id=category.".$flag)
+                    ->where($map)
+                    ->group($group)
+                    ->order("category.".$flag."_sort asc")
+                    ->select();
+
+        $this->assign("category", $category);
+        
+        $this->display();
+    }
+    
+    /**
+    * 添加题目所属类目的属性
+    * author reasono
+    */
+    public function updateProperty() {
+        $question_id = intval(($_REQUEST["question_id"]));
+        if($question_id == 0){
+            $this->error("非法操作");
+        }
+        
+        
+        $voice       = isset($_REQUEST["voice"])     ? intval($_REQUEST["voice"])     : 1;
+        $pattern     = isset($_REQUEST["pattern"])   ? intval($_REQUEST["pattern"])   : 1;
+        $level_one   = isset($_REQUEST["level_one"]) ? intval($_REQUEST["level_one"]) : 0;
+        $level_two   = isset($_REQUEST["level_two"]) ? intval($_REQUEST["level_two"]) : 0;
+        $level_thr   = isset($_REQUEST["level_thr"]) ? intval($_REQUEST["level_thr"]) : 0;
+        $status      = isset($_REQUEST["status"])    ? intval($_REQUEST["status"])    : 0;
+        $type        = isset($_REQUEST["type"])      ? intval($_REQUEST["type"])      : 1;
+        $target      = $type == 0 ? 0 : 1;
+
+
+        $ret = $this->cEnglishQuestionLogic->saveProperty(
+                                                    $question_id, 
+                                                    $voice, 
+                                                    $target, 
+                                                    $pattern, 
+                                                    $level_one, 
+                                                    $level_two, 
+                                                    $level_thr, 
+                                                    $status, 
+                                                    $type
+                                                );
+        if ($ret === false) {
+            $this->error($this->cEnglishQuestionLogic->getErrorMessage());
+            return;
+        }
+        $this->success('添加分类属性成功');
+    }
+    
+    public function delProperty(){
+        $id = $_REQUEST['id'];
+        $question_id = intval($_REQUEST['question_id']);
+        if($question_id == 0 || empty($id)){
+            $this->error("非法操作");
+        }
+        $ids = explode(",", $id);
+        //删除指定记录
+        $model = D("EnglishCatquestion");
+        $cat_condition = array(
+            "cat_id" => array('in', $ids),
+            );
+        $categoryModel = D("EnglishCategory");
+        $cat_list = $categoryModel->where($cat_condition)->select();
+        foreach($cat_list as $value){
+            $level_one_ids[] = $value['level_one'];
+        }
+            
+        //删除默认的,例如 综合
+        $map = array(
+            "catquestion.question_id"=>$question_id,
+            "catquestion.type"=>1,
+            "category.level_one"=>array("in",$level_one_ids),
+            "level_two_table.default"=>1,
+        );
+        $ret = $model->alias("catquestion")
+                ->field("catquestion.cat_id as cat_id")
+                ->join(C("DB_PREFIX")."english_category category on category.cat_id=catquestion.cat_id")
+                ->join(C("DB_PREFIX")."english_levelname level_two_table on category.level_two=level_two_table.id")
+                ->where($map)->select();
+        if(!empty($ret)){
+            foreach($ret as $value){
+                $ids[] = $value['cat_id'];
+            }
+        }
+        $condition = array(
+            "cat_id" => array('in', $ids),
+            "question_id"=>$question_id,
+            "type"=>1
+        );
+        $model->startTrans();
+        if (false !== $model->where($condition)->delete()) {
+            $question_map = array(
+                "media.status"=>1,
+                "question.status"=> 1,
+                "question.id"=>$question_id
+            );
+            $questionModel = D("EnglishQuestion");
+            $question_info = $questionModel->alias("question")->join(C("DB_PREFIX")."english_media media on media.id=question.media_id")->where($question_map)->find();
+            if(!empty($question_info)){
+                $cat_map = array(
+                    "cat_id" => array('in', $ids)
+                );
+                if(false === D("EnglishCategory")->where($cat_map)->setDec("question_num")){
+                    $model->rollback();
+                    $this->error('删除失败！');
+                }
+            }
+            $model->commit();
+            $this->success('删除成功！', cookie('_currentUrl_'));
+        } else {
+            $model->rollback();
+            $this->error('删除失败！');
+        }
+                
     }
 
 
@@ -688,12 +919,12 @@ class EnglishQuestionAction extends CommonAction {
                                         $is_standard_excel = false;
                                         break;
                                     }
-                                }  else if ($cell->getColumn() == "D") {
+                                }  else if ($cell->getColumn() == "N") {
                                     if(ftrim($cell->getCalculatedValue())!="视频来源地址"){
                                         $is_standard_excel = false;
                                         break;
                                     }
-                                } else if ($cell->getColumn() == "J") {
+                                } else if ($cell->getColumn() == "T") {
                                     if(ftrim($cell->getCalculatedValue())!="选项D内容"){
                                         $is_standard_excel = false;
                                         break;
@@ -711,28 +942,29 @@ class EnglishQuestionAction extends CommonAction {
                                 } else if ($cell->getColumn() == "C") {
                                     $data['pattern'] = intval($cell->getCalculatedValue()) == 2 ? 0 : 1; //类型，视频，音频
                                 } else if ($cell->getColumn() == "D") {
-                                    $data['media_text_url'] = $media_data['media_source_url'] = ftrim($cell->getCalculatedValue()); //媒体内容地址
+                                    //说力听力，无用
                                 } else if ($cell->getColumn() == "E") {
-                                    $data['content'] = ftrim($cell->getCalculatedValue()); //题目内容
-                                } else if ($cell->getColumn() == "F") {
-                                    $data['answer'] = intval($cell->getCalculatedValue()); //题目答案
-                                } else if ($cell->getColumn() == "G") {
-                                    $data['option'][0] = ftrim($cell->getCalculatedValue()); //题目选项一
-                                } else if ($cell->getColumn() == "H") {
-                                    $data['option'][1] = ftrim($cell->getCalculatedValue()); //题目选项二
-                                } else if ($cell->getColumn() == "I") {
-                                    $data['option'][2] = ftrim($cell->getCalculatedValue()); //题目选项三
-                                } else if ($cell->getColumn() == "J") {
-                                    $data['option'][3] = ftrim($cell->getCalculatedValue()); //题目选项四
-                                } else if ($cell->getColumn() == "K") {
-                                    $media_data['special_recommend'] = intval($cell->getCalculatedValue()); //特别推荐
-                                } else if ($cell->getColumn() == "L") {
+                                    //年级
                                     $data['grade'] = ftrim($cell->getCalculatedValue()); //二级分类，年级，选择课程顶级分类使用
-                                } else if ($cell->getColumn() == "M") {
-                                    $data['difficulty'] = ftrim($cell->getCalculatedValue()); //二级分类，难度值，其他等级分类使用
                                     if($difficulty_from_grade_list[$data['grade']]){
                                         $data['difficulty'] = $difficulty_from_grade_list[$data['grade']];
                                     }
+                                } else if ($cell->getColumn() == "I") {
+                                    $media_data['special_recommend'] = intval($cell->getCalculatedValue()); //特别推荐
+                                } else if ($cell->getColumn() == "N") {
+                                    $data['media_text_url'] = $media_data['media_source_url'] = ftrim($cell->getCalculatedValue()); //媒体内容地址
+                                } else if ($cell->getColumn() == "O") {
+                                    $data['content'] = ftrim($cell->getCalculatedValue()); //题目内容
+                                } else if ($cell->getColumn() == "P") {
+                                    $data['answer'] = intval($cell->getCalculatedValue()); //题目答案
+                                } else if ($cell->getColumn() == "Q") {
+                                    $data['option'][0] = ftrim($cell->getCalculatedValue()); //题目选项一
+                                } else if ($cell->getColumn() == "R") {
+                                    $data['option'][1] = ftrim($cell->getCalculatedValue()); //题目选项一
+                                } else if ($cell->getColumn() == "S") {
+                                    $data['option'][2] = ftrim($cell->getCalculatedValue()); //题目选项一
+                                } else if ($cell->getColumn() == "T") {
+                                    $data['option'][3] = ftrim($cell->getCalculatedValue()); //题目选项一
                                 } else if (intval($excel_level_one_list[$cell->getColumn()]) > 0) {
                                     $calculatedValue = ftrim($cell->getCalculatedValue());
                                     if(!empty($calculatedValue)){
@@ -747,7 +979,7 @@ class EnglishQuestionAction extends CommonAction {
                                         }
                                         //如果二级分类名为1，则分类名和选择课程的名称一样
                                         if(intval($data['category'][$level_one]['level_two_name']) == 1){
-                                            $data['category'][$level_one]['level_two_name'] = $data[$object_level_one_id]['level_two_name'];
+                                            $data['category'][$level_one]['level_two_name'] = $data['category'][$object_level_one_id]['level_two_name'];
                                             $data['category'][$level_one]['level_thr'] = intval($level_name_list[$data['difficulty']]);//三级分类
                                         }
                                     }
@@ -782,36 +1014,11 @@ class EnglishQuestionAction extends CommonAction {
                                 if(FALSE === $new_id){
                                     $model->rollback();
                                     Log::write("导入失败，新增分类名称失败！：".$levelnameModel->getLastSql(), Log::ERR, true);
-                                    die(json_encode(array("info" => "导入失败，新增分类名称失败！", "status" => false)));
+                                    die(json_encode(array("info" => "导入失败，新增分类名称失败！","status" => false)));
                                 }
                                 Log::write("新增levelname:".$levelnameModel->getLastSql(), Log::INFO);
                                 $level_name_list[$value['level_two_name']] = $new_id;
-                                //逐一添加新增二级分类下的三级分类
-                                //默认三级分类列表为难度列表
-                                $level_thr_list = $difficulty_list;
-                                if($value['level_one'] == $object_level_one_id){
-                                    $level_thr_list = $grade_list;//如果是选择课程的新分类，逐一增加年级
-                                }
-                                foreach ($level_thr_list as $level_thr){
-                                    $cat_data = array();
-                                    $cat_data['cat_attr_id'] = $data['cat_attr_id'];
-                                    $cat_data['level_one'] = $value['level_one'];
-                                    $cat_data['level_two'] = $level_name_list[$value['level_two_name']];
-                                    $cat_data['level_thr'] = $level_thr;
-                                    $cat_data['updated'] = $cat_data['created'] = $time;
-                                    $new_id = $categoryModel->add($cat_data);
-                                    if(FALSE === $new_id){
-                                        $model->rollback();
-                                        Log::write("导入失败，新增分类失败！：".$categoryModel->getLastSql(), Log::ERR, true);
-                                        die(json_encode(array("info" => "导入失败，新增分类失败！", "status" => false)));
-                                    }
-                                    Log::write("新增:".$categoryModel->getLastSql(), Log::INFO);
-                                    //获取本次试题对应的分类id
-                                    if($value['level_thr'] == $level_thr){
-                                        $cat_id = $new_id;
-                                    }
-                                }
-                            }else{
+                            }/*else{
                                 $cat_map = array();
                                 $cat_map['cat_attr_id'] = $data['cat_attr_id'];
                                 $cat_map['level_one'] = $value['level_one'];
@@ -831,10 +1038,41 @@ class EnglishQuestionAction extends CommonAction {
                                     Log::write("新增:".$categoryModel->getLastSql(), Log::INFO);
                                     $cat_id = $new_id;
                                 }
+                            }*/
+                            //逐一添加二级分类下的三级分类
+                            //默认三级分类列表为难度列表
+                            $level_thr_list = $difficulty_list;
+                            if($value['level_one'] == $object_level_one_id){
+                                $level_thr_list = $grade_list;//如果是选择课程的新分类，逐一增加年级
+                            }
+                            foreach ($level_thr_list as $key=>$level_thr){
+                                $cat_data = array();
+                                $cat_data['cat_attr_id'] = $data['cat_attr_id'];
+                                $cat_data['level_one'] = $value['level_one'];
+                                $cat_data['level_two'] = $level_name_list[$value['level_two_name']];
+                                $cat_data['level_thr'] = $level_thr;
+                                $cat_data['level_thr_sort'] = $key;
+                                $this_cat_id = $categoryModel->where($cat_data)->getField("cat_id");
+                                if(intval($this_cat_id) == 0){
+                                    $cat_data['updated'] = $cat_data['created'] = $time;
+                                    $new_cat_id = $categoryModel->add($cat_data);
+                                    if(FALSE === $new_cat_id){
+                                        $model->rollback();
+                                        Log::write("导入失败，新增分类失败！：".$categoryModel->getLastSql(), Log::ERR, true);
+                                        die(json_encode(array("info" => "导入失败，新增分类失败！", "status" => false)));
+                                    }
+                                    Log::write("新增:".$categoryModel->getLastSql(), Log::INFO);
+                                    //获取本次试题对应的分类id
+                                    if($value['level_thr'] == $level_thr){
+                                        $cat_id = $new_cat_id;
+                                    }
+                                }else{
+                                    $cat_id = $this_cat_id;
+                                }
                             }
                             //保存分类id，用于后面更新分类下的试题数量
                             $data['cat_id'][] = $cat_id;
-                        }   
+                        } 
                     }else{
                         $data['status'] = 0;//分类信息为空，试题锁住
                     }
@@ -1004,7 +1242,6 @@ class EnglishQuestionAction extends CommonAction {
                                 die(json_encode(array("info" => "导入失败，更新选项和试题关联失败！", "status" => false)));
                             }
                         }
-                        
                         //@ 添加类目id和题目id到对应表
                         if(!empty($data['cat_id'])){
                             foreach ($data['cat_id'] as $value){

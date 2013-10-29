@@ -9,12 +9,13 @@ class EnglishQuestionLogic {
 
 	/**
 	* @param [Integer] $question_id 题目ID
-	* @param [Integer] $question_type 题目类型 1=说力 0=听力
+	* @param [Integer] $question_type 题目类型 0=说力 1=听力
 	* @return [Array] question and property
 	*/
 	public function getQuestionAndProperty($question_id, $question_type = 1) {
 		$dic = array();
-		if ($question_type == 1) {
+        $default_list = array();
+		if ($question_type == 0) {
 			$question = D('EnglishQuestionSpeak')->find($question_id);	
 		} else {
 			$question = D('EnglishQuestion')->find($question_id);
@@ -22,23 +23,29 @@ class EnglishQuestionLogic {
 		$ret = D('EnglishLevelname')->getCategoryLevelListBy();
 		foreach($ret as $each_lvname) {
 			$dic[$each_lvname["id"]] = $each_lvname["name"];
+            if($each_lvname['level'] == 2 && $each_lvname['default'] == 1){
+                $default_list[$each_lvname["id"]] = 1;
+            }
 		}
 		$ret   = D('EnglishCatquestion')->getQuestionProperty($question_id);
-        
-		for($i = 0; $i < count($ret); $i++) {
-			$cat_attr_id = decbin($ret[$i]["cat_attr_id"]);
-			$ret[$i]["voice"]   = substr($cat_attr_id, 0, 1);
-			$ret[$i]["target"]  = substr($cat_attr_id, 1, 1);
-			$ret[$i]["pattern"] = substr($cat_attr_id, 2, 1);
+        foreach($ret as $key=>$value){
+            if($default_list[$value["level_two"]] == 1){
+                unset($ret[$key]);
+                continue;
+            }
+			$cat_attr_id = sprintf("%03d", decbin($value["cat_attr_id"]));
+			$ret[$key]["voice"]   = substr($cat_attr_id, 0, 1);
+			$ret[$key]["target"]  = substr($cat_attr_id, 1, 1);
+			$ret[$key]["pattern"] = substr($cat_attr_id, 2, 1);
 
-			$ret[$i]["voice_name"]   = ($ret[$i]["voice"]   == 1) ? "美音" : "英音";
-			$ret[$i]["target_name"]  = ($ret[$i]["target"]  == 1) ? "听力" : "说力";
-			$ret[$i]["pattern_name"] = ($ret[$i]["pattern"] == 1) ? "视频" : "音频";
+			$ret[$key]["voice_name"]   = ($ret[$key]["voice"]   == 1) ? "美音" : "英音";
+			$ret[$key]["target_name"]  = ($ret[$key]["target"]  == 1) ? "听力" : "说力";
+			$ret[$key]["pattern_name"] = ($ret[$key]["pattern"] == 1) ? "视频" : "音频";
 
-			$ret[$i]["level_one_name"] = $dic[$ret[$i]["level_one"]];
-			$ret[$i]["level_two_name"] = $dic[$ret[$i]["level_two"]];
-			$ret[$i]["level_thr_name"] = $dic[$ret[$i]["level_thr"]];
-		}
+			$ret[$key]["level_one_name"] = $dic[$value["level_one"]];
+			$ret[$key]["level_two_name"] = $dic[$value["level_two"]];
+			$ret[$key]["level_thr_name"] = $dic[$value["level_thr"]];
+        }
 		return array("question" => $question, "property" => $ret);
 	}
 

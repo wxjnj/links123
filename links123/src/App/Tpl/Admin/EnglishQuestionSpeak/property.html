@@ -11,9 +11,6 @@
 	function resume(id) {
 		location.href = URL + "/resume/id/" + id + "/qid/" + document.getElementById('question_id').value;
 	}
-	function foreverdel(id) {
-		location.href = URL + "/foreverdel/id/" + id + "/qid/" + document.getElementById('question_id').value;
-	}
 	
 </script>
 
@@ -52,6 +49,23 @@
 	</div>
 </div>
 <script type="text/javascript">
+    function foreverdel(id) {
+        var question_id = $("#question_id").val();
+        var keyValue;
+        if (id) {
+            keyValue = id;
+        } else {
+            keyValue = getSelectCheckboxValues();
+        }
+        if (!keyValue) {
+            alert('请选择删除项！');
+            return false;
+        }
+
+        if (window.confirm('确实要永久删除选择项吗？')) {
+            location.href = URL + "/delProperty/id/" + keyValue+"/question_id/"+question_id;
+        }
+    }
     $(function() {
         
     })
