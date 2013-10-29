@@ -54,7 +54,7 @@ $(function() {
 			o.remove();
 		});
 
-	}, 10000);
+	}, 6000);
 
 	// 幻灯
 	$('#J_ScrollBox').find('.items').slidesjs({
