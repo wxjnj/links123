@@ -32,6 +32,30 @@ $(function() {
 
 	$('#J_Apps').sortable();
 
+	// banner
+	setTimeout(function(){
+		var o = $('.banner');
+		var o1 = null;
+		$('#J_Apps>li').each(function(){
+			if($(this).attr('id') == 1){
+				o1 = $(this).find('img');
+				return;
+			}
+		});
+		if(!o1){ return; }
+		var pos = o1.position();
+		o.css({border: '1px dotted #ccc', position: 'absolute'});
+		o.animate({
+			width: 0,
+			height: 0,
+			top: pos.top-o.height()+40+36,
+			left: pos.left+36
+		}, 2000, function(){
+			o.remove();
+		});
+
+	}, 6000);
+
 	// 幻灯
 	$('#J_ScrollBox').find('.items').slidesjs({
 		play: {
@@ -784,6 +808,7 @@ var HelpMouse = {
 	var Calendar = {
 		Init: function(type) {
 			var self = this;
+            self.defaultMarkTitle = '新建日程';
 			self.type = type || 'Date';
 			self.weekStart = 1;
 			self.marksStore = {};
@@ -1172,7 +1197,7 @@ var HelpMouse = {
 			});
 		},
 		//删除任务
-		delete: function(id){
+		deleteMark: function(id){
 			var self = this;
 			self.request({
 				url: URL + '/delSchedule',
@@ -1208,7 +1233,7 @@ var HelpMouse = {
 			self.listElement.on('click', '.enter-mark', function(){
 				$(this).removeClass('enter-mark').addClass('delete-mark').html('×');
 				var o = $(this).siblings('.cal_v303_mark_content');
-				var c = o.find('.input-content').val();
+				var c = o.find('.input-content').val() || Calendar.defaultMarkTitle;
 				o.html(c).attr('title', c);
 				var desc = c;
 				var hm = o.siblings('.cal_v303_time_span').html();
@@ -1220,8 +1245,10 @@ var HelpMouse = {
 			});
 
 			self.listElement.on('keydown', '.input-content', function(e){
+                console.log(11111);
 				if(e.keyCode == 13){
-					var c = $(this).val();
+                    console.log($(this).val());
+					var c = $(this).val() || Calendar.defaultMarkTitle;
 					var o = $(this).parent('.cal_v303_mark_content');
 					var li = $(this).closest('li');
 					var id = li.attr('data-id');
@@ -1291,7 +1318,7 @@ var HelpMouse = {
 				var li = $(this).parent('li');
 				var id = li.attr('data-id');
 				li.remove();
-				Calendar.delete(id);
+				Calendar.deleteMark(id);
 			});
 
 			$(document).on('click', '.cal_v303_new_mark', function(){
@@ -1704,7 +1731,7 @@ var HelpMouse = {
 			self.html.on('keydown', '.input_desc', function(e){
 				if(e.keyCode == 13){
 					var d = $(this).closest('.desc')
-					var v = $(this).val();
+					var v = $(this).val() || Calendar.defaultMarkTitle;
 					d.html(v);
 					self.desc = v;
 					$(this).hide();
@@ -1714,7 +1741,7 @@ var HelpMouse = {
 			});
 			self.html.find('.enter').click(function() {
 				var d = $(this).siblings('.desc')
-				var v = d.find('.input_desc').val();
+				var v = d.find('.input_desc').val() || Calendar.defaultMarkTitle;
 				d.html(v);
 				self.desc = v;
 				$(this).hide();
@@ -1722,13 +1749,13 @@ var HelpMouse = {
 				Calendar.update(self.id, self.time, self.desc, self.html);
 			});
 			self.html.find('.delete').click(function() {
-				Calendar.delete(self.id);
+				Calendar.deleteMark(self.id);
 				self.html.remove();
 			});
 		},
 		removeElement: function() {
 			this.html.remove();
-			Calendar.delete(this.id)
+			Calendar.deleteMark(this.id)
 		},
 		appendTo: function(el) {
 			var self = this;

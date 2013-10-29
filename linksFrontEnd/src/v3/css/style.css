@@ -843,3 +843,20 @@ input:focus{ outline: 0; }
 .widescreen .uc-avatar {
 	float:right;
 }
+
+
+/*banner*/
+.banner{
+	width: 960px;
+	overflow: hidden;
+	margin: -30px 0 20px 0;
+	height: 342px;
+}
+.banner img{ width: 960px; }
+.widescreen .banner{
+	width: 1172px;
+	overflow: hidden;
+	margin: -30px 0 20px 0;
+	height: 418px;
+}
+.widescreen .banner img{ width: 1172px; }
