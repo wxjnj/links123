@@ -59,6 +59,7 @@
 						<option value="{$each_lv_two.id}">{$each_lv_two.name}</option>
 						</volist>
 					</SELECT>
+                    <a id='level_two_add_btn' href="{:U('Admin/EnglishCategory/add')}?level=2&level_one={$category['level_one'][0]['id']}" target='_blank'>新增二级分类</a>
 				</td>
 			</tr>
 			<tr>
@@ -69,6 +70,7 @@
 						<option value="{$each_lv_thr.id}">{$each_lv_thr.name}</option>
 						</volist>
 					</SELECT>
+                    <a id='level_thr_add_btn' href="{:U('Admin/EnglishCategory/add')}?level=3&level_one={$category['level_one'][0]['id']}&level_two={$category['level_two'][0]['id']}" target='_blank'>新增三级分类</a>
 				</td>
 			</tr>
 <!--			<tr>
@@ -113,20 +115,20 @@
             if(msg){
                 if(msg.status){
                     var str = "";
-                    var data = msg.data;
-                    for(var i = 0;i<data.length;i++){
-                        str+="<option value='"+data[i]['id']+"'>"+data[i]['name']+"</option>";
+                    if(msg.data != null){
+                        var data = msg.data;
+                        for(var i = 0;i<data.length;i++){
+                            str+="<option value='"+data[i]['id']+"'>"+data[i]['name']+"</option>";
+                        }
                     }
                     if(level == 2){
-                        if(str){
-                            $("#level_two_select").html(str);
-                        }
+                        $("#level_two_select").html(str);
                         getLevelList(3);
                     }else if(level == 3){
-                        if(str){
-                            $("#level_thr_select").html(str);
-                        }
+                        $("#level_thr_select").html(str);
                     }
+                    $("#level_two_add_btn").attr("href","{:U('Admin/EnglishCategory/add')}?level=2&level_one="+$("#level_one_select").val());
+                    $("#level_thr_add_btn").attr("href","{:U('Admin/EnglishCategory/add')}?level=3&level_one="+$("#level_one_select").val()+"&level_two="+$("#level_two_select").val());
                 }
             }
         },"json")

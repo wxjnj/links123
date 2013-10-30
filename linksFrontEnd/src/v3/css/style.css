@@ -75,9 +75,9 @@ input:focus{ outline: 0; }
 	padding: 4px 10px;
 	vertical-align: text-bottom;
 	width: 280px;
-	-moz-border-radius: 25px;
-	-webkit-border-radius: 25px;
-	border-radius: 25px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
 }
 .zdl .ipton{ color: #999; }
 .zdl .btn{
