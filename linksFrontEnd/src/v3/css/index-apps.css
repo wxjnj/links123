@@ -861,36 +861,39 @@ div.gt-baf-translations {
     display: block;
     width: 27px;
     height: 27px;
+    background-image:url(../imgs/app/music_box_channel_logos.png);
+    background-repeat: no-repeat;
 }
-.normal_music_channel_douban {
-    background: url(../imgs/app/music_logo_douban.png) 0 0 no-repeat;
-}
-.normal_music_channel_xiami {
-    background: url(../imgs/app/music_logo_xiami.png) 0 0 no-repeat;
-}
+
 .normal_music_channel_baidu {
-    background: url(../imgs/app/music_logo_baidu.png) 0 0 no-repeat;
-}
-.normal_music_channel_duole {
-    background: url(../imgs/app/music_logo_duole.png) 0 0 no-repeat;
-}
-.normal_music_channel_kugou {
-    background: url(../imgs/app/music_logo_kugou.png) 0 0 no-repeat;
-}
-.normal_music_channel_duomi {
-    background: url(../imgs/app/music_logo_duomi.png) 0 0 no-repeat;
-}
-.normal_music_channel_kuwo {
-    background: url(../imgs/app/music_logo_kuwo.png) 0 0 no-repeat;
-}
-.normal_music_channel_beiwa {
-    background: url(../imgs/app/music_logo_beiwa.png) 0 0 no-repeat;
-}
-.normal_music_channel_yinyuetai {
-    background: url(../imgs/app/music_logo_yinyuetai.png) 0 0 no-repeat;
+    background-position: 0 0;
 }
 .normal_music_channel_st {
-    background: url(../imgs/app/music_logo_st.png) 0 0 no-repeat;
+    background-position: -27px 0;
+}
+.normal_music_channel_yinyuetai {
+    background-position: -54px 0;
+}
+.normal_music_channel_beiwa {
+    background-position: 0 -27px;
+}
+.normal_music_channel_kugou {
+    background-position: -27px -27px;
+}
+.normal_music_channel_duomi {
+    background-position: -54px -27px;
+}
+.normal_music_channel_kuwo {
+    background-position: 0 -54px;
+}
+.normal_music_channel_duole {
+    background-position: -27px -54px;
+}
+.normal_music_channel_xiami {
+    background-position: -54px -54px;
+}
+.normal_music_channel_douban {
+    background-position: 0 -81px;
 }
 .normal_music_box_close_btn {
     color: #333;
@@ -1023,41 +1026,41 @@ div.gt-baf-translations {
     width: 14px;
     height: 14px;
     display: inline-block;
-    background-repeat: no-repeat;
-    background-size: 100%;
     position: absolute;
     margin: 2px 5px;
     left: 10px;
-}
-.mini_music_channel_douban b {
-    background-image: url(../imgs/app/mini_music_logo_douban.png);
-}
-.mini_music_channel_xiami b {
-    background-image: url(../imgs/app/mini_music_logo_xiami.png);
+    background-image: url(../imgs/app/music_box_channel_logos.png);
+    background-repeat: no-repeat;
 }
 .mini_music_channel_baidu b {
-    background-image: url(../imgs/app/mini_music_logo_baidu.png);
-}
-.mini_music_channel_duole b {
-    background-image: url(../imgs/app/mini_music_logo_duole.png);
-}
-.mini_music_channel_kugou b {
-    background-image: url(../imgs/app/mini_music_logo_kugou.png);
-}
-.mini_music_channel_duomi b {
-    background-image: url(../imgs/app/mini_music_logo_duomi.png);
-}
-.mini_music_channel_kuwo b {
-    background-image: url(../imgs/app/mini_music_logo_kuwo.png);
-}
-.mini_music_channel_beiwa b {
-    background-image: url(../imgs/app/mini_music_logo_beiwa.png);
-}
-.mini_music_channel_yinyuetai b {
-    background-image: url(../imgs/app/mini_music_logo_yinyuetai.png);
+    background-position: 0 -110px;
 }
 .mini_music_channel_st b {
-    background-image: url(../imgs/app/mini_music_logo_st.png);
+    background-position: -14px -110px;
+}
+.mini_music_channel_yinyuetai b {
+    background-position: -28px -110px;
+}
+.mini_music_channel_beiwa b {
+    background-position: -42px -110px;
+}
+.mini_music_channel_kugou b {
+    background-position: -56px -110px;
+}
+.mini_music_channel_duomi b {
+    background-position: 0 -124px;
+}
+.mini_music_channel_kuwo b {
+    background-position: -14px -124px;
+}
+.mini_music_channel_duole b {
+    background-position: -28px -124px;
+}
+.mini_music_channel_xiami b {
+    background-position: -42px -124px;
+}
+.mini_music_channel_douban b {
+    background-position: -56px -124px;
 }
 .mini_channel_list {
     border: 1px solid #cfcfcf;
@@ -1071,7 +1074,8 @@ div.gt-baf-translations {
     padding-top: 5px;
     padding-bottom: 5px;
 }
-.mini_channel_list .mini_music_channel_btn:hover{
+
+.mini_channel_list .hover_class{
     color: #fff;
     background: #85c794;
 }

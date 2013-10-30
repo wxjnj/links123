@@ -31,8 +31,6 @@ $( function($) {
 		window.open($(this).data('href'));
 	});
 
-
-
 	/*
 	 * 当前的 App集合
 	 */
@@ -816,11 +814,30 @@ $( function($) {
                 self.changeMode(mode);
             });
 
+            $('.mini_channel_list').on('mouseover', '.mini_music_channel_btn', function(){
+                $('.mini_music_channel_btn').removeClass('hover_class');
+                $(this).addClass('hover_class');
+            }).on('mouseout', '.mini_music_channel_btn', function(){
+                $(this).removeClass('hover_class');
+            })
+
             $('.mini_music_channel_select').mouseover(function(){
+                if(!$('.mini_channel_list').is(':hidden')) return;
+                var h = $('.mini_channel_list').height();
+                var bt = $('.mini_music_box').css('top');
+                var bh = $('.mini_music_box').height();
+                var wh = $(window).height();
+                bt = bt == 'auto' ? wh - bh : parseInt(bt);
+                if(wh - bt - bh <= h){
+                    $('.mini_channel_list').css('margin-top', - (h + bh - 8) + 'px');
+                }else{
+                    $('.mini_channel_list').css('margin-top', '0');
+                }
                 $('.mini_channel_list').show();
             }).mouseout(function(){
-                    $('.mini_channel_list').hide();
-                });
+                $('.mini_music_channel_btn').removeClass('hover_class');
+                $('.mini_channel_list').hide();
+            });
 
             $('.normal_music_box_close_btn, .mini_music_box_close_btn').click(function(){
                 self.close();
