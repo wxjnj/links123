@@ -1,136 +1,149 @@
 .screen-theme {
-	float:right;
-	color:#c9c9c9;
-	margin-right:60px;
-	line-height:40px
+    float:right;
+    color:#c9c9c9;
+    margin-right:60px;
+    line-height:40px;
 }
 .screen-theme li {
-	float:left;
-	margin:0 2px;
-	cursor:pointer
+    float:left;
+    margin:0 2px;
+    cursor:pointer
 }
 /*screen btn*/
 #J_Styles ul{
-	float:left;
+    float:left;
 }
 .screen-change-btn{
-	line-height:40px;
-	float:left;
-	margin-right:20px;
+    line-height:40px;
+    float:left;
+    margin-right:20px;
 }
 .screen-change-btn a{
-	color:#c9c9c9;
+    color:#c9c9c9;
 }
 .screen-change-btn a:hover{
-	color:red;
+    color:red;
 }
 .screen-change-btn .s-wide{
-	font-size:12px;
+    font-size:12px;
 }
 .screen-change-btn .s-960{
-	font-size:14px;
+    font-size:14px;
 }
 
 /*screen-theme*/
 .screen-theme .change-theme-btn {
-	width:20px;
-	height:20px;
-	border:2px solid #ccc;
-	border-radius:20px;
-	-moz-border-radius:20px;
-	-webkit-border-radius:20px;
-	margin:7px 5px 0 0;
-	cursor: auto;
+    width:20px;
+    height:20px;
+    border:2px solid #ccc;
+    border-radius:20px;
+    -moz-border-radius:20px;
+    -webkit-border-radius:20px;
+    margin:7px 5px 0 0;
+    cursor: auto;
 }
 
 .screen-theme .change-back-btn,.screen-theme .change-screen-btn {
-	color:#c9c9c9
+    color:#c9c9c9
 }
 .screen-theme .change-back-btn:hover,.screen-theme .change-screen-btn:hover {
-	color:#fc2a06;
-	text-decoration:none
+    color:#fc2a06;
+    text-decoration:none
 }
 .skin-list {
-	height:120px;
-	top:40px;
-	position:absolute;
-	/*margin-left:-155px;
-	*margin-left: -185px;*/
-	right: 0;
-	z-index:11;
-	background:#fff;
-	box-shadow:0 0 5px #666;
-	filter:alpha(opacity=90);
-	-moz-opacity:.9;
-	-khtml-opacity:.9;
-	opacity:.9;
-	border-radius:4px;
-	-moz-border-radius:4px;
-	-webkit-border-radius:4px
+    width: 540px;
+    /*height:120px;*/
+    top:40px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    position:absolute;
+    /*margin-left:-155px;
+    *margin-left: -185px;*/
+    right: 0;
+    z-index:11;
+    background:#fff;
+    box-shadow:0 0 5px #666;
+    border-radius:3px;
+    -moz-border-radius:3px;
+    -webkit-border-radius:3px
 }
 .skin-list .ang {
-	width:0;
-	height:0;
-	font-size:0;
-	overflow:hidden;
-	position:absolute;
-	border-width:15px;
-	border-style:dashed dashed solid;
-	border-color:transparent transparent #fff;
-	right: 272px;
-	top:-25px
+    width:0;
+    height:0;
+    font-size:0;
+    overflow:hidden;
+    position:absolute;
+    border-width:15px;
+    border-style:dashed dashed solid;
+    border-color:transparent transparent #fff;
+    right: 272px;
+    top:-25px
 }
 .skin-theme-split {
-	color: #333!important;
+    color: #333!important;
 }
 .J_link_skin_type {
-	margin: auto 2px;
-	color: #333;
+    margin: auto 2px;
+    color: #777;
 }
 .skin-types {
-	margin: auto 15px;
-	text-align: center;
+    margin: auto 15px;
+    text-align: center;
 }
 .skin-types .active {
-	color: #fc2a06;
+    color: #333;
+    font-weight: 700;
+    text-decoration: underline;
 }
 
 .skin-list .skin-pics {
-	padding: 0 20px;
+    padding: 0;
+    text-align:center;
+    position:relative;
+    overflow: hidden;
 }
 .skin-list .skin-pics .item {
-	overflow:hidden;
-	display:none;
-	text-align:center
+    float: left;
+    position: relative;
+    left: 50%;
+    display:none;
 }
-.skin-list .skin-pics>.active {
-	display:block
-}
-.skin-list .skin-pics {
-	text-align:center
+.skin-list .skin-pics .active {
+    display:block
 }
 .skin-list .skin-pics a {
-	display:inline-block;
-	width:40px;
-	height:40px;
-	overflow:hidden;
-	margin:10px 5px;
-	border:2px solid #c8bbc9;
-	border-radius:40px;
-	-moz-border-radius:40px;
-	-webkit-border-radius:40px
+    display:block;
+    float: left;
+    right: 50%;
+    position: relative;
+    width:60px;
+    height:36px;
+    overflow:hidden;
+    margin:0 2px 5px;
+    border:1px solid #b4b4b4;
+}
+.skin-list .skin-pics a:hover {
+    display:inline-block;
+    width:58px;
+    height:34px;
+    border:2px solid #238b3a;
 }
 .skin-list .skin-pics img {
-	width:70px;
-	height:70px
+    width:60px;
+    height:36px;
+}
+.skin-list .skin-pics a:hover img {
+    margin-top: -1px;
+    margin-left: -1px;
 }
 
 .widescreen .screen-change-btn .s-wide{
-	display: none;
+    display: none;
 }
 .widescreen .screen-change-btn .s-960{
-	display: inline;
+    display: inline;
 }
 .widescreen .screen-theme .change-back-btn {
-	font-size: 14px;
+    font-size: 14px;
 }

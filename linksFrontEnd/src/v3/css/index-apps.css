@@ -968,7 +968,7 @@ div.gt-baf-translations {
     right: 0;
 }
 .mini_music_box {
-    position: absolute;
+    position: fixed;
     left: 0;
     width: 230px;
     height: 30px;

@@ -878,7 +878,7 @@ $( function($) {
             }
             if(mode == 'mini'){
                 $('.mini_music_box').css({
-                    'bottom' : -t + h,
+                    'bottom' : 0,//-t + h,
                     'top' : 'auto'
                 });
             }
