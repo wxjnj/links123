@@ -538,7 +538,7 @@
         $.post("{:U('Admin/EnglishQuestion/getLevelList')}",postData,function(msg){
             if(msg){
                 if(msg.status){
-                    var str = "";
+                    var str = "<option value='0'>全部</option>";
                     var data = msg.data;
                     for(var i = 0;i<data.length;i++){
                         str+="<option value='"+data[i]['id']+"'>"+data[i]['name']+"</option>";

@@ -51,19 +51,19 @@
 						</div>
 					</div>
 				</empty>
-			</div>		
+			</div>
 			<ul class="screen-theme">
 				<li class="change-theme-btn theme-purple-btn"></li>
 				<li id="K_change_skin_btn" class="change-back-btn">
 					换 肤
-					<div class="skin-list" style="display:none">
+					<div class="skin-list" style="display: none">
 						<span class="ang"></span>
 						<div class="skin-content">
 							<div class="subpanel" id="J_skin_selection">
 								<div class="skin-types">
 									<a data-id="themes" class="J_link_skin_type">快捷主题</a>
-									<volist name="skinCategory" id="vo" key="k">
 									<span class="skin-theme-split"> | </span>
+									<volist name="skinCategory" id="vo" key="k">
 									<a data-id="{$vo.categoryId}" class='J_link_skin_type <if condition="$k eq 1">active</if>'>{$vo.categoryName}</a>
 									</volist>
 								</div>

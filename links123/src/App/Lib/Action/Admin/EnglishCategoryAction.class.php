@@ -65,7 +65,8 @@ class EnglishCategoryAction extends CommonAction{
                 $listRows = '20';
             }
             $p = new Page($count, $listRows);
-//            $map['a.default'] = array("neq",1);
+            $map['a.default'] = array(array('neq',1),array('exp',"is null"),'or') ;
+
             //分页查询数据
             $voList = $model->alias("category")
                     ->field($field)

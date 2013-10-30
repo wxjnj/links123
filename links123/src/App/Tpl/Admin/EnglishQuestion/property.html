@@ -3,7 +3,7 @@
 <load href="__PUBLIC__/Js/Jquery/jquery.js" />
 <script language="javascript">
 	function add() {
-		location.href = URL + "/addProperty/type/{$Think.get.type}/qid/{$Think.get.qid}";
+		location.href = URL + "/addProperty?type={$Think.get.type}&qid={$Think.get.qid}";
 	}
 	function forbid(id) {
 		location.href = URL + "/forbid/id/" + id + "/qid/" + document.getElementById('question_id').value;
