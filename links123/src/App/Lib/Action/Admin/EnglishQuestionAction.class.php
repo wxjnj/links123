@@ -290,7 +290,7 @@ class EnglishQuestionAction extends CommonAction {
 
     public function property () {
         $question_id = intval($_REQUEST["qid"]);
-        $type = intval($_REQUEST["type"]);
+        $type = 1;
         $page = intval($_REQUEST["page"]);
         $question_property = $this->cEnglishQuestionLogic->getQuestionAndProperty($question_id, $type);
         //$is_recommend = $this->cEnglishQuestionLogic->isQuestionSpecRecommend($question_id);
@@ -431,6 +431,11 @@ class EnglishQuestionAction extends CommonAction {
         if($question_id == 0){
             $this->error("非法操作");
         }
+        $cat_id = intval($_REQUEST['cat_id']);
+        if($cat_id == 0){
+            $this->error("非法操作");
+        }
+        
         
         
         $voice       = isset($_REQUEST["voice"])     ? intval($_REQUEST["voice"])     : 1;
@@ -438,10 +443,30 @@ class EnglishQuestionAction extends CommonAction {
         $level_one   = isset($_REQUEST["level_one"]) ? intval($_REQUEST["level_one"]) : 0;
         $level_two   = isset($_REQUEST["level_two"]) ? intval($_REQUEST["level_two"]) : 0;
         $level_thr   = isset($_REQUEST["level_thr"]) ? intval($_REQUEST["level_thr"]) : 0;
-        $status      = isset($_REQUEST["status"])    ? intval($_REQUEST["status"])    : 0;
-        $type        = isset($_REQUEST["type"])      ? intval($_REQUEST["type"])      : 1;
+        $status      = isset($_REQUEST["status"])    ? intval($_REQUEST["status"])    : 1;
+        //$type        = isset($_REQUEST["type"])      ? intval($_REQUEST["type"])      : 1;
+        $type = 1; //听力
         $target      = $type == 0 ? 0 : 1;
-
+        
+        $model = D("EnglishCatquestion");
+        $cat_map = array(
+            "cat_id"=>$cat_id,
+            "question_id"=>$question_id,
+            "type"=>$type
+        );
+        if(false === $model->where($cat_map)->delete()){
+            $model->rollback();
+            $this->error("操作失败");
+        }
+        $questionModel =D("EnglishQuestion");
+        $question_info = $questionModel->alias("question")
+                ->join(C("DB_PREFIX")."english_media media on question.media_id = media.id")
+                ->where(array("question.id"=>$question_id,"question.status"=>1,"media.status"=>1))
+                ->find();
+        if(!empty($question_info)){
+            //@ 需要更新EnglishCategory 题目数-1
+            D('EnglishCategory')->where(array('cat_id' => $cat_id))->setDec('question_num');
+        }
 
         $ret = $this->cEnglishQuestionLogic->saveProperty(
                                                     $question_id, 
@@ -455,10 +480,12 @@ class EnglishQuestionAction extends CommonAction {
                                                     $type
                                                 );
         if ($ret === false) {
+            $model->rollback();
             $this->error($this->cEnglishQuestionLogic->getErrorMessage());
             return;
         }
-        $this->success('添加分类属性成功');
+        $model->commit();
+        $this->success('编辑分类属性成功');
     }
     
     public function delProperty(){
