@@ -143,27 +143,6 @@ class IndexAction extends CommonAction {
 			
 			$_SESSION['myarea_sort'] = array_keys($_SESSION['arealist']);
 		}
-	
-		//日程表
-		if ($user_id) {
-			
-			$schedule_list = $scheduleModel->where(array('mid' => $user_id, 'status' => 0))->select();
-		} else {
-			
-			$schedule_list = cookie(md5('schedule_list'));
-			if (!$schedule_list[0]) {
-				$schedule_list = $scheduleModel->where(array('mid' => 0, 'status' => 0))->select();
-			}
-			
-			cookie(md5('schedule_list'), $schedule_list);
-		}
-		
-		if (!$schedule_list[0]['datetime']) {
-			$schedule_list[0]['datetime'] = time();
-			$schedule_list[0]['content'] = '快来创建第一个日程';
-		}
-		
-		$this->assign('schedule_list', $schedule_list);
 		
 		//热门音乐
 		$this->assign('homeMusics', $this->getHomeMusics());
@@ -883,6 +862,8 @@ class IndexAction extends CommonAction {
 		
 		$stauts = 1;
 		$data  = array();
+		$nowTime = time();
+		$today = date('d', $nowTime);
 		
 		if ($user_id) {
 			$scheduleModel = M("Schedule");
@@ -896,6 +877,10 @@ class IndexAction extends CommonAction {
 		} else {
 		
 			$stauts = 0;
+		}
+		
+		if (!$data[$today]) {
+			$data[$today][] = array('id' => 0, 'content' => '今天还没有创建新的日程', 'datetime' => $nowTime, 'stauts' => 0);
 		}
 		
 		$this->ajaxReturn($data, '', $stauts);
