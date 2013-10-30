@@ -53,9 +53,10 @@ module.exports = function(grunt) {
 					'~temp/css.css' : [
 						'src/v3/css/jquery-ui.css', 
 						'src/v3/css/style.css',
-						'src/v3/css/slide.css',
 						'src/v3/css/g-theme.css',
 						'src/v3/css/g-dialog.css',
+						'src/v3/css/g-uc.css',
+						'src/v3/css/slide.css',
 						'src/v3/css/index-app.css',
 						'src/v3/css/index-apps.css',
 						'src/v3/css/index-ted.css',
@@ -83,6 +84,7 @@ module.exports = function(grunt) {
 						'src/v3/jplayer/jplayer.playlist.min.js'
 					],
 					'dest/v3/css/base.css' : 'src/v3/css/base.css',
+					'~temp/g-uc.css' : 'src/v3/css/g-uc.css',
 					'dest/v3/js/init.js' : 'src/v3/js/init.js',
 					'dest/v3/js/jquery.cookies.2.2.0.min.js' : 'src/v3/js/jquery.cookies.2.2.0.min.js'
 				}
@@ -142,7 +144,8 @@ module.exports = function(grunt) {
 			}
 			,v3: {
 				files: {
-					'dest/v3/css/css.min.css' : ['~temp/css.css']
+					'dest/v3/css/css.min.css' : ['~temp/css.css'],
+					'dest/v3/css/g-uc.css' : ['~temp/g-uc.css']
 				}
 			}
 		}

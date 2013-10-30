@@ -1,0 +1,31 @@
+.clearafter{content:'\0020';display:block;height:0;clear:both}
+body{color:#727171;font-family:\5FAE\8F6F\96C5\9ED1,Hiragino Sans GB,Hiragino Sans GB W3;font-size:12px}
+a,a:hover{text-decoration:none}
+input:focus{outline:0}
+img{vertical-align:middle}
+.header,.container,.footer{min-width:960px}.header .wrap,.container .wrap,.footer .wrap{margin:0 auto;width:90%}
+.header{background:#2e2a28;height:40px}.header h1{float:left;padding-top:5px}
+.header .logo{background:url(../imgs/uc-logo.png) 0 0 no-repeat;_background-image:url(../imgs/uc-logo8.png);display:block;height:30px;overflow:hidden;text-indent:-999px;width:140px}
+.header .nav{float:left;margin-left:35px}.header .nav li{display:inline;float:left;text-align:center;width:70px}.header .nav li a,.header .nav li a:hover{color:#c9c9c9;display:block;height:40px;line-height:40px}
+.header .uc{width:174px}.header .uc .uc-menu .nm .ang{z-index:2}
+.header .uc .uc-menu .nm .ang-in{border-style:dashed dashed solid;border-color:transparent transparent #ddd;top:19px;z-index:2}
+.header .uc .uc-menu ul{border:1px solid #ddd;z-index:1;padding-top:1px}
+.container{background:#f5f5f5;padding:35px 0 40px}.container .wrap{background:#fff url(../imgs/uc-sider-bg.jpg) 0 0 repeat-y;border:1px solid #ddd}.container .wrap .sider{float:left;padding:30px 0 0;width:200px}
+.container .wrap .content{margin-left:200px;overflow:hidden;min-height:850px;*height:850px;padding:30px 0 0 60px}
+.container .wrap .uc-user,.container .wrap .uc-tips{padding:0 18px}
+.container .wrap .uc-user{height:49px}.container .wrap .uc-user img{float:left;margin-right:10px}
+.container .wrap .uc-tips{margin-top:15px}.container .wrap .uc-tips span{color:#238b3a}
+.container .wrap .uc-tips a,.container .wrap .uc-tips a:hover{color:#325e7f;text-decoration:underline}
+.container .wrap .uc-submenu{margin-top:30px}.container .wrap .uc-submenu h2{background:#7cc49e;color:#fff;font-weight:normal;padding:10px 0}.container .wrap .uc-submenu h2 a,.container .wrap .uc-submenu h2 a:hover{display:block;color:#fff;height:20px;line-height:20px}
+.container .wrap .uc-submenu ul li a{color:#325e7f;display:block;height:18px;line-height:18px;padding:3px 0 3px 60px}
+.container .wrap .uc-submenu ul li a:hover{background:#cbe6d9;color:#000}
+.container .wrap .uc-submenu ul li.on a,.container .wrap .uc-submenu ul li.on a:hover{background:#cbe6d9;color:#000}
+.container .wrap .uc-icons-1,.container .wrap .uc-icons-2,.container .wrap .uc-icons-3,.container .wrap .uc-icons-4{background:url(../imgs/uc-icons.png) 1000px 1000px no-repeat;display:inline-block;height:20px;margin-right:5px;margin-left:35px;vertical-align:middle;width:20px}
+.container .wrap .uc-icons-1{background-position:0 0}
+.container .wrap .uc-icons-2{background-position:0 -25px}
+.container .wrap .uc-icons-3{background-position:0 -50px}
+.container .wrap .uc-icons-4{background-position:0 -75px}
+.footer{background:#fff}.footer a,.footer a:hover{color:#325e7f}
+.footer .uc-links{border-bottom:1px solid #ccc;padding:20px 0;*zoom:1}.footer .uc-links ul{float:left;width:16%}.footer .uc-links ul li{padding:3px 0}
+.footer .uc-links:after{content:'\0020';display:block;height:0;clear:both}
+.footer .uc-copyright{padding:20px 0}.footer .uc-copyright ul{height:20px}.footer .uc-copyright ul li{display:inline;float:left;margin-right:10px}
