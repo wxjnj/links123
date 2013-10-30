@@ -60,7 +60,7 @@
     -moz-border-radius:20px;
     -webkit-border-radius:20px;
     margin:7px 5px 0 0;
-    cursor: auto;
+    cursor: pointer;
     display:inline-block;
     position:absolute;
     *margin-top:0;
