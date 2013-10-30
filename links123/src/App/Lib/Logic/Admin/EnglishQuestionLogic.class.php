@@ -27,7 +27,7 @@ class EnglishQuestionLogic {
                 $default_list[$each_lvname["id"]] = 1;
             }
 		}
-		$ret   = D('EnglishCatquestion')->getQuestionProperty($question_id);
+		$ret   = D('EnglishCatquestion')->getQuestionProperty($question_id, $question_type);
         foreach($ret as $key=>$value){
             if($default_list[$value["level_two"]] == 1){
                 unset($ret[$key]);
@@ -79,8 +79,8 @@ class EnglishQuestionLogic {
         $data["level_two"]   = $level_two;
         $data["level_thr"]   = $level_thr;
         
-        $cate_ret = D('EnglishCategory')->where($data)->select();
-        if (!isset($cate_ret[0]["cat_id"])) {
+        $cate_ret = D('EnglishCategory')->where($data)->find();
+        if (!isset($cate_ret["cat_id"])) {
             $data["status"]  = $status;
             $data["question_num"] = 1;
             $data["created"] = time();
@@ -104,12 +104,12 @@ class EnglishQuestionLogic {
             }
         } else {
             $catquestion_data = array(
-                                    "cat_id"      => $cate_ret[0]["cat_id"], 
+                                    "cat_id"      => $cate_ret["cat_id"], 
                                     "question_id" => $question_id);
-            $catquestion_ret  = D('EnglishCatquestion')->where($catquestion_data)->select();
-            if (!isset($catquestion_ret[0]["cat_id"])) {
+            $catquestion_ret  = D('EnglishCatquestion')->where($catquestion_data)->find();
+            if (!isset($catquestion_ret["cat_id"])) {
                 $catquestion_data = array(
-                                    "cat_id"      => $cate_ret[0]["cat_id"], 
+                                    "cat_id"      => $cate_ret["cat_id"], 
                                     "question_id" => $question_id, 
                                     "created"     => time(),
                                     "type"        => $type, 
@@ -119,8 +119,18 @@ class EnglishQuestionLogic {
                     $this->error_msg = '(#102)添加类目失败';
                     return false;
                 }
-                //@ 需要更新EnglishCatquestion 题目数＋1
-            	D('EnglishCategory')->where(array('cat_id' => $cate_ret[0]["cat_id"]))->setInc('question_num');
+                $questionModel =D("EnglishQuestion");
+                if($type == 0){
+                    $questionModel = D("EnglishQuestionSpeak");
+                }
+                $question_info = $questionModel->alias("question")
+                        ->join(C("DB_PREFIX")."english_media media on question.media_id = media.id")
+                        ->where(array("question.id"=>$question_id,"question.status"=>1,"media.status"=>1))
+                        ->find();
+                if(!empty($question_info)){
+                    //@ 需要更新EnglishCatquestion 题目数＋1
+                    D('EnglishCategory')->where(array('cat_id' => $cate_ret["cat_id"]))->setInc('question_num');
+                }
             } else {
                 $this->error_msg = '已经添加过此类目和题目的对应属性';
                 return false;

@@ -168,7 +168,7 @@ input:focus{ outline: 0; }
 	float: left;
 	width: 30px;
 	height: 30px;
-	background: url(../imgs/sprite.png) 0 0 no-repeat;
+	/*background: url(../imgs/sprite.png) 0 0 no-repeat;*/
 }
 .uc {
 	float:right;
