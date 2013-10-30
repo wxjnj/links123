@@ -60,7 +60,7 @@ $(function() {
 	$('#J_ScrollBox').find('.items').slidesjs({
 		play: {
 			active: true,
-			auto: true,
+			auto: false,
 			interval: 10000,
 			swap: false
 		},
