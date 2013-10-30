@@ -1170,7 +1170,7 @@ var HelpMouse = {
 			User.CheckLogin();
 			var self = this;
 			var url, data;
-			if(id == 'null') {
+			if(id == 'null' || id == 0 ) {
 				url = URL + '/addSchedule';
 				data = {
 					time: time/1000,
