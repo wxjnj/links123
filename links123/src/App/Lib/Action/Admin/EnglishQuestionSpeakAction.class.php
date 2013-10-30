@@ -966,8 +966,9 @@ class EnglishQuestionSpeakAction extends CommonAction {
         $level_one   = isset($_REQUEST["level_one"]) ? intval($_REQUEST["level_one"]) : 0;
         $level_two   = isset($_REQUEST["level_two"]) ? intval($_REQUEST["level_two"]) : 0;
         $level_thr   = isset($_REQUEST["level_thr"]) ? intval($_REQUEST["level_thr"]) : 0;
-        $status      = isset($_REQUEST["status"])    ? intval($_REQUEST["status"])    : 0;
+        $status      = isset($_REQUEST["status"])    ? intval($_REQUEST["status"])    : 1;
         $type        = isset($_REQUEST["type"])      ? intval($_REQUEST["type"])      : 0;
+        $type = 0;//说力
         $target      = $type == 0 ? 0 : 1;
 
 

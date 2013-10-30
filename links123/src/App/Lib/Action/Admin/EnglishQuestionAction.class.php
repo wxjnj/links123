@@ -350,7 +350,7 @@ class EnglishQuestionAction extends CommonAction {
         $level_one   = isset($_REQUEST["level_one"]) ? intval($_REQUEST["level_one"]) : 0;
         $level_two   = isset($_REQUEST["level_two"]) ? intval($_REQUEST["level_two"]) : 0;
         $level_thr   = isset($_REQUEST["level_thr"]) ? intval($_REQUEST["level_thr"]) : 0;
-        $status      = isset($_REQUEST["status"])    ? intval($_REQUEST["status"])    : 0;
+        $status      = isset($_REQUEST["status"])    ? intval($_REQUEST["status"])    : 1;
         $type        = isset($_REQUEST["type"])      ? intval($_REQUEST["type"])      : 1;
         $target      = $type == 0 ? 0 : 1;
 
@@ -1615,7 +1615,7 @@ class EnglishQuestionAction extends CommonAction {
             "media.status"=>1
         );
         $q_map['question.id'] = array('in',$id);
-        $q_list = $model->alias("question")->join(C("DB_PREFIX")."english_media media on media.id=question.media_sid")->field("question.id")->where($q_map)->select();
+        $q_list = $model->alias("question")->join(C("DB_PREFIX")."english_media media on media.id=question.media_id")->field("question.id")->where($q_map)->select();
         $model->startTrans();
         $time = time();
         $list = $model->forbid($condition);
