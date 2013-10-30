@@ -33,28 +33,28 @@ $(function() {
 	$('#J_Apps').sortable();
 
 	// banner
-	setTimeout(function(){
-		var o = $('.banner');
-		var o1 = null;
-		$('#J_Apps>li').each(function(){
-			if($(this).attr('id') == 1){
-				o1 = $(this).find('img');
-				return;
-			}
-		});
-		if(!o1){ return; }
-		var pos = o1.position();
-		o.css({border: '1px dotted #ccc', position: 'absolute'});
-		o.animate({
-			width: 0,
-			height: 0,
-			top: pos.top-o.height()+40+36,
-			left: pos.left+36
-		}, 2000, function(){
-			o.remove();
-		});
+	// setTimeout(function(){
+	// 	var o = $('.banner');
+	// 	var o1 = null;
+	// 	$('#J_Apps>li').each(function(){
+	// 		if($(this).attr('id') == 1){
+	// 			o1 = $(this).find('img');
+	// 			return;
+	// 		}
+	// 	});
+	// 	if(!o1){ return; }
+	// 	var pos = o1.position();
+	// 	o.css({border: '1px dotted #ccc', position: 'absolute'});
+	// 	o.animate({
+	// 		width: 0,
+	// 		height: 0,
+	// 		top: pos.top-o.height()+40+36,
+	// 		left: pos.left+36
+	// 	}, 2000, function(){
+	// 		o.remove();
+	// 	});
 
-	}, 3000);
+	// }, 3000);
 
 	// 幻灯
 	$('#J_ScrollBox').find('.items').slidesjs({
@@ -66,21 +66,21 @@ $(function() {
 		},
     	//异步加载幻灯片
     	//初始化加载0
-    	callback: {
-      		loaded: function(){
-        		var cur = $('#J_ScrollBox').find('li:eq(' + 0 + ')').find('img');
-        		if(!cur.attr('src')){
-          			var path = cur.data('src');
-          			cur.attr('src', path);
-        		}
-      		},
-      		start: function(cur, next) {
-        		var target = $('#J_ScrollBox').find('li:eq(' + next + ')').find('img');
-        		if(!target.attr('src')){
-          			var path = target.data('src');
-          			target.attr('src', path);
-        		}
-      		}
+		callback: {
+			loaded: function(){
+				var cur = $('#J_ScrollBox').find('li:eq(' + 0 + ')').find('img');
+				if(!cur.attr('src')){
+					var path = cur.data('src');
+					cur.attr('src', path);
+				}
+			},
+			start: function(cur, next) {
+				var target = $('#J_ScrollBox').find('li:eq(' + next + ')').find('img');
+				if(!target.attr('src')){
+					var path = target.data('src');
+					target.attr('src', path);
+				}
+			}
    		}
 	});
 
@@ -1245,7 +1245,6 @@ var HelpMouse = {
 			});
 
 			self.listElement.on('keydown', '.input-content', function(e){
-                console.log(11111);
 				if(e.keyCode == 13){
                     console.log($(this).val());
 					var c = $(this).val() || Calendar.defaultMarkTitle;

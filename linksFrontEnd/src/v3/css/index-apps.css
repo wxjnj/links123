@@ -826,7 +826,8 @@ div.gt-baf-translations {
     width: 840px;
     height: 550px;
     bottom: 0;
-    left: 0;
+    /*left: 0;*/
+    left: -789px;
     overflow: hidden;
 }
 .normal_music_iframe_box {
@@ -967,13 +968,14 @@ div.gt-baf-translations {
     right: 0;
 }
 .mini_music_box {
-    position: absolute;
+    position: fixed;
     left: 0;
     width: 230px;
     height: 30px;
 }
 .mini_music_channel_list {
     position: relative;
+    cursor: move;
     display: none;
     width: 230px;
     height: 30px;
