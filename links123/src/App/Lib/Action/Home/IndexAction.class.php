@@ -874,13 +874,10 @@ class IndexAction extends CommonAction {
 				$data[$v['day']][] = $v;
 			}
 			
-		} else {
-		
-			$stauts = 0;
 		}
 		
 		if (!$data[$today]) {
-			$data[$today][] = array('id' => 0, 'content' => '今天还没有创建新的日程', 'datetime' => $nowTime, 'stauts' => 0);
+			$data[$today][] = array('id' => 0, 'content' => '来创建今天新的日程吧！', 'datetime' => $nowTime, 'stauts' => 0);
 		}
 		
 		$this->ajaxReturn($data, '', $stauts);
