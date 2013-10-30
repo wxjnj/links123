@@ -61,14 +61,16 @@ module.exports = function(grunt) {
 						'src/v3/css/index-ted.css',
 						'src/v3/css/index-calendar.css',
 						'src/v3/css/index-music.css',
-						'src/v3/css/g-dialog.css'
+						'src/v3/css/g-dialog.css',
+						'src/v3/css/jquery.autocomplete.css'
 					],
 					'~temp/jquery.plugins.js' : [
 						'src/v3/js/jquery.placeholder.js',
 						'src/v3/js/jquery-ui.min.js',
 						'src/v3/js/json2.js',
 						'src/v3/js/jquery.dropdown.js',
-						'src/v3/js/jquery.slides.js'
+						'src/v3/js/jquery.slides.js',
+						'src/v3/js/jquery.autocomplete.js'
 					],
 					'~temp/index.js' : [
 						'src/v3/js/common.js',

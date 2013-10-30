@@ -113,10 +113,10 @@
 	width: 360px;
 }
 .find li .go{
-	background-position: 45px 20px;
+	background-position: 101px 52px;
 }
 .find li.hover .go{
-	background-position: 52px 27px;
+	background-position: 108px 59px;
 }
 
 .widescreen .find ul{ margin-left: -10px; }
@@ -144,10 +144,10 @@
 	width: 160px;
 }
 .widescreen .find li .go{
-	background-position: 58px 30px;
+	background-position: 124px 65px;
 }
 .widescreen .find li.hover .go{
-	background-position: 65px 37px;
+	background-position: 131px 72px;
 }
 .widescreen .find li img{
 	height: 98px;
