@@ -163,12 +163,12 @@ input:focus{ outline: 0; }
 	background:url(../imgs/sprite.png) -92px -62px no-repeat
 }
 .uc-menu .nm ul i {
-	display: none; /*临时隐藏1030*/
+	display: inline-block;
 	margin: 0 5px 0 5px;
 	float: left;
 	width: 30px;
 	height: 30px;
-	background: url(../imgs/sprite.png) 0 0 no-repeat;
+	/*background: url(../imgs/sprite.png) 0 0 no-repeat;*/
 }
 .uc {
 	float:right;
