@@ -688,14 +688,20 @@ var Theme = {
 		var isImgSrc = false;
 
 		$('#K_change_skin_btn').on('mouseenter', function(){
-			if(!isImgSrc){
-				isImgSrc = true;
-				$(this).find('img').each(function(){
-					$(this).attr('src', $(this).data('src'));
-				});
-			}
-			$('.skin-list').fadeIn(150);
-		}).on('mouseleave', '.skin-list',function(){
+            clearTimeout(self.timer);
+            self.timer = null;
+            if($('.skin-list').is(':hidden')){
+                $('.skin-list').fadeIn(150);
+            }
+		}).on('mouseleave', function(){
+                clearTimeout(self.timer);
+                self.timer = null;
+                self.timer = setTimeout(function(){
+                    $('.skin-list').hide();
+                },500);
+        });
+
+        $('#K_change_skin_btn_old').on('mouseleave', '.skin-list',function(){
 			clearTimeout(self.timer);
 			self.timer = null;
 			self.timer = setTimeout(function(){
@@ -706,7 +712,14 @@ var Theme = {
 				clearTimeout(self.timer);
 				self.timer = null;
 			}
-		});
+		}).on('mouseover', function(){
+                if(!isImgSrc){
+                    isImgSrc = true;
+                    $(this).find('img').each(function(){
+                        $(this).attr('src', $(this).data('src'));
+                    });
+                }
+            });
 
 		//靠右的皮肤 图例靠右显示
 		//$('#J_skin_pics').find('.item:eq(3)').css('text-align','center')
