@@ -1221,7 +1221,6 @@ var HelpMouse = {
 			});
 
 			self.listElement.on('keydown', '.input-content', function(e){
-                console.log(11111);
 				if(e.keyCode == 13){
                     console.log($(this).val());
 					var c = $(this).val() || Calendar.defaultMarkTitle;

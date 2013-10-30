@@ -31,6 +31,8 @@ $( function($) {
 		window.open($(this).data('href'));
 	});
 
+
+
 	/*
 	 * 当前的 App集合
 	 */
@@ -779,7 +781,7 @@ $( function($) {
             ];
 
 
-            self.changeMode('normal');
+            self.changeMode('normal', true);
             var lis = '';
             var divs = '';
             $.each(self.music_channel_list, function(k, v){
@@ -827,6 +829,18 @@ $( function($) {
             $('.normal_music_box_toggle_btn').click(function(){
                 self.changeNormalPosition();
             });
+
+            $(document).on('keydown', function(e){
+                if (e.keyCode == 27) {
+                    var mode1 = $('.active-size').hasClass('size_fullscreen');
+                    var mode2 = $('.active-size').hasClass('size_normal');
+                    if(mode1){
+                        self.changeMode('normal');
+                    }else if(mode2 && parseInt($('#J_box_music').css('left')) == 0){
+                        self.changeNormalPosition();
+                    }
+                }
+            });
         },
         close: function(){
             $('#J_box_music').hide();
@@ -844,9 +858,9 @@ $( function($) {
             $('.mini_current_channel').find('.mini_music_channel_btn').appendTo('.mini_channel_list');
             $('.mini_music_channel_' + id).appendTo('.mini_current_channel');
         },
-        changeMode: function(mode){
+        changeMode: function(mode, isFirst){
             var self = this;
-            if(parseInt($('#J_box_music').css('left')) != 0){
+            if(!isFirst && parseInt($('#J_box_music').css('left')) != 0){
                 self.changeNormalPosition();
             }
 
@@ -909,4 +923,17 @@ $( function($) {
             $('.normal_music_box_toggle_btn').html(tit);
         }
     };
+
+    $('a[data-href="#J_box_music"]').trigger('click');
+/*
+
+    var K_appId = '#J_box_music';
+    if(!$(K_appId).size()){
+        $('body').append(AppsTpl[K_appId]);
+    }
+    $('a[data-href="#J_box_music"]').data('links_app') || $('a[data-href="#J_box_music"]').data('links_app', new App(K_appId));
+    var K_app = $('a[data-href="#J_box_music"]').data('links_app');
+    K_app.show();
+*/
+
 }(jQuery));
