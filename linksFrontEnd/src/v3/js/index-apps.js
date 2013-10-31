@@ -888,10 +888,17 @@ $( function($) {
             $('#J_box_music').attr('class', '').addClass(mode +'_music_box');
 
             if(mode == 'normal'){
-                $('.normal_music_box').css({
-                    'bottom': -t,
-                    'top' : 'auto'
-                });
+                if($(window).height() < 560){
+                    $('.normal_music_box').css({
+                        'bottom': 'auto',
+                        'top' : '0'
+                    });
+                }else{
+                    $('.normal_music_box').css({
+                        'bottom': -t,
+                        'top' : 'auto'
+                    });
+                }
             }
             if(mode == 'mini'){
                 $('.mini_music_box').css({
