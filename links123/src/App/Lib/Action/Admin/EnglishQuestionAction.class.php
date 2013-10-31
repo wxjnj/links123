@@ -305,11 +305,9 @@ class EnglishQuestionAction extends CommonAction {
         
         //@ 一级类目
         $category["level_one"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("1");
-        //@ 一级类目
-        $category["level_one"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("1");
         //@ 二级类目
         $category["level_two"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("2");
-        //@ 三级类目
+        
         $category["level_thr"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("3");
 
         $this->assign("category", $category);
