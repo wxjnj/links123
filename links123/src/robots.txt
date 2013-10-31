@@ -1,14 +1,11 @@
 User-agent: *
 Disallow: /Admin/
 Disallow: /Test/
-Disallow: /Public/
-Disallow: /*.jpg$
-Disallow: /*.jpeg$
-Disallow: /*.gif$
-Disallow: /*.png$
-Disallow: /*.bmp$
+Disallow: /Public/Uploads/Faces/
 Disallow: /*.css$
 Disallow: /*.js$
+Disallow: /*.xlsx$
+Disallow: /*..vec$
 Disallow: /*.mp3$
 Disallow: /*.mp4$
 Disallow: /*.flv$
