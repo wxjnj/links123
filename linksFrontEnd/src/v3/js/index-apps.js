@@ -792,7 +792,9 @@ $( function($) {
             $('#J_box_music').show();
 
             //默认播放第一个频道
-            self.play();
+            if($.cookies.get('music_box_v303_close') != 1){
+                self.play();
+            }
 
             //绑定事件
             $('.normal_music_channel_list').on('click', '.normal_music_channel_btn', function(){
@@ -862,6 +864,7 @@ $( function($) {
         close: function(){
             $('#J_box_music').hide();
             $('#K_303_music_iframe').attr('src', '');
+            $.cookies.set('music_box_v303_close', '1', { expiresAt: (new Date).add_day(365) });
 
         },
         play: function(id, url){
@@ -871,6 +874,8 @@ $( function($) {
                 id = defaultChannel.id;
                 url = defaultChannel.url;
             }
+            $('.normal_music_channel_list').find('li').removeClass('active');
+            $('.normal_music_channel_' + id).closest('li').addClass('active');
             $('#K_303_music_iframe').attr('src', url);
             $('.mini_current_channel').find('.mini_music_channel_btn').appendTo('.mini_channel_list');
             $('.mini_music_channel_' + id).appendTo('.mini_current_channel');
@@ -939,6 +944,9 @@ $( function($) {
             if(st != 0){
                 tit = '收起';
                 pos = '0';
+                if(!$('#K_303_music_iframe').attr('src')){
+                    self.play();
+                }
             }else{
                 tit = '展开';
                 pos = '-789px';

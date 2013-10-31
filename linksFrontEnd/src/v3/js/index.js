@@ -1224,12 +1224,24 @@ var HelpMouse = {
 			self.listElement.on('click', '.cal_v303_mark_content', function(){
 				if($(this).find('input').size()) return false;
 				var c = $(this).attr('title');
+                if(c == '来创建今天新的日程吧！'){
+                    c = '';
+                }
 				var it = $('<input type="text" class="input-content" maxlength="30" />')
 				it.val(c);
 				$(this).html(it);
 				it.select();
 				$(this).siblings('.delete-mark').removeClass('delete-mark').addClass('enter-mark').html('确定');
 			});
+
+            //主视图点击空白区域增加事件
+            self.listElement.on('click', function(e){
+                e = $.event.fix(e);
+                if(e.target == this){
+                    $('.cal_v303_new_mark').trigger('click');
+                    return false;
+                }
+            });
 
 			self.listElement.on('click', '.enter-mark', function(){
 				$(this).removeClass('enter-mark').addClass('delete-mark').html('×');
