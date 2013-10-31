@@ -855,7 +855,8 @@ div.gt-baf-translations {
 }
 .normal_music_channel_list li {
     width: 27px;
-    margin: 10px auto;
+    margin: 0 auto;
+    padding: 5px 10px;
 }
 .normal_music_channel_list li a {
     display: block;
@@ -863,6 +864,9 @@ div.gt-baf-translations {
     height: 27px;
     background-image:url(../imgs/app/music_box_channel_logos.png);
     background-repeat: no-repeat;
+}
+.normal_music_channel_list .active {
+    background: #85c794;
 }
 
 .normal_music_channel_baidu {
