@@ -844,7 +844,6 @@ class EnglishQuestionAction extends CommonAction {
                     }
                 }
             }
-            var_dump($level_one_list);exit;
             //年级列表
             $level_map = array(
                 "cat_attr_id"=>7,

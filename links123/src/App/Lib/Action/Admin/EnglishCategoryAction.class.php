@@ -440,14 +440,18 @@ class EnglishCategoryAction extends CommonAction{
         set_time_limit(0);
         $time = time();
         $englishQuestionModel = D("EnglishQuestion");
-        $englishQuestionSpeakModel = D("EngishQuestionSpeak");
+        $englishQuestionSpeakModel = D("EnglishQuestionSpeak");
         $englishCategoryModel = D("EnglishCategory");
         
         $englishCategoryModel->startTrans();
         $field = "a.*,(select group_concat(b.question_id) from ".
                 C("DB_PREFIX")."english_catquestion b where b.cat_id=a.cat_id and b.type=1 group by b.cat_id) as question_id,(select group_concat(c.question_id) from ".
                 C("DB_PREFIX")."english_catquestion c where c.cat_id=a.cat_id and c.type=0 group by c.cat_id) as question_speak_id";
-        $categoryList = $englishCategoryModel->alias("a")->field($field)->select();
+        $where = "((select group_concat(c.question_id) from ".
+                C("DB_PREFIX")."english_catquestion c where c.cat_id=a.cat_id and c.type=0 group by c.cat_id) is not null)".
+                "OR".
+                "((select group_concat(b.question_id) from ". C("DB_PREFIX")."english_catquestion b where b.cat_id=a.cat_id and b.type=1 group by b.cat_id) is not null)";
+        $categoryList = $englishCategoryModel->alias("a")->field($field)->where($where)->select();
         foreach($categoryList as $key=>$value){
             $question_num =0;
             if(!empty($value['question_id'])){
