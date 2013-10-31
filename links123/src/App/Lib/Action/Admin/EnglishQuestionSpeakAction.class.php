@@ -922,31 +922,9 @@ class EnglishQuestionSpeakAction extends CommonAction {
         //@ 一级类目
         $category["level_one"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("1");
         //@ 二级类目
-        $categoryModel = D("EnglishCategory");
-        $map = array();
-        $map['category.level_one'] = $category["level_one"][0]['id'];
-        $group = 'category.level_two';
-        $flag = "level_two";
-        $category["level_two"] = $categoryModel->alias("category")
-                    ->field("category.".$flag." as id,levelname.name")
-                    ->join("RIGHT JOIN ".C("DB_PREFIX")."english_levelname levelname on levelname.id=category.".$flag)
-                    ->where($map)
-                    ->group($group)
-                    ->order("category.".$flag."_sort asc")
-                    ->select();
+        $category["level_two"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("2");
         //@ 三级类目
-        $map = array();
-        $map['category.level_one'] = $category["level_one"][0]['id'];
-        $map['category.level_two'] = $category["level_two"][0]['id'];
-        $group = 'category.level_thr';
-        $flag = "level_thr";
-        $category["level_thr"] = $categoryModel->alias("category")
-                    ->field("category.".$flag." as id,levelname.name")
-                    ->join("RIGHT JOIN ".C("DB_PREFIX")."english_levelname levelname on levelname.id=category.".$flag)
-                    ->where($map)
-                    ->group($group)
-                    ->order("category.".$flag."_sort asc")
-                    ->select();
+        $category["level_thr"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("3");
 
         $this->assign("category", $category);
         $this->assign("qid", intval($_REQUEST["qid"]));
@@ -1009,31 +987,9 @@ class EnglishQuestionSpeakAction extends CommonAction {
         //@ 一级类目
         $category["level_one"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("1");
         //@ 二级类目
-        $categoryModel = D("EnglishCategory");
-        $map = array();
-        $map['category.level_one'] = $cat_info["level_one"];
-        $group = 'category.level_two';
-        $flag = "level_two";
-        $category["level_two"] = $categoryModel->alias("category")
-                    ->field("category.".$flag." as id,levelname.name")
-                    ->join("RIGHT JOIN ".C("DB_PREFIX")."english_levelname levelname on levelname.id=category.".$flag)
-                    ->where($map)
-                    ->group($group)
-                    ->order("category.".$flag."_sort asc")
-                    ->select();
+        $category["level_two"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("2");
         //@ 三级类目
-        $map = array();
-        $map['category.level_one'] = $cat_info["level_one"];
-        $map['category.level_two'] = $cat_info["level_two"];
-        $group = 'category.level_thr';
-        $flag = "level_thr";
-        $category["level_thr"] = $categoryModel->alias("category")
-                    ->field("category.".$flag." as id,levelname.name")
-                    ->join("RIGHT JOIN ".C("DB_PREFIX")."english_levelname levelname on levelname.id=category.".$flag)
-                    ->where($map)
-                    ->group($group)
-                    ->order("category.".$flag."_sort asc")
-                    ->select();
+        $category["level_thr"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("3");
 
         $this->assign("category", $category);
         
