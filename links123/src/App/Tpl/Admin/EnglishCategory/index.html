@@ -124,4 +124,20 @@
             window.location.href = URL + '/resume/id/' + keyValue+"/level/"+$("#level").val();
         }
     }
+    function foreverdel(id) {
+        var keyValue;
+        if (id) {
+            keyValue = id;
+        } else {
+            keyValue = getSelectCheckboxValues();
+        }
+        if (!keyValue) {
+            alert('请选择操作项！');
+            return false;
+        }
+
+        if (window.confirm('确认永久删除操作？！')) {
+            window.location.href = URL + '/foreverdelete/id/' + keyValue+"/level/"+$("#level").val();
+        }
+    }
 </script>
