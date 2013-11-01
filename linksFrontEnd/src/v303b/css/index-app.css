@@ -1,0 +1,70 @@
+/*apps*/
+.apps{
+	overflow: hidden;
+    padding-bottom: 20px;
+}
+.apps ul{
+	*zoom: 1;
+	margin-left: -10px;
+	height: 100px;
+	overflow: hidden;
+}
+.apps ul:after{
+	content: '\0020';
+	display: block;
+	height: 0;
+	clear: both;
+}
+.apps ul li{
+	cursor: pointer;
+	display: inline;
+	margin-left: 25px;
+	float: left;
+	width: 80px;
+	height: 100px;
+	text-align: center;
+}
+.apps ul li:hover,
+.apps ul li:hover a,
+.apps ul li:hover a:hover{
+	color: #fc2a06;
+}
+.apps ul li img{
+	vertical-align: middle;
+}
+.apps ul li .av,
+.apps ul li .ct{
+	margin-bottom: 7px;
+}
+.apps ul li.today{
+	background: url(../imgs/app/app-date.png) 0 0 no-repeat;
+}
+.apps ul li.today .ct{
+	height: 72px;
+	width: 72px;
+}
+.apps ul li.today b{
+	color: #000;
+	font-size: 12px;
+	padding-top: 10px;
+}
+.apps ul li.today i{
+	color: #cb2d40;
+	font-size: 40px;
+	font-weight: bold;
+	font-style: normal;
+	font-family: arial;
+	margin-top: -5px;
+}
+.apps ul li.today b,
+.apps ul li.today i{
+	display: block;
+	text-align: center;
+}
+
+.widescreen .apps ul{
+	margin-right: -38px;
+}
+.widescreen .apps ul li{
+	margin-left: 38px;
+}

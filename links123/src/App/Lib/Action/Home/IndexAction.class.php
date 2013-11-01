@@ -15,16 +15,7 @@ class IndexAction extends CommonAction {
 	 * @author slate date:2013-10-07
 	 */
 	public function indexV4() {
-        
-        //气象数据
-        $this->assign('weatherData', $this->getWeatherData());
-        
-        //推荐电影
-        $this->assign('homeMovies', $this->getHomeMovies());
-
-        //推荐音乐
-        $this->assign('homeMusics', $this->getHomeMusics());
-        
+		import("@.ORG.String");
 		//自留地
 		$myareaModel = M("Myarea");
 		$scheduleModel = M("Schedule");
@@ -36,6 +27,12 @@ class IndexAction extends CommonAction {
 			$_SESSION['myarea_sort'] = $mbrNow['myarea_sort'] ? explode(',', $mbrNow['myarea_sort']) : '';
 			$_SESSION['app_sort'] = $mbrNow['app_sort'];
 
+			//取出皮肤ID和模板ID
+			$skinId = session('skinId');
+			if (!$skinId) {
+				$skinId = cookie('skinId');
+			}
+
 			$themeId = session('themeId');
 			if (!$themeId) {
 				$themeId = cookie('themeId');
@@ -43,6 +40,10 @@ class IndexAction extends CommonAction {
 		} else {
 
 			//取出皮肤ID和模板ID
+			$skinId = session('skinId');
+			if (!$skinId) {
+				$skinId = cookie('skinId');
+			}
 			$themeId = session('themeId');
 			if (!$themeId) {
 				$themeId = cookie('themeId');
@@ -54,14 +55,54 @@ class IndexAction extends CommonAction {
 			}
 		}
 
-		if(!$themeId || strpos($themeId, 'theme')) { //暂时只有1和2
-			$themeId = 'theme-purple';
+		//快捷皮肤
+		$skins = $this->getSkins();
+		if ($skinId) {
+			$skin = $skins['skin'][$skinId]['skinId'];
+			if (!$skin) $skinId = '';
+			$themeId = $skins['skin'][$skinId]['themeId'];
+			$this->assign("skinId", $skinId);
+			$this->assign("skin", $skin);
+		}
+		$this->assign("skinList", $skins['list']);
+		$this->assign("skinCategory", $skins['category']);
+
+		$theme = $this->getTheme($themeId);
+		$this->assign('theme', $theme);
+
+		//自留地数据
+		if ($user_id || !$_SESSION['arealist']) {
+			$areaList = $myareaModel->where(array('mid' => $user_id))->select();
+
+			if ($areaList) {
+				$_SESSION['arealist'] = array();
+			}
+
+			foreach ($areaList as $value) {
+				$_SESSION['arealist'][$value['id']] = $value;
+			}
+		}
+		if (!$_SESSION['myarea_sort']) {
+
+			$_SESSION['myarea_sort'] = array_keys($_SESSION['arealist']);
 		}
 
-		$this->assign('themeId', $themeId);
 
+
+		//APP应用
 		$app_list = $this->getApps($_SESSION['app_sort']);
 		$this->assign('app_list', $app_list);
+
+        //气象数据
+        $this->assign('weatherData', $this->getWeatherData());
+        
+        //推荐电影
+        $this->assign('homeMovies', $this->getHomeMovies());
+
+        //推荐音乐
+        $this->assign('homeMusics', $this->getHomeMusics());
+        
+
 		$this->getHeaderInfo();
 		$this->display('index_v4');
 	}
