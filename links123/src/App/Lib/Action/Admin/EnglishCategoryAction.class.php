@@ -436,6 +436,58 @@ class EnglishCategoryAction extends CommonAction{
         $levelnameModel->commit();
         $this->success('操作成功');
     }
+    function resetCategoryQuestionNum(){
+        set_time_limit(0);
+        $time = time();
+        $englishQuestionModel = D("EnglishQuestion");
+        $englishQuestionSpeakModel = D("EnglishQuestionSpeak");
+        $englishCategoryModel = D("EnglishCategory");
+        
+        $englishCategoryModel->startTrans();
+        $field = "a.*,(select group_concat(b.question_id) from ".
+                C("DB_PREFIX")."english_catquestion b where b.cat_id=a.cat_id and b.type=1 group by b.cat_id) as question_id,(select group_concat(c.question_id) from ".
+                C("DB_PREFIX")."english_catquestion c where c.cat_id=a.cat_id and c.type=0 group by c.cat_id) as question_speak_id";
+        $where = "((select group_concat(c.question_id) from ".
+                C("DB_PREFIX")."english_catquestion c where c.cat_id=a.cat_id and c.type=0 group by c.cat_id) is not null)".
+                "OR".
+                "((select group_concat(b.question_id) from ". C("DB_PREFIX")."english_catquestion b where b.cat_id=a.cat_id and b.type=1 group by b.cat_id) is not null)";
+        $categoryList = $englishCategoryModel->alias("a")->field($field)->where($where)->select();
+        foreach($categoryList as $key=>$value){
+            $question_num =0;
+            if(!empty($value['question_id'])){
+                $question_map = array();
+                $question_map['question.id'] = array("in",$value['question_id']);
+                $question_map['question.status'] = 1;
+                $question_map['media.status'] = 1;
+                $question_num = intval($englishQuestionModel->alias("question")->join("RIGHT JOIN ".C("DB_PREFIX")."english_media media on media.id=question.media_id")->where($question_map)->count("question.id"));
+            }
+            
+            $question_speak_num = 0;
+            if(!empty($value['question_speak_id'])){
+                $question_map = array();
+                $question_map['question.id'] = array("in",$value['question_speak_id']);
+                $question_map['question.status'] = 1;
+                $question_map['media.status'] = 1;
+                $question_speak_num = intval($englishQuestionSpeakModel->alias("question")->join("RIGHT JOIN ".C("DB_PREFIX")."english_media media on media.id=question.media_id")->where($question_map)->count("question.id"));
+            }
+            $new_question_num = $categoryList[$key]['new_question_num'] =  intval($question_num + $question_speak_num);
+            $cat_map = array(
+                "cat_id"=>$value['cat_id']
+            );
+            $data =array(
+                "updated"=>$time,
+                "question_num"=>$new_question_num
+            );
+            $ret = $englishCategoryModel->where($cat_map)->save($data);
+            Log::write($englishCategoryModel->getLastSql(), LOG::SQL);
+            if(false === $ret){
+                $englishCategoryModel->rollback();
+                $this->error("执行失败");
+            }
+            $englishCategoryModel->commit();
+            $this->success("执行成功");
+        }
+    }
 }
 
 ?>

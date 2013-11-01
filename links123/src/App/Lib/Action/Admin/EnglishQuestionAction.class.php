@@ -824,7 +824,8 @@ class EnglishQuestionAction extends CommonAction {
             $object_level_one_id = 0;//选择课程 分类的id
             $target = 1;//听力
             $difficulty_list = array();//新分类的默认难度id
-            foreach($levelnames as $each_lv) {
+            foreach($levelnames as $key=>$each_lv) {
+                $levelnames[$key]["name"] = $each_lv["name"] = preg_replace("/\s+/", '', $each_lv["name"]); //将开头或结尾的一个或多个半角空格转换为空
                 $level_name_list[$each_lv["name"]] = $each_lv["id"];
                 if($each_lv['level'] == 1){
                     $level_one_list[$each_lv["name"]] = $each_lv["id"];
