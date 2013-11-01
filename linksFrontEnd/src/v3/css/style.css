@@ -205,6 +205,10 @@ input:focus{ outline: 0; }
 	-khtml-opacity: 1;
 	opacity: 1;
 }
+.thl .thl-keyword-span {
+    margin-left: 4px;
+    margin-right: 4px;
+}
 
 /*zld*/
 .zld{}
