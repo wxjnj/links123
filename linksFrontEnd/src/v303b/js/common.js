@@ -769,6 +769,17 @@ var Theme = {
 			if(id && theme && bg) self.SetBackGround(id, theme, bg);
 		});
 
+		if($('body').css('background-image')){
+			self.hasBack();
+		}
+
+
+	},
+	hasBack: function(){
+		$('.under-header, .footer, .container').addClass('no-background-color');
+	},
+	noBack: function(){
+		$('.under-header, .footer, .container').removeClass('no-background-color');
 	},
 	SetBackGround : function(id, tm, bg) {
 		var tmurl = $CONFIG['PUBLIC'] + '/IndexV3/skins/{0}/style.css';
@@ -778,6 +789,7 @@ var Theme = {
 		$.post(URL + "/updateSkin", {
 			'skinId' : id
 		});
+		this.removeBack();
 		return false;
 	},
 	SetTheme : function(id, tm, bg) {
@@ -787,6 +799,7 @@ var Theme = {
 		$.post(URL + "/updateSkinTheme", {
 			'themeId' : id
 		});
+		this.removeBack();
 		return false;
 	},
 	SetGlobal : function() {

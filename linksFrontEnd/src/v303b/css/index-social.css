@@ -1,0 +1,258 @@
+.title-tabs {
+    margin: 20px 20px 10px;
+    height: 25px;
+    line-height: 25px;
+    overflow: hidden;
+}
+.title-tabs span {
+    display: block;
+    float: left;
+}
+.title-tabs a,
+.title-tabs a:active,
+.title-tabs a:hover{
+    display: block;
+    float: left;
+    margin-top:3px;
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+    -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    border-radius: 20px;
+    color: #fff;
+    background: #a9a9a9;
+    text-align: center;
+    text-decoration: none;
+    font-weight: 800;
+    margin-left: 5px;
+}
+.title-tabs ul {
+    float: right;
+    overflow: hidden;
+}
+.title-tabs li {
+    float: left;
+    height: 25px;
+    line-height: 25px;
+    padding-left: 10px;
+    padding-right: 10px;
+    -moz-border-radius: 30px;
+    -webkit-border-radius: 30px;
+    border-radius: 30px;
+    color:#000;
+    cursor: pointer;
+}
+.title-tabs .active {
+    color:#fff;
+    background: #a9a9a9;
+}
+.like-tags {
+    overflow: hidden;
+    margin-left: 20px;
+}
+.like-tags .a_tag {
+    margin-right: 5px;
+    height: 16px;
+    line-height: 16px;
+    background: #a9a9a9;
+    color: #fff;
+    float: left;
+    padding-left: 5px;
+    padding-right: 5px;
+    -moz-border-radius: 30px;
+    -webkit-border-radius: 30px;
+    border-radius: 30px;
+}
+.a_tag a,
+.a_tag a:active,
+.a_tag a:hover {
+    color: #fff;
+    text-decoration: none;
+}
+.social-box {
+    margin: 20px;
+}
+.pic-news {
+    float: left;
+    width: 120px;
+    overflow: hidden;
+}
+
+.social-box .pics-box {
+    width: 120px;
+    height: 75px;
+    overflow: hidden;
+}
+.social-box .pics-box img{
+    width: 100%;
+}
+.pic-news-title {
+    width: 120px;
+    font-size: 14px;
+    font-weight: 100;
+    margin-top: 10px;
+    overflow: hidden;
+}
+.pic-news-desc {
+    color: #999;
+    width: 120px;
+    margin-top: 10px;
+    display: block;
+}
+.pic-news-desc a,
+.pic-news-desc a:active,
+.pic-news-desc a:hover{
+    color: #999;
+}
+
+.text-news {
+    float: right;
+    width: 290px;
+}
+.text-news p {
+    line-height: 100%;
+    margin-bottom: 12px;
+}
+.text-news p a,
+.text-news p a:active,
+.text-news p a:hover{
+    color:#000;
+}
+.text-news .more-news {
+    text-align: right;
+}
+.text-news .more-news a,
+.text-news .more-news a:active,
+.text-news .more-news a:hover {
+    margin-top: 15px;
+    color: #3b76b3;
+    text-decoration: underline;
+}
+
+.social-digs {
+    position: relative;
+}
+
+.social-digs img {
+    display: none;
+    width: 60px;
+    height: 40px;
+    float: left;
+    margin-right: 5px;
+}
+.social-digs .text-div {
+    float: left;
+}
+
+.social-digs .lft-digs {
+    width: 205px;
+    float: left;
+}
+.social-digs .rgt-digs {
+    width: 205px;
+    float: right;
+}
+.social-digs h5 {
+    font-size: 13px;
+    font-weight: 100;
+}
+.social-digs h5 a,
+.social-digs h5 a:active,
+.social-digs h5 a:hover {
+    color: #000;
+}
+.social-digs p {
+    color: #999;
+}
+
+.social-digs li {
+    overflow: hidden;
+    border-bottom: 1px solid #ddd;
+    padding: 7px 0;
+}
+
+.social-digs .more-digs {
+    clear: both;
+    text-align: right;
+    position: relative;
+    line-height: 200%;
+}
+.social-digs .more-digs a,
+.social-digs .more-digs a:active,
+.social-digs .more-digs a:hover {
+    color: #3b76b3;
+    text-decoration: underline;
+}
+
+
+.pic-news-tabs {
+    width: 125px;
+    overflow: hidden;
+    margin-top: 5px;
+    margin-left: -1px;
+}
+.pic-news-tabs a {
+    display: block;
+    float: left;
+    width: 28px;
+    height: 3px;
+    margin-left: 2px;
+    background: #d1d1d1;
+}
+
+.pic-news-tabs .active {
+    background:#000;
+}
+
+.wide-news {
+    display: none;
+}
+
+.widescreen .pic-news-tabs {
+    width: 195px;
+}
+
+.widescreen .pic-news-tabs a {
+    width: 46px;
+    height: 4px;
+    margin-left: 2px;
+}
+
+.widescreen .pic-news {
+    width: 190px;
+}
+.widescreen .social-box .pics-box {
+    width: 190px;
+    height: 120px;
+}
+.widescreen .pic-news-title {
+    width: 190px;
+    font-size: 18px;
+}
+.widescreen .pic-news-desc {
+    width: 190px;
+}
+.widescreen .text-news {
+    width: 320px;
+    font-size: 13px;
+}
+.widescreen .wide-news {
+    display: block;
+}
+.widescreen .pic-news-desc {
+    font-size: 13px;
+    margin-top: 20px;
+}
+
+.widescreen .social-digs .lft-digs {
+    width: 255px;
+    float: left;
+}
+.widescreen .social-digs .rgt-digs {
+    width: 255px;
+    float: right;
+}
+.widescreen .social-digs img {
+    display: block;
+}

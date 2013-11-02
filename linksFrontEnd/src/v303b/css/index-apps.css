@@ -818,6 +818,20 @@ div.gt-baf-translations {
 
 
 /* 音乐盒new */
+
+.music-close-tip {
+	display:none;
+    position: absolute;
+    top: -25px;
+    left: 44px;
+    color: #333;
+    width:80px;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    background: url(../imgs/app/music-close-tip-ang.png) 0 0 no-repeat;
+}
+
 #J_box_music {
     z-index: 9999;
 }
@@ -828,7 +842,7 @@ div.gt-baf-translations {
     bottom: 0;
     /*left: 0;*/
     left: -789px;
-    overflow: hidden;
+   /* overflow: hidden;*/
 }
 .normal_music_iframe_box {
     overflow: hidden;
@@ -845,7 +859,7 @@ div.gt-baf-translations {
     position: absolute;
 }
 .normal_music_channel_list {
-    overflow: hidden;
+ /*   overflow: hidden;*/
     width: 48px;
     height: 548px;
     background: #eee;
