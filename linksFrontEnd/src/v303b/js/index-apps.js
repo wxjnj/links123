@@ -779,7 +779,7 @@ $( function($) {
             ];
 
 
-            self.changeMode('normal', true);
+            self.changeMode('mini', true);
             var lis = '';
             var divs = '';
             $.each(self.music_channel_list, function(k, v){
@@ -795,6 +795,9 @@ $( function($) {
             if($.cookies.get('music_box_v303_close') != 1){
                 $('.music-close-tip').show();   // 关闭提示
                 self.play();
+            }else{
+            	self.play();
+            	self.pause();
             }
 
             //绑定事件
@@ -928,7 +931,6 @@ $( function($) {
             var t = $(window).scrollTop();
             var h = $(window).height() / 2;
 
-
             $('#J_box_music').attr('class', '').addClass(mode +'_music_box');
 
             if(mode == 'normal'){
@@ -946,7 +948,7 @@ $( function($) {
             }
             if(mode == 'mini'){
                 $('.mini_music_box').css({
-                    'bottom' : 0,//-t + h,
+                    'bottom' : '80px',//-t + h,
                     'top' : 'auto'
                 });
             }

@@ -833,6 +833,9 @@ div.gt-baf-translations {
     background: url(../imgs/app/music-close-tip-ang.png) 0 0 no-repeat;
 }
 
+.mini_music_box .music-close-tip {
+	left: 275px;
+}
 #J_box_music {
     z-index: 9999;
 }
@@ -1006,7 +1009,11 @@ div.gt-baf-translations {
     box-shadow:0 0 5px #666;
 }
 .mini_music_box .normal_music_iframe_box {
-    display: none;
+    /*display: none;*/
+    left: -789px;
+    width: 0;
+    height: 0;
+    overflow:hidden;
 }
 .mini_music_box .normal_music_channel_list {
     display: none;

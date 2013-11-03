@@ -181,6 +181,7 @@ var AppsTpl = {
                     <div class="mini_channel_list">\
                     </div>\
                 </div>\
+                <div class="music-close-tip">听烦了</div>\
                 <a class="mini_music_box_close_btn" href="javascript:;">×</a>\
                 <a class="mini_music_box_play_btn mini_music_box_play_btn_pause" href="javascript:;"></a>\
                 <a class="mini_music_box_size_btn size_mini" href="javascript:;" data-size="mini">小</a>\
