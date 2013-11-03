@@ -14,7 +14,7 @@ class IndexAction extends CommonAction {
 	 * 
 	 * @author slate date:2013-10-07
 	 */
-	public function indexV4() {
+	public function index() {
 		import("@.ORG.String");
 		//自留地
 		$myareaModel = M("Myarea");
@@ -87,18 +87,19 @@ class IndexAction extends CommonAction {
 			$_SESSION['myarea_sort'] = array_keys($_SESSION['arealist']);
 		}
 
-
-
 		//APP应用
 		$app_list = $this->getApps($_SESSION['app_sort']);
 		$this->assign('app_list', $app_list);
 
         //气象数据
         $this->assign('weatherData', $this->getWeatherData());
+        
+        //新闻信息
         $hotNews = $this->getHotNews();
         shuffle($hotNews['imgNews']);
         $this->assign('hotNewsData',  $hotNews['news']);
         $this->assign('imgNewsData',  $hotNews['imgNews']);
+        
 		$this->getHeaderInfo();
 		$this->display('index_v4');
 	}
@@ -108,7 +109,7 @@ class IndexAction extends CommonAction {
 	 *
 	 * @author slate date:2013-09-06
 	 */
-	public function index() {
+	public function indexV3() {
 		import("@.ORG.String");
 		//自留地
 		$myareaModel = M("Myarea");
@@ -1366,6 +1367,9 @@ class IndexAction extends CommonAction {
         return $result;
     }
     
+    /**
+     * 抓取360热门新闻头条
+     */
     protected function getHotNews() {
     
     	$hotNews = S('hotNewsList');
