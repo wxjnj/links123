@@ -280,6 +280,7 @@ var Zld = { // 自留地
 
         /* 鼠标经过缩放*/
          var holder = {};
+         /*
          $(document).on('mouseover', '#J_sortable li .nm', function() {
          var nm = $(this);
          var oldWidth = nm.width();
@@ -306,6 +307,7 @@ var Zld = { // 自留地
          });
          nm.find('b').css('margin', '0');
          });
+        */
          /**/
         /*
          $(document).on('mouseenter', '#J_Zld input[name="url"], #J_Zld input[name="name"]', function(){

@@ -1,7 +1,7 @@
 body{
 	font-family: \5FAE\8F6F\96C5\9ED1,Hiragino Sans GB,Hiragino Sans GB W3;
 	font-size: 12px;
-    background: #3f3a39 top center fixed;
+    background: #fff top center fixed;
     background-size: cover;
 }
 input:focus{ outline: 0; }
@@ -361,9 +361,13 @@ left: 37px;
 }
 
 .zld ul li .nm:hover{
-	color: #fc2a06;
+	/*color: #fc2a06;*/
 	cursor: pointer;
+    padding-top:12px;
+    margin-top:1px;
+    box-shadow:inset 0px 0 5px #ccc;
 }
+
 
 .zld ul li b{
 	font-weight: normal;
@@ -825,13 +829,15 @@ left: 37px;
 
 .site-info li a,
 .site-info li a:active,
-.site-info li a:hover,
 .friend-links li a,
-.friend-links li a:active,
-.friend-links li a:hover{
+.friend-links li a:active {
     color: #3b76b3;
     text-decoration: underline;
     margin: 5px 15px 0 0;
+}
+.site-info li a:hover,
+.friend-links li a:hover {
+    color: #fc2a06;
 }
 
 .site-info {

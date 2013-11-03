@@ -778,10 +778,10 @@ var Theme = {
 
 	},
 	hasBack: function(){
-		$('.under-header, .footer, .container').addClass('no-background-color');
+		$('.footer, .container').addClass('no-background-color');
 	},
 	noBack: function(){
-		$('.under-header, .footer, .container').removeClass('no-background-color');
+		$('.footer, .container').removeClass('no-background-color');
 	},
 	SetBackGround : function(id, tm, bg) {
 		var tmurl = $CONFIG['PUBLIC'] + '/IndexV3/skins/{0}/style.css';

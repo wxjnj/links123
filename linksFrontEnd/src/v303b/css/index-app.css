@@ -6,7 +6,7 @@
 .apps ul{
 	*zoom: 1;
 	margin-left: -10px;
-	height: 100px;
+	height: 101px;
 	overflow: hidden;
 }
 .apps ul:after{

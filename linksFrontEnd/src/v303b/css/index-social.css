@@ -123,11 +123,14 @@
     text-align: right;
 }
 .text-news .more-news a,
-.text-news .more-news a:active,
-.text-news .more-news a:hover {
+.text-news .more-news a:active {
     margin-top: 15px;
     color: #3b76b3;
     text-decoration: underline;
+}
+
+.text-news .more-news a:hover {
+    color:#fc2a06;
 }
 
 .social-digs {
