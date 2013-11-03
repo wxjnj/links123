@@ -150,8 +150,7 @@ input:focus{ outline: 0; }
 
 
 .mini-tip {
-    -webkit-text-size-adjust: none; 
-    font-size: 10px;
+    font-size: 12px;
     color: #7e6b5a;
     overflow: hidden;
     position: absolute;
@@ -360,12 +359,12 @@ left: 37px;
 	vertical-align: top;
     background: #fff;
 }
-/*
+
 .zld ul li .nm:hover{
 	color: #fc2a06;
 	cursor: pointer;
 }
-*/
+
 .zld ul li b{
 	font-weight: normal;
 }
@@ -581,7 +580,7 @@ left: 37px;
 	float: right;
 	cursor: pointer;
 	z-index: 3;
-	position: relative;
+    margin-right: 5px;
 }
 .app-icon-list .app-more-box .nm{
     color: #fff;
@@ -755,6 +754,7 @@ left: 37px;
     width: 35px;
     padding: 5px;
 }
+
 .zld ul li .ctl i{
     width: 35px;
     height: 35px;
