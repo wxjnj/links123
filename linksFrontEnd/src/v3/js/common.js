@@ -31,9 +31,11 @@ $(function() {
 		'async': true,
 		width : 298,
 		scroll : false,
-		matchContains : true,
+		cacheLength : 0,
+		matchSubset : false,
+		matchContains: false,
 		parse : function(data) {
-	 		return $.map(data, function(row) {
+			return $.map(data, function(row) {
 	 			return {
 	 				data : row,
 	 				value : row.tag,
