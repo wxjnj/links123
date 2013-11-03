@@ -240,15 +240,35 @@ class EnglishMediaAction extends CommonAction {
             }
             $model->ted = intval($tedId);
         }
-        $media['media_id'] = $model->id;
+       
         $media['media_source_url'] = $model->media_source_url;
+        $media['name'] = $model->name;
         //保存当前数据对象
         $list = $model->add();
+        
+        $media_id = $media['media_id'] = $list;
         if ($list !== false) { //保存成功
             $model->commit();
-            
+           
+            //给特别推荐添加空试题，添加分类  @author slate date:2013-11-02
+            if (intval($_REQUEST['special_recommend']) == 1) {
+            	$englishQuestionModel = M('EnglishQuestion');
+            	$question = $englishQuestionModel->where(array('media_id' => $media_id))->find();
+            	if (!$question['id']) {
+            		$question_id = $englishQuestionModel->add(array('media_id' => $media_id, 'name' => $media['name'], 'media_text_url' => $media['media_source_url'],'status' => 1));
+            		if ($question_id) {
+            		$englishCatgoryModel = D('EnglishCategory');
+            			$cat = $englishCatgoryModel->where(array('cat_attr_id' => 7,'level_one' => -1, 'level_two' => -1, 'level_thr' => -1))->find();
+            			if ($cat['cat_id']) {
+            				$englishCatquestionModel = D('EnglishCatquestion');
+            				$catquestion_id = $englishCatquestionModel->add(array('cat_id' => $cat['cat_id'], 'question_id' => $question_id,'type' => 1, 'status' => 1));
+            			}
+            		}
+            	}
+            } 
             //TODO 推荐视频解析 @author slate date 20131001
-            $model->analysisMediaPlayCode($media);
+            //$model->analysisMediaPlayCode($media);
+            $this->analysisMediaPlayCode($media_id);
             
             $this->success('新增成功!', cookie('_currentUrl_'));
         } else {
@@ -340,17 +360,35 @@ class EnglishMediaAction extends CommonAction {
                 $model->ted = $tedId;
             }
         }
-        $media['media_id'] = $model->id;
+        $media_id = $media['media_id'] = $model->id;
         $media['media_source_url'] = $model->media_source_url;
+        $media['name'] = $model->name;
         // 更新数据
         $list = $model->save();
         if (false !== $list) {
             $model->commit();
             
+            //给特别推荐添加空试题，添加分类  @author slate date:2013-11-02
+            if (intval($_REQUEST['special_recommend']) == 1) {
+            	$englishQuestionModel = D('EnglishQuestion');
+            	$question = $englishQuestionModel->where(array('media_id' => $media_id))->find();
+            	if (!$question['id']) {
+            		$question_id = $englishQuestionModel->add(array('media_id' => $media_id, 'name' => $media['name'], 'media_text_url' => $media['media_source_url'], 'status' => 1));
+            		if ($question_id) {
+            			$englishCatgoryModel = D('EnglishCategory');
+            			$cat = $englishCatgoryModel->where(array('cat_attr_id' => 7, 'level_one' => -1, 'level_two' => -1, 'level_thr' => -1))->find();
+            			if ($cat['cat_id']) {
+            				$englishCatquestionModel = D('EnglishCatquestion');
+            				$englishCatquestionModel->add(array('cat_id' => $cat['cat_id'], 'question_id' => $question_id,'type' => 1, 'status' => 1));
+            			}
+            		}
+            	}
+            }
+            
             //TODO 推荐视频解析 @author slate date 20131001
             if (!$model->play_code) {
 	            
-	            $this->analysisMediaPlayCode($media['media_id'] );
+	            $this->analysisMediaPlayCode($media_id);
             }
             
             //成功提示
