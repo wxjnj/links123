@@ -95,8 +95,10 @@ class IndexAction extends CommonAction {
 
         //气象数据
         $this->assign('weatherData', $this->getWeatherData());
-        $this->assign('hotNewsData',  $this->getHotNews());
-       
+        $hotNews = $this->getHotNews();
+        shuffle($hotNews['imgNews']);
+        $this->assign('hotNewsData',  $hotNews['news']);
+        $this->assign('imgNewsData',  $hotNews['imgNews']);
 		$this->getHeaderInfo();
 		$this->display('index_v4');
 	}
@@ -1365,27 +1367,34 @@ class IndexAction extends CommonAction {
     }
     
     protected function getHotNews() {
-    	 
+    
     	$hotNews = S('hotNewsList');
-    	 
+    
     	if (!$hotNews) {
-    		
-    		$url = 'http://news.baidu.com/';
     
-    		$str = iconv('gb2312', 'utf8' , file_get_contents($url));
+    		$url = 'http://sh.qihoo.com/index.html';
+    
+    		$str = file_get_contents($url);
+    		$news = $imgNews = array();
+    		preg_match_all('/<p class="title">(.*?)<\/p>/is', $str, $match);
     		
-    		preg_match_all('/<\!-- sp_tag_start -->(.*?)<\!-- sp_tag_end -->/is', $str, $matchHotNews);
-    		foreach ($matchHotNews[1] as $k => $v) {
-    			$hotNews[] = array('url' => $this->tp_match('/href="(.*?)"/is', $v), 'title' => trim(trim(str_replace("\n", '', strip_tags($v))),'"'), 'img' => '');
+    		foreach ($match[1] as $k => $v) {
+    			$news[] = array('url' => $this->tp_match('/href="(.*?)"/is', $v), 'title' => trim(str_replace("\n", '', strip_tags($v))), 'img' => '');
+    		}
+    		
+    		preg_match_all('/<li class="focal f16">(.*?)<\/li>/is', $str, $match);
+    		foreach ($match[1] as $k => $v) {
+    			$news[] = array('url' => $this->tp_match('/href="(.*?)"/is', $v), 'title' => trim(str_replace("\n", '', strip_tags($v))), 'img' => '');
     		}
     
-    		preg_match_all('/cpOptions_1\.data\.push\((.*?)\)\;/is', $str, $matchImgNews);
-    		foreach ($matchImgNews[1] as $k => $v) {
-    			$hotNews[] = array('url' => stripslashes($this->tp_match('/"url": "(.*?)"/is', $v)), 'title' => trim($this->tp_match('/"title": "(.*?)"/is', $v),'"'), 'img' => stripslashes($this->tp_match('/"imgUrl": "(.*?)"/is', $v)));
+    		preg_match_all('/<div class="image">(.*?)<\/div>/is', $str, $match);
+    		foreach ($match[1] as $k => $v) {
+    			if ($k >= (count($match[1])-1)) continue;
+    			$imgNews[] = array('url' => stripslashes($this->tp_match('/href="(.*?)"/is', $v)), 'title' => trim($this->tp_match('/title="(.*?)"/is', $v)), 'img' => $this->tp_match('/src="(.*?)"/is', $v));
     		}
-    
-    		S('hotNewsList', $hotNews, 172800);
+    		$hotNews = array('news' => $news, 'imgNews' => $imgNews);
+    		S('hotNewsList', $hotNews, 14400);
     	}
     	return $hotNews;
-    }
+    } 
 }

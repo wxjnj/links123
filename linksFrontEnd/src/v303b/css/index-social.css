@@ -94,6 +94,9 @@
 	margin-top: 10px;
 	overflow: hidden;
 }
+.pic-news-title a {
+	color: #000000;
+}
 .pic-news-desc {
 	color: #999;
 	width: 120px;

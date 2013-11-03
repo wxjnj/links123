@@ -249,10 +249,13 @@
 				</div>
 				-->
 				<!-- 头条 -->
+				<script>
+				var news = [ <volist name="imgNewsData" id="news" offset="1" length="4"> { title: '{$news.title}',img: '{$news.img}',url:'{$news.url}',desc:'{$news.desc}' }  <if condition="$i lt 10">,</if> </volist> ];
+				</script>
 				<div class="social-news social-box">
 					<div class="pic-news">
 						<div class="pics-box">
-							<img src="__PUBLIC__/Uploads/Others/50e17b4358cd4.jpg" />
+							<img src="" />
 						</div>
 						<div class="pic-news-tabs">
 						
@@ -261,15 +264,18 @@
 							<a href="javascript:;" data-tab="2"></a>
 							<a href="javascript:;" data-tab="3"></a>
 						</div>
-						<h3 class="pic-news-title">习近平：坚持男女平等基本国策</h3>
-						<span class="pic-news-desc"><a href="#">新华网北京10月31日电　中共中央总书记、国家主席、中央军委主席习近平……</a></span>
+						<h3 class="pic-news-title"></h3>
+						<span class="pic-news-desc"><a href="#"></a></span>
 					</div>
 					<div class="text-news">
 					<volist name="hotNewsData" id="news">
-						<p><a href="{$news.url}" target="_blank">{$news.title}"</a></p>
+						<p><a href="{$news.url}" target="_blank">{$news.title}</a></p>
+					</volist>
+					<volist name="imgNewsData" id="news" offset="1" length="6">
+						<p><a href="{$news.url}" target="_blank">{$news.title}</a></p>
 					</volist>
 						<!-- <p class="wide-news"><a href="#"></a></p> -->
-						<p class="more-news"><a href="http://news.baidu.com" target="_blank">更多新闻</a></p>
+						<p class="more-news"><a href="http://sh.qihoo.com/index.html" target="_blank">更多新闻</a></p>
 					</div>
 				</div>
 				<div class="social-digs social-box" style="display: none">
@@ -278,7 +284,7 @@
 							<img src="__PUBLIC__/Uploads/Others/50e17b4358cd4.jpg" />
 							<div class="text-div">
 								<h5><a href="#">为什么说体验即设计？</a></h5>
-								<p>2013/10/30 xbsmag.com</p>
+								<p>2013/10/30 </p>
 							</div>
 						</li>
 					</ul>
