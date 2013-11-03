@@ -190,6 +190,7 @@ var AppsTpl = {
                 <iframe id="K_303_music_iframe" allowtransparency="true" frameborder="0" style=""></iframe>\
             </div>\
             <div class="normal_music_channel_list">\
+            	<div class="music-close-tip">听烦了</div>\
                 <a class="normal_music_box_close_btn" href="javascript:;">×</a>\
                 <a href="javascript:;" class="normal_music_box_toggle_btn">展开</a>\
                 <ul>\

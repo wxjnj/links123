@@ -10,7 +10,7 @@
 	<!--link rel="stylesheet" href="__PUBLIC__/IndexV3/skins/{$theme}/style.css" id="J_Skins" /-->
 	<script>var $CONFIG = { 'STATIC': '__STATIC__','APP' : '__APP__/', 'URL' : '__URL__', 'PUBLIC' : '__PUBLIC__', 'IsLogin' : <empty name="_SESSION[C('MEMBER_AUTH_KEY')]">1<else />0</empty> };</script>
 </head>
-<body>
+<body id="container" <if condition="$skinId">style="background-image:url({$skin})"</if>>
 <script src="__STATIC__/v3/js/init.js"></script>
 <div id="J_header" class="header">
 	<div class="header-inner">
@@ -146,7 +146,7 @@
 	</div>
 </div>
 
-<div class="container" id="container" <if condition="$skinId">style="background-image:url({$skin})"</if>>
+<div class="container">
 	<div class="container-inner">
 		<!-- <div class="banner"><img src="__PUBLIC__/IndexV3/1175.jpg" alt="" /></div> -->
 		<div class="zld" id="J_ZldList">
@@ -159,8 +159,17 @@
 							<span class="ctl"><i></i></span>
 						</li>
 					</if>
-				</volist>
-				<li class="add"><span class="ctl"><i>+</i></span></li>
+				</volist>			
+				<li class="add">
+					<span class="ctl"><i>+</i></span>
+					<empty name="_SESSION[C('MEMBER_AUTH_KEY')]">
+					<div class="mini-tip zld-mini-tip">
+						<div class="mini-tip-l"></div>
+						<div class="mini-tip-c">请登陆后添加网址</div>
+						<div class="mini-tip-r"></div>
+					</div>
+					</empty>
+				</li>
 			</ul>
 		</div><!--.zld end-->
 		<div class="box box-apps">
@@ -196,12 +205,164 @@
 							</li>
 						</volist>
 					</ul>
+					<div class="app-add">
+						<a href="javascript:;">+</a>
+						<empty name="_SESSION[C('MEMBER_AUTH_KEY')]">
+						<div class="mini-tip zld-mini-tip">
+							<div class="mini-tip-l"></div>
+							<div class="mini-tip-c">请登陆后添加应用</div>
+							<div class="mini-tip-r"></div>
+						</div>
+						</empty>
+					</div>
 				</div><!--.apps end-->
 			</div><!-- app-box-body end -->
 		</div><!-- app-box end -->
 		<div class="extra-wrap">
-			<div class="lft-box extra-box"></div>
-			<div class="rgt-box extra-box"></div>
+			<div class="lft-box extra-box">
+				<div class="title-tabs">
+					<span>发现你最喜欢的内容</span>
+					<a href="javascript:;">+</a>
+					<ul>
+						<li data-tab="news" class="active">头条</li>
+						<li data-tab="digs">文摘</li>
+					</ul>
+				</div>
+				<!-- 标签 -->
+				<div class="like-tags">
+					<div class="a_tag">
+						<span>标签</span>
+						<a href="javascript:;">×</a>
+					</div>
+					<div class="a_tag">
+						<span>标签</span>
+						<a href="javascript:;">×</a>
+					</div>
+					<div class="a_tag">
+						<span>标签</span>
+						<a href="javascript:;">×</a>
+					</div>
+					<div class="a_tag">
+						<span>标签</span>
+						<a href="javascript:;">×</a>
+					</div>
+					<div class="a_tag">
+						<span>标签</span>
+						<a href="javascript:;">×</a>
+					</div>
+				</div>
+				<!-- 头条 -->
+				<div class="social-news social-box">
+					<div class="pic-news">
+						<div class="pics-box">
+							<img src="__PUBLIC__/Uploads/Others/50e17b4358cd4.jpg" />
+						</div>
+						<div class="pic-news-tabs">
+							<a class="active" href="javascript:;" data-tab="0"></a>
+							<a href="javascript:;" data-tab="1"></a>
+							<a href="javascript:;" data-tab="2"></a>
+							<a href="javascript:;" data-tab="3"></a>
+						</div>
+						<h3 class="pic-news-title">习近平：坚持男女平等基本国策</h3>
+						<span class="pic-news-desc"><a href="#">新华网北京10月31日电　中共中央总书记、国家主席、中央军委主席习近平……</a></span>
+					</div>
+					<div class="text-news">
+						<p><a href="#">国信办主任向凤凰网博主致敬 网媒生命力 社会担当</a></p>
+						<p><a href="#">国信办主任向凤凰网博主致敬 网媒生命力 社会担当</a></p>
+						<p><a href="#">国信办主任向凤凰网博主致敬 网媒生命力 社会担当</a></p>
+						<p><a href="#">国信办主任向凤凰网博主致敬 网媒生命力 社会担当</a></p>
+						<p><a href="#">国信办主任向凤凰网博主致敬 网媒生命力 社会担当</a></p>
+						<p><a href="#">国信办主任向凤凰网博主致敬 网媒生命力 社会担当</a></p>
+						<p><a href="#">国信办主任向凤凰网博主致敬 网媒生命力 社会担当</a></p>
+						<p><a href="#">国信办主任向凤凰网博主致敬 网媒生命力 社会担当</a></p>
+						<p><a href="#">国信办主任向凤凰网博主致敬 网媒生命力 社会担当</a></p>
+						<p class="wide-news"><a href="#">国信办主任向凤凰网博主致敬 网媒生命力 社会担当</a></p>
+						<p class="wide-news"><a href="#">国信办主任向凤凰网博主致敬 网媒生命力 社会担当</a></p>
+						<p class="more-news"><a href="#">更多新闻</a></p>
+					</div>
+				</div>
+				<div class="social-digs social-box" style="display: none">
+					<ul class="lft-digs">
+						<li>
+							<img src="__PUBLIC__/Uploads/Others/50e17b4358cd4.jpg" />
+							<div class="text-div">
+								<h5><a href="#">为什么说体验即设计？</a></h5>
+								<p>2013/10/30 xbsmag.com</p>
+							</div>
+						</li>
+						<li>
+							<img src="__PUBLIC__/Uploads/Others/50e17b4358cd4.jpg" />
+							<div class="text-div">
+								<h5><a href="#">为什么说体验即设计？</a></h5>
+								<p>2013/10/30 xbsmag.com</p>
+							</div>
+						</li>
+						<li>
+							<img src="__PUBLIC__/Uploads/Others/50e17b4358cd4.jpg" />
+							<div class="text-div">
+								<h5><a href="#">为什么说体验即设计？</a></h5>
+								<p>2013/10/30 xbsmag.com</p>
+							</div>
+						</li>
+						<li>
+							<img src="__PUBLIC__/Uploads/Others/50e17b4358cd4.jpg" />
+							<div class="text-div">
+								<h5><a href="#">为什么说体验即设计？</a></h5>
+								<p>2013/10/30 xbsmag.com</p>
+							</div>
+						</li>
+						<li class="wide-news">
+							<img src="__PUBLIC__/Uploads/Others/50e17b4358cd4.jpg" />
+							<div class="text-div">
+								<h5><a href="#">为什么说体验即设计？</a></h5>
+								<p>2013/10/30 xbsmag.com</p>
+							</div>
+						</li>
+					</ul>
+					<ul class="rgt-digs">
+						<li>
+							<img src="__PUBLIC__/Uploads/Others/50e17b4358cd4.jpg" />
+							<div class="text-div">
+								<h5><a href="#">为什么说体验即设计？</a></h5>
+								<p>2013/10/30 xbsmag.com</p>
+							</div>
+						</li>
+						<li>
+							<img src="__PUBLIC__/Uploads/Others/50e17b4358cd4.jpg" />
+							<div class="text-div">
+								<h5><a href="#">为什么说体验即设计？</a></h5>
+								<p>2013/10/30 xbsmag.com</p>
+							</div>
+						</li>
+						<li>
+							<img src="__PUBLIC__/Uploads/Others/50e17b4358cd4.jpg" />
+							<div class="text-div">
+								<h5><a href="#">为什么说体验即设计？</a></h5>
+								<p>2013/10/30 xbsmag.com</p>
+							</div>
+						</li>
+						<li>
+							<img src="__PUBLIC__/Uploads/Others/50e17b4358cd4.jpg" />
+							<div class="text-div">
+								<h5><a href="#">为什么说体验即设计？</a></h5>
+								<p>2013/10/30 xbsmag.com</p>
+							</div>
+						</li>
+						<li class="wide-news">
+							<img src="__PUBLIC__/Uploads/Others/50e17b4358cd4.jpg" />
+							<div class="text-div">
+								<h5><a href="#">为什么说体验即设计？</a></h5>
+								<p>2013/10/30 xbsmag.com</p>
+							</div>
+						</li>
+					</ul>
+					<p class="more-digs"><a href="#">更多文摘</a></p>
+				</div>
+
+			</div>
+			<div class="rgt-box extra-box extra-calendar">
+				<include file="Contorls:calendar" />
+			</div>
 		</div>
 	</div>
 </div><!--#container end-->
@@ -262,9 +423,8 @@
 		</div>
 	</div>
 </div>
-<script>
-
-</script>
 <script src="__STATIC__/min/?b=v303b/js&f=jquery-1.7.1.min.js,jquery.cookies.2.2.0.min.js,jquery.plugins.js,index.js"></script>
+<script>
+</script>
 </body>
 </html>
