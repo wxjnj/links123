@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="UTF-8" />
-	<title>个人中心</title>
+	<title>绑定手机_个人中心</title>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<link rel="stylesheet" href="http://a.links123.cn/v3/css/base.css" />
 	<link rel="stylesheet" href="/Public/User/css/uc-layout.css" />
@@ -71,7 +71,7 @@
 							<li><a href="pwd.html">修改密码</a></li>
 							<li><a href="pwdprotect.html">密码保护设置</a></li>
 							<li><a href="find.html">帐号申诉</a></li>
-							<li><a href="phone.html">绑定手机</a></li>
+							<li class="on"><a href="phone.html">绑定手机</a></li>
 							<li><a href="mail.html">绑定邮箱</a></li>
 						</ul>
 					</li>
@@ -89,8 +89,46 @@
 				</ul>
 			</div>
 			<div class="content">
-				这个文件是主框架
-				这个位置是主内容
+				<h2 class="c-ttl">绑定手机</h2>
+				<div class="phone-panel">
+					<p>绑定手机，可提高账户的安全度，也可用来找回密码及修改密保设置，手机号码也是登录名。</p>
+					<table class="tb-form">
+						<tr>
+							<td class="a">所在地</td>
+							<td class="b">
+								<select name="" id="">
+									<option value="">中国大陆(China)</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td class="a">手机号</td>
+							<td class="b">
+								<em>0086</em><input class="ipt-s ipt-dis" type="text" /> <a class="btn-v" href="javascript:;">免费获取验证码</a>
+							</td>
+						</tr>
+						<tr>
+							<td class="a">验证码</td>
+							<td class="b">
+								<input class="ipt-s ipt-dis" type="text" />
+							</td>
+						</tr>
+						<tr>
+							<td class="a"></td>
+							<td class="b">
+								是否收取异常登录提醒短信
+								<label for=""><input type="radio" value="" /> 是</label>
+								<label for=""><input type="radio" value="" /> 否</label>
+							</td>
+						</tr>
+						<tr>
+							<td class="a"></td>
+							<td class="b">
+								<input class="btn-bind" type="submit" value="提交" /> <span class="tips">* 请放心绑定，我们不会将您的信息透露给任何第三方。</span>
+							</td>
+						</tr>
+					</table>
+				</div>
 			</div>
 		</div>
 	</div>
