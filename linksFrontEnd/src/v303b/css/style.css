@@ -1,6 +1,8 @@
 body{
 	font-family: \5FAE\8F6F\96C5\9ED1,Hiragino Sans GB,Hiragino Sans GB W3;
 	font-size: 12px;
+    background: #3f3a39 url(bg.jpg) top center fixed;
+    background-size: cover;
 }
 input:focus{ outline: 0; }
 .placeholder{ color: #ccc; }
@@ -160,19 +162,19 @@ input:focus{ outline: 0; }
     float: left;
     width: 9px;
     height: 14px;
-    background: url(__STATIC__/V303b/imgs/mini-tip-l.png) 0 0 no-repeat;
+    background: url(../imgs/mini-tip-l.png) 0 0 no-repeat;
 }
 .mini-tip-c {
     float: left;
     height: 14px;
     line-height: 14px;
-    background: url(__STATIC__/V303b/imgs/mini-tip-c.png) 0 0 repeat;
+    background: url(../imgs/mini-tip-c.png) 0 0 repeat;
 }
 .mini-tip-r {
     float: left;
     width: 9px;
     height: 14px;
-    background: url(__STATIC__/V303b/imgs/mini-tip-r.png) 0 0 no-repeat;
+    background: url(../imgs/mini-tip-r.png) 0 0 no-repeat;
 }
 .zld-mini-tip{
 display: none;
@@ -385,6 +387,13 @@ left: 37px;
 .edit{} /* TODO skins */
 .del{} /* TODO skins */
 .new{} /* TODO skins */
+
+.edit, .del, .new, .more{ background: url(../imgs/sprite-light.png); }
+.edit{ background-position: -6px -6px; }
+.del{ background-position: -37px -6px; }
+.new{ background-position: -66px -6px; }
+.more{ background-position: -96px -6px; }
+
 .close{
 	background: url(../imgs/sprite.png) -125px -6px no-repeat;
 }
@@ -580,7 +589,7 @@ left: 37px;
 	position: absolute;
 	z-index: 2;
 	right: -20px;
-	background: #fff;
+	background: #000;
 	box-shadow: 0 0 5px #666;
 	filter: alpha(opacity=90);
 	-moz-opacity: .9;
@@ -706,14 +715,17 @@ left: 37px;
 
 .big-pic {
     width: 100%;
-    height: 420px;
-    background: #323037;
+    /*height: 400px;*/
+    background: #d0c9c0;
+    overflow: hidden;
 }
 .big-pic-inner {
-    width: 960px;
-    height: 420px;
+    overflow: hidden;
+    /*width: 960px;*/
+    /*height: 400px;*/
     margin: 0 auto;
 }
+
 
 .container {
     background: #e0e0e0;

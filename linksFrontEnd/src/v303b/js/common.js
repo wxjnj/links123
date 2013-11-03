@@ -791,7 +791,7 @@ var Theme = {
 		$.post(URL + "/updateSkin", {
 			'skinId' : id
 		});
-		this.removeBack();
+		this.hasBack();
 		return false;
 	},
 	SetTheme : function(id, tm, bg) {
@@ -801,7 +801,7 @@ var Theme = {
 		$.post(URL + "/updateSkinTheme", {
 			'themeId' : id
 		});
-		this.removeBack();
+		this.hasBack();
 		return false;
 	},
 	SetGlobal : function() {

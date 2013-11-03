@@ -1,0 +1,13 @@
+#K_banner_01 {
+    position: relative;
+    width:1024px;
+    height: 400px;
+    margin: 0 auto;
+}
+#K_banner_01_arrow {
+    display:none;
+    position:absolute;
+}
+.big-pic-inner img {
+    display: block;
+}
