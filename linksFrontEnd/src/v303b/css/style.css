@@ -590,14 +590,12 @@ left: 37px;
 	position: absolute;
 	z-index: 2;
 	right: -20px;
-	background: #fff;
+	background: #000;
 	box-shadow: 0 0 5px #666;
-	/*
     filter: alpha(opacity=90);
 	-moz-opacity: .9;
 	-khtml-opacity: .9;
 	opacity: .9;
-    */
 	border-radius: 4px;
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
@@ -610,7 +608,11 @@ left: 37px;
 	position: absolute;
 	border-width: 15px;
 	border-style: dashed dashed solid;
-	border-color: transparent transparent #fff;
+	border-color: transparent transparent #000;
+    filter: alpha(opacity=90);
+    -moz-opacity: .9;
+    -khtml-opacity: .9;
+    opacity: .9;
 	right: 15px;
 	margin-left: -15px;
 	top: -25px;
