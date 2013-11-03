@@ -1,11 +1,13 @@
 /*apps*/
 .apps{
 	/*overflow: hidden;*/
-    padding-bottom: 20px;
+	width: 920px;
+	margin: 0 auto;
+	padding-bottom: 20px;
 }
 .apps ul{
 	*zoom: 1;
-	margin-left: -10px;
+	margin-left: -34px;
 	height: 101px;
 	overflow: hidden;
 }
@@ -18,9 +20,9 @@
 .apps ul li{
 	cursor: pointer;
 	display: inline;
-	margin-left: 20px;
+	margin-left: 34px;
 	float: left;
-	width: 80px;
+	width: 72px;
 	height: 100px;
 	text-align: center;
 }
@@ -62,10 +64,12 @@
 	display: block;
 	text-align: center;
 }
-
+.widescreen .apps{
+	width: 1132px;
+}
 .widescreen .apps ul{
-	margin-right: -38px;
+	margin-right: -34px;
 }
 .widescreen .apps ul li{
-	margin-left: 30px;
+	margin-left: 34px;
 }
