@@ -182,17 +182,24 @@ var AppsTpl = {
                     </div>\
                 </div>\
                 <a class="mini_music_box_close_btn" href="javascript:;">×</a>\
+                <a class="mini_music_box_play_btn mini_music_box_play_btn_pause" href="javascript:;"></a>\
                 <a class="mini_music_box_size_btn size_mini" href="javascript:;" data-size="mini">小</a>\
                 <a class="mini_music_box_size_btn size_normal" href="javascript:;" data-size="normal">中</a>\
                 <a class="mini_music_box_size_btn size_fullscreen" href="javascript:;" data-size="fullscreen">大</a>\
             </div>\
             <div class="normal_music_iframe_box">\
                 <iframe id="K_303_music_iframe" allowtransparency="true" frameborder="0" style=""></iframe>\
+                <div class="normal_music_iframe_box_pause_status">\
+                	<a href="javascript:;"></a>\
+                	<p>点击继续听...</p>\
+                </div>\
             </div>\
             <div class="normal_music_channel_list">\
+            	<div class="normal_music_channel_list_toggle"><span class="list-open"></span></div>\
             	<div class="music-close-tip">听烦了</div>\
                 <a class="normal_music_box_close_btn" href="javascript:;">×</a>\
-                <a href="javascript:;" class="normal_music_box_toggle_btn">展开</a>\
+                <a class="normal_music_box_play_btn" href="javascript:;"></a>\
+                <!--a href="javascript:;" class="normal_music_box_toggle_btn">展开</a-->\
                 <ul>\
                 </ul>\
                 <a class="normal_music_box_size_btn size_nimi" href="javascript:;" data-size="mini">小</a>\

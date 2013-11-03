@@ -10,7 +10,7 @@
 	<!--link rel="stylesheet" href="__PUBLIC__/IndexV3/skins/{$theme}/style.css" id="J_Skins" /-->
 	<script>var $CONFIG = { 'STATIC': '__STATIC__','APP' : '__APP__/', 'URL' : '__URL__', 'PUBLIC' : '__PUBLIC__', 'IsLogin' : <empty name="_SESSION[C('MEMBER_AUTH_KEY')]">1<else />0</empty> };</script>
 </head>
-<body id="container" <if condition="$skinId">style="background-image:url({$skin})"</if>>
+<body>
 <script src="__STATIC__/v3/js/init.js"></script>
 <div id="J_header" class="header">
 	<div class="header-inner">
@@ -159,7 +159,7 @@
 
 	</div>
 </div>
-<div class="container">
+<div class="container" id="container" <if condition="$skinId">style="background-image:url({$skin})"</if>>
 	<div class="container-inner">
 		<!-- <div class="banner"><img src="__PUBLIC__/IndexV3/1175.jpg" alt="" /></div> -->
 		<div class="zld" id="J_ZldList">

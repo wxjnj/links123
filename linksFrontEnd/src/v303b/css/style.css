@@ -770,8 +770,10 @@ left: 37px;
 .zld ul li .ctl:hover{
     height: 35px;
     width: 35px;
-    padding: 3px;
-    margin: 2px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    margin-top: 1px;
+    box-shadow:inset 0px 0 5px #ccc;
 }
 .zld ul li.add .ctl{
     -moz-border-radius: 40px;

@@ -842,11 +842,11 @@ $( function($) {
                 $('.mini_channel_list').hide();
             });
 
-            $('.normal_music_box_close_btn, .mini_music_box_close_btn').click(function(){
+            $('.normal_music_box_close_btn, .mini_music_box_close_btn, .music-close-tip').click(function(){
                 self.close();
             });
 
-            $('.normal_music_box_toggle_btn').click(function(){
+            $('.normal_music_channel_list_toggle').click(function(){
                 self.changeNormalPosition();
             });
 
@@ -861,6 +861,8 @@ $( function($) {
                     }
                 }
             });
+
+
         },
         close: function(){
             $('#J_box_music').hide();
@@ -868,16 +870,26 @@ $( function($) {
             $.cookies.set('music_box_v303_close', '1', { expiresAt: (new Date).add_day(365) });
 
         },
+        pause: function(){
+ 
+        },
         play: function(id, url){
             var self = this;
             if(arguments.length == 0){
-                var defaultChannel = self.music_channel_list[0]
-                id = defaultChannel.id;
-                url = defaultChannel.url;
+            	var cur = $('.normal_music_channel_list').find('.active');
+            	if(cur.size()){
+            		id = cur.find('a').attr('data-channel');
+            		url = cur.find('a').attr('data-url');
+            	}else{
+	                var defaultChannel = self.music_channel_list[0]
+	                id = defaultChannel.id;
+	                url = defaultChannel.url;
+            	}
             }
+
             $('.normal_music_channel_list').find('li').removeClass('active');
             $('.normal_music_channel_' + id).closest('li').addClass('active');
-            $('#K_303_music_iframe').attr('src', url);
+            $('#K_303_music_iframe').attr('src', url).show();
             $('.mini_current_channel').find('.mini_music_channel_btn').appendTo('.mini_channel_list');
             $('.mini_music_channel_' + id).appendTo('.mini_current_channel');
         },
@@ -931,7 +943,6 @@ $( function($) {
             $('.size_' + mode).addClass('active-size');
         },
         changeNormalPosition: function(){
-
             var self = this;
             var mode = $('.active-size').hasClass('size_fullscreen');
             if(mode){
@@ -945,12 +956,14 @@ $( function($) {
             if(st != 0){
                 tit = '收起';
                 pos = '0';
+                $('.normal_music_channel_list_toggle').find('span').removeAttr('class').addClass('list-close');
                 if(!$('#K_303_music_iframe').attr('src')){
                     self.play();
                 }
             }else{
                 tit = '展开';
                 pos = '-789px';
+                $('.normal_music_channel_list_toggle').find('span').removeAttr('class').addClass('list-open');
             }
             $('#J_box_music').animate({'left': pos});
             $('.normal_music_box_toggle_btn').html(tit);

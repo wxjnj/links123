@@ -41,8 +41,8 @@
 	background: url(../imgs/app/app-date.png) 0 0 no-repeat;
 }
 .apps ul li.today .ct{
-	height: 72px;
-	width: 72px;
+	height: 80px;
+	width: 80px;
 }
 .apps ul li.today b{
 	color: #000;

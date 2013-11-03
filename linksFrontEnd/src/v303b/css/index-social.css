@@ -115,10 +115,13 @@
     margin-bottom: 12px;
 }
 .text-news p a,
-.text-news p a:active,
-.text-news p a:hover{
+.text-news p a:active{
     color:#000;
 }
+.text-news p a:hover {
+    color: #3b76b3;
+}
+
 .text-news .more-news {
     text-align: right;
 }
