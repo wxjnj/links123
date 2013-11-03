@@ -1,7 +1,7 @@
 body{
 	font-family: \5FAE\8F6F\96C5\9ED1,Hiragino Sans GB,Hiragino Sans GB W3;
 	font-size: 12px;
-    background: #3f3a39 url(bg.jpg) top center fixed;
+    background: #3f3a39 top center fixed;
     background-size: cover;
 }
 input:focus{ outline: 0; }
@@ -407,13 +407,14 @@ left: 37px;
 	font-size: 14px;
 }
 .box .box-hd{
-	padding-top: 10px;
+	padding-top: 5px;
+    background: #fff;
 }
 .box-apps .box-bd,
 .box-music .box-bd,
 .box-pics .box-bd,
 .box-find .box-bd{
-	padding-top: 20px;
+	padding-top: 10px;
 }
 .box-apps,
 .box-find{
@@ -589,12 +590,14 @@ left: 37px;
 	position: absolute;
 	z-index: 2;
 	right: -20px;
-	background: #000;
+	background: #fff;
 	box-shadow: 0 0 5px #666;
-	filter: alpha(opacity=90);
+	/*
+    filter: alpha(opacity=90);
 	-moz-opacity: .9;
 	-khtml-opacity: .9;
 	opacity: .9;
+    */
 	border-radius: 4px;
 	-moz-border-radius: 4px;
 	-webkit-border-radius: 4px;
