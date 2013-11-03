@@ -726,7 +726,7 @@ input:focus{ outline: 0; }
 
 .big-pic {
 	width: 100%;
-	/*height: 400px;*/
+	height: 400px;
 	background: #d0c9c0;
 	overflow: hidden;
 }
@@ -843,10 +843,17 @@ input:focus{ outline: 0; }
 }
 
 .site-info {
-	border-top: 1px solid #ddd;
+	/*border-top: 1px solid #ddd;*/
 	margin-top: 15px;
-	padding-top: 15px;
+	padding-top: 10px;
 	padding-bottom: 15px;
+	height: 24px;
+}
+.site-info ul{
+	float: left;
+}
+.site-info p{
+	float: right;
 }
 
 
