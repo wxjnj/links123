@@ -769,8 +769,10 @@ var Theme = {
 			if(id && theme && bg) self.SetBackGround(id, theme, bg);
 		});
 
-		if($('body').css('background-image')){
+		if($('body').css('background-image') != 'none' ){
 			self.hasBack();
+		}else{
+			self.noBack();
 		}
 
 
