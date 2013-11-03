@@ -583,6 +583,9 @@ left: 37px;
 	z-index: 3;
 	position: relative;
 }
+.app-icon-list .app-more-box .nm{
+    color: #fff;
+}
 .app-icon-list .app-more-box{
 	display: none;
 	top: 30px;
