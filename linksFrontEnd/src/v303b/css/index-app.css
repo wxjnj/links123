@@ -27,6 +27,7 @@
 .apps ul li:hover,
 .apps ul li:hover a,
 .apps ul li:hover a:hover{
+	text-decoration: none;
 	color: #fc2a06;
 }
 .apps ul li img{
