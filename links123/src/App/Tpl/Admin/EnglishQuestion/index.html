@@ -62,6 +62,7 @@
                     分类：
                     <select name="level_one" id="level_one_select">
                         <volist name="category['level_one']" id="level_one">
+                        	<option value="0">全部</option>
                             <option value="{$level_one.id}" <eq name="param['level_one']" value="$level_one['id']">selected="true"</eq>>{$level_one.name}</option>
                         </volist>
                     </select>&nbsp;&nbsp;

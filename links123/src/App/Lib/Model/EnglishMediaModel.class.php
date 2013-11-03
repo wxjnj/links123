@@ -147,6 +147,14 @@ class EnglishMediaModel extends CommonModel {
 //                ->limit($limit)
                 ->order("question.id asc")
                 ->select();
+
+    	//TODO 暂时修改推荐视频以视频为主，可以没有试题
+//     	$ret = $this->alias("media")->field("media.id,media.name,media.media_thumb_img")
+//     	->join("LEFT JOIN " . C("DB_PREFIX") . "english_question question on question.media_id=media.id")
+//     	->where("media.special_recommend=1 and media.media_thumb_img!='' AND media.status=1")
+//     	//                ->limit($limit)
+//     	->order("media.updated desc")
+//     	->select();
         return $ret;
     }
 
@@ -407,6 +415,9 @@ class EnglishMediaModel extends CommonModel {
                         'play_code' => $play_code,
                         'play_type' => $play_type
                     );
+                    if ($media_thumb_img) {
+                    	$saveData['media_thumb_img'] = $media_thumb_img;
+                    }
                     D("EnglishMedia")->save($saveData);
                     $media['play_code'] = $play_code;
 
