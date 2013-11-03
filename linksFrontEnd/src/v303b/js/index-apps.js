@@ -862,6 +862,24 @@ $( function($) {
                 }
             });
 
+            $('.normal_music_box_play_btn').click(function(){
+            	if($(this).hasClass('normal_music_box_play_btn_play')){
+            		self.play();
+            	}else{
+            		self.pause();
+            	}
+            });
+			$('.mini_music_box_play_btn').click(function(){
+            	if($(this).hasClass('mini_music_box_play_btn_play')){
+            		self.play();
+            	}else{
+            		self.pause();
+            	}
+            });
+
+            $('.normal_music_iframe_box_pause_status a').click(function(){
+            	self.play();
+            });
 
         },
         close: function(){
@@ -871,7 +889,12 @@ $( function($) {
 
         },
         pause: function(){
- 
+        	$('.normal_music_box_play_btn').removeClass('normal_music_box_play_btn_pause').addClass('normal_music_box_play_btn_play');
+            $('.mini_music_box_play_btn').removeClass('mini_music_box_play_btn_pause').addClass('mini_music_box_play_btn_play');
+			
+            $('#K_303_music_iframe').attr('src', '').hide();
+            $('.normal_music_iframe_box').addClass('normal_music_iframe_box_pause');
+
         },
         play: function(id, url){
             var self = this;
@@ -886,6 +909,9 @@ $( function($) {
 	                url = defaultChannel.url;
             	}
             }
+            $('.normal_music_iframe_box').removeClass('normal_music_iframe_box_pause');
+            $('.normal_music_box_play_btn').removeClass('normal_music_box_play_btn_play').addClass('normal_music_box_play_btn_pause');
+            $('.mini_music_box_play_btn').removeClass('mini_music_box_play_btn_play').addClass('mini_music_box_play_btn_pause');
 
             $('.normal_music_channel_list').find('li').removeClass('active');
             $('.normal_music_channel_' + id).closest('li').addClass('active');

@@ -1105,7 +1105,7 @@ div.gt-baf-translations {
 	margin: 0 0 10px 11px;
 	width: 27px;
 	height: 27px;
-	background: url(__STATIC__/v303b/imgs/app/music_box_channel_logos.png) -27px -81px no-repeat;
+	background: url(../imgs/app/music_box_channel_logos.png) -27px -81px no-repeat;
 }
 .normal_music_box_play_btn_play {
 	background-position: -27px -81px;
@@ -1135,7 +1135,7 @@ div.gt-baf-translations {
 	margin-left: 3px;
 	width: 6px;
 	height: 13px;
-	background: url(__STATIC__/v303b/imgs/app/music_box_channel_logos.png) 0 0 no-repeat;
+	background: url(../imgs/app/music_box_channel_logos.png) 0 0 no-repeat;
 }
 .normal_music_channel_list_toggle .list-open {
 	background-position: -41px -141px;
@@ -1157,7 +1157,7 @@ div.gt-baf-translations {
     background-color: #85c794;
     float: left;
     margin:6px 14px 0 14px;
-    background-image: url(__STATIC__/v303b/imgs/app/music_box_channel_logos.png);
+    background-image: url(../imgs/app/music_box_channel_logos.png);
     background-repeat: no-repeat;
 }
 .mini_music_box_play_btn_play {
@@ -1168,7 +1168,7 @@ div.gt-baf-translations {
 }
 .fullscreen_music_box .normal_music_iframe_box_pause,
 .normal_music_box .normal_music_iframe_box_pause {
-	background: url(__STATIC__/v303b/imgs/app/music-pause-back.png) top center fixed;
+	background: url(../imgs/app/music-pause-back.png) top center fixed;
     background-size: cover;
 }
 .normal_music_iframe_box_pause_status {
@@ -1184,7 +1184,7 @@ div.gt-baf-translations {
 	display: block;
 	width: 109px;
 	height: 109px;
-	background: url(__STATIC__/v303b/imgs/app/music-pause-back-play.png) 0 0 no-repeat;
+	background: url(../imgs/app/music-pause-back-play.png) 0 0 no-repeat;
 	margin: 0 auto;
 }
 .normal_music_iframe_box_pause_status p {
