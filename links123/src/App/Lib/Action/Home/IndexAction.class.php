@@ -95,14 +95,8 @@ class IndexAction extends CommonAction {
 
         //气象数据
         $this->assign('weatherData', $this->getWeatherData());
-        
-        //推荐电影
-        $this->assign('homeMovies', $this->getHomeMovies());
-
-        //推荐音乐
-        $this->assign('homeMusics', $this->getHomeMusics());
-        
-
+        $this->assign('hotNewsData',  $this->getHotNews());
+       
 		$this->getHeaderInfo();
 		$this->display('index_v4');
 	}
@@ -1368,5 +1362,30 @@ class IndexAction extends CommonAction {
         }
         
         return $result;
+    }
+    
+    protected function getHotNews() {
+    	 
+    	$hotNews = S('hotNewsList');
+    	 
+    	if (!$hotNews) {
+    		
+    		$url = 'http://news.baidu.com/';
+    
+    		$str = iconv('gb2312', 'utf8' , file_get_contents($url));
+    		
+    		preg_match_all('/<\!-- sp_tag_start -->(.*?)<\!-- sp_tag_end -->/is', $str, $matchHotNews);
+    		foreach ($matchHotNews[1] as $k => $v) {
+    			$hotNews[] = array('url' => $this->tp_match('/href="(.*?)"/is', $v), 'title' => trim(trim(str_replace("\n", '', strip_tags($v))),'"'), 'img' => '');
+    		}
+    
+    		preg_match_all('/cpOptions_1\.data\.push\((.*?)\)\;/is', $str, $matchImgNews);
+    		foreach ($matchImgNews[1] as $k => $v) {
+    			$hotNews[] = array('url' => stripslashes($this->tp_match('/"url": "(.*?)"/is', $v)), 'title' => trim($this->tp_match('/"title": "(.*?)"/is', $v),'"'), 'img' => stripslashes($this->tp_match('/"imgUrl": "(.*?)"/is', $v)));
+    		}
+    
+    		S('hotNewsList', $hotNews, 172800);
+    	}
+    	return $hotNews;
     }
 }
