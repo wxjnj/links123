@@ -54,18 +54,6 @@ input:focus{ outline: 0; }
 	height: 120px;
 	margin: 0 auto;
 }
-.header-weather {
-	position: absolute;
-	top: 0;
-	right: 0;
-	color: #000;
-	line-height:115px
-}
-.header-weather .degree {
-	font-size:42px;
-	font-weight:800;
-	font-family:Arial
-}
 
 
 
@@ -175,50 +163,7 @@ input:focus{ outline: 0; }
 	height: 14px;
 	background: url(../imgs/mini-tip-r.png) 0 0 no-repeat;
 }
-.zld-mini-tip{
-	display: none;
-	width: 120px;
-	top: -4px;
-	left: 37px;
-}
 
-.app-add:hover .zld-mini-tip,
-.add:hover .zld-mini-tip{
-	display: block;
-}
-
-.app-add .zld-mini-tip{
-	display: none;
-	width: 120px;
-	top: -10px;
-	left: 18px;
-}
-
-
-.apps {
-	position: relative;
-	padding-top: 20px;
-	margin-top: -20px;
-}
-.app-add {
-	position: absolute;
-	top: 10px;
-	right: 10px;
-}
-.app-add a {
-	display: block;
-	width: 22px;
-	height: 22px;
-	background: #a9a9a9;
-	color: #fff;
-	line-height: 22px;
-	text-align: center;
-	font-size: 14px;
-	font-weight: 800;
-	border-radius: 30px;
-	-moz-border-radius:30px;
-	-webkit-border-radius:30px
-}
 
 
 
@@ -363,7 +308,7 @@ input:focus{ outline: 0; }
 .zld ul li .nm:hover{
 	/*color: #fc2a06;*/
 	cursor: pointer;
-	padding-top:12px;
+	padding-top:8px;
 	margin-top:1px;
 	box-shadow:inset 0px 0 5px #ccc;
 }
@@ -413,12 +358,18 @@ input:focus{ outline: 0; }
 	padding-top: 5px;
 	background: #fff;
 }
-.box-apps .box-bd,
+
 .box-music .box-bd,
 .box-pics .box-bd,
 .box-find .box-bd{
 	padding-top: 10px;
 }
+
+.box-apps .box-bd {
+	padding-top: 0;
+}
+
+
 .box-apps,
 .box-find{
 	margin-top: 20px;
@@ -672,7 +623,7 @@ input:focus{ outline: 0; }
 	display:none;
 }
 .thl{
-	margin-left: 290px;
+	margin-left: 255px;
 	width: 410px;
 }
 .thl .ctls .ipt{
@@ -790,17 +741,17 @@ input:focus{ outline: 0; }
 	margin: 4px;
 }
 .zld ul li.add .ctl i{
-	background: url(../imgs/sprite.png) -301px -30px no-repeat;
+	background: url(../imgs/sprite.png) -301px -61px no-repeat;
 }
 
 
 .extra-wrap {
-	margin-top: 25px;
+	margin-top: 15px;
 	overflow: hidden;
 }
 
 .extra-box {
-	width: 470px;
+	width: 472px;
 	height: 350px;
 	overflow: hidden;
 	background: #fff;
@@ -846,7 +797,7 @@ input:focus{ outline: 0; }
 	/*border-top: 1px solid #ddd;*/
 	margin-top: 15px;
 	padding-top: 10px;
-	padding-bottom: 15px;
+	padding-bottom: 30px;
 	height: 24px;
 }
 .site-info ul{
@@ -893,7 +844,7 @@ input:focus{ outline: 0; }
 
 */
 .widescreen .thl{
-	margin-left: 400px; 
+	margin-left: 380px; 
 	width: 460px;
 }
 .widescreen .thl .ctls .ipt{

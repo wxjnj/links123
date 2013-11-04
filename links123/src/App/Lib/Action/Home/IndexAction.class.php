@@ -901,7 +901,7 @@ class IndexAction extends CommonAction {
 		$stauts = 1;
 		$data  = array();
 		$nowTime = time();
-		$today = date('d', $nowTime);
+		$today = intval(date('d', $nowTime));
 		
 		if ($user_id) {
 			$scheduleModel = M("Schedule");

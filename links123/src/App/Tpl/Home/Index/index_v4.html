@@ -27,7 +27,8 @@
 		</ul>
 		<div class="uc">
 			<empty name="_SESSION[C('MEMBER_AUTH_KEY')]">
-				<a class="join J_SignUp" href="javascript:;">注&nbsp;册</a><a class="login J_SignIn" href="javascript:;">登&nbsp;录</a>
+				<a class="login J_SignIn" href="javascript:;">登&nbsp;录</a>
+				<a class="join J_SignUp" href="javascript:;">注&nbsp;册</a>
 				<else />
 				<img class="uc-avatar" src="__PUBLIC__/Uploads/Faces/{$Think.session.face}" />
 				<div class="uc-menu">
@@ -134,7 +135,15 @@
 			<div class="header-weather">
 				<span class="region">{$weatherData['city']}</span>
 				<span class="degree">{$weatherData['temp']}°</span>
-				<span class="info">{$weatherData['sun']}，空气质量{$weatherData['air']}</span>
+				<span class="info"><b class="weather-icon"></b><b class="weather-desc">{$weatherData['sun']}</b>，空气质量{$weatherData['air']}</span>			
+				<div class="weather-find-region-box" style="display:none">
+					<span class="ang1"></span>
+					<span class="ang2"></span>
+					<div class="content">
+						搜索: <input class="region-name-input" type="text" size="20" /><br />
+						<div class="region-ul"></div>
+					</div>
+				</div>
 			</div><!-- // .header-weather -->
 		</div>
 	</div>
@@ -156,7 +165,6 @@
 			</map>
 			<img id="K_banner_01_arrow" src="__STATIC__/v303b/imgs/banner-arrow.png" />
 		</div>
-
 	</div>
 </div>
 <div class="container" id="container" <if condition="$skinId">style="background-image:url({$skin})"</if>>
@@ -258,7 +266,6 @@
 							<img src="" />
 						</div>
 						<div class="pic-news-tabs">
-						
 							<a class="active" href="javascript:;" data-tab="0"></a>
 							<a href="javascript:;" data-tab="1"></a>
 							<a href="javascript:;" data-tab="2"></a>
@@ -269,10 +276,10 @@
 					</div>
 					<div class="text-news">
 					<volist name="hotNewsData" id="news">
-						<p><a href="{$news.url}" target="_blank">{$news.title}</a></p>
+						<p><b></b><a href="{$news.url}" target="_blank">{$news.title}</a></p>
 					</volist>
 					<volist name="imgNewsData" id="news" offset="1" length="6">
-						<p><a href="{$news.url}" target="_blank">{$news.title}</a></p>
+						<p><b></b><a href="{$news.url}" target="_blank">{$news.title}</a></p>
 					</volist>
 						<!-- <p class="wide-news"><a href="#"></a></p> -->
 						<p class="more-news"><a href="http://sh.qihoo.com/index.html" target="_blank">更多新闻</a></p>

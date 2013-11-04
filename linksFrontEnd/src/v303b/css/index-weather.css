@@ -1,0 +1,187 @@
+.header-weather {
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: #000;
+    line-height:115px
+}
+.header-weather .region {
+    text-decoration: underline;
+    cursor: pointer;
+    color: #325e7f;
+}
+
+.header-weather .degree {
+    font-size:36px;
+    font-weight:800;
+    font-family:Arial
+}
+
+.weather-desc {
+    font-weight: 100;
+}
+
+/* icons */
+.weather-icon {
+    display: inline-block;
+    position: relative;
+    width: 30px;
+    height: 30px;
+    background-image: url(../imgs/weather-icon-psd.png);
+    background-repeat: no-repeat;
+}
+
+/* 晴 */
+.weather-icon-sunny {
+    background-position: 0 0;
+}
+/* 阴 */
+.weather-icon-cloudy-day {
+    background-position: -30px 0;
+}
+/* 晴间多云 */
+.weather-icon-partly-cloudy {
+    background-position: -60px 0;
+}
+/* 多云 */
+.weather-icon-cloudy {
+    background-position: -90px 0;
+}
+/* 雷雨 */
+.weather-icon-thunderstorm {
+    background-position: -120px 0;
+}
+/* 雷阵雨 */
+.weather-icon-thundershowers-sunny {
+    background-position: 0 -30px;
+}
+/* 阵雨 */
+.weather-icon-shower {
+    background-position: -30px -30px;
+}
+/* 小雨 中雨 */
+.weather-icon-rain {
+    background-position: -60px -30px;
+}
+/* 大雨 暴雨 */
+.weather-icon-heavy-rain {
+    background-position: -90px -30px;
+}
+/* 小雪 中雪 */
+.weather-icon-snow {
+    background-position: -120px -30px;
+}
+/* 大雪 暴雪 */
+.weather-icon-heavy-snow {
+    background-position: 0 -60px;
+}
+/* 雨夹雪 */
+.weather-icon-rain-snow {
+    background-position: -30px -60px;
+}
+/* 晴-夜 */
+.weather-icon-night {
+    background-position: -60px -60px;
+}
+/* 多云-夜 */
+.weather-icon-night-less-cloudy {
+    background-position: -90px -60px;
+}
+/* 阴-夜 */
+.weather-icon-night-cloudy{
+    background-position: -120px -60px;
+}
+
+/* 浮尘 */
+.weather-icon-dust {
+    background-position: 0px -90px;
+}
+/* 冻雨 */
+.weather-icon-sleet {
+    background-position: -30px -90px;
+}
+/*  */
+.weather-icon-sleet-rain {
+    background-position: -60px -90px;
+}
+/* 沙尘暴 扬沙 */
+.weather-icon-wind {
+    background-position: -90px -90px;
+}
+/* 雾 霾 */
+.weather-icon-fog {
+    background-position: -120px -90px;
+}
+
+
+.weather-find-region-box {
+    position: absolute;
+    z-index: 9;
+    background: #fff;
+    border:1px solid #ddd;
+    width: 420px;
+    height: 240px;
+    left:0;
+    margin-left: -385px;
+    top: 0;
+    margin-top: 85px;
+    line-height: 100%;
+}
+.weather-find-region-box .ang1 {
+    width: 0;
+    height: 0;
+    font-size: 0;
+    overflow: hidden;
+    position: absolute;
+    border-width: 8px;
+    border-style: dashed dashed solid;
+    border-color: transparent transparent #ddd;
+    right: 15px;
+    margin-left: -15px;
+    top: -16px;
+}
+.weather-find-region-box .ang2 {
+    width: 0;
+    height: 0;
+    font-size: 0;
+    overflow: hidden;
+    position: absolute;
+    border-width: 8px;
+    border-style: dashed dashed solid;
+    border-color: transparent transparent #fff;
+    right: 15px;
+    margin-left: -15px;
+    top: -14px;
+}
+.weather-find-region-box .content {
+    padding: 10px;
+}
+
+.weather-find-region-box .region-tab li,
+.weather-find-region-box .region-box li {
+    cursor: pointer;
+    float: left;
+    width: 65px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+}
+.weather-find-region-box .region-tab {
+    margin-top: 10px;
+    overflow: hidden;
+    border-bottom: 1px solid #ccc;
+}
+
+.weather-find-region-box .region-tab .active {
+    border: 1px solid #ccc;
+    border-bottom: 0;
+}
+.weather-find-region-box .region-box {
+    margin-top: 10px;
+}
+.weather-find-region-box .region-box li {
+    height: 25px;
+    line-height: 25px;
+}
+
+
