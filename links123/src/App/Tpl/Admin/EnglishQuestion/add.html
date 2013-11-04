@@ -7,6 +7,34 @@
         <form method='post' id="form1" action="__URL__/insert/" >
             <table cellpadding=3 cellspacing=3>
                 <tr>
+                    <td class="tRight" >分类：</td>
+                    <td class="tLeft" >
+                        <SELECT class="medium bLeft" name="voice">
+                            <option value="1">美音</option>
+                            <option value="0">英音</option>
+                        </SELECT>&nbsp;&nbsp;
+                        <SELECT class="medium bLeft" name="pattern">
+                            <option value="1">视频</option>
+                            <option value="0">音频</option>
+                        </SELECT>&nbsp;&nbsp;
+                        <SELECT class="medium bLeft" name="level_one" id="level_one_select">
+                            <volist name="category.level_one" id="each_lv_one">
+                            <option value="{$each_lv_one.id}">{$each_lv_one.name}</option>
+                            </volist>
+                        </SELECT>&nbsp;&nbsp;
+                        <SELECT class="medium bLeft" name="level_two"  id="level_two_select">
+                            <volist name="category.level_two" id="each_lv_two">
+                            <option value="{$each_lv_two.id}">{$each_lv_two.name}</option>
+                            </volist>
+                        </SELECT>&nbsp;&nbsp;
+                        <SELECT class="medium bLeft" name="level_thr"  id="level_thr_select">
+                            <volist name="category.level_thr" id="each_lv_thr">
+                            <option value="{$each_lv_thr.id}">{$each_lv_thr.name}</option>
+                            </volist>
+                        </SELECT>
+                    </td>
+                </tr>
+                <tr>
                     <td class="tRight" style="width:70px ;">名称：</td>
                     <td class="tLeft" ><input type="text" class="bLeftRequire xhuge" name="name" /></td>
                 </tr>

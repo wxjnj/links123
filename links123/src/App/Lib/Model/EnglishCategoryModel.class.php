@@ -32,4 +32,13 @@ class EnglishCategoryModel extends CommonModel {
 		}
 		return false;
 	}
+    /**
+     * 更新试题的分类的有效试题数量
+     * @param type $question_id
+     */
+    public function updateCategoryQuestionNumByQuestionId($question_id, $type = 1){
+        
+        $map = array();
+        $map['question.id'] = array("in",$question_id);
+    }
 }

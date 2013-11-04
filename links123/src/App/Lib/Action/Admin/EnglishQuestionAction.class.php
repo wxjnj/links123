@@ -164,7 +164,7 @@ class EnglishQuestionAction extends CommonAction {
         } else {
             $count = $model->where($map)->count('id');
         }
-        //echo $model->getlastsql()."<br />";
+//        echo $model->getlastsql()."<br />";
         if ($count > 0) {
             import("@.ORG.Page");
             //创建分页对象
@@ -515,10 +515,14 @@ class EnglishQuestionAction extends CommonAction {
 
 
     public function add() {
-        $object_list = D("EnglishObject")->where("`status`=1")->order("sort")->select();
-        $this->assign("object_list", $object_list);
-        $level_list = D("EnglishLevel")->where("`status`=1")->order("sort")->select();
-        $this->assign("level_list", $level_list);
+        //@ 一级类目
+        $category["level_one"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("1");
+        //@ 二级类目
+        $category["level_two"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("2");
+        
+        $category["level_thr"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("3");
+
+        $this->assign("category", $category);
 
         $this->display();
     }
@@ -528,7 +532,7 @@ class EnglishQuestionAction extends CommonAction {
         $answer = intval($_POST['answer']);
         $optionModel = D("EnglishOptions");
         $model->startTrans();
-
+        
         //判断题目是否为判断题
         $is_double_true = false; //是否为True文字选项
         $is_double_false = false; //是否为False文字选项
@@ -612,6 +616,33 @@ class EnglishQuestionAction extends CommonAction {
             if (false === $optionModel->where("id in (" . implode(",", $option_id) . ")")->setField("question_id", $list)) {
                 $model->rollback();
                 $this->error('新增失败!');
+            }
+            $question_id = $list;
+        
+            $voice       = intval($_REQUEST["voice"]) ;
+            $pattern     = intval($_REQUEST["pattern"]);
+            $level_one   = intval($_REQUEST["level_one"]);
+            $level_two   = intval($_REQUEST["level_two"]);
+            $level_thr   = intval($_REQUEST["level_thr"]);
+            $status      = intval($_REQUEST["status"]);
+            $type        = 1;//听力
+            $target      = 1;//听力
+
+
+            $ret = $this->cEnglishQuestionLogic->saveProperty(
+                                                        $question_id, 
+                                                        $voice, 
+                                                        $target, 
+                                                        $pattern, 
+                                                        $level_one, 
+                                                        $level_two, 
+                                                        $level_thr, 
+                                                        $status, 
+                                                        $type
+                                                    );
+            if ($ret === false) {
+                $model->rollback();
+                $this->error($this->cEnglishQuestionLogic->getErrorMessage());
             }
             $model->commit();
             $this->success('新增成功!', cookie('_currentUrl_'));
@@ -1139,61 +1170,63 @@ class EnglishQuestionAction extends CommonAction {
                         Log::write("导入听力试题，未找到对应的媒体：".$media_data['media_source_url'], Log::INFO);
                     }
 
-                    //插入答案
-                    $option_id = array();
-                    //判断题目是否是判断题
-                    $is_double_true = false; //是否为True文字选项
-                    $is_double_false = false; //是否为False文字选项
-                    foreach ($data['option'] as $key => $value) {
-                        if (preg_match("/True.?/i", $value)) {
-                            $is_double_true = true;
-                        }
-                        if (preg_match("/False.?/i", $value)) {
-                            $is_double_false = true;
-                        }
-                    }
-                    //选项是否有重复，有则题目停用
-                    if (count(array_unique($data['option'])) < count($data['option']) && !($is_double_false && $is_double_true)) {
-                        $data['status'] = 0;
-                        Log::write("导入听力试题，有重复选项，锁住：".$data['name'], Log::INFO);
-                    }
-                    //
-                    //依次存入选项，不知道问题id
-                    $option_data['created'] = $time;
-                    $index = array(1, 2, 3, 4); //选择序号数组
-                    foreach ($data['option'] as $key => $value) {
-                        if (!empty($value)) {
-                            $d_1 = preg_match("/all(\s)+of(\s)+the(\s+)above.?/i", $value);
-                            $d_2 = preg_match("/none(\s)+of(\s)+the(\s)+above.?/i", $value);
-                            $d_3 = preg_match("/either(\s)+B(\s)+or(\s)+C.?/i", $value);
-                            $d_4 = preg_match("/(both(\s)+)?B(\s)+and(\s)+C.?/i", $value);
-                            $c_1 = preg_match("/(both(\s)+A)?(\s)+and(\s)+B.?/i", $value);
-                            $c_2 = preg_match("/either(\s)+A(\s)+or(\s)+B.?/i", $value);
-                            $option_data['content'] = $value;
-                            $option_data['sort'] = current($index); //选项排序等于当前最前面序号
-                            if ($d_1 || $d_2 || $d_3 || $d_4) {
-                                $option_data['sort'] = 4; //D
-                            } else if ($c_1 || $c_2) {
-                                $option_data['sort'] = 3; //C
+                    if($data['answer'] != -1){
+                        //插入答案
+                        $option_id = array();
+                        //判断题目是否是判断题
+                        $is_double_true = false; //是否为True文字选项
+                        $is_double_false = false; //是否为False文字选项
+                        foreach ($data['option'] as $key => $value) {
+                            if (preg_match("/True.?/i", $value)) {
+                                $is_double_true = true;
                             }
-                            unset($index[array_search($option_data['sort'], $index)]); //已排序的序号删除
+                            if (preg_match("/False.?/i", $value)) {
+                                $is_double_false = true;
+                            }
+                        }
+                        //选项是否有重复，有则题目停用
+                        if (count(array_unique($data['option'])) < count($data['option']) && !($is_double_false && $is_double_true)) {
+                            $data['status'] = 0;
+                            Log::write("导入听力试题，有重复选项，锁住：".$data['name'], Log::INFO);
+                        }
+                        //
+                        //依次存入选项，不知道问题id
+                        $option_data['created'] = $time;
+                        $index = array(1, 2, 3, 4); //选择序号数组
+                        foreach ($data['option'] as $key => $value) {
+                            if (!empty($value)) {
+                                $d_1 = preg_match("/all(\s)+of(\s)+the(\s+)above.?/i", $value);
+                                $d_2 = preg_match("/none(\s)+of(\s)+the(\s)+above.?/i", $value);
+                                $d_3 = preg_match("/either(\s)+B(\s)+or(\s)+C.?/i", $value);
+                                $d_4 = preg_match("/(both(\s)+)?B(\s)+and(\s)+C.?/i", $value);
+                                $c_1 = preg_match("/(both(\s)+A)?(\s)+and(\s)+B.?/i", $value);
+                                $c_2 = preg_match("/either(\s)+A(\s)+or(\s)+B.?/i", $value);
+                                $option_data['content'] = $value;
+                                $option_data['sort'] = current($index); //选项排序等于当前最前面序号
+                                if ($d_1 || $d_2 || $d_3 || $d_4) {
+                                    $option_data['sort'] = 4; //D
+                                } else if ($c_1 || $c_2) {
+                                    $option_data['sort'] = 3; //C
+                                }
+                                unset($index[array_search($option_data['sort'], $index)]); //已排序的序号删除
 
-                            $ret = $optionModel->add($option_data);
-                            if (false === $ret) {
-                                $model->rollback();
-                                Log::write("导入失败，添加试题选项失败：".$optionModel->getLastSql(), Log::ERR);
-                                die(json_encode(array("info" => "导入失败，添加试题选项失败！", "status" => false)));
+                                $ret = $optionModel->add($option_data);
+                                if (false === $ret) {
+                                    $model->rollback();
+                                    Log::write("导入失败，添加试题选项失败：".$optionModel->getLastSql(), Log::ERR);
+                                    die(json_encode(array("info" => "导入失败，添加试题选项失败！", "status" => false)));
+                                }
+                                array_push($option_id, $ret); //保存增加的id数组，用于更新选项对应的问题id
                             }
-                            array_push($option_id, $ret); //保存增加的id数组，用于更新选项对应的问题id
                         }
-                    }
-                    //答案id
-                    $data['answer'] = $option_id[$data['answer'] - 1];
-                    //没有答案或者不是双选下选项小于4
-                    if ($data['answer'] == 0 || (count($option_id) < 4 && !($is_double_false && $is_double_true))) {
-                        $data['status'] = 0;
-                        $data['answer'] = 0;
-                        Log::write("导入听力试题，选项小于四个或没有答案，锁住：".$data['name'], Log::INFO);
+                        //答案id
+                        $data['answer'] = $option_id[$data['answer'] - 1];
+                        //没有答案或者不是双选下选项小于4
+                        if ($data['answer'] == 0 || (count($option_id) < 4 && !($is_double_false && $is_double_true))) {
+                            $data['status'] = 0;
+                            $data['answer'] = 0;
+                            Log::write("导入听力试题，选项小于四个或没有答案，锁住：".$data['name'], Log::INFO);
+                        }
                     }
 
                     

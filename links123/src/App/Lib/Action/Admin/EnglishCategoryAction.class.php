@@ -436,6 +436,70 @@ class EnglishCategoryAction extends CommonAction{
         $levelnameModel->commit();
         $this->success('操作成功');
     }
+    public function foreverdelete() {
+        $cat_id = $_REQUEST['id'];
+        $level = intval($_REQUEST['level']);
+        if($level == 0){
+            $this->error('非法操作');
+        }
+        $categoryModel = D("EnglishCategory");
+        $levelnameModel = D("EnglishLevelname");
+        $catquestionModel  = D("EnglishCatquestion");
+        $map['cat_id'] = array("in",$cat_id);
+        $cat_info = $categoryModel->where($map)->select();
+        $levelnameModel->startTrans();
+        if(false === $catquestionModel->where($map)->delete()){
+            $levelnameModel->rollback();
+            $this->error("操作失败");
+        }
+        foreach($cat_info as $value){
+            $level_id = 0;
+            if($level == 1){
+                $level_id = $value['level_one'];
+            }elseif($level == 2){
+                $level_id = $value['level_two'];
+            }elseif($level == 3){
+                $level_id = $value['level_thr'];
+            }
+            $level_info = $levelnameModel->find($level_id);
+            if($level_info === false || empty($level_info)){
+                $this->error('非法操作');
+            }
+            if($level_info['default'] == 1){
+                $this->error('不能删除默认分类');
+            }
+            if($level == 1){
+                if(false === $levelnameModel->delete($level_id)){
+                    $levelnameModel->rollback();
+                    $this->error('操作失败');
+                }
+            }
+            //
+            $cat_map =array();
+            $cat_map['level_one'] = $value['level_one'];
+            if($level > 1){
+                $cat_map['level_two'] = $value['level_two'];
+            }
+            if($level > 2){
+                $cat_map['level_thr'] = $value['level_thr'];
+            }
+            $cat_list = $categoryModel->field("group_concat(cat_id) as cat_id")->where($cat_map)->group("level_one")->find();
+            if(!empty($cat_list['cat_id'])){
+                $cat_question_map = array();
+                $cat_question_map['cat_id'] = array("in",$cat_list['cat_id']);
+                if(false === $catquestionModel->where($cat_question_map)->delete()){
+                    $levelnameModel->rollback();
+                    $this->error('操作失败');
+                }
+            }
+            if(false === $categoryModel->where($cat_map)->delete()){
+                $levelnameModel->rollback();
+                $this->error('操作失败');
+            }
+        }
+        $levelnameModel->commit();
+        $this->success('操作成功');
+    }
     function resetCategoryQuestionNum(){
         set_time_limit(0);
         $time = time();
