@@ -413,7 +413,7 @@ $(function(){
                                     c.time = c.datetime;
                                 });
                                 d1[parseInt(k)] = v;
-                                delete d1[k];
+                                if(parseInt(k) + '' != k) delete d1[k];
                             });
                         }
                         if(d2.length != 0) {
@@ -423,7 +423,7 @@ $(function(){
                                     c.time = c.datetime;
                                 });
                                 d2[parseInt(k)] = v;
-                                delete d2[k];
+                                if(parseInt(k) + '' != k) delete d2[k];
                             });
                         }
 
@@ -448,7 +448,7 @@ $(function(){
                                     c.time = c.datetime;
                                 });
                                 d[parseInt(k)] = v;
-                                delete d[k];
+                                if(parseInt(k) + '' != k) delete d[k];
                             });
                         }
                         self.marksStore[self.currentMarkId] = d;

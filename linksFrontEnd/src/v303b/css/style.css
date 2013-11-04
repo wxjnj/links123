@@ -623,7 +623,7 @@ input:focus{ outline: 0; }
 	display:none;
 }
 .thl{
-	margin-left: 290px;
+	margin-left: 255px;
 	width: 410px;
 }
 .thl .ctls .ipt{
@@ -746,12 +746,12 @@ input:focus{ outline: 0; }
 
 
 .extra-wrap {
-	margin-top: 25px;
+	margin-top: 15px;
 	overflow: hidden;
 }
 
 .extra-box {
-	width: 470px;
+	width: 472px;
 	height: 350px;
 	overflow: hidden;
 	background: #fff;
@@ -844,7 +844,7 @@ input:focus{ outline: 0; }
 
 */
 .widescreen .thl{
-	margin-left: 400px; 
+	margin-left: 380px; 
 	width: 460px;
 }
 .widescreen .thl .ctls .ipt{

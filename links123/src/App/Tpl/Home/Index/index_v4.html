@@ -135,7 +135,15 @@
 			<div class="header-weather">
 				<span class="region">{$weatherData['city']}</span>
 				<span class="degree">{$weatherData['temp']}°</span>
-				<span class="info">{$weatherData['sun']}，空气质量{$weatherData['air']}</span>
+				<span class="info"><b class="weather-icon"></b><b class="weather-desc">{$weatherData['sun']}</b>，空气质量{$weatherData['air']}</span>			
+				<div class="weather-find-region-box" style="display:none">
+					<span class="ang1"></span>
+					<span class="ang2"></span>
+					<div class="content">
+						搜索: <input class="region-name-input" type="text" size="20" /><br />
+						<div class="region-ul"></div>
+					</div>
+				</div>
 			</div><!-- // .header-weather -->
 		</div>
 	</div>
@@ -157,7 +165,6 @@
 			</map>
 			<img id="K_banner_01_arrow" src="__STATIC__/v303b/imgs/banner-arrow.png" />
 		</div>
-
 	</div>
 </div>
 <div class="container" id="container" <if condition="$skinId">style="background-image:url({$skin})"</if>>
