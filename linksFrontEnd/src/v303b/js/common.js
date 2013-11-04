@@ -54,6 +54,7 @@ $(function() {
 $(document).on('mousemove', '.ui-widget-overlay', function(e){
 	e.stopPropagation();
 });
+
 var User = {
 	Init : function() {
 		var self = this;
@@ -237,6 +238,7 @@ var User = {
 	},
 	Login : function(msg) {
 		var self = this;
+
 		if (!$('#J_Login').size()) {
 			var hl = '';
 			hl = hl + '<div class="lk-dialog lk-dialog-login" id="J_Login">';
@@ -278,14 +280,17 @@ var User = {
 				open : function() {
 					setTimeout(function() {
 						obj.find('input[name="user"]').select();
+						obj.find('.close').on('click', function(e) {
+							obj.dialog('close');
+							obj.remove();
+							return false;
+						});
 					}, 20);
+					
 				}
 			});
 
-			obj.find('.close').on('click', function() {
-				obj.dialog('close');
-				return false;
-			});
+
 			obj.find('.fgpass').on('click', function() {
 				obj.dialog('close');
 				self.FindPass();
@@ -405,9 +410,11 @@ var User = {
 
 				});
 
+				
 				return false;
 			});
 		} else {
+
 			var obj = $('#J_Login');
 			obj.find('input[name="user"]').val('');
 			obj.find('input[name="password"]').val('');
@@ -423,6 +430,7 @@ var User = {
 	},
 	FindPass : function() {
 		if (!$('#J_FindPass').size()) {
+
 			var hl = '';
 			hl = hl + '<div class="lk-dialog lk-dialog-fpass" id="J_FindPass">';
 			hl = hl + '	<div class="lkd-hd">';
@@ -447,9 +455,12 @@ var User = {
 			hl = hl + '		<a class="lkd-btn" href="javascript:;">发送验证邮件</a>';
 			hl = hl + '	</div>';
 			hl = hl + '</div>';
+
 			$('body').append(hl);
 
+			
 			var obj = $('#J_FindPass');
+
 
 			obj.dialog({
 				autoOpen : true,
@@ -533,6 +544,8 @@ var User = {
 		}
 	}
 };
+
+
 
 var THL = {
 	conf : {
