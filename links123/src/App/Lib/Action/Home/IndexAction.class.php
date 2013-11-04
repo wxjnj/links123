@@ -14,7 +14,7 @@ class IndexAction extends CommonAction {
 	 * 
 	 * @author slate date:2013-10-07
 	 */
-	public function indexV4() {
+	public function index() {
 		import("@.ORG.String");
 		//自留地
 		$myareaModel = M("Myarea");
@@ -87,8 +87,6 @@ class IndexAction extends CommonAction {
 			$_SESSION['myarea_sort'] = array_keys($_SESSION['arealist']);
 		}
 
-
-
 		//APP应用
 		$app_list = $this->getApps($_SESSION['app_sort']);
 		$this->assign('app_list', $app_list);
@@ -96,13 +94,12 @@ class IndexAction extends CommonAction {
         //气象数据
         $this->assign('weatherData', $this->getWeatherData());
         
-        //推荐电影
-        $this->assign('homeMovies', $this->getHomeMovies());
-
-        //推荐音乐
-        $this->assign('homeMusics', $this->getHomeMusics());
+        //新闻信息
+        $hotNews = $this->getHotNews();
+        shuffle($hotNews['imgNews']);
+        $this->assign('hotNewsData',  $hotNews['news']);
+        $this->assign('imgNewsData',  $hotNews['imgNews']);
         
-
 		$this->getHeaderInfo();
 		$this->display('index_v4');
 	}
@@ -112,7 +109,7 @@ class IndexAction extends CommonAction {
 	 *
 	 * @author slate date:2013-09-06
 	 */
-	public function index() {
+	public function indexV3() {
 		import("@.ORG.String");
 		//自留地
 		$myareaModel = M("Myarea");
@@ -1369,4 +1366,39 @@ class IndexAction extends CommonAction {
         
         return $result;
     }
+    
+    /**
+     * 抓取360热门新闻头条
+     */
+    protected function getHotNews() {
+    
+    	$hotNews = S('hotNewsList');
+    
+    	if (!$hotNews) {
+    
+    		$url = 'http://sh.qihoo.com/index.html';
+    
+    		$str = file_get_contents($url);
+    		$news = $imgNews = array();
+    		preg_match_all('/<p class="title">(.*?)<\/p>/is', $str, $match);
+    		
+    		foreach ($match[1] as $k => $v) {
+    			$news[] = array('url' => $this->tp_match('/href="(.*?)"/is', $v), 'title' => trim(str_replace("\n", '', strip_tags($v))), 'img' => '');
+    		}
+    		
+    		preg_match_all('/<li class="focal f16">(.*?)<\/li>/is', $str, $match);
+    		foreach ($match[1] as $k => $v) {
+    			$news[] = array('url' => $this->tp_match('/href="(.*?)"/is', $v), 'title' => trim(str_replace("\n", '', strip_tags($v))), 'img' => '');
+    		}
+    
+    		preg_match_all('/<div class="image">(.*?)<\/div>/is', $str, $match);
+    		foreach ($match[1] as $k => $v) {
+    			if ($k >= (count($match[1])-1)) continue;
+    			$imgNews[] = array('url' => stripslashes($this->tp_match('/href="(.*?)"/is', $v)), 'title' => trim($this->tp_match('/title="(.*?)"/is', $v)), 'img' => $this->tp_match('/src="(.*?)"/is', $v));
+    		}
+    		$hotNews = array('news' => $news, 'imgNews' => $imgNews);
+    		S('hotNewsList', $hotNews, 14400);
+    	}
+    	return $hotNews;
+    } 
 }

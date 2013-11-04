@@ -21,9 +21,10 @@ module.exports = function(grunt) {
 						'css/g-uc.css',
 						//'css/slide.css',
 						'css/index-banner.css',
+						'css/index-weather.css',
 						'css/index-app.css',
 						'css/index-apps.css',
-                        'css/index-social.css',
+						'css/index-social.css',
 						//'css/index-ted.css',
 						'css/index-calendar.css',
 						//'css/index-music.css',
@@ -42,8 +43,9 @@ module.exports = function(grunt) {
 						'js/common.js',
 						'js/date.js',
 						'js/index.js',
+						'js/index-weather.js',
 						'js/index-banner.js',
-                        'js/index-calendar.js',
+						'js/index-calendar.js',
 						'js/detect.js',
 						'js/index-apps-tpl.js',
 						'js/index-apps.js',
@@ -64,10 +66,10 @@ module.exports = function(grunt) {
 						'../../dest/v303b/js/jquery-1.7.1.min.js' : 'js/jquery-1.7.1.min.js'
 					}
 					,{
-					 	expand: true,
-					 	cwd: 'imgs',
-					 	src: ['**'],
-					 	dest: '../../dest/v303b/imgs/'
+						expand: true,
+						cwd: 'imgs',
+						src: ['**'],
+						dest: '../../dest/v303b/imgs/'
 					}
 				]
 			}

@@ -27,7 +27,8 @@
 		</ul>
 		<div class="uc">
 			<empty name="_SESSION[C('MEMBER_AUTH_KEY')]">
-				<a class="join J_SignUp" href="javascript:;">注&nbsp;册</a><a class="login J_SignIn" href="javascript:;">登&nbsp;录</a>
+				<a class="login J_SignIn" href="javascript:;">登&nbsp;录</a>
+				<a class="join J_SignUp" href="javascript:;">注&nbsp;册</a>
 				<else />
 				<img class="uc-avatar" src="__PUBLIC__/Uploads/Faces/{$Think.session.face}" />
 				<div class="uc-menu">
@@ -143,9 +144,9 @@
 <div class="big-pic">
 	<div class="big-pic-inner">
 		<div id="K_banner_01">
-			<!--a href="http://en.links123.cn/" target="_blank"-->
+			<a href="http://en.links123.cn/" target="_blank">
 				<img src="__STATIC__/v303b/imgs/big-pic-01.png" usemap="K_banner_01_map" />
-			<!--/a-->
+			</a>
 			<map id="K_banner_01_map" name="K_banner_01_map">
 				<area class="doll" shape ="rect" coords ="30,177,159,356" href ="http://en.links123.cn/" target ="_blank" alt="老外在隔壁" />
 				<area class="doll" shape ="rect" coords ="243,144,376,358" href ="http://en.links123.cn/" target ="_blank" alt="老外在隔壁" />
@@ -161,7 +162,6 @@
 </div>
 <div class="container" id="container" <if condition="$skinId">style="background-image:url({$skin})"</if>>
 	<div class="container-inner">
-		<!-- <div class="banner"><img src="__PUBLIC__/IndexV3/1175.jpg" alt="" /></div> -->
 		<div class="zld" id="J_ZldList">
 			<form action="{:U('Link/index')}?mod=myarea" id="J_MyAreaForm" target="_blank" method="post"><input type="hidden" name="url" value="" /></form>
 			<ul id="J_sortable">
@@ -235,40 +235,28 @@
 			<div class="lft-box extra-box">
 				<div class="title-tabs">
 					<span>发现你最喜欢的内容</span>
-					<a href="javascript:;">+</a>
+					<!--<a href="javascript:;">+</a>  -->
 					<ul>
 						<li data-tab="news" class="active">头条</li>
-						<li data-tab="digs">文摘</li>
+						<!--<li data-tab="digs">文摘</li>  -->
 					</ul>
 				</div>
-				<!-- 标签 -->
+				<!-- 标签 
 				<div class="like-tags">
 					<div class="a_tag">
 						<span>标签</span>
 						<a href="javascript:;">×</a>
 					</div>
-					<div class="a_tag">
-						<span>标签</span>
-						<a href="javascript:;">×</a>
-					</div>
-					<div class="a_tag">
-						<span>标签</span>
-						<a href="javascript:;">×</a>
-					</div>
-					<div class="a_tag">
-						<span>标签</span>
-						<a href="javascript:;">×</a>
-					</div>
-					<div class="a_tag">
-						<span>标签</span>
-						<a href="javascript:;">×</a>
-					</div>
 				</div>
+				-->
 				<!-- 头条 -->
+				<script>
+				var news = [ <volist name="imgNewsData" id="news" offset="1" length="4"> { title: '{$news.title}',img: '{$news.img}',url:'{$news.url}',desc:'{$news.desc}' }  <if condition="$i lt 10">,</if> </volist> ];
+				</script>
 				<div class="social-news social-box">
 					<div class="pic-news">
 						<div class="pics-box">
-							<img src="__PUBLIC__/Uploads/Others/50e17b4358cd4.jpg" />
+							<img src="" />
 						</div>
 						<div class="pic-news-tabs">
 							<a class="active" href="javascript:;" data-tab="0"></a>
@@ -276,22 +264,18 @@
 							<a href="javascript:;" data-tab="2"></a>
 							<a href="javascript:;" data-tab="3"></a>
 						</div>
-						<h3 class="pic-news-title">习近平：坚持男女平等基本国策</h3>
-						<span class="pic-news-desc"><a href="#">新华网北京10月31日电　中共中央总书记、国家主席、中央军委主席习近平……</a></span>
+						<h3 class="pic-news-title"></h3>
+						<span class="pic-news-desc"><a href="#"></a></span>
 					</div>
 					<div class="text-news">
-						<p><a href="#">国信办主任向凤凰网博主致敬 网媒生命力 社会担当</a></p>
-						<p><a href="#">国信办主任向凤凰网博主致敬 网媒生命力 社会担当</a></p>
-						<p><a href="#">国信办主任向凤凰网博主致敬 网媒生命力 社会担当</a></p>
-						<p><a href="#">国信办主任向凤凰网博主致敬 网媒生命力 社会担当</a></p>
-						<p><a href="#">国信办主任向凤凰网博主致敬 网媒生命力 社会担当</a></p>
-						<p><a href="#">国信办主任向凤凰网博主致敬 网媒生命力 社会担当</a></p>
-						<p><a href="#">国信办主任向凤凰网博主致敬 网媒生命力 社会担当</a></p>
-						<p><a href="#">国信办主任向凤凰网博主致敬 网媒生命力 社会担当</a></p>
-						<p><a href="#">国信办主任向凤凰网博主致敬 网媒生命力 社会担当</a></p>
-						<p class="wide-news"><a href="#">国信办主任向凤凰网博主致敬 网媒生命力 社会担当</a></p>
-						<p class="wide-news"><a href="#">国信办主任向凤凰网博主致敬 网媒生命力 社会担当</a></p>
-						<p class="more-news"><a href="#">更多新闻</a></p>
+					<volist name="hotNewsData" id="news">
+						<p><b></b><a href="{$news.url}" target="_blank">{$news.title}</a></p>
+					</volist>
+					<volist name="imgNewsData" id="news" offset="1" length="6">
+						<p><b></b><a href="{$news.url}" target="_blank">{$news.title}</a></p>
+					</volist>
+						<!-- <p class="wide-news"><a href="#"></a></p> -->
+						<p class="more-news"><a href="http://sh.qihoo.com/index.html" target="_blank">更多新闻</a></p>
 					</div>
 				</div>
 				<div class="social-digs social-box" style="display: none">
@@ -300,72 +284,7 @@
 							<img src="__PUBLIC__/Uploads/Others/50e17b4358cd4.jpg" />
 							<div class="text-div">
 								<h5><a href="#">为什么说体验即设计？</a></h5>
-								<p>2013/10/30 xbsmag.com</p>
-							</div>
-						</li>
-						<li>
-							<img src="__PUBLIC__/Uploads/Others/50e17b4358cd4.jpg" />
-							<div class="text-div">
-								<h5><a href="#">为什么说体验即设计？</a></h5>
-								<p>2013/10/30 xbsmag.com</p>
-							</div>
-						</li>
-						<li>
-							<img src="__PUBLIC__/Uploads/Others/50e17b4358cd4.jpg" />
-							<div class="text-div">
-								<h5><a href="#">为什么说体验即设计？</a></h5>
-								<p>2013/10/30 xbsmag.com</p>
-							</div>
-						</li>
-						<li>
-							<img src="__PUBLIC__/Uploads/Others/50e17b4358cd4.jpg" />
-							<div class="text-div">
-								<h5><a href="#">为什么说体验即设计？</a></h5>
-								<p>2013/10/30 xbsmag.com</p>
-							</div>
-						</li>
-						<li class="wide-news">
-							<img src="__PUBLIC__/Uploads/Others/50e17b4358cd4.jpg" />
-							<div class="text-div">
-								<h5><a href="#">为什么说体验即设计？</a></h5>
-								<p>2013/10/30 xbsmag.com</p>
-							</div>
-						</li>
-					</ul>
-					<ul class="rgt-digs">
-						<li>
-							<img src="__PUBLIC__/Uploads/Others/50e17b4358cd4.jpg" />
-							<div class="text-div">
-								<h5><a href="#">为什么说体验即设计？</a></h5>
-								<p>2013/10/30 xbsmag.com</p>
-							</div>
-						</li>
-						<li>
-							<img src="__PUBLIC__/Uploads/Others/50e17b4358cd4.jpg" />
-							<div class="text-div">
-								<h5><a href="#">为什么说体验即设计？</a></h5>
-								<p>2013/10/30 xbsmag.com</p>
-							</div>
-						</li>
-						<li>
-							<img src="__PUBLIC__/Uploads/Others/50e17b4358cd4.jpg" />
-							<div class="text-div">
-								<h5><a href="#">为什么说体验即设计？</a></h5>
-								<p>2013/10/30 xbsmag.com</p>
-							</div>
-						</li>
-						<li>
-							<img src="__PUBLIC__/Uploads/Others/50e17b4358cd4.jpg" />
-							<div class="text-div">
-								<h5><a href="#">为什么说体验即设计？</a></h5>
-								<p>2013/10/30 xbsmag.com</p>
-							</div>
-						</li>
-						<li class="wide-news">
-							<img src="__PUBLIC__/Uploads/Others/50e17b4358cd4.jpg" />
-							<div class="text-div">
-								<h5><a href="#">为什么说体验即设计？</a></h5>
-								<p>2013/10/30 xbsmag.com</p>
+								<p>2013/10/30 </p>
 							</div>
 						</li>
 					</ul>
@@ -381,58 +300,18 @@
 </div><!--#container end-->
 <div class="footer">
 	<div class="footer-inner">
-		<h5 class="friend-links-title">友情链接</h5>
+		<!-- <h5 class="friend-links-title">友情链接</h5>
 		<ul class="friend-links">
-			<li><a href="#">爱爸妈网</a></li>
-			<li><a href="#">爱爸妈网</a></li>
-			<li><a href="#">爱爸妈网</a></li>
-			<li><a href="#">爱爸妈网</a></li>
-			<li><a href="#">爱爸妈网</a></li>
-			<li><a href="#">爱爸妈网</a></li>
-			<li><a href="#">爱爸妈网</a></li>
-			<li><a href="#">爱爸妈网</a></li>
-			<li><a href="#">爱爸妈网</a></li>
-			<li><a href="#">爱爸妈网</a></li>
-			<li><a href="#">爱爸妈网</a></li>
-			<li><a href="#">爱爸妈网</a></li>
-			<li><a href="#">爱爸妈网</a></li>
-			<li><a href="#">爱爸妈网</a></li>
-			<li><a href="#">爱爸妈网</a></li>
-			<li><a href="#">爱爸妈网</a></li>
-			<li><a href="#">爱爸妈网</a></li>
-			<li><a href="#">爱爸妈网</a></li>
-			<li><a href="#">爱爸妈网</a></li>
-			<li><a href="#">爱爸妈网</a></li>
-			<li><a href="#">爱爸妈网</a></li>
-			<li><a href="#">爱爸妈网</a></li>
-			<li><a href="#">爱爸妈网</a></li>
-			<li><a href="#">爱爸妈网</a></li>
-			<li><a href="#">爱爸妈网</a></li>
-			<li><a href="#">爱爸妈网</a></li>
-			<li><a href="#">爱爸妈网</a></li>
-			<li><a href="#">爱爸妈网</a></li>
-			<li><a href="#">爱爸妈网</a></li>
-			<li><a href="#">爱爸妈网</a></li>
-			<li><a href="#">爱爸妈网</a></li>
-			<li><a href="#">爱爸妈网</a></li>
-			<li><a href="#">爱爸妈网</a></li>
-			<li><a href="#">爱爸妈网</a></li>
-			<li><a href="#">爱爸妈网</a></li>
-		</ul>
+			<li><a href="#">另客网</a></li>
+		</ul> -->
 		<div class="site-info">
 			<ul>
-				<li><a href="#">关于</a></li>
-				<li><a href="#">帮助</a></li>
-				<li><a href="#">博客</a></li>
-				<li><a href="#">状态</a></li>
-				<li><a href="#">广告商</a></li>
-				<li><a href="#">企业</a></li>
-				<li><a href="#">媒体</a></li>
-				<li><a href="#">开发者</a></li>
-				<li><a href="#">资源</a></li>
-				<li><a href="#">目录</a>
+				<li><a target="_blank" href="{:U('/About')}">关于我们</a></li>
+				<li><a target="_blank" href="{:U('/Suggestion')}">留言板</a></li>
+				<li><a target="_blank" href="{:U('/Blogroll')}">友情链接</a></li>
+				<li><a target="_blank" href="{:U('/Recommend')}">推荐链接</a></li>
 			</ul>
-			<p>沪ICP备12036721号 © 2013 另客</p>
+			<p>沪ICP备12036721号 &copy; 另客 2013<script src="http://s96.cnzz.com/stat.php?id=4907803&web_id=4907803&show=pic1" type="text/javascript"></script></p>
 		</div>
 	</div>
 </div>

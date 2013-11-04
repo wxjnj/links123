@@ -279,9 +279,9 @@
 .extra-calendar .cal-day .cal-day-burn-down-chart .chart .time-show {
     color:#fff;
     font-size:18px;
-    font-weight:100;
+    font-weight: bold;
     position:absolute;
-    right:5px;
+    right:40px;
     bottom:2px
 }
 .extra-calendar .cal-day .cal-day-burn-down-chart .cal-day-event-item {

@@ -7,33 +7,6 @@ $(function(){
         $('.social-' + t).show()
     });
 
-    var news = [
-        {
-            img: '__PUBLIC__/Uploads/Others/50e17b4358cd4.jpg',
-            title: '习近平：坚持男女平等基本国策1',
-            desc: '新华网北京10月31日电　中共中央总书记、国家主席、中央军委主席习近平……',
-            url: '/'
-        },
-        {
-            img: '__PUBLIC__/Uploads/Others/50e17b4358cd4.jpg',
-            title: '习近平：坚持男女平等基本国策2',
-            desc: '新华网北京10月31日电　中共中央总书记、国家主席、中央军委主席习近平……',
-            url: '/'
-        },
-        {
-            img: '__PUBLIC__/Uploads/Others/50e17b4358cd4.jpg',
-            title: '习近平：坚持男女平等基本国策3',
-            desc: '新华网北京10月31日电　中共中央总书记、国家主席、中央军委主席习近平……',
-            url: '/'
-        },
-        {
-            img: '__PUBLIC__/Uploads/Others/50e17b4358cd4.jpg',
-            title: '习近平：坚持男女平等基本国策4',
-            desc: '新华网北京10月31日电　中共中央总书记、国家主席、中央军委主席习近平……',
-            url: '/'
-        }
-    ];
-
     changeNews();
 
     $('.pic-news-tabs').on('click', 'a', function(){
@@ -46,10 +19,15 @@ $(function(){
         var idx = $('.pic-news-tabs').find('.active').attr('data-tab');
         var o = news[idx];
         $('.pic-news').find('img').attr('src', o.img).end()
-            .find('.pic-news-title').html(o.title).end()
+            .find('.pic-news-title').html('<a target="_blank" href="'+ o.url +'">' + o.title + '</a>').end()
             .find('.pic-news-desc a').attr('href', o.url).html(o.desc);
     }
 
+    $('.text-news').find('p:gt(9)').each(function(){
+        if($(this).hasClass('more-news')) return;
+        $(this).addClass('wide-news');
+    });
+    
 });
 
 

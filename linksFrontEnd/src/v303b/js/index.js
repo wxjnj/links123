@@ -33,30 +33,6 @@ $(function() {
 
 	$('#J_Apps').sortable();
 
-	// banner
-	// setTimeout(function(){
-	// 	var o = $('.banner');
-	// 	var o1 = null;
-	// 	$('#J_Apps>li').each(function(){
-	// 		if($(this).attr('id') == 1){
-	// 			o1 = $(this).find('img');
-	// 			return;
-	// 		}
-	// 	});
-	// 	if(!o1){ return; }
-	// 	var pos = o1.position();
-	// 	o.css({border: '1px dotted #ccc', position: 'absolute'});
-	// 	o.animate({
-	// 		width: 0,
-	// 		height: 0,
-	// 		top: pos.top-o.height()+40+36,
-	// 		left: pos.left+36
-	// 	}, 2000, function(){
-	// 		o.remove();
-	// 	});
-
-	// }, 3000);
-
 	// 幻灯
     /*
 	$('#J_ScrollBox').find('.items').slidesjs({

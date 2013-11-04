@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="UTF-8" />
-	<title>个人中心</title>
+	<title>聊天记录管理_个人中心</title>
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 	<link rel="stylesheet" href="http://a.links123.cn/v3/css/base.css" />
 	<link rel="stylesheet" href="/Public/User/css/uc-layout.css" />
@@ -79,7 +79,7 @@
 						<h2><i class="uc-icons-3"></i>隐私设置</h2>
 						<ul>
 							<li><a href="common.html">通用</a></li>
-							<li><a href="record.html">聊天记录管理</a></li>
+							<li class="on"><a href="record.html">聊天记录管理</a></li>
 							<li><a href="data.html">隐私数据管理</a></li>
 						</ul>
 					</li>
@@ -89,8 +89,33 @@
 				</ul>
 			</div>
 			<div class="content">
-				这个文件是主框架
-				这个位置是主内容
+				<h2 class="c-ttl">聊天记录管理</h2>
+				<div class="record-panel">
+					<div class="record-x">
+						<h3>聊天记录漫游</h3>
+						<ul>
+							<li><label for=""><input type="checkbox" name="" id=""> 开启</label></li>
+							<li><label for=""><input type="checkbox" name="" id=""> 关闭</label></li>
+						</ul>
+						<p>您已与2013-10-27日将聊天记录漫游升级为 200 条聊天记录，2013-11-27日可再次免费升级为漫游400条，</p>
+						<p>您也可使用 <span class="aline">35另币</span> 升级。<a class="aline" href="#">如何获取另币</a></p>
+						<p class="ctls"><input class="btn-ok" type="submit" value="提交" /></p>
+					</div>
+					<div class="record-empty">
+						<h3>清空聊天记录<span>注意：为了您的隐私安全，清空的聊天记录将不再能找回请慎用此功能。</span></h3>
+						<p>清空聊天记录前请输入密码确认</p>
+						<p><input class="ipt-m ipt-dis" type="text" /></p>
+						<p class="ctls"><input class="btn-ok" type="submit" value="提交" /></p>
+					</div>
+					<div class="record-protect">
+						<h3>聊天记录密码保护<span>查看聊天记录时需要输入密码</span></h3>
+						<p>聊天记录密码设置</p>
+						<p><input class="ipt-m ipt-dis" type="text" /></p>
+						<p>确认密码</p>
+						<p><input class="ipt-m ipt-dis" type="text" /></p>
+						<p class="ctls"><input class="btn-ok" type="submit" value="提交" /></p>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

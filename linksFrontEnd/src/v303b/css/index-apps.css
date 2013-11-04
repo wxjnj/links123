@@ -1006,7 +1006,8 @@ div.gt-baf-translations {
     width: 280px;
     height: 30px;
     background: #eee;
-    box-shadow:0 0 5px #666;
+    /*box-shadow:0 0 5px #666;*/
+    border: 1px solid #d9d9d9;
 }
 .mini_music_box .normal_music_iframe_box {
     /*display: none;*/

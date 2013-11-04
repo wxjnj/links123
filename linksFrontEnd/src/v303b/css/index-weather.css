@@ -1,0 +1,27 @@
+.header-weather {
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: #000;
+    line-height:115px
+}
+.header-weather .degree {
+    font-size:42px;
+    font-weight:800;
+    font-family:Arial
+}
+
+
+/* icons */
+.weather-icon {
+    display: inline-block;
+    position: relative;
+    width: 30px;
+    height: 30px;
+    background-image: url(../imgs/weather-icon-psd.png);
+    background-repeat: no-repeat;
+}
+
+.weather-icon-day-sun {
+    background-position: 0 0;
+}
