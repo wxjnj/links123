@@ -243,6 +243,23 @@ var Zld = { // 自留地
                     'padding-right': opr - xw + 'px'
                 });
             });
+        } else if(boxWidth - fstLineWidth <= 45 && boxWidth - fstLineWidth > 10) { 
+            // 差距过小，使用本行增加宽度适应行宽
+            var w = boxWidth - fstLineWidth + 5;
+            w = ~~Math.floor(w / (overIndex-1) / 2);
+            var s = lis.filter(':lt(' + overIndex + ')');
+
+            $.each(s, function(k, v){
+                var opl = $(v).find('.nm').css('padding-left');
+                var opr = $(v).find('.nm').css('padding-right');
+                opl = parseInt(opl);
+                opr = parseInt(opr);
+                $(v).find('.nm').css({
+                    'padding-left': opl + xw + 'px',
+                    'padding-right': opr + xw + 'px'
+                });
+            });
+
         }
     },
     Init: function() {
@@ -279,8 +296,8 @@ var Zld = { // 自留地
         });
 
         /* 鼠标经过缩放*/
-         var holder = {};
          /*
+         var holder = {};
          $(document).on('mouseover', '#J_sortable li .nm', function() {
          var nm = $(this);
          var oldWidth = nm.width();

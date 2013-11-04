@@ -709,11 +709,13 @@ $(function(){
                 var d = $(this).attr('data-date');
                 Calendar.DateChangeFunc(d);
             });
+            /*
             if($('body').hasClass('widescreen')){
                 self.G = 3;
             }else{
                 self.G = 2;
-            }
+            }*/
+            self.G = Calendar.G;
             self.burnDownElement.find('.chart-body').dblclick(function(e) {
                 var pos = e.pageY - $(this).offset().top;
                 pos = pos - pos % self.G;
@@ -745,6 +747,10 @@ $(function(){
                 }
             } else {
                 var now = new Date();
+                //TODO:  跨日状况处理
+                if(Calendar.compare(now, Calendar.currentDateObject) != 0){
+                    Calendar.Init();
+                }
                 var pass = now - Date.today();
                 var sec_px = 24 * 60 * 60 / self.burnDownElement.find('.chart-body').height();
                 var oooo = (self.G == 3 ? 39 : 70);
@@ -755,6 +761,7 @@ $(function(){
                 setTimeout(function(){
                     var baseLine = self.burnDownChartElement.offset().top + self.burnDownChartElement.height();
                     self.burnDownElement.find('.cal-day-event-item').each(function() {
+                        // 日期进入燃尽区变色
                         if ($(this).offset().top + $(this).height() <= baseLine) {
                             $(this).addClass('cal-day-event-item-pass');
                         }
@@ -762,9 +769,8 @@ $(function(){
                 }, 0);
 
                 Calendar.timer = setTimeout(function() {
-                        Calendar.DateView.renderBurnDownChart();
-                    },
-                    30000);
+                    Calendar.DateView.renderBurnDownChart();
+                }, 30000);
             }
         },
         renderMarks: function() {
@@ -891,9 +897,8 @@ $(function(){
                 });
             },0);
             Calendar.timer = setTimeout(function() {
-                    Calendar.DateView.renderBurnDownChart();
-                },
-                30000);
+                Calendar.DateView.renderBurnDownChart();
+            }, 30000);
         },
         renderMarks: function() {
             var self = this;
@@ -1046,11 +1051,14 @@ $(function(){
             var hour = time.getHours();
             var minute = time.getMinutes();
 
+/*
             if($('body').hasClass('widescreen')){
                 self.G = 3;
             }else{
                 self.G = 2;
             }
+*/
+            self.G = Calendar.G;
 
             self.id = m.id;
             self.date = date;
