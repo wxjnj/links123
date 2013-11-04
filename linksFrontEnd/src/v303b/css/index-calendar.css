@@ -154,6 +154,8 @@
     height: 298px;
 }
 .cal-date-marks-table li {
+    width: 100%;
+    overflow: hidden;
     height: 24px;
     line-height: 24px;
     border-bottom: 1px dashed #e0e0e0;
@@ -243,7 +245,7 @@
     width:220px;
     height:190px;
     background:#fff;
-margin: -363px 0 0 394px;
+    margin: -363px 0 0 394px;
 }
 
 

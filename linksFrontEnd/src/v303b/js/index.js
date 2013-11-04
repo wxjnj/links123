@@ -231,8 +231,8 @@ var Zld = { // 自留地
                 opl = parseInt(opl);
                 opr = parseInt(opr);
                 $(v).find('.nm').css({
-                    'padding-left': opl + xw + 'px',
-                    'padding-right': opr + xw + 'px'
+                    'padding-left': opl + w + 'px',
+                    'padding-right': opr + w + 'px'
                 });
             });
 

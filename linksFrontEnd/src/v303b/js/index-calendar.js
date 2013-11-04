@@ -570,7 +570,7 @@ $(function(){
                 self.format();
                 Calendar.update(id, time, desc, $(this).parent('li'));
             });
-
+/*
             self.listElement.on('keydown', '.input-content', function(e){
                 if(e.keyCode == 13){
                     var c = $(this).val() || Calendar.defaultMarkTitle;
@@ -587,7 +587,7 @@ $(function(){
                     return false;
                 }
             });
-
+*/
             self.listElement.on('click', '.cal_v303_time_enter', function(){
                 var $self = $(this);
 
@@ -711,8 +711,16 @@ $(function(){
             });
 
             $('.cal-date-marks-table').on('click', '.add-btn', function(){
-                $(this).parent('.desc').html('<input type="text" />');
-                $(this).parent('.desc').find('input').select();
+                var d = $(this).parent('.desc');
+                d.html('<input class="cal-desc-input-text" type="text" />');
+                d.find('input').select();
+                /*
+                d.find('input').keydown(function(e){
+                    //console.log(e);
+                    //if($(this).find('input').size()) return;
+                    var x = $(this).attr('data-title');
+                    $(this).html('<input type="text" value="' + x + '" />');
+                });*/
                 return false;
             });
 
@@ -732,6 +740,7 @@ $(function(){
                 $(this).html('<input type="text" value="' + x + '" />');
             });
 
+
             $('.cal-date-marks-table').on('keydown', 'input', function(e){
                 if(e.keyCode == 13){
                     var input = $(this);
@@ -744,6 +753,7 @@ $(function(){
                     Calendar.update(id, time, desc);
                 }
             });
+
             /*
             if($('body').hasClass('widescreen')){
                 self.G = 3;
@@ -1139,6 +1149,7 @@ $(function(){
                 self.html.find('.enter').show();
                 return false;
             });
+            /*
             self.html.on('keydown', '.input_desc', function(e){
                 if(e.keyCode == 13){
                     var d = $(this).closest('.desc')
@@ -1150,6 +1161,7 @@ $(function(){
                     Calendar.update(self.id, self.time, self.desc, self.html);
                 }
             });
+*/
             self.html.find('.enter').click(function() {
                 var d = $(this).siblings('.desc')
                 var v = d.find('.input_desc').val() || Calendar.defaultMarkTitle;
