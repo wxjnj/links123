@@ -1,4 +1,5 @@
 $(function(){
+    /*
     $('.title-tabs').on('click', 'li', function(){
         $('.title-tabs').find('li').removeClass('active');
         $(this).addClass('active');
@@ -6,14 +7,34 @@ $(function(){
         $('.social-box').hide();
         $('.social-' + t).show()
     });
+    */
+
+    var newsTimer = null;
 
     changeNews();
+    autoChangeNews();
 
     $('.pic-news-tabs').on('click', 'a', function(){
         $('.pic-news-tabs').find('a').removeClass('active');
         $(this).addClass('active');
         changeNews();
+        clearTimeout(newsTimer);
+        newsTimer = null;
+        autoChangeNews();
     });
+
+    function autoChangeNews(){
+        newsTimer = setTimeout(function(){
+            var o = $('.pic-news-tabs').find('.active').attr('data-tab') * 1;
+            if(o == 3){
+                o = 0;
+            }else{
+                o += 1;
+            }
+            $('.pic-news-tabs').find('a:eq(' + o + ')').trigger('click');
+            autoChangeNews()
+        }, 5000);
+    }
 
     function changeNews(){
         var idx = $('.pic-news-tabs').find('.active').attr('data-tab');
@@ -29,6 +50,8 @@ $(function(){
     });
     
 });
+
+
 
 
 /*
@@ -463,7 +486,7 @@ $(function(){
             User.CheckLogin();
             var self = this;
             var url, data;
-            if(id == 'null' || id == 0 ) {
+            if(!id || id == 0 ) {
                 url = URL + '/addSchedule';
                 data = {
                     time: time/1000,
@@ -483,7 +506,7 @@ $(function(){
             }).fail(function(c, e){
                 }).done(function(d){
                     if(id != 'null'){
-                        element.attr('data-id', d);
+                    //    element.attr('data-id', d);
                     }
                     self.marksStore = {};
                     self.loadMarks();
@@ -678,14 +701,46 @@ $(function(){
             var self = Calendar.DateView;
             self.mainPanel = $('.cal-day');
             self.miniMonthElement = $('.cal-mini-month-panel').find('tbody');
-            self.marksListElement = $('.cal-day-note-list');
-            self.burnDownElement = $('.cal-day-burn-down-chart');
-            self.burnDownChartElement = self.burnDownElement.find('.chart');
-            self.burnDownChartTimeElement = self.burnDownChartElement.find('.time-show');
+            //self.marksListElement = $('.cal-day-note-list');
+            //self.burnDownElement = $('.cal-day-burn-down-chart');
+            //self.burnDownChartElement = self.burnDownElement.find('.chart');
+            //self.burnDownChartTimeElement = self.burnDownChartElement.find('.time-show');
             self.miniMonthView = new MiniMonthView;
             self.miniMonthElement.on('click', 'a', function() {
                 var d = $(this).attr('data-date');
                 Calendar.DateChangeFunc(d);
+            });
+
+            $('.cal-date-marks-table').on('click', '.add-btn', function(){
+                $(this).parent('.desc').html('<input type="text" />');
+                $(this).parent('.desc').find('input').select();
+                return false;
+            });
+
+            $('.cal-date-marks-table').on('click', '.delete-btn', function(){
+                var li = $(this).parent('li');
+                var id = li.attr('data-id');
+                if(id && id != 0){
+                    Calendar.deleteMark(id);
+                }
+            });
+
+            $('.cal-date-marks-table').on('click', '.desc', function(){
+                if($(this).find('input').size()) return;
+                var x = $(this).attr('data-title');
+                $(this).html('<input type="text" value="' + x + '" />');
+            });
+            $('.cal-date-marks-table').on('keydown', 'input', function(e){
+                if(e.keyCode == 13){
+                    var input = $(this);
+                    var li = input.parents('li');
+                    var desc = input.val();
+                    var h = li.attr('data-time');
+                    var time = Date.today();
+                    var id = li.attr('data-id');
+                    time.setHours(h);
+                    Calendar.update(id, time, desc);
+                }
             });
             /*
             if($('body').hasClass('widescreen')){
@@ -693,6 +748,7 @@ $(function(){
             }else{
                 self.G = 2;
             }*/
+            /*
             self.G = Calendar.G;
             self.burnDownElement.find('.chart-body').dblclick(function(e) {
                 var pos = e.pageY - $(this).offset().top;
@@ -710,6 +766,7 @@ $(function(){
                 }
                 mark.html.find('.desc').trigger('click');
             });
+            */
         },
         renderBurnDownChart: function() {
             clearTimeout(Calendar.timer);
@@ -761,6 +818,24 @@ $(function(){
             }
             var lis = '';
             var count = 0;
+
+            var v;
+            var len = marks.length;
+            var h;
+            var line;
+            for(var i = 0; i < len; i++){
+                v = marks[i];
+                h = (new Date(v.time * 1000)).getHours();
+
+                if(h % 2 != 0) h -= 1;
+                line = $('.cal-date-marks-table').find('.line_' + h);
+                if(h < 10) h = '0' + h;
+                line.find('.time').html(h + ':00');
+                line.find('.desc').html(v.desc).attr('data-title', v.desc);
+                line.attr('data-id', v.id);
+            }
+
+            /*
             var chartBody = self.burnDownElement.find('.chart-body');
             chartBody.empty();
 
@@ -776,7 +851,8 @@ $(function(){
             }
             self.marksListElement.find('.cal-day-ul').html(lis);
             self.marksListElement.find('.marks-count').html(count);
-            self.renderBurnDownChart();
+            */
+            //self.renderBurnDownChart();
         }
     };
     Calendar.MonthView = {
@@ -832,7 +908,7 @@ $(function(){
                     cur.append('<b class="month_task_dot" style="' + style + '"></b>');
                 });
             });
-            self.renderBurnDownChart();
+            //self.renderBurnDownChart();
         }
     };
     Calendar.WeekView = {
@@ -918,7 +994,7 @@ $(function(){
                 });
             }
             if (burndown) {
-                self.renderBurnDownChart();
+                //self.renderBurnDownChart();
             }
         }
     };

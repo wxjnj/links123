@@ -62,7 +62,7 @@
     top:50%
 }
 .extra-calendar .cal-header {
-    width:470px;
+    /*width:470px;*/
     height:50px;
     background: #fff;
 }
@@ -137,19 +137,94 @@
     -webkit-border-radius:28px
 }
 .extra-calendar .cal-body {
-    width:470px;
+    background: #fff;
+    width:473px;
     height:298px;
-    margin-top:2px
+    border-top:1px solid #e0e0e0;
 }
 .widescreen .extra-calendar .cal-body {
     width:578px;
     height:363px;
 }
 
-.extra-calendar .cal-day {
-    width:470px;
-    height:298px
+
+.cal-date-marks-table {
+    width: 290px;
+    border-right: 1px solid #e0e0e0;
+    height: 298px;
 }
+.cal-date-marks-table li {
+    height: 24px;
+    line-height: 24px;
+    border-bottom: 1px dashed #e0e0e0;
+}
+.cal-date-marks-table li .dot {
+    display: block;
+    float: left;
+    position: relative;
+    width: 3px;
+    height: 3px;
+    background: #333;
+    margin: 10px 5px 0 10px;
+}
+.cal-date-marks-table li .time {
+    display: block;
+    float: left;
+    margin-right: 10px;
+    color: #666;
+}
+.cal-date-marks-table li .add-btn,
+.cal-date-marks-table li .add-btn:hover {
+    display: none;
+    float: left;
+    padding: 0 4px;
+    height: 14px;
+    line-height: 14px;
+    margin-top: 5px;
+    border-radius: 3px;
+    background: #a9a9a9;
+    color: #fff;
+    text-decoration: none;
+}
+.cal-date-marks-table li .delete-btn {
+    float: right;
+    margin-right: 5px;
+    display: none;
+}
+
+.cal-date-marks-table li:hover .add-btn {
+    display: block;
+}
+.cal-date-marks-table li:hover .delete-btn {
+    display: block;
+}
+
+.widescreen .cal-date-marks-table {
+    padding-top: 3px;
+    width: 393px;
+    height:363px
+}
+.widescreen .cal-date-marks-table li {
+    height: 29px;
+    line-height: 29px;
+}
+
+.widescreen .cal-date-marks-table li .dot {
+    margin: 12px 5px 0 10px;
+}
+.widescreen .cal-date-marks-table li .add-btn {
+    margin-top: 7px;
+}
+
+
+.cal-month table th,
+.cal-month table td,
+.cal-week table th,
+.cal-week table td {
+    border: 1px solid #e0e0e0;
+}
+
+
 .widescreen .extra-calendar .cal-day {
     width:578px;
     height:363px
@@ -160,15 +235,17 @@
 .extra-calendar .cal-day .cal-mini-month-panel {
     overflow:hidden;
     width:180px;
-    height:170px;
-    background:#fff;
+
+    margin: -298px 0 0 292px;
 }
 .widescreen .extra-calendar .cal-day .cal-mini-month-panel {
     overflow:hidden;
     width:220px;
     height:190px;
     background:#fff;
+margin: -363px 0 0 394px;
 }
+
 
 
 .extra-calendar .cal-day .cal-mini-month-panel table {
@@ -356,11 +433,11 @@
 }
 .extra-calendar .cal-month table,
 .extra-calendar .cal-week table {
-    border-spacing:2px;
+    border-spacing:0;
     border-collapse:separate;
     text-align:center;
-    width:474px;
-    margin-left: -2px;
+    width:475px;
+    margin-left: -1px;
     height:100%;
     *height: auto;
     *text-align: left;
@@ -386,12 +463,15 @@
     position:relative;
 }
 
+
+
+
 /*
 .extra-calendar .cal-week table td {
-	*height:293px;
+    *height:293px;
 }
 .extra-calendar .cal-month table td {
-	*height: 57px;
+    *height: 57px;
 }*/
 
 .extra-calendar .cal-month table td .month_task_dot,
@@ -500,6 +580,9 @@
 
 
 
+
+
+
 .widescreen .extra-calendar .cal-body {
     width:578px;
 }
@@ -516,6 +599,11 @@
         height: 50px;
     }
 
+    .extra-calendar .cal-month table,
+    .extra-calendar .cal-week table {
+        width: 480px;
+    }
+
     .extra-calendar .cal-month table td,
     .extra-calendar .cal-week table td {
         display: inline-block;
@@ -525,12 +613,12 @@
     }
     .extra-calendar .cal-month table th,
     .extra-calendar .cal-week table th {
-        width: 63px;
+        width: 64px;
         display: block;
         float: left;
         line-height: 50px;
         position: relative;
-        margin-right: 2px;
+        /*margin-right: 2px;*/
     }
     .widescreen .extra-calendar .cal-month table th,
     .widescreen .extra-calendar .cal-week table th {
@@ -539,26 +627,26 @@
         float: left;
         line-height: 50px;
         position: relative;
-        margin-right: 2px;
+        /*margin-right: 2px;*/
     }
     .extra-calendar .cal-month table td,
     .extra-calendar .cal-week table td {
-        width: 65px;
+        width: 66px;
         height: 242px;
         display: block;
         position: relative;
         float: left;
-        margin-right: 2px;
+       /* margin-right: 2px;*/
     }
 
     .widescreen .extra-calendar .cal-month table td,
     .widescreen .extra-calendar .cal-week table td {
         width: 81px;
-        height: 293px;
+        height: 297px;
         display: block;
         position: relative;
         float: left;
-        margin-right: 2px;
+        /*margin-right: 2px;*/
     }
     .extra-calendar .cal-month table td {
         height: 47px;
@@ -593,4 +681,3 @@
         }
     */
 }
-
