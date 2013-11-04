@@ -164,7 +164,7 @@ class EnglishQuestionAction extends CommonAction {
         } else {
             $count = $model->where($map)->count('id');
         }
-        //echo $model->getlastsql()."<br />";
+//        echo $model->getlastsql()."<br />";
         if ($count > 0) {
             import("@.ORG.Page");
             //创建分页对象
@@ -515,10 +515,14 @@ class EnglishQuestionAction extends CommonAction {
 
 
     public function add() {
-        $object_list = D("EnglishObject")->where("`status`=1")->order("sort")->select();
-        $this->assign("object_list", $object_list);
-        $level_list = D("EnglishLevel")->where("`status`=1")->order("sort")->select();
-        $this->assign("level_list", $level_list);
+        //@ 一级类目
+        $category["level_one"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("1");
+        //@ 二级类目
+        $category["level_two"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("2");
+        
+        $category["level_thr"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("3");
+
+        $this->assign("category", $category);
 
         $this->display();
     }
@@ -528,7 +532,7 @@ class EnglishQuestionAction extends CommonAction {
         $answer = intval($_POST['answer']);
         $optionModel = D("EnglishOptions");
         $model->startTrans();
-
+        
         //判断题目是否为判断题
         $is_double_true = false; //是否为True文字选项
         $is_double_false = false; //是否为False文字选项
@@ -612,6 +616,33 @@ class EnglishQuestionAction extends CommonAction {
             if (false === $optionModel->where("id in (" . implode(",", $option_id) . ")")->setField("question_id", $list)) {
                 $model->rollback();
                 $this->error('新增失败!');
+            }
+            $question_id = $list;
+        
+            $voice       = intval($_REQUEST["voice"]) ;
+            $pattern     = intval($_REQUEST["pattern"]);
+            $level_one   = intval($_REQUEST["level_one"]);
+            $level_two   = intval($_REQUEST["level_two"]);
+            $level_thr   = intval($_REQUEST["level_thr"]);
+            $status      = intval($_REQUEST["status"]);
+            $type        = 1;//听力
+            $target      = 1;//听力
+
+
+            $ret = $this->cEnglishQuestionLogic->saveProperty(
+                                                        $question_id, 
+                                                        $voice, 
+                                                        $target, 
+                                                        $pattern, 
+                                                        $level_one, 
+                                                        $level_two, 
+                                                        $level_thr, 
+                                                        $status, 
+                                                        $type
+                                                    );
+            if ($ret === false) {
+                $model->rollback();
+                $this->error($this->cEnglishQuestionLogic->getErrorMessage());
             }
             $model->commit();
             $this->success('新增成功!', cookie('_currentUrl_'));

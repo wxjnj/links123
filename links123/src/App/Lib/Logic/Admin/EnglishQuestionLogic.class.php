@@ -193,7 +193,6 @@ class EnglishQuestionLogic {
                                     "status"      => $status);
                 $catq_add_ret = $englishCatquestionModel->data($catquestion_data)->add();
                 if ($catq_add_ret === false) {
-                    echo $englishCatquestionModel->getLastSql();exit;
                     $this->error_msg = '(#102)添加类目失败';
                     return false;
                 }
