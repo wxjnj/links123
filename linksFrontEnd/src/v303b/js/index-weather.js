@@ -57,7 +57,7 @@ $(function(){
             self.show(c, '', 'loading', 'loading');
 
             $.ajax({
-                url: '/Home/weather/city?city=' + c,
+                url: '/Home/Weather/city?city=' + c,
                 type: 'get',
                 dataType: 'json'
             }).fail(function(){
