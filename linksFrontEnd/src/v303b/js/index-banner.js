@@ -15,7 +15,7 @@ $(function(){
 	});
 
 	$('#K_banner_01').on('click', function(){
-		$.cookies.set('big_pic_01_clicked', '1', { expiresAt: (new Date).add_day(365) });
+		//$.cookies.set('big_pic_01_clicked', '1', { expiresAt: (new Date).add_day(365) });
 	});
 
 	// banner

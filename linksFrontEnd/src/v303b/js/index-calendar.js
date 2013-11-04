@@ -53,7 +53,6 @@ $(function(){
 
 
 
-
 /*
  *   Calendar
  */
@@ -717,10 +716,12 @@ $(function(){
                 return false;
             });
 
+
             $('.cal-date-marks-table').on('click', '.delete-btn', function(){
                 var li = $(this).parent('li');
                 var id = li.attr('data-id');
                 if(id && id != 0){
+                    li.remove();
                     Calendar.deleteMark(id);
                 }
             });
@@ -730,6 +731,7 @@ $(function(){
                 var x = $(this).attr('data-title');
                 $(this).html('<input type="text" value="' + x + '" />');
             });
+
             $('.cal-date-marks-table').on('keydown', 'input', function(e){
                 if(e.keyCode == 13){
                     var input = $(this);
@@ -819,6 +821,9 @@ $(function(){
             var lis = '';
             var count = 0;
 
+
+            var all_lis = '<li class="line_0" data-time="0"><b class="dot"></b><span class="time">00:00</span><span class="desc"><a class="add-btn" href="javascript:;">增加日程</a></span><a class="delete-btn" href="javascript:;">×</a></li><li class="line_2" data-time="2"><b class="dot"></b><span class="time">02:00</span><span class="desc"><a class="add-btn" href="javascript:;">增加日程</a></span><a class="delete-btn" href="javascript:;">×</a></li><li class="line_4" data-time="4"><b class="dot"></b><span class="time">04:00</span><span class="desc"><a class="add-btn" href="javascript:;">增加日程</a></span><a class="delete-btn" href="javascript:;">×</a></li><li class="line_6" data-time="6"><b class="dot"></b><span class="time">06:00</span><span class="desc"><a class="add-btn" href="javascript:;">增加日程</a></span><a class="delete-btn" href="javascript:;">×</a></li><li class="line_8" data-time="8"><b class="dot"></b><span class="time">08:00</span><span class="desc"><a class="add-btn" href="javascript:;">增加日程</a></span><a class="delete-btn" href="javascript:;">×</a></li><li class="line_10" data-time="10"><b class="dot"></b><span class="time">10:00</span><span class="desc"><a class="add-btn" href="javascript:;">增加日程</a></span><a class="delete-btn" href="javascript:;">×</a></li><li class="line_12" data-time="12"><b class="dot"></b><span class="time">12:00</span><span class="desc"><a class="add-btn" href="javascript:;">增加日程</a></span><a class="delete-btn" href="javascript:;">×</a></li><li class="line_14" data-time="14"><b class="dot"></b><span class="time">14:00</span><span class="desc"><a class="add-btn" href="javascript:;">增加日程</a></span><a class="delete-btn" href="javascript:;">×</a></li><li class="line_16" data-time="16"><b class="dot"></b><span class="time">16:00</span><span class="desc"><a class="add-btn" href="javascript:;">增加日程</a></span><a class="delete-btn" href="javascript:;">×</a></li><li class="line_18" data-time="18"><b class="dot"></b><span class="time">18:00</span><span class="desc"><a class="add-btn" href="javascript:;">增加日程</a></span><a class="delete-btn" href="javascript:;">×</a></li><li class="line_20" data-time="20"><b class="dot"></b><span class="time">20:00</span><span class="desc"><a class="add-btn" href="javascript:;">增加日程</a></span><a class="delete-btn" href="javascript:;">×</a></li><li style="border:0;" class="line_22" data-time="22"><b class="dot"></b><span class="time">22:00</span><span class="desc"><a class="add-btn" href="javascript:;">增加日程</a></span><a class="delete-btn" href="javascript:;">×</a></li>';
+            $('.cal-date-marks-table').html(all_lis);
             var v;
             var len = marks.length;
             var h;
