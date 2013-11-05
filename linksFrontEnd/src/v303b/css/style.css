@@ -235,13 +235,15 @@ input:focus{ outline: 0; }
 }
 .thl a{
 	color: #000;
+	margin-left: 3px;
+	margin-right: 3px;
 }
 .thl .subcate a:hover{
-	color: #325e7f;
+	color: #fc2a06;
 	text-decoration: underline;
 }
 .thl .cate a:hover{
-	color: #325e7f;
+	color: #fc2a06;
 	text-decoration: underline;
 }
 .thl .cate-in{ color: #727171; }
@@ -249,11 +251,11 @@ input:focus{ outline: 0; }
 	color: #727171;
 }
 .thl .cate-in a:hover{
-	color: #325e7f;
+	color: #fc2a06;
 }
 .thl .cate a.on,
 .thl .cate a.on:hover{
-	color: #325e7f;
+	color: #fc2a06;
 	filter:alpha(opacity=100);
 	-moz-opacity: 1;
 	-khtml-opacity: 1;
@@ -261,7 +263,7 @@ input:focus{ outline: 0; }
 }
 .thl .subcate a.on,
 .thl .subcate a.on:hover{
-	color: #325e7f;
+	color: #fc2a06;
 	filter:alpha(opacity=100);
 	-moz-opacity: 1;
 	-khtml-opacity: 1;
