@@ -43,7 +43,11 @@ $(function(){
             }else{
                 o += 1;
             }
-            $('.pic-news-tabs').find('a:eq(' + o + ')').trigger('click');
+            $('.pic-news-tabs').find('a').removeClass('active');
+            $('.pic-news-tabs').find('a:eq(' + o + ')').addClass('active');
+
+            changeNews();
+
             autoChangeNews()
         }, 5000);
     }
