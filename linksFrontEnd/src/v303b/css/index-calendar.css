@@ -253,14 +253,14 @@
 .extra-calendar .cal-day .cal-mini-month-panel {
     overflow:hidden;
     width:180px;
-    margin: -298px 0 0 292px;
+    margin: -310px 0 0 292px;
 }
 .widescreen .extra-calendar .cal-day .cal-mini-month-panel {
     overflow:hidden;
     width:220px;
     height:190px;
     background:#fff;
-    margin: -363px 0 0 395px;
+    margin: -377px 0 0 395px;
 }
 
 
