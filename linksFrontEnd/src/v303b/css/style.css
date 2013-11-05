@@ -36,9 +36,7 @@ input:focus{ outline: 0; }
 }
 
 .footer-inner {
-	width: 900px;
-	padding: 0 30px;
-	background: #fff;
+	width: 960px;
 }
 
 .widescreen .footer-inner {
@@ -60,7 +58,6 @@ input:focus{ outline: 0; }
 .under-header {
 	width: 100%;
 	padding-top:40px;
-	background-color:#fff;
 }
 .under-header-inner {
 	position: relative;
@@ -141,7 +138,7 @@ input:focus{ outline: 0; }
 .logo{
 	background: url(../imgs/logo.png) 0 0 no-repeat;
 	position: absolute;
-	left: 10px;
+	left: 0;
 	top: 35px;
 	height: 55px;
 	overflow: hidden;
@@ -314,7 +311,6 @@ input:focus{ outline: 0; }
 }
 .box .box-hd{
 	padding-top: 5px;
-	background: #fff;
 }
 
 .box-music .box-bd,
@@ -327,8 +323,11 @@ input:focus{ outline: 0; }
 	padding-top: 0;
 }
 
+.box-apps {
+	margin-top: 35px;
+	border-top: 1px solid #ededed;
+}
 
-.box-apps,
 .box-find{
 	margin-top: 15px;
 }
@@ -660,20 +659,13 @@ input:focus{ outline: 0; }
 
 
 .container {
-	background: #e0e0e0;
-	overflow: hidden;
-	padding-bottom: 35px;
-}
-
-.box-bd {
 	background: #fff;
+	overflow: hidden;
 }
 
 
 /*zld*/
-.zld{
-	margin-top: 20px;
-}
+.zld{}
 .zld ul{
 	font-size: 12px;
 	*zoom: 1;
@@ -703,13 +695,10 @@ input:focus{ outline: 0; }
 	line-height: 16px;
 	padding: 10px 25px 10px 25px;
 	vertical-align: top;
-	background: #fff;
+	background: #f2f2f2;
 }
 
 .zld ul li .nm:hover{
-	cursor: pointer;
-	padding-top:8px;
-	margin-top:1px;
 	box-shadow:inset 0px 0 5px #ccc;
 }
 
@@ -719,7 +708,7 @@ input:focus{ outline: 0; }
 }
 .zld ul li .ctl{
 	float:left;
-	background-color:#fff;
+	background-color:#f2f2f2;
 	cursor: pointer;
 	display: inline-block;
 	height: 26px;
@@ -737,26 +726,14 @@ input:focus{ outline: 0; }
 	background-repeat: no-repeat;
 }
 .zld ul li .ctl:hover{
-	height: 26px;
-	width: 26px;
-	padding-top: 4px;
-	padding-bottom: 4px;
-	margin-top: 1px;
 	box-shadow:inset 0px 0 5px #ccc;
 }
 .zld ul li.add .ctl{
-	-moz-border-radius: 40px;
-	-webkit-border-radius: 40px;
-	border-radius: 40px;
-	padding: 3px;
-	margin: 2px;
 	cursor: pointer;
-	/*text-indent: -999px; 360兼容模式出bug */
 	color: transparent;
 }
 .zld ul li.add .ctl:hover{
-	padding: 1px;
-	margin: 4px;
+	box-shadow:inset 0px 0 5px #ccc;
 }
 .zld ul li.add .ctl i{
 	background: url(../imgs/sprite.png) -301px -61px no-repeat;
@@ -803,15 +780,16 @@ input:focus{ outline: 0; }
 
 
 .extra-wrap {
-	margin-top: 15px;
+	margin-top: 20px;
 	overflow: hidden;
 }
 
 .extra-box {
+	border-top: 1px solid #ededed;
+	border-bottom: 1px solid #ededed;
 	width: 473px;
 	height: 350px;
 	/*overflow: hidden;*/
-	background: #fff;
 }
 
 .extra-wrap .lft-box{
@@ -852,9 +830,8 @@ input:focus{ outline: 0; }
 
 .site-info {
 	/*border-top: 1px solid #ddd;*/
-	margin-top: 15px;
-	padding-top: 20px;
-	padding-bottom: 30px;
+	padding-top: 30px;
+	padding-bottom: 40px;
 	height: 24px;
 }
 .site-info ul{

@@ -1,11 +1,13 @@
 .title-tabs {
-	margin: 20px 20px 10px;
-	height: 25px;
-	line-height: 25px;
+	margin: 10px auto;
+	height: 20px;
+	line-height: 20px;
 	/*overflow: hidden;*/
 }
 .title-tabs span {
 	display: block;
+	font-size: 14px;
+	color: #296299;
 	float: left;
 }
 .title-tabs a,
@@ -35,12 +37,9 @@
 	float: left;
 	height: 16px;
 	line-height: 16px;
-	padding-left: 7px;
-	padding-right: 7px;
-	-moz-border-radius: 30px;
-	-webkit-border-radius: 30px;
-	border-radius: 30px;
-	color:#000;
+	padding: 2px 8px;
+	color: #333;
+	margin-left: 12px;
 	cursor: pointer;
 	position: relative;
 }
@@ -87,7 +86,7 @@
 	text-decoration: none;
 }
 .social-box {
-	margin: 20px;
+	margin: 17px auto;
 }
 .pic-news {
 	float: left;
@@ -127,7 +126,7 @@
 
 .text-news {
 	float: right;
-	width: 290px;
+	width: 340px;
 }
 .text-news p {
 	line-height: 100%;
@@ -140,7 +139,7 @@
 	margin-right: 5px;
 	width: 3px;
 	height: 3px;
-	background: #3b76b3;
+	background: #98aebf;
 }
 .text-news p a,
 .text-news p a:active{
@@ -237,7 +236,7 @@
 }
 
 .pic-news-tabs .active {
-	background:#000;
+	background: #4f93d5;
 }
 
 .wide-news {
@@ -271,7 +270,7 @@
 	line-height: 24px;
 }
 .widescreen .text-news {
-	width: 320px;
+	width: 370px;
 	font-size: 13px;
 }
 .widescreen .wide-news {
