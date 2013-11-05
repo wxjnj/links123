@@ -73,9 +73,8 @@ class EnglishQuestionLogic {
             $this->error_msg = '缺少类目等级参数';
             return false;
         }
-
+        $catQuestionModel = D("EnglishCatquestion");
         if(intval($voice) == 0 && intval($target) && intval($pattern) == 0){
-            $catQuestionModel = D("EnglishCatquestion");
             $cat_question_map = array(
                 "a.type" => $type,
                 "a.question_id" => $question_id
@@ -89,8 +88,62 @@ class EnglishQuestionLogic {
         }else{
             $data["cat_attr_id"] = bindec($voice . $target . $pattern);
         }
+        //准备字典
+        $levelnames = D('EnglishLevelname')->order("sort asc")->select();
+        $difficulty_list = array();//难度列表
+        $grad_list = array();//年级列表
+        $grade_name_list = array();
+        $object_level_one_id = 7;//使用年级的一级分类id
+        //找到难度列表、年级列表和使用年级的一级分类id
+        foreach($levelnames as $each_lv) {
+
+            if($each_lv['id'] == $level_one){
+                $level_one_info = $each_lv;
+            }
+            if($each_lv['id'] == $level_two){
+                $level_two_info = $each_lv;
+            }
+
+            if($each_lv['level'] == 1){
+                if($each_lv['default'] == 1){
+                    $object_level_one_id = $each_lv['id'];
+                }
+            }elseif($each_lv['level'] == 3){
+                if($each_lv['name'] == "初级"){
+                    $difficulty_list["初级"] = $each_lv['id'];
+                }else if($each_lv['name'] == "中级"){
+                    $difficulty_list["中级"] = $each_lv['id'];
+                }else if($each_lv['name'] == "高级"){
+                    $difficulty_list["高级"] = $each_lv['id'];
+                }else{
+                    $grad_list[$each_lv['name']] = $each_lv['id'];
+                    $grade_name_list[$each_lv['name']] = $each_lv;
+                }
+            }
+        }
         $data["level_one"]   = $level_one;
         $data["level_two"]   = $level_two;
+        //查找这个试题的年级，自动生成三级目录
+        if($level_one != $object_level_one_id){
+            $new_map = array(
+                "b.level_one" => $object_level_one_id,
+                'a.question_id' => $question_id,
+                'a.type' => $type
+            );
+            $grade_level_thr_sort = $catQuestionModel->alias("a")
+                    ->join(C("DB_PREFIX")."english_category b on a.cat_id=b.cat_id")
+                    ->where($new_map)
+                    ->getField("level_thr_sort");
+            if(intval($grade_level_thr_sort) > 0){
+                if ($grade_level_thr_sort <= $grade_name_list['小六']['sort']) {
+                    $level_thr = $difficulty_list["初级"];
+                } else if ($grade_level_thr_sort >= $grade_name_list['大一']['sort']) {
+                    $level_thr = $difficulty_list["高级"];
+                } else {
+                    $level_thr = $difficulty_list["中级"];
+                }
+            }
+        }
         $data["level_thr"]   = $level_thr;
        
         $englishCategoryModel = D('EnglishCategory');
@@ -110,37 +163,7 @@ class EnglishQuestionLogic {
         $cate_ret = $englishCategoryModel->where($data)->find();
         //添加到的分类不存在
         if (!isset($cate_ret["cat_id"])) {
-            //准备字典
-            $levelnames = D('EnglishLevelname')->order("sort asc")->select();
-            $difficulty_list = array();//难度列表
-            $grad_list = array();//年级列表
-            $object_level_one_id = 7;//使用年级的一级分类id
-            //找到难度列表、年级列表和使用年级的一级分类id
-            foreach($levelnames as $each_lv) {
-                
-                if($each_lv['id'] == $level_one){
-                    $level_one_info = $each_lv;
-                }
-                if($each_lv['id'] == $level_two){
-                    $level_two_info = $each_lv;
-                }
-                
-                if($each_lv['level'] == 1){
-                    if($each_lv['default'] == 1){
-                        $object_level_one_id = $each_lv['id'];
-                    }
-                }elseif($each_lv['level'] == 3){
-                    if($each_lv['name'] == "初级"){
-                        $difficulty_list["初级"] = $each_lv['id'];
-                    }else if($each_lv['name'] == "中级"){
-                        $difficulty_list["中级"] = $each_lv['id'];
-                    }else if($each_lv['name'] == "高级"){
-                        $difficulty_list["高级"] = $each_lv['id'];
-                    }else{
-                        $grad_list[$each_lv['name']] = $each_lv['id'];
-                    }
-                }
-            }
+            
             $level_sort = $englishCategoryModel->where(array("cat_attr_id"=>$data['cat_attr_id'],"level_one"=>$level_one,"level_two"=>$level_two,"level_one_sort"=>array("gt",0),"level_two_sort"=>array("gt",0)))->find();
             $level_one_sort = intval($level_sort['level_one_sort']) > 0 ? intval($level_sort['level_one_sort']) : $level_one_info['sort'];
             $level_two_sort = intval($level_sort['level_two_sort']) > 0 ? intval($level_sort['level_two_sort']) : $level_two_info['sort'];
