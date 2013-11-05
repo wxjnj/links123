@@ -1457,7 +1457,7 @@ class EnglishQuestionAction extends CommonAction {
                 $object_level_one_id = $value['id'];
             }
         }
-        $ret = $model->where($map)->select();
+        $ret = $model->where($map)->group("englishQuestion.id")->select();
         $optionsModel = D("EnglishOptions");
         foreach ($ret as $key => $value) {
             $options = $optionsModel->where("question_id=" . $value['id'])->order("sort asc")->select();
