@@ -9,31 +9,34 @@ $(function(){
     });
     */
 
-    var newsTimer = null;
+    window.newsTimer = null;
 
     changeNews();
     autoChangeNews();
 
     $('.pic-news-tabs').on('click', 'a', function(){
-        clearTimeout(newsTimer);
-        newsTimer = null;
+        clearTimeout(window.newsTimer);
+        window.newsTimer = null;
         $('.pic-news-tabs').find('a').removeClass('active');
         $(this).addClass('active');
         changeNews();
         autoChangeNews();
     }).on('mouseenter', 'a', function(){
-        clearTimeout(newsTimer);
-        newsTimer = null;
+        var $this = $(this)
+        clearTimeout(window.newsTimer);
+        window.newsTimer = null;
         $('.pic-news-tabs').find('a').removeClass('active');
-        $(this).addClass('active');
+        $this.addClass('active');
         changeNews();
         //autoChangeNews();
-    }).on('mouseleaver', 'a', function(){
+    }).on('mouseout', 'a', function(){
         autoChangeNews();
     });
 
     function autoChangeNews(){
-        newsTimer = setTimeout(function(){
+        clearTimeout(window.newsTimer);
+        window.newsTimer = null;
+        window.newsTimer = setTimeout(function(){
             var o = $('.pic-news-tabs').find('.active').attr('data-tab') * 1;
             if(o == 3){
                 o = 0;
