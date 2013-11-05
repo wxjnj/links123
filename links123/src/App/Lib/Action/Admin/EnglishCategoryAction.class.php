@@ -178,6 +178,10 @@ class EnglishCategoryAction extends CommonAction{
         $levelNameModel  = D("EnglishLevelname");
         $categoryModel = D("EnglishCategory");
         $levelNameModel->startTrans();
+        $new_info = $levelNameModel->where(array("name",array("like",$data['name']),"level"=>$level))->find();
+        if(!empty($new_info)){
+            $this->error("需要添加的分类已存在！");
+        }
         
         //添加1级分类
         if($level == 1){
@@ -316,7 +320,10 @@ class EnglishCategoryAction extends CommonAction{
         $time = time();
         $levelnameModel = D("EnglishLevelname");
         $categoryModel = D("EnglishCategory");
-        $cat_info = $categoryModel->find();
+        $new_info = $levelnameModel->where(array("name",array("like",$_POST['name']),"level"=>$level,"id"=>array("neq",$id)))->find();
+        if(!empty($new_info)){
+            $this->error("需要添加的分类名已存在！");
+        }
         if(intval($_POST['status']) == 0 && intval($levelnameModel->where(array('id'=>$id))->getField("default")) == 1){
             $this->error("不能禁用默认的分类");
         }
