@@ -840,7 +840,7 @@ div.gt-baf-translations {
     z-index: 9999;
 }
 .normal_music_box {
-    position: absolute;
+    position: fixed;
     width: 840px;
     height: 550px;
     bottom: 0;

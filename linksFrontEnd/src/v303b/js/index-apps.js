@@ -943,12 +943,14 @@ $( function($) {
 				if($(window).height() < 560){
 					$('.normal_music_box').css({
 						'bottom': 'auto',
-						'top' : '0'
+						'top' : '0',
+						'position' : 'absolute'
 					});
 				}else{
 					$('.normal_music_box').css({
 						'bottom': -t,
-						'top' : 'auto'
+						'top' : 'auto',
+						'position' : 'fixed'
 					});
 				}
 			}

@@ -33,10 +33,10 @@
 }
 .title-tabs li {
 	float: left;
-	height: 25px;
-	line-height: 25px;
-	padding-left: 10px;
-	padding-right: 10px;
+	height: 16px;
+	line-height: 16px;
+	padding-left: 7px;
+	padding-right: 7px;
 	-moz-border-radius: 30px;
 	-webkit-border-radius: 30px;
 	border-radius: 30px;
@@ -51,9 +51,9 @@
 	color: #7e6b5a;
 	overflow: hidden;
 	position: absolute;
-	top: -7px;
+	top: -10px;
 	width: 200px;
-	left: 35px;
+	left: 32px;
 }
 
 .title-tabs li:hover .news-mini-tip {

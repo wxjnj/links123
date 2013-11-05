@@ -36,13 +36,13 @@ input:focus{ outline: 0; }
 }
 
 .footer-inner {
-	width: 940px;
-	padding: 0 10px;
+	width: 900px;
+	padding: 0 30px;
 	background: #fff;
 }
 
 .widescreen .footer-inner {
-	width: 1152px;
+	width: 1112px;
 }
 
 .footer a,
@@ -274,65 +274,7 @@ input:focus{ outline: 0; }
 	margin-right: 4px;
 }
 
-/*zld*/
-.zld{
-	margin-top: 20px;
-}
-.zld ul{
-	font-size: 12px;
-	*zoom: 1;
-} 
-.zld ul:after{
-	content: '\0020';
-	display: block;
-	height: 0;
-	clear: both;
-}
-.zld ul li{
-	display: inline-block;
-	float: left;
-	height: 36px;
-	line-height: 36px;
-	margin: 5px 5px 0 0;
-	white-space: nowrap;
-	position: relative;
-	vertical-align: middle;
-}
-/*
-.zld ul li .mask{
-	width: 100%;
-	height: 100%;
-	position: absolute;
-	top: 0;
-	left: 0;
-	filter:alpha(opacity=30);
-	-moz-opacity: 0.3;
-	-khtml-opacity: 0.3;
-	opacity: 0.3;
-}*/
-.zld ul li .nm{
-	float:left;
-	cursor: pointer;
-	display: inline-block;
-	height: 16px;
-	line-height: 16px;
-	padding: 10px 25px 10px 25px;
-	vertical-align: top;
-	background: #fff;
-}
 
-.zld ul li .nm:hover{
-	/*color: #fc2a06;*/
-	cursor: pointer;
-	padding-top:8px;
-	margin-top:1px;
-	box-shadow:inset 0px 0 5px #ccc;
-}
-
-
-.zld ul li b{
-	font-weight: normal;
-}
 /*box*/
 .edit,
 .del,
@@ -388,7 +330,7 @@ input:focus{ outline: 0; }
 
 .box-apps,
 .box-find{
-	margin-top: 20px;
+	margin-top: 15px;
 }
 
 /*footer*/
@@ -553,6 +495,19 @@ input:focus{ outline: 0; }
 	z-index: 3;
 	margin-right: 5px;
 }
+.app-icon-list .app-more .more {
+	width: 18px;
+	height: 18px;
+	display: block;
+	background-color: #a9a9a9;
+	background-image: url(../imgs/sprite.png);
+	background-position: -306px -96px;
+	background-repeat: no-repeat;
+	border-radius: 20px;
+	-moz-border-radius: 20px;
+	-webkit-border-radius: 20px;
+}
+
 .app-icon-list .app-more-box .nm{
 	color: #fff;
 }
@@ -714,6 +669,54 @@ input:focus{ outline: 0; }
 	background: #fff;
 }
 
+
+/*zld*/
+.zld{
+	margin-top: 20px;
+}
+.zld ul{
+	font-size: 12px;
+	*zoom: 1;
+} 
+.zld ul:after{
+	content: '\0020';
+	display: block;
+	height: 0;
+	clear: both;
+}
+.zld ul li{
+	display: inline-block;
+	float: left;
+	height: 36px;
+	line-height: 36px;
+	margin: 5px 5px 0 0;
+	white-space: nowrap;
+	position: relative;
+	vertical-align: middle;
+}
+
+.zld ul li .nm{
+	float:left;
+	cursor: pointer;
+	display: inline-block;
+	height: 16px;
+	line-height: 16px;
+	padding: 10px 25px 10px 25px;
+	vertical-align: top;
+	background: #fff;
+}
+
+.zld ul li .nm:hover{
+	cursor: pointer;
+	padding-top:8px;
+	margin-top:1px;
+	box-shadow:inset 0px 0 5px #ccc;
+}
+
+
+.zld ul li b{
+	font-weight: normal;
+}
 .zld ul li .ctl{
 	float:left;
 	background-color:#fff;
@@ -758,6 +761,45 @@ input:focus{ outline: 0; }
 .zld ul li.add .ctl i{
 	background: url(../imgs/sprite.png) -301px -61px no-repeat;
 }
+
+
+.widescreen .zld ul li{
+	height: 42px;
+	line-height: 42px;
+	margin: 5px 5px 0 0;
+}
+
+.widescreen .zld ul li .nm{
+	height: 16px;
+	line-height: 16px;
+	padding: 13px 25px 13px 25px;
+}
+
+.widescreen .zld ul li .nm:hover{
+	padding-top:11px;
+	margin-top:1px;
+}
+.widescreen .zld ul li .ctl{
+	height: 26px;
+	width: 26px;
+	padding: 8px;
+}
+.widescreen .zld ul li .ctl i{
+	width: 26px;
+	height: 26px;
+	background-position: -272px -61px;
+}
+.widescreen .zld ul li .ctl:hover{
+	height: 26px;
+	width: 26px;
+	padding-top: 7px;
+	padding-bottom: 7px;
+	margin-top: 1px;
+	box-shadow:inset 0px 0 5px #ccc;
+}
+
+
+
 
 
 .extra-wrap {
@@ -811,8 +853,8 @@ input:focus{ outline: 0; }
 .site-info {
 	/*border-top: 1px solid #ddd;*/
 	margin-top: 15px;
-	padding-top: 10px;
-	padding-bottom: 20px;
+	padding-top: 20px;
+	padding-bottom: 30px;
 	height: 24px;
 }
 .site-info ul{

@@ -9,11 +9,14 @@
     text-decoration: underline;
     cursor: pointer;
     color: #325e7f;
+    margin-right: 5px;
 }
 
 .header-weather .degree {
     font-size:20px;
     font-weight:800;
+    position: relative;
+    bottom: -1px;
     font-family:Arial
 }
 .header-weather .info {
