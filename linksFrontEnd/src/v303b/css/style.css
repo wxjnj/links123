@@ -235,6 +235,8 @@ input:focus{ outline: 0; }
 }
 .thl a{
 	color: #000;
+	margin-left: 3px;
+	margin-right: 3px;
 }
 .thl .subcate a:hover{
 	color: #325e7f;
