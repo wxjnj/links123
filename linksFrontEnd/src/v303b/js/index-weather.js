@@ -30,7 +30,7 @@ $(function(){
                 }, 200);
             });
 
-            $('.weather-find-region-box').find('.content').on('click', '.region-tab-li', function(){
+            $('.weather-find-region-box').find('.content').on('mouseenter', '.region-tab-li', function(){
                 $('.region-tab-li').removeClass('active');
                 $(this).addClass('active');
                 var cur = $(this).html();

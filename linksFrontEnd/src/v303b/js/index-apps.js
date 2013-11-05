@@ -779,7 +779,7 @@ $( function($) {
 			];
 
 
-			self.changeMode('mini', true);
+			self.changeMode('normal', true);
 			var lis = '';
 			var divs = '';
 			$.each(self.music_channel_list, function(k, v){
@@ -882,6 +882,12 @@ $( function($) {
 
 			$('.normal_music_iframe_box_pause_status a').click(function(){
 				self.play();
+			});
+
+			$('.mini_current_channel').click(function(){
+				if(!$('#K_303_music_iframe').attr('src')){
+					self.play();
+				}
 			});
 
 		},

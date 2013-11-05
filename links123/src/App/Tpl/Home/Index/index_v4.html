@@ -62,7 +62,8 @@
 				<div class="skin-list" style="display: none">
 					<span class="ang"></span>
 					<div class="skin-content">
-						<div class="subpanel" id="J_skin_selection">
+						<p style="color:#333!important;text-align:center;line-height:40px;margin-top:10px">comming soon ...</p>
+						<!--div class="subpanel" id="J_skin_selection">
 							<div class="skin-types">
 								<a data-id="themes" class="J_link_skin_type">另&nbsp;客</a>
 								<span class="skin-theme-split"> | </span>
@@ -90,7 +91,7 @@
 									</div>
 								</volist>
 							</div>
-						</div>
+						</div-->
 					</div>
 				</div>
 			</li>
@@ -102,74 +103,81 @@
 		</ul><!-- // .screen-theme -->
 	</div>
 </div><!--#header end-->
-<div class="under-header">
-	<div class="under-header-inner">
-		<div class="ci-hd J_thl_area">
-			<h1><a class="logo" href="/" rel="home">另客网</a></h1>
-			<div class="thl">
-				<form action="" id="searchForm">
-					<input name="thl" id="J_thl" type="hidden" value="">
-					<input name="tid" id="J_tid" type="hidden" value="">
-					<input name="q" id="J_q" type="hidden" value="">
-					<input type="text" value="" style="display:none;" />
-					<input type="hidden" id="tidNow" value="{$tidNow}" />
-					<div class="cate cate-in" id="J_thl_div" >
-						<volist name="thl_list" id="vo" key="m"><a <eq name="thlNow" value="$vo['thl']">class="on"</eq> href="#">{$vo['thl']}</a><if condition='$m neq 12'>-</if></volist>
-					</div>
-					<div class="subcate">
-						<dl>
-							<volist name="thl_list" id="vo" key="i">
-								<dd class="J_thlz" <neq name="vo['thl']" value="$thlNow">style="display:none;"</neq> >
-								<volist name="vo['thlz']" id="thlz" key="j"><a <if condition='$thlz["id"] eq $tidNow'>class="on"</if> href="#" title="{$thlz['tip']}" ndk="{$thlz['needkey']}" url="{$thlz['url']}" tid="{$thlz['id']}" tag_name="{$thlz['url_tag_name']}">{$thlz['name']}</a><neq name="vo['thlz_len']" value="$j">-</neq></volist>
-								</dd>
-							</volist>
-						</dl>
-					</div>
-					<div class="ctls">
-						<input type="text" id="search_text" class="ipt" x-webkit-speech lang="zh-CN" value="{$_COOKIE['keyword']}" autocomplete="off" />
-						<input type="hidden" id="search_text_o" />
-						<input class="btn" type="submit" value="" id="btn_search" />
-					</div>
-				</form>
-			</div>
-			<div class="header-weather">
-				<span class="region">{$weatherData['city']}</span>
-				<span class="degree">{$weatherData['temp']}°</span>
-				<span class="info"><b class="weather-icon"></b><b class="weather-desc">{$weatherData['sun']}</b>，空气质量{$weatherData['air']}</span>			
-				<div class="weather-find-region-box" style="display:none">
-					<span class="ang1"></span>
-					<span class="ang2"></span>
-					<div class="content">
-						搜索: <input class="region-name-input" type="text" size="20" /><br />
-						<div class="region-ul"></div>
-					</div>
-				</div>
-			</div><!-- // .header-weather -->
-		</div>
-	</div>
-</div>
-<if condition="$_COOKIE.big_pic_01_clicked != 1">
-<div class="big-pic">
-	<div class="big-pic-inner">
-		<div id="K_banner_01">
-			<a href="http://en.links123.cn/" target="_blank">
-				<img src="__STATIC__/v303b/imgs/big-pic-01.png" usemap="K_banner_01_map" />
-			</a>
-			<map id="K_banner_01_map" name="K_banner_01_map">
-				<area class="doll" shape ="rect" coords ="30,177,159,356" href ="http://en.links123.cn/" target ="_blank" alt="老外在隔壁" />
-				<area class="doll" shape ="rect" coords ="243,144,376,358" href ="http://en.links123.cn/" target ="_blank" alt="老外在隔壁" />
-				<area class="doll" shape ="rect" coords ="459,163,574,359" href ="http://en.links123.cn/" target ="_blank" alt="老外在隔壁" />
-				<area class="doll" shape ="rect" coords ="676,146,787,358" href ="http://en.links123.cn/" target ="_blank" alt="老外在隔壁" />
-				<area class="doll" shape ="rect" coords ="866,168,965,350" href ="http://en.links123.cn/" target ="_blank" alt="老外在隔壁" />
-				<area shape ="rect" coords ="521,34,979,120" href ="http://en.links123.cn/" target ="_blank" alt="老外在隔壁" />
-			</map>
-			<img id="K_banner_01_arrow" src="__STATIC__/v303b/imgs/banner-arrow.png" />
-		</div>
-	</div>
-</div>
-</if>
+
 <div class="container" id="container" <if condition="$skinId">style="background-image:url({$skin})"</if>>
+
 	<div class="container-inner">
+
+
+		<div class="under-header">
+			<div class="under-header-inner">
+				<div class="ci-hd J_thl_area">
+					<h1><a class="logo" href="/" rel="home">另客网</a></h1>
+					<div class="thl">
+						<form action="" id="searchForm">
+							<input name="thl" id="J_thl" type="hidden" value="">
+							<input name="tid" id="J_tid" type="hidden" value="">
+							<input name="q" id="J_q" type="hidden" value="">
+							<input type="text" value="" style="display:none;" />
+							<input type="hidden" id="tidNow" value="{$tidNow}" />
+							<div class="cate cate-in" id="J_thl_div" >
+								<volist name="thl_list" id="vo" key="m"><a <eq name="thlNow" value="$vo['thl']">class="on"</eq> href="#">{$vo['thl']}</a><if condition='$m neq 12'>-</if></volist>
+							</div>
+							<div class="subcate">
+								<dl>
+									<volist name="thl_list" id="vo" key="i">
+										<dd class="J_thlz" <neq name="vo['thl']" value="$thlNow">style="display:none;"</neq> >
+										<volist name="vo['thlz']" id="thlz" key="j"><a <if condition='$thlz["id"] eq $tidNow'>class="on"</if> href="#" title="{$thlz['tip']}" ndk="{$thlz['needkey']}" url="{$thlz['url']}" tid="{$thlz['id']}" tag_name="{$thlz['url_tag_name']}">{$thlz['name']}</a><neq name="vo['thlz_len']" value="$j">-</neq></volist>
+										</dd>
+									</volist>
+								</dl>
+							</div>
+							<div class="ctls">
+								<input type="text" id="search_text" class="ipt" x-webkit-speech lang="zh-CN" value="{$_COOKIE['keyword']}" autocomplete="off" />
+								<input type="hidden" id="search_text_o" />
+								<input class="btn" type="submit" value="" id="btn_search" />
+							</div>
+						</form>
+					</div>
+					<div class="header-weather">
+						<span class="region">{$weatherData['city']}</span>
+						<span class="degree">{$weatherData['temp']}°</span>
+						<span class="info"><b class="weather-icon"></b><b class="weather-desc">{$weatherData['sun']}</b>，空气质量{$weatherData['air']}</span>			
+						<div class="weather-find-region-box" style="display:none">
+							<span class="ang1"></span>
+							<span class="ang2"></span>
+							<div class="content">
+								搜索: <input class="region-name-input" type="text" size="20" /><br />
+								<div class="region-ul"></div>
+							</div>
+						</div>
+					</div><!-- // .header-weather -->
+				</div>
+			</div>
+		</div>
+		<if condition="$_COOKIE.big_pic_01_clicked != 1">
+		<div class="big-pic">
+			<div class="big-pic-inner">
+				<div id="K_banner_01">
+					<a href="http://en.links123.cn/" target="_blank">
+						<img id="K_banner_01_img" src="__STATIC__/v303b/imgs/big-pic-01.png" usemap="K_banner_01_map" />
+					</a>
+					<map id="K_banner_01_map" name="K_banner_01_map">
+						<area class="doll" shape ="rect" coords ="30,177,159,356" href ="http://en.links123.cn/" target ="_blank" alt="老外在隔壁" />
+						<area class="doll" shape ="rect" coords ="243,144,376,358" href ="http://en.links123.cn/" target ="_blank" alt="老外在隔壁" />
+						<area class="doll" shape ="rect" coords ="459,163,574,359" href ="http://en.links123.cn/" target ="_blank" alt="老外在隔壁" />
+						<area class="doll" shape ="rect" coords ="676,146,787,358" href ="http://en.links123.cn/" target ="_blank" alt="老外在隔壁" />
+						<area class="doll" shape ="rect" coords ="866,168,965,350" href ="http://en.links123.cn/" target ="_blank" alt="老外在隔壁" />
+						<area shape ="rect" coords ="521,34,979,120" href ="http://en.links123.cn/" target ="_blank" alt="老外在隔壁" />
+					</map>
+					<img id="K_banner_01_arrow" src="__STATIC__/v303b/imgs/banner-arrow.png" />
+				</div>
+			</div>
+		</div>
+		</if>
+
+
+
 		<div class="zld" id="J_ZldList">
 			<form action="{:U('Link/index')}?mod=myarea" id="J_MyAreaForm" target="_blank" method="post"><input type="hidden" name="url" value="" /></form>
 			<ul id="J_sortable">

@@ -1,7 +1,7 @@
 .header-weather {
     position: absolute;
     top: 0;
-    right: 0;
+    right: 10px;
     color: #000;
     line-height:115px
 }
@@ -12,9 +12,12 @@
 }
 
 .header-weather .degree {
-    font-size:36px;
+    font-size:20px;
     font-weight:800;
     font-family:Arial
+}
+.header-weather .info {
+    margin-left: -2px;
 }
 
 .weather-desc {
@@ -27,6 +30,7 @@
     position: relative;
     width: 30px;
     height: 30px;
+    bottom: -2px;
     background-image: url(../imgs/weather-icon-psd.png);
     background-repeat: no-repeat;
 }
