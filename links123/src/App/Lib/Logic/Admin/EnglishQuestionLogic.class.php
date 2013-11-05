@@ -74,7 +74,21 @@ class EnglishQuestionLogic {
             return false;
         }
 
-        $data["cat_attr_id"] = bindec($voice . $target . $pattern);
+        if(intval($voice) == 0 && intval($target) && intval($pattern) == 0){
+            $catQuestionModel = D("EnglishCatquestion");
+            $cat_question_map = array(
+                "a.type" => $type,
+                "a.question_id" => $question_id
+            );
+            $question_cat_attr_id = $catQuestionModel->alias("a")
+                ->join(C("DB_PREFIX")."english_category b on a.cat_id=b.cat_id")
+                ->where($cat_question_map)
+                ->order("a.status desc,a.created desc")
+                ->getField("b.cat_attr_id");
+            $data["cat_attr_id"] = intval($question_cat_attr_id);
+        }else{
+            $data["cat_attr_id"] = bindec($voice . $target . $pattern);
+        }
         $data["level_one"]   = $level_one;
         $data["level_two"]   = $level_two;
         $data["level_thr"]   = $level_thr;
