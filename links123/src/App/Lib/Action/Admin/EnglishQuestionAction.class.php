@@ -1680,6 +1680,34 @@ class EnglishQuestionAction extends CommonAction {
             $this->error('状态启用失败！');
         }
     }
+    public function voice(){
+        if($this->isAjax()){
+            $id = intval($_REQUEST['id']);
+            $model = D("EnglishCatquestion");
+            $model->startTrans();
+            $ret  = $this->cEnglishQuestionLogic->setQuestionCatAttrId($id,"voice",1);
+            if(false === $ret){
+                $model->rollback();
+                $this->ajaxReturn("",  $this->cEnglishQuestionLogic->getErrorMessage(),false);
+            }
+            $model->commit();
+            $this->ajaxReturn($ret, "操作成功",true);
+        }
+    }
+    public function pattern(){
+        if($this->isAjax()){
+            $id = intval($_REQUEST['id']);
+            $model = D("EnglishCatquestion");
+            $model->startTrans();
+            $ret  = $this->cEnglishQuestionLogic->setQuestionCatAttrId($id,"pattern",1);
+            if(false === $ret){
+                $model->rollback();
+                $this->ajaxReturn("",  $this->cEnglishQuestionLogic->getErrorMessage(),false);
+            }
+            $model->commit();
+            $this->ajaxReturn($ret, "操作成功",true);
+        }
+    }
 
 }
 

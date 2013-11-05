@@ -320,7 +320,7 @@ class EnglishCategoryAction extends CommonAction{
         $time = time();
         $levelnameModel = D("EnglishLevelname");
         $categoryModel = D("EnglishCategory");
-        $new_info = $levelnameModel->where(array("name",array("like",$_POST['name']),"level"=>$level,"id"=>array("neq",$id)))->find();
+        $new_info = $levelnameModel->where(array("name"=>array("like",$_POST['name']),"level"=>$level,"id"=>array("neq",$id)))->find();
         if(!empty($new_info)){
             $this->error("需要添加的分类名已存在！");
         }

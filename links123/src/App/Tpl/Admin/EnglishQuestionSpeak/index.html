@@ -59,6 +59,7 @@
                     &nbsp;&nbsp;
                     分类：
                     <select name="level_one"  id="level_one_select">
+                        <option value="0">全部</option>
                         <volist name="category['level_one']" id="level_one">
                             <option value="{$level_one.id}" <eq name="param['level_one']" value="$level_one['id']">selected="true"</eq>>{$level_one.name}</option>
                         </volist>
@@ -123,7 +124,7 @@
 
 
         <div class="list" >
-            <html:list id="checkList" name="category" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,name:名称:edit,created|toDateShort:发布时间,cat_attr_id|getVoiceNameFromAttrId:语音,cat_attr_id|getPatternNameFromAttrId:形式,special_recommend|getYorN:特别推荐:special_recommend|media_id,status|getStatus:状态" actionlist="property:分类,edit:编辑" />
+            <html:list id="checkList" name="category" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,name:名称:edit,created|toDateShort:发布时间,cat_attr_id|getVoiceNameFromAttrId:语音:voice|id,cat_attr_id|getPatternNameFromAttrId:形式:pattern|id,special_recommend|getYorN:特别推荐:special_recommend|media_id,status|getStatus:状态" actionlist="property:分类,edit:编辑" />
         </div>
 
         <div class="page">{$page}</div>
@@ -320,6 +321,54 @@
                             $("a[href=\"javascript:special_recommend('" + id + "')\"]").text("否");
                         } else {
                             $("a[href=\"javascript:recommend('" + id + "')\"]").text("是");
+                        }
+                    }
+                }
+                $("#load_dialog").window("close");
+            }, "json");
+        } else {
+            alert("非法操作！");
+        }
+    }
+     /**
+     * 修改英音美音等
+     * @param {int} id 操作对象id
+     * @returns {void}
+     */
+    function voice(id) {
+        if (id > 0) {
+            $("#load_dialog").window("open");
+            $.post("{:U('Admin/EnglishQuestionSpeak/voice')}", {id: id}, function(msg) {
+                if (msg) {
+                    if (msg.status) {
+                        if (msg.data == 0) {
+                            $("a[href=\"javascript:voice('" + id + "')\"]").text("英音");
+                        } else {
+                            $("a[href=\"javascript:voice('" + id + "')\"]").text("美音");
+                        }
+                    }
+                }
+                $("#load_dialog").window("close");
+            }, "json");
+        } else {
+            alert("非法操作！");
+        }
+    }
+    /**
+     * 修改视频音频等
+     * @param {int} id 操作对象id
+     * @returns {void}
+     */
+    function pattern(id) {
+        if (id > 0) {
+            $("#load_dialog").window("open");
+            $.post("{:U('Admin/EnglishQuestionSpeak/pattern')}", {id: id}, function(msg) {
+                if (msg) {
+                    if (msg.status) {
+                        if (msg.data == 0) {
+                            $("a[href=\"javascript:pattern('" + id + "')\"]").text("音频");
+                        } else {
+                            $("a[href=\"javascript:pattern('" + id + "')\"]").text("视频");
                         }
                     }
                 }
