@@ -28,26 +28,26 @@ class IndexAction extends CommonAction {
 			$_SESSION['app_sort'] = $mbrNow['app_sort'];
 
 			//取出皮肤ID和模板ID
-			$skinId = session('skinId');
-			if (!$skinId) {
-				$skinId = cookie('skinId');
-			}
+// 			$skinId = session('skinId');
+// 			if (!$skinId) {
+// 				$skinId = cookie('skinId');
+// 			}
 
-			$themeId = session('themeId');
-			if (!$themeId) {
-				$themeId = cookie('themeId');
-			}
+// 			$themeId = session('themeId');
+// 			if (!$themeId) {
+// 				$themeId = cookie('themeId');
+// 			}
 		} else {
 
 			//取出皮肤ID和模板ID
-			$skinId = session('skinId');
-			if (!$skinId) {
-				$skinId = cookie('skinId');
-			}
-			$themeId = session('themeId');
-			if (!$themeId) {
-				$themeId = cookie('themeId');
-			}
+// 			$skinId = session('skinId');
+// 			if (!$skinId) {
+// 				$skinId = cookie('skinId');
+// 			}
+// 			$themeId = session('themeId');
+// 			if (!$themeId) {
+// 				$themeId = cookie('themeId');
+// 			}
 
 			if (!$_SESSION['app_sort']) {
 
@@ -56,19 +56,19 @@ class IndexAction extends CommonAction {
 		}
 
 		//快捷皮肤
-		$skins = $this->getSkins();
-		if ($skinId) {
-			$skin = $skins['skin'][$skinId]['skinId'];
-			if (!$skin) $skinId = '';
-			$themeId = $skins['skin'][$skinId]['themeId'];
-			$this->assign("skinId", $skinId);
-			$this->assign("skin", $skin);
-		}
-		$this->assign("skinList", $skins['list']);
-		$this->assign("skinCategory", $skins['category']);
+// 		$skins = $this->getSkins();
+// 		if ($skinId) {
+// 			$skin = $skins['skin'][$skinId]['skinId'];
+// 			if (!$skin) $skinId = '';
+// 			$themeId = $skins['skin'][$skinId]['themeId'];
+// 			$this->assign("skinId", $skinId);
+// 			$this->assign("skin", $skin);
+// 		}
+// 		$this->assign("skinList", $skins['list']);
+// 		$this->assign("skinCategory", $skins['category']);
 
-		$theme = $this->getTheme($themeId);
-		$this->assign('theme', $theme);
+// 		$theme = $this->getTheme($themeId);
+// 		$this->assign('theme', $theme);
 
 		//自留地数据
 		if ($user_id || !$_SESSION['arealist']) {
