@@ -77,7 +77,7 @@
 	width: 40px;
 	background: url(../imgs/hot.png) 0 0 no-repeat;
 	position: absolute;
-	left: 2px;
+	left: -1px;
 	top: 0px
 }
 .apps ul li:hover,
@@ -88,8 +88,8 @@
 }
 .apps ul li img{
 	vertical-align: middle;
-	height: 72px;
-	width: 72px; /* 这里强制图片为统一尺寸，否则hot图标对不齐 */
+	height: 80px;
+	width: 80px; /* 这里强制图片为统一尺寸，否则hot图标对不齐 && 啥时候又换成80X80了？ */
 }
 .apps ul li .av,
 .apps ul li .ct{
