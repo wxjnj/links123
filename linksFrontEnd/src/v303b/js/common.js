@@ -59,14 +59,14 @@ var User = {
 	Init : function() {
 		var self = this;
 		$('.uc-menu .nm').on('mouseenter', function() {
-            clearTimeout(self.menuTimer);
-            self.menuTimer = null;
+			clearTimeout(self.menuTimer);
+			self.menuTimer = null;
 			$(this).find('ul, .ang').show();
 		}).on('mouseleave', function() {
-            var cur = $(this);
-            self.menuTimer = setTimeout(function(){
-                cur.find('ul, .ang').hide();
-            }, 500);
+			var cur = $(this);
+			self.menuTimer = setTimeout(function(){
+				cur.find('ul, .ang').hide();
+			}, 500);
 		});
 		$('.J_SignUp').on('click', function() {
 			self.Reg();
@@ -701,20 +701,20 @@ var Theme = {
 		var isImgSrc = false;
 
 		$('#K_change_skin_btn').on('mouseenter', function(){
-            clearTimeout(self.timer);
-            self.timer = null;
-            if($('.skin-list').is(':hidden')){
-                $('.skin-list').fadeIn(150);
-            }
+			clearTimeout(self.timer);
+			self.timer = null;
+			if($('.skin-list').is(':hidden')){
+				$('.skin-list').fadeIn(150);
+			}
 		}).on('mouseleave', function(){
-                clearTimeout(self.timer);
-                self.timer = null;
-                self.timer = setTimeout(function(){
-                    $('.skin-list').hide();
-                },500);
-        });
+				clearTimeout(self.timer);
+				self.timer = null;
+				self.timer = setTimeout(function(){
+					$('.skin-list').hide();
+				},500);
+		});
 
-        $('#K_change_skin_btn_old').on('mouseleave', '.skin-list',function(){
+		$('#K_change_skin_btn_old').on('mouseleave', '.skin-list',function(){
 			clearTimeout(self.timer);
 			self.timer = null;
 			self.timer = setTimeout(function(){
@@ -726,13 +726,13 @@ var Theme = {
 				self.timer = null;
 			}
 		}).on('mouseover', function(){
-                if(!isImgSrc){
-                    isImgSrc = true;
-                    $(this).find('img').each(function(){
-                        $(this).attr('src', $(this).data('src'));
-                    });
-                }
-            });
+				if(!isImgSrc){
+					isImgSrc = true;
+					$(this).find('img').each(function(){
+						$(this).attr('src', $(this).data('src'));
+					});
+				}
+			});
 
 		//靠右的皮肤 图例靠右显示
 		//$('#J_skin_pics').find('.item:eq(3)').css('text-align','center')

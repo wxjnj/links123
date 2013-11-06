@@ -498,13 +498,9 @@ input:focus{ outline: 0; }
 	width: 18px;
 	height: 18px;
 	display: block;
-	background-color: #a9a9a9;
 	background-image: url(../imgs/sprite.png);
-	background-position: -306px -96px;
+	background-position: -67px -98px;
 	background-repeat: no-repeat;
-	border-radius: 20px;
-	-moz-border-radius: 20px;
-	-webkit-border-radius: 20px;
 }
 
 .app-icon-list .app-more-box .nm{
@@ -737,7 +733,7 @@ input:focus{ outline: 0; }
 	box-shadow:inset 0px 0 5px #ccc;
 }
 .zld ul li.add .ctl i{
-	background: url(../imgs/sprite.png) -301px -61px no-repeat;
+	background: url(../imgs/sprite.png) -272px -3px no-repeat;
 }
 
 

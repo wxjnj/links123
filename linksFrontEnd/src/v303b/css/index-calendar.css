@@ -472,13 +472,16 @@
 
 .desc-input-div {
     height: 20px;
-    margin-top: 1px;
+    /*margin-top: 1px;*/
     padding: 0 2px;
     display: inline-block;
-    border: 1px solid #ededed;
+    /*border: 1px solid #ededed;*/
 }
 .desc-input-div input {
     border: 0;
+    height: 15px;
+    line-height: 15px;
+    padding: 5px;
 }
 .desc-input-div b {
     display: inline-block;
@@ -507,6 +510,9 @@
 
 .widescreen .extra-calendar .cal-body {
     width:578px;
+}
+.widescreen .desc-input-div input{
+    padding: 8px 0;
 }
 
 

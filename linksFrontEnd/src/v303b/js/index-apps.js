@@ -1007,7 +1007,7 @@ $( function($) {
 	};
 
 	window.onload = function(){
-		$('a[data-href="#J_box_music"]').trigger('click');
+		//$('a[data-href="#J_box_music"]').trigger('click');
 		$('a[data-href="#J_box_music"]').on('click', function(){
 			setTimeout(function(){
 				MusicBox.changeMode('normal');
