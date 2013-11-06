@@ -328,7 +328,8 @@ class EnglishQuestionAction extends CommonAction {
         $status      = isset($_REQUEST["status"])    ? intval($_REQUEST["status"])    : 1;
         $type        = isset($_REQUEST["type"])      ? intval($_REQUEST["type"])      : 1;
 
-        
+        $model = D("EnglishCatquestion");
+        $model->startTrans();
         $ret = $this->cEnglishQuestionLogic->saveProperty(
                                                     $question_id, 
                                                     null, 
@@ -342,9 +343,11 @@ class EnglishQuestionAction extends CommonAction {
                                                     true
                                                 );
         if ($ret === false) {
+            $model->rollback();
             $this->error($this->cEnglishQuestionLogic->getErrorMessage());
             return;
         }
+        $model->commit();
         $this->success('添加分类属性成功');
     }
     function editProperty(){
@@ -404,6 +407,7 @@ class EnglishQuestionAction extends CommonAction {
             "question_id"=>$question_id,
             "type"=>$type
         );
+        $model->startTrans();
         if(false === $model->where($cat_map)->delete()){
             $model->rollback();
             $this->error("操作失败");

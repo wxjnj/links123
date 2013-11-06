@@ -944,8 +944,9 @@ class EnglishQuestionSpeakAction extends CommonAction {
         $status      = isset($_REQUEST["status"])    ? intval($_REQUEST["status"])    : 1;
         $type        = isset($_REQUEST["type"])      ? intval($_REQUEST["type"])      : 0;
         $type = 0;//说力
-
-
+        
+        $model = D("EnglishCatquestion");
+        $model->startTrans();
         $ret = $this->cEnglishQuestionLogic->saveProperty(
                                                     $question_id, 
                                                     null, 
@@ -959,9 +960,11 @@ class EnglishQuestionSpeakAction extends CommonAction {
                                                     true
                                                 );
         if ($ret === false) {
+            $model->rollback();
             $this->error($this->cEnglishQuestionLogic->getErrorMessage());
             return;
         }
+        $model->commit();
         $this->success('添加分类属性成功');
     }
     
@@ -1016,6 +1019,7 @@ class EnglishQuestionSpeakAction extends CommonAction {
         $type = 0; //说力
         
         $model = D("EnglishCatquestion");
+        $model->startTrans();
         $cat_map = array(
             "cat_id"=>$cat_id,
             "question_id"=>$question_id,
