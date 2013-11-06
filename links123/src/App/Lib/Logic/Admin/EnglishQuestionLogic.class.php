@@ -51,19 +51,20 @@ class EnglishQuestionLogic {
 
 	/**
 	* 保存题目所属的分类
-	* @param [Integer] $question_id
-	* @param [Integer] $voice
-	* @param [Integer] $target
-	* @param [Integer] $pattern
-	* @param [Integer] $level_one
-	* @param [Integer] $level_two
-	* @param [Integer] $level_thr
-	* @param [Integer] $status
-	* @param [Integer] $type
+	* @param [int] $question_id
+	* @param [int] $voice
+	* @param [int] $target
+	* @param [int] $pattern
+	* @param [int] $level_one
+	* @param [int] $level_two
+	* @param [int] $level_thr
+	* @param [int] $status
+	* @param [int] $type
+     * @param [int] $is_add Description
 	*
 	* @return [Boolean] 
 	*/
-	public function saveProperty($question_id, $voice, $target, $pattern, $level_one, $level_two, $level_thr, $status, $type) {
+	public function saveProperty($question_id, $voice, $target, $pattern, $level_one, $level_two, $level_thr, $status, $type, $is_add = true) {
 		if ($question_id == 0) {
             $this->error_msg = '缺少题目ID';
             return false;
@@ -74,7 +75,7 @@ class EnglishQuestionLogic {
             return false;
         }
         $catQuestionModel = D("EnglishCatquestion");
-        if(intval($voice) == 0 && intval($target) && intval($pattern) == 0){
+        if(is_null($voice) && is_null($target) && is_null($pattern)){
             $cat_question_map = array(
                 "a.type" => $type,
                 "a.question_id" => $question_id
@@ -88,6 +89,25 @@ class EnglishQuestionLogic {
         }else{
             $data["cat_attr_id"] = bindec($voice . $target . $pattern);
         }
+        
+        if($is_add){
+            //判断当前一级分类下是否已有分类，不允许一级分类试题对应多个二级
+            $new_map = array(
+                    "b.level_one" => $level_one,
+                    "b.cat_attr_id" => $data["cat_attr_id"],
+                    'a.question_id' => $question_id,
+                    'a.type' => $type
+                );
+                $level_one_cat_id = $catQuestionModel->alias("a")
+                        ->join(C("DB_PREFIX")."english_category b on a.cat_id=b.cat_id")
+                        ->where($new_map)
+                        ->getField("a.cat_id");
+            if(intval($level_one_cat_id) > 0){
+                $this->error_msg = '当前一级分类已存在，不允许试题对应多个一级分类';
+                return false;
+            }
+        }
+        
         //准备字典
         $levelnames = D('EnglishLevelname')->order("sort asc")->select();
         $difficulty_list = array();//难度列表
