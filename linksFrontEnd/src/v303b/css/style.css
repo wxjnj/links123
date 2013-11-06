@@ -136,7 +136,7 @@ input:focus{ outline: 0; }
 
 /*logo*/
 .logo{
-	background: url(../imgs/logo.png) 0 0 no-repeat;
+	background: url(../imgs/logo2.png) 0 0 no-repeat;
 	position: absolute;
 	left: 0;
 	top: 35px;
@@ -320,7 +320,7 @@ input:focus{ outline: 0; }
 }
 
 .box-apps .box-bd {
-	padding-top: 0;
+	padding-top: 10px;
 }
 
 .box-apps {
@@ -695,7 +695,7 @@ input:focus{ outline: 0; }
 	line-height: 16px;
 	padding: 10px 25px 10px 25px;
 	vertical-align: top;
-	background: #f2f2f2;
+	background: url(../imgs/op60.png);
 }
 
 .zld ul li .nm:hover{
@@ -715,6 +715,7 @@ input:focus{ outline: 0; }
 	position: relative;
 	width: 26px;
 	padding: 5px;
+	background: url(../imgs/op60.png);
 }
 
 .zld ul li .ctl i{
