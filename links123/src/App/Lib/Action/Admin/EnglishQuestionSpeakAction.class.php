@@ -365,12 +365,14 @@ class EnglishQuestionSpeakAction extends CommonAction {
         if (!empty($_REQUEST['media_source_url'])) {
             $mediaMap = array();
             $mediaMap['media_source_url'] = ftrim($_REQUEST['media_source_url']);
-            $mediaId = intval($mediaModel->where($mediaMap)->getField('id'));
+            $mediaInfo = $mediaModel->where($mediaMap)->find();
+            $mediaId = intval($mediaInfo['id']);
         }
         if ($mediaId == 0 && !empty($_REQUEST['media_name'])) {
             $mediaMap = array();
             $mediaMap['name'] = $_REQUEST['media_name'];
-            $mediaId = intval($mediaModel->where($mediaMap)->getField('id'));
+            $mediaInfo = $mediaModel->where($mediaMap)->find();
+            $mediaId = intval($mediaInfo['id']);
         }
         //
         //媒体id为零，将试题置为禁用
@@ -414,6 +416,23 @@ class EnglishQuestionSpeakAction extends CommonAction {
                     $model->where(array("id" => $id))->setField("status", 0);
                 }
             }
+            //更新分类试题数量
+            if($_POST['old_status'] == 1){
+                if($_POST['status'] != 1 && $mediaInfo['status'] == 1){
+                    if(false == D("EnglishCategory")->updateCategoryQuestionNumByQuestion($id, true, 0)){
+                        $model->rollback();
+                        $this->error('编辑失败！');
+                    }
+                }
+            }else{
+                if($_POST['status'] == 1 && $mediaInfo['status'] == 1){
+                    if(false == D("EnglishCategory")->updateCategoryQuestionNumByQuestion($id, false, 0)){
+                        $model->rollback();
+                        $this->error('编辑失败！');
+                    }
+                }
+            }
+
             $model->commit();
             $this->success('编辑成功!', cookie('_currentUrl_'));
         } else {
@@ -1063,7 +1082,6 @@ class EnglishQuestionSpeakAction extends CommonAction {
         $name = $this->getActionName();
         $model = D($name);
         $categoryModel = D("EnglishCategory");
-        $catquestionModel =  D("EnglishCatquestion");
         $pk = $model->getPk();
         $id = $_REQUEST [$pk];
         $condition = array($pk => array('in', $id));
@@ -1073,35 +1091,85 @@ class EnglishQuestionSpeakAction extends CommonAction {
         );
         $q_map['question.id'] = array('in',$id);
         $q_list = $model->alias("question")->join(C("DB_PREFIX")."english_media media on media.id=question.media_id")->field("question.id")->where($q_map)->select();
+        foreach ($q_list as $value) {
+            $question_ids[] = $value['id'];
+        }
         $model->startTrans();
-        $time = time();
         $list = $model->forbid($condition);
         
         if ($list !== false) {
-            foreach ($q_list as $value){
-                if($value['status'] == 1){
-                    $cat_question_map = array(
-                        "question_id"=>$value['id'],
-                        "type"=>0,
-                        "status"=>1
-                    );
-                    $cat_list = $catquestionModel->where($cat_question_map)->select();
-                    foreach($cat_list as $v){
-                        $data['question_num'] = array('exp','question_num-1');
-                        $data['updated'] = $time;
-                        $ret = $categoryModel->where(array("cat_id"=>$v['cat_id']))->save($data);
-                        if(false === $ret){
-                            $model->rollback();
-                            $this->error('状态禁用失败！');
-                        }
-                    }
-                }
+            if(false === $categoryModel->updateCategoryQuestionNumByQuestion($question_ids, true, 0)){
+                $model->rollback();
+                $this->error('状态禁用失败！');
             }
             $model->commit();
             $this->success('状态禁用成功', $this->getReturnUrl());
         } else {
             $model->rollback();
             $this->error('状态禁用失败！');
+        }
+    }
+    public function resume() {
+        $name = $this->getActionName();
+        $model = D($name);
+        $categoryModel = D("EnglishCategory");
+        $pk = $model->getPk();
+        $id = $_REQUEST [$pk];
+        //获取被禁用的试题列表，为更新分类下的试题数量准备
+        $condition = array($pk => array('in', $id));
+        $q_map = array(
+            "question.status"=>array("neq",1),
+            "media.status"=>1
+        );
+        $q_map['question.id'] = array('in',$id);
+        $q_list = $model->alias("question")->join(C("DB_PREFIX")."english_media media on media.id=question.media_id")->field("question.id")->where($q_map)->select();
+        foreach ($q_list as $value) {
+            $question_ids[] = $value['id'];
+        }
+        $model->startTrans();
+        $list = $model->resume($condition);
+        
+        if ($list !== false) {
+            if(false === $categoryModel->updateCategoryQuestionNumByQuestion($question_ids, false, 0)){
+                $model->rollback();
+                $this->error('状态启用失败！');
+            }
+            $model->commit();
+            $this->success('状态启用成功', $this->getReturnUrl());
+        } else {
+            $model->rollback();
+            $this->error('状态启用失败！');
+        }
+    }
+    public function delete() {
+        $name = $this->getActionName();
+        $model = D($name);
+        $categoryModel = D("EnglishCategory");
+        $pk = $model->getPk();
+        $id = $_REQUEST [$pk];
+        $condition = array($pk => array('in', $id));
+        $q_map = array(
+            "question.status"=>1,
+            "media.status"=>1
+        );
+        $q_map['question.id'] = array('in',$id);
+        $q_list = $model->alias("question")->join(C("DB_PREFIX")."english_media media on media.id=question.media_id")->field("question.id")->where($q_map)->select();
+        foreach ($q_list as $value) {
+            $question_ids[] = $value['id'];
+        }
+        $model->startTrans();
+        $list = $model->where($condition)->setField("status",-1);
+        
+        if ($list !== false) {
+            if(false === $categoryModel->updateCategoryQuestionNumByQuestion($question_ids, true, 0)){
+                $model->rollback();
+                $this->error('删除失败！');
+            }
+            $model->commit();
+            $this->success('删除成功', $this->getReturnUrl());
+        } else {
+            $model->rollback();
+            $this->error('删除失败！');
         }
     }
     public function delProperty(){

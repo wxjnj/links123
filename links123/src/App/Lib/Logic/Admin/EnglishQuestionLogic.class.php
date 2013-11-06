@@ -29,10 +29,10 @@ class EnglishQuestionLogic {
 		}
 		$ret   = D('EnglishCatquestion')->getQuestionProperty($question_id, $question_type);
         foreach($ret as $key=>$value){
-            if($default_list[$value["level_two"]] == 1){
-                unset($ret[$key]);
-                continue;
-            }
+//            if($default_list[$value["level_two"]] == 1 || $value["level_one"] == -1){
+//                unset($ret[$key]);
+//                continue;
+//            }
 			$cat_attr_id = sprintf("%03d", decbin($value["cat_attr_id"]));
 			$ret[$key]["voice"]   = substr($cat_attr_id, 0, 1);
 			$ret[$key]["target"]  = substr($cat_attr_id, 1, 1);
