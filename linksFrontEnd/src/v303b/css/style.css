@@ -763,6 +763,9 @@ input:focus{ outline: 0; }
 	height: 26px;
 	background-position: -272px -61px;
 }
+.widescreen .zld ul li.add .ctl i{
+	background-position: -272px -3px;
+}
 .widescreen .zld ul li .ctl:hover{
 	height: 26px;
 	width: 26px;
