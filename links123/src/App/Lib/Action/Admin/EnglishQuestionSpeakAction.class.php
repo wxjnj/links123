@@ -938,23 +938,19 @@ class EnglishQuestionSpeakAction extends CommonAction {
     public function insertProperty() {
         $question_id = isset($_REQUEST["question_id"]) ? intval($_REQUEST["question_id"]) : 0;
         
-        $voice       = isset($_REQUEST["voice"])     ? intval($_REQUEST["voice"])     : 1;
-        //$target      = isset($_REQUEST["target"])    ? intval($_REQUEST["target"])    : 1;
-        $pattern     = isset($_REQUEST["pattern"])   ? intval($_REQUEST["pattern"])   : 1;
         $level_one   = isset($_REQUEST["level_one"]) ? intval($_REQUEST["level_one"]) : 0;
         $level_two   = isset($_REQUEST["level_two"]) ? intval($_REQUEST["level_two"]) : 0;
         $level_thr   = isset($_REQUEST["level_thr"]) ? intval($_REQUEST["level_thr"]) : 0;
         $status      = isset($_REQUEST["status"])    ? intval($_REQUEST["status"])    : 1;
         $type        = isset($_REQUEST["type"])      ? intval($_REQUEST["type"])      : 0;
         $type = 0;//说力
-        $target      = $type == 0 ? 0 : 1;
 
 
         $ret = $this->cEnglishQuestionLogic->saveProperty(
                                                     $question_id, 
-                                                    $voice, 
-                                                    $target, 
-                                                    $pattern, 
+                                                    null, 
+                                                    null, 
+                                                    null, 
                                                     $level_one, 
                                                     $level_two, 
                                                     $level_thr, 

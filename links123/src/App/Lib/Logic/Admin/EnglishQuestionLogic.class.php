@@ -188,7 +188,7 @@ class EnglishQuestionLogic {
             $level_one_sort = intval($level_sort['level_one_sort']) > 0 ? intval($level_sort['level_one_sort']) : $level_one_info['sort'];
             $level_two_sort = intval($level_sort['level_two_sort']) > 0 ? intval($level_sort['level_two_sort']) : $level_two_info['sort'];
             //获取对应的三级分类列表
-            if($cate_ret['level_one'] == $object_level_one_id){
+            if($level_one == $object_level_one_id){
                 $level_thr_list = $grad_list;
             }else{
                 $level_thr_list = $difficulty_list;
