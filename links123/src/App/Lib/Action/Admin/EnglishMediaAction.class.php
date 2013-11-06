@@ -402,6 +402,7 @@ class EnglishMediaAction extends CommonAction {
     private function analysisMediaPlayCode($media_id) {
         $model = D("EnglishMedia");
         $media = $model->find($media_id);
+        $media['media_local_path'] = $media['local_path'];
         $saveData = array();
         $saveData['id'] = $media['id'];
         $saveData['priority_type'] = empty($media['priority_type'])? 1 : $media['priority_type'];
