@@ -482,6 +482,7 @@
     height: 15px;
     line-height: 15px;
     padding: 5px;
+    width: 140px;
 }
 .desc-input-div b {
     display: inline-block;
@@ -512,7 +513,8 @@
     width:578px;
 }
 .widescreen .desc-input-div input{
-    padding: 8px 0;
+    padding: 8px 5px;
+     width: 240px;
 }
 
 

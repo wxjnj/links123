@@ -73,12 +73,12 @@
 }
 .apps ul li .hot{
 	display: block;
-	height: 20px;
-	width: 20px;
+	height: 37px;
+	width: 40px;
 	background: url(../imgs/hot.png) 0 0 no-repeat;
 	position: absolute;
-	right: -5px;
-	top: -5px
+	left: 2px;
+	top: 0px
 }
 .apps ul li:hover,
 .apps ul li:hover a,
@@ -88,6 +88,8 @@
 }
 .apps ul li img{
 	vertical-align: middle;
+	height: 72px;
+	width: 72px; /* 这里强制图片为统一尺寸，否则hot图标对不齐 */
 }
 .apps ul li .av,
 .apps ul li .ct{
