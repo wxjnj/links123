@@ -1,9 +1,9 @@
 <tagLib name="html" />
 <include file="Public:header" />
 <load href ="__PUBLIC__/Js/common.js" />
+<load href="__PUBLIC__/Js/editor/kindeditor-min.js" />
 
-<script type="text/javascript" language="JavaScript">
-<!--
+<script type="text/javascript">
 	function fn_sbmt(frm, field){
 		var obj1 = document.getElementById(frm);
 		//var obj2 = document.getElementById(field);
@@ -12,7 +12,19 @@
 		//ThinkAjax.send(obj1.action, temp);
 		obj1.submit();
 	}
-//-->
+	var editor;
+	KindEditor.ready(function(K) {
+		editor = K.create("textarea[name='about_us']", {
+			resizeType : 1,
+			allowPreviewEmoticons : false,
+			allowImageUpload : true,
+			items : [
+				'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
+				'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
+				'insertunorderedlist', '|', 'emoticons', 'link', 'image'],
+			afterBlur: function(){this.sync();}
+		});
+	});
 </script>
 
 <div id="main" class="main" >
@@ -292,7 +304,20 @@
 			</tr>
 		</table>
 	</form>
-    
-
+    <form method='post' id="frm_setAboutUs" action="__URL__/setAboutUs" >
+		<table cellpadding=3 cellspacing=3>
+			<tr>
+				<td class="tRight" width="150">关于我们：</td>
+				<td class="tLeft" ><textarea name="about_us" style="width:700px;height:380px;">{$about_us['value_varchar']}</textarea></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td class="center">
+				<input type="submit" value="保 存" class="small submit"  />&nbsp;
+				</td>
+				<td></td>
+			</tr>
+		</table>
+	</form> 
 	</div>
 </div>

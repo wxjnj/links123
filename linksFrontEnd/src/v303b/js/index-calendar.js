@@ -9,29 +9,43 @@ $(function(){
     });
     */
 
-    var newsTimer = null;
-
+    window.newsTimer = null;
     changeNews();
     autoChangeNews();
-
     $('.pic-news-tabs').on('click', 'a', function(){
+        clearTimeout(window.newsTimer);
+        window.newsTimer = null;
         $('.pic-news-tabs').find('a').removeClass('active');
         $(this).addClass('active');
         changeNews();
-        clearTimeout(newsTimer);
-        newsTimer = null;
+        autoChangeNews();
+    }).on('mouseenter', 'a', function(){
+        var $this = $(this)
+        clearTimeout(window.newsTimer);
+        window.newsTimer = null;
+        $('.pic-news-tabs').find('a').removeClass('active');
+        $this.addClass('active');
+        changeNews();
+        //autoChangeNews();
+    }).on('mouseout', 'a', function(){
         autoChangeNews();
     });
 
     function autoChangeNews(){
-        newsTimer = setTimeout(function(){
+        clearTimeout(window.newsTimer);
+        window.newsTimer = null;
+        window.newsTimer = setTimeout(function(){
             var o = $('.pic-news-tabs').find('.active').attr('data-tab') * 1;
             if(o == 3){
                 o = 0;
             }else{
                 o += 1;
             }
-            $('.pic-news-tabs').find('a:eq(' + o + ')').trigger('click');
+            $('.pic-news-tabs').find('a').removeClass('active');
+            $('.pic-news-tabs').find('a:eq(' + o + ')').addClass('active');
+
+            changeNews();
+
             autoChangeNews()
         }, 5000);
     }
@@ -50,7 +64,6 @@ $(function(){
     });
     
 });
-
 
 
 /*
@@ -138,62 +151,6 @@ $(function(){
                 self.changeType(type);
             });
 
-            $('.cal_v303_prev_btn').on('click', function() {
-                self.MainViewChangeFunc(self.currentDate - 1);
-            });
-            $('.cal_v303_next_btn').on('click', function() {
-                self.MainViewChangeFunc(self.currentDate + 1);
-            });
-            $('.cal_v303_mini_cal').on('click', 'td', function() {
-
-                var d = $(this).find('a').attr('data-date');
-                self.MainViewChangeFunc(d);
-
-            });
-
-            $(document).on('click', '.extra-calendar-overlayer', function() {
-                $(this).hide();
-                $('.extra-calendar').hide();
-            });
-
-            $(document).on('keydown', function(e){
-                if (e.keyCode == 27) {
-                    $('.extra-calendar-overlayer').hide();
-                    $('.extra-calendar').hide();
-                }
-            });
-
-            $(document).on('click', '.cal-close', function(){
-                $('.extra-calendar-overlayer').hide();
-                $('.extra-calendar').hide();
-            });
-
-            $(document).on('click', '.cal_show_pop_btn', function() {
-                var type = $(this).attr('data-type');
-                self.changeType(type);
-                $('.extra-calendar, .extra-calendar-overlayer').show();
-            });
-            $(document).on('click', '.cal_v303_more', function() {
-                self.changeType('Date');
-                $('.extra-calendar, .extra-calendar-overlayer').show();
-            });
-
-            /*
-             $('.cal-body').on('mouseover', '.cal-month td', function(){
-             var td = $(this);
-             var date = td.find('a').attr('data-date');
-             if(!self.marksStore[self.currentMarkId] || !self.marksStore[self.currentMarkId][date]) return;
-             var marks = self.marksStore[self.currentMarkId][date];
-             var tem = '';
-             $.each(marks, function(k, v){
-             tem += '<p>' + v.desc + '</p>';
-             });
-             self.tooltip.find('.content').html(tem).end().appendTo(td).show();
-             }).on('mouseout', '.cal-month td', function(){
-             self.tooltip.hide();
-             });
-             */
-            self.MainView.Init();
             /**/
             self.DateView.Init();
             self.MonthView.Init();
@@ -246,7 +203,7 @@ $(function(){
             this.MonthView.mainPanel.hide();
             var cur = this[targetType + 'View'];
             cur.mainPanel.show();
-            this.MainView.renderMonthView();
+            //this.MainView.renderMonthView();
             if (targetType == 'Date') {
                 Calendar.DateView.miniMonthView.render();
             }
@@ -256,6 +213,7 @@ $(function(){
             }
             cur.renderMarks();
         },
+        /*
         MainViewChangeFunc: function(t) {
             var self = this;
             var targetDate = new Date(self.currentYear, self.currentMonth, t);
@@ -266,7 +224,7 @@ $(function(){
             } else {
                 self.loadMarks();
             }
-        },
+        },*/
         prevView: function() {
             this[this.type + 'PrevView']();
         },
@@ -278,7 +236,7 @@ $(function(){
             var targetDate = new Date(self.currentYear, self.currentMonth, t);
             self.setCurrentDate(targetDate);
             self.DateView.miniMonthView.render();
-            self.MainView.renderMonthView();
+            //self.MainView.renderMonthView();
             if (self.marksStore[self.currentMarkId]) {
                 self.DateView.renderMarks();
             } else {
@@ -297,7 +255,7 @@ $(function(){
             self.setCurrentDate(targetDate);
             var id_start = self.currentWeekStartObject.getFullYear() + '-' + self.currentWeekStartObject.getMonth();
             var id_end = self.currentWeekEndObject.getFullYear() + '-' + self.currentWeekEndObject.getMonth();
-            self.MainView.renderMonthView();
+            //self.MainView.renderMonthView();
             if (self.marksStore[id_start] && self.marksStore[id_end]) {
                 self.WeekView.renderMarks();
             } else {
@@ -315,7 +273,7 @@ $(function(){
             var targetDate = new Date(self.currentYear, t, 1);
             self.setCurrentDate(targetDate);
             self.MonthView.tableView.render();
-            self.MainView.renderMonthView();
+            //self.MainView.renderMonthView();
             if (self.marksStore[self.currentMarkId]) {
                 self.MonthView.renderMarks();
             } else {
@@ -452,7 +410,7 @@ $(function(){
                         self.marksStore[year1 + '-' + month1] = d1;
                         self.marksStore[year2 + '-' + month2] = d2;
                         self[self.type + 'View'].renderMarks();
-                        self.MainView.renderMarks();
+                        //self.MainView.renderMarks();
                     });
             } else {
                 self.request({
@@ -475,7 +433,7 @@ $(function(){
                         }
                         self.marksStore[self.currentMarkId] = d;
                         self[self.type + 'View'].renderMarks();
-                        self.MainView.renderMarks();
+                        //self.MainView.renderMarks();
                     });
             }
         },
@@ -527,200 +485,30 @@ $(function(){
         }
     };
 
-    Calendar.MainView = {
-        Init: function() {
-            var self = this;
-            self.mainPanel = $('.cal_v303');
-            self.monthPanelElement = $('.cal_v303_mini_cal');
-            self.monthView = new MiniMonthView;
-            self.listElement = $('.cal_v303_mark_list_wrap').find('ul');
-            self.renderMonthView();
-            self.listElement.on('click', '.cal_v303_mark_content', function(){
-                if($(this).find('input').size()) return false;
-                var c = $(this).attr('title');
-                if(c == '来创建今天新的日程吧！'){
-                    c = '';
-                }
-                var it = $('<input type="text" class="input-content" maxlength="30" />')
-                it.val(c);
-                $(this).html(it);
-                it.select();
-                $(this).siblings('.delete-mark').removeClass('delete-mark').addClass('enter-mark').html('确定');
-            });
-
-            //主视图点击空白区域增加事件
-            self.listElement.on('click', function(e){
-                e = $.event.fix(e);
-                if(e.target == this){
-                    $('.cal_v303_new_mark').trigger('click');
-                    return false;
-                }
-            });
-
-            self.listElement.on('click', '.enter-mark', function(){
-                $(this).removeClass('enter-mark').addClass('delete-mark').html('×');
-                var o = $(this).siblings('.cal_v303_mark_content');
-                var c = o.find('.input-content').val() || Calendar.defaultMarkTitle;
-                o.html(c).attr('title', c);
-                var desc = c;
-                var hm = o.siblings('.cal_v303_time_span').html();
-                var ymd = $('.cal_v303_show_date').html().replace(/\D\b/g, '-').replace(/\D\B/g, '');
-                var time = Date.parse(ymd + ' ' + hm);
-                var id = $(this).parent('li').attr('data-id');
-                self.format();
-                Calendar.update(id, time, desc, $(this).parent('li'));
-            });
-/*
-            self.listElement.on('keydown', '.input-content', function(e){
-                if(e.keyCode == 13){
-                    var c = $(this).val() || Calendar.defaultMarkTitle;
-                    var o = $(this).parent('.cal_v303_mark_content');
-                    var li = $(this).closest('li');
-                    var id = li.attr('data-id');
-                    o.html(c).attr('title', c).siblings('.enter-mark').removeClass('.enter-mark').addClass('delete-mark').html('×');
-                    var desc = c;
-                    var hm = o.siblings('.cal_v303_time_span').html();
-                    var ymd = $('.cal_v303_show_date').html().replace(/\D\b/g, '-').replace(/\D\B/g, '');
-                    var time = Date.parse(ymd + ' ' + hm);
-                    self.format();
-                    Calendar.update(id, time, desc, li);
-                    return false;
-                }
-            });
-*/
-            self.listElement.on('click', '.cal_v303_time_enter', function(){
-                var $self = $(this);
-
-                var li = $self.parents('li');
-
-                var h = Calendar.tooltip.find('.cal_v303_time_hour_select').val();
-                var m = Calendar.tooltip.find('.cal_v303_time_minute_select').val();
-                var o = Calendar.tooltip.parent('.cal_v303_time_span');
-
-                o.html(h + ':' + m);
-
-                var desc = li.find('.cal_v303_mark_content').attr('title');
-                var hm = h + ':' + m;
-                var ymd = $('.cal_v303_show_date').html().replace(/\D\b/g, '-').replace(/\D\B/g, '');
-                var time = Date.parse(ymd + ' ' + hm);
-                var id = li.attr('data-id');
-                Calendar.update(id, time, desc, li);
-                setTimeout(function(){
-                    Calendar.tooltip.appendTo('body');
-                    Calendar.tooltip.hide();
-                },0)
-            });
-
-            self.listElement.on('click', '.cal_v303_time_span', function(){
-                if($(this).find('select').size()){
-                    return false;
-                }
-                var h = '';
-                var tem;
-                for(var i = 0; i < 24; i++){
-                    tem = i < 10 ?  '0' + i : i;
-                    h += '<option value="' + tem + '">' + tem + '</option>';
-                }
-                h = '<select class="cal_v303_time_hour_select">' + h + '</select>'
-                var m = '<select class="cal_v303_time_minute_select">' +
-                    '<option value="00">00</option>' +
-                    '<option value="15">15</option>' +
-                    '<option value="30">30</option>' +
-                    '<option value="45">45</option>' +
-                    '</select>';
-                h = $(h);
-                m = $(m);
-                var cur = $(this).html().split(':');
-                h.val(cur[0]);
-                m.val(cur[1]);
-                Calendar.tooltip.find('.content').empty()
-                    .append(h).append(':').append(m)
-                    .append('<a class="cal_v303_time_enter" href="javascript:;">确定</a>');
-                Calendar.tooltip.appendTo($(this)).show();
-            });
-
-            self.listElement.on('click', '.delete-mark', function() {
-                var li = $(this).parent('li');
-                var id = li.attr('data-id');
-                li.remove();
-                Calendar.deleteMark(id);
-            });
-
-            $(document).on('click', '.cal_v303_new_mark', function(){
-                var li = '<li data-id="null"><b></b><span class="cal_v303_time_span">00:00</span>'+
-                    '<span class="cal_v303_mark_content">输入日程</span><a class="delete-mark" href="javascript:;">×</a></li>'
-                li = $(li);
-                if(self.listElement.find('li').size() == 4){
-                    self.listElement.find('li:last').remove();
-                }
-                self.listElement.prepend(li);
-                li.find('.cal_v303_mark_content').trigger('click');
-            });
-        },
-        renderMonthView: function() {
-            var self = this;
-            self.monthView.render(self.monthPanelElement.find('tbody'));
-            self.renderMarks();
-        },
-        format: function(){
-            var self = this;
-            self.listElement.find('li').each(function(k, v){
-                var c = $(v).find('.cal_v303_mark_content');
-                if(c.find('input').size()) return;
-                var h = c.html().length > 15 ? c.html().substring(0, 15) + '...' : c.html();
-                c.html(h);
-            });
-        },
-        renderMarks: function() {
-            var self = this;
-            var tem = Calendar.marksStore[Calendar.currentYear + '-' + Calendar.currentMonth];
-            if (tem && tem[Calendar.currentDate]) {
-                var marks = self.marks = tem[Calendar.currentDate];
-            } else {
-                var marks = self.marks = [];
-            }
-            marks.sort(function(a, b){
-                return a.time - b.time;
-            });
-            var lis = '';
-            var v;
-            for (var i = 0, len = marks.length < 4 ? marks.length: 4; i < len; i++) {
-                v = marks[i];
-                lis += '<li data-id="' + v.id + '"><b></b><span class="cal_v303_time_span">' +
-                    (new Date(v.time*1000)).toString('HH:mm') + '</span><span class="cal_v303_mark_content" title="' + v.desc + '">' +
-                    v.desc + '</span><a class="delete-mark" href="javascript:;">×</a></li>';
-            }
-            self.listElement.html(lis);
-        }
-
-    };
-
     Calendar.DateView = {
         Init: function() {
             var self = Calendar.DateView;
             self.mainPanel = $('.cal-day');
             self.miniMonthElement = $('.cal-mini-month-panel').find('tbody');
-            //self.marksListElement = $('.cal-day-note-list');
-            //self.burnDownElement = $('.cal-day-burn-down-chart');
-            //self.burnDownChartElement = self.burnDownElement.find('.chart');
-            //self.burnDownChartTimeElement = self.burnDownChartElement.find('.time-show');
+
             self.miniMonthView = new MiniMonthView;
             self.miniMonthElement.on('click', 'a', function() {
                 var d = $(this).attr('data-date');
                 Calendar.DateChangeFunc(d);
             });
 
+            self.colorCode = '#!4587';
+            self.colors = {
+                'b' : 'blue',
+                'g' : 'green',
+                'r' : 'red'
+            };
+
             $('.cal-date-marks-table').on('click', '.add-btn', function(){
                 var d = $(this).parent('.desc');
-                d.html('<input class="cal-desc-input-text" type="text" />');
+                d.html('<div class="desc-input-div"><input type="text" value="" /><b class="blue active" data-code="b"></b><b class="green" data-code="g"></b><b class="red" data-code="r"></b></div>');
                 d.find('input').select();
-                /*
-                d.find('input').keydown(function(e){
-                    //console.log(e);
-                    //if($(this).find('input').size()) return;
-                    var x = $(this).attr('data-title');
-                    $(this).html('<input type="text" value="' + x + '" />');
-                });*/
+
                 return false;
             });
 
@@ -729,15 +517,22 @@ $(function(){
                 var li = $(this).parent('li');
                 var id = li.attr('data-id');
                 if(id && id != 0){
-                    li.remove();
                     Calendar.deleteMark(id);
                 }
             });
 
-            $('.cal-date-marks-table').on('click', '.desc', function(){
+            $('.cal-date-marks-table').on('click', '.desc-content', function(){
                 if($(this).find('input').size()) return;
-                var x = $(this).attr('data-title');
-                $(this).html('<input type="text" value="' + x + '" />');
+                var x = $(this).attr('title');
+                var d = $(this).parent('.desc');
+                var c = $(this).attr('data-color');
+                d.html('<div class="desc-input-div"><input type="text" data-old="' + x + '" data-color="' + c + '" value="' + x + '" /><b class="blue" data-code="b"></b><b class="green" data-code="g"></b><b class="red" data-code="r"></b></div>');
+                d.find('input').select();
+                d.find('.' + c).addClass('active');
+            });
+
+            $('.cal-date-marks-table').on('click', '.desc-input-div b', function(){
+                $(this).siblings('b').removeClass('active').end().addClass('active');
             });
 
 
@@ -745,7 +540,16 @@ $(function(){
                 if(e.keyCode == 13){
                     var input = $(this);
                     var li = input.parents('li');
-                    var desc = input.val();
+                    var desc = input.val() + self.colorCode + li.find('.active').attr('data-code');
+                    var h = li.attr('data-time');
+                    var time = Date.today();
+                    var id = li.attr('data-id');
+                    time.setHours(h);
+                    Calendar.update(id, time, desc);
+                }else if(e.keyCode == 27){
+                    var input = $(this);
+                    var li = input.parents('li');
+                    var desc = input.attr('data-old') + self.colorCode + input.attr('data-color').charAt(0);
                     var h = li.attr('data-time');
                     var time = Date.today();
                     var id = li.attr('data-id');
@@ -754,71 +558,6 @@ $(function(){
                 }
             });
 
-            /*
-            if($('body').hasClass('widescreen')){
-                self.G = 3;
-            }else{
-                self.G = 2;
-            }*/
-            /*
-            self.G = Calendar.G;
-            self.burnDownElement.find('.chart-body').dblclick(function(e) {
-                var pos = e.pageY - $(this).offset().top;
-                pos = pos - pos % self.G;
-                var time = + Date.today() + pos / self.G * 15 * 60 * 1000
-                var mark = new MarkClass({
-                    time: time / 1000,
-                    desc: '',
-                    id: 'null'
-                });
-                mark.appendTo($(this));
-                var baseLine = self.burnDownChartElement.offset().top + self.burnDownChartElement.height();
-                if (mark.html.offset().top + mark.html.height() <= baseLine) {
-                    mark.html.addClass('cal-day-event-item-pass');
-                }
-                mark.html.find('.desc').trigger('click');
-            });
-            */
-        },
-        renderBurnDownChart: function() {
-            clearTimeout(Calendar.timer);
-            var self = this;
-            var op = Calendar.compare(Calendar.currentDateObject, Date.today());
-            if (op != 0) {
-                self.burnDownChartTimeElement.hide();
-                if (op < 0) {
-                    self.burnDownChartElement.height(self.burnDownElement.height()).show();
-                    self.burnDownElement.find('.cal-day-event-item').addClass('cal-day-event-item-pass');
-                } else {
-                    self.burnDownChartElement.hide();
-                }
-            } else {
-                var now = new Date();
-                //TODO:  跨日状况处理
-                if(Calendar.compare(now, Calendar.currentDateObject) != 0){
-                    Calendar.Init();
-                }
-                var pass = now - Date.today();
-                var sec_px = 24 * 60 * 60 / self.burnDownElement.find('.chart-body').height();
-                var oooo = (self.G == 3 ? 39 : 70);
-                var height = pass / 1000 / sec_px + oooo;
-                self.burnDownChartElement.height(height).show();
-                self.burnDownChartTimeElement.html(now.toString('HH:mm')).show();
-
-                setTimeout(function(){
-                    var baseLine = self.burnDownChartElement.offset().top + self.burnDownChartElement.height();
-                    self.burnDownElement.find('.cal-day-event-item').each(function() {
-                        // 日期进入燃尽区变色
-                        if ($(this).offset().top + $(this).height() <= baseLine) {
-                            $(this).addClass('cal-day-event-item-pass');
-                        }
-                    });
-                }, 0);
-
-                Calendar.timer = setTimeout(function() {
-                    Calendar.DateView.renderBurnDownChart();
-                }, 30000);
-            }
         },
         renderMarks: function() {
             var self = this;
@@ -831,42 +570,70 @@ $(function(){
             var lis = '';
             var count = 0;
 
-            var all_lis = '<li class="line_0" data-time="0"><b class="dot"></b><span class="time">00:00</span><span class="desc"><a class="add-btn" href="javascript:;">增加日程</a></span><a class="delete-btn" href="javascript:;">×</a></li><li class="line_2" data-time="2"><b class="dot"></b><span class="time">02:00</span><span class="desc"><a class="add-btn" href="javascript:;">增加日程</a></span><a class="delete-btn" href="javascript:;">×</a></li><li class="line_4" data-time="4"><b class="dot"></b><span class="time">04:00</span><span class="desc"><a class="add-btn" href="javascript:;">增加日程</a></span><a class="delete-btn" href="javascript:;">×</a></li><li class="line_6" data-time="6"><b class="dot"></b><span class="time">06:00</span><span class="desc"><a class="add-btn" href="javascript:;">增加日程</a></span><a class="delete-btn" href="javascript:;">×</a></li><li class="line_8" data-time="8"><b class="dot"></b><span class="time">08:00</span><span class="desc"><a class="add-btn" href="javascript:;">增加日程</a></span><a class="delete-btn" href="javascript:;">×</a></li><li class="line_10" data-time="10"><b class="dot"></b><span class="time">10:00</span><span class="desc"><a class="add-btn" href="javascript:;">增加日程</a></span><a class="delete-btn" href="javascript:;">×</a></li><li class="line_12" data-time="12"><b class="dot"></b><span class="time">12:00</span><span class="desc"><a class="add-btn" href="javascript:;">增加日程</a></span><a class="delete-btn" href="javascript:;">×</a></li><li class="line_14" data-time="14"><b class="dot"></b><span class="time">14:00</span><span class="desc"><a class="add-btn" href="javascript:;">增加日程</a></span><a class="delete-btn" href="javascript:;">×</a></li><li class="line_16" data-time="16"><b class="dot"></b><span class="time">16:00</span><span class="desc"><a class="add-btn" href="javascript:;">增加日程</a></span><a class="delete-btn" href="javascript:;">×</a></li><li class="line_18" data-time="18"><b class="dot"></b><span class="time">18:00</span><span class="desc"><a class="add-btn" href="javascript:;">增加日程</a></span><a class="delete-btn" href="javascript:;">×</a></li><li class="line_20" data-time="20"><b class="dot"></b><span class="time">20:00</span><span class="desc"><a class="add-btn" href="javascript:;">增加日程</a></span><a class="delete-btn" href="javascript:;">×</a></li><li style="border:0;" class="line_22" data-time="22"><b class="dot"></b><span class="time">22:00</span><span class="desc"><a class="add-btn" href="javascript:;">增加日程</a></span><a class="delete-btn" href="javascript:;">×</a></li>';
+            var all_lis = '';
+            var tem = '';
+            for(var i = 0; i < 24; i+=2) {
+                if(i < 10) {
+                    tem = '0' + i;
+                }else{
+                    tem = i;
+                }
+                all_lis += '<li class="line_'+i+'" data-time="'+i+'"><b class="dot"></b><span class="time">'+tem+':00</span><span class="desc"><a class="add-btn" href="javascript:;">增加日程 +</a></span></li>';
+            }
+
+
             $('.cal-date-marks-table').html(all_lis);
             var v;
             var len = marks.length;
             var h;
             var line;
+            var desc;
+            var color;
+            var tem;
+            var short_desc;
+
             for(var i = 0; i < len; i++){
                 v = marks[i];
                 h = (new Date(v.time * 1000)).getHours();
+                desc = v.desc;
+                if(desc.search(self.colorCode) >= 0){
+                    tem = desc.split(self.colorCode);
+                    color = self.colors[tem[1]];
+                    desc = tem[0];
+                }else{
+                    color = 'blue';
+                }
 
                 if(h % 2 != 0) h -= 1;
                 line = $('.cal-date-marks-table').find('.line_' + h);
                 if(h < 10) h = '0' + h;
                 line.find('.time').html(h + ':00');
-                line.find('.desc').html(v.desc).attr('data-title', v.desc);
+
+                if(desc.length > 15) {
+                    short_desc = desc.substring(0, 13) + '...';
+                }else{
+                    short_desc = desc;
+                }
+
+                if(!line.find('.add-btn').size()){
+                    continue;
+                }
+
+                line.find('.desc').html('<a class="desc-content ' + color + '" data-color="' + color + '" title="' + desc + '" href="javascript:;">' + short_desc + '</a>');
+                line.append('<a class="delete-btn" href="javascript:;">×</a>');
                 line.attr('data-id', v.id);
             }
+            $('.cal-date-marks-table').find('li:last').css({
+                'border': 0,
+                'height': '35px'
+            });
 
-            /*
-            var chartBody = self.burnDownElement.find('.chart-body');
-            chartBody.empty();
-
-            var len = marks.length > 5 ? 5 : marks.length;
-            var mark;
-            var v;
-            for(var i = 0; i < len; i++){
-                v = marks[i];
-                lis += '<li>' + v.desc + '</li>';
-                count++;
-                mark = new MarkClass(v);
-                mark.appendTo(chartBody);
+            if(Calendar.compare(Date.today(), Calendar.currentDateObject) == 0){
+                var h = (new Date()).getHours();
+                if(h % 2 != 0) h -= 1;
+                $('.cal-date-marks-table').find('.line_' + h).addClass('current-time');
             }
-            self.marksListElement.find('.cal-day-ul').html(lis);
-            self.marksListElement.find('.marks-count').html(count);
-            */
-            //self.renderBurnDownChart();
+
         }
     };
     Calendar.MonthView = {
@@ -875,10 +642,10 @@ $(function(){
             self.mainPanel = $('.cal-month');
             self.tableElement = self.mainPanel.find('table');
             self.tableView = new MonthTable;
-            self.tableElement.on('click', 'a', function() {
+            self.tableElement.on('click', 'td', function() {
                 var y = Calendar.currentYear;
                 var m = Calendar.currentMonth;
-                var d = $(this).attr('data-date');
+                var d = $(this).find('a').attr('data-date');
                 d = new Date(y, m, d);
                 Calendar.setCurrentDate(d);
                 Calendar.changeType('Date');
@@ -922,7 +689,6 @@ $(function(){
                     cur.append('<b class="month_task_dot" style="' + style + '"></b>');
                 });
             });
-            //self.renderBurnDownChart();
         }
     };
     Calendar.WeekView = {
@@ -937,36 +703,6 @@ $(function(){
                 Calendar.setCurrentDate(new Date(y, m, d));
                 Calendar.changeType('Date');
             });
-        },
-        renderBurnDownChart: function() {
-            clearTimeout(Calendar.timer);
-
-            var self = this;
-            var start = Calendar.currentWeekStartObject;
-            var today = Calendar.today;
-            self.burnDownChartElement = $('<div class="chart"><h5 class="time-show">00:00</h5></div>');
-            var todayIndex = today.getDay() - Calendar.weekStart;
-            if(today.getDay() == 0) todayIndex = 6;
-            var today_td = self.tableElement.find('td:eq(' + todayIndex + ')');
-            self.burnDownChartElement.appendTo(today_td);
-            var now = new Date();
-            var pass = now - Calendar.today;
-            var sec_px = 24 * 60 * 60 / (today_td.height() || 293) - 6;
-            var height = pass / 1000 / sec_px - 6;
-            self.burnDownChartElement.height(height).show();
-            self.burnDownChartElement.find('.time-show').html(now.toString('HH:mm'));
-            //var baseLine = self.burnDownChartElement.offset().top + self.burnDownChartElement.height();
-            var baseLine =  self.burnDownChartElement.height();
-            setTimeout(function(){
-                today_td.find('.week-mark-line').each(function() {
-                    if (parseInt($(this).css('top')) + $(this).height() <= baseLine) {
-                        $(this).addClass('week-mark-line-pass');
-                    }
-                });
-            },0);
-            Calendar.timer = setTimeout(function() {
-                Calendar.DateView.renderBurnDownChart();
-            }, 30000);
         },
         renderMarks: function() {
             var self = this;
@@ -995,8 +731,6 @@ $(function(){
                 });
                 op = Calendar.compare(tem, today);
                 td.removeClass('month_pass_date');
-                if (op < 0) td.addClass('month_pass_date');
-                if (op == 0) burndown = true;
                 $.each(marks, function(k, v) {
                     line = $('<div class="week-mark-line"><b></b><span></span></div>');
                     time = new Date(v.time * 1000);
@@ -1007,9 +741,7 @@ $(function(){
                     td.append(line);
                 });
             }
-            if (burndown) {
-                //self.renderBurnDownChart();
-            }
+
         }
     };
     //月级视图 - 基础
@@ -1106,110 +838,6 @@ $(function(){
             }
         }
     });
-    //事件
-    var MarkClass = new Class;
-    MarkClass.include({
-        init: function(m) {
-            var self = this;
-            var time = new Date(m.time * 1000);
-            var desc = m.desc;
-            var year = time.getFullYear();
-            var month = time.getMonth();
-            var date = time.getDate();
-            var hour = time.getHours();
-            var minute = time.getMinutes();
-
-/*
-            if($('body').hasClass('widescreen')){
-                self.G = 3;
-            }else{
-                self.G = 2;
-            }
-*/
-            self.G = Calendar.G;
-
-            self.id = m.id;
-            self.date = date;
-            self.time = time;
-            self.desc = desc;
-            self.baseTime = + new Date(year, month, date, 0);
-            var showtime = time.toString('HH:mm');
-            var html = '<div class="cal-day-event-item">' + '<b class="dot"></b>' + '<span class="time">' + showtime + '</span>' + '<span class="desc">' + desc + '</span>' + '<a class="enter" href="javascript:;">确定</a>' + '<a class="delete" href="javascript:;">×</a>' + '</div>';
-
-            self.html = $(html).css('top', hour * 4 * self.G + minute / 15 * self.G);
-            self.html.find('.desc').click(function() {
-                if($(this).find('input').size()){
-                    return false;
-                }
-                var desc = $(this).html();
-                $(this).html('<input class="input_desc" type="text" maxlength="30" value="' + desc + '" >');
-                self.html.find('.input_desc').select();
-                self.html.find('.delete').hide();
-                self.html.find('.enter').show();
-                return false;
-            });
-            /*
-            self.html.on('keydown', '.input_desc', function(e){
-                if(e.keyCode == 13){
-                    var d = $(this).closest('.desc')
-                    var v = $(this).val() || Calendar.defaultMarkTitle;
-                    d.html(v);
-                    self.desc = v;
-                    $(this).hide();
-                    self.html.find('.show').hide();
-                    Calendar.update(self.id, self.time, self.desc, self.html);
-                }
-            });
-*/
-            self.html.find('.enter').click(function() {
-                var d = $(this).siblings('.desc')
-                var v = d.find('.input_desc').val() || Calendar.defaultMarkTitle;
-                d.html(v);
-                self.desc = v;
-                $(this).hide();
-                self.html.find('.show').hide();
-                Calendar.update(self.id, self.time, self.desc, self.html);
-            });
-            self.html.find('.delete').click(function() {
-                Calendar.deleteMark(self.id);
-                self.html.remove();
-            });
-        },
-        removeElement: function() {
-            this.html.remove();
-            Calendar.deleteMark(this.id)
-        },
-        appendTo: function(el) {
-            var self = this;
-            self.html.appendTo(el);
-            self.html.draggable({
-                axis: 'y',
-                grid: [100, self.G],
-                containment: 'parent',
-                start: function(event, ui) {},
-                drag: function(event, ui) {
-                    var top = ui.position.top;
-                    var time = top / self.G * 15 * 60 * 1000 + self.baseTime;
-                    time = new Date(time);
-                    if (time.getDate() != self.date) {
-                        time = '24:00';
-                    } else {
-                        time = time.toString('HH:mm');
-                    }
-                    self.time = Date.parse(time);
-                    $(this).find('.time').html(time);
-                    baseLine = Calendar.DateView.burnDownChartElement.offset().top + Calendar.DateView.burnDownChartElement.height();
-                    if ($(this).offset().top + $(this).height() <= baseLine) {
-                        $(this).addClass('cal-day-event-item-pass');
-                    } else {
-                        $(this).removeClass('cal-day-event-item-pass');
-                    }
-                },
-                stop: function(event, ui) {
-                    Calendar.update(self.id, self.time, self.desc, self.html);
-                }
-            });
-        }
-    });
+ 
     window.Calendar = Calendar;
 })();

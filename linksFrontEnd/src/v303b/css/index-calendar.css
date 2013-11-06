@@ -61,15 +61,11 @@
     text-align:center;
     top:50%
 }
-.extra-calendar .cal-header {
-    /*width:470px;*/
-    height:50px;
-    background: #fff;
-}
+
 
 .widescreen .extra-calendar .cal-header {
     width:578px;
-    height:60px;
+    height: 46px;
 }
 .extra-calendar .cal-header .tc {
     text-align:center
@@ -77,16 +73,16 @@
 .extra-calendar .cal-header .tr {
     text-align:right
 }
-.extra-calendar .cal-header .pr20 {
-    padding-right:20px
+.extra-calendar .cal-header .pr10 {
+    padding-right:10px
 }
 .extra-calendar .cal-header td {
-    height:50px;
-    line-height:50px
+    height: 34px;
+    line-height: 34px
 }
 .widescreen .extra-calendar .cal-header td {
-    height:60px;
-    line-height:60px
+    height: 46px;
+    line-height: 46px
 }
 
 
@@ -107,7 +103,8 @@
 .extra-calendar .cal-header .cal-header-date-prev,
 .extra-calendar .cal-header .cal-header-date-next,
 .extra-calendar .cal-header .cal-header-date {
-    font-size:12px;
+    font-family: Arial;
+    font-size:14px;
     font-weight:800;
     color: #000;
 }
@@ -132,15 +129,21 @@
 .extra-calendar .cal-header .active {
     color:#fff;
     background:#a9a9a9;
-    border-radius:28px;
-    -moz-border-radius:28px;
-    -webkit-border-radius:28px
+    width: 22px;
+    height: 22px;
+    padding:3px;
 }
+
+.widescreen .extra-calendar .cal-header .active {
+    width: 28px;
+    height: 28px;
+    padding:0;
+}
+
 .extra-calendar .cal-body {
-    background: #fff;
     width:473px;
     height:298px;
-    border-top:1px solid #e0e0e0;
+    border-top:1px solid #ededed;
 }
 .widescreen .extra-calendar .cal-body {
     width:578px;
@@ -150,16 +153,21 @@
 
 .cal-date-marks-table {
     width: 290px;
-    border-right: 1px solid #e0e0e0;
-    height: 298px;
+    border-right: 1px solid #ededed;
+    height: 313px;
+    padding-top:2px;
 }
 .cal-date-marks-table li {
     width: 100%;
     overflow: hidden;
-    height: 24px;
-    line-height: 24px;
-    border-bottom: 1px dashed #e0e0e0;
+    height: 25px;
+    line-height: 25px;
+    border-bottom: 1px dashed #ededed;
 }
+.cal-date-marks-table .current-time {
+    background: #f6f4f1;
+}
+
 .cal-date-marks-table li .dot {
     display: block;
     float: left;
@@ -171,6 +179,8 @@
 }
 .cal-date-marks-table li .time {
     display: block;
+    font-family: Arial;
+    font-size: 10px;
     float: left;
     margin-right: 10px;
     color: #666;
@@ -204,11 +214,14 @@
 .widescreen .cal-date-marks-table {
     padding-top: 3px;
     width: 393px;
-    height:363px
+    height: 375px
 }
+
+
+
 .widescreen .cal-date-marks-table li {
-    height: 29px;
-    line-height: 29px;
+    height: 30px;
+    line-height: 30px;
 }
 
 .widescreen .cal-date-marks-table li .dot {
@@ -220,10 +233,13 @@
 
 
 .cal-month table th,
+.cal-week table th {
+    border-right:1px solid #ededed;
+}
 .cal-month table td,
-.cal-week table th,
 .cal-week table td {
-    border: 1px solid #e0e0e0;
+    border-top: 1px solid #ededed;
+    border-right: 1px solid #ededed;
 }
 
 
@@ -237,15 +253,14 @@
 .extra-calendar .cal-day .cal-mini-month-panel {
     overflow:hidden;
     width:180px;
-
-    margin: -298px 0 0 292px;
+    margin: -310px 0 0 292px;
 }
 .widescreen .extra-calendar .cal-day .cal-mini-month-panel {
     overflow:hidden;
     width:220px;
     height:190px;
     background:#fff;
-    margin: -363px 0 0 394px;
+    margin: -377px 0 0 395px;
 }
 
 
@@ -268,6 +283,7 @@
 }
 .widescreen .extra-calendar .cal-day .cal-mini-month-panel td,
 .widescreen .extra-calendar .cal-day .cal-mini-month-panel th {
+
     text-align:center;
     width:28px;
     height:25px
@@ -275,6 +291,8 @@
 
 .extra-calendar .cal-day .cal-mini-month-panel td a,
 .extra-calendar .cal-day .cal-mini-month-panel th a {
+    font-family: Arial;
+    font-size: 10px;
     color:#333;
     text-align:center;
     display:inline-block;
@@ -286,9 +304,6 @@
 .extra-calendar .cal-day .cal-mini-month-panel th .active {
     background:#a9a9a9;
     color:#fff;
-    border-radius:27px;
-    -moz-border-radius:27px;
-    -webkit-border-radius:27px
 }
 .extra-calendar .cal-day .cal-day-note-list {
     width:160px;
@@ -315,123 +330,13 @@
     padding-left:15px;
     list-style:disc
 }
-.extra-calendar .cal-day .cal-day-burn-down-chart {
-    width:288px;
-    height:298px;
-    margin:-298px 0 0 182px;
-    background:#fff;
-    overflow:hidden;
-    position:relative
-}
-.widescreen .extra-calendar .cal-day .cal-day-burn-down-chart {
-    width:356px;
-    height:363px;
-    margin:-363px 0 0 222px;
-}
-.extra-calendar .cal-day .cal-day-burn-down-chart .chart-body {
-    width:288px;
-    height:213px;
-    position:absolute;
-    bottom:15px
-}
-.widescreen .extra-calendar .cal-day .cal-day-burn-down-chart .chart-body {
-    width:356px;
-    height:309px;
-    position:absolute;
-    bottom:15px
-}
-.extra-calendar .cal-day .cal-day-burn-down-chart .chart {
-    width:288px;
-    height:70px;
-    position:absolute;
-    top:0;
-    background:#a9a9a9
-}
-.widescreen .extra-calendar .cal-day .cal-day-burn-down-chart .chart {
-    width:356px;
-    height:39px;
-    position:absolute;
-    top:0;
-    background:#a9a9a9
-}
-
-.extra-calendar .cal-day .cal-day-burn-down-chart .chart .time-show {
-    color:#fff;
-    font-size:18px;
-    font-weight: bold;
-    position:absolute;
-    right:40px;
-    bottom:2px
-}
-.extra-calendar .cal-day .cal-day-burn-down-chart .cal-day-event-item {
-    cursor:move;
-    color:#333;
-    position:absolute;
-    width:278px;
-    padding:0 5px;
-    height:20px;
-    line-height:20px;
-    border-bottom:1px dashed #502d5c
-}
-.widescreen .extra-calendar .cal-day .cal-day-burn-down-chart .cal-day-event-item {
-    cursor:move;
-    color:#333;
-    position:absolute;
-    width:346px;
-    padding:0 5px;
-    height:20px;
-    line-height:20px;
-    border-bottom:1px dashed #502d5c
-}
-.extra-calendar .cal-day .cal-day-burn-down-chart .cal-day-event-item .dot {
-    display:inline-block;
-    width:4px;
-    height:4px;
-    background:#a9a9a9;
-    position:relative;
-    top:-2px;
-    border-radius:5px;
-    -moz-border-radius:5px;
-    -webkit-border-radius:5px
-}
-.extra-calendar .cal-day .cal-day-burn-down-chart .cal-day-event-item .time {
-    margin-left:5px
-}
-.extra-calendar .cal-day .cal-day-burn-down-chart .cal-day-event-item .desc {
-    margin-left:10px;
-    margin-right:10px
-}
-.extra-calendar .cal-day .cal-day-burn-down-chart .cal-day-event-item .enter {
-    display:none;
-    color:#502d5c;
-    float:right;
-}
-.extra-calendar .cal-day .cal-day-burn-down-chart .cal-day-event-item .delete {
-    color:#502d5c;
-    float:right;
-    display:inline;
-}
-
-.extra-calendar .cal-day .cal-day-burn-down-chart .cal-day-event-item-pass {
-    color:#fff;
-    border-bottom:1px dashed #fff
-}
-.extra-calendar .cal-day .cal-day-burn-down-chart .cal-day-event-item-pass .dot {
-    background:#fff
-}
-.extra-calendar .cal-day .cal-day-burn-down-chart .cal-day-event-item-pass .enter {
-    color:#fff
-}
-.extra-calendar .cal-day .cal-day-burn-down-chart .cal-day-event-item-pass .delete {
-    color:#fff
-}
 
 
 .extra-calendar .cal-month,.extra-calendar .cal-week {
-    height:299px
+    height:315px
 }
 .widescreen .extra-calendar .cal-month,.widescreen .extra-calendar .cal-week {
-    height:363px
+    height:378px
 }
 .extra-calendar .cal-month table,
 .extra-calendar .cal-week table {
@@ -460,6 +365,7 @@
 
 .extra-calendar .cal-month table td,
 .extra-calendar .cal-week table td {
+    cursor: pointer;
     background:#fff;
     color:#333;
     position:relative;
@@ -509,18 +415,6 @@
     margin-left:5px;
     border-bottom:1px dashed #a9a9a9
 }
-.extra-calendar .cal-month table td .week-mark-line-pass,
-.extra-calendar .cal-week table td .week-mark-line-pass {
-    z-index:2
-}
-.extra-calendar .cal-month table td .week-mark-line-pass b,
-.extra-calendar .cal-week table td .week-mark-line-pass b {
-    background:#fff
-}
-.extra-calendar .cal-month table td .week-mark-line-pass span,
-.extra-calendar .cal-week table td .week-mark-line-pass span {
-    border-bottom:1px dashed #fff
-}
 .extra-calendar .cal-month table td .chart,
 .extra-calendar .cal-week table td .chart {
     width:100%;
@@ -554,39 +448,71 @@
     overflow:hidden;
     background:#fff
 }
-.extra-calendar .cal-month .month_pass_date,
-.extra-calendar .cal-week .month_pass_date {
-    color:#fff;
-    background:#a9a9a9;
-}
-.extra-calendar .cal-month .month_pass_date .month_task_dot,
-.extra-calendar .cal-week .month_pass_date .month_task_dot {
-    background-color:#fff
-}
-.extra-calendar .cal-month .month_pass_date a,
-.extra-calendar .cal-week .month_pass_date a,
-.extra-calendar .cal-month .month_pass_date a:active,
-.extra-calendar .cal-week .month_pass_date a:active,
-.extra-calendar .cal-month .month_pass_date a:hover,
-.extra-calendar .cal-week .month_pass_date a:hover {
-    color:#fff
-}
-.extra-calendar .cal-month .month_pass_date .week-mark-line b,
-.extra-calendar .cal-week .month_pass_date .week-mark-line b {
-    background:#fff
-}
-.extra-calendar .cal-month .month_pass_date .week-mark-line span,
-.extra-calendar .cal-week .month_pass_date .week-mark-line span {
-    border-color:#fff
-}
 
 
+.cal-date-marks-table .desc-content,
+.cal-date-marks-table .desc-content:hover {
+    color: #fff;
+    display: inline-block;
+    height: 20px;
+    line-height: 20px;
+    padding: 0 8px;
+    border-radius: 3px;
+    text-decoration: none;
+}
+.cal-date-marks-table .blue {
+    background: #79abe6;
+}
+.cal-date-marks-table .green {
+    background: #81c7d4;
+}
+.cal-date-marks-table .red {
+    background: #e0ada2;
+}
 
+.desc-input-div {
+    height: 20px;
+    /*margin-top: 1px;*/
+    padding: 0 2px;
+    display: inline-block;
+    /*border: 1px solid #ededed;*/
+}
+.desc-input-div input {
+    border: 0;
+    height: 15px;
+    line-height: 15px;
+    padding: 5px;
+}
+.desc-input-div b {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-left: 5px;
+}
+.desc-input-div .blue {
+    background: #79abe6;
+}
+.desc-input-div .green {
+    background: #81c7d4;
+}
+.desc-input-div .red {
+    background: #e0ada2;
+}
+.desc-input-div .active {
+    border:1px solid #333;
+    width:10px;
+    height:10px;
+}
 
 
 
 .widescreen .extra-calendar .cal-body {
     width:578px;
+}
+.widescreen .desc-input-div input{
+    padding: 8px 0;
 }
 
 
@@ -615,7 +541,7 @@
     }
     .extra-calendar .cal-month table th,
     .extra-calendar .cal-week table th {
-        width: 64px;
+        width: 65px;
         display: block;
         float: left;
         line-height: 50px;
@@ -624,7 +550,7 @@
     }
     .widescreen .extra-calendar .cal-month table th,
     .widescreen .extra-calendar .cal-week table th {
-        width: 79px;
+        width: 80px;
         display: block;
         float: left;
         line-height: 50px;
@@ -633,8 +559,8 @@
     }
     .extra-calendar .cal-month table td,
     .extra-calendar .cal-week table td {
-        width: 66px;
-        height: 242px;
+        width: 67px;
+        height: 415px;
         display: block;
         position: relative;
         float: left;
@@ -643,7 +569,7 @@
 
     .widescreen .extra-calendar .cal-month table td,
     .widescreen .extra-calendar .cal-week table td {
-        width: 81px;
+        width: 82px;
         height: 297px;
         display: block;
         position: relative;
@@ -651,21 +577,21 @@
         /*margin-right: 2px;*/
     }
     .extra-calendar .cal-month table td {
-        height: 47px;
-        line-height: 47px;
+        height: 51.5px;
+        line-height: 51px;
         /*39*/
     }
     .extra-calendar .cal-month table .more-line {
-        height: 39px;
-        line-height: 39px;
+        height: 42px;
+        line-height: 42px;
     }
     .widescreen .extra-calendar .cal-month table .more-line {
-        height: 48px;
-        line-height: 48px;
+        height: 51px;
+        line-height: 51px;
     }
     .widescreen .extra-calendar .cal-month table td {
-        height: 58px;
-        line-height: 58px;
+        height: 62px;
+        line-height: 62px;
     }
     /*
         .widescreen .extra-calendar .cal-day .cal-day-burn-down-chart {

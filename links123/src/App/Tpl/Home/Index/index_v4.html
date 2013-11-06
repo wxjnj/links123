@@ -9,6 +9,79 @@
 	<link rel="stylesheet" href="__STATIC__/min/?b=v303b/css&f=base.css,css.min.css" />
 	<!--link rel="stylesheet" href="__PUBLIC__/IndexV3/skins/{$theme}/style.css" id="J_Skins" /-->
 	<script>var $CONFIG = { 'STATIC': '__STATIC__','APP' : '__APP__/', 'URL' : '__URL__', 'PUBLIC' : '__PUBLIC__', 'IsLogin' : <empty name="_SESSION[C('MEMBER_AUTH_KEY')]">1<else />0</empty> };</script>
+	<style>
+	a, a:hover{
+		color: #fff;
+	}
+	#container{
+		background: url(__PUBLIC__/IndexV3/skins/dark/bg.jpg);
+	}
+	.subcate,
+	.thl a,
+	.header-weather,
+	.header-weather .region{ color: #fff; }
+	.thl .cate,
+	.title-tabs span,
+	.text-news p a, .text-news p a:active,
+	.pic-news-title a,
+	.title-tabs li,
+	.cal-date-marks-table li .time,
+	.extra-calendar .cal-day .cal-mini-month-panel table,
+	.extra-calendar .cal-day .cal-mini-month-panel td a,
+	.text-news .more-news a, .text-news .more-news a:active,
+	.site-info li a, .site-info li a:active, .friend-links li a, .friend-links li a:active,
+	.extra-calendar .cal-header .cal-header-date-prev, .extra-calendar .cal-header .cal-header-date-next, .extra-calendar .cal-header .cal-header-date,
+	.extra-calendar .cal-header button,
+	.site-info{
+		color: #fff;
+	}
+	.thl .cate-in,
+	.thl .cate-in a{ color: #000; }
+	.zld,
+	.zld a,
+	.zld a:hover{
+		color: #fff;
+	}
+	.title-tabs li{
+		padding-left: 0;
+		padding-right: 0;
+		margin-left: 20px;
+	}
+	.title-tabs .active,
+	.extra-calendar .cal-header .active{
+		background: none;
+		border-bottom: 3px solid #9e8686;
+	}
+	.pic-news-tabs a{
+		background: #6e848e;
+	}
+	.pic-news-tabs .active,
+	.cal-date-marks-table li .dot,
+	.text-news p b{
+		background: #fff;
+	}
+	.cal-date-marks-table .current-time,
+	.widescreen .extra-calendar .cal-day .cal-mini-month-panel{
+		background: none;
+	}
+	.text-news p a:hover{
+		color: #f00;
+	}
+	.text-news{
+		padding-left: 30px;
+		width: 310px;
+	}
+	.widescreen .text-news{
+		width: 340px;
+	}
+	.more-news{
+		padding-top: 30px;
+	}
+	.widescreen .more-news{
+		padding-top: 20px;
+	}
+	/* 先放这吧，后期再根据调整来整理吧  */
+	</style>
 </head>
 <body>
 <script src="__STATIC__/v3/js/init.js"></script>
@@ -62,7 +135,8 @@
 				<div class="skin-list" style="display: none">
 					<span class="ang"></span>
 					<div class="skin-content">
-						<div class="subpanel" id="J_skin_selection">
+						<p style="color:#333!important;text-align:center;line-height:40px;margin-top:10px">coming soon ...</p>
+						<!--div class="subpanel" id="J_skin_selection">
 							<div class="skin-types">
 								<a data-id="themes" class="J_link_skin_type">另&nbsp;客</a>
 								<span class="skin-theme-split"> | </span>
@@ -90,7 +164,7 @@
 									</div>
 								</volist>
 							</div>
-						</div>
+						</div-->
 					</div>
 				</div>
 			</li>
@@ -102,74 +176,81 @@
 		</ul><!-- // .screen-theme -->
 	</div>
 </div><!--#header end-->
-<div class="under-header">
-	<div class="under-header-inner">
-		<div class="ci-hd J_thl_area">
-			<h1><a class="logo" href="/" rel="home">另客网</a></h1>
-			<div class="thl">
-				<form action="" id="searchForm">
-					<input name="thl" id="J_thl" type="hidden" value="">
-					<input name="tid" id="J_tid" type="hidden" value="">
-					<input name="q" id="J_q" type="hidden" value="">
-					<input type="text" value="" style="display:none;" />
-					<input type="hidden" id="tidNow" value="{$tidNow}" />
-					<div class="cate cate-in" id="J_thl_div" >
-						<volist name="thl_list" id="vo" key="m"><a <eq name="thlNow" value="$vo['thl']">class="on"</eq> href="#">{$vo['thl']}</a><if condition='$m neq 12'>-</if></volist>
-					</div>
-					<div class="subcate">
-						<dl>
-							<volist name="thl_list" id="vo" key="i">
-								<dd class="J_thlz" <neq name="vo['thl']" value="$thlNow">style="display:none;"</neq> >
-								<volist name="vo['thlz']" id="thlz" key="j"><a <if condition='$thlz["id"] eq $tidNow'>class="on"</if> href="#" title="{$thlz['tip']}" ndk="{$thlz['needkey']}" url="{$thlz['url']}" tid="{$thlz['id']}" tag_name="{$thlz['url_tag_name']}">{$thlz['name']}</a><neq name="vo['thlz_len']" value="$j">-</neq></volist>
-								</dd>
-							</volist>
-						</dl>
-					</div>
-					<div class="ctls">
-						<input type="text" id="search_text" class="ipt" x-webkit-speech lang="zh-CN" value="{$_COOKIE['keyword']}" autocomplete="off" />
-						<input type="hidden" id="search_text_o" />
-						<input class="btn" type="submit" value="" id="btn_search" />
-					</div>
-				</form>
-			</div>
-			<div class="header-weather">
-				<span class="region">{$weatherData['city']}</span>
-				<span class="degree">{$weatherData['temp']}°</span>
-				<span class="info"><b class="weather-icon"></b><b class="weather-desc">{$weatherData['sun']}</b>，空气质量{$weatherData['air']}</span>			
-				<div class="weather-find-region-box" style="display:none">
-					<span class="ang1"></span>
-					<span class="ang2"></span>
-					<div class="content">
-						搜索: <input class="region-name-input" type="text" size="20" /><br />
-						<div class="region-ul"></div>
-					</div>
-				</div>
-			</div><!-- // .header-weather -->
-		</div>
-	</div>
-</div>
-<if condition="$_COOKIE.big_pic_01_clicked != 1">
-<div class="big-pic">
-	<div class="big-pic-inner">
-		<div id="K_banner_01">
-			<a href="http://en.links123.cn/" target="_blank">
-				<img src="__STATIC__/v303b/imgs/big-pic-01.png" usemap="K_banner_01_map" />
-			</a>
-			<map id="K_banner_01_map" name="K_banner_01_map">
-				<area class="doll" shape ="rect" coords ="30,177,159,356" href ="http://en.links123.cn/" target ="_blank" alt="老外在隔壁" />
-				<area class="doll" shape ="rect" coords ="243,144,376,358" href ="http://en.links123.cn/" target ="_blank" alt="老外在隔壁" />
-				<area class="doll" shape ="rect" coords ="459,163,574,359" href ="http://en.links123.cn/" target ="_blank" alt="老外在隔壁" />
-				<area class="doll" shape ="rect" coords ="676,146,787,358" href ="http://en.links123.cn/" target ="_blank" alt="老外在隔壁" />
-				<area class="doll" shape ="rect" coords ="866,168,965,350" href ="http://en.links123.cn/" target ="_blank" alt="老外在隔壁" />
-				<area shape ="rect" coords ="521,34,979,120" href ="http://en.links123.cn/" target ="_blank" alt="老外在隔壁" />
-			</map>
-			<img id="K_banner_01_arrow" src="__STATIC__/v303b/imgs/banner-arrow.png" />
-		</div>
-	</div>
-</div>
-</if>
+
 <div class="container" id="container" <if condition="$skinId">style="background-image:url({$skin})"</if>>
+
 	<div class="container-inner">
+
+
+		<div class="under-header">
+			<div class="under-header-inner">
+				<div class="ci-hd J_thl_area">
+					<h1><a class="logo" href="/" rel="home">另客网</a></h1>
+					<div class="thl">
+						<form action="" id="searchForm">
+							<input name="thl" id="J_thl" type="hidden" value="">
+							<input name="tid" id="J_tid" type="hidden" value="">
+							<input name="q" id="J_q" type="hidden" value="">
+							<input type="text" value="" style="display:none;" />
+							<input type="hidden" id="tidNow" value="{$tidNow}" />
+							<div class="cate cate-in" id="J_thl_div" >
+								<volist name="thl_list" id="vo" key="m"><a <eq name="thlNow" value="$vo['thl']">class="on"</eq> href="#">{$vo['thl']}</a><if condition='$m neq 12'>-</if></volist>
+							</div>
+							<div class="subcate">
+								<dl>
+									<volist name="thl_list" id="vo" key="i">
+										<dd class="J_thlz" <neq name="vo['thl']" value="$thlNow">style="display:none;"</neq> >
+										<volist name="vo['thlz']" id="thlz" key="j"><a <if condition='$thlz["id"] eq $tidNow'>class="on"</if> href="#" title="{$thlz['tip']}" ndk="{$thlz['needkey']}" url="{$thlz['url']}" tid="{$thlz['id']}" tag_name="{$thlz['url_tag_name']}">{$thlz['name']}</a><neq name="vo['thlz_len']" value="$j">-</neq></volist>
+										</dd>
+									</volist>
+								</dl>
+							</div>
+							<div class="ctls">
+								<input type="text" id="search_text" class="ipt" x-webkit-speech lang="zh-CN" value="{$_COOKIE['keyword']}" autocomplete="off" />
+								<input type="hidden" id="search_text_o" />
+								<input class="btn" type="submit" value="" id="btn_search" />
+							</div>
+						</form>
+					</div>
+					<div class="header-weather">
+						<span class="region">{$weatherData['city']}</span>
+						<span class="degree">{$weatherData['temp']}°</span>
+						<span class="info"><b class="weather-icon"></b><b class="weather-desc">{$weatherData['sun']}</b>，空气质量{$weatherData['air']}</span>			
+						<div class="weather-find-region-box" style="display:none">
+							<span class="ang1"></span>
+							<span class="ang2"></span>
+							<div class="content">
+								搜索: <input class="region-name-input" type="text" size="20" /><br />
+								<div class="region-ul"></div>
+							</div>
+						</div>
+					</div><!-- // .header-weather -->
+				</div>
+			</div>
+		</div>
+		<!-- <if condition="$_COOKIE.big_pic_01_clicked != 1">
+		<div class="big-pic">
+			<div class="big-pic-inner">
+				<div id="K_banner_01">
+					<a href="http://en.links123.cn/" target="_blank">
+						<img id="K_banner_01_img" src="__STATIC__/v303b/imgs/big-pic-01.png" usemap="K_banner_01_map" />
+					</a>
+					<map id="K_banner_01_map" name="K_banner_01_map">
+						<area class="doll" shape ="rect" coords ="30,177,159,356" href ="http://en.links123.cn/" target ="_blank" alt="老外在隔壁" />
+						<area class="doll" shape ="rect" coords ="243,144,376,358" href ="http://en.links123.cn/" target ="_blank" alt="老外在隔壁" />
+						<area class="doll" shape ="rect" coords ="459,163,574,359" href ="http://en.links123.cn/" target ="_blank" alt="老外在隔壁" />
+						<area class="doll" shape ="rect" coords ="676,146,787,358" href ="http://en.links123.cn/" target ="_blank" alt="老外在隔壁" />
+						<area class="doll" shape ="rect" coords ="866,168,965,350" href ="http://en.links123.cn/" target ="_blank" alt="老外在隔壁" />
+						<area shape ="rect" coords ="521,34,979,120" href ="http://en.links123.cn/" target ="_blank" alt="老外在隔壁" />
+					</map>
+					<img id="K_banner_01_arrow" src="__STATIC__/v303b/imgs/banner-arrow.png" />
+				</div>
+			</div>
+		</div>
+		</if> -->
+
+
+
 		<div class="zld" id="J_ZldList">
 			<form action="{:U('Link/index')}?mod=myarea" id="J_MyAreaForm" target="_blank" method="post"><input type="hidden" name="url" value="" /></form>
 			<ul id="J_sortable">
@@ -183,13 +264,13 @@
 				</volist>			
 				<li class="add">
 					<span class="ctl"><i>+</i></span>
-					<empty name="_SESSION[C('MEMBER_AUTH_KEY')]">
+					<!-- <empty name="_SESSION[C('MEMBER_AUTH_KEY')]">
 					<div class="mini-tip zld-mini-tip">
 						<div class="mini-tip-l"></div>
 						<div class="mini-tip-c">请登陆后添加网址</div>
 						<div class="mini-tip-r"></div>
 					</div>
-					</empty>
+					</empty> -->
 				</li>
 			</ul>
 		</div><!--.zld end-->
@@ -197,7 +278,7 @@
 			<div class="box-hd">
 				<div class="app-icon-list">
 					<div class="app-more">
-						<a href="javascript:" class="more"></a><em>更多应用</em>
+						<a href="javascript:" class="more"></a><!--em>更多应用</em-->
 						<div class="app-more-box" id="J_AppsMore">
 							<b class="ang"></b>
 							<div class="amb-bd">
@@ -212,6 +293,9 @@
 					<ul id="J_Apps">
 						<volist name="app_list" id="vo">
 							<li id="{$vo.appId}" <if condition="$vo.appClass neq ''">class="{$vo.appClass}"</if>>
+							<if condition="$vo.appId eq '1'"><i class="hot"></i></if>
+							<if condition="$vo.appId eq '2'"><i class="hot"></i></if>
+							<if condition="$vo.appId eq '3'"><i class="hot"></i></if>
 							<a data-href="{$vo.appLink}" <if condition="$vo.isTarget eq '1'">target="_blank"</if> class="{$vo.linkClass}">
 							<if condition="$vo.appName eq '日&nbsp;历'">
 								<p class="ct">
@@ -250,7 +334,7 @@
 							文摘
 							<div class="mini-tip news-mini-tip">
 								<div class="mini-tip-l"></div>
-								<div class="mini-tip-c">comming soon...</div>
+								<div class="mini-tip-c">coming soon...</div>
 								<div class="mini-tip-r"></div>
 							</div>
 						</li>
@@ -258,7 +342,7 @@
 							社交
 							<div class="mini-tip news-mini-tip">
 								<div class="mini-tip-l"></div>
-								<div class="mini-tip-c">comming soon...</div>
+								<div class="mini-tip-c">coming soon...</div>
 								<div class="mini-tip-r"></div>
 							</div>
 						</li>
@@ -338,5 +422,10 @@
 	</div>
 </div><!--#container end-->
 <script src="__STATIC__/min/?b=v303b/js&f=jquery-1.7.1.min.js,jquery.cookies.2.2.0.min.js,jquery.plugins.js,index.js"></script>
+<script>
+
+
+
+</script>
 </body>
 </html>

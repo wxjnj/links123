@@ -218,6 +218,18 @@ class BasicSetAction extends CommonAction {
         $this->success("设置英语角游客记录保存时间成功");
     }
 
+    /**
+     * 设置关于我们
+     * 
+     * @author slate $date:2013-11-05
+     */
+    public function setAboutUs() {
+    	
+    	$about_us = $this->_post('about_us');
+    	$variableModel = D("Variable");
+    	$variableModel->setVariable("about_us", $about_us, "关于我们");
+    	$this->success("设置关于我们成功");
+    }
 }
 
 ?>

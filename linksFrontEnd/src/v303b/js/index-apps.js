@@ -779,7 +779,7 @@ $( function($) {
 			];
 
 
-			self.changeMode('mini', true);
+			self.changeMode('normal', true);
 			var lis = '';
 			var divs = '';
 			$.each(self.music_channel_list, function(k, v){
@@ -884,6 +884,12 @@ $( function($) {
 				self.play();
 			});
 
+			$('.mini_current_channel').click(function(){
+				if(!$('#K_303_music_iframe').attr('src')){
+					self.play();
+				}
+			});
+
 		},
 		close: function(){
 			$('#J_box_music').hide();
@@ -937,12 +943,14 @@ $( function($) {
 				if($(window).height() < 560){
 					$('.normal_music_box').css({
 						'bottom': 'auto',
-						'top' : '0'
+						'top' : '0',
+						'position' : 'absolute'
 					});
 				}else{
 					$('.normal_music_box').css({
 						'bottom': -t,
-						'top' : 'auto'
+						'top' : 'auto',
+						'position' : 'fixed'
 					});
 				}
 			}
@@ -999,7 +1007,7 @@ $( function($) {
 	};
 
 	window.onload = function(){
-		$('a[data-href="#J_box_music"]').trigger('click');
+		//$('a[data-href="#J_box_music"]').trigger('click');
 		$('a[data-href="#J_box_music"]').on('click', function(){
 			setTimeout(function(){
 				MusicBox.changeMode('normal');

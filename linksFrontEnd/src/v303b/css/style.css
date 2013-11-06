@@ -36,13 +36,11 @@ input:focus{ outline: 0; }
 }
 
 .footer-inner {
-	width: 940px;
-	padding: 0 10px;
-	background: #fff;
+	width: 960px;
 }
 
 .widescreen .footer-inner {
-	width: 1152px;
+	width: 1112px;
 }
 
 .footer a,
@@ -60,7 +58,6 @@ input:focus{ outline: 0; }
 .under-header {
 	width: 100%;
 	padding-top:40px;
-	background-color:#fff;
 }
 .under-header-inner {
 	position: relative;
@@ -139,7 +136,7 @@ input:focus{ outline: 0; }
 
 /*logo*/
 .logo{
-	background: url(../imgs/logo.png) 0 0 no-repeat;
+	background: url(../imgs/logo2.png) 0 0 no-repeat;
 	position: absolute;
 	left: 0;
 	top: 35px;
@@ -194,7 +191,7 @@ input:focus{ outline: 0; }
 }
 .thl .ctls{
 	background: #fff;
-	height: 34px;
+	height: 30px;
 	padding: 0 10px;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
@@ -207,14 +204,14 @@ input:focus{ outline: 0; }
 	font-size: 14px;
 	height: 16px;
 	line-height: 16px;
-	padding: 9px 0;
+	padding: 7px 0;
 	width: 360px;
 }
 .thl .ctls .btn{
-	background: url(../imgs/sprite.png) -5px 2px no-repeat;
+	background: url(../imgs/sprite.png) -2px -30px no-repeat;
 	cursor: pointer;
 	float: right;
-	height: 34px;
+	height: 32px;
 	width: 20px;
 	line-height: 999px;
 	font-size: 0;
@@ -229,7 +226,7 @@ input:focus{ outline: 0; }
 }
 .thl .cate{
 	position: absolute;
-	top: 34px;
+	top: 32px;
 	left: 86px;
 	left: 45px;
 }
@@ -274,65 +271,7 @@ input:focus{ outline: 0; }
 	margin-right: 4px;
 }
 
-/*zld*/
-.zld{
-	margin-top: 20px;
-}
-.zld ul{
-	font-size: 12px;
-	*zoom: 1;
-} 
-.zld ul:after{
-	content: '\0020';
-	display: block;
-	height: 0;
-	clear: both;
-}
-.zld ul li{
-	display: inline-block;
-	float: left;
-	height: 36px;
-	line-height: 36px;
-	margin: 5px 5px 0 0;
-	white-space: nowrap;
-	position: relative;
-	vertical-align: middle;
-}
-/*
-.zld ul li .mask{
-	width: 100%;
-	height: 100%;
-	position: absolute;
-	top: 0;
-	left: 0;
-	filter:alpha(opacity=30);
-	-moz-opacity: 0.3;
-	-khtml-opacity: 0.3;
-	opacity: 0.3;
-}*/
-.zld ul li .nm{
-	float:left;
-	cursor: pointer;
-	display: inline-block;
-	height: 16px;
-	line-height: 16px;
-	padding: 10px 25px 10px 25px;
-	vertical-align: top;
-	background: #fff;
-}
 
-.zld ul li .nm:hover{
-	/*color: #fc2a06;*/
-	cursor: pointer;
-	padding-top:8px;
-	margin-top:1px;
-	box-shadow:inset 0px 0 5px #ccc;
-}
-
-
-.zld ul li b{
-	font-weight: normal;
-}
 /*box*/
 .edit,
 .del,
@@ -372,7 +311,6 @@ input:focus{ outline: 0; }
 }
 .box .box-hd{
 	padding-top: 5px;
-	background: #fff;
 }
 
 .box-music .box-bd,
@@ -382,13 +320,16 @@ input:focus{ outline: 0; }
 }
 
 .box-apps .box-bd {
-	padding-top: 0;
+	padding-top: 10px;
 }
 
+.box-apps {
+	margin-top: 35px;
+	border-top: 1px solid #ededed;
+}
 
-.box-apps,
 .box-find{
-	margin-top: 20px;
+	margin-top: 15px;
 }
 
 /*footer*/
@@ -553,6 +494,15 @@ input:focus{ outline: 0; }
 	z-index: 3;
 	margin-right: 5px;
 }
+.app-icon-list .app-more .more {
+	width: 18px;
+	height: 18px;
+	display: block;
+	background-image: url(../imgs/sprite.png);
+	background-position: -67px -98px;
+	background-repeat: no-repeat;
+}
+
 .app-icon-list .app-more-box .nm{
 	color: #fff;
 }
@@ -687,7 +637,7 @@ input:focus{ outline: 0; }
 */
 
 .thl .ctls {
-	border: 1px solid #ececec;
+	border: 1px solid #d1d1d1;
 }
 
 .big-pic {
@@ -705,24 +655,63 @@ input:focus{ outline: 0; }
 
 
 .container {
-	background: #e0e0e0;
-	overflow: hidden;
-	padding-bottom: 35px;
-}
-
-.box-bd {
 	background: #fff;
+	overflow: hidden;
 }
 
+
+/*zld*/
+.zld{}
+.zld ul{
+	font-size: 12px;
+	*zoom: 1;
+} 
+.zld ul:after{
+	content: '\0020';
+	display: block;
+	height: 0;
+	clear: both;
+}
+.zld ul li{
+	display: inline-block;
+	float: left;
+	height: 36px;
+	line-height: 36px;
+	margin: 5px 5px 0 0;
+	white-space: nowrap;
+	position: relative;
+	vertical-align: middle;
+}
+
+.zld ul li .nm{
+	float:left;
+	cursor: pointer;
+	display: inline-block;
+	height: 16px;
+	line-height: 16px;
+	padding: 10px 25px 10px 25px;
+	vertical-align: top;
+	background: url(../imgs/op60.png);
+}
+
+.zld ul li .nm:hover{
+	box-shadow:inset 0px 0 5px #ccc;
+}
+
+
+.zld ul li b{
+	font-weight: normal;
+}
 .zld ul li .ctl{
 	float:left;
-	background-color:#fff;
+	background-color:#f2f2f2;
 	cursor: pointer;
 	display: inline-block;
 	height: 26px;
 	position: relative;
 	width: 26px;
 	padding: 5px;
+	background: url(../imgs/op60.png);
 }
 
 .zld ul li .ctl i{
@@ -734,42 +723,73 @@ input:focus{ outline: 0; }
 	background-repeat: no-repeat;
 }
 .zld ul li .ctl:hover{
-	height: 26px;
-	width: 26px;
-	padding-top: 4px;
-	padding-bottom: 4px;
-	margin-top: 1px;
 	box-shadow:inset 0px 0 5px #ccc;
 }
 .zld ul li.add .ctl{
-	-moz-border-radius: 40px;
-	-webkit-border-radius: 40px;
-	border-radius: 40px;
-	padding: 3px;
-	margin: 2px;
 	cursor: pointer;
-	/*text-indent: -999px; 360兼容模式出bug */
 	color: transparent;
 }
 .zld ul li.add .ctl:hover{
-	padding: 1px;
-	margin: 4px;
+	box-shadow:inset 0px 0 5px #ccc;
 }
 .zld ul li.add .ctl i{
-	background: url(../imgs/sprite.png) -301px -61px no-repeat;
+	background: url(../imgs/sprite.png) -272px -3px no-repeat;
 }
+
+
+.widescreen .zld ul li{
+	height: 42px;
+	line-height: 42px;
+	margin: 5px 5px 0 0;
+}
+
+.widescreen .zld ul li .nm{
+	height: 16px;
+	line-height: 16px;
+	padding: 13px 25px 13px 25px;
+}
+
+.widescreen .zld ul li .nm:hover{
+	padding-top:11px;
+	margin-top:1px;
+}
+.widescreen .zld ul li .ctl{
+	height: 26px;
+	width: 26px;
+	padding: 8px;
+}
+.widescreen .zld ul li .ctl i{
+	width: 26px;
+	height: 26px;
+	background-position: -272px -61px;
+}
+.widescreen .zld ul li.add .ctl i{
+	background-position: -272px -3px;
+}
+.widescreen .zld ul li .ctl:hover{
+	height: 26px;
+	width: 26px;
+	padding-top: 7px;
+	padding-bottom: 7px;
+	margin-top: 1px;
+	box-shadow:inset 0px 0 5px #ccc;
+}
+
+
+
 
 
 .extra-wrap {
-	margin-top: 15px;
+	margin-top: 20px;
 	overflow: hidden;
 }
 
 .extra-box {
+	border-top: 1px solid #ededed;
+	border-bottom: 1px solid #ededed;
 	width: 473px;
 	height: 350px;
 	/*overflow: hidden;*/
-	background: #fff;
 }
 
 .extra-wrap .lft-box{
@@ -810,9 +830,8 @@ input:focus{ outline: 0; }
 
 .site-info {
 	/*border-top: 1px solid #ddd;*/
-	margin-top: 15px;
-	padding-top: 10px;
-	padding-bottom: 20px;
+	padding-top: 30px;
+	padding-bottom: 40px;
 	height: 24px;
 }
 .site-info ul{
@@ -871,7 +890,7 @@ input:focus{ outline: 0; }
 }
 .widescreen .thl .cate{
 	left: 87px;
-	top: 34px;
+	top: 32px;
 }
 .widescreen .nav{ font-size: 14px; }
 .widescreen .nav li a{ padding: 0 20px; }

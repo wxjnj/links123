@@ -823,8 +823,8 @@ div.gt-baf-translations {
 	cursor: pointer;
 	display:none;
     position: absolute;
-    top: -25px;
-    left: 44px;
+    top: -23px;
+    left: 38px;
     color: #333;
     width:80px;
     height: 35px;
@@ -840,7 +840,7 @@ div.gt-baf-translations {
     z-index: 9999;
 }
 .normal_music_box {
-    position: absolute;
+    position: fixed;
     width: 840px;
     height: 550px;
     bottom: 0;
