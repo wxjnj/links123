@@ -114,6 +114,7 @@ class EnglishQuestionLogic {
         $grad_list = array();//年级列表
         $grade_name_list = array();
         $object_level_one_id = 7;//使用年级的一级分类id
+        $object_level_two_id = 0;
         //找到难度列表、年级列表和使用年级的一级分类id
         foreach($levelnames as $each_lv) {
 
@@ -138,6 +139,10 @@ class EnglishQuestionLogic {
                 }else{
                     $grad_list[$each_lv['name']] = $each_lv['id'];
                     $grade_name_list[$each_lv['name']] = $each_lv;
+                }
+            }else{
+                if($each_lv['default'] == 1){
+                    $object_level_two_id = $each_lv['id'];
                 }
             }
         }
@@ -248,7 +253,7 @@ class EnglishQuestionLogic {
                                     "updated"     => $time,
                                     "type"        => $type, 
                                     "status"      => $status);
-                $catq_add_ret = $englishCatquestionModel->data($catquestion_data)->add();
+                $catq_add_ret = $englishCatquestionModel->add($catquestion_data);
                 if ($catq_add_ret === false) {
                     $this->error_msg = '(#102)添加类目失败';
                     return false;
@@ -256,12 +261,48 @@ class EnglishQuestionLogic {
                 
                 if(!empty($question_info)){
                     //@ 需要更新EnglishCatquestion 题目数＋1
-                    $englishCategoryModel->where(array('cat_id' => $cate_ret["cat_id"]))->setInc('question_num');
+                    if(false === $englishCategoryModel->where(array('cat_id' => $cate_ret["cat_id"]))->setInc('question_num')){
+                        $this->error_msg = '(#103)更新分类有效试题数量失败';
+                        return false;
+                    }
                 }
             } else {
                 $this->error_msg = '已经添加过此类目和题目的对应属性';
                 return false;
             }
+        }
+        //添加综合的分类
+        if($level_one == $object_level_one_id){
+            $map = array();
+            $map['cat_attr_id'] = $data["cat_attr_id"];
+            $map['level_one'] = $level_one;
+            $map['level_two'] = $object_level_two_id;
+            $map['level_thr'] = $level_thr;
+            $object_cat_id = $englishCategoryModel->where($map)->getField("cat_id");
+            if(intval($object_cat_id) == 0){
+                $this->error_msg = '添加到综合分类失败[#105]';
+                return false;
+            }
+            $new_cat_data = array(
+                                "cat_id"      => $object_cat_id, 
+                                "question_id" => $question_id, 
+                                "created"     => $time,
+                                "type"        => $type, 
+                                "status"      => $status);
+            $new_ret = $englishCatquestionModel->add($new_cat_data);
+            if (false === $new_ret) {
+                $this->error_msg = '(#106)添加试题类目关联失败1';
+                return false;
+            }
+
+            if(!empty($question_info)){
+                //@ 需要更新EnglishCatquestion 题目数＋1
+                if(false === $englishCategoryModel->where(array('cat_id' => $object_cat_id))->setInc('question_num')){
+                    $this->error_msg = '(#107)更新分类有效试题数量失败';
+                    return false;
+                }
+            }
+            
         }
         return true;
 	}
