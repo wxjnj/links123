@@ -205,41 +205,6 @@ class EnglishMediaAction extends CommonAction {
         if (false === $model->create()) {
             $this->error($model->getError());
         }
-        //为设置难度准备
-        $levels = D("EnglishLevel")->order("`sort` ASC")->select();
-        foreach ($levels as $value) {
-            $level_list[$value['id']] = $value;
-            $level_name_list_info[$value['name']] = $value;
-        }
-        //在指定范围内的指定对应的难度值
-        if ($level_list[intval($_REQUEST['level'])]['sort'] <= $level_name_list_info['小六']['sort']) {
-            $model->difficulty = 1;
-        } else if ($level_list[intval($_REQUEST['level'])]['sort'] >= $level_name_list_info['大一']['sort']) {
-            $model->difficulty = 3;
-        } else {
-            $model->difficulty = 2;
-        }
-        if (intval($_REQUEST['special_recommend']) == 1) {
-            $_REQUEST['recommend'] = 1;
-        }
-        if (intval($_REQUEST['recommend']) == 1) {
-            $recommendId = D("EnglishMediaRecommend")->getRecommendIdByObjectOrSubject($_REQUEST['object'], $_REQUEST['subject']);
-            if ($recommendId == false) {
-                $model->rollback();
-                //失败提示
-                $this->error('新增失败!');
-            }
-            $model->recommend = intval($recommendId);
-        }
-        if (intval($_REQUEST['ted']) == 1) {
-            $tedId = D("EnglishMediaTed")->getTedIdByObjectOrSubject($_REQUEST['object'], $_REQUEST['subject']);
-            if ($tedId == false) {
-                $model->rollback();
-                //失败提示
-                $this->error('新增失败!');
-            }
-            $model->ted = intval($tedId);
-        }
        
         $media['media_source_url'] = $model->media_source_url;
         $media['name'] = $model->name;
@@ -248,26 +213,13 @@ class EnglishMediaAction extends CommonAction {
         
         $media_id = $media['media_id'] = $list;
         if ($list !== false) { //保存成功
+            if(false === $model->setSpecialRecommend($media, $_POST['special_recommend'])){
+                $model->rollback();
+                $this->error("编辑失败");
+            }
             $model->commit();
            
-            //给特别推荐添加空试题，添加分类  @author slate date:2013-11-02
-            if (intval($_REQUEST['special_recommend']) == 1) {
-            	$englishQuestionModel = M('EnglishQuestion');
-            	$question = $englishQuestionModel->where(array('media_id' => $media_id))->find();
-            	if (!$question['id']) {
-            		$question_id = $englishQuestionModel->add(array('media_id' => $media_id, 'name' => $media['name'], 'media_text_url' => $media['media_source_url'],'status' => 1));
-            		if ($question_id) {
-            		$englishCatgoryModel = D('EnglishCategory');
-            			$cat = $englishCatgoryModel->where(array('cat_attr_id' => 7,'level_one' => -1, 'level_two' => -1, 'level_thr' => -1))->find();
-            			if ($cat['cat_id']) {
-            				$englishCatquestionModel = D('EnglishCatquestion');
-            				$catquestion_id = $englishCatquestionModel->add(array('cat_id' => $cat['cat_id'], 'question_id' => $question_id,'type' => 1, 'status' => 1));
-            			}
-            		}
-            	}
-            } 
             //TODO 推荐视频解析 @author slate date 20131001
-            //$model->analysisMediaPlayCode($media);
             $this->analysisMediaPlayCode($media_id);
             
             $this->success('新增成功!', cookie('_currentUrl_'));
@@ -335,56 +287,17 @@ class EnglishMediaAction extends CommonAction {
                 $model->media_thumb_img = $dir_name . "/" . $info[0]['savename'];
             }
         }
-        if (intval($_REQUEST['special_recommend']) == 1) {
-            $_REQUEST['recommend'] = 1;
-        }
-        if (intval($_REQUEST['recommend']) == 1) {
-            $recommendId = D("EnglishMediaRecommend")->getRecommendIdByObjectOrSubject($_REQUEST['object'], $_REQUEST['subject']);
-            if (false == $recommendId) {
-                //错误提示
-                $model->rollback();
-                $this->error('编辑失败!');
-            }
-            if (intval($recommendId) > 0) {
-                $model->recommend = $recommendId;
-            }
-        }
-        if (intval($_REQUEST['ted']) == 1) {
-            $tedId = D("EnglishMediaTed")->getTedIdByObjectOrSubject($_REQUEST['object'], $_REQUEST['subject']);
-            if (false == $tedId) {
-                //错误提示
-                $model->rollback();
-                $this->error('编辑失败!');
-            }
-            if (intval($tedId) > 0) {
-                $model->ted = $tedId;
-            }
-        }
         $media_id = $media['media_id'] = $model->id;
         $media['media_source_url'] = $model->media_source_url;
         $media['name'] = $model->name;
         // 更新数据
         $list = $model->save();
         if (false !== $list) {
-            $model->commit();
-            
-            //给特别推荐添加空试题，添加分类  @author slate date:2013-11-02
-            if (intval($_REQUEST['special_recommend']) == 1) {
-            	$englishQuestionModel = D('EnglishQuestion');
-            	$question = $englishQuestionModel->where(array('media_id' => $media_id))->find();
-            	if (!$question['id']) {
-            		$question_id = $englishQuestionModel->add(array('media_id' => $media_id, 'name' => $media['name'], 'media_text_url' => $media['media_source_url'], 'status' => 1));
-            		if ($question_id) {
-            			$englishCatgoryModel = D('EnglishCategory');
-            			$cat = $englishCatgoryModel->where(array('cat_attr_id' => 7, 'level_one' => -1, 'level_two' => -1, 'level_thr' => -1))->find();
-            			if ($cat['cat_id']) {
-            				$englishCatquestionModel = D('EnglishCatquestion');
-            				$englishCatquestionModel->add(array('cat_id' => $cat['cat_id'], 'question_id' => $question_id,'type' => 1, 'status' => 1));
-            			}
-            		}
-            	}
+            if(false === $model->setSpecialRecommend($media_id, $_POST['special_recommend'])){
+                $model->rollback();
+                $this->error("编辑失败");
             }
-            
+            $model->commit();
             //TODO 推荐视频解析 @author slate date 20131001
             if (!$model->play_code) {
 	            
@@ -630,6 +543,7 @@ class EnglishMediaAction extends CommonAction {
     public function setSpecialRecommend() {
         if ($this->isAjax()) {
             $model = D("EnglishMedia");
+            $model->startTrans();
             $data = array();
             $map['id'] = $_REQUEST['id'];
             $now_special_recommend = $model->where($map)->getField("special_recommend");
@@ -639,8 +553,15 @@ class EnglishMediaAction extends CommonAction {
                 $special_recommend = 1;
             }
             if(false === $model->where($map)->setField("special_recommend",$special_recommend)){
+                $model->rollback();
                 $this->ajaxReturn("", "操作失败", false);
             }
+            $media = $model->find($map['id']);
+            if(false === $model->setSpecialRecommend($media, $special_recommend)){
+                $model->rollback();
+                $this->ajaxReturn("", "操作失败", false);
+            }
+            $model->commit();
             $data['special_recommend'] = $special_recommend;
             $this->ajaxReturn($data, "操作成功", true);
         }
