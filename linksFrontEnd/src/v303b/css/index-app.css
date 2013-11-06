@@ -77,8 +77,8 @@
 	width: 40px;
 	background: url(../imgs/hot.png) 0 0 no-repeat;
 	position: absolute;
-	left: -1px;
-	top: 0px
+	left: 1px;
+	top: 2px
 }
 .apps ul li:hover,
 .apps ul li:hover a,
