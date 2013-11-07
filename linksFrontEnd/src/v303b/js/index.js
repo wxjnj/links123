@@ -33,46 +33,6 @@ $(function() {
 
 	$('#J_Apps').sortable();
 
-	// 幻灯
-	/*
-	$('#J_ScrollBox').find('.items').slidesjs({
-		play: {
-			active: true,
-			auto: false,
-			interval: 10000,
-			swap: false
-		},
-		//异步加载幻灯片
-		//初始化加载0
-		callback: {
-			loaded: function(){
-				var cur = $('#J_ScrollBox').find('li:eq(' + 0 + ')').find('img');
-				if(!cur.attr('src')){
-					var path = cur.data('src');
-					cur.attr('src', path);
-				}
-			},
-			start: function(cur, next) {
-				var target = $('#J_ScrollBox').find('li:eq(' + next + ')').find('img');
-				if(!target.attr('src')){
-					var path = target.data('src');
-					target.attr('src', path);
-				}
-			}
-		}
-	});
-	$('#J_ScrollBox').find('li').on('hover', function() {
-		$(this).toggleClass('hover');
-	});
-	 */
-
-	// 发现
-	/*
-	$('#J_Find .find li').on('hover', function() {
-		$(this).toggleClass('hover');
-	});
-	*/
-
 	// 切换宽屏
 	$('.screen-change-btn').on('click', 'a', function() {
 		if ($(this).attr('data-size') == 'wide') {
@@ -180,15 +140,23 @@ var ZhiDaLan = { // 直达框
 	}
 };
 
+
 var Zld = { // 自留地
 	IsSortable: false,
 	//是否为拖拽点击，true则不打开自留地网址
 	Resize: function() {
 		//自适应算法
 		var box = $('#J_sortable');
+
+		//先恢复默认值
+		box.find('.nm').removeAttr('style').css({
+			'padding-left': self.holderPaddingLeft,
+			'padding-right': self.holderPaddingRight
+		});
+
 		var boxWidth = box.width();
 		var lis = box.find('li');
-		//lis.css('width', 'auto');
+
 		var liWidth = 0;
 		var overIndex = null;
 		var fstLineWidth = null;
@@ -199,16 +167,15 @@ var Zld = { // 自留地
 				fstLineWidth = liWidth - $(v).width() - 5;
 			}
 		});
+
 		lis.find('.nm').trigger('mouseout');
 		if (liWidth <= boxWidth) return;
-		//TODO: 算法还不完美！
-		if (boxWidth - fstLineWidth > 45) {
+		if (boxWidth - fstLineWidth > 65) {
 			var w = lis.eq(overIndex).width() + 5 - (boxWidth - fstLineWidth);
-			w = ~~Math.ceil(w / (overIndex + 1));
+			var xw = Math.ceil(w / (overIndex + 1) / 2);
 			var s = lis.filter(':lt(' + (overIndex + 1) + ')');
 			$.each(s, function(k, v) {
-				//var ow = $(v).width();
-				var xw = ~~Math.ceil(w/2);
+				//var xw = Math.ceil(w / 2);
 				var opl = $(v).find('.nm').css('padding-left');
 				var opr = $(v).find('.nm').css('padding-right');
 				opl = parseInt(opl);
@@ -218,12 +185,11 @@ var Zld = { // 自留地
 					'padding-right': opr - xw + 'px'
 				});
 			});
-		} else if(boxWidth - fstLineWidth <= 45 && boxWidth - fstLineWidth > 10) { 
+		} else if(boxWidth - fstLineWidth <= 65 && boxWidth - fstLineWidth >= 10) { 
 			// 差距过小，使用本行增加宽度适应行宽
-			var w = boxWidth - fstLineWidth + 5;
-			w = ~~Math.floor(w / (overIndex-1) / 2);
+			var w = boxWidth - fstLineWidth;
+			w = Math.floor(w / (overIndex) / 2);
 			var s = lis.filter(':lt(' + overIndex + ')');
-
 			$.each(s, function(k, v){
 				var opl = $(v).find('.nm').css('padding-left');
 				var opr = $(v).find('.nm').css('padding-right');
@@ -233,14 +199,20 @@ var Zld = { // 自留地
 					'padding-left': opl + w + 'px',
 					'padding-right': opr + w + 'px'
 				});
-			});
+			});		
 
 		}
 	},
 	Init: function() {
 		var self = this;
 		var obj = $('#J_ZldList');
-		self.Resize();self.Resize(); //这里临时执行2次，具体等待@Kevin重构
+
+		//先记录默认值（用于调整自适应）
+		self.holderPaddingLeft = obj.find('.nm').css('padding-left');
+		self.holderPaddingRight = obj.find('.nm').css('padding-right');
+		self.Resize();
+
+		//self.Resize(); //这里临时执行2次，具体等待@Kevin重构
 		$(document).on('click', '#J_ZldList .add', function() {
 			//if(User.CheckLogin()){
 			self.Create();
@@ -270,42 +242,6 @@ var Zld = { // 自留地
 			return false;
 		});
 
-		/* 鼠标经过缩放*/
-		 /*
-		 var holder = {};
-		 $(document).on('mouseover', '#J_sortable li .nm', function() {
-		 var nm = $(this);
-		 var oldWidth = nm.width();
-		 holder.oldPaddingLeft = nm.css('padding-left').replace('px', '') * 1;
-		 holder.oldPaddingRight = nm.css('padding-right').replace('px', '') * 1;
-		 nm.css({
-		 'width': oldWidth + holder.oldPaddingRight + holder.oldPaddingLeft + 'px',
-		 'display': 'inline-block',
-		 'text-align': 'center',
-		 'font-size': '14px',
-		 'padding-left': 0,
-		 'padding-right': 0
-		 });
-		 nm.find('b').css('margin', '0 -10px -5px 0');
-		 }).on('mouseout', '#J_sortable li .nm', function() {
-		 var nm = $(this);
-		 nm.css({
-		 'width': 'auto',
-		 'display': '',
-		 'text-align': 'center',
-		 'font-size': '12px',
-		 'padding-left': holder.oldPaddingLeft + 'px',
-		 'padding-right': holder.oldPaddingRight + 'px'
-		 });
-		 nm.find('b').css('margin', '0');
-		 });
-		*/
-		 /**/
-		/*
-		 $(document).on('mouseenter', '#J_Zld input[name="url"], #J_Zld input[name="name"]', function(){
-		 $(this).select();
-		 });
-		 */
 		$('#J_sortable').sortable({
 			items: '> li:not(.add)',
 			start: function(event, ui) {
@@ -550,6 +486,8 @@ var Zld = { // 自留地
 	}
 };
 
+/*
+
 var MusicPlayer = {
 	Init: function() {
 		var self = this;
@@ -651,6 +589,9 @@ var MusicPlayer = {
 	}
 };
 
+*/
+
+
 var HelpMouse = {
 	init: function() {
 		var self = this;
@@ -681,6 +622,7 @@ var HelpMouse = {
 		});
 
 		$(document).on('mousemove', function(ev) {
+
 			var isNeedHelp = 1;
 			$('.links123-app-frame').each(function() {
 				if ($(this).is(":visible")) {
@@ -698,6 +640,9 @@ var HelpMouse = {
 			var search_text_right_end_pos = search_text_left_end_pos + $search_text.width();
 			var direct_text_right_end_pos = $direct_text.offset().left + $direct_text.width() + 10;
 
+			var app_top_pos = $('.box-apps').offset().top;
+			var zld_top_pos = $('#J_sortable').offset().top + 5;
+
 			//向下滚800px后不再判断焦点
 			if ($(window).scrollTop() > 800) return;
 
@@ -711,8 +656,7 @@ var HelpMouse = {
 				}
 				return;
 			}
-
-			if ((mousePos.y < 165) && (mousePos.x < search_text_left_end_pos)) {
+			if ((mousePos.y < zld_top_pos) && (mousePos.x < search_text_left_end_pos)) {
 				if ($('#direct_text').val() == $('#direct_text').attr('txt')) {
 					$('#direct_text').select().removeClass('ipton');
 					isSearchTxtSelected = false;
@@ -721,12 +665,14 @@ var HelpMouse = {
 					}
 				}
 			} //else{
-			if ((mousePos.y < 165) && (mousePos.x > search_text_left_end_pos)) {
+
+			if ((mousePos.y < zld_top_pos) && (mousePos.x > search_text_left_end_pos)) {
 				if ($('#J_thl_div').is(':hidden') && $('#J_thl_div').attr('data-hide') == 'true') {
 					$('#J_thl_div').attr('data-hide', 'false').show();
 				}
 			}
-			if ((mousePos.y > 165 && mousePos.y < 360) || mousePos.x > search_text_left_end_pos) {
+			if ((mousePos.y > zld_top_pos && mousePos.y < app_top_pos) || mousePos.x > search_text_left_end_pos) {
+				
 				$('#direct_text').val($('#direct_text').attr('txt')).addClass('ipton');
 				if ($('#J_thl_div').is(':hidden') && $('#J_thl_div').attr('data-hide') == 'true') {
 					return;
@@ -736,9 +682,11 @@ var HelpMouse = {
 					isSearchTxtSelected = true;
 				}
 			}
-			if (mousePos.y > 360) {
+			if (mousePos.y > app_top_pos) {
+				console.log(mousePos.y)
 				$('#J_thl_div').attr('data-hide', 'true').hide();
 			}
+
 
 		});
 	},
