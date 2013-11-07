@@ -52,7 +52,7 @@
 	*zoom: 1;
 	margin-left: -27px;
 	height: 101px;
-	padding-top: 5px;
+	padding-top: 7px;
 	overflow: hidden;
 }
 .apps ul:after{
@@ -73,12 +73,12 @@
 }
 .apps ul li .hot{
 	display: block;
-	height: 37px;
-	width: 40px;
+	height: 29px;
+	width: 28px;
 	background: url(../imgs/hot.png) 0 0 no-repeat;
 	position: absolute;
-	left: 1px;
-	top: 2px
+	right: -7px;
+	top: -7px
 }
 .apps ul li:hover,
 .apps ul li:hover a,

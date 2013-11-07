@@ -84,7 +84,6 @@ $(function() {
 		}
 		$('body').trigger('screenchange'); //触发body上自定义的方法screenchange
 
-		//window.sladePlugin.update();
 		Zld.Resize();
 		Calendar.Init();
 	});
@@ -241,7 +240,7 @@ var Zld = { // 自留地
 	Init: function() {
 		var self = this;
 		var obj = $('#J_ZldList');
-		self.Resize();
+		self.Resize();self.Resize(); //这里临时执行2次，具体等待@Kevin重构
 		$(document).on('click', '#J_ZldList .add', function() {
 			//if(User.CheckLogin()){
 			self.Create();
@@ -688,11 +687,6 @@ var HelpMouse = {
 					isNeedHelp ? isNeedHelp = 0: '';
 				}
 			});
-			// $('.fancybox-wrap').each(function(){
-			// if($(this).is(":visible")){
-			// isNeedHelp ? isNeedHelp = 0 : '';
-			// }
-			// });
 			if (!isNeedHelp) {
 				return false;
 			}
@@ -718,7 +712,7 @@ var HelpMouse = {
 				return;
 			}
 
-			if ((mousePos.y < 200) && (mousePos.x < search_text_left_end_pos)) {
+			if ((mousePos.y < 165) && (mousePos.x < search_text_left_end_pos)) {
 				if ($('#direct_text').val() == $('#direct_text').attr('txt')) {
 					$('#direct_text').select().removeClass('ipton');
 					isSearchTxtSelected = false;
@@ -727,12 +721,12 @@ var HelpMouse = {
 					}
 				}
 			} //else{
-			if ((mousePos.y < 200) && (mousePos.x > search_text_left_end_pos)) {
+			if ((mousePos.y < 165) && (mousePos.x > search_text_left_end_pos)) {
 				if ($('#J_thl_div').is(':hidden') && $('#J_thl_div').attr('data-hide') == 'true') {
 					$('#J_thl_div').attr('data-hide', 'false').show();
 				}
 			}
-			if ((mousePos.y > 200 && mousePos.y < 360) || mousePos.x > search_text_left_end_pos) {
+			if ((mousePos.y > 165 && mousePos.y < 360) || mousePos.x > search_text_left_end_pos) {
 				$('#direct_text').val($('#direct_text').attr('txt')).addClass('ipton');
 				if ($('#J_thl_div').is(':hidden') && $('#J_thl_div').attr('data-hide') == 'true') {
 					return;
