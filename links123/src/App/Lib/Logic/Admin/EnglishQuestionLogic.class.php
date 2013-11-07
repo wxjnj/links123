@@ -29,9 +29,12 @@ class EnglishQuestionLogic {
 		}
 		$ret   = D('EnglishCatquestion')->getQuestionProperty($question_id, $question_type);
         foreach($ret as $key=>$value){
-            if($default_list[$value["level_two"]] == 1 || $value["level_one"] == -1){
+            if($value["level_one"] == -1){
                 unset($ret[$key]);
                 continue;
+            }
+            if($default_list[$value["level_two"]] == 1){
+                $ret[$key]['is_default'] = 1;
             }
 			$cat_attr_id = sprintf("%03d", decbin($value["cat_attr_id"]));
 			$ret[$key]["voice"]   = substr($cat_attr_id, 0, 1);
@@ -186,6 +189,7 @@ class EnglishQuestionLogic {
         $time = time();
         //需要添加到的分类是否存在
         $cate_ret = $englishCategoryModel->where($data)->find();
+//        echo $englishCategoryModel->getLastSql();exit;
         //添加到的分类不存在
         if (!isset($cate_ret["cat_id"])) {
             
@@ -243,7 +247,9 @@ class EnglishQuestionLogic {
         } else {
             $catquestion_data = array(
                                     "cat_id"      => $cate_ret["cat_id"], 
-                                    "question_id" => $question_id);
+                                    "question_id" => $question_id,
+                                    "type"        => $type
+                    );
             $catquestion_ret  = $englishCatquestionModel->where($catquestion_data)->find();
             if (!isset($catquestion_ret["cat_id"])) {
                 $catquestion_data = array(
@@ -272,7 +278,7 @@ class EnglishQuestionLogic {
             }
         }
         //添加综合的分类
-        if($level_one == $object_level_one_id){
+        if($level_one == $object_level_one_id && $level_two != $object_level_two_id){
             $map = array();
             $map['cat_attr_id'] = $data["cat_attr_id"];
             $map['level_one'] = $level_one;
@@ -283,6 +289,26 @@ class EnglishQuestionLogic {
                 $this->error_msg = '添加到综合分类失败[#105]';
                 return false;
             }
+            
+            //去除旧的综合关联
+            $old_cat_map = array(
+                "a.question_id"=>$question_id,
+                "a.type"=>$type,
+                "b.level_one"=>$object_level_one_id,
+                "b.level_two"=>$object_level_two_id
+            );
+            $old_cat_list = $englishCatquestionModel->alias("a")
+                    ->field("a.cat_id")
+                    ->join(C("DB_PREFIX")."english_category b on a.cat_id=b.cat_id")
+                    ->where($old_cat_map)
+                    ->select();
+            if(!empty($old_cat_list)){
+                $old_cat_id = array();
+                foreach ($old_cat_list as $value){
+                    $old_cat_id[] = $value['cat_id'];
+                }
+                $englishCatquestionModel->where(array("cat_id"=>array("in",$old_cat_id),"question_id"=>$question_id,"type"=>$type))->delete();
+            }
             $new_cat_data = array(
                                 "cat_id"      => $object_cat_id, 
                                 "question_id" => $question_id, 
@@ -291,7 +317,7 @@ class EnglishQuestionLogic {
                                 "status"      => $status);
             $new_ret = $englishCatquestionModel->add($new_cat_data);
             if (false === $new_ret) {
-                $this->error_msg = '(#106)添加试题类目关联失败1';
+                $this->error_msg = '(#106)添加试题类目关联失败';
                 return false;
             }
 
