@@ -4,7 +4,7 @@ function createCookie(c, d, f, e) {
 	if (f) {
 		var b = new Date();
 		b.setTime(b.getTime() + (f * 24 * 60 * 60 * 1000));
-		var a = "; expires=" + b.toGMTString()
+		var a = "; expires=" + b.toGMTString() + ";path=/"
 	} else {
 		var a = ""
 	}
