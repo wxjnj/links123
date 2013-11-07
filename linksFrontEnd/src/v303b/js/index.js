@@ -683,7 +683,6 @@ var HelpMouse = {
 				}
 			}
 			if (mousePos.y > app_top_pos) {
-				console.log(mousePos.y)
 				$('#J_thl_div').attr('data-hide', 'true').hide();
 			}
 
