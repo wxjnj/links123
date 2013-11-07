@@ -854,6 +854,71 @@ class EnglishMediaAction extends CommonAction {
             $this->error('状态禁用失败！');
         }
     }
+    
+    /**
+	 * @desc 排序
+	 */
+	public function special_recommend_sort(){
+		$sortId = $this->_param('sortId');
+		$model = D("EnglishMedia");
+		$map = array();
+		$map['status'] = 1;
+        $map['special_recommend'] = 1;
+        $thumb = $this->_param("thumb");
+        if(isset($thumb)){
+            if($thumb == 1){
+                $map['media_thumb_img'] = array("neq","");
+            }else{
+                $map['media_thumb_img'] = array("eq","");
+            }
+        }else{
+            $thumb = -1;
+        }
+        $this->assign("thumb",$thumb);
+        $sortList = $model->where($map)->order('special_recommend_sort ASC,id asc')->select();
+        foreach ($sortList as &$value) {
+        	$value['txt_show'] = $value['name']."　　　　　";
+        }
+        $this->assign("sortList", $sortList);
+        $this->display("special_recommend_sort");
+        return;
+    }
+    public function saveSort() {
+        $seqNoList = $_POST ['seqNoList'];
+        if (!empty($seqNoList)) {
+            //更新数据对象
+            $name = $this->getActionName();
+            $model = D($name);
+            $col = explode(',', $seqNoList);
+            //启动事务
+            $model->startTrans();
+            $result = true;
+            foreach ($col as $val) {
+                $val = explode(':', $val);
+                $sort = $model->where("id = '%s'", $val[0])->getField('special_recommend_sort');
+                if ($sort == $val[1]) {
+                    continue;
+                }
+                $model->id = $val[0];
+                $model->special_recommend_sort = $val[1];
+                $temp_result = $model->save();
+                if (!$temp_result) {
+                    $result = false;
+                    Log::write('保存排序失败：' . $model->getLastSql(), Log::SQL);
+                }
+            }
+
+            if ($result) {
+                $model->commit();
+                //采用普通方式跳转刷新页面
+                $this->success('更新成功');
+            } else {
+                // 回滚事务
+                $model->rollback();
+                $this->error($model->getError());
+            }
+        }
+    }
 
 }
 
