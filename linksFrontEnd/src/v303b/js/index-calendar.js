@@ -514,15 +514,26 @@ $(function(){
                 'r' : 'red'
             };
 
-            $('.cal-date-marks-table').on('mouseenter', 'li', function(){
+            $('.cal-date-marks-table').on('click', 'li', function(){
                 if($(this).find('input').size()) return;
 
-                if($(this).find('.desc-content').size()) return;
+                if($(this).find('.desc-content').size()){
 
+                    var x = $(this).find('.desc-content').attr('title');
+                    var d = $(this).find('.desc');
+                    var c = $(this).find('.desc-content').attr('data-color');
+                    d.html('<div class="desc-input-div"><input type="text" data-old="' + x + '" data-color="' + c + '" value="' + x + '" /><!--b class="blue" data-code="b"></b><b class="green" data-code="g"></b><b class="red" data-code="r"></b--></div>');
+                    d.find('input').select();
+                    d.find('.' + c).addClass('active');
+                    
 
-                var d = $(this).find('.desc')//.parent('.desc');
-                d.html('<div class="desc-input-div"><input type="text" value="" /><!--b class="blue active" data-code="b"></b><b class="green" data-code="g"></b><b class="red" data-code="r"></b--></div>');
-                d.find('input').select();
+                }else{
+                    var d = $(this).find('.desc')//.parent('.desc');
+                    d.html('<div class="desc-input-div"><input type="text" value="" /><!--b class="blue active" data-code="b"></b><b class="green" data-code="g"></b><b class="red" data-code="r"></b--></div>');
+                    d.find('input').select();   
+
+                }
+                $(this).append('<a class="delete-btn" href="javascript:;">×</a>')
 
                 return false;
             });
@@ -531,12 +542,23 @@ $(function(){
             $('.cal-date-marks-table').on('click', '.delete-btn', function(){
                 var li = $(this).parent('li');
                 var id = li.attr('data-id');
+                if(li.find('input').size()) {
+                    var input = li.find('input');
+                    var desc = input.attr('data-old')// + self.colorCode + input.attr('data-color').charAt(0);
+                    var h = li.attr('data-time');
+                    var time = Date.today();
+                    var id = li.attr('data-id');
+                    time.setHours(h);
+                    Calendar.update(id, time, desc);
+                }
                 if(id && id != 0){
                     Calendar.deleteMark(id);
                 }
+                return false;
             });
 
-            $('.cal-date-marks-table').on('mouseenter', '.desc-content', function(){
+            /*
+            $('.cal-date-marks-table').on('click', '.desc-content', function(){
                 if($(this).find('input').size()) return;
                 var x = $(this).attr('title');
                 var d = $(this).parent('.desc');
@@ -545,6 +567,7 @@ $(function(){
                 d.find('input').select();
                 d.find('.' + c).addClass('active');
             });
+            */
 
             $('.cal-date-marks-table').on('click', '.desc-input-div b', function(){
                 $(this).siblings('b').removeClass('active').end().addClass('active');
@@ -571,7 +594,7 @@ $(function(){
                     time.setHours(h);
                     Calendar.update(id, time, desc);
                 }
-            }).on('mouseout', 'input', function(){
+            });/*.on('mouseout', 'input', function(){
                 var input = $(this);
                 var li = input.parents('li');
                 var desc = input.val()// + self.colorCode + li.find('.active').attr('data-code');
@@ -580,7 +603,7 @@ $(function(){
                 var id = li.attr('data-id');
                 time.setHours(h);
                 Calendar.update(id, time, desc);
-            });
+            });*/
 
         },
         renderMarks: function() {
@@ -602,7 +625,7 @@ $(function(){
                 }else{
                     tem = i;
                 }
-                all_lis += '<li class="line_'+i+'" data-time="'+i+'"><b class="dot"></b><span class="time">'+tem+':00</span><span class="desc"><!--a class="add-btn" href="javascript:;">增加日程 +</a--></span></li>';
+                all_lis += '<li class="line_'+i+'" data-time="'+i+'"><b class="dot"></b><span class="time">'+tem+':00</span><span class="desc"><a class="add-btn" href="javascript:;">增加日程</a></span></li>';
             }
 
 
