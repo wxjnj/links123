@@ -83,6 +83,116 @@ class EnglishUserCountModel extends CommonModel {
     }
 
     /**
+     * 获取用户英语角统计信息
+     * @param int $view_type [查看方式，1科目等级，2专题难度，3推荐难度,4特别推荐]
+     * @param array $params
+     * @throws
+     * @author Adam $date2013.09.17$ 
+     */
+    public function getEnglishUserCount($view_type = 1, $params) {
+        $user_count_info = array();
+        $map['view_type'] = $view_type;
+        if (intval($params['voice']) > 0) {
+            $map['voice'] = $params['voice'];
+        }
+        if (intval($params['target']) > 0) {
+            $map['target'] = $params['target'];
+        }
+        if ($view_type == 1) {
+            if (intval($params['object']) > 0) {
+                $map['object'] = $params['object'];
+            }
+            if (intval($params['level']) > 0) {
+                $map['level'] = $params['level'];
+            }
+        } else if ($view_type == 2) {
+            if (intval($params['subject']) > 0) {
+                $map['subject'] = $params['subject'];
+            }
+            if (intval($params['difficulty']) > 0) {
+                $map['difficulty'] = $params['difficulty'];
+            }
+        } else if ($view_type == 3) {
+            if (intval($params['recommend']) > 0) {
+                $map['recommend'] = $params['recommend'];
+            }
+            if (intval($params['difficulty']) > 0) {
+                $map['difficulty'] = $params['difficulty'];
+            }
+        } else if ($view_type == 4) {
+            $map['recommend'] = 0;
+            $map['difficulty'] = 0;
+        } else if ($view_type == 5) {
+            if (intval($params['ted']) > 0) {
+                $map['ted'] = $params['ted'];
+            }
+            if (intval($params['difficulty']) > 0) {
+                $map['difficulty'] = $params['difficulty'];
+            }
+        }
+        //
+        //游客对应游客信息统计表english_tourist_count
+        if (!isset($_SESSION[C('MEMBER_AUTH_KEY')]) || intval($_SESSION[C('MEMBER_AUTH_KEY')]) <= 0) {
+            $map['user_id'] = intval(cookie('english_tourist_id')); //从cookie获取游客id
+            if ($map['user_id'] > 0) {
+                $user_count_info = D("EnglishTouristCount")->where($map)->find();
+            }
+        } else {
+            $map['user_id'] = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+            if ($map['user_id'] > 0) {
+                $user_count_info = $this->where($map)->find();
+            }
+        }
+        //
+        //初始化信息，防止记录不存在
+        $user_count_info['right_num'] = intval($user_count_info['right_num']);
+        $user_count_info['continue_right_num'] = intval($user_count_info['continue_right_num']);
+        $user_count_info['continue_error_num'] = intval($user_count_info['continue_error_num']);
+        $user_count_info['rice'] = intval($user_count_info['rice']);
+        $user_count_info['view_type'] = intval($user_count_info['view_type']);
+        if (!in_array($user_count_info['view_type'], array(1, 2, 3, 4, 5))) {
+            $user_count_info['view_type'] = $view_type;
+        }
+        if ($user_count_info['voice'] == 0) {
+            $user_count_info['voice'] = $params['voice'];
+        }
+        if ($user_count_info['target'] == 0) {
+            $user_count_info['target'] = $params['target'];
+        }
+        if ($view_type == 1) {
+            if ($user_count_info['object'] == 0) {
+                $user_count_info['object'] = $params['object'];
+            }
+            if ($user_count_info['level'] == 0) {
+                $user_count_info['level'] = $params['level'];
+            }
+        } else if ($view_type == 2) {
+            if ($user_count_info['subject'] == 0) {
+                $user_count_info['subject'] = $params['subject'];
+            }
+            if ($user_count_info['difficulty'] == 0) {
+                $user_count_info['difficulty'] = $params['difficulty'];
+            }
+        } else if ($view_type == 3) {
+            if ($user_count_info['recommend'] == 0) {
+                $user_count_info['recommend'] = $params['recommend'];
+            }
+            if ($user_count_info['difficulty'] == 0) {
+                $user_count_info['difficulty'] = $params['difficulty'];
+            }
+        } else if ($view_type == 5) {
+            if ($user_count_info['ted'] == 0) {
+                $user_count_info['ted'] = $params['ted'];
+            }
+            if ($user_count_info['difficulty'] == 0) {
+                $user_count_info['difficulty'] = $params['difficulty'];
+            }
+        }
+
+        return $user_count_info;
+    }
+
+    /**
      * 保存用户英语角统计信息
      * @param array $user_count_info [用户统计信息数组]
      * @return void
@@ -99,6 +209,7 @@ class EnglishUserCountModel extends CommonModel {
         $map['level'] = intval($user_count_info['level']);
         $map['subject'] = intval($user_count_info['subject']);
         $map['recommend'] = intval($user_count_info['recommend']);
+        $map['ted'] = intval($user_count_info['ted']);
         $map['difficulty'] = intval($user_count_info['difficulty']);
         //
         //游客对应游客信息统计表english_tourist_count
@@ -141,27 +252,33 @@ class EnglishUserCountModel extends CommonModel {
      */
     public function getTopRiceUserList($limit = 3, $voice, $target, $pattern, $object, $level) {
         $condition = array();
+        $params = array();
         if (intval($voice) > 0) {
             $condition['user_count_info.voice'] = $voice;
+            $params['voice'] = $voice;
         }
         if (intval($target) > 0) {
             $condition['user_count_info.target'] = $target;
+            $params['target'] = $target;
         }
         if (intval($pattern) > 0) {
             $condition['user_count_info.pattern'] = $pattern;
+            $params['pattern'] = $pattern;
         }
         if (intval($object) > 0) {
             $object_map['id'] = $object;
             $objecr_name = D("EnglishObject")->where($object_map)->getField("name");
             if ($objecr_name != "综合") {
                 $condition['user_count_info.object'] = $object;
+                $params['object'] = $object;
             }
         }
         if (intval($level) > 0) {
             $condition['user_count_info.level'] = $level;
+            $params['level'] = $level;
         }
         $list = $this->alias("user_count_info")
-                ->field("SUM(user_count_info.rice) as rice_sum,user.nickname as nickname,level.name as best_level_name")
+                ->field("SUM(user_count_info.rice) as rice_sum,user.face,user.id as user_id,user.nickname as nickname,level.name as best_level_name")
                 ->join(C("DB_PREFIX") . "english_user_info english_user_info on user_count_info.user_id=english_user_info.user_id")
                 ->join(C("DB_PREFIX") . "english_level level on english_user_info.best_level=level.id")
                 ->join("RIGHT JOIN " . C("DB_PREFIX") . "member user on user_count_info.user_id=user.id")
@@ -170,6 +287,20 @@ class EnglishUserCountModel extends CommonModel {
                 ->order("rice_sum DESC")
                 ->limit($limit)
                 ->select();
+        if (intval($_SESSION[C('MEMBER_AUTH_KEY')]) == 0) {
+            $list[] = $this->getNowUserCountToTop($params);
+        } else {
+            $user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+            $user_is_in_top = false;
+            foreach ($list as $value) {
+                if ($value['user_id'] == $user_id) {
+                    $user_is_in_top = true;
+                }
+            }
+            if (false == $user_is_in_top) {
+                $list[] = $this->getNowUserCountToTop($params);
+            }
+        }
         return $list;
     }
 
@@ -212,6 +343,53 @@ class EnglishUserCountModel extends CommonModel {
             }
         }
         D("EnglishRecord")->clearUserRecord($object, $level, $voice, $target); //重置用户记录
+    }
+
+    /**
+     * 
+     */
+    public function getNowUserCountToTop($params) {
+        if (intval($_SESSION[C('MEMBER_AUTH_KEY')]) == 0) {
+            $model = D("EnglishTouristCount");
+            $params['user_id'] = intval(cookie('english_tourist_id'));
+            $ret = $model->field("SUM(rice) as rice_sum")->where($params)->find();
+            $user_info = D("EnglishUserInfo")->getEnglishUserInfo();
+            $ret['nickname'] = "我";
+            $ret['face'] = "face.jpg";
+            $ret['best_level_name'] = $user_info['best_level_name'];
+        } else {
+            $condition = array();
+            $condition['user_count_info.user_id'] = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+            if (intval($params['voice']) > 0) {
+                $condition['user_count_info.voice'] = $params['voice'];
+            }
+            if (intval($params['target']) > 0) {
+                $condition['user_count_info.target'] = $params['target'];
+            }
+            if (intval($params['pattern']) > 0) {
+                $condition['user_count_info.pattern'] = $params['pattern'];
+            }
+            if (intval($params['object']) > 0) {
+                $object_map['id'] = $params['object'];
+                $objecr_name = D("EnglishObject")->where($object_map)->getField("name");
+                if ($objecr_name != "综合") {
+                    $condition['user_count_info.object'] = $params['object'];
+                }
+            }
+            if (intval($params['level']) > 0) {
+                $condition['user_count_info.level'] = $params['level'];
+            }
+            $ret = $this->alias("user_count_info")
+                    ->field("SUM(user_count_info.rice) as rice_sum,user.face,user.id as user_id,user.nickname as nickname,level.name as best_level_name")
+                    ->join(C("DB_PREFIX") . "english_user_info english_user_info on user_count_info.user_id=english_user_info.user_id")
+                    ->join(C("DB_PREFIX") . "english_level level on english_user_info.best_level=level.id")
+                    ->where($condition)
+                    ->find();
+            if ($ret == false) {
+                $ret = array();
+            }
+        }
+        return $ret;
     }
 
 }

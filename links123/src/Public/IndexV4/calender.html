@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<title>日历</title>
+	<link rel="stylesheet" href="src/css/reset.css">
+	<link rel="stylesheet" href="src/css/links123.calender.css">
+	<style>
+ html, body{
+     background: #000000;
+     background-attachment: fixed;
+ }
+ .calender_wrap{
+     width:578px;
+     height: 425px;
+     margin: 10px;
+ }
+ </style>
+</head>
+<body>
+    <div class="calender_wrap">
+        <div class="links123_calender">
+            <div class="c_header">
+                <div id="J_chooser" class="c_chooser_date">
+                    <a id="J_prev_date" href="#" class="prev">&lt;</a>
+                    <span></span>
+                    <a id="J_next_date" href="#" class="next">&gt;</a>
+                </div>
+                <div id="J_switches" class="c_chooser_view">
+                    <a id="J_tabMonthViewTrigger" data-href="#monthView" data-viewname="monthView">月</a>
+                    <a id="J_tabWeekViewTrigger" data-href="#weekView" data-viewname="weekView">周</a>
+                    <a id="J_tabDayViewTrigger" data-href="#dayView" class="active" data-viewname="dayView">日</a>
+                </div>
+            </div><!-- c_header -->
+            <div class="c_body_wrap">
+                <div id="dayView" class="c_body day_view">
+                    <div class="left_side">
+                        <div class="small_calendar_wrap">
+                            <div class="c_inner">
+                                <table id="J_dayViewCalender">
+                                    <!-- <tbody>
+                                        <tr>
+                                            <th>一</th>
+                                            <th>二</th>
+                                            <th>三</th>
+                                            <th>四</th>
+                                            <th>五</th>
+                                            <th>六</th>
+                                            <th>日</th>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="6"></td>
+                                            <td>
+                                                <a href="#">1</a>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><a href="#">1</a></td>
+                                            <td><a href="#">1</a></td>
+                                            <td><a href="#">1</a></td>
+                                            <td><a href="#">1</a></td>
+                                            <td><a href="#">1</a></td>
+                                            <td><a href="#">1</a></td>
+                                            <td><a href="#">1</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td><a href="#">1</a></td>
+                                            <td><a href="#">1</a></td>
+                                            <td><a href="#">1</a></td>
+                                            <td><a href="#">1</a></td>
+                                            <td><a href="#">1</a></td>
+                                            <td><a href="#">1</a></td>
+                                            <td><a href="#">1</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td><a href="#">1</a></td>
+                                            <td><a href="#">1</a></td>
+                                            <td><a href="#">1</a></td>
+                                            <td><a href="#">1</a></td>
+                                            <td><a href="#">1</a></td>
+                                            <td><a href="#">1</a></td>
+                                            <td><a href="#">1</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td><a href="#">1</a></td>
+                                            <td><a href="#">1</a></td>
+                                            <td><a href="#">1</a></td>
+                                            <td><a href="#">1</a></td>
+                                            <td><a href="#">1</a></td>
+                                            <td><a href="#">1</a></td>
+                                            <td><a href="#">1</a></td>
+                                        </tr>
+                                        <tr>
+                                            <td><a href="#">1</a></td>
+                                            <td><a href="#">1</a></td>
+                                            <td><a href="#">1</a></td>
+                                            <td><a href="#">1</a></td>
+                                            <td><a href="#">1</a></td>
+                                            <td><a href="#">1</a></td>
+                                            <td><a href="#">1</a></td>
+                                        </tr>
+                                    </tbody> -->
+                                </table>
+                            </div>
+                        </div>
+                        <div class="small_task_list_wrap">
+                            <div id="J_dvSmallTaskList" class="c_inner">
+                                <!-- <h4>全天事件 —— 3件</h4>
+                                <ul>
+                                    <li>英语角代码重构</li>
+                                    <li>英语角代码重构</li>
+                                    <li>英语角代码重构</li>
+                                </ul> -->
+                            </div>
+                        </div>
+                    </div><!-- left_side -->
+                    <div id="J_taskMgr" class="right_side">
+                        <div id="J_dvMainTaskList" class="main_task_list_wrap">
+                            <!-- <div class="task_item">
+                                <strong>00:00</strong> 英语角代码重构
+                            </div>
+                            <div class="task_item todo">
+                                <strong>22:00</strong> 英语角代码重构
+                            </div> -->
+                        </div>
+                        <div id="J_dvBurnChart" class="burn_down_chart"></div>
+                        <h2 id="J_dvClock" class="clock">00:00</h2>
+                    </div><!-- right_side -->
+                </div>
+
+                <div id="weekView" class="c_body big_table week_view">
+                    <table id="J_weekViewCalender" cellpadding="0" cellspacing="2">
+                        <tbody>
+                            <tr>
+                                <th height="60">Mon</th>
+                                <th height="60">Tue</th>
+                                <th height="60">Web</th>
+                                <th height="60">Thu</th>
+                                <th height="60">Fri</th>
+                                <th height="60">Sat</th>
+                                <th height="60">Sun</th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="relative_div">
+                                        <div class="task_item">
+                                            <span>x</span>..................
+                                        </div>
+                                        <div class="task_item" style="top: 20%">
+                                            <span>x</span>..................
+                                        </div>
+                                        <div class="task_item" style="top: 80%">
+                                            <span>x</span>..................
+                                        </div>
+                                        <div class="burn_down_chart" style="height: 100%">
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="relative_div">
+                                        <div class="task_item">
+                                            <span>x</span>..................
+                                        </div>
+                                        <div class="task_item" style="top: 20%">
+                                            <span>x</span>..................
+                                        </div>
+                                        <div class="task_item todo">
+                                            <span>x</span>..................
+                                        </div>
+                                        <div class="burn_down_chart" style="height: 60%">
+                                            <div class="relative_div">
+                                                <h5 class="clock">11:20</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    &nbsp;
+                                </td>
+                                <td>
+                                    &nbsp;
+                                </td>
+                                <td>
+                                    &nbsp;
+                                </td>
+                                <td>
+                                    &nbsp;
+                                </td>
+                                <td>
+                                    &nbsp;
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="monthView" class="c_body big_table month_view">
+                    <table id="J_monthViewCalender" cellpadding="0" cellspacing="2">
+                        <!-- <tbody>
+                            <tr>
+                                <th>Mon</th>
+                                <th>Tue</th>
+                                <th>Web</th>
+                                <th>Thu</th>
+                                <th>Fri</th>
+                                <th>Sat</th>
+                                <th>Sun</th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <a href="#">1</a>
+                                    <div class="task_items">
+                                        <span class="task_item">x</span>
+                                        <span class="task_item">x</span>
+                                        <span class="task_item">x</span>
+                                        <span class="task_item">x</span>
+                                    </div>
+                                </td>
+                                <td><a href="#">1</a></td>
+                                <td><a href="#">1</a></td>
+                                <td><a href="#">1</a></td>
+                                <td><a href="#">1</a></td>
+                                <td><a href="#">1</a></td>
+                                <td><a href="#">1</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="#">1</a></td>
+                                <td><a href="#">1</a></td>
+                                <td><a href="#">1</a></td>
+                                <td><a href="#">1</a></td>
+                                <td><a href="#">1</a></td>
+                                <td><a href="#">1</a></td>
+                                <td><a href="#">1</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="#">1</a></td>
+                                <td><a href="#">1</a></td>
+                                <td><a href="#">1</a></td>
+                                <td><a href="#">1</a></td>
+                                <td><a href="#">1</a></td>
+                                <td><a href="#">1</a></td>
+                                <td><a href="#">1</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="#">1</a></td>
+                                <td><a href="#">1</a></td>
+                                <td><a href="#">1</a></td>
+                                <td><a href="#">1</a></td>
+                                <td><a href="#">1</a></td>
+                                <td><a href="#">1</a></td>
+                                <td><a href="#">1</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="#">1</a></td>
+                                <td><a href="#">1</a></td>
+                                <td><a href="#">1</a></td>
+                                <td><a href="#">1</a></td>
+                                <td><a href="#">1</a></td>
+                                <td><a href="#">1</a></td>
+                                <td><a href="#">1</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="#">1</a></td>
+                                <td><a href="#">1</a></td>
+                                <td><a href="#">1</a></td>
+                                <td><a href="#">1</a></td>
+                                <td><a href="#">1</a></td>
+                                <td><a href="#">1</a></td>
+                                <td><a href="#">1</a></td>
+                            </tr>
+                            <tr>
+                                <td><a href="#">1</a></td>
+                                <td><a href="#">1</a></td>
+                                <td colspan="5">&nbsp;</td>
+                            </tr>
+                        </tbody> -->
+                    </table>
+                </div>
+            </div><!-- c_body_wrap -->
+        </div><!-- links123-calender -->
+    </div><!-- calender-wrap -->
+
+    <br><br><br><br><br><br><br><br>
+    <script src="src/js/libs/jquery-1.10.2.min.js"></script>
+    <script src="src/js/modules/links123.calender.js"></script>
+    <script>
+
+    </script>
+    <div id="J_pop" class="c_popover">
+        <div id="J_popCtn" class="c_pop_content">
+            <!-- <ul>
+                <li>测试测试丁是丁哦倒萨倒萨大看大声道(00:00)</li>
+                <li>测试测试丁是丁哦倒萨倒萨大看大声道(00:00)</li>
+                <li>测试测试丁是丁哦倒萨倒萨大看大声道(00:00)</li>
+                <li>测试测试丁是丁哦倒萨倒萨大看大声道(00:00)</li>
+                <li>测试测试丁是丁哦倒萨倒萨大看大声道(00:00)</li>
+                <li>测试测试丁是丁哦倒萨倒萨大看大声道(00:00)</li>
+                <li>测试测试丁是丁哦倒萨倒萨大看大声道(00:00)</li>
+            </ul> -->
+        </div>
+        <div class="relative_div">
+            <div class="c_pop_tangle">&nbsp;</div>
+        </div>
+    </div>
+    <div id="J_monthTip" class="c_month_tip">
+        <div class="c_mt_ctn"></div>
+    </div>
+</body>
+</html>

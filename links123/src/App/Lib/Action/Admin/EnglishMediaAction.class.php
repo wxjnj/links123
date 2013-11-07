@@ -11,14 +11,17 @@ class EnglishMediaAction extends CommonAction {
         if (isset($_REQUEST['name'])) {
             $name = ftrim($_REQUEST['name']);
         }
+        //视频类型
         if (intval($_REQUEST['pattern']) > 0) {
             $map['englishMedia.pattern'] = intval($_REQUEST['pattern']);
             $param['pattern'] = intval($_REQUEST['pattern']);
         }
+        //视频口音
         if (intval($_REQUEST['voice']) > 0) {
             $map['englishMedia.voice'] = intval($_REQUEST['voice']);
             $param['voice'] = intval($_REQUEST['voice']);
         }
+        //媒体科目
         if (intval($_REQUEST['object']) > 0) {
             $map['englishMedia.object'] = intval($_REQUEST['object']);
             $object_info = D("EnglishObject")->find($map['englishMedia.object']);
@@ -27,22 +30,27 @@ class EnglishMediaAction extends CommonAction {
             }
             $param['object'] = intval($_REQUEST['object']);
         }
+        //媒体专题
         if (intval($_REQUEST['subject']) > 0) {
             $map['englishMedia.subject'] = intval($_REQUEST['subject']);
             $param['subject'] = intval($_REQUEST['subject']);
         }
+        //媒体难度
         if (intval($_REQUEST['difficulty']) > 0) {
             $map['englishMedia.difficulty'] = intval($_REQUEST['difficulty']);
             $param['difficulty'] = intval($_REQUEST['difficulty']);
         }
+        //媒体年级
         if (intval($_REQUEST['level']) > 0) {
             $map['englishMedia.level'] = intval($_REQUEST['level']);
             $param['level'] = intval($_REQUEST['level']);
         }
+        //媒体状态
         if (isset($_REQUEST['status'])) {
             $map['englishMedia.status'] = intval($_REQUEST['status']);
             $param['status'] = intval($_REQUEST['status']);
         }
+        //媒体推荐
         if (isset($_REQUEST['recommend'])) {
             if (intval($_REQUEST['recommend']) == 0) {
                 $map['englishMedia.recommend'] = 0;
@@ -51,10 +59,45 @@ class EnglishMediaAction extends CommonAction {
             }
             $param['recommend'] = intval($_REQUEST['recommend']);
         }
+        //媒体特别推荐
         if (isset($_REQUEST['special_recommend'])) {
             $map['englishMedia.special_recommend'] = intval($_REQUEST['special_recommend']);
             $param['special_recommend'] = intval($_REQUEST['special_recommend']);
         }
+        //是否TED
+        if (isset($_REQUEST['ted'])) {
+            if (intval($_REQUEST['ted']) == 0) {
+                $map['englishMedia.ted'] = 0;
+            } else {
+                $map['englishMedia.ted'] = array("neq", 0);
+            }
+            $param['ted'] = intval($_REQUEST['ted']);
+        }
+        //omg
+        if (isset($_REQUEST['omg'])) {
+        	$omg = intval($this->_param('omg'));
+        	$map['englishMedia.omg'] = $omg;
+        	$param['omg'] = $omg;
+        }
+        //媒体缩略图
+        if (isset($_REQUEST['thumb'])) {
+            if (intval($_REQUEST['thumb']) == 1) {
+                $map['englishMedia.media_thumb_img'] = array("neq", "");
+            } else {
+                $map['englishMedia.media_thumb_img'] = array("eq", "");
+            }
+            $param['thumb'] = intval($_REQUEST['thumb']);
+        }
+        //是否存在本地视频文件
+        if (isset($_REQUEST['has_local_path'])) {
+            if (intval($_REQUEST['has_local_path']) == 0) {
+                $map['englishMedia.local_path'] = array("eq", "");
+            } else {
+                $map['englishMedia.local_path'] = array("neq", "");
+            }
+            $param['has_local_path'] = intval($_REQUEST['has_local_path']);
+        }
+        //媒体添加时间
         if (isset($_REQUEST['created']) && strtotime($_REQUEST['created'])) {
             $map['_string'] = "DATE_FORMAT(FROM_UNIXTIME(englishMedia.created),'%Y-%m-%d')='" . $_REQUEST['created'] . "'";
             $param['created'] = $_REQUEST['created'];
@@ -162,31 +205,23 @@ class EnglishMediaAction extends CommonAction {
         if (false === $model->create()) {
             $this->error($model->getError());
         }
-        $levels = D("EnglishLevel")->order("`sort` ASC")->select();
-        foreach ($levels as $key => $value) {
-            $level_list[$value['id']] = $value;
-            $level_name_list_info[$value['name']] = $value;
-        }
-        if ($level_list[intval($_REQUEST['level'])]['sort'] <= $level_name_list_info['小六']['sort']) {
-            $model->difficulty = 1;
-        } else if ($level_list[intval($_REQUEST['level'])]['sort'] >= $level_name_list_info['大一']['sort']) {
-            $model->difficulty = 3;
-        } else {
-            $model->difficulty = 2;
-        }
-        if (intval($_REQUEST['special_recommend']) == 1) {
-            $_REQUEST['recommend'] = 1;
-        }
-        if (intval($_REQUEST['recommend']) == 1) {
-            $recommendIds = D("EnglishMediaRecommend")->getRecommendIdByObjectAndSubject($_REQUEST['object'], $_REQUEST['subject']);
-            if (!empty($recommendIds)) {
-                $model->recommend = implode(",", $recommendIds);
-            }
-        }
+       
+        $media['media_source_url'] = $model->media_source_url;
+        $media['name'] = $model->name;
         //保存当前数据对象
         $list = $model->add();
+        
+        $media_id = $media['media_id'] = $list;
         if ($list !== false) { //保存成功
+            if(false === $model->setSpecialRecommend($media, $_POST['special_recommend'])){
+                $model->rollback();
+                $this->error("编辑失败");
+            }
             $model->commit();
+           
+            //TODO 推荐视频解析 @author slate date 20131001
+            $this->analysisMediaPlayCode($media_id);
+            
             $this->success('新增成功!', cookie('_currentUrl_'));
         } else {
             $model->rollback();
@@ -199,6 +234,7 @@ class EnglishMediaAction extends CommonAction {
         $model = D("EnglishMedia");
         $id = intval($_REQUEST["id"]);
         $vo = $model->find($id);
+        $vo['name'] = htmlspecialchars($vo['name']);
         $this->assign('vo', $vo);
 
         //科目列表
@@ -251,24 +287,75 @@ class EnglishMediaAction extends CommonAction {
                 $model->media_thumb_img = $dir_name . "/" . $info[0]['savename'];
             }
         }
-        if (intval($_REQUEST['special_recommend']) == 1) {
-            $_REQUEST['recommend'] = 1;
-        }
-        if (intval($_REQUEST['recommend']) == 1) {
-            $recommendIds = D("EnglishMediaRecommend")->getRecommendIdByObjectAndSubject($_REQUEST['object'], $_REQUEST['subject']);
-            if (false == $recommendIds) {
-                //错误提示
-                $model->rollback();
-                $this->error('编辑失败!');
-            }
-            if (!empty($recommendIds)) {
-                $model->recommend = implode(",", $recommendIds);
-            }
-        }
+        $media_id = $media['media_id'] = $model->id;
+        $media['media_source_url'] = $model->media_source_url;
+        $media['name'] = $model->name;
         // 更新数据
         $list = $model->save();
         if (false !== $list) {
+            if(false === $model->setSpecialRecommend($media_id, $_POST['special_recommend'])){
+                $model->rollback();
+                $this->error("编辑失败");
+            }
+            
+            $categoryModel = D("EnglishCategory");
+            $questionModel = D("EnglishQuestion");
+            $questionSpeakModel = D("EnglishQuestionSpeak");
+            $q_map['media_id'] = array("in", $media_id);
+            $q_map['status'] = 1;
+            $question_list = $questionModel->field("id")->where($q_map)->select();
+            $question_speak_list = $questionSpeakModel->field("id")->where($q_map)->select();
+            //更新分类试题数量
+            if($_POST['old_status'] == 1 && $_POST['status'] != 1){
+                if(!empty($question_speak_list)){
+                    $question_ids = array();
+                    foreach($question_speak_list as $value){
+                        $question_ids[] = $value['id'];
+                    }
+                    if(false === $categoryModel->updateCategoryQuestionNumByQuestion($question_ids, true, 0)){
+                        $model->rollback();
+                        $this->error('编辑失败！');
+                    }
+                }
+                if(!empty($question_list)){
+                    $question_ids = array();
+                    foreach($question_list as $value){
+                        $question_ids[] = $value['id'];
+                    }
+                    if(false === $categoryModel->updateCategoryQuestionNumByQuestion($question_ids, true, 1)){
+                        $model->rollback();
+                        $this->error('编辑失败！');
+                    }
+                }
+            }elseif($_POST['old_status'] != 1 && $_POST['status'] == 1){
+                if(!empty($question_speak_list)){
+                    $question_ids = array();
+                    foreach($question_speak_list as $value){
+                        $question_ids[] = $value['id'];
+                    }
+                    if(false === $categoryModel->updateCategoryQuestionNumByQuestion($question_ids, false, 0)){
+                        $model->rollback();
+                        $this->error('编辑失败！');
+                    }
+                }
+                if(!empty($question_list)){
+                    $question_ids = array();
+                    foreach($question_list as $value){
+                        $question_ids[] = $value['id'];
+                    }
+                    if(false === $categoryModel->updateCategoryQuestionNumByQuestion($question_ids, false, 1)){
+                        $model->rollback();
+                        $this->error('编辑失败！');
+                    }
+                }
+            }
             $model->commit();
+            //TODO 推荐视频解析 @author slate date 20131001
+            if (!$model->play_code) {
+	            
+	            $this->analysisMediaPlayCode($media_id);
+            }
+            
             //成功提示
             $this->success('编辑成功!', cookie('_currentUrl_'));
         } else {
@@ -277,34 +364,91 @@ class EnglishMediaAction extends CommonAction {
             $this->error('编辑失败!');
         }
     }
+    private function analysisMediaPlayCode($media_id) {
+        $model = D("EnglishMedia");
+        $media = $model->find($media_id);
+        $media['media_local_path'] = $media['local_path'];
+        $saveData = array();
+        $saveData['id'] = $media['id'];
+        $saveData['priority_type'] = empty($media['priority_type'])? 1 : $media['priority_type'];
+        if (strpos($media['media_source_url'], 'http://www.youtube.com') !== FALSE && $media['local_path']) {
+            $saveData['priority_type'] = 2;
+        }
+        //优先播放本地，且本地视频存在
+        if ($saveData['priority_type'] == 2 && $media['local_path']) {
+            $saveData['play_code'] = $media['local_path'];
+            if (strtolower(end(explode(".", $media['local_path']))) == "swf") {
+                $saveData['play_type'] = 0;
+            } else {
+                $saveData['play_type'] = 4;
+            }
+        } else {
+            //play_code为空，则进行视频解析
+            if (!$media['play_code']) {
+                //视频解析库
+                import("@.ORG.VideoHooks");
+                $videoHooks = new VideoHooks();
+
+                $media['media_source_url'] = trim(str_replace(' ', '', $media['media_source_url']));
+                $videoInfo = $videoHooks->analyzer($media['media_source_url']);
+
+                $play_code = $videoInfo['swf'];
+
+                $media_thumb_img = $videoInfo['img'];
+
+                //解析成功，保存视频解析地址
+                if (!$videoHooks->getError() && $play_code) {
+
+                    $play_type = $videoInfo['media_type'];
+                    $saveData['media_thumb_img'] = $media_thumb_img;
+                    $saveData['play_code'] = $play_code;
+                    $saveData['play_type'] = $play_type;
+                } else {
+                    if ($media['media_local_path']) {
+                        $saveData['priority_type'] = 2;
+                        $saveData['play_type'] = 4;
+                        $saveData['play_code'] = $media['local_path'];
+                    } else {
+                        $saveData['status'] = 0;
+                    }
+                }
+            } else {
+                if (strpos($media['media_source_url'], 'britishcouncil.org') !== FALSE) {
+                    $saveData['play_code'] = preg_replace('/<!--<!\[endif\]-->(.*)/is', '</object></object>', $media['play_code']);
+                    $saveData['play_code'] = str_replace('width=585&amp;height=575', 'width=100%&amp;height=100%', $media['play_code']);
+                }
+                $saveData['play_code'] = preg_replace(array('/width="(.*?)"/is', '/height="(.*?)"/is', '/width=300 height=280/is', '/width=600 height=400/is'), array('width="100%"', 'height="100%"', 'width="100%" height="100%"', 'width="100%" height="100%"'), $media['play_code']);
+            }
+        }
+        $model->save($saveData);
+    }
 
     public function pointSubject() {
         if ($this->isAjax()) {
             $id = $_REQUEST['id'];
-            $tartget = intval($_REQUEST['target']);
-            if ($tartget >= 0) {
+            $target = intval($_REQUEST['target']);
+            if ($target >= 0) {
                 $map['id'] = array("in", $id);
                 $model = D("EnglishMedia");
                 $model->startTrans();
-                $info = $model->field("recommend,object")->where($map)->find();
+                $info = $model->field("recommend,ted,object")->where($map)->find();
                 if ($info['recommend'] > 0) {
-                    if ($tartget == 0) {
-                        if (false === $model->setRecommend($id, 1, -1, intval($info['object']))) {
-                            $model->rollback();
-                            $this->ajaxReturn("", "操作失败", false);
-                        }
-                    } else {
-                        if (false === $model->setRecommend($id, 1, intval($tartget))) {
-                            $model->rollback();
-                            $this->ajaxReturn("", "操作失败", false);
-                        }
+                    $recommendId = D("EnglishMediaRecommend")->getRecommendIdByObjectOrSubject($info['object'], $target);
+                    if (intval($recommendId) > 0) {
+                        $data['recommend'] = intval($recommendId);
                     }
                 }
-                $data['subject'] = intval($tartget);
+                if ($info['ted'] > 0) {
+                    $tedId = D("EnglishMediaTed")->getTedIdByObjectOrSubject($info['object'], $target);
+                    if (intval($tedId) > 0) {
+                        $data['ted'] = intval($tedId);
+                    }
+                }
+                $data['subject'] = $target;
                 $ret = $model->where($map)->save($data);
                 if (false !== $ret) {
                     $model->commit();
-                    $this->ajaxReturn($tartget, "操作成功", true);
+                    $this->ajaxReturn($target, "操作成功", true);
                 }
             }
             $model->rollback();
@@ -312,16 +456,66 @@ class EnglishMediaAction extends CommonAction {
         }
     }
 
-    public function pointRecommend() {
+    public function pointObject() {
         if ($this->isAjax()) {
             $id = $_REQUEST['id'];
-            $tartget = $_REQUEST['target'];
-            if (intval($tartget) > 0) {
+            $target = intval($_REQUEST['target']);
+            if ($target >= 0) {
                 $map['id'] = array("in", $id);
-                $data['recommend'] = intval($tartget);
-                $ret = D("EnglishMedia")->where($map)->save($data);
+                $model = D("EnglishMedia");
+                $model->startTrans();
+                $info = $model->field("recommend,subject")->where($map)->find();
+                if ($info['recommend'] > 0) {
+                    $recommendId = D("EnglishMediaRecommend")->getRecommendIdByObjectOrSubject($target, $info['subject']);
+                    if (intval($recommendId) > 0) {
+                        $data['recommend'] = intval($recommendId);
+                    }
+                }
+                if ($info['ted'] > 0) {
+                    $tedId = D("EnglishMediaTed")->getTedIdByObjectOrSubject($target,$info['subject']);
+                    if (intval($tedId) > 0) {
+                        $data['ted'] = intval($tedId);
+                    }
+                }
+                $data['object'] = $target;
+                $ret = $model->where($map)->save($data);
                 if (false !== $ret) {
-                    $this->ajaxReturn($tartget, "操作成功", true);
+                    $model->commit();
+                    $this->ajaxReturn($target, "操作成功", true);
+                }
+            }
+            $model->rollback();
+            $this->ajaxReturn("", "操作失败", false);
+        }
+    }
+
+    public function pointLevel() {
+        if ($this->isAjax()) {
+            $target = intval($_REQUEST['target']);
+            if ($target >= 0) {
+                $model = D("EnglishMedia");
+                $data = array();
+                $data['id'] = $_REQUEST['id'];
+                $data['level'] = $target;
+                $levels = D("EnglishLevel")->order("`sort` ASC")->select();
+                foreach ($levels as $value) {
+                    $level_list[$value['id']] = $value;
+                    $level_name_list_info[$value['name']] = $value;
+                }
+                if ($data['level'] == 0) {
+                    $data['difficulty'] = 0;
+                } else {
+                    if ($level_list[intval($data['level'])]['sort'] <= $level_name_list_info['小六']['sort']) {
+                        $data['difficulty'] = 1;
+                    } else if ($level_list[intval($data['level'])]['sort'] >= $level_name_list_info['大一']['sort']) {
+                        $data['difficulty'] = 3;
+                    } else {
+                        $data['difficulty'] = 2;
+                    }
+                }
+                $ret = $model->save($data);
+                if (false !== $ret) {
+                    $this->ajaxReturn($data['difficulty'], "操作成功", true);
                 }
             }
             $this->ajaxReturn("", "操作失败", false);
@@ -336,41 +530,61 @@ class EnglishMediaAction extends CommonAction {
     public function groupSet() {
         if ($this->isAjax()) {
             $id = $_REQUEST['id'];
-            if (intval($_REQUEST['targetSubject']) > 0) {
+            //指定的专题
+            if (intval($_REQUEST['targetSubject']) >= 0) {
                 $data['subject'] = intval($_REQUEST['targetSubject']);
             }
+            //指定特别推荐
             if (isset($_REQUEST['targetSpecialRecommend'])) {
                 $data['special_recommend'] = intval($_REQUEST['targetSpecialRecommend']);
+                if ($data['special_recommend'] == 1) {
+                    $data['recommend'] = 1;
+                }
             }
             if (isset($_REQUEST['targetRecommend'])) {
-                if (intval($_REQUEST['targetRecommend']) == 1) {
-                    $recommend = 1;
-                } else {
-                    $data['recommend'] = 0;
+                $data['recommend'] = intval($_REQUEST['targetRecommend']);
+                if ($data['recommend'] == 0) {
                     $data['special_recommend'] = 0;
                 }
             }
-            $englishMediaModel = D("EnglishMedia");
-            if (!empty($data)) {
-                $map['id'] = array("in", $id);
-                $englishMediaModel->startTrans();
-                $data['updated'] = time();
-                $ret = $englishMediaModel->where($map)->save($data);
-                if (false === $ret) {
-                    $englishMediaModel->rollback();
-                    $this->ajaxReturn("", "操作失败", false);
-                }
+            if (isset($_REQUEST['targetDifficulty'])) {
+            	$data['difficulty'] = intval($_REQUEST['targetDifficulty']);
             }
-
-            if (false !== $ret || $recommend == 1) {
-                if ($recommend == 1 || $data['special_recommend'] == 1) {
-                    if (false == $englishMediaModel->setRecommend($id, 1, intval($_REQUEST['targetSubject']))) {
+            
+            if (isset($_REQUEST['targetTed'])) {
+                $data['ted'] = intval($_REQUEST['targetTed']);
+            }
+            $englishMediaModel = D("EnglishMedia");
+            $englishMediaRecommendModel = D("EnglishMediaRecommend");
+            $englishMediaTedModel = D("EnglishMediaTed");
+            $map['id'] = array("in", $id);
+            $data['updated'] = time();
+            $medias_info = $englishMediaModel->field("id,recommend,special_recommend,object,subject")->where($map)->select();
+            if (!empty($data) && !empty($medias_info)) {
+                foreach ($medias_info as $value) {
+                    $data['id'] = $value['id'];
+                    $englishMediaModel->startTrans();
+                    if ($data['subject'] > 0) {
+                        $value['subject'] = $data['subject'];
+                    }
+                    if ($data['recommend'] > 0 || (!isset($data['recommend']) && $value['recommend'] > 0)) {
+                        $data['recommend'] = $englishMediaRecommendModel->getRecommendIdByObjectOrSubject($value['object'], $value['subject']);
+                    }
+                    if($data['ted']>0){
+                        $data['ted'] = $englishMediaTedModel->getTedIdByObjectOrSubject($value['object'], $value['subject']);
+                    }
+                    $ret = $englishMediaModel->save($data);
+                    if (false === $ret) {
+                        $englishMediaModel->rollback();
                         $this->ajaxReturn("", "操作失败", false);
                     }
                 }
+                $englishMediaModel->commit();
+                $this->ajaxReturn("", "操作成功", true);
+            } else {
+                $englishMediaModel->rollback();
+                $this->ajaxReturn("", "操作对象或记录不存在", false);
             }
-            $englishMediaModel->commit();
-            $this->ajaxReturn($data, "操作成功", true);
         }
     }
 
@@ -380,36 +594,28 @@ class EnglishMediaAction extends CommonAction {
      */
     public function setSpecialRecommend() {
         if ($this->isAjax()) {
-            $id = $_REQUEST['id'];
             $model = D("EnglishMedia");
-            $data = array();
-            $ret = $model->field("special_recommend,recommend")->find($id);
             $model->startTrans();
-            if (false == $ret) {
-                $this->ajaxReturn("", "操作失败", false);
-            }
-            $special_recommend = intval($ret['special_recommend']);
-            if ($special_recommend == 0) {
-                //如果不是推荐，自动设置为推荐
-                if (intval($ret['recommend']) == 0) {
-                    $ret = $model->setRecommend($id);
-                    if (false === $ret) {
-                        $this->ajaxReturn("", "操作失败", false);
-                    }
-                    $data['recommend'] = $id;
-                }
-                $special_recommend = 1;
-            } else {
+            $data = array();
+            $map['id'] = $_REQUEST['id'];
+            $now_special_recommend = $model->where($map)->getField("special_recommend");
+            if($now_special_recommend == 1){
                 $special_recommend = 0;
+            }else{
+                $special_recommend = 1;
             }
-            if (false === $model->where(array("id" => $id))->setField("special_recommend", $special_recommend)) {
+            if(false === $model->where($map)->setField("special_recommend",$special_recommend)){
                 $model->rollback();
                 $this->ajaxReturn("", "操作失败", false);
-            } else {
-                $model->commit();
-                $data['special_recommend'] = $special_recommend;
-                $this->ajaxReturn($data, "操作成功", true);
             }
+            $media = $model->find($map['id']);
+            if(false === $model->setSpecialRecommend($media, $special_recommend)){
+                $model->rollback();
+                $this->ajaxReturn("", "操作失败", false);
+            }
+            $model->commit();
+            $data['special_recommend'] = $special_recommend;
+            $this->ajaxReturn($data, "操作成功", true);
         }
     }
 
@@ -441,14 +647,275 @@ class EnglishMediaAction extends CommonAction {
      */
     public function setRecommend() {
         if ($this->isAjax()) {
-            $englishMediaModel = D("EnglishMedia");
-            $ret = $englishMediaModel->setRecommend($_REQUEST['id']);
+            $model = D("EnglishMedia");
+            $data = array();
+            $data['id'] = $_REQUEST['id'];
+            $info = $model->field("special_recommend,recommend,subject,object")->find($data['id']);
+
+            if (empty($info)) {
+                $this->ajaxReturn("", "操作记录不存在", false);
+            }
+            if (intval($info['recommend']) == 0) {
+                $data['recommend'] = D("EnglishMediaRecommend")->getRecommendIdByObjectOrSubject($info['object'], $info['subject']);
+            } else {
+                $data['special_recommend'] = 0;
+                $data['recommend'] = 0;
+            }
+            $ret = $model->save($data);
             if (false === $ret) {
-                $englishMediaModel->rollback();
+                $model->rollback();
                 $this->ajaxReturn("", "操作失败", false);
             } else {
-                $englishMediaModel->commit();
-                $this->ajaxReturn($ret, "操作成功", true);
+                $model->commit();
+                $this->ajaxReturn($data['special_recommend'], "操作成功", true);
+            }
+        }
+    }
+
+    public function setTed() {
+        if ($this->isAjax()) {
+            $model = D("EnglishMedia");
+            $data = array();
+            $data['id'] = $_REQUEST['id'];
+            $info = $model->field("ted,subject,object")->find($data['id']);
+
+            if (empty($info)) {
+                $this->ajaxReturn("", "操作记录不存在", false);
+            }
+            $model->startTrans();
+            if (intval($info['ted']) == 0) {
+                $data['ted'] = D("EnglishMediaTed")->getTedIdByObjectOrSubject($info['object'], $info['subject']);
+            } else {
+                $data['ted'] = 0;
+            }
+            $ret = $model->save($data);
+            if (false === $ret) {
+                $model->rollback();
+                $this->ajaxReturn("", "操作失败", false);
+            } else {
+                $model->commit();
+                $this->ajaxReturn($data['ted'], "操作成功", true);
+            }
+        }
+    }
+     public function forbid() {
+        $name = $this->getActionName();
+        $model = D($name);
+        $categoryModel = D("EnglishCategory");
+        $questionModel = D("EnglishQuestion");
+        $questionSpeakModel = D("EnglishQuestionSpeak");
+        $pk = $model->getPk();
+        $id = $_REQUEST [$pk];
+        $condition = array($pk => array('in', $id));
+        $old_media_list = $model->field("id,status")->where($condition)->select();
+        $model->startTrans();
+        $list = $model->forbid($condition);
+        
+        if ($list !== false) {
+            foreach($old_media_list as $value){
+                if($value['status'] != 1){
+                    continue;
+                }
+                $media_ids[] = $value['id'];
+            }
+            $q_map['media_id'] = array("in", $media_ids);
+            $q_map['status'] = 1;
+            $question_list = $questionModel->field("id,1 as type")->where($q_map)->select();
+            $question_speak_list = $questionSpeakModel->field("id,0 as type")->where($q_map)->select();
+            if(!empty($question_speak_list)){
+                $question_ids = array();
+                foreach($question_speak_list as $value){
+                    $question_ids[] = $value['id'];
+                }
+                if(false === $categoryModel->updateCategoryQuestionNumByQuestion($question_ids, true, 0)){
+                    $model->rollback();
+                    $this->error('状态禁用失败！');
+                }
+            }
+            if(!empty($question_list)){
+                $question_ids = array();
+                foreach($question_list as $value){
+                    $question_ids[] = $value['id'];
+                }
+                if(false === $categoryModel->updateCategoryQuestionNumByQuestion($question_ids, true, 1)){
+                    $model->rollback();
+                    $this->error('状态禁用失败！');
+                }
+            }
+            
+            $model->commit();
+            $this->success('状态禁用成功', $this->getReturnUrl());
+        } else {
+            $model->rollback();
+            $this->error('状态禁用失败！');
+        }
+    }
+    public function resume() {
+        $name = $this->getActionName();
+        $model = D($name);
+        $categoryModel = D("EnglishCategory");
+        $questionModel = D("EnglishQuestion");
+        $questionSpeakModel = D("EnglishQuestionSpeak");
+        $pk = $model->getPk();
+        $id = $_REQUEST [$pk];
+        $condition = array($pk => array('in', $id));
+        $old_media_list = $model->field("id,status")->where($condition)->select();
+        $model->startTrans();
+        $list = $model->resume($condition);
+        
+        if ($list !== false) {
+            foreach($old_media_list as $value){
+                if($value['status'] == 1){
+                    continue;
+                }
+                $media_ids[] = $value['id'];
+            }
+            $q_map['media_id'] = array("in", $media_ids);
+            $q_map['status'] = 1;
+            $question_list = $questionModel->field("id,1 as type")->where($q_map)->select();
+            $question_speak_list = $questionSpeakModel->field("id,0 as type")->where($q_map)->select();
+            if(!empty($question_speak_list)){
+                $question_ids = array();
+                foreach($question_speak_list as $value){
+                    $question_ids[] = $value['id'];
+                }
+                if(false === $categoryModel->updateCategoryQuestionNumByQuestion($question_ids, false, 0)){
+                    $model->rollback();
+                    $this->error('状态禁用失败！');
+                }
+            }
+            if(!empty($question_list)){
+                $question_ids = array();
+                foreach($question_list as $value){
+                    $question_ids[] = $value['id'];
+                }
+                if(false === $categoryModel->updateCategoryQuestionNumByQuestion($question_ids, false, 1)){
+                    $model->rollback();
+                    $this->error('状态禁用失败！');
+                }
+            }
+            
+            $model->commit();
+            $this->success('状态禁用成功', $this->getReturnUrl());
+        } else {
+            $model->rollback();
+            $this->error('状态禁用失败！');
+        }
+    }
+    public function delete() {
+        $name = $this->getActionName();
+        $model = D($name);
+        $categoryModel = D("EnglishCategory");
+        $questionModel = D("EnglishQuestion");
+        $questionSpeakModel = D("EnglishQuestionSpeak");
+        $pk = $model->getPk();
+        $id = $_REQUEST [$pk];
+        $condition = array($pk => array('in', $id));
+        $old_media_list = $model->field("id,status")->where($condition)->select();
+        $model->startTrans();
+        $list = $model->where($condition)->setField("status",-1);
+        
+        if ($list !== false) {
+            foreach($old_media_list as $value){
+                if($value['status'] != 1){
+                    continue;
+                }
+                $media_ids[] = $value['id'];
+            }
+            $q_map['media_id'] = array("in", $media_ids);
+            $q_map['status'] = 1;
+            $question_list = $questionModel->field("id,1 as type")->where($q_map)->select();
+            $question_speak_list = $questionSpeakModel->field("id,0 as type")->where($q_map)->select();
+            if(!empty($question_speak_list)){
+                $question_ids = array();
+                foreach($question_speak_list as $value){
+                    $question_ids[] = $value['id'];
+                }
+                if(false === $categoryModel->updateCategoryQuestionNumByQuestion($question_ids, true, 0)){
+                    $model->rollback();
+                    $this->error('状态禁用失败！');
+                }
+            }
+            if(!empty($question_list)){
+                $question_ids = array();
+                foreach($question_list as $value){
+                    $question_ids[] = $value['id'];
+                }
+                if(false === $categoryModel->updateCategoryQuestionNumByQuestion($question_ids, true, 1)){
+                    $model->rollback();
+                    $this->error('状态禁用失败！');
+                }
+            }
+            
+            $model->commit();
+            $this->success('状态禁用成功', $this->getReturnUrl());
+        } else {
+            $model->rollback();
+            $this->error('状态禁用失败！');
+        }
+    }
+    
+    /**
+	 * @desc 排序
+	 */
+	public function special_recommend_sort(){
+		$sortId = $this->_param('sortId');
+		$model = D("EnglishMedia");
+		$map = array();
+		$map['status'] = 1;
+        $map['special_recommend'] = 1;
+        $thumb = $this->_param("thumb");
+        if(isset($thumb)){
+            if($thumb == 1){
+                $map['media_thumb_img'] = array("neq","");
+            }else{
+                $map['media_thumb_img'] = array("eq","");
+            }
+        }else{
+            $thumb = -1;
+        }
+        $this->assign("thumb",$thumb);
+        $sortList = $model->where($map)->order('special_recommend_sort ASC,id asc')->select();
+        foreach ($sortList as &$value) {
+        	$value['txt_show'] = $value['name']."　　　　　";
+        }
+        $this->assign("sortList", $sortList);
+        $this->display("special_recommend_sort");
+        return;
+    }
+    public function saveSort() {
+        $seqNoList = $_POST ['seqNoList'];
+        if (!empty($seqNoList)) {
+            //更新数据对象
+            $name = $this->getActionName();
+            $model = D($name);
+            $col = explode(',', $seqNoList);
+            //启动事务
+            $model->startTrans();
+            $result = true;
+            foreach ($col as $val) {
+                $val = explode(':', $val);
+                $sort = $model->where("id = '%s'", $val[0])->getField('special_recommend_sort');
+                if ($sort == $val[1]) {
+                    continue;
+                }
+                $model->id = $val[0];
+                $model->special_recommend_sort = $val[1];
+                $temp_result = $model->save();
+                if (!$temp_result) {
+                    $result = false;
+                    Log::write('保存排序失败：' . $model->getLastSql(), Log::SQL);
+                }
+            }
+
+            if ($result) {
+                $model->commit();
+                //采用普通方式跳转刷新页面
+                $this->success('更新成功');
+            } else {
+                // 回滚事务
+                $model->rollback();
+                $this->error($model->getError());
             }
         }
     }

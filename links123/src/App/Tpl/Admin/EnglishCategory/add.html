@@ -1,0 +1,54 @@
+<include file="Public:header" />
+
+<div id="main" class="main" >
+	<div class="content">
+		<div class="title">
+			新增
+            <if condition='$_GET["level"] eq 2'>
+                【{$level_one_info.name}】 的 二级<elseif condition="$_GET['level'] eq 3" />
+                【{$level_one_info.name}】【{$level_two_info.name}】的三级<else />
+                一级</if>分类
+			[
+			<a href="javascript:history.go(-1);">
+				返回列表
+			</a>
+			]
+		</div>
+		<form method='post'  id="form1"  action="__URL__/insert/" >
+			<table cellpadding=3 cellspacing=3 >
+			<tr>
+				<td class="tRight" >名称：</td>
+				<td class="tLeft" >
+					<input type="text" class="medium bLeftRequire" check='Require' warning="显示名称必须"  name="name" />
+					<input type="hidden" value="0" name="default">
+				</td>
+			</tr>
+			<tr>
+				<td class="tRight" >排序：</td>
+				<td class="tLeft" >
+					<input type="text" class="medium"  name="sort" />
+				</td>
+			</tr>
+			<tr>
+				<td class="tRight">状　态：</td>
+				<td class="tLeft">
+					<SELECT class="small bLeft"  name="status">
+						<option value="1">启用</option>
+						<option value="0">禁用</option>
+					</SELECT>
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td class="center">
+                    <input type='hidden' value='{$Think.get.level}' name='level' />
+                    <input type='hidden' value='{$Think.get.level_one}' name='level_one' />
+                    <input type='hidden' value='{$Think.get.level_two}' name='level_two' />
+					<input type="submit" value="保 存" class="small submit">&nbsp;
+					<input type="reset" class="submit small" value="清 空" >
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>
+</div>

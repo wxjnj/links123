@@ -473,14 +473,19 @@ class VideoHooks {
 		$data['url'] = $this->_url;
 	
 		$swf = $this->match('/var oeTags = \'(.*?)\';/is', $html);
-		
+		//<div class="videoInStoryD">(.*?)<object(.*?)</object>
 		if (!$swf) {
-				
-			$swf = $this->match('/<meta property="og:video" content="(.*?)" \/>/is', $html);
+			$swf = $this->match('/<div class="videoInStoryD">(.*?)<object width="0" height="0">(.*?)<\/object>/is', $html, 2);
+			$swf = $swf ? '<object width="100%" height="100%">' . $swf . '</object>' : '';
+			//$swf = $this->match('/<meta property="og:video" content="(.*?)" \/>/is', $html);
+			
+			$media_type = 1;	//Object内嵌播放
 		} else {
 			
 			$swfUrl = str_replace(end(explode('/', $this->_url)), '', $this->_url);
 			$swf = $swfUrl.$this->match('/src="(.*?)"/is', $swf);
+			
+			$media_type = 2;	//iframe
 		}
 
 		$data['swf'] = $swf;
@@ -489,7 +494,7 @@ class VideoHooks {
 		$data['title'] = $this->match('/<title>(.+?)<\/title>/is', $html);
 		
 	
-		$data['media_type'] = 2;	//iframe
+		$data['media_type'] = $media_type;
 	
 		return $data;
 	
@@ -828,6 +833,7 @@ class VideoHooks {
 			$data['img'] = $this->match('/<meta property="og:image" content="(.+?)"/is', $html);
 		}
 
+		$data['media_type'] = 3;
 		return $data;
 	}
 

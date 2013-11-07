@@ -1,10 +1,12 @@
 <?php
-
-// 判断url中否有效
+/**
+ * @desc 判断url中否有效
+ * @author Frank UPDATE 2013-9-14
+ */
 class LinksCheckAction extends CommonAction {
 
     public function index() {
-        $sql = "select id,title,link from lnk_links order by id asc limit 10";
+        $sql = "select id, title, link from lnk_links order by id ASC limit 10";
         $list = M()->query($sql);
         foreach ($list as $slist) {
             $url = 'http://' . $slist['link'];
@@ -17,7 +19,10 @@ class LinksCheckAction extends CommonAction {
         }
     }
 
-    //当跳转到114里面里也是无效URL
+    /**
+     * @desc 当跳转到114里面里也是无效URL
+     * @author Frank UPDATE 2013-09-14
+     */
     private function is_yxurl($url) {
         //先判断状态码
         $exists = $this->check_remote_file_exists($url);
@@ -34,8 +39,11 @@ class LinksCheckAction extends CommonAction {
         }
         return $ar;
     }
-
-    //判断状态码是否为200 如果是200表示有效的URL
+    
+    /**
+     * @desc 判断状态码是否为200 如果是200表示有效的URL
+     * @author Frank UPDATE 2013-09-14
+     */
     private function check_remote_file_exists($url) {
         $curl = curl_init($url);
         // 不取回数据 

@@ -16,7 +16,7 @@ class EnglishMediaModel extends CommonModel {
     );
     protected $_auto = array(
         array("updated", "time", 3, "function"),
-        array("created", "time", 3, "function")
+        array("created", "time", 1, "function")
     );
 
     /**
@@ -134,6 +134,54 @@ class EnglishMediaModel extends CommonModel {
             return true;
         }
     }
+    public function  setSpecialRecommend($media,$recommend){
+        if(!$media['media_id']){
+            $media['media_id'] = $media['id'];
+        }
+        $englishCatquestionModel = D('EnglishCatquestion');
+        $englishQuestionModel = D('EnglishQuestion');
+        $englishCatgoryModel = D('EnglishCategory');
+        //查询特别推荐的分类id
+        $recommend_cat_id = intval($englishCatgoryModel->where(array('cat_attr_id' => 7, 'level_one' => -1, 'level_two' => -1, 'level_thr' => -1))->getField("cat_id"));
+        $question = $englishQuestionModel->where(array('media_id' => $media['media_id']))->find();//是否有试题
+        //给特别推荐添加空试题，添加分类  @author slate date:2013-11-02
+        if ($recommend == 1) {
+            if (!$question['id']) {
+                $question_id = $englishQuestionModel->add(array('media_id' => $media['media_id'], 'name' => $media['name'], 'media_text_url' => $media['media_source_url'], 'status' => 1));
+                if ($question_id) {
+                    if ($recommend_cat_id) {
+                        $englishCatquestionModel->add(array('cat_id' => $recommend_cat_id, 'question_id' => $question_id,'type' => 1, 'status' => 1));
+                    }
+                }
+            }else{
+                //存在试题，则关联试题到特别推荐分类
+                $recommend_cat_map = array(
+                    "question_id"=>$question['id'],
+                    "type" => 1,
+                    "cat_id" => $recommend_cat_id
+                );
+                $cat_id = $englishCatquestionModel->where($recommend_cat_map)->getField("cat_id");
+                if (intval($cat_id) == 0){
+                    if(false === $englishCatquestionModel->add($recommend_cat_map)){
+                        return false;
+                    }
+                }
+            }
+        }else{
+            if (!$question['id']) {
+                //存在试题，则删除试题和特别推荐分类和的关联
+                $recommend_cat_map = array(
+                    "question_id" => $question['id'],
+                    "type" => 1,
+                    "cat_id" => $recommend_cat_id
+                );
+                if(false === $englishCatquestionModel->where($recommend_cat_map)->delete()){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 
     /**
      * 获取特别推荐的视频列表
@@ -145,8 +193,16 @@ class EnglishMediaModel extends CommonModel {
                 ->join("RIGHT JOIN " . C("DB_PREFIX") . "english_question question on question.media_id=media.id")
                 ->where("media.special_recommend=1 and media.media_thumb_img!='' AND media.status=1 AND question.status=1")
 //                ->limit($limit)
-                ->order("media.difficulty desc")
+                ->order("question.id asc")
                 ->select();
+
+    	//TODO 暂时修改推荐视频以视频为主，可以没有试题
+//     	$ret = $this->alias("media")->field("media.id,media.name,media.media_thumb_img")
+//     	->join("LEFT JOIN " . C("DB_PREFIX") . "english_question question on question.media_id=media.id")
+//     	->where("media.special_recommend=1 and media.media_thumb_img!='' AND media.status=1")
+//     	//                ->limit($limit)
+//     	->order("media.updated desc")
+//     	->select();
         return $ret;
     }
 
@@ -167,8 +223,8 @@ class EnglishMediaModel extends CommonModel {
         if (!empty($media_info)) {
             $data['title'] = $media_info['name'];
             $data['question_id'] = $media_info['question_id'];
-            $data['url'] = C("WEB_HOST_URL") . $media_info['real_path'];
-            $data['mp3url'] = C("WEB_HOST_URL") . C("VIDEO_UPLOAD_PATH") . $media_info['slow_audio']; //慢放的mp3
+            $data['url'] = $media_info['real_path'];
+            $data['mp3url'] = C("VIDEO_UPLOAD_PATH") . $media_info['slow_audio']; //慢放的mp3
             $data['clips'] = array();
             foreach ($media_info['captions'] as $key => $value) {
                 $data['clips'][$key]['title'] = "clip " . $key;
@@ -200,8 +256,8 @@ class EnglishMediaModel extends CommonModel {
         if (!empty($media_info)) {
             $data['title'] = $media_info['name'];
             $data['question_id'] = $media_info['question_id'];
-            $data['url'] = C("WEB_HOST_URL") . $media_info['real_path'];
-            $data['mp3url'] = C("WEB_HOST_URL") . C("VIDEO_UPLOAD_PATH") . $media_info['slow_audio']; //慢放的mp3
+            $data['url'] = $media_info['real_path'];
+            $data['mp3url'] = C("VIDEO_UPLOAD_PATH") . $media_info['slow_audio']; //慢放的mp3
             $data['clips'] = array();
             foreach ($media_info['captions'] as $key => $value) {
                 $data['clips'][$key]['title'] = "clip " . $key;
@@ -229,14 +285,20 @@ class EnglishMediaModel extends CommonModel {
      * @param string $caption_text
      * @return array [数组格式：'start_time','end_time','en','zh']
      */
-    public function formatCaptionTextToArray($caption_text) {
+    public function formatCaptionTextToArray($caption_text,$need_zh=true) {
         $captions = array();
         if (!empty($caption_text)) {
             $ret = preg_split("/\n+/", $caption_text, -1, PREG_SPLIT_NO_EMPTY);
             $row = 0;
             $is_row = true;
+            //是否已经跳过空行
+            if (intval($ret[3]) > 0) {
+                $mod = 3;
+            }else{
+                $mod = 4;
+            }
             foreach ($ret as $key => $value) {
-                $index = $key % 4;
+                $index = $key % $mod;
                 switch ($index) {
                     case 0:
                         $is_row = true;
@@ -262,7 +324,9 @@ class EnglishMediaModel extends CommonModel {
                             $lan_temp = explode('|', $value);
                             if (!empty($lan_temp)) {
                                 $captions[$row]['en'] = $lan_temp[0];
-                                $captions[$row]['zh'] = $lan_temp[1];
+                                if($need_zh){
+                                    $captions[$row]['zh'] = $lan_temp[1];
+                                }
                             } else {
                                 $is_row = false;
                             }
@@ -307,7 +371,7 @@ class EnglishMediaModel extends CommonModel {
         } else if ($recommend == -1) {
             $condition['media.recommend'] = array("neq", 0);
         } else {
-            $condition['_string'] = "FIND_IN_SET(" . $recommend . ",media.recommend)";
+            $condition['recommend'] = $recommend;
         }
         $num = $this->alias("media")
                 ->join(C("DB_PREFIX") . $english_question_table_name . " question on question.media_id=media.id")
@@ -338,6 +402,189 @@ class EnglishMediaModel extends CommonModel {
         return intval($num);
     }
 
+    public function getTedQuestionNum($target = 1, $voice = 1, $pattern = 1, $ted = 0) {
+        $english_question_table_name = "english_question";
+        if ($target == 2) {
+            $english_question_table_name = "english_question_speak";
+        }
+        $condition = array();
+        $condition['question.status'] = 1;
+        $condition['media.status'] = 1;
+        $condition['media.voice'] = $voice;
+        $condition['media.pattern'] = $pattern;
+        if ($ted == 0) {
+            $condition['media.ted'] = array("neq", 0);
+        } else {
+            $condition['media.ted'] = $ted;
+        }
+        $num = $this->alias("media")
+                ->join(C("DB_PREFIX") . $english_question_table_name . " question on question.media_id=media.id")
+                ->where($condition)
+                ->count("question.id");
+        return intval($num);
+    }
+
+    public function analysisMediaPlayCode(&$media) {
+        if (strpos($media['media_source_url'], 'http://www.youtube.com') !== FALSE && $media['media_local_path']) {
+            $media['priority_type'] = 2;
+        }
+        $media['isAboutVideo'] = 0;
+        //优先播放本地，且本地视频存在
+        if ($media['priority_type'] == 2 && $media['media_local_path']) {
+            $media['play_code'] = $media['media_local_path'];
+            $media['isAboutVideo'] = 0;
+            if (strtolower(end(explode(".", $media['media_local_path']))) == "swf") {
+                $media['play_type'] = 0;
+            } else {
+                $media['play_type'] = 4;
+            }
+            return;
+        } else {
+            //play_code为空，则进行视频解析
+            if (!$media['play_code']) {
+                //视频解析库
+                import("@.ORG.VideoHooks");
+                $videoHooks = new VideoHooks();
+
+                $media['media_source_url'] = trim(str_replace(' ', '', $media['media_source_url']));
+                $videoInfo = $videoHooks->analyzer($media['media_source_url']);
+
+                $play_code = $videoInfo['swf'];
+
+                $media_thumb_img = $videoInfo['img'];
+
+                //解析成功，保存视频解析地址
+                if (!$videoHooks->getError() && $play_code) {
+
+                    $play_type = $videoInfo['media_type'];
+                    $saveData = array(
+                        'id' => $media['media_id'],
+                        'media_thumb_img' => $media_thumb_img,
+                        'play_code' => $play_code,
+                        'play_type' => $play_type
+                    );
+                    if ($media_thumb_img) {
+                    	$saveData['media_thumb_img'] = $media_thumb_img;
+                    }
+                    D("EnglishMedia")->save($saveData);
+                    $media['play_code'] = $play_code;
+
+                    $media['media_thumb_img'] = $media_thumb_img;
+
+                    $media['play_type'] = $play_type;
+                    //判断是否为about.com视频
+                    if (strpos($media['media_source_url'], 'http://video.about.com') !== FALSE && $media['target'] == 1) {
+                        $media['isAboutVideo'] = 1;
+                    }
+                    if (strpos($media['media_source_url'], 'britishcouncil.org') !== FALSE) {
+                        $media['play_code'] = preg_replace('/<!--<!\[endif\]-->(.*)/is', '</object></object>', $media['play_code']);
+                        $media['play_code'] = str_replace('width=585&amp;height=575', 'width=100%&amp;height=100%', $media['play_code']);
+                    }
+                    $media['play_code'] = preg_replace(array('/width="(.*?)"/is', '/height="(.*?)"/is', '/width=300 height=280/is', '/width=600 height=400/is'), array('width="100%"', 'height="100%"', 'width="100%" height="100%"', 'width="100%" height="100%"'), $media['play_code']);
+                    return;
+                } else {
+                    if ($media['media_local_path']) {
+                        $media['priority_type'] = 2;
+                        $media['play_type'] = 4;
+                        $media['play_code'] = $media['media_local_path'];
+                        return;
+                    } else {
+                        $media['play_code'] = FALSE;
+                        $saveData = array(
+                            'id' => $media['media_id'],
+                            'status' => 0
+                        );
+                        D("EnglishMedia")->save($saveData);
+                    }
+                }
+            } else {
+                //判断是否为about.com视频
+                if (strpos($media['media_source_url'], 'http://video.about.com') !== FALSE && $media['target'] == 1) {
+                    $media['isAboutVideo'] = 1;
+                }
+                if (strpos($media['media_source_url'], 'britishcouncil.org') !== FALSE) {
+                    $media['play_code'] = preg_replace('/<!--<!\[endif\]-->(.*)/is', '</object></object>', $media['play_code']);
+                    $media['play_code'] = str_replace('width=585&amp;height=575', 'width=100%&amp;height=100%', $media['play_code']);
+                }
+                $media['play_code'] = preg_replace(array('/width="(.*?)"/is', '/height="(.*?)"/is', '/width=300 height=280/is', '/width=600 height=400/is'), array('width="100%"', 'height="100%"', 'width="100%" height="100%"', 'width="100%" height="100%"'), $media['play_code']);
+                return;
+            }
+        }
+        return;
+    }
+	/**
+	 * 通过关键字搜索视频，返回搜索结果
+	 *
+	 * @param $keyword string
+	 *       	 [搜索视频的关键词]
+	 * @param $start int
+	 *       	 [搜索结果集起始序号]
+	 * @param $limit int
+	 *       	 [搜索结果集最大数目]
+	 * @return array [视频搜索结果集]
+	 *        
+	 * @author Rachel $date2013.10.1$
+	 */
+	public function getMediasByKeyword($keyword, $start = 0, $limit = 16) {
+		$model = new Model ();
+		$searchResult = $model->query ( "select m.id, s.name as subject, m.name,l.name as level,
+    			m.updated, m.created, m.media_thumb_img
+    			from lnk_english_media as m left join lnk_english_media_subject as s
+    			on m.subject = s.id left join lnk_english_level as l on 
+				m.level=l.id where m.name like '%%%s%%' or
+    			s.name like '%%%s%%' limit $start, $limit;", $keyword, $keyword );
+		foreach ( $searchResult as $index => $video ) {
+			$timespan = time () - $video ['created'];
+			if ($timespan < 60) { // time unit is second
+				$searchResult [$index] ['created'] = $timespan . "秒前";
+			} else if ($timespan >= 60 && $timespan < 3600) { // time unit is minute
+				$timespan = ( int ) floor ( $timespan / 60 );
+				$searchResult [$index] ['created'] = $timespan . "分钟前";
+			} else if ($timespan >= 3600 && $timespan < 3600 * 24) { // time unit is hour
+				$timespan = ( int ) floor ( $timespan / 3600 );
+				$searchResult [$index] ['created'] = $timespan . "小时前";
+			} else { // time unit is day
+				$timespan = ( int ) floor ( $timespan / (3600 * 24) );
+				$searchResult [$index] ['created'] = $timespan . "天前";
+			}
+		}
+		return $searchResult;
+	}
+	
+	/**
+	 * 获得具有指定关键字的视频数
+	 *
+	 * @param $keyword string
+	 *       	 [搜索视频的关键词]
+	 * @return int [视频搜索结果数目]
+	 *        
+	 * @author Rachel $date2013.10.3$
+	 */
+	public function getMediaSearchCount($keyword) {
+		$model = new Model ();
+		$count = $model->query ( "select count(*) as count
+    			from lnk_english_media as m left join lnk_english_media_subject as s
+    			on m.subject = s.id where m.name like '%%%s%%';", $keyword );
+		return $count [0] ['count'];
+	}
+	
+	/**
+	 * 生成视频搜索下拉框即时提示列表数据
+	 *
+	 * @param $keyword string
+	 *       	 [搜索视频的关键词]
+	 * @param $limit int
+	 *       	 [搜索下拉框列表行数]
+	 * @return array [视频即时提示列表集]
+	 *        
+	 * @author Rachel $date2013.10.3$
+	 */
+	public function getMediaPrompts($keyword, $limit = "30") {
+		$model = new Model ();
+		$prompts = $model->query ( "select name from lnk_english_media
+    			where name like '%%%s%%' limit $limit;", $keyword );
+		return $prompts;
+	}
 }
 
 ?>

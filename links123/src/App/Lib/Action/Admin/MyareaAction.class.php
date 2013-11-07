@@ -8,20 +8,17 @@
  * @version 0.0.1
  */
 class MyareaAction extends CommonAction {
-
-    // 
+	
     protected function _filter(&$map, &$param) {
-        //
-        if (isset($_REQUEST['web_name'])) {
-            $web_name = $_REQUEST['web_name'];
-        }
+        $web_name = $this->_param('web_name');
+        $mid = $this->_param('mid');
         if (!empty($web_name)) {
-            $map['web_name'] = array('like', "%" . $web_name . "%");
+            $map['web_name'] = array('like', '%' . $web_name . '%');
         }
         $this->assign('web_name', $web_name);
         $param['web_name'] = $web_name;
-        if (isset($_REQUEST['mid'])) {
-            if ($_REQUEST['mid'] == "default") {
+        if (isset($mid)) {
+            if ($mid == "default") {
                 $map['mid'] = 0;
             }
             $param['mid'] = "default";
@@ -40,7 +37,7 @@ class MyareaAction extends CommonAction {
         }
         $model = M("Myarea");
         if (!empty($model)) {
-            $this->_list($model, $map, $param,'sort', false);
+            $this->_list($model, $map, $param, 'sort', false);
         }
         $this->assign('param', $param);
         $this->display();
@@ -63,8 +60,9 @@ class MyareaAction extends CommonAction {
     public function insert() {
         $this->checkPost();
         // 创建数据对象
+        $url = $this->_param('url');
         $model = D("Myarea");
-        if ($model->where("mid=0 and url='" . $_POST['url'] . "'")->find()) {
+        if ($model->where("mid = 0 and url = '%s'", $url)->find()) {
             $this->error('该链接已存在！');
         }
         if (false === $model->create()) {
@@ -94,8 +92,9 @@ class MyareaAction extends CommonAction {
 	 * @see MyareaAction::edit()
 	 */
     function edit() {
+    	$id = $this->_param('id');
         $model = M("Myarea");
-        $vo = $model->getById($_REQUEST['id']);
+        $vo = $model->getById($id);
         $this->assign('vo', $vo);
         $this->display();
         return;
@@ -108,7 +107,9 @@ class MyareaAction extends CommonAction {
     public function update() {
         $this->checkPost();
         $model = D("Myarea");
-        if ($model->where("mid=0 and url='".$_POST['url']."' and id!=".$_POST['id'])->find()) {
+        $url = $this->_param('url');
+        $id = $this->_param('id');
+        if ($model->where("mid = 0 and url = '%s' and id != %d", $url, $id)->find()) {
             $this->error('该链接已存在！');
         }
         if (false === $model->create()) {
@@ -128,22 +129,24 @@ class MyareaAction extends CommonAction {
 	 * @see MyareaAction::sort()
 	 */
     public function sort() {
+    	$sortId = $this->_param('sortId');
+    	
         $model = M("Myarea");
         $map = array();
         $map['status'] = 1;
         $map['mid'] = 0;
         if (!empty($_GET['sortId'])) {
-            $map['id'] = array('in',$_GET['sortId']);
+            $map['id'] = array('in', $sortId);
         } else {
             $params =explode("&",$_SESSION[C('SEARCH_PARAMS_KEY')]);
             foreach ($params as &$value) {
                 $temp = explode("=",$value);
-                if (!empty($temp[1]) && $temp[0]!='sort' && $temp[0] != 'order') {
+                if (!empty($temp[1]) && $temp[0] != 'sort' && $temp[0] != 'order') {
                     $map[$temp[0]] = $temp[1];
                 }
             }
         }
-        $sortList = $model->where($map)->order('sort asc,create_time asc')->select();
+        $sortList = $model->where($map)->order('sort ASC, create_time ASC')->select();
         foreach ($sortList as &$value) {
             $value['txt_show'] = $value['web_name'] . "　　　　";
         }

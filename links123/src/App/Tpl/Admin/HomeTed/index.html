@@ -1,0 +1,75 @@
+<tagLib name="html" />
+<include file="Public:header" />
+
+<load href="__PUBLIC__/Js/Jquery/jquery.js" />
+<script type="text/javascript">
+$(function(){
+	
+	$(".J_del").click(function(){
+		
+		$.post(APP + "/Admin/HomeTed/del", {id: $(this).attr('data-id')}, function(data){
+			if (data == 1) {
+				window.location.reload();
+			} else {
+				alert('删除失败');
+			}
+		}); 
+	});
+	
+	$(".J_start").click(function(){
+		
+		$.post(APP + "/Admin/HomeTed/start", {id: $(this).attr('data-id')}, function(data){
+			if (data == 1) {
+				
+				window.location.reload();
+			} else {
+				alert('启用失败');
+			}
+		}); 
+	});
+});
+</script>
+
+<div id="main" class="main" >
+	<div class="content" >
+		<div class="title">TED发现</div>
+		
+		<div class="list" >
+		<table cellspacing="0" cellpadding="0" class="list" id="checkList"><tbody>
+		<tr><td height="5" class="topTd" colspan="13"></td></tr>
+		<tr class="row"><th width="8"></th>
+			<th width="5%" nowrap="">编号</th>
+			<th width="22%" nowrap="">标题</th>
+			<th width="31%" nowrap="">链接</th>
+			<th>缩略图</th>
+			<th style="text-align:center;">操作</th>
+		</tr>
+		<volist name="ted_list" id="vo" key="j">
+		<tr onclick="change(event)" onmouseout="out(event)" onmouseover="over(event)" class="out">
+			<td></td>
+			<td>{$vo.id}</td>
+			<td>{$vo.title}</td>
+			<td><a href="/Detail/index?id={$vo.id}" target="_blank">http://www.links123.cn/Detail/index?id={$vo.id}</a></td>
+			<td><if condition="$vo.link_cn_img neq '' "><img src="{$vo.link_cn_img}" style="width: 159px; height: 98px;" /></if></td>
+			<td nowrap="" align="center"><if condition="$vo.status neq 1 "><a href="#" class="J_start" data-id="{$vo.id}">启用</a> | <else /></if><a href="#" class="J_del" data-id="{$vo.id}">删除</a></td>
+		</tr>
+		</volist>
+		</tbody></table>
+		</div>
+
+		<div class="page">{$page}</div>
+
+	</div>
+
+</div>
+
+<div id="div_check" style="width:200px;background-color:#FFF;border:1px solid #333;position:absolute;left:270px;top:82px;display:none;">
+	<p style="margin:10px;padding-top:10px;border-top:1px dotted #999999;text-align:center;"><label><input type="radio" name="flag" value="1" />&nbsp;通过审核</label>　<label><input type="radio" name="flag" value="０" />&nbsp;取消审核</label></p>
+	<p style="margin:10px;padding-top:10px;border-top:1px dotted #999999;text-align:right;"><input type="button" id="btn_qd" value=" 确定 " style="cursor:pointer;" />&nbsp;<input type="button" id="btn_ccl" value=" 取消 " style="cursor:pointer;" /></p>
+	<input type="hidden" id="ids" />
+</div>
+
+</body>
+</html>
+
+

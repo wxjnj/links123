@@ -138,6 +138,19 @@
 	    }
 		location.href = URL + "/groupEdit/id/" + keyValue;
 	}
+	
+	function addToHomeTed(id) {
+		
+		$.post(APP + "/Admin/HomeTed/add", {'id': id}, function(data){
+			if (data == 1) {
+				alert('添加成功');
+			} else if (data == -1){
+				alert('已添加');
+			} else {
+				alert('添加失败');
+			}
+		}); 
+	}
 	//
 	setCookie("bg_login", 1);
 //-->
@@ -227,7 +240,11 @@
 		<eq name="status" value="-1">
 			<html:list id="checkList" name="links" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,title:标题|22%:edit,link|getLinkToHref:链接|31%,cat_name:目录|4%,language|getLang:语言|4%,create_time|toDateShort:发布日期|8%,status|getLinkStt:状态|4%,sort:序号|4%,recommended:推荐人|4%,usr_name:录入员|4%,click_num:点击量|4%" actionlist="edit:编辑,recycle:恢复,check:审核" />
 		<else />
-			<html:list id="checkList" name="links" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,title:标题|22%:edit,link|getLinkToHref:链接|31%,cat_name:目录|4%,language|getLang:语言|4%,create_time|toDateShort:发布日期|8%,status|getLinkStt:状态|4%,sort:序号|4%,recommended:推荐人|4%,usr_name:录入员|4%,click_num:点击量|4%" actionlist="edit:编辑,del:删除,check:审核" />
+			<if condition="$cat_id eq '5'">
+				<html:list id="checkList" name="links" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,title:标题|22%:edit,link|getLinkToHref:链接|31%,cat_name:目录|4%,language|getLang:语言|4%,create_time|toDateShort:发布日期|8%,status|getLinkStt:状态|4%,sort:序号|4%,recommended:推荐人|4%,usr_name:录入员|4%,click_num:点击量|4%" actionlist="edit:编辑,del:删除,check:审核,addToHomeTed:添加到TED发现" />
+			<else />
+				<html:list id="checkList" name="links" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,title:标题|22%:edit,link|getLinkToHref:链接|31%,cat_name:目录|4%,language|getLang:语言|4%,create_time|toDateShort:发布日期|8%,status|getLinkStt:状态|4%,sort:序号|4%,recommended:推荐人|4%,usr_name:录入员|4%,click_num:点击量|4%" actionlist="edit:编辑,del:删除,check:审核" />
+			</if>
 		</eq>
 		</div>
 

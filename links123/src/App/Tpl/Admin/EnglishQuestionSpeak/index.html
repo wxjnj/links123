@@ -1,0 +1,611 @@
+<tagLib name="html" />
+<include file="Public:header" />
+
+<load href="__PUBLIC__/skin/easyui/themes/metro/easyui.css" />
+<load href="__PUBLIC__/Js/Jquery/jquery.js" />
+<load href="__PUBLIC__/Js/Jquery/jqueryform.js" />
+<load href="__PUBLIC__/Js/My97DatePicker/WdatePicker.js" />
+<load href="__PUBLIC__/skin/easyui/locale/easyui-lang-zh_CN.js" /> 
+<load href="__PUBLIC__/skin/easyui/jquery.easyui.min.js" />
+
+<div id="main" class="main" >
+    <div class="content" >
+        <div class="title">英语角说力试题列表</div>
+        <div class="operate" >
+            <html:imageBtn name="add" click="add()" style="hMargin fLeft" />
+            <html:imageBtn name="edit" click="edit()" style="hMargin fLeft" />
+            <html:imageBtn name="delete" click="del()" style="hMargin fLeft" />
+            <html:imageBtn name="forbid" click="forbid()" style="hMargin fLeft" />
+            <html:imageBtn name="resume" click="resume()" style="hMargin fLeft" />
+            <html:imageBtn name="myimport" click="import_excel()" style="hMargin fLeft" />
+            <html:imageBtn name="myexport" click="export_to_excel()" style="hMargin fLeft" />
+            <select id="selectSubjectSource" style='display: none;float:left;margin:0 5px;'>
+                <option value='-1'>选择专题</option>
+                <option value='0'>无专题</option>
+                <volist name="subject_list" id="subject">
+                    <option value="{$subject.id}" <eq name="param['subject']" value="$subject['id']">selected="true"</eq>>{$subject.name}</option>
+                </volist>
+            </select>
+            <div class="hMargin fLeft">
+                <label>英语角点击次数：</label><label>{$english_click_num|default=0}</label>
+            </div>
+        </div>
+        <form method='post' action="__URL__">
+            <div class="rSearch">
+                <div class="fLeft">试题查询：<span id="key"><input autocomplete="off" type="text" name="name" value="{$name}" class="medium" /></span></div>
+                <html:imageBtn type="submit" name="search" style="hMargin fLeft" />
+            </div>
+            <div class="search cBoth" style="height: 60px;">
+                <div>
+                    筛选：&nbsp;&nbsp;
+                    <label>
+                        <input class="checkbox" type="checkbox" value="1" name="voice" <eq name="param['voice']" value="1">checked="checked"</eq>>
+                        美音
+                    </label>
+                    <label>
+                        <input class="checkbox" type="checkbox" value="2" name="voice" <eq name="param['voice']" value="2">checked="checked"</eq>>
+                        英音
+                    </label>&nbsp;&nbsp;
+                    <label>
+                        <input class="checkbox" type="checkbox" value="1" name="pattern" <eq name="param['pattern']" value="1">checked="checked"</eq>>
+                        视频
+                    </label>
+                    <label>
+                        <input class="checkbox" type="checkbox" value="2" name="pattern" <eq name="param['pattern']" value="2">checked="checked"</eq>>
+                        音频
+                    </label>&nbsp;&nbsp;
+                    添加时间：
+                    <input type="text" id="J_createTime" name="created" value="{$param['created']}" />
+                    &nbsp;&nbsp;
+                    分类：
+                    <select name="level_one"  id="level_one_select">
+                        <option value="0">全部</option>
+                        <volist name="category['level_one']" id="level_one">
+                            <option value="{$level_one.id}" <eq name="param['level_one']" value="$level_one['id']">selected="true"</eq>>{$level_one.name}</option>
+                        </volist>
+                    </select>&nbsp;&nbsp;
+                    <select name="level_two"  id="level_two_select">
+                        <option value="0">全部</option>
+                        <volist name="category['level_two']" id="level_two">
+                            <option value="{$level_two.id}" <eq name="param['level_two']" value="$level_two['id']">selected="true"</eq>>{$level_two.name}</option>
+                        </volist>
+                    </select>&nbsp;&nbsp;
+                    <select name="level_thr"  id="level_thr_select">
+                        <option value="0">全部</option>
+                        <volist name="category['level_thr']" id="level_thr">
+                            <option value="{$level_thr.id}" <eq name="param['level_thr']" value="$level_thr['id']">selected="true"</eq>>{$level_thr.name}</option>
+                        </volist>
+                    </select>
+                </div>
+                <div style="margin-top: 10px;">
+                    特别推荐：
+                    <label>
+                        <input class="checkbox" type="checkbox" value="1" name="special_recommend" <if condition="$param['special_recommend'] eq 1">checked="checked"</if>>
+                        是
+                    </label>&nbsp;
+                    <label>
+                        <input class="checkbox" type="checkbox" value="0" name="special_recommend" <eq name="param['special_recommend']" value="0">checked="checked"</eq>>
+                        否
+                    </label>&nbsp;&nbsp;
+                    状态：
+                    <label>
+                        <input class="checkbox" type="checkbox" value="1" name="status" <if condition="$param['status'] eq 1">checked="checked"</if>>
+                        正常
+                    </label>&nbsp;
+                    <label>
+                        <input class="checkbox" type="checkbox" value="0" name="status" <eq name="param['status']" value="0">checked="checked"</eq>>
+                        禁用
+                    </label>&nbsp;
+                    <label>
+                        <input class="checkbox" type="checkbox" value="-1" name="status" <eq name="param['status']" value="-1">checked="checked"</eq>>
+                        已删除
+                    </label>&nbsp;&nbsp;
+                    缩略图：
+                    <label>
+                        <input class="checkbox" type="checkbox" value="1" name="thumb" <eq name="param['thumb']" value="1">checked="checked"</eq>>
+                        有
+                    </label>&nbsp;
+                    <label>
+                        <input class="checkbox" type="checkbox" value="0" name="thumb" <eq name="param['thumb']" value="0">checked="checked"</eq>>
+                        无
+                    </label>&nbsp;&nbsp;
+                    本地视频：
+                    <label>
+                        <input class="checkbox" type="checkbox" value="1" name="has_local_path" <eq name="param['has_local_path']" value="1">checked="checked"</eq>>
+                        有
+                    </label>&nbsp;
+                    <label>
+                        <input class="checkbox" type="checkbox" value="0" name="has_local_path" <eq name="param['has_local_path']" value="0">checked="checked"</eq>>
+                        无
+                    </label>
+                </div>
+            </div>
+        </form>
+
+
+        <div class="list" >
+            <html:list id="checkList" name="category" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,name:名称:edit,created|toDateShort:发布时间,cat_attr_id|getVoiceNameFromAttrId:语音:voice|id,cat_attr_id|getPatternNameFromAttrId:形式:pattern|id,special_recommend|getYorN:特别推荐:special_recommend|media_id,status|getStatus:状态" actionlist="property:分类,edit:编辑" />
+        </div>
+
+        <div class="page">{$page}</div>
+
+    </div>
+
+</div>
+<div id="import_dialog" class="easyui-dialog" style="width:250px;height:auto;" data-options="title:'请选择导入文件',shadow:false,modal:true,closed:true,closable:true">
+    <form method='post' id="frm_att" action="__URL__/excel_insert" enctype="multipart/form-data">
+        <input name="file" id="file_att" type="file" />
+        <input type="hidden" id="folder" name="folder" value="Excels" />
+        <input type="hidden" name="id" value="att" />
+    </form>
+</div>
+<div id="dialog" class="easyui-dialog" style="width:225px;height:auto;" data-options="title:'导入试题中',shadow:false,modal:true,closed:true,closable:false">
+    <img style="" src="__PUBLIC__/Images/loading.gif" />
+</div>
+<div id="export_dialog" class="easyui-dialog" style="width:250px;height:auto;" data-options="title:'请选择导出项',shadow:false,modal:true,closed:true,closable:true">
+    <h2>请选择需要导出的方式：</h2>
+    <div style='margin:10px 0 0 10px;'>
+        <label style="display: block;margin-bottom: 10px;"><input  type='radio' name='export_type' value='select' checked="true" />导出选中项</label>
+        <label style="display: block;"><input  type='radio' name='export_type' value='condition' />导出当前查询下所有项</label>
+    </div>
+    <div style="margin: 20px 0 10px 0;">
+        <input type="button" id='J_exportBtn' style='margin: 0 30px' value="确 认" class="small submit" />&nbsp;
+        <input type="button" id='J_exportCancelBtn' value="取消" class="small submit" />&nbsp;
+    </div>
+    <form id="J_fileDownloadForm" action='__URL__/download_excel'>
+        <input id="J_fileName" name='filename' type="hidden" value='' />
+    </form>
+</div>
+<script type="text/javascript">
+    $(function(){
+        $("#J_createTime").focus(function() {
+            WdatePicker({dateFmt: 'yyyy-MM-dd', maxDate: "%y-%M-%d",onpicked:function(){
+                    $("[name='search']").click();
+                },oncleared:function(){ $("[name='search']").click();}
+            });
+            $(this).blur();
+        })
+        var options = {beforeSubmit: showRequest,success: showResponse};
+        $("#frm_att").submit(function() {
+            $(this).ajaxSubmit(options); 
+            return false;
+        });
+        $("#file_att").change(function(){
+            if ( $(this).val() != '' ) {
+                $("#import_dialog").window("close");
+                $("#frm_att").submit();
+            }
+        });
+        $(".search .checkbox").click(function(){
+            $("[name='"+$(this).attr("name")+"']").not("[value='"+$(this).val()+"']").removeAttr("checked");
+            $("[name='search']").click();
+        })
+        $("[name='level_one'],[name='level_two'],[name='level_thr']").change(function() {
+            //$("[name='search']").click();
+        })
+        $(".operate input[name='special_recommend']").click(function() {
+            if ($(this).val() == 1) {
+                if (!$(".operate input[name='recommend'][value='1']").attr("checked")) {
+                    $(".operate input[name='recommend']").removeAttr("checked");
+                    $(".operate input[name='recommend'][value='1']").attr("checked", "checked");
+                }
+            }
+            $(".operate [name='special_recommend']").not("[value='" + $(this).val() + "']").removeAttr("checked");
+        })
+        $(".operate input[name='recommend']").click(function() {
+            if ($(this).val() == 0) {
+                if ($(".operate input[name='special_recommend'][value='1']").attr("checked")) {
+                    $(".operate input[name='special_recommend'][value='1']").removeAttr("checked");
+                }
+            }
+            $(".operate [name='recommend']").not("[value='" + $(this).val() + "']").removeAttr("checked");
+        })
+        
+        $("#J_exportCancelBtn").click(function(){
+            $("#export_dialog").window("close");
+        })
+        $("#J_exportBtn").click(function(){
+            export_action();
+        })
+        
+        /* 直达 */
+        $(".page input").keydown(function(event) {
+            if (event.keyCode == 13) {	// 回车
+                if ($(this).val() != '' && !isNaN($(this).val())) {
+                    window.location.href = $(this).attr("url") + "&p=" + $(this).val();
+                }
+            }
+        });
+        $("#level_one_select").change(function(){
+            getLevelList(2);
+        })
+        $("#level_two_select").change(function(){
+            getLevelList(3);
+        })
+    })
+    function showRequest(formData, jqForm, options) {
+        $("#dialog").window({title: "导入视频中"});
+        $("#dialog").window("open");
+        return true;
+    }
+    //
+    function showResponse(responseText, statusText)  {
+        $("#file_att").val('');
+        $("#dialog").window("close");
+        responseText = jQuery.parseJSON(responseText);
+        alert(responseText.info);
+        if(responseText.status){
+            window.location.reload();
+        }
+        //alert('status: ' + statusText + '\n\nresponseText: \n' + responseText);
+    }
+    function import_excel(){
+        $("#import_dialog").window("open");
+    }
+    function export_to_excel(){
+        $("#export_dialog").window("open");
+    }
+    function export_action(){
+        var type = $("input[name='export_type']:checked").val();
+        //导出选择项的id
+        if(type=="select"){
+            var id = getSelectCheckboxValues();
+            if (!id) {
+                alert('请选择编辑项！');
+                $("#export_dialog").window("close");
+                return false;
+            }
+        }else{
+            var param = "{$param_str}";
+        }
+        var url = "__URL__/export_excel?"+param;
+        $("#dialog").window({title: "导出视频中"});
+        $("#dialog").window("open");
+        $("#export_dialog").window("close");
+        $.post(url,{id:id},function(msg){
+            if(msg){
+                if(msg.status){
+                    $("#J_fileName").val(msg.data);
+                    $("#J_fileDownloadForm").submit();
+//                    window.open("__URL__/download_excel?filename="+msg.data);
+                    $("#export_dialog").window("close");
+                }else{
+                    $("#export_dialog").window("open");
+                    alert(msg.info);
+                }
+            }
+            $("#dialog").window("close");
+        },"json")
+    }
+    function sortBy(field, sort, param) {
+        param = "{$param_str}";
+        location.href = "?" + param + "&_order=" + field + "&_sort=" + sort;
+    }
+    /**
+     * 特别推荐
+     * @param {int} id 操作对象id
+     * @returns {void}
+     */
+    function special_recommend(id) {
+        if (id > 0) {
+            $("#load_dialog").window("open");
+            $.post("{:U('Admin/EnglishMedia/setSpecialRecommend')}", {id: id}, function(msg) {
+                if (msg) {
+                    if (msg.status) {
+                        if (msg.data.special_recommend == 0) {
+                            $("a[href=\"javascript:special_recommend('" + id + "')\"]").text("否");
+                        } else {
+                            $("a[href=\"javascript:special_recommend('" + id + "')\"]").text("是");
+                        }
+                    }
+                }
+                $("#load_dialog").window("close");
+            }, "json");
+        } else {
+            alert("非法操作！");
+        }
+    }
+    /**
+     * 推荐
+     * @param {int} id 操作对象id
+     * @returns {void}
+     */
+    function recommend(id) {
+        if (id > 0) {
+            $("#load_dialog").window("open");
+            $.post("{:U('Admin/EnglishMedia/setRecommend')}", {id: id}, function(msg) {
+                if (msg) {
+                    if (msg.status) {
+                        if (msg.data == 0) {
+                            $("a[href=\"javascript:recommend('" + id + "')\"]").text("否");
+                            $("a[href=\"javascript:special_recommend('" + id + "')\"]").text("否");
+                        } else {
+                            $("a[href=\"javascript:recommend('" + id + "')\"]").text("是");
+                        }
+                    }
+                }
+                $("#load_dialog").window("close");
+            }, "json");
+        } else {
+            alert("非法操作！");
+        }
+    }
+     /**
+     * 修改英音美音等
+     * @param {int} id 操作对象id
+     * @returns {void}
+     */
+    function voice(id) {
+        if (id > 0) {
+            $("#load_dialog").window("open");
+            $.post("{:U('Admin/EnglishQuestionSpeak/voice')}", {id: id}, function(msg) {
+                if (msg) {
+                    if (msg.status) {
+                        if (msg.data == 0) {
+                            $("a[href=\"javascript:voice('" + id + "')\"]").text("英音");
+                        } else {
+                            $("a[href=\"javascript:voice('" + id + "')\"]").text("美音");
+                        }
+                    }
+                }
+                $("#load_dialog").window("close");
+            }, "json");
+        } else {
+            alert("非法操作！");
+        }
+    }
+    /**
+     * 修改视频音频等
+     * @param {int} id 操作对象id
+     * @returns {void}
+     */
+    function pattern(id) {
+        if (id > 0) {
+            $("#load_dialog").window("open");
+            $.post("{:U('Admin/EnglishQuestionSpeak/pattern')}", {id: id}, function(msg) {
+                if (msg) {
+                    if (msg.status) {
+                        if (msg.data == 0) {
+                            $("a[href=\"javascript:pattern('" + id + "')\"]").text("音频");
+                        } else {
+                            $("a[href=\"javascript:pattern('" + id + "')\"]").text("视频");
+                        }
+                    }
+                }
+                $("#load_dialog").window("close");
+            }, "json");
+        } else {
+            alert("非法操作！");
+        }
+    }
+     /**
+    * 
+
+     * @param {type} id
+     * @returns {void}    
+     */
+    
+    function ted(id){
+        if (id > 0) {
+            $("#load_dialog").window("open");
+            $.post("{:U('Admin/EnglishMedia/setTed')}", {id: id}, function(msg) {
+                if (msg) {
+                    if (msg.status) {
+                        if (msg.data == 0) {
+                            $("a[href=\"javascript:ted('" + id + "')\"]").text("否");
+                        } else {
+                            $("a[href=\"javascript:ted('" + id + "')\"]").text("是");
+                        }
+                    }
+                }
+                $("#load_dialog").window("close");
+            }, "json");
+        } else {
+            alert("非法操作！");
+        }
+    }
+    /**
+     * 选择专题
+     * @param {int} id
+     * @returns {void}     
+     * @author Adam $date2013.08.30$
+     */
+    function selectSubject(id) {
+        $(".subjectSelect").unbind();
+        //现有的select
+        var old_select_id = $(".subjectSelect").attr("id");
+        //现有的select移除，还原链接
+        if (old_select_id) {
+            var old_id = old_select_id.substr(old_select_id.indexOf("_") + 1);
+            $("#subjectSelect_" + old_id).remove();
+            $("a[href=\"javascript:selectSubject('" + old_id + "')\"]").show();
+        }
+        //显示当前选中的
+        var td = $("a[href=\"javascript:selectSubject('" + id + "')\"]").parent("td");
+        $("a[href=\"javascript:selectSubject('" + id + "')\"]").hide();
+        var now_text = $("a[href=\"javascript:selectSubject('" + id + "')\"]").text();
+        td.append("<select class='subjectSelect' id='subjectSelect_" + id + "'></select>");
+        $("#subjectSelect_" + id).html($("#selectSubjectSource").html());
+        $("#subjectSelect_" + id + " option:contains('" + now_text + "')").attr("selected", "selected");
+        //
+        //绑定事件
+        $(".subjectSelect").change(function() {
+            if (parseInt($(this).val()) == -1) {
+                return false;
+            }
+            var select = $(this);
+            var id = $(this).attr("id").substr($(this).attr("id").indexOf("_") + 1);
+            var target = $(this).val();
+            var targetName = $(".subjectSelect option[value='" + target + "']").text();
+            $("#load_dialog").window("open");
+            $.post("{:U('Admin/EnglishMedia/pointSubject')}", {id: id, target: target}, function(msg) {
+                if (msg) {
+                    if (msg.status) {
+                        $("a[href=\"javascript:selectSubject('" + id + "')\"]").text(targetName);
+                        select.remove();
+                        $("a[href=\"javascript:selectSubject('" + id + "')\"]").show();
+                    }
+                }
+                $("#load_dialog").window("close");
+            }, "json")
+        })
+    }
+    
+    /**
+     * 选择科目
+     * @param {int} id
+     * @returns {void}     
+     * @author Adam $date2013.08.30$
+     */
+    function selectObject(id) {
+        $(".objectSelect").unbind();
+        //现有的select
+        var old_select_id = $(".objectSelect").attr("id");
+        //现有的select移除，还原链接
+        if (old_select_id) {
+            var old_id = old_select_id.substr(old_select_id.indexOf("_") + 1);
+            $("#selectObject_" + old_id).remove();
+            $("a[href=\"javascript:selectObject('" + old_id + "')\"]").show();
+        }
+        //显示当前选中的
+        var td = $("a[href=\"javascript:selectObject('" + id + "')\"]").parent("td");
+        $("a[href=\"javascript:selectObject('" + id + "')\"]").hide();
+        var now_text = $("a[href=\"javascript:selectObject('" + id + "')\"]").text();
+        td.append("<select class='objectSelect' id='selectObject_" + id + "'></select>");
+        $("#selectObject_" + id).html($("#opeartObjectSelect").html());
+        $("#selectObject_" + id + " option:contains('综合')").remove();
+        $("#selectObject_" + id + " option:contains('" + now_text + "')").attr("selected", "selected");
+        //
+        //绑定事件
+        $(".objectSelect").change(function() {
+            if (parseInt($(this).val()) == -1) {
+                return false;
+            }
+            var select = $(this);
+            var id = $(this).attr("id").substr($(this).attr("id").indexOf("_") + 1);
+            var target = $(this).val();
+            var targetName = $(".objectSelect option[value='" + target + "']").text();
+            $("#load_dialog").window("open");
+            $.post("{:U('Admin/EnglishMedia/pointObject')}", {id: id, target: target}, function(msg) {
+                if (msg) {
+                    if (msg.status) {
+                        $("a[href=\"javascript:selectObject('" + id + "')\"]").text(targetName);
+                        select.remove();
+                        $("a[href=\"javascript:selectObject('" + id + "')\"]").show();
+                    }
+                }
+                $("#load_dialog").window("close");
+            }, "json")
+        })
+    }
+    
+    
+     /**
+     * 选择科等级
+     * @param {int} id
+     * @returns {void}     
+     * @author Adam $date2013.08.30$
+     */
+    function selectLevel(id) {
+        $(".levelSelect").unbind();
+        //现有的select
+        var old_select_id = $(".levelSelect").attr("id");
+        //现有的select移除，还原链接
+        if (old_select_id) {
+            var old_id = old_select_id.substr(old_select_id.indexOf("_") + 1);
+            $("#selectLevel_" + old_id).remove();
+            $("a[href=\"javascript:selectObject('" + old_id + "')\"]").show();
+        }
+        //显示当前选中的
+        var td = $("a[href=\"javascript:selectLevel('" + id + "')\"]").parent("td");
+        $("a[href=\"javascript:selectLevel('" + id + "')\"]").hide();
+        var now_text = $("a[href=\"javascript:selectLevel('" + id + "')\"]").text();
+        td.append("<select class='levelSelect' id='selectLevel_" + id + "'></select>");
+        $("#selectLevel_" + id).html($("#opeartLevelSelect").html());
+        $("#selectLevel_" + id+" option[value='0']").text("无");
+        $("#selectLevel_" + id + " option:contains('" + now_text + "')").attr("selected", "selected");
+        //
+        //绑定事件
+        $(".levelSelect").change(function() {
+            if (parseInt($(this).val()) == -1) {
+                return false;
+            }
+            var select = $(this);
+            var id = $(this).attr("id").substr($(this).attr("id").indexOf("_") + 1);
+            var target = $(this).val();
+            var targetName = $(".levelSelect option[value='" + target + "']").text();
+            $("#load_dialog").window("open");
+            $.post("{:U('Admin/EnglishMedia/pointLevel')}", {id: id, target: target}, function(msg) {
+                if (msg) {
+                    if (msg.status) {
+                        $("a[href=\"javascript:selectLevel('" + id + "')\"]").text(targetName);
+                        var difficultyObj = $("a[href=\"javascript:selectLevel('" + id + "')\"]").parent("td").siblings("td").find(".difficulty");
+                        switch(msg.data){
+                            case 0:
+                                difficultyObj.text("无");
+                                break;
+                            case 1:
+                                difficultyObj.text("初级");
+                                break;
+                            case 2:
+                                difficultyObj.text("中级");
+                                break;
+                            case 3:
+                                difficultyObj.text("高级");
+                                break;
+                            default:
+                                break;
+                        }
+                        if(msg.data==0){
+                            $("a[href=\"javascript:selectLevel('" + id + "')\"]").parent("td").siblings("td").find(".difficulty").text("无");
+                        }
+                        select.remove();
+                        $("a[href=\"javascript:selectLevel('" + id + "')\"]").show();
+                    }
+                }
+                $("#load_dialog").window("close");
+            }, "json")
+        })
+    }
+    function property(id) {
+        var target = window.location.href;
+        var page   = 1;
+        if (target.match(/p=([^&]+)/) != null) {
+            page   = target.match(/p=([^&]+)/)[1];
+        }
+        location.href = URL + "/property/type/{$type}/qid/" + id + "/page/" + page;
+    }
+    function getLevelList(level){
+        var  postData = new Object();
+        postData.level = level;
+        if(level == 2){
+            postData.level_one = $("#level_one_select").val();
+        }else if(level == 3){
+            postData.level_one = $("#level_one_select").val();
+            postData.level_two = $("#level_two_select").val();
+        }
+        $.post("{:U('Admin/EnglishQuestion/getLevelList')}",postData,function(msg){
+            if(msg){
+                if(msg.status){
+                    var str = "<option value='0'>全部</option>";
+                    var data = msg.data;
+                    for(var i = 0;i<data.length;i++){
+                        str+="<option value='"+data[i]['id']+"'>"+data[i]['name']+"</option>";
+                    }
+                    if(level == 2){
+                        if(str){
+                            $("#level_two_select").html(str);
+                        }
+                        getLevelList(3);
+                    }else if(level == 3){
+                        if(str){
+                            $("#level_thr_select").html(str);
+                        }
+                    }
+                }
+            }
+        },"json")
+    }
+</script>
+</body>
+</html>

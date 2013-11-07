@@ -1,0 +1,101 @@
+<div class="cal-header">
+	<table width="100%">
+		<tr>
+			<td class="tr" width="40px">
+				<button class="cal-header-date-prev"></button>
+			</td>
+			<td class="tc">
+				<h5 class="cal-header-date" data-date="2013/01/01" data-date2="2013/01/31">2013年01月01日</h5>
+			</td>
+			<td class="tl" width="40px">
+				<button class="cal-header-date-next"></button>
+			</td>
+			<td class="tr pr10">
+				<button class="cal-view-select-btn cal-view-select-btn-month" data-type="Month">月</button>
+				<button class="cal-view-select-btn cal-view-select-btn-week" data-type="Week">周</button>
+				<button class="cal-view-select-btn cal-view-select-btn-date active" data-type="Date">日</button>
+			</td>
+		</tr>
+	</table>
+</div>
+<div class="cal-body">
+	<div class="cal-day" style="display:none">
+		<!--div class="cal-day-burn-down-chart">
+			<div class="chart">
+				<h5 class="time-show">00:00</h5>
+			</div>
+			<div class="chart-body"></div>
+		</div-->
+		<ul class="cal-date-marks-table">
+		</ul>
+		
+		<input style="display:none" type="text" />
+		<div class="cal-mini-month-panel">
+			<table>
+				<thead>
+				<tr>
+					<th>一</th><th>二</th><th>三</th><th>四</th>
+					<th>五</th><th>六</th><th>日</th>
+				</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
+		<!--div class="cal-day-note-list">
+			<h6>全天事件 - <b class="marks-count"></b>件</h6>
+			<ul class="cal-day-ul"></ul>
+		</div-->
+
+	</div>
+	<div class="cal-week" style="display:none">
+		<table>
+			<thead>
+			<tr>
+				<th class="th_1">一</th>
+				<th class="th_2">二</th>
+				<th class="th_3">三</th>
+				<th class="th_4">四</th>
+				<th class="th_5">五</th>
+				<th class="th_6">六</th>
+				<th class="th_7">日</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr>
+				<td class="td_1"></td>
+				<td class="td_2"></td>
+				<td class="td_3"></td>
+				<td class="td_4"></td>
+				<td class="td_5"></td>
+				<td class="td_6"></td>
+				<td class="td_7"></td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="cal-month" style="display:none">
+		<table>
+			<thead>
+			<tr>
+				<th>一</th>
+				<th>二</th>
+				<th>三</th>
+				<th>四</th>
+				<th>五</th>
+				<th>六</th>
+				<th>日</th>
+			</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<div class="cal-ajax-overlayer" style="display:none">
+	<div class="layer"></div>
+	<div class="content">加载中...</div>
+</div>
+
+

@@ -1,3 +1,4 @@
+//temp info.
 $(function() {
 	// 注册
 	if ( $("#frm_reg")[0] ) {
@@ -25,6 +26,14 @@ $(function() {
 		
 		/* 输入框失去焦点判断 */
 		$("#frm_reg input[name='nickname']").blur(function(){
+			if ($.trim($(this).val()) == "") {
+				$(this).parent("td").next("td").children(".must").css("display", 'inline-block');
+			}
+			else {
+				$(this).parent("td").next("td").children(".must").css("display", 'none');
+			}
+		})
+		$("#frm_reg input[name='email']").blur(function(){
 			if ($.trim($(this).val()) == "") {
 				$(this).parent("td").next("td").children(".must").css("display", 'inline-block');
 			}
@@ -65,7 +74,7 @@ $(function() {
 		/* 注册 */
 		$("#btn_reg_sub").click(function(){
 			//
-			var data = {"nickname":"","password":"","verify":""};
+			var data = {"nickname":"","email":"","password":"","verify":""};
 			//
 			var obj = $("#frm_reg input[name='nickname']");
 			if ($.trim(obj.val()) == "") {
@@ -74,6 +83,14 @@ $(function() {
 				return false;
 			}
 			data.nickname = obj.val();
+			
+			var obj = $("#frm_reg input[name='email']");
+			if ($.trim(obj.val()) == "") {
+				obj.parent("td").next("td").children(".must").css("display", 'inline-block');
+				obj.focus();
+				return false;
+			}
+			data.email = obj.val();
 			//
 			obj = $("#frm_reg input[name='password']");
 			if (obj.val() == "") {
@@ -186,7 +203,8 @@ $(function() {
 			function(data){
 				if ( data.indexOf("loginOK") >= 0 ) {
 					if(window.opener){
-						window.opener.location.reload();
+						window.opener.location.href = document.referrer;
+						//window.opener.location.reload();
 					}
 					window.location.href = APP+"Index";
 				}else{
@@ -223,12 +241,23 @@ $(function() {
 			  }
 		});
 		//
+		$(document).on('click', '.div_email .verifyImg', function(){
+			var timeNow = new Date().getTime();
+			$(this).attr('src', '/Verify?' + timeNow);
+		});
 		$(document).on('click', '.div_btn .btn_sub_email', function(){
 			//
-			var obj = $(this).parent(".div_btn").siblings(".email");
+			var container = $(this).parent(".div_btn").parent();
+			var obj = container.find(".email");
+			var validateCode = container.find(".yzm");
 			if (obj.val() == "") {
 				alert("请输入邮箱.");
 				obj.focus();
+				return false;
+			}
+			if (validateCode.val() == "") {
+				alert("请输入验证码.");
+				validateCode.focus();
 				return false;
 			}
 			var result = obj.val().match(/^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/);
@@ -242,7 +271,8 @@ $(function() {
 			shellnow.html("<img src='"+PUBLIC+"/skin/images/jdt.gif' style='padding:35px 0 0 180px;' />");
 			//
 			$.post(URL+"/missPwd", {
-				email: obj.val()
+				email: obj.val(), 
+				verify:validateCode.val()
 			}, 
 			function(data){
 				if ( data.indexOf("sendOK") >= 0 ) {

@@ -338,7 +338,7 @@ function array_sort($arr, $keys, $type = 'desc') {
     }
     reset($keysvalue);
     foreach ($keysvalue as $k => $v) {
-        $new_array[$k] = $arr[$k];
+        $new_array[] = $arr[$k];
     }
     return $new_array;
 }

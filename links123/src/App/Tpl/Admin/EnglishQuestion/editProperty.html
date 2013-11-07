@@ -1,0 +1,57 @@
+<include file="Public:header" />
+<div id="main" class="main" >
+	<div class="content">
+		<div class="title">
+			编辑类目属性
+			[
+			<a href="__URL__/property/qid/{$Think.get.question_id}">
+				返回
+				列表
+			</a>
+			]
+		</div>
+		<form method='post'  id="form1"  action="__URL__/updateProperty/" >
+			<table cellpadding=3 cellspacing=3 >
+			<tr>
+				<td class="tRight" >一级类目：</td>
+				<td class="tLeft" >
+					<SELECT class="medium bLeft" name="level_one" id="level_one_select">
+						<volist name="category.level_one" id="each_lv_one">
+						<option value="{$each_lv_one.id}" <eq name="info['level_one']" value="$each_lv_one['id']">selected="true"</eq>>{$each_lv_one.name}</option>
+						</volist>
+					</SELECT>
+				</td>
+			</tr>
+			<tr>
+				<td class="tRight" >二级类目：</td>
+				<td class="tLeft" >
+					<SELECT class="medium bLeft" name="level_two"  id="level_two_select">
+						<volist name="category.level_two" id="each_lv_two">
+						<option value="{$each_lv_two.id}" <eq name="info['level_two']" value="$each_lv_two['id']">selected="true"</eq>>{$each_lv_two.name}</option>
+						</volist>
+					</SELECT>
+				</td>
+			</tr>
+			<tr>
+				<td class="tRight" >三级类目：</td>
+				<td class="tLeft" >
+					<SELECT class="medium bLeft" name="level_thr"  id="level_thr_select">
+						<volist name="category.level_thr" id="each_lv_thr">
+						<option value="{$each_lv_thr.id}" <eq name="info['level_thr']" value="$each_lv_thr['id']">selected="true"</eq>>{$each_lv_thr.name}</option>
+						</volist>
+					</SELECT>
+				</td>
+			</tr>
+			<tr>
+                    <td></td>
+                    <td class="center">
+                        <input type="hidden" name="question_id" value="{$Think.get.question_id}"/>
+                        <input type="hidden" name="cat_id" value="{$Think.get.id}"/>
+                        <input type="submit" value="保 存" class="small submit">&nbsp;
+                        <input type="reset" class="submit small" value="清 空" >
+                    </td>
+                </tr>
+		</table>
+	</form>
+</div>
+</div>

@@ -17,11 +17,12 @@ class GroupAction extends CommonAction {
 	 * @return array    
 	 */  
 	protected function _filter(&$map, &$param){
-        if (isset($_REQUEST['name']) && !empty($_REQUEST['name'])) {
-			$map['name'] =array('like', "%".$_REQUEST['name']."%");
+		$name = $this->_param('name');
+        if (!empty($name)) {
+			$map['name'] =array('like', "%".$name."%");
 		}
-		$this->assign('name', $_REQUEST['name']);
-		$param['name'] = $_REQUEST['name'];
+		$this->assign('name', $name);
+		$param['name'] = $name;
 	}
 
 	/**
@@ -29,17 +30,17 @@ class GroupAction extends CommonAction {
      * @author Lee UPDATE 2013-09-05 
 	 */     
     public function sort(){
+    	$sortId = $this->_param('sortId');
     	$model = M("Group");
     	$map = array();
     	$map['status'] = 1;
-    	if (!empty($_GET['sortId'])) {
-    		$map['id'] = array('in', $_GET['sortId']);
-    	}
-    	else {
+    	if (!empty($sortId)) {
+    		$map['id'] = array('in', $sortId);
+    	} else {
     		$params = explode("&", $_SESSION[C('SEARCH_PARAMS_KEY')]);
     		foreach ($params as &$value) {
     			$temp = explode("=", $value);
-    			if (!empty($temp[1]) && $temp[0]!='sort' && $temp[0]!='order') {
+    			if (!empty($temp[1]) && $temp[0] != 'sort' && $temp[0] != 'order') {
     				$map[$temp[0]] = $temp[1];
     			}
     		}

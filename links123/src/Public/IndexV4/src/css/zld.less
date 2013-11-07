@@ -1,0 +1,188 @@
+.container {
+    margin: 0 auto;
+}
+
+.zld {
+    margin-top: 20px;
+    overflow: visible;
+}
+
+.link-custom-panel {
+    width: 60px;
+    height: 30px;
+    top: -32px;
+    left: 50%;
+    margin-left: -30px;
+    position: absolute;
+    background: #68466d;
+    box-shadow: 0 0 5px #666;
+    filter:alpha(opacity=90);
+    -moz-opacity: 0.9;
+    -khtml-opacity: 0.9;
+    opacity: 0.9;
+    .ang {
+        width: 0; 
+        height: 0; 
+        font-size: 0; 
+        overflow: hidden;
+        position: absolute;
+        border-width: 10px; 
+        border-style: solid dashed dashed; 
+        border-color: #68466d transparent transparent; 
+        left: 21px; 
+        bottom: -16px;
+    }
+    /* 13   4-78   7-96*/
+    a {
+        display: block;
+        width: 13px;
+        height: 13px;
+        background: url(../imgs/sprite.png) 0 0 no-repeat;
+    }
+    .link-edit {
+        margin: 8px 0 0 10px;
+        background-position: -4px -96px;
+    }
+    .link-remove {
+        margin: -13px 0 0 38px;
+        background-position: -4px -78px;
+    }
+}
+
+
+.zld ul{
+    font-size: 12px;
+    overflow: visible;
+    clear: right;
+} 
+.zld ul li{
+    color: #fff;
+    display: inline-block;
+    float: left;
+    height: 40px;
+    line-height: 40px;
+    margin: 6px 4px 0 0;
+    white-space: nowrap;
+    position: relative;
+    vertical-align: middle;
+    background: url(../imgs/white_20.png) 0 0 repeat;
+    overflow:hidden;
+}
+
+.K_link_it .nm {
+    cursor: pointer;
+    display: inline-block;
+    padding: 0 20px;
+    font-weight: 100;
+    margin:0;
+    float:left;
+}
+.K_link_it .nm:hover {
+    background: url(../imgs/purple_80.png) 0 0 repeat;
+    box-shadow: inset 0 0 10px #333;
+}
+
+.K_link_it .cs-btn {
+    float:right;
+    cursor: pointer;
+    display: inline-block;
+    width: 35px;
+    height: 40px;
+    text-align: center;
+    background: url(../imgs/zld-custom-btn.png) center center no-repeat;
+}
+
+.zld .add{
+    margin: 13px 0 0 13px;
+    padding:0;
+    display: block;
+    width: 31px;
+    height: 31px;
+    cursor: pointer;
+    color: transparent;
+    overflow: visible;
+    background: url(../imgs/sprite.png) -23px -1px no-repeat;
+}
+
+.zld .add .mini-tip{
+    display: none;
+    width: 120px;
+    top: -5px;
+    left: 22px;
+}
+
+.zld .add:hover .mini-tip{
+    display: block;
+}
+
+.zld-dialog {
+    padding: 60px!important;
+
+    .radio-li{
+        float: left;
+        margin-right: 10px!important;
+        em {
+            display: block;
+            width: 14px;
+            height: 14px;
+            background-position: -55px -74px;
+            background-repeat: no-repeat;
+            cursor: pointer;
+        }
+        b {
+            display: block;
+            margin: -15px 0 0 20px;
+            color: #fff;
+            cursor: pointer;
+            font-weight: 100;
+        }
+    }
+    .checked {
+        em {
+            background-position: -38px -74px;
+        }
+    }
+
+    li {
+        .input {
+            .icon-name {
+                background-position: 0 -66px;
+            }
+            .icon-url {
+                background-position: 0 -99px;
+            }
+
+        }
+
+        .lkd-add {
+            display: block;
+            width: 140px;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            color: #fff;
+            background: #55254f;
+            border:0;
+            margin: 0;
+            float:right;
+            .border-radius(4px);
+            i {
+                display: block;
+                width: 16px;
+                height: 13px;
+                margin: 0 auto;
+                background-position: -55px -55px;
+                background-repeat: no-repeat;
+            }
+        }
+        .zld-remove-btn {
+            width: 100%;
+            height:40px;
+            background: #333;
+            border:0;
+            color:#fff;
+
+        }
+    }
+}
+

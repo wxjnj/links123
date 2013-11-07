@@ -9,6 +9,7 @@
         <script type="text/javascript">
             var URL = "__URL__";
             var PUBLIC = "__PUBLIC__";
+            var screen_type = 1;
             var media_height = 325;
             var media_width = 518;
             var media_marin = '18px 0 0 20px';
@@ -35,8 +36,10 @@
             }
             function ScreenWidth(CSS1,CSS2){
                 if (screen.height <= 1050){
+                    screen_type = 1;
                     setActiveStyleSheet(CSS1);
                 }else{ 
+                    screen_type = 2;
                     media_height=448;
                     media_width=710;
                     media_marin = '24px 0 0 28px';
@@ -45,18 +48,23 @@
                 }
             } 
             function setActiveStyleSheet(title){
-                $("link").attr("href","__PUBLIC__/English/css/"+title + '?2013091101');
+                $("link").attr("href","__PUBLIC__/English/css/"+title + '?2013092301');
 //                document.getElementsByTagName("link")[0].href="__PUBLIC__/English/css/"+title;
             }
         </script>
-        <link href="__PUBLIC__/English/css/tabs.css?2013091003" rel="stylesheet" type="text/css" />
+        <link href="__PUBLIC__/English/css/tabs.css?2013092301" rel="stylesheet" type="text/css" />
+        <link href="__PUBLIC__/English/css/jquery.autocomplete.css?2013092301" rel="stylesheet" type="text/css" />
+
         <script type="text/javascript" src="__PUBLIC__/English/js/jquery.tools.min.js"></script>
         <!--<load href="__PUBLIC__/skin/easyui/jquery.easyui.min.js" />-->
         <!--<load href='__PUBLIC__/skin/easyui/themes/metro/easyui.css' />-->
         <load href="__PUBLIC__/skin/easyui/easyloader.js" />
-        <SCRIPT src="__PUBLIC__/English/js/select.js?2013081701"></SCRIPT>
+        <SCRIPT src="__PUBLIC__/English/js/select.js?2013092301"></SCRIPT>
         <script type="text/javascript" src="__PUBLIC__/Js/Links123Player/swfobject.js"></script>
-        <SCRIPT src="__PUBLIC__/English/js/index.js?2013091109"></SCRIPT>
+        <SCRIPT src="__PUBLIC__/English/js/index.js?2013092302"></SCRIPT>
+        <script src="__PUBLIC__/English/js/search.js?2013092302"></script>
+
+        <script src="__PUBLIC__/English/js/jquery.autocomplete.js?201309210111"></script>
         
         <script type="text/javascript" src="__PUBLIC__/Js/flowplayer/flowplayer-3.2.12.min.js"></script>
 		
@@ -105,6 +113,12 @@
                             <a href="javascript:;" value="3" <if condition="($user_last_select['viewType'] eq 3)OR($user_last_select['viewType'] eq 4)">class="current"
                                     <elseif condition="$recommedsQuestionNum eq 0" />class="grey"</if> >
                                 选择推荐
+                            </a>
+                        </li>
+                        <li>
+                            <a href="javascript:;" value="5" <if condition="$user_last_select['viewType'] eq 5">class="current"
+                                    <elseif condition="$tedsQuestionNum eq 0" />class="grey"</if> >
+                                选择TED
                             </a>
                         </li>
                     </ul>
@@ -156,14 +170,43 @@
                             <div class="kechenggrade">
                                 <ul class="kecheng J_recommend">
                                     <volist name="recommend_list" id="recommend">
-                                        <li value="{$recommend.id}" <if condition="($user_last_select['recommend'] eq $recommend['id'])">class="current"</if>>
-                                        <span>{$recommend.name}</span></li>
+                                        <if condition="$key lt 20">
+                                            <li value="{$recommend.id}" <if condition="($user_last_select['recommend'] eq $recommend['id'])AND($recommend['question_num'] gt 0)AND($user_last_select['viewType'] eq 3)">class="current"
+                                                <elseif condition="$recommend['question_num'] eq 0" />class="grey not_allowed"</if>>
+                                                <span>{$recommend.name}</span>
+                                            </li>
+                                        <elseif condition="$key eq 25" />
+                                            <li id="J_recommendMore" value="more"><span>更多</span></li>
+                                            <li value="{$recommend.id}" class="J_recommendMore"><span>{$recommend.name}</span></li>
+                                        <else />
+                                            <li value="{$recommend.id}" class="J_recommendMore"><span>{$recommend.name}</span></li>
+                                        </if>
                                     </volist>
                                 </ul>
                                 <ul class="grade J_recommendDifficulty">
                                     <volist name="recommendDifficultyList" id="difficulty">
                                         <li value="{$difficulty.id}" 
-                                            <if condition="($user_last_select['recommendDifficulty'] eq $difficulty['id'])AND($difficulty['question_num'] gt 0)">class="current"
+                                            <if condition="($user_last_select['recommendDifficulty'] eq $difficulty['id'])AND($difficulty['question_num'] gt 0)AND($user_last_select['viewType'] eq 3)">class="current"
+                                            <elseif condition="$difficulty['question_num'] eq 0" />class="grey not_allowed"</if>>
+                                            <span>{$difficulty.name}</span>
+                                        </li>
+                                    </volist>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="box1" <if condition="$user_last_select['viewType'] neq 5">style="display:none"</if>>
+                            <div class="kechenggrade">
+                                <ul class="kecheng J_ted">
+                                    <volist name="ted_list" id="ted">
+                                        <li value="{$ted.id}" <if condition="($user_last_select['ted'] eq $ted['id'])AND($ted['question_num'] gt 0)">class="current"
+                                            <elseif condition="$ted['question_num'] eq 0" />class="grey not_allowed"</if>>
+                                        <span>{$ted.name}</span></li>
+                                    </volist>
+                                </ul>
+                                <ul class="grade J_tedDifficulty">
+                                    <volist name="tedDifficultyList" id="difficulty">
+                                        <li value="{$difficulty.id}" 
+                                            <if condition="($user_last_select['tedDifficulty'] eq $difficulty['id'])AND($difficulty['question_num'] gt 0)">class="current"
                                             <elseif condition="$difficulty['question_num'] eq 0" />class="grey not_allowed"</if>>
                                             <span>{$difficulty.name}</span>
                                         </li>
@@ -174,10 +217,27 @@
                     </div>
                 </div>
                 <div class="contentcenter">
-                    <div class="ricewan"><div id="J_riceDiv" class="rice_{$user_conut_info['right_num']*100}"></div></div>
+                    <div class="ricewan">
+                        <!--<div id="J_riceDiv" class="rice_{$user_conut_info['right_num']*100}"></div>-->
+                        <img id="J_riceDiv" <if condition="$user_conut_info['right_num'] gt 0">src="__PUBLIC__/English/images/rice{$user_conut_info['right_num']*100}.png?2013092301"
+                            <else /> style="display:none"</if> />
+                    </div>
                     <label id="J_questionId" style="display: none">{$question['id']}</label>
                     <label id="J_mediaId" style="display: none">{$question['media_info']['id']|default=0}</label>
                     <label id="J_mediaPath" style="display: none">{$question['media_info']['real_path']}</label>
+                    <label id="J_mediaLocalPath" style="display: none">{$question['media_local_path']}</label>
+                    <div class="videottl">
+                        <div class="local-play-button">
+                            <span></span>
+                            <a id="J_mediaLocalPlayButton" href="javascript:;" 
+                            <if condition="(empty($question['media_local_path'])) || (!empty($question['media_local_path'])AND($question['priority_type'] eq 2))">style="display:none"</if> 
+                            >
+                            快速加载
+                            </a>
+                        </div>
+
+                        <em id="J_mediaTitle" title="{$question.name}">{$question.name}</em>
+                    </div>
                     <div class="videoplay">
                         <!-- $Flash视频播放 视频非本地化方法 -->
                         <div class="video_div">
@@ -203,23 +263,25 @@
                                    <script type="text/javascript">
                                        var swfVersionStr = "10.2.0";
                                        var xiSwfUrlStr = "__PUBLIC__/Js/Links123Player/playerProductInstall.swf";
-                                       var flashvars = {};
+                                       var flashvars = new Object();
                                        flashvars.logging = true;
                                        flashvars.playerMode = 2;//播放器播放类型，1一般看，2说力看，3说力说模式
-                                       flashvars.questionId = "{$question.id}";//试题id
+                                       flashvars.questionId =  "{$question.id}";//试题id
                                        flashvars.mediaId = "{$question.media_info.id}";
+                                       flashvars.rate = 22;//采样率配置 
+                                       flashvars.codec = 1;//模式 1.默认模式  2.speex压缩模式
                                        flashvars.sendDataHost = encodeURIComponent("{:U('English/Index/speakScore')}");//往服务器端传数据的地址,音频数据传输接口
                                        flashvars.googleHost = google_host;
                                        flashvars.url = "{$question['media_info']['real_path']}";
                                        flashvars.datahost = encodeURIComponent("{:U('English/Index/requestionMediaInfo')}");
                                        flashvars.mp3host = mp3host;
                                        flashvars.wordhost = "{:U('English/Index/requestionWordInfo')}";
-                                       var params = {};
+                                       var params = new Object();
                                        params.quality = "high";
                                        params.bgcolor = "#ffffff";
                                        params.allowscriptaccess = "sameDomain";
                                        params.allowfullscreen = "true";
-                                       var attributes = {};
+                                       var attributes = new Object();
                                        attributes.id = "Links123Player";
                                        attributes.name = "Links123Player";
                                        attributes.align = "middle";
@@ -257,15 +319,38 @@
                                             </script>
                                         </case>
                                         <case value="4">
-                                            <div id="J_media_swfobject_div"></div>
+                                            <div id="flashContent"></div>
                                             <script type="text/javascript">
-                                            $('#J_media_swfobject_div').css({
+                                                var swfVersionStr = "10.2.0";
+                                                var xiSwfUrlStr = PUBLIC + "/Js/Links123Player/playerProductInstall.swf";
+                                                var flashvars = new Object();
+                                                flashvars.logging = true;
+                                                flashvars.playerMode = 1;//播放器播放类型，1一般看，2说力看，3说力说模式
+                                                flashvars.url = "{$question['play_code']}";
+                                                //flashvars.autoplay = false;
+                                                var params = new Object();
+                                                params.quality = "high";
+                                                params.bgcolor = "#ffffff";
+                                                params.allowscriptaccess = "sameDomain";
+                                                params.allowfullscreen = "true";
+                                                var attributes = new Object();
+                                                attributes.id = "Links123Player";
+                                                attributes.name = "Links123Player";
+                                                attributes.align = "middle";
+                                                swfobject.embedSWF(
+                                                        PUBLIC + "/Js/Links123Player/Links123Player.swf", "flashContent",
+                                                        media_width, media_height,
+                                                        swfVersionStr, xiSwfUrlStr,
+                                                        flashvars, params, attributes);
+                                                swfobject.createCSS("#flashContent", "display:block;text-align:left;");
+                                            /*$('#J_media_swfobject_div').css({
                                                 'height': media_height,
                                                 'width': media_width
                                             });
                                             var media_thumb_img = "{$question['media_thumb_img']}";
                                             var media_url = "{$question['play_code']}";
                                             flowplayer("J_media_swfobject_div", "http://releases.flowplayer.org/swf/flowplayer-3.2.16.swf", {playlist:[media_thumb_img,{url: media_url,autoPlay: false}]});
+                                            */
                                             </script>
                                         </case>
                                         <default />
@@ -287,28 +372,28 @@
                                 <notempty name="question['option'][0]">
                                     <p class="J_option" id="J_option_{$question['option'][0]['id']}" value="{$question['option'][0]['id']}">
                                     	<span class="gc"></span>
-                                        <span class="ricenumber">A</span>
+                                        <span class="ricenumber">A.</span>
                                         <span class="J_optionContent">{$question['option'][0]['content']}</span>
                                     </p>
                                 </notempty>
                                 <notempty name="question['option'][1]" value="{$question['option'][1]['id']}">
                                     <p class="J_option" id="J_option_{$question['option'][1]['id']}" value="{$question['option'][1]['id']}">
                                     	<span class="gc"></span>
-                                        <span class="ricenumber">B</span>
+                                        <span class="ricenumber">B.</span>
                                         <span class="J_optionContent">{$question['option'][1]['content']}</span>
                                     </p>
                                 </notempty>
                                 <notempty name="question['option'][2]" value="{$question['option'][2]['id']}">
                                     <p class="J_option" id="J_option_{$question['option'][2]['id']}" value="{$question['option'][2]['id']}">
                                     	<span class="gc"></span>
-                                        <span class="ricenumber">C</span>
+                                        <span class="ricenumber">C.</span>
                                         <span class="J_optionContent">{$question['option'][2]['content']}</span>
                                     </p>
                                 </notempty>
                                 <notempty name="question['option'][3]" value="{$question['option'][3]['id']}">
                                     <p class="J_option" id="J_option_{$question['option'][3]['id']}" value="{$question['option'][3]['id']}">
                                     	<span class="gc"></span>
-                                        <span class="ricenumber">D</span>
+                                        <span class="ricenumber">D.</span>
                                         <span class="J_optionContent">{$question['option'][3]['content']}</span>
                                     </p>
                                 </notempty>
@@ -336,11 +421,11 @@
                         <!--<div class="pre"> <img src="__PUBLIC__/English/images/pre.png" width="94" height="38" /></div>-->
                         <div class="playbutton" <eq name="user_last_select['target']" value="1">style='display:none;'</eq>>
                             <ul>
-                                <li id="J_preSentenceButton"> <img src="__PUBLIC__/English/images/video1.png" width="55" height="55" /></li>
-                                <!--<li id="J_replaySentenceButton"> <img src="__PUBLIC__/English/images/video2.png" width="40" height="40" /></li>-->
-                                <!--<li id="J_slowPlayButton"> <img src="__PUBLIC__/English/images/video3.png" width="40" height="40" /></li>-->
-                                <li id="J_pauseButton"> <img src="__PUBLIC__/English/images/video5.png" width="40" height="40" /></li>
-                                <li id="J_nextSentenceButton"> <img src="__PUBLIC__/English/images/video4.png" width="40" height="40" /></li>
+                                <li id="J_preSentenceButton"> <img src="__PUBLIC__/English/images/video1.png" /></li>
+                                <li id="J_replaySentenceButton"> <img src="__PUBLIC__/English/images/video2.png" /></li>
+                                <li id="J_slowPlayButton"> <img src="__PUBLIC__/English/images/video3.png" /></li>
+                                <li id="J_pauseButton"> <img src="__PUBLIC__/English/images/video5.png" /></li>
+                                <li id="J_nextSentenceButton"> <img src="__PUBLIC__/English/images/video4.png" /></li>
                             </ul>
                         </div>
                         <!--<div class="next"> <img src="__PUBLIC__/English/images/next.png" width="94" height="38" /></div>-->
@@ -349,7 +434,7 @@
             </div>
             <div class="ranklist">
                 <div class="ranklist-hd">
-                    <a class="all J_now_Object" href="javascript:void(0);"><em>综合</em><span>更多排行</span></a>
+                    <a class="all J_now_Object" href="javascript:void(0);" value="object_综合"><em>综合</em><span>更多排行</span></a>
                     <ul>
                         <li><a href="javascript:void(0)" class="cur" type="object_综合">综合</a> </li>
                         <li><a href="javascript:void(0)" type="total_rice">大米</a> </li>
@@ -375,6 +460,8 @@
 		                        <switch name="i" >
 		                            <case value="1"><img src="__PUBLIC__/English/images/gold.png" width="26" height="25" /></case>
 		                            <case value="2"><img src="__PUBLIC__/English/images/yingpai.png" width="26" height="25" /></case>
+                                    <case value="3"><img src="__PUBLIC__/English/images/tongpai.png" width="26" height="25" /></case>
+                                    <case value="4"><img src="__PUBLIC__/Uploads/Faces/{$user.face}" width="26" height="25" /></case>
 		                            <default /><img src="__PUBLIC__/English/images/tongpai.png" width="26" height="25" />
 		                        </switch>
 		                        </p>
@@ -394,7 +481,7 @@
                 </div>
             </div>
 			
-            <div style="margin:0 auto; width: 1000px; height:140px; position:relative;clear:both;">
+            <div style="margin:30px auto 0; width: 1000px; height:140px; position:relative;clear:both;">
                 <!-- "previous page" action -->
                 <a class="prev browse left"></a>
 
@@ -435,12 +522,23 @@
                     </div>
 
                           <else />
+                          <style>
+                            .loading{
+                                background-image: url(__PUBLIC__/English/images/loading_3.gif);
+                                background-position: center center;
+                                background-repeat: no-repeat;
+                                background-color: #fff;
+                            }
+                          </style>
                           <volist name="special_media" id="media" mod="6">
                             <eq name="mod" value="0">
                                 <div>
                                 <ul>
                             </eq>
-                                <li><img title='{$media.name}' media_id="{$media.id}" src="{$media.media_thumb_img}" /></li>
+                                <li class="loading">
+                                    <img style="display:none" onload="this.style.display='block';" 
+                                        title='{$media.name}' media_id="{$media.id}" src="{$media.media_thumb_img}" />
+                                </li>
                             <if condition="$mod eq 5 or $key eq $special_media_num">
                                 </ul>
                                 </div>
@@ -458,6 +556,16 @@
 
                 </div>
         <include file='Public:footer' />
+        </div>
+        <div id="answer-tip-layer" style="display:none">
+            <div class="layer layer-lft"></div>
+            <div class="layer layer-center">
+                <div class="layer-top"></div>
+                <div class="layer-focus"></div>
+                <div class="layer-bottom"></div>
+            </div>
+            <div class="layer layer-rgt"></div>
+            <div class="tip"></div>
         </div>
     </body>
 </html>

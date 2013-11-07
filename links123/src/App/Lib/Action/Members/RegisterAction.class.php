@@ -40,8 +40,9 @@ class RegisterAction extends CommonAction
 	public function saveReg() 
 	{
         $nickname = trim($this->_param('nickname'));
-        $password = $this->_param('password');
-        $verify = $this->_param('verify');
+        $password = trim($this->_param('password'));
+        $verify = trim($this->_param('verify'));
+        $email = trim($this->_param('email'));
                 
 		$member = M("Member");
 
@@ -51,6 +52,11 @@ class RegisterAction extends CommonAction
 		}
 		if (!checkStr($password)) {
 			echo '密码应为6到20位数字或字母';
+			return false;
+		}
+		
+		if (!checkEmail($email)) {
+			echo '请填写正确格式的Email';
 			return false;
 		}
                 
@@ -64,8 +70,14 @@ class RegisterAction extends CommonAction
 			return false;
 		}
 		
+		if ($member->where("email = '%s'", $email)->select()) {
+			echo '该邮箱已注册过';
+			return false;
+		}
+		
 		import("@.ORG.String");
 		$data['nickname'] = $nickname;
+		$data['email'] = $email;
 		$data['salt'] = String::randString();
 		$data['password'] = md5(md5($password) . $data['salt']);
 		$data['status'] = 1;
@@ -87,6 +99,9 @@ class RegisterAction extends CommonAction
 			
 			$home_session_expire = intval(D("Variable")->getVariable("home_session_expire"));
 			cookie(md5("home_session_expire"), time(), $home_session_expire);
+            
+            $str = $_SESSION[C('MEMBER_AUTH_KEY')] . "|" . md5($data['password'] . $data['nickname']);
+            cookie(md5(C('MEMBER_AUTH_KEY')), $str, intval(D("Variable")->getVariable("home_session_expire")));//设置cookie记录用户登录信息，提供给英语角同步登录 Adam 2013.09.27 @todo 安全性，下一步进行单点登录优化 
 			
 			echo "regOK";
 		} else {

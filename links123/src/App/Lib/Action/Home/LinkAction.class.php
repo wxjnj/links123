@@ -41,6 +41,20 @@ class LinkAction extends CommonAction {
 		
 	}
 	
+	public function tag() {
+	    $tag = cleanParam($this->_param('q'));
+		$tag = str_replace('。', '.', $tag);
+	    $dl = M('directLinks');
+	    $condition['tag'] = array('like', $tag . '%');
+	    $condition['status'] = 1;
+	    $list = $dl->field(array('tag', 'url'))->where($condition)->limit(15)->order('tag asc')->select();
+	    if ($list && count ( $list ) > 0) {
+	        echo json_encode($list);
+	    } else {
+	        echo '[]';
+	    }
+	}
+	
 	/**
 	 * @name direct
 	 * @desc 直达网址
@@ -59,13 +73,42 @@ class LinkAction extends CommonAction {
 	
 		$model = M("DirectLinks");
 		$linkNow = $model->where($condition)->find();
+		$directUrl = '';
 		if ($linkNow) {
+			
+			$directUrl = 'http://' . $linkNow['url'];
 			$model->where("id={$linkNow['id']}")->setInc("click_num");
+			
+		} else {
+			
+			//如果用户输入的是网址，则自动跳转
+			if (preg_match('/\.\w+/is', $tag)) {
+				
+				if (!preg_match('/^http[s]?:\/\/(.*)/is', $tag)) {
+					
+					$directUrl = 'http://' . $tag;
+				} else {
+
+					$directUrl = $tag;
+				}
+				
+// 				$headerInfo = get_headers($directUrl, 1);
+// 				if(!preg_match('/200|301|302/', $headerInfo[0])){
+					
+// 					$directUrl = '';
+// 				}
+				
+			}
+			
+		}
+		
+		if ($directUrl) {
 			echo '<style type="text/css">a{display:none}</style>
 				  <script src="http://s96.cnzz.com/stat.php?id=4907803&web_id=4907803" language="JavaScript"></script>
-				  <script type="text/javascript">window.location.href="http://' . $linkNow['url'] . '";
+				  <script type="text/javascript">window.location.href="' . $directUrl . '";
 				  </script>';
 		} else {
+			
 			$data['tag'] = $condition['tag'];
 			$data['update_time'] = time();
 			$model->add($data);

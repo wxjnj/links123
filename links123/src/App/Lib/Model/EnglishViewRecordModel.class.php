@@ -69,6 +69,60 @@ class EnglishViewRecordModel extends CommonModel {
     }
 
     /**
+     * 添加用户查看记录
+     * @param int $view_type 
+     * @param array $params
+     * @return
+     */
+    public function addViewRecord($view_type = 1, $params) {
+        $map = array();
+        //游客
+        if (!isset($_SESSION[C('MEMBER_AUTH_KEY')]) || empty($_SESSION[C('MEMBER_AUTH_KEY')])) {
+            $map['user_id'] = intval(cookie('english_tourist_id')); //从cookie获取游客id
+            //如果不存在游客id，获取最大游客id加1为新游客id
+            if ($map['user_id'] == 0) {
+                $map['user_id'] = $this->getNewTouristId();
+            }
+            cookie('english_tourist_id', $map['user_id'], 24 * 60 * 60 * 30); //更新游客id到cookie
+            $map['user_id'] = -$map['user_id']; //游客id在数据库表中记录为负数
+        } else {
+            $map['user_id'] = intval($_SESSION[C("MEMBER_AUTH_KEY")]); //用户id为登录用户的对应用户id
+        }
+        $map['voice'] = intval($params['voice']);
+        $map['target'] = intval($params['target']);
+        $map['pattern'] = intval($params['pattern']);
+        $map['question_id'] = $params['id'];
+        if (!in_array($view_type, array(1, 2, 3, 4, 5))) {
+            $map['view_type'] = 1;
+        }
+
+        if ($view_type == 5) {
+            $map['ted'] = intval($params['ted']);
+            $map['difficulty'] = intval($params['difficulty']);
+        } else if ($view_type == 3) {
+            $map['recommend'] = intval($params['recommend']);
+            $map['difficulty'] = intval($params['difficulty']);
+        } else if ($view_type == 2) {
+            $map['subject'] = intval($params['subject']);
+            $map['difficulty'] = intval($params['difficulty']);
+        } else if ($view_type == 1) {
+            $map['object'] = intval($params['object']);
+            $map['level'] = intval($params['level']);
+        }
+        $ret = $this->where($map)->find();
+        if (!empty($ret)) {
+            return;
+        }
+        $map['created'] = time();
+        $max_sort = $this->where('`user_id`=' . intval($map['user_id']))->field("MAX(sort) as max_sort")->find();
+        if (false === $max_sort || empty($max_sort) || $max_sort['max_sort'] == null) {
+            $max_sort['max_sort'] = 0;
+        }
+        $map['sort'] = $max_sort['max_sort'] + 1;
+        $this->add($map);
+    }
+
+    /**
      * 获取用户看过的题目记录
      * 根据用户当前的题目id，根据上下题的方式获取用户看过的题目记录
      * @param int $question_id [用户当前题目id]
@@ -193,7 +247,7 @@ class EnglishViewRecordModel extends CommonModel {
             $map['media.subject'] = intval($subject);
         }
         if (intval($recommend) > 0) {
-            $map['_string'] = "FIND_IN_SET('" + $recommend + "',media.recomend)";
+            $map['media.recommend'] = $recommend;
             //$map['media.recommend'] = intval($recommend);
         }
         if (intval($difficulty) > 0) {
@@ -207,6 +261,88 @@ class EnglishViewRecordModel extends CommonModel {
         }
         if (intval($pattern) > 0) {
             $map['media.pattern'] = intval($pattern);
+        }
+        if (!empty($extend_condition)) {
+            $map['_string'] .= $extend_condition;
+        }
+        if (isset($_SESSION[C('MEMBER_AUTH_KEY')]) && intval($_SESSION[C('MEMBER_AUTH_KEY')]) > 0) {
+            $map['record.user_id'] = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+        } else {
+            $map['record.user_id'] = intval(cookie("english_tourist_id")) > 0 ? -intval(cookie("english_tourist_id")) : 0;
+        }
+        $ret = $this->alias("record")
+                ->field("record.question_id")
+                ->join(C("DB_PREFIX") . "english_question question on record.question_id=question.id")
+                ->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media on question.media_id=media.id")
+                ->where($map)
+                ->order("record.sort")
+                ->select();
+        if (false !== $ret && !empty($ret)) {
+            foreach ($ret as $key => $value) {
+                $question_ids[] = intval($value['question_id']);
+            }
+        }
+        return $question_ids;
+    }
+
+    /**
+     * 获取用户看过的题目id列表
+     * @param array $params [科目id]
+     * @param string $extend_condition [额外条件]
+     * @return array
+     */
+    public function getUserViewedQuestionIdList($viewType, $params, $extend_condition = "") {
+        //试题id数组初始化
+        $question_ids = array();
+        if ($params == 1) {
+            if (intval($params['object'])) {
+                if (D("EnglishObject")->where("id=" . intval($params['object']))->getField("name") == "综合") {
+                    $params['object'] = 0;
+                }
+            }
+            if (intval($params['object']) > 0) {
+                $map['media.object'] = intval($params['object']);
+            }
+            if (intval($params['level']) > 0) {
+                $map['media.level'] = intval($params['level']);
+            }
+        } else if ($viewType == 2) {
+            if (intval($params['subject']) > 0) {
+                $map['media.subject'] = intval($params['subject']);
+            }
+            if (intval($params['difficulty']) > 0) {
+                $map['media.difficulty'] = intval($params['difficulty']);
+            }
+        } else if ($viewType == 3) {
+            if (intval($params['recommend']) > 0) {
+                $map['media.recommend'] = $params['recommend'];
+            }
+            if (intval($params['difficulty']) > 0) {
+                $map['media.difficulty'] = intval($params['difficulty']);
+            }
+        } else if ($viewType == 4) {
+            $map['media.recommend'] = 0;
+            $map['media.difficulty'] = 0;
+        } else if ($viewType == 5) {
+            if (intval($params['ted']) > 0) {
+                $map['media.ted'] = $params['ted'];
+            }
+            if (intval($params['difficulty']) > 0) {
+                $map['media.difficulty'] = intval($params['difficulty']);
+            }
+        }
+        if (intval($params['voice']) > 0) {
+            $map['media.voice'] = intval($params['voice']);
+        }
+        if (intval($params['target']) > 0) {
+            $map['question.target'] = intval($params['target']);
+        }
+        if (intval($params['pattern']) > 0) {
+            $map['media.pattern'] = intval($params['pattern']);
+        }
+        $map['view_type'] = $viewType;
+        if (!in_array($map['view_type'], array(1, 2, 3, 4, 5))) {
+            $map['view_type'] = 1;
         }
         if (!empty($extend_condition)) {
             $map['_string'] .= $extend_condition;
@@ -258,62 +394,105 @@ class EnglishViewRecordModel extends CommonModel {
      * @author slate date:2013-09-11
      */
     public function getUserViewQuestionLastId($object, $level, $subject, $recommend, $difficulty, $voice, $target, $pattern, $extend_condition = "") {
-    	//试题id数组初始化
-    	$question_ids = array();
-    	if (intval($object)) {
-    		if (D("EnglishObject")->where("id=" . intval($object))->getField("name") == "综合") {
-    			$object = 0;
-    		}
-    	}
-    	if (intval($object) > 0) {
-    		$map['media.object'] = intval($object);
-    	}
-    	if (intval($level) > 0) {
-    		$map['media.level'] = intval($level);
-    	}
-    	if (intval($subject) > 0) {
-    		$map['media.subject'] = intval($subject);
-    	}
-    	if (intval($recommend) > 0) {
-    		$map['_string'] = "FIND_IN_SET('" + $recommend + "',media.recomend)";
-    		//$map['media.recommend'] = intval($recommend);
-    	}
-    	if (intval($difficulty) > 0) {
-    		$map['media.difficulty'] = intval($difficulty);
-    	}
-    	if (intval($voice) > 0) {
-    		$map['media.voice'] = intval($voice);
-    	}
-    	if (intval($target) > 0) {
-    		$map['question.target'] = intval($target);
-    	}
-    	if (intval($pattern) > 0) {
-    		$map['media.pattern'] = intval($pattern);
-    	}
-    	if (!empty($extend_condition)) {
-    		$map['_string'] .= $extend_condition;
-    	}
-    	if (isset($_SESSION[C('MEMBER_AUTH_KEY')]) && intval($_SESSION[C('MEMBER_AUTH_KEY')]) > 0) {
-    		$map['record.user_id'] = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
-    	} else {
-    		$map['record.user_id'] = intval(cookie("english_tourist_id")) > 0 ? -intval(cookie("english_tourist_id")) : 0;
-    	}
-    	$ret = $this->alias("record")
-    	->field("record.question_id")
-    	->join(C("DB_PREFIX") . "english_question question on record.question_id=question.id")
-    	->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media on question.media_id=media.id")
-    	->where($map)
-    	->order("record.sort DESC")
-    	->limit(1)
-    	->select();
-    	
-    	$question_id = 0;
-    	if ($ret[0]) {
-    		$question_id = $ret[0]['question_id'];
-    	}
-    	
-    	return $question_id;
+        //试题id数组初始化
+        $question_ids = array();
+        $map['media.status'] = 1;
+        $map['question.status'] = 1;
+        if (intval($object)) {
+            if (D("EnglishObject")->where("id=" . intval($object))->getField("name") == "综合") {
+                $object = 0;
+            }
+        }
+        if (intval($object) > 0) {
+            $map['media.object'] = intval($object);
+        }
+        if (intval($level) > 0) {
+            $map['media.level'] = intval($level);
+        }
+        if (intval($subject) > 0) {
+            $map['media.subject'] = intval($subject);
+        }
+        if (intval($recommend) > 0) {
+            $map['media.recommend'] = $recommend;
+            //$map['media.recommend'] = intval($recommend);
+        }
+        if (intval($difficulty) > 0) {
+            $map['media.difficulty'] = intval($difficulty);
+        }
+        if (intval($voice) > 0) {
+            $map['media.voice'] = intval($voice);
+        }
+        if (intval($target) > 0) {
+            $map['question.target'] = intval($target);
+        }
+        if (intval($pattern) > 0) {
+            $map['media.pattern'] = intval($pattern);
+        }
+        if (!empty($extend_condition)) {
+            $map['_string'] .= $extend_condition;
+        }
+        if (isset($_SESSION[C('MEMBER_AUTH_KEY')]) && intval($_SESSION[C('MEMBER_AUTH_KEY')]) > 0) {
+            $map['record.user_id'] = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+        } else {
+            $map['record.user_id'] = intval(cookie("english_tourist_id")) > 0 ? -intval(cookie("english_tourist_id")) : 0;
+        }
+        $ret = $this->alias("record")
+                ->field("record.question_id")
+                ->join(C("DB_PREFIX") . "english_question question on record.question_id=question.id")
+                ->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media on question.media_id=media.id")
+                ->where($map)
+                ->order("record.sort DESC")
+                ->limit(1)
+                ->select();
+
+        $question_id = 0;
+        if ($ret[0]) {
+            $question_id = $ret[0]['question_id'];
+        }
+
+        return $question_id;
     }
+
+    public function getUserLastViewedTedQuestionId($ted, $difficulty, $voice, $target, $pattern) {
+        //试题id数组初始化
+        $question_ids = array();
+        if (intval($ted) > 0) {
+            $map['media.ted'] = $ted;
+        }
+        if (intval($difficulty) > 0) {
+            $map['media.difficulty'] = intval($difficulty);
+        }
+        if (intval($voice) > 0) {
+            $map['media.voice'] = intval($voice);
+        }
+        if (intval($target) > 0) {
+            $map['question.target'] = intval($target);
+        }
+        if (intval($pattern) > 0) {
+            $map['media.pattern'] = intval($pattern);
+        }
+        if (isset($_SESSION[C('MEMBER_AUTH_KEY')]) && intval($_SESSION[C('MEMBER_AUTH_KEY')]) > 0) {
+            $map['record.user_id'] = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+        } else {
+            $map['record.user_id'] = intval(cookie("english_tourist_id")) > 0 ? -intval(cookie("english_tourist_id")) : 0;
+        }
+        $ret = $this->alias("record")
+                ->field("record.question_id")
+                ->join(C("DB_PREFIX") . "english_question question on record.question_id=question.id")
+                ->join("RIGHT JOIN " . C("DB_PREFIX") . "english_media media on question.media_id=media.id")
+                ->where($map)
+                ->order("record.sort DESC")
+                ->limit(1)
+                ->select();
+
+        $question_id = 0;
+        if ($ret[0]) {
+            $question_id = $ret[0]['question_id'];
+        }
+
+        return $question_id;
+    }
+
 }
 
 ?>

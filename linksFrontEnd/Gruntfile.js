@@ -48,6 +48,47 @@ module.exports = function(grunt) {
 					'~temp/DD_belatedPNG.js' : 'src/v2/js/DD_belatedPNG.js'
 				}
 			}
+			,v3: {
+				files: {
+					'~temp/css.css' : [
+						'src/v3/css/jquery-ui.css', 
+						'src/v3/css/style.css',
+						'src/v3/css/g-theme.css',
+						'src/v3/css/g-dialog.css',
+						'src/v3/css/g-uc.css',
+						'src/v3/css/slide.css',
+						'src/v3/css/index-app.css',
+						'src/v3/css/index-apps.css',
+						'src/v3/css/index-ted.css',
+						'src/v3/css/index-calendar.css',
+						'src/v3/css/index-music.css',
+						'src/v3/css/g-dialog.css',
+						'src/v3/css/jquery.autocomplete.css'
+					],
+					'~temp/jquery.plugins.js' : [
+						'src/v3/js/jquery.placeholder.js',
+						'src/v3/js/jquery-ui.min.js',
+						'src/v3/js/json2.js',
+						'src/v3/js/jquery.dropdown.js',
+						'src/v3/js/jquery.slides.js',
+						'src/v3/js/jquery.autocomplete.js'
+					],
+					'~temp/index.js' : [
+						'src/v3/js/common.js',
+						'src/v3/js/date.js',
+						'src/v3/js/index.js',
+						'src/v3/js/detect.js',
+						'src/v3/js/index-apps-tpl.js',
+						'src/v3/js/index-apps.js',
+						'src/v3/jplayer/jquery.jplayer.min.js',
+						'src/v3/jplayer/jplayer.playlist.min.js'
+					],
+					'dest/v3/css/base.css' : 'src/v3/css/base.css',
+					'~temp/g-uc.css' : 'src/v3/css/g-uc.css',
+					'dest/v3/js/init.js' : 'src/v3/js/init.js',
+					'dest/v3/js/jquery.cookies.2.2.0.min.js' : 'src/v3/js/jquery.cookies.2.2.0.min.js'
+				}
+			}
 		}
 		,copy: {
 			v2: {
@@ -81,11 +122,30 @@ module.exports = function(grunt) {
 					}
 				]
 			}
+			,v3: {
+				files: [
+					{
+						'dest/v3/js/jquery-1.7.1.min.js' : 'src/v3/js/jquery-1.7.1.min.js'
+					}
+					,{
+					 	expand: true,
+					 	cwd: 'src/v3/imgs',
+					 	src: ['**'],
+					 	dest: 'dest/v3/imgs/'
+					}
+				]
+			}
 		}
 		,cssmin: {
 			v2: {
 				files: {
 					'dest/v2/css/css.min.css' : ['~temp/css.css']
+				}
+			}
+			,v3: {
+				files: {
+					'dest/v3/css/css.min.css' : ['~temp/css.css'],
+					'dest/v3/css/g-uc.css' : ['~temp/g-uc.css']
 				}
 			}
 		}
@@ -95,6 +155,12 @@ module.exports = function(grunt) {
 					'dest/v2/js/jquery.plugins.js' : ['~temp/jquery.plugins.js'],
 					'dest/v2/js/global.min.js' : ['~temp/global.js'],
 					'dest/v2/js/DD_belatedPNG.js' : ['~temp/DD_belatedPNG.js']
+				}
+			}
+			,v3: {
+				files: {
+					'dest/v3/js/jquery.plugins.js' : ['~temp/jquery.plugins.js'],
+					'dest/v3/js/index.js' : ['~temp/index.js']
 				}
 			}
 		}
@@ -112,5 +178,6 @@ module.exports = function(grunt) {
 
 	// 注册任务
 	grunt.registerTask('default', ['clean']);
-	grunt.registerTask('build', ['concat', 'copy', 'cssmin', 'uglify', 'clean:build']);
+	grunt.registerTask('build', ['concat:v2', 'copy:v2', 'cssmin:v2', 'uglify:v2', 'clean:build']);
+	grunt.registerTask('buildv3', ['concat:v3', 'copy:v3', 'cssmin:v3', 'uglify:v3', 'clean:build']);
 };

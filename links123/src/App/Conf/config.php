@@ -3,17 +3,17 @@ return array(
     'URL_MODEL'                 =>  2,										// 如果你的环境不支持PATHINFO 请设置为3
     
     'DB_TYPE'                   =>  'mysqli',
-	'DB_HOST'                   =>  '127.0.0.1',
-	'DB_NAME'                   =>  'linkstest',
-	'DB_USER'                   =>  'linkstest',
-	'DB_PWD'                    =>  'linkstest7066',	
+	'DB_HOST'                   =>  '10.160.8.46',
+	'DB_NAME'                   =>  'linkstest',	 
+	'DB_USER'                   =>  'root',	 
+	'DB_PWD'                    =>  'linksWsX7066',
     'DB_PORT'                   =>  '3306',
     'DB_PREFIX'                 =>  'lnk_',
 
 	'MEMBER_AUTH_KEY'			=> 'lnkMemberId',
     'SESSION_AUTO_START'        =>	false,
 		
-	'APP_GROUP_LIST' 			=>	'Home,Admin,English,Homepage,Members',					//项目分组设定
+	'APP_GROUP_LIST' 			=>	'Home,Admin,English,Homepage,Members,User',	//项目分组设定
 	'DEFAULT_GROUP'  			=>	'Home',									//默认分组
 	
 	'VAR_PAGE'					=>	'p',
@@ -34,7 +34,8 @@ return array(
 		'/^homepage\/search\/(.*)$/' 					=>	'Homepage/Search/index?search_type=:1',
 	),
 	'TMPL_PARSE_STRING'         =>array(
-		'__STATIC__'            => 'http://a.links123.net', // 更改默认的/Public 替换规则
+		'__STATIC__'            => 'http://a.links123.net', 				// 更改默认的/Public 替换规则
 	),
-    "VIDEO_UPLOAD_PATH" =>  "/English/Video" //英语角视频存储路径
+    "VIDEO_UPLOAD_PATH" 		=>  "http://121.199.26.124/" 				//英语角视频存储路径
+    ,"COOKIE_DOMAIN"            =>  ".links123.net"
 );

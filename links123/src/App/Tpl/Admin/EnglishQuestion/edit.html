@@ -9,18 +9,8 @@
             <table cellpadding=3 cellspacing=3>
                 <tr>
                     <td class="tRight" style="width:70px ;" >名称：</td>
-                    <td class="tLeft" ><input type="text" class="bLeftRequire xhuge" name="name" 
-                <if condition="strstr($vo['name'], $doubleQuotes) neq ''">value='{$vo.name}'<else />value="{$vo.name}"</if> />
+                    <td class="tLeft" ><input type="text" class="bLeftRequire xhuge" name="name" value="{$vo.name}" />
                 </td>
-                </tr>
-                <tr>
-                    <td class="tRight" ></td>
-                    <td class="tLeft">
-                        <span style="margin-right: 100px;">
-                            <label class="radio_label"><input type="radio" name="target" value="1" <eq name="vo['target']" value='1'>checked="checked"</eq>  />听力</label>
-                            <label class="radio_label"><input type="radio" name="target" value="2" <eq name="vo['target']" value='2'>checked="checked"</eq>  />说力</label>
-                        </span>
-                    </td>
                 </tr>
                 <tr>
                     <td class="tRight" >试题：</td>
@@ -72,6 +62,7 @@
                     <td></td>
                     <td class="center">
                         <input type="hidden" value="{$vo.id}" name="id" />
+                        <input type="hidden" value="{$vo.status}" name="old_status" />
                         <input type="submit" value="保 存" class="small submit">&nbsp;
                         <input type="reset" class="submit small" value="清 空" >
                     </td>

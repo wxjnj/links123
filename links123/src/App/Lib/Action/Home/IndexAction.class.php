@@ -10,10 +10,247 @@ import("@.Common.CommonAction");
 class IndexAction extends CommonAction {
 	
 	/**
-	 * @desc 新首页
-	 * @author slate date: 2013-08-20
+	 * @desc index V4
+	 * 
+	 * @author slate date:2013-10-07
 	 */
 	public function index() {
+		import("@.ORG.String");
+		//自留地
+		$myareaModel = M("Myarea");
+		$scheduleModel = M("Schedule");
+
+		$user_id = intval($this->_session(C('MEMBER_AUTH_KEY')));
+		if ($user_id) {
+			$memberModel = M("Member");
+			$mbrNow = $memberModel->where(array('id' => $user_id))->find();
+			$_SESSION['myarea_sort'] = $mbrNow['myarea_sort'] ? explode(',', $mbrNow['myarea_sort']) : '';
+			$_SESSION['app_sort'] = $mbrNow['app_sort'];
+
+			//取出皮肤ID和模板ID
+// 			$skinId = session('skinId');
+// 			if (!$skinId) {
+// 				$skinId = cookie('skinId');
+// 			}
+
+// 			$themeId = session('themeId');
+// 			if (!$themeId) {
+// 				$themeId = cookie('themeId');
+// 			}
+		} else {
+
+			//取出皮肤ID和模板ID
+// 			$skinId = session('skinId');
+// 			if (!$skinId) {
+// 				$skinId = cookie('skinId');
+// 			}
+// 			$themeId = session('themeId');
+// 			if (!$themeId) {
+// 				$themeId = cookie('themeId');
+// 			}
+
+			if (!$_SESSION['app_sort']) {
+
+				$_SESSION['app_sort'] = cookie('app_sort');
+			}
+		}
+
+		//快捷皮肤
+// 		$skins = $this->getSkins();
+// 		if ($skinId) {
+// 			$skin = $skins['skin'][$skinId]['skinId'];
+// 			if (!$skin) $skinId = '';
+// 			$themeId = $skins['skin'][$skinId]['themeId'];
+// 			$this->assign("skinId", $skinId);
+// 			$this->assign("skin", $skin);
+// 		}
+// 		$this->assign("skinList", $skins['list']);
+// 		$this->assign("skinCategory", $skins['category']);
+
+// 		$theme = $this->getTheme($themeId);
+// 		$this->assign('theme', $theme);
+
+		//自留地数据
+		if ($user_id || !$_SESSION['arealist']) {
+			$areaList = $myareaModel->where(array('mid' => $user_id))->select();
+
+			if ($areaList) {
+				$_SESSION['arealist'] = array();
+			}
+
+			foreach ($areaList as $value) {
+				$_SESSION['arealist'][$value['id']] = $value;
+			}
+		}
+		if (!$_SESSION['myarea_sort']) {
+
+			$_SESSION['myarea_sort'] = array_keys($_SESSION['arealist']);
+		}
+
+		//APP应用
+		$app_list = $this->getApps($_SESSION['app_sort']);
+		$this->assign('app_list', $app_list);
+
+        //气象数据
+        $this->assign('weatherData', $this->getWeatherData());
+        
+        //新闻信息
+        $hotNews = $this->getHotNews();
+        shuffle($hotNews['imgNews']);
+        $this->assign('hotNewsData',  $hotNews['news']);
+        $this->assign('imgNewsData',  $hotNews['imgNews']);
+        
+		$this->getHeaderInfo();
+		$this->display('index_v4');
+	}
+	
+	/**
+	 * @desc 新首页
+	 *
+	 * @author slate date:2013-09-06
+	 */
+	public function indexV3() {
+		import("@.ORG.String");
+		//自留地
+		$myareaModel = M("Myarea");
+		$scheduleModel = M("Schedule");
+
+		$user_id = intval($this->_session(C('MEMBER_AUTH_KEY')));
+		if ($user_id) {
+			$memberModel = M("Member");
+			$mbrNow = $memberModel->where(array('id' => $user_id))->find();
+			$_SESSION['myarea_sort'] = $mbrNow['myarea_sort'] ? explode(',', $mbrNow['myarea_sort']) : '';
+			$_SESSION['app_sort'] = $mbrNow['app_sort'];
+			
+			//取出皮肤ID和模板ID
+			$skinId = session('skinId');
+			if (!$skinId) {
+				$skinId = cookie('skinId');
+			}
+			
+			$themeId = session('themeId');
+			if (!$themeId) {
+				$themeId = cookie('themeId');
+			}
+		} else {
+			
+			//取出皮肤ID和模板ID
+			$skinId = session('skinId');
+			if (!$skinId) {
+				$skinId = cookie('skinId');
+			}
+			$themeId = session('themeId');
+			if (!$themeId) {
+				$themeId = cookie('themeId');
+			}
+			
+			if (!$_SESSION['app_sort']) {
+				
+				$_SESSION['app_sort'] = cookie('app_sort');
+			}
+		}
+		
+		//快捷皮肤
+		$skins = $this->getSkins();
+		if ($skinId) {
+			$skin = $skins['skin'][$skinId]['skinId'];
+			if (!$skin) $skinId = '';
+			$themeId = $skins['skin'][$skinId]['themeId'];
+			$this->assign("skinId", $skinId);
+			$this->assign("skin", $skin);
+		}
+		$this->assign("skinList", $skins['list']);
+		$this->assign("skinCategory", $skins['category']);
+		
+		$theme = $this->getTheme($themeId);
+		$this->assign('theme', $theme);
+		
+		//自留地数据
+		if ($user_id || !$_SESSION['arealist']) {	
+			$areaList = $myareaModel->where(array('mid' => $user_id))->select();
+			
+			if ($areaList) {
+				$_SESSION['arealist'] = array();
+			}
+			
+			foreach ($areaList as $value) {
+				$_SESSION['arealist'][$value['id']] = $value;
+			}
+		}
+		if (!$_SESSION['myarea_sort']) {
+			
+			$_SESSION['myarea_sort'] = array_keys($_SESSION['arealist']);
+		}
+		
+		//热门音乐
+		$this->assign('homeMusics', $this->getHomeMusics());
+		
+		//推荐电影
+        $this->assign('homeMovies', $this->getHomeMovies());
+        
+		//TED 发现
+		$ted_list = S('ted_list');
+		if (!$ted_list) {
+			
+			$variableModel = M('Variable');
+			$linksModel = M("Links");
+			
+			$ted_list = array();
+			$home_ted_hot_list = S('home_ted_hot');
+			if (!$home_ted_hot_list) {
+				
+				$home_ted_hot_list = $variableModel->where(array('vname' => 'home_ted_hot'))->find();
+				$home_ted_hot_list =  unserialize($home_ted_hot_list['value_varchar']);
+				S('home_ted_hot', $home_ted_hot_list);
+			}
+			
+			$ted_ids = implode(',', array_keys($home_ted_hot_list));
+			$result = $linksModel->where('id in ('.$ted_ids.')')->select();
+			
+			$ted_list = array();
+			foreach ($result as $value) {
+				
+				$ted_list[$value['id']] = array(
+						'id' => $value['id'], 
+						'title' => $value['title'], 
+						'link_cn_img' => $value['link_cn_img'], 
+						'status' => $home_ted_hot_list[$value['id']], 
+						'sintro' => String::msubstr($value["intro"], 0, 50),
+						'create_time' => date('Y-m-d H:i:s', $value['create_time']),
+				);
+			}
+					
+			S('ted_list', $ted_list);
+		}
+		$this->assign('ted_list', $ted_list);
+		
+		//图片精选
+		
+		//APP应用
+		$app_list = $this->getApps($_SESSION['app_sort']);
+		$this->assign('app_list', $app_list);
+		
+		
+		$this->getHeaderInfo();
+		$this->display('index_v3');
+	}
+	
+	/**
+	 * @desc 另客导航3.0
+	 * 
+	 * @author slate date:2013-10-1
+	 */
+	public function hao() {
+		
+		$this->getHeaderInfo();
+		$this->display('hao');
+	}
+	
+	/**
+	 * @desc 首页2.0
+	 * @author slate date: 2013-08-20
+	 */
+	public function old_index() {
 		import("@.ORG.String");
 	
 		// 公告
@@ -66,30 +303,102 @@ class IndexAction extends CommonAction {
 	 * @author slate date:2013-08-29
 	 */
 	public function updateSkin() {
-		
+
 		$skinId = intval($this->_param('skinId'));
-		
+
 		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
-		
+
 		$result = true;
-		
+
 		if ($user_id) {
-			
+
 			$memberModel = M("member");
-					
+
 			if (!$memberModel->where(array('id' => $user_id))->setField('skin' , $skinId)) {
-				
+
 				$result = false;
 			}
-			
-			session('skinId', $skinId);
+
 		}
-			
-		cookie('skinId', $skinId, array('expire' => 0));
-		
+
+		if ($skinId) {
+			session('skinId', $skinId);
+			cookie('skinId', $skinId, array('expire' => 0));
+		} else {
+			unset($_SESSION['skinId']);
+			cookie('skinId',null);
+		}
+
+		$this->ajaxReturn(cookie('skinId'));
+	}
+
+	/**
+	 * 更新首页主题
+	 *
+	 * @param themeId: ThemeID
+	 *
+	 * @return void
+	 *
+	 * @author slate date:2013-09-21
+	 */
+	public function updateSkinTheme() {
+
+		$themeId = intval($this->_param('themeId'));
+
+		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+
+		$result = true;
+
+		if ($user_id) {
+
+			$memberModel = M("member");
+
+			if (!$memberModel->where(array('id' => $user_id))->setField('theme' , $themeId)) {
+
+				$result = false;
+			}
+
+		}
+
+		session('themeId', $themeId);
+		cookie('themeId', $themeId, array('expire' => 0));
+
+		$this->updateSkin(0);
 		$this->ajaxReturn($result);
 	}
-	
+
+	/**
+	 * 更新首页主题 V4
+	 *
+	 *  与v3版区别: themeId是字符串
+	 *
+	 */
+	public function updateThemeV4() {
+
+		$themeId = $this->_param('themeId');
+
+		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+
+		$result = true;
+
+		if ($user_id) {
+
+			$memberModel = M("member");
+
+			if (!$memberModel->where(array('id' => $user_id))->setField('theme' , $themeId)) {
+
+				$result = false;
+			}
+
+		}
+
+		session('themeId', $themeId);
+		cookie('themeId', $themeId, array('expire' => 0));
+
+		$this->updateSkin(0);
+		$this->ajaxReturn($result);
+	}
+
 	/**
 	 * @desc 旧首页（导航）
 	 * @author Frank UPDATE 2013-08-16
@@ -158,19 +467,6 @@ class IndexAction extends CommonAction {
 		$announce = M("Announcement");
 		$announces = $announce->where('status = 1')->order('sort ASC, create_time DESC')->select();
 		
-		// 我的地盘
-		$myarea = M("Myarea");
-		session('arealist_default', $myarea->where('mid = 0')->order('sort ASC')->select());
-		//存在用户登录，获取用户的我的地盘
-		
-		if ($mid) {
-			$areaList = $myarea->where("mid = '%d'", $mid)->order('sort ASC')->select();
-			empty($areaList) && $areaList = session('arealist_default');
-			session('arealist', $areaList);
-		} else {
-			$areaList = $this->_session('arealist');
-			empty($areaList) && session('arealist', session('arealist_default'));
-		}
 		// 目录图片
 		$catPics = $this->getCatPics($rid);
 		
@@ -190,142 +486,6 @@ class IndexAction extends CommonAction {
 		
 		$this->getHeaderInfo();
 		$this->display('index');
-	}
-	
-	/**
-	 * @name updateArealist
-	 * @desc 更新我的地盘
-	 * @param string url
-	 * @param string web_name
-	 * @param int id
-	 * @author Frank UPDATE 2013-08-20
-	 */
-	public function updateArealist() {
-		
-		$url = $this->_param('url');
-		$webname = $this->_param('web_name');
-		$id = $this->_param('id');
-		
-		foreach ($_SESSION['arealist'] as $key => $value) {
-			if ($id == $value['id']) {
-				$_SESSION['arealist'][$key]['url'] = $url;
-				$_SESSION['arealist'][$key]['web_name'] = $webname;
-			}
-		}
-		
-		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
-		
-		$result = true;
-		$reason = "updateOK";
-		
-		if ($user_id) {
-			$myarea = M("Myarea");
-			$list = $myarea->where("mid = '%d'", $user_id)->order('sort')->select();	
-			$myarea->startTrans();
-			
-			$now = time();
-			$data['mid'] = $user_id;
-			$data['create_time'] = $now;
-			if (empty($list)) {
-				foreach ($_SESSION['arealist'] as $value) {
-					$data['web_name'] = $value['web_name'];
-					$data['url'] = $value['url'];
-					if (false === $myarea->add($data)) {
-						$result = false;
-						Log::write('新增我的地盘失败：' . $myarea->getLastSql(), Log::SQL);
-						$reason = '新增我的地盘失败！';
-					}
-				}
-			} else {
-					
-				$saveData = array(
-						'url' => $url,
-						'web_name' => $webname,
-						'create_time' => $now
-				);
-				
-				if (false === $myarea->where(array('id' => $id, 'mid' => $user_id))->save($saveData)) {
-					$result = false;
-					Log::write('更新我的地盘失败：' . $myarea->getLastSql(), Log::SQL);
-					$reason = '保存我的地盘失败！';
-				}
-			}
-			
-			if ($result) {
-				$myarea->commit();
-			} else {
-				$myarea->rollback();
-			}
-		}
-		
-		echo $reason;
-	}
-	/**
-	 * @name sortArealist
-	 * @desc 拖动我的地盘进行排序
-	 * @param string area
-	 * @author Frank UPDATE 2013-08-20
-	 */
-	public function sortArealist() {
-		if ($this->isAjax()) {
-			$area_list = $this->_post('area');
-			$sort = 1;
-			foreach ($area_list as $value) {
-				foreach ($_SESSION['arealist'] as $val) {
-					if ($val['id'] == intval($value)) {
-						$val['sort'] = $sort;
-						$new_area_list[] = $val;
-						$sort++;
-					}
-				}
-			}
-			$_SESSION['arealist'] = $new_area_list;
-			
-			$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
-			if ($user_id) {
-				
-				$myarea = M("Myarea");
-				$list = $myarea->where("mid = '%d'", $user_id)->order('id')->select();
-				$myarea->startTrans();
-				$result = true;
-				$reason = "未知";
-				
-				$now = time();
-				$data['mid'] = $user_id;
-				$data['create_time'] = $now;
-				if (empty($list)) {
-					foreach ($_SESSION['arealist'] as $value) {
-						$data['web_name'] = $value['web_name'];
-						$data['url'] = $value['url'];
-						$data['sort'] = $value['sort'];
-						if (false === $myarea->add($data)) {
-							$result = false;
-							Log::write('新增我的地盘失败：' . $myarea->getLastSql(), Log::SQL);
-							$reason = '新增我的地盘失败！';
-						}
-					}
-				} else {
-					foreach ($_SESSION['arealist'] as $key => $value) {
-						Log::write('session：sort_myarea ' . $_SESSION['arealist'][$key]['web_name'] . ';sort:' . $_SESSION['arealist'][$key]['sort'], Log::SQL);
-						if (false === $myarea->save($value)) {
-							$result = false;
-							Log::write('更新我的地盘失败：' . $myarea->getLastSql(), Log::SQL);
-							$reason = '更新我的地盘失败！';
-						}
-					}
-				}
-				
-				if ($result) {
-					$myarea->commit();
-					die(json_encode(array('status' => 'ok', 'data' => $_SESSION['arealist'])));
-				} else {
-					$myarea->rollback();
-					echo $reason;
-				}
-			} else {
-				die(json_encode(array('status' => 'ok', 'data' => $_SESSION['arealist'])));
-			}
-		}
 	}
 	
 	/**
@@ -702,12 +862,543 @@ class IndexAction extends CommonAction {
 	 * @author Frank UPDATE 2013-08-17
 	 */
 	public function google_translate() {
+		//使用get，长文本翻译会出错，改为post
 		$srcLang = $this->_param('sl');
 		$tatLang =$this->_param('tl');
-		$q = urlencode(trim($_POST['q']));
-		
-		$url = 'http://translate.google.cn/translate_a/t?client=t&hl=zh-CN&sl=' . $srcLang . '&tl=' . $tatLang . '&ie=UTF-8&oe=UTF-8&multires=1&oc=1&prev=conf&psl=en&ptl=vi&otf=1&it=sel.166768%2Ctgtd.2118&ssel=4&tsel=4&sc=1&q=' . $q;
-		$result = file_get_contents($url);
+		//$q = rawurlencode(trim($_POST['q']));
+		$q = trim($_POST['q']);
+		$data = array ('q' => $q);
+		$data = http_build_query($data);
+		$opts = array (
+			'http' => array (
+			'method' => 'POST',
+			'header'=> "Content-type: application/x-www-form-urlencoded\r\n" .
+			"Content-Length: " . strlen($data) . "\r\n",
+			'content' => $data
+			)
+		);
+		$context = stream_context_create($opts);
+		//$html = file_get_contents('http://localhost/e/admin/test.html', false, $context);
+		$url = 'http://translate.google.cn/translate_a/t?client=t&hl=zh-CN&sl=' . $srcLang . '&tl=' . $tatLang . '&ie=UTF-8&oe=UTF-8&multires=1&oc=1&prev=conf&psl=en&ptl=vi&otf=1&it=sel.166768%2Ctgtd.2118&ssel=4&tsel=4&sc=1';//&q=' . $q;
+		$result = file_get_contents($url, false, $context);
 		$this->ajaxReturn($result, '', true);
 	}
+	
+	/**
+	 * @desc 获取日程
+	 * 
+	 * @param String year
+	 * @param String month
+	 * @return
+	 * @author slate date:2013-10-27
+	 */
+	public function getSchedule() {
+		$year = intval($this->_param('year'));
+		$month = intval($this->_param('month'));
+		
+		$user_id = intval(session(C('MEMBER_AUTH_KEY')));
+		
+		$stauts = 1;
+		$data  = array();
+		$nowTime = time();
+		$today = intval(date('d', $nowTime));
+		
+		if ($user_id) {
+			$scheduleModel = M("Schedule");
+		
+			$result = $scheduleModel->where(array('mid' => $user_id,'status' =>0 , 'year' => $year, 'month' => $month))->select();
+		
+			foreach ($result as $k => $v) {
+				$data[$v['day']][] = $v;
+			}
+			
+		}
+		
+		if (!$data[$today]) {
+			$data[$today][] = array('id' => 0, 'content' => '来创建今天新的日程吧！', 'datetime' => $nowTime, 'stauts' => 0);
+		}
+		
+		$this->ajaxReturn($data, '', $stauts);
+	}
+	/**
+	 * @name addSchedule
+	 * @desc 添加日程
+	 * @param string desc
+	 * @param string time
+	 * @return 成功:1; 失败:0; 未登录或登录已失效: -1
+	 * @author slate date:2013-09-14
+	 */
+	public function addSchedule() {
+	
+		$content = $this->_param('desc');
+		$datetime = intval($this->_param('time'));
+	
+		$user_id = intval(session(C('MEMBER_AUTH_KEY')));
+	
+		$result = 0;
+	
+		if ($user_id) {
+			$scheduleModel = M("Schedule");
+	
+			$now = time();
+				
+			$datetime = $datetime ? $datetime : $now;
+	
+			$saveData = array(
+					'mid' => $user_id,
+					'content' => $content,
+					'datetime' => $datetime,
+					'status' => 0,
+					'create_time' => $now,
+					'update_time' => $now,
+					'year' => date('Y', $datetime),
+					'month' => date('m', $datetime),
+					'day' => date('d', $datetime)
+			);
+	
+			$id = $scheduleModel->add($saveData);
+				
+			if ($id) {
+	
+				$saveData['id'] = $result = $id;
+				$schedule_list = cookie(md5('schedule_list'));
+				$schedule_list[$id] = $saveData;
+				cookie(md5('schedule_list'), $schedule_list);
+			}
+		} else {
+				
+			$result = -1;
+		}
+	
+		echo $result;
+	}
+	
+	/**
+	 * @name updateSchedule
+	 * @desc 更新日程表
+	 * @param int id
+	 * @param String desc
+	 * @param String time
+	 * @return 成功:1; 失败:0;
+	 * @author slate date:2013-09-14
+	 */
+	public function updateSchedule() {
+	
+		$id = $this->_param('id');
+		$content = $this->_param('desc');
+		$datetime = $this->_param('time');
+	
+		$user_id = intval(session(C('MEMBER_AUTH_KEY')));
+	
+		$result = 0;
+	
+		if ($id) {
+				
+			$now = time();
+				
+			$datetime = $datetime ? $datetime : $now;
+	
+			$saveData = array(
+					'content' => $content,
+					'datetime' => $datetime,
+					'update_time' => $now,
+					'year' => date('Y', $datetime),
+					'month' => date('m', $datetime),
+					'day' => date('d', $datetime)
+			);
+				
+			$result = 1;
+				
+			if ($user_id) {
+				$scheduleModel = M("Schedule");
+					
+				if (false === $scheduleModel->where(array('id' => $id, 'mid' => $user_id))->save($saveData)) {
+						
+					$result = 0;
+				}
+			}
+				
+			$schedule_list = cookie(md5('schedule_list'));
+			$schedule_list[$id] = array_merge($schedule_list[$id], $saveData);
+			cookie(md5('schedule_list'), $schedule_list);
+		}
+			
+		echo $result;
+	}
+	
+	/**
+	 * @name delSchedule
+	 * @desc 删除日程表
+	 * @param int id
+	 * @return 成功:1; 失败:0;
+	 * @author slate date:2013-09-14
+	 */
+	public function delSchedule() {
+	
+		$id = $this->_param('id');
+	
+		$user_id = intval(session(C('MEMBER_AUTH_KEY')));
+	
+		$result = 0;
+	
+		if ($id) {
+				
+			$result = 1;
+				
+			if ($user_id) {
+	
+				$scheduleModel = M("Schedule");
+	
+				if (false === $scheduleModel->where(array('mid' => $user_id, 'id' => $id))->save(array('status' => 1))) {
+	
+					$result = 0;
+				}
+	
+			}
+				
+			$schedule_list = cookie(md5('schedule_list'));
+			unset($schedule_list[array_search($id, $schedule_list)]);
+			cookie(md5('schedule_list'), $schedule_list);
+		}
+	
+		echo $result;
+	
+	}
+	
+	/**
+	 * @name delArea
+	 * @desc 删除自留地
+	 * @param string web_id
+	 * @return 成功:1; 失败:0; 未登录或登录已失效: -1
+	 * @author slate date:2013-09-14
+	 */
+	public function delArea() {
+	
+		$id = $this->_param('web_id');
+	
+		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+	
+		$result = 0;
+	
+		if ($id) {
+            //判断session是否为空
+            if(!$_SESSION['arealist']){
+                $_SESSION['arealist'] = D("Myarea")->where(array("mid" => $user_id))->select();
+            }
+			if ($user_id) {
+	
+				$memberModel = M("Member");
+	
+				$myarea = M("Myarea");
+				//判断session是否为空
+                if(!$_SESSION['myarea_sort']){
+                    $myarea_sort = $memberModel->where(array('id' => $user_id))->getField("myarea_sort");
+                    if(false !== $myarea_sort && !empty($myarea_sort)){
+                        $_SESSION['myarea_sort'] = explode(",", $myarea_sort);
+                    }else{
+                        $_SESSION['myarea_sort'] = array_keys($_SESSION['arealist']);
+                    }
+                }
+				if (false !== $myarea->where(array('id' => $id, 'mid' => $user_id))->delete()) {
+	
+					$result = 1;
+						
+                    unset($_SESSION['arealist'][$id]);
+					unset($_SESSION['myarea_sort'][array_search($id, $_SESSION['myarea_sort'])]);
+					$memberModel->where(array('id' => $user_id))->save(array('myarea_sort' => implode(',', $_SESSION['myarea_sort'])));
+				}
+	
+			} else {
+                //判断session是否为空
+                if(!$_SESSION['myarea_sort']){
+                    $_SESSION['myarea_sort'] = array_keys($_SESSION['arealist']);
+                }
+                unset($_SESSION['arealist'][$id]);
+				unset($_SESSION['myarea_sort'][array_search($id, $_SESSION['myarea_sort'])]);
+				$result = 1;
+			}
+		}
+	
+		echo $result;
+	
+	}
+	
+	/**
+	 * @name updateArea
+	 * @desc 更新我的地盘
+	 * @param string web_url
+	 * @param string web_name
+	 * @return 成功:1; 失败:0; 未登录或登录已失效: -1
+	 * @author slate date:2013-09-14
+	 */
+	public function updateArea() {
+	
+		$url = $this->_param('web_url');
+		$webname = $this->_param('web_name');
+		$id = $this->_param('web_id');
+	
+		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+	
+		$result = 0;
+        //判断session是否为空
+        if(!$_SESSION['arealist']){
+            $_SESSION['arealist'] = D("Myarea")->where(array("mid" => $user_id))->select();
+        }
+		if ($user_id) {
+			$myarea = M("Myarea");
+			$memberModel =  M("Member");
+            //判断session是否为空
+            if(!$_SESSION['myarea_sort']){
+                $myarea_sort = $memberModel->where(array('id' => $user_id))->getField("myarea_sort");
+                if(false !== $myarea_sort && !empty($myarea_sort)){
+                    $_SESSION['myarea_sort'] = explode(",", $myarea_sort);
+                }else{
+                    $_SESSION['myarea_sort'] = array_keys($_SESSION['arealist']);
+                }
+            }
+			$now = time();
+	
+			$saveData = array(
+					'url' => $url,
+					'web_name' => $webname,
+					'create_time' => $now
+			);
+	
+			if (!$id) {
+				$saveData['mid'] = $user_id;
+				$id = $myarea->add($saveData);
+				if ($id) {
+	
+					$saveData['id'] = $result = $id;
+						
+					$_SESSION['arealist'][$id] = $saveData;
+					array_push($_SESSION['myarea_sort'], $id);
+					$memberModel->where(array('id' => $user_id))->save(array('myarea_sort' => implode(',', $_SESSION['myarea_sort'])));
+				}
+			} else {
+				if (false !== $myarea->where(array('id' => $id, 'mid' => $user_id))->save($saveData)) {
+						
+					$result = 1;
+				}
+			}
+	
+			if ($result) {
+	
+				if ($id) {
+					$_SESSION['arealist'][$id]['url'] = $url;
+					$_SESSION['arealist'][$id]['web_name'] = $webname;
+				}
+			}
+		} else {
+            //判断session是否为空
+            if(!$_SESSION['myarea_sort']){
+                $_SESSION['myarea_sort'] = array_keys($_SESSION['arealist']);
+            }
+            $result = 1;
+            if (!$id) {
+                $id = end($_SESSION['myarea_sort']) + 1;
+                array_push($_SESSION['myarea_sort'], $id);
+                $_SESSION['arealist'][$id]['id'] = $id;
+                $result = $id;
+            }
+            $_SESSION['arealist'][$id]['url'] = $url;
+            $_SESSION['arealist'][$id]['web_name'] = $webname;
+				
+			
+		}
+	
+		echo $result;
+	}
+	/**
+	 * @name sortArealist
+	 * @desc 拖动我的地盘进行排序
+	 * @param Array area
+	 * @return 成功:1; 失败:0;
+	 * @author slate date:2013-09-14
+	 */
+	public function sortArealist() {
+	
+		$result = 1;
+	
+		$area_list = $this->_post('area');
+	
+		if ($this->isAjax() && $area_list) {
+				
+			
+			$_SESSION['myarea_sort'] = $area_list;
+				
+			$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+				
+			$memberModel = M("Member");
+				
+			if ($user_id) {
+	
+				$memberModel->where(array('id' => $user_id))->save(array('myarea_sort' => implode(',', $area_list)));
+					
+			}
+				
+		} else {
+				
+			$result = 0;
+		}
+	
+		echo $result;
+	}
+	
+	/**
+	 * APP排序
+	 * 
+	 * @param appIds
+	 * 
+	 * @return void
+	 * 
+	 * @author slate date:2013-10-02
+	 */
+	public function sortApp() {
+	
+		$result = 1;
+	
+		$appIds = $this->_post('appIds');
+	
+		if ($this->isAjax() && $appIds) {
+	
+				
+			$_SESSION['app_sort'] = $app_sort = implode(',', $appIds);
+	
+			$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+	
+			$memberModel = M("Member");
+	
+			if ($user_id) {
+	
+				$memberModel->where(array('id' => $user_id))->save(array('app_sort' => $app_sort));
+					
+			} else {
+				
+				cookie('app_sort', $app_sort, array('expire' => 0));
+			}
+	
+		} else {
+	
+			$result = 0;
+		}
+	
+		echo $result;
+	}
+	
+	public function tag() {
+		$key = $this->_param('q');
+		$dl = M('directLinks');
+		$condition['tag'] = array('like', '%' . $key . '%');
+		$data = $dl->where($condition)->select();
+		$val = '';
+		foreach ($data as $row) {
+			$val .= $row['tag'].'|'.$row['id']."\n";
+		}
+		echo $val;
+		exit;
+	}
+
+	//MacQQBrowser载入定制的豆瓣音乐
+	public function dbfm(){
+		$this->display();
+	}
+    
+    /**
+     * 获取当前访问用户所在地的天气数据
+     * 
+     * @author Hiker date:2013-10-16
+     * 
+     * @return array
+     */
+    protected function getWeatherData() {
+        
+        $weather = A('Home/Weather');
+        $data = json_decode($weather->getJsonData());
+        $weatherData = array(
+            'city' => $data->n,
+            'temp' => $data->t,
+            'sun'  => $data->s,
+            'air'  => $data->i->aq->label
+        );
+        
+        return $weatherData;
+    }
+    
+    /**
+     * 获取指定条数的数据推荐电影数据
+     * 
+     * @author Hiker date:2013-10-16
+     * 
+     * @param int $length
+     * @return array
+     */
+    protected function getHomeMovies($length = 10) {
+        
+        $result = S('HomeMovies'.$length);
+        if(!$result) {
+            $model = D('HomeMovie');
+            $result = $model->getList(array('status'=>1), 'sort', $length);
+            
+            S('HomeMovies'.$length, $result);
+        }
+        
+        return $result;
+    }
+    
+    /**
+     * 获取指定数目的推荐音乐数据
+     * 
+     * @author Hiker date:2013-10-16
+     * 
+     * @param int $length
+     * @return array
+     */
+    protected function getHomeMusics($length = 30) {
+        
+        $result = S('HomeMusics'.$length);
+        if(!$result) {
+            $model = D('HomeMusic');
+            $result = $model->getList(array('status'=>1), 'sort', $length);
+            
+            S('HomeMusics'.$length, $result);
+        }
+        
+        return $result;
+    }
+    
+    /**
+     * 抓取360热门新闻头条
+     */
+    protected function getHotNews() {
+    
+    	$hotNews = S('hotNewsList');
+    
+    	if (!$hotNews) {
+    
+    		$url = 'http://sh.qihoo.com/index.html';
+    
+    		$str = file_get_contents($url);
+    		$news = $imgNews = array();
+    		preg_match_all('/<p class="title">(.*?)<\/p>/is', $str, $match);
+    		
+    		foreach ($match[1] as $k => $v) {
+    			$news[] = array('url' => $this->tp_match('/href="(.*?)"/is', $v), 'title' => trim(str_replace("\n", '', strip_tags($v))), 'img' => '');
+    		}
+    		
+    		preg_match_all('/<li class="focal f16">(.*?)<\/li>/is', $str, $match);
+    		foreach ($match[1] as $k => $v) {
+    			$news[] = array('url' => $this->tp_match('/href="(.*?)"/is', $v), 'title' => trim(str_replace("\n", '', strip_tags($v))), 'img' => '');
+    		}
+    
+    		preg_match_all('/<div class="image">(.*?)<\/div>/is', $str, $match);
+    		foreach ($match[1] as $k => $v) {
+    			if ($k >= (count($match[1])-1)) continue;
+    			$imgNews[] = array('url' => stripslashes($this->tp_match('/href="(.*?)"/is', $v)), 'title' => trim($this->tp_match('/title="(.*?)"/is', $v)), 'img' => $this->tp_match('/src="(.*?)"/is', $v));
+    		}
+    		$hotNews = array('news' => $news, 'imgNews' => $imgNews);
+    		S('hotNewsList', $hotNews, 14400);
+    	}
+    	return $hotNews;
+    } 
 }

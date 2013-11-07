@@ -76,6 +76,41 @@ class EnglishObjectModel extends CommonModel {
         }
         return $default_ret;
     }
+    
+    /**
+     * 获取默认的科目id
+     * 优先获取系统默认，如果默认下不存在题目。则获取该类下拥有题目的第一个
+     * @param int $voice [口语]
+     * @param int $target [目标]
+     * @param int $pattern [表现类型]
+     * @return int [默认的科目id]
+     * @author Adam $date2013.6$
+     */
+    public function getDefaultObjectId($voice = 1, $target = 1, $pattern = 1) {
+        $question_table_name = "english_question";
+        if ($target == 2) {
+            $question_table_name = "english_question_speak";
+        }
+        $object_info = $this->field("id,name")->where("`default`=1 and `status`=1")->find();
+        if ($object_info['name'] == "综合") {
+            return $object_info['id'];
+        }
+        $condition = "(select count(question.id) from " . C("DB_PREFIX") . $question_table_name . " question 
+                    right join " . C("DB_PREFIX") . "english_media media on question.media_id=media.id where media.object=object.id and media.voice={$voice} 
+                    and media.pattern={$pattern} and media.status=1 and question.status=1)>0";
+        $default_ret = $this->alias("object")->field("object.id as id")->where("object.status=1 and object.default=1 and {$condition}")->find();
+        if (false === $default_ret || empty($default_ret)) {
+            $default_ret = $this->alias("object")->field("object.id as id")->where($condition)->find();
+        }
+        return $default_ret;
+    }
+    
+    public function getObjectInfo($object){
+    	
+    	$ret = $this->alias("object")->where(array("id" => $object, "status" => 1))->find();
+    	
+    	return $ret;
+    }
 
 }
 
