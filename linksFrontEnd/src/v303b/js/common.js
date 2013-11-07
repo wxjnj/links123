@@ -565,10 +565,11 @@ var THL = {
 			$("#search_text").select();
 		});
 		//移入糖葫芦区域 显示糖葫芦, 选中 文本
-
+		/*
 		$('.J_thl_area').mouseleave(function() {
 			$('#J_thl_div').hide();
 		});
+		*/
 		//移除糖葫芦主区域 隐藏糖葫芦
 
 		$(".J_thlz a").click(function() {//糖葫芦籽点击
