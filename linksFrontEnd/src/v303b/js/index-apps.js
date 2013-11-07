@@ -948,7 +948,7 @@ $( function($) {
 					});
 				}else{
 					$('.normal_music_box').css({
-						'bottom': -t,
+						'bottom': 0, //-t, // 这里fixed了，bottom为负值，啥意思？
 						'top' : 'auto',
 						'position' : 'fixed'
 					});
