@@ -440,7 +440,7 @@ $(function(){
 
         //新建和更新日程: id==null为新建，有id值为更新
         update: function(id, time, desc, element){
-            User.CheckLogin();
+            
             var self = this;
             var url, data;
 
@@ -450,6 +450,8 @@ $(function(){
                 Calendar.DateView.renderMarks();
                 return;
             }
+
+            User.CheckLogin();
 
             if(!id || id == 0 ) {
                 url = URL + '/addSchedule';
