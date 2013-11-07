@@ -779,7 +779,7 @@ $( function($) {
 			];
 
 
-			self.changeMode('normal', true);
+			self.changeMode('mini', true);
 			var lis = '';
 			var divs = '';
 			$.each(self.music_channel_list, function(k, v){
@@ -1015,7 +1015,7 @@ $( function($) {
 		});
 
 	};
-/*
+/**/
 
 	var K_appId = '#J_box_music';
 	if(!$(K_appId).size()){
@@ -1024,6 +1024,6 @@ $( function($) {
 	$('a[data-href="#J_box_music"]').data('links_app') || $('a[data-href="#J_box_music"]').data('links_app', new App(K_appId));
 	var K_app = $('a[data-href="#J_box_music"]').data('links_app');
 	K_app.show();
-*/
+/**/
 
 }(jQuery));
