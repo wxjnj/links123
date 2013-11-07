@@ -480,7 +480,7 @@ var Zld = { // 自留地
 	CreateItem: function(id, nm, url) {
 		var hl = '<li id="' + id + '" url="/Link/index.html?mod=myarea&amp;url=' + url + '" data-id="' + id + '" data-url="' + url + '">';
 		hl = hl + '<i class="mask"></i><span class="nm"><b>' + nm + '</b></span>';
-		hl = hl + '<span class="ctl"></span>';
+		hl = hl + '<span class="ctl"><i></i></span>';
 		hl = hl + '</li>';
 		return hl;
 	}
