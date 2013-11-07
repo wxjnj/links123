@@ -208,7 +208,7 @@ input:focus{ outline: 0; }
 	width: 360px;
 }
 .thl .ctls .btn{
-	background: url(../imgs/sprite.png) -2px -30px no-repeat;
+	background: url(../imgs/sprite.png) -5px 0px no-repeat;
 	cursor: pointer;
 	float: right;
 	height: 32px;
