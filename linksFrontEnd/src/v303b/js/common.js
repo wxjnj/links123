@@ -622,7 +622,12 @@ var THL = {
 		});
 
 		$(document).mouseup(function(ev) {// 搜索文本框始终获取焦点
-			if (document.activeElement.tagName == 'SELECT' || document.activeElement.tagName == "INPUT" || document.activeElement.tagName == "TEXTAREA" || document.activeElement.tagName == "IFRAME" || document.activeElement.id == "direct_text" || document.activeElement.id == "search_text" || document.activeElement.id == "search_text") {
+			if (document.activeElement.tagName == 'SELECT' ||
+				document.activeElement.tagName == "INPUT" ||
+				document.activeElement.tagName == "TEXTAREA" ||
+				document.activeElement.tagName == "IFRAME" ||
+				document.activeElement.id == "direct_text" ||
+				document.activeElement.id == "search_text") {
 				return;
 			}
 			var txt = '';

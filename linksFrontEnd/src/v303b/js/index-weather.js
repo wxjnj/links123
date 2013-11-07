@@ -77,7 +77,7 @@ $(function(){
             var o = $('.header-weather');
             o.find('.region').html(city);
             o.find('.degree').html(temp + '°');
-            o.find('.info').html('<span class="info"><b class="weather-icon"></b><b class="weather-desc">' + sun + '</b>，空气质量' + air + '</span>');
+            o.find('.info').html('<span class="info"><b class="weather-icon"></b><b class="weather-desc">' + sun + '</b>，空气' + air + '</span>');
             this.showIcon();
         },
 

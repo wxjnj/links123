@@ -504,7 +504,7 @@ input:focus{ outline: 0; }
 }
 
 .app-icon-list .app-more-box .nm{
-	color: #fff;
+	color: #000;
 }
 .app-icon-list .app-more-box{
 	display: none;
@@ -513,7 +513,7 @@ input:focus{ outline: 0; }
 	position: absolute;
 	z-index: 2;
 	right: -20px;
-	background: #000;
+	background: #fff;
 	box-shadow: 0 0 5px #666;
 	filter: alpha(opacity=90);
 	-moz-opacity: .9;
@@ -531,7 +531,7 @@ input:focus{ outline: 0; }
 	position: absolute;
 	border-width: 15px;
 	border-style: dashed dashed solid;
-	border-color: transparent transparent #000;
+	border-color: transparent transparent #fff;
 	filter: alpha(opacity=90);
 	-moz-opacity: .9;
 	-khtml-opacity: .9;
@@ -736,8 +736,8 @@ input:focus{ outline: 0; }
 	background: url(../imgs/sprite.png) -272px -3px no-repeat;
 }
 
-
-.widescreen .zld ul li{
+/* 自留地 按照 窄屏 尺寸 */
+/*.widescreen .zld ul li{
 	height: 42px;
 	line-height: 42px;
 	margin: 5px 5px 0 0;
@@ -773,7 +773,7 @@ input:focus{ outline: 0; }
 	padding-bottom: 7px;
 	margin-top: 1px;
 	box-shadow:inset 0px 0 5px #ccc;
-}
+}*/
 
 
 
@@ -929,6 +929,9 @@ input:focus{ outline: 0; }
 */
 .widescreen .uc-avatar {
 	float:right;
+}
+.widescreen .box-apps .box-bd{
+	padding-top: 0;
 }
 
 
