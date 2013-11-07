@@ -443,6 +443,14 @@ $(function(){
             User.CheckLogin();
             var self = this;
             var url, data;
+
+            if((!id || id == 0 ) && (!desc || desc.search('来创建今天新的日程吧') >= 0)) {
+                //self.marksStore = {};
+                //self.loadMarks();
+                Calendar.DateView.renderMarks();
+                return;
+            }
+
             if(!id || id == 0 ) {
                 url = URL + '/addSchedule';
                 data = {
@@ -504,9 +512,14 @@ $(function(){
                 'r' : 'red'
             };
 
-            $('.cal-date-marks-table').on('click', '.add-btn', function(){
-                var d = $(this).parent('.desc');
-                d.html('<div class="desc-input-div"><input type="text" value="" /><b class="blue active" data-code="b"></b><b class="green" data-code="g"></b><b class="red" data-code="r"></b></div>');
+            $('.cal-date-marks-table').on('mouseenter', 'li', function(){
+                if($(this).find('input').size()) return;
+
+                if($(this).find('.desc-content').size()) return;
+
+
+                var d = $(this).find('.desc')//.parent('.desc');
+                d.html('<div class="desc-input-div"><input type="text" value="" /><!--b class="blue active" data-code="b"></b><b class="green" data-code="g"></b><b class="red" data-code="r"></b--></div>');
                 d.find('input').select();
 
                 return false;
@@ -521,12 +534,12 @@ $(function(){
                 }
             });
 
-            $('.cal-date-marks-table').on('click', '.desc-content', function(){
+            $('.cal-date-marks-table').on('mouseenter', '.desc-content', function(){
                 if($(this).find('input').size()) return;
                 var x = $(this).attr('title');
                 var d = $(this).parent('.desc');
                 var c = $(this).attr('data-color');
-                d.html('<div class="desc-input-div"><input type="text" data-old="' + x + '" data-color="' + c + '" value="' + x + '" /><b class="blue" data-code="b"></b><b class="green" data-code="g"></b><b class="red" data-code="r"></b></div>');
+                d.html('<div class="desc-input-div"><input type="text" data-old="' + x + '" data-color="' + c + '" value="' + x + '" /><!--b class="blue" data-code="b"></b><b class="green" data-code="g"></b><b class="red" data-code="r"></b--></div>');
                 d.find('input').select();
                 d.find('.' + c).addClass('active');
             });
@@ -540,7 +553,7 @@ $(function(){
                 if(e.keyCode == 13){
                     var input = $(this);
                     var li = input.parents('li');
-                    var desc = input.val() + self.colorCode + li.find('.active').attr('data-code');
+                    var desc = input.val()// + self.colorCode + li.find('.active').attr('data-code');
                     var h = li.attr('data-time');
                     var time = Date.today();
                     var id = li.attr('data-id');
@@ -549,13 +562,22 @@ $(function(){
                 }else if(e.keyCode == 27){
                     var input = $(this);
                     var li = input.parents('li');
-                    var desc = input.attr('data-old') + self.colorCode + input.attr('data-color').charAt(0);
+                    var desc = input.attr('data-old')// + self.colorCode + input.attr('data-color').charAt(0);
                     var h = li.attr('data-time');
                     var time = Date.today();
                     var id = li.attr('data-id');
                     time.setHours(h);
                     Calendar.update(id, time, desc);
                 }
+            }).on('mouseout', 'input', function(){
+                var input = $(this);
+                var li = input.parents('li');
+                var desc = input.val()// + self.colorCode + li.find('.active').attr('data-code');
+                var h = li.attr('data-time');
+                var time = Date.today();
+                var id = li.attr('data-id');
+                time.setHours(h);
+                Calendar.update(id, time, desc);
             });
 
         },
@@ -578,7 +600,7 @@ $(function(){
                 }else{
                     tem = i;
                 }
-                all_lis += '<li class="line_'+i+'" data-time="'+i+'"><b class="dot"></b><span class="time">'+tem+':00</span><span class="desc"><a class="add-btn" href="javascript:;">增加日程 +</a></span></li>';
+                all_lis += '<li class="line_'+i+'" data-time="'+i+'"><b class="dot"></b><span class="time">'+tem+':00</span><span class="desc"><!--a class="add-btn" href="javascript:;">增加日程 +</a--></span></li>';
             }
 
 
@@ -614,10 +636,10 @@ $(function(){
                 }else{
                     short_desc = desc;
                 }
-
+                /*
                 if(!line.find('.add-btn').size()){
                     continue;
-                }
+                }*/
 
                 line.find('.desc').html('<a class="desc-content ' + color + '" data-color="' + color + '" title="' + desc + '" href="javascript:;">' + short_desc + '</a>');
                 line.append('<a class="delete-btn" href="javascript:;">×</a>');
