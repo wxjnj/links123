@@ -35,7 +35,7 @@ class IndexAction extends CommonAction {
 
 			if (!$_SESSION['app_sort']) {
 
-				$_SESSION['app_sort'] = cookie('app_sort');
+				//$_SESSION['app_sort'] = cookie('app_sort');
 			}
 		}
 
