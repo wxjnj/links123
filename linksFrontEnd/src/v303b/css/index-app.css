@@ -73,12 +73,11 @@
 }
 .apps ul li .hot{
 	display: block;
-	height: 29px;
-	width: 28px;
+	height: 38px;
+	width: 40px;
 	background: url(../imgs/hot.png) 0 0 no-repeat;
 	position: absolute;
-	right: -7px;
-	top: -7px
+	top: -1px
 }
 .apps ul li:hover,
 .apps ul li:hover a,
