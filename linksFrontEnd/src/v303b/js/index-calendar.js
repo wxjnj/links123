@@ -585,17 +585,7 @@ $(function(){
             var self = this;
             var id = self.element.attr('data-id');
             self.element.find('.desc').html('<a class="add-btn" href="javascript:;">增加日程</a>');
-            self.element.removeAttr('data-id')
-            Calendar.request({
-                url: URL + '/delSchedule',
-                data: {
-                    id: id
-                }
-            }).fail(function(c, e){
-            }).done(function(d){
-                //self.marksStore = {};
-                //self.loadMarks();
-            });
+            self.element.removeAttr('data-id');
             $.each(Calendar.marksStore[Calendar.currentMarkId][Calendar.currentDate], function(k, v){
                 if(!v) return;
                 if(v.id == id) {
@@ -607,6 +597,17 @@ $(function(){
                 Calendar.marksStore = {};
                 Calendar.loadMarks();
             }
+
+            if(id == 0 || !id) return;
+            Calendar.request({
+                url: URL + '/delSchedule',
+                data: {
+                    id: id
+                }
+            }).fail(function(c, e){
+            }).done(function(d){
+            });
+
         },
         updateMark: function(id, time, desc){
             var self = this;
@@ -617,8 +618,7 @@ $(function(){
             if((id == 0) && (!desc || desc == '来创建今天新的日程吧！')) {
                 return;
             }
-
-            User.CheckLogin();
+            //User.CheckLogin();
 
             if(!id || id == 0 ) {
                 type = 'add';
@@ -724,9 +724,10 @@ $(function(){
                     var time = mark.element.attr('data-time');
                     time = Date.today().setHours(time);
                     mark.setMark(id, desc);
+                    mark.updateMark(id, time, desc);
                 }
             });
-
+            /*
             $('.cal-date-marks-table').on('blur', 'input', function(e){
                 var time = $(this).parents('li').attr('data-time');
                 var mark = self.all_lis[time];
@@ -736,7 +737,7 @@ $(function(){
                 time = Date.today().setHours(time);
                 mark.setMark(id, desc);
                 mark.updateMark(id, time, desc);
-            });
+            });*/
 
         },
         renderMarks: function() {
