@@ -126,19 +126,29 @@
 	width:28px;
 	height:28px
 }
+.extra-calendar .cal-header .cal-view-select-btn:hover,
 .extra-calendar .cal-header .active {
-	color:#fff;
-	background:#a9a9a9;
+	display:inline-block;
+	background: none;
 	width: 22px;
 	height: 22px;
-	padding:3px;
+	margin-left:3px;
+	margin-right:3px;
+	padding-bottom:3px;
+	border-bottom: 3px solid #aaa;
 }
 
+.widescreen .extra-calendar .cal-header .cal-view-select-btn:hover,
 .widescreen .extra-calendar .cal-header .active {
+	display:inline-block;
+	background: none;
 	width: 28px;
-	height: 28px;
-	padding:0;
+	height: 25px;
+	margin: 0;
+	padding: 3px;
+	border-bottom: 3px solid #aaa;
 }
+
 
 .extra-calendar .cal-body {
 	width:473px;
