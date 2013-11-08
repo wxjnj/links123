@@ -585,17 +585,7 @@ $(function(){
             var self = this;
             var id = self.element.attr('data-id');
             self.element.find('.desc').html('<a class="add-btn" href="javascript:;">增加日程</a>');
-            self.element.removeAttr('data-id')
-            Calendar.request({
-                url: URL + '/delSchedule',
-                data: {
-                    id: id
-                }
-            }).fail(function(c, e){
-            }).done(function(d){
-                //self.marksStore = {};
-                //self.loadMarks();
-            });
+            self.element.removeAttr('data-id');
             $.each(Calendar.marksStore[Calendar.currentMarkId][Calendar.currentDate], function(k, v){
                 if(!v) return;
                 if(v.id == id) {
@@ -607,14 +597,28 @@ $(function(){
                 Calendar.marksStore = {};
                 Calendar.loadMarks();
             }
+
+            if(id == 0 || !id) return;
+            Calendar.request({
+                url: URL + '/delSchedule',
+                data: {
+                    id: id
+                }
+            }).fail(function(c, e){
+            }).done(function(d){
+            });
+
         },
         updateMark: function(id, time, desc){
             var self = this;
             var url, data;
 
             var type;
-
             if((id == 0) && (!desc || desc == '来创建今天新的日程吧！')) {
+                return;
+            }
+            if(!desc){
+                self.deleteMark();
                 return;
             }
 
@@ -700,8 +704,12 @@ $(function(){
                         var desc = v.element.find('input').val();
                         var time = v.element.attr('data-time');
                         time = Date.today().setHours(time);
+                        if(desc != v.element.find('input').attr('data-old')) {
+                            v.updateMark(id, time, desc);
+                        }
                         v.setMark(id, desc);
-                        v.updateMark(id, time, desc);
+
+                        //v.updateMark(id, time, desc);
                     }
                 });
                 mark.edit();
@@ -723,10 +731,13 @@ $(function(){
                     var desc = mark.element.find('input').val();
                     var time = mark.element.attr('data-time');
                     time = Date.today().setHours(time);
+                    if(desc != mark.element.find('input').attr('data-old')) {
+                        mark.updateMark(id, time, desc);
+                    }
                     mark.setMark(id, desc);
                 }
             });
-
+            /*
             $('.cal-date-marks-table').on('blur', 'input', function(e){
                 var time = $(this).parents('li').attr('data-time');
                 var mark = self.all_lis[time];
@@ -736,7 +747,7 @@ $(function(){
                 time = Date.today().setHours(time);
                 mark.setMark(id, desc);
                 mark.updateMark(id, time, desc);
-            });
+            });*/
 
         },
         renderMarks: function() {

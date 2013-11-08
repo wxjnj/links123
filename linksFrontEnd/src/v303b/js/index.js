@@ -145,12 +145,16 @@ var Zld = { // 自留地
 	//是否为拖拽点击，true则不打开自留地网址
 	_resizeLine: function(start){
 
+		//console.log('=======================');
+
 		var box = $('#J_sortable');
 		var boxWidth = box.width();
 		if(start == 0){
 			var lis = box.find('li');
+		//	console.log(lis);
 		}else{
 			var lis = box.find('li:gt('+(start)+')');
+		//	console.log(lis);
 		}
 
 		var liWidth = 0;
@@ -164,43 +168,70 @@ var Zld = { // 自留地
 				fstLineWidth = liWidth - $(v).width() - 5;
 			}
 		});
-		overIndex += start;
 
 		//lis.find('.nm').trigger('mouseout');
 		if (liWidth <= boxWidth) return false;
-		if (boxWidth - fstLineWidth > 65) {
+
+		oi = overIndex + start;
+
+		//console.log(boxWidth - fstLineWidth);
+		
+		if (boxWidth - fstLineWidth > 55) {
 			var w = lis.eq(overIndex).width() + 5 - (boxWidth - fstLineWidth);
-			var xw = Math.ceil(w / (overIndex + 1) / 2);
+			var xw = Math.floor(w / (overIndex + 1) / 2);
+			var diff = w - xw * (overIndex + 1) * 2;
+
 			var s = lis.filter(':lt(' + (overIndex + 1) + ')');
 			$.each(s, function(k, v) {
 				//var xw = Math.ceil(w / 2);
 				var opl = $(v).find('.nm').css('padding-left');
 				var opr = $(v).find('.nm').css('padding-right');
 				opl = parseInt(opl);
+				if(diff > 0) {
+					opl -= 1;
+					diff--;
+				}
 				opr = parseInt(opr);
+				if(diff > 0) {
+					opr -= 1;
+					diff--;
+				}
 				$(v).find('.nm').css({
 					'padding-left': opl - xw + 'px',
 					'padding-right': opr - xw + 'px'
 				});
 			});
-		} else if(boxWidth - fstLineWidth <= 65 && boxWidth - fstLineWidth >= 10) { 
+		} else if(boxWidth - fstLineWidth <= 55 && boxWidth - fstLineWidth > 0) { 
 			// 差距过小，使用本行增加宽度适应行宽
+			oi = overIndex + start;
 			var w = boxWidth - fstLineWidth;
-			w = Math.floor(w / (overIndex) / 2);
+			var xw = Math.floor(w / (overIndex) / 2);
+			var diff = w - xw * 2 * overIndex;
+
 			var s = lis.filter(':lt(' + overIndex + ')');
 			$.each(s, function(k, v){
 				var opl = $(v).find('.nm').css('padding-left');
 				var opr = $(v).find('.nm').css('padding-right');
 				opl = parseInt(opl);
+				if(diff > 0){
+					opl += 1;
+					diff--;
+				}
 				opr = parseInt(opr);
+				if(diff > 0){
+					opr += 1;
+					diff--;
+				}
 				$(v).find('.nm').css({
-					'padding-left': opl + w + 'px',
-					'padding-right': opr + w + 'px'
+					'padding-left': opl + xw + 'px',
+					'padding-right': opr + xw + 'px'
 				});
 			});		
 
-		}	
-		return overIndex;	
+			oi = overIndex + start;
+
+		}
+		return oi;	
 	},
 	Resize: function() {
 		//自适应算法
@@ -216,7 +247,15 @@ var Zld = { // 自留地
 		var s = 0;
 		
 		oi = self._resizeLine(s);
-		//oi = self._resizeLine(oi-1);
+		//oi = self._resizeLine(oi);
+		//oi = self._resizeLine(oi);
+		//oi = self._resizeLine(oi);
+		/*
+		oi = self._resizeLine(oi);
+		oi = self._resizeLine(oi);
+		oi = self._resizeLine(oi);
+		oi = self._resizeLine(oi);
+		*/
 		/*
 		do{
 			oi = self._resizeLine(s);
@@ -507,7 +546,6 @@ var Zld = { // 自留地
 		return hl;
 	}
 };
-
 
 var HelpMouse = {
 	init: function() {

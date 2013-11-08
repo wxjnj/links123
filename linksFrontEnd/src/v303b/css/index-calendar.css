@@ -193,7 +193,7 @@
 	width: 31px;
 	font-size: 10px;
 	float: left;
-	margin-right: 10px;
+	margin-right: 5px;
 	color: #666;
 }
 .cal-date-marks-table li .desc {
@@ -204,7 +204,7 @@
 	padding: 0 4px;
 	height: 30px;
 	line-height: 30px;
-	margin-left: 48px;
+	margin-left: 44px;
 	background: #a9a9a9;
 	color: #fff;
 	text-decoration: none;
@@ -486,14 +486,14 @@
 	padding: 0 2px;
 	display: inline-block;
 	background: #fff;
-	width: 200px;
+	width: 220px;
 }
 .desc-input-div input {
 	border: 0;
 	height: 15px;
 	line-height: 15px;
 	padding: 5px;
-	width: 190px;
+	width: 200px;
 }
 .desc-input-div b {
 	display: inline-block;
