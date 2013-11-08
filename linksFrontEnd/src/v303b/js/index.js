@@ -151,10 +151,12 @@ var Zld = { // 自留地
 		var boxWidth = box.width();
 		if(start == 0){
 			var lis = box.find('li');
-		//	console.log(lis);
 		}else{
+			//修正pos偏移 （非完美 需要重新在算法里排查）
+			if(box.find('li:eq('+(start + 1)+')').find('.nm').css('padding-left') != '25px'){
+				start += 1;
+			}
 			var lis = box.find('li:gt('+(start)+')');
-		//	console.log(lis);
 		}
 
 		var liWidth = 0;
@@ -169,12 +171,9 @@ var Zld = { // 自留地
 			}
 		});
 
-		//lis.find('.nm').trigger('mouseout');
 		if (liWidth <= boxWidth) return false;
 
 		oi = overIndex + start;
-
-		//console.log(boxWidth - fstLineWidth);
 		
 		if (boxWidth - fstLineWidth > 55) {
 			var w = lis.eq(overIndex).width() + 5 - (boxWidth - fstLineWidth);
@@ -183,7 +182,6 @@ var Zld = { // 自留地
 
 			var s = lis.filter(':lt(' + (overIndex + 1) + ')');
 			$.each(s, function(k, v) {
-				//var xw = Math.ceil(w / 2);
 				var opl = $(v).find('.nm').css('padding-left');
 				var opr = $(v).find('.nm').css('padding-right');
 				opl = parseInt(opl);
@@ -203,7 +201,6 @@ var Zld = { // 自留地
 			});
 		} else if(boxWidth - fstLineWidth <= 55 && boxWidth - fstLineWidth > 0) { 
 			// 差距过小，使用本行增加宽度适应行宽
-			oi = overIndex + start;
 			var w = boxWidth - fstLineWidth;
 			var xw = Math.floor(w / (overIndex) / 2);
 			var diff = w - xw * 2 * overIndex;
@@ -227,9 +224,6 @@ var Zld = { // 自留地
 					'padding-right': opr + xw + 'px'
 				});
 			});		
-
-			oi = overIndex + start;
-
 		}
 		return oi;	
 	},
@@ -246,22 +240,10 @@ var Zld = { // 自留地
 		var oi;
 		var s = 0;
 		
-		oi = self._resizeLine(s);
-		//oi = self._resizeLine(oi);
-		//oi = self._resizeLine(oi);
-		//oi = self._resizeLine(oi);
-		/*
-		oi = self._resizeLine(oi);
-		oi = self._resizeLine(oi);
-		oi = self._resizeLine(oi);
-		oi = self._resizeLine(oi);
-		*/
-		/*
 		do{
 			oi = self._resizeLine(s);
 			s = oi;
 		}while(oi !== false);
-		*/
 
 	},
 	Init: function() {
