@@ -153,9 +153,9 @@ var Zld = { // 自留地
 			var lis = box.find('li');
 		}else{
 			//修正pos偏移 （非完美 需要重新在算法里排查）
-			if(box.find('li:eq('+(start + 1)+')').find('.nm').css('padding-left') != '25px'){
-				start += 1;
-			}
+			//if(box.find('li:eq('+(start + 1)+')').find('.nm').css('padding-left') != '25px'){
+			//	start += 1;
+			//}
 			var lis = box.find('li:gt('+(start)+')');
 		}
 
