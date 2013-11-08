@@ -27,48 +27,17 @@ class IndexAction extends CommonAction {
 			$_SESSION['myarea_sort'] = $mbrNow['myarea_sort'] ? explode(',', $mbrNow['myarea_sort']) : '';
 			$_SESSION['app_sort'] = $mbrNow['app_sort'];
 
-			//取出皮肤ID和模板ID
-// 			$skinId = session('skinId');
-// 			if (!$skinId) {
-// 				$skinId = cookie('skinId');
-// 			}
 
-// 			$themeId = session('themeId');
-// 			if (!$themeId) {
-// 				$themeId = cookie('themeId');
-// 			}
 		} else {
-
-			//取出皮肤ID和模板ID
-// 			$skinId = session('skinId');
-// 			if (!$skinId) {
-// 				$skinId = cookie('skinId');
-// 			}
-// 			$themeId = session('themeId');
-// 			if (!$themeId) {
-// 				$themeId = cookie('themeId');
-// 			}
+			
+			$this->get_member_guest();
+			
 
 			if (!$_SESSION['app_sort']) {
 
 				$_SESSION['app_sort'] = cookie('app_sort');
 			}
 		}
-
-		//快捷皮肤
-// 		$skins = $this->getSkins();
-// 		if ($skinId) {
-// 			$skin = $skins['skin'][$skinId]['skinId'];
-// 			if (!$skin) $skinId = '';
-// 			$themeId = $skins['skin'][$skinId]['themeId'];
-// 			$this->assign("skinId", $skinId);
-// 			$this->assign("skin", $skin);
-// 		}
-// 		$this->assign("skinList", $skins['list']);
-// 		$this->assign("skinCategory", $skins['category']);
-
-// 		$theme = $this->getTheme($themeId);
-// 		$this->assign('theme', $theme);
 
 		//自留地数据
 		if ($user_id || !$_SESSION['arealist']) {
@@ -903,6 +872,11 @@ class IndexAction extends CommonAction {
 		$nowTime = time();
 		$today = intval(date('d', $nowTime));
 		
+		if (!$user_id) {
+				
+			$user_id = $this->get_member_guest();
+		}
+		
 		if ($user_id) {
 			$scheduleModel = M("Schedule");
 		
@@ -937,7 +911,13 @@ class IndexAction extends CommonAction {
 	
 		$result = 0;
 	
-		if ($user_id) {
+		if (!$user_id) {
+			
+			$user_id = $this->get_member_guest();
+		}
+		
+		if ($user_id && $content) {
+			
 			$scheduleModel = M("Schedule");
 	
 			$now = time();
@@ -1008,7 +988,12 @@ class IndexAction extends CommonAction {
 			);
 				
 			$result = 1;
-				
+			
+			if (!$user_id) {
+			
+				$user_id = $this->get_member_guest();
+			}
+			
 			if ($user_id) {
 				$scheduleModel = M("Schedule");
 					
@@ -1016,11 +1001,10 @@ class IndexAction extends CommonAction {
 						
 					$result = 0;
 				}
-			}
+			} else {
 				
-			$schedule_list = cookie(md5('schedule_list'));
-			$schedule_list[$id] = array_merge($schedule_list[$id], $saveData);
-			cookie(md5('schedule_list'), $schedule_list);
+				$result = -1;
+			}				
 		}
 			
 		echo $result;
@@ -1044,7 +1028,12 @@ class IndexAction extends CommonAction {
 		if ($id) {
 				
 			$result = 1;
-				
+			
+			if (!$user_id) {
+			
+				$user_id = $this->get_member_guest();
+			}
+			
 			if ($user_id) {
 	
 				$scheduleModel = M("Schedule");
@@ -1054,11 +1043,10 @@ class IndexAction extends CommonAction {
 					$result = 0;
 				}
 	
-			}
+			} else {
 				
-			$schedule_list = cookie(md5('schedule_list'));
-			unset($schedule_list[array_search($id, $schedule_list)]);
-			cookie(md5('schedule_list'), $schedule_list);
+				$result = -1;
+			}
 		}
 	
 		echo $result;
@@ -1402,4 +1390,27 @@ class IndexAction extends CommonAction {
     	}
     	return $hotNews;
     } 
+    
+    /**
+     * 获取和生成游客记录
+     */
+    protected function get_member_guest() {
+    	$member_guest_id = cookie(md5('member_guest'));
+    	if (!$member_guest_id) {
+    	
+    		$guestModel = M('MemberGuest');
+    	
+    		$guest_id = $guestModel->add(array('create_time' => time(), 'status' => 1));
+    		if ($guest_id) {
+    				
+    			$member_guest_id = - $guest_id;
+    			if ($guestModel->where(array('id' => $guest_id))->save(array('mid' => $member_guest_id))) {
+    	
+    				cookie(md5('member_guest'), $member_guest_id, 365*24*60*60);
+    			}
+    		}
+    	} 
+    	
+    	return $member_guest_id;
+    }
 }
