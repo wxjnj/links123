@@ -236,19 +236,6 @@ class EnglishMediaAction extends CommonAction {
         $vo = $model->find($id);
         $vo['name'] = htmlspecialchars($vo['name']);
         $this->assign('vo', $vo);
-        if(!preg_match("/^((http)|(https):\/\/)/i", $vo['media_source_url'])){
-            $vo['media_text_url'] = "http://".$vo['media_source_url'];
-        }
-        $host = explode('.', parse_url($vo['media_source_url'], PHP_URL_HOST));
-        if(!isset($host[1])){
-            $host[1] = "others";
-        }
-        $upload_path = $host[1]."/".date("Ymd",$vo['created'])."/";
-        $file_name = md5($vo['media_source_url']);
-        $token = md5($upload_path.date("Ymd")."!@#$%");
-        $this->assign("file_name",$file_name);
-        $this->assign("upload_path",$upload_path);
-        $this->assign("token",$token);
 
         //科目列表
         $object_list = D("EnglishObject")->where("`status`=1")->order("sort")->select();
@@ -270,21 +257,41 @@ class EnglishMediaAction extends CommonAction {
         $name = $this->getActionName();
         $model = D($name);
         $model->startTrans();
+        $media_info = $model->find($_POST['id']);
         if (false === $model->create()) {
             $this->error($model->getError());
         }
-        $levels = D("EnglishLevel")->order("`sort` ASC")->select();
-        foreach ($levels as $key => $value) {
-            $level_list[$value['id']] = $value;
-            $level_name_list_info[$value['name']] = $value;
+        if (!empty($_FILES['img']['name'])) {
+            if(!preg_match("/^((http)|(https):\/\/)/i", $media_info['media_source_url'])){
+                $media_info['media_text_url'] = "http://".$media_info['media_source_url'];
+            }
+            $host = explode('.', parse_url($media_info['media_source_url'], PHP_URL_HOST));
+            if(!isset($host[1])){
+                $host[1] = "others";
+            }
+            $upload_path = "/mnt/www/video/".$host[1]."/".date("Ymd",$media_info['created'])."/";
+            $file_name = md5($media_info['media_source_url']);
+            import("@.ORG.UploadFile");
+            $upload = new UploadFile();
+            $upload->maxSize = 11000000; // 设置附件上传大小
+            $upload->allowExts = array('jpeg', 'jpg', 'png', 'gif'); // 设置附件上传类型
+            $upload->saveRule = uniqid();
+            $upload->savePath = "./Public/Uploads/Temp/"; // 设置附件上传目录
+            if (!$upload->upload()) {// 上传错误提示错误信息
+                $this->error($upload->getErrorMsg());
+            } else {// 上传成功 获取上传文件信息
+                $info = $upload->getUploadFileInfo();
+                $conn_id = ftp_ssl_connect(C("VIDEO_UPLOAD_PATH"));
+                $login_result = ftp_login($conn_id, "root", "L1i2n3kS");
+                if(false === $login_result){
+                    $model->rollback();
+                    $this->error("编辑失败");
+                }
+                $upload = ftp_put($conn_id, $upload_path.$file_name . "." . $info[0]['extension'],$info[0]['savepath'] . $info[0]['savename'], FTP_BINARY);
+                $model->media_thumb_img = C("VIDEO_UPLOAD_PATH") . $upload_path . $file_name . "." . $info[0]['extension'];
+            }
         }
-        if ($level_list[intval($_REQUEST['level'])]['sort'] <= $level_name_list_info['小六']['sort']) {
-            $model->difficulty = 1;
-        } else if ($level_list[intval($_REQUEST['level'])]['sort'] >= $level_name_list_info['大一']['sort']) {
-            $model->difficulty = 3;
-        } else {
-            $model->difficulty = 2;
-        }
+        
         $media_id = $media['media_id'] = $model->id;
         $media['media_source_url'] = $model->media_source_url;
         $media['name'] = $model->name;
