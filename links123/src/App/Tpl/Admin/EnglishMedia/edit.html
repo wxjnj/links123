@@ -139,6 +139,16 @@
 <script type="text/javascript">
     $(function() {
         
+        $("#media_thumb_btn").click(function(){
+            if($("#thumb_img").is(":visible")){
+                $("#thumb_img").css("display","none");
+                $(this).text("查看");
+            }else{
+                $("#thumb_img").css("display","block");
+                $(this).text("隐藏");
+            }
+        })
+        
         var object = $("input[name='object']").val();
         $("#object_" + object).css("color", "#FF0000").siblings("label").css("color", "#000000");
         var level = $("input[name='level']").val();
