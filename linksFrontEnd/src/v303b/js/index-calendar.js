@@ -618,6 +618,7 @@ $(function(){
             if((id == 0) && (!desc || desc == '来创建今天新的日程吧！')) {
                 return;
             }
+
             //User.CheckLogin();
 
             if(!id || id == 0 ) {
