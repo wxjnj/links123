@@ -614,8 +614,11 @@ $(function(){
             var url, data;
 
             var type;
-
             if((id == 0) && (!desc || desc == '来创建今天新的日程吧！')) {
+                return;
+            }
+            if(!desc){
+                self.deleteMark();
                 return;
             }
 
@@ -701,8 +704,12 @@ $(function(){
                         var desc = v.element.find('input').val();
                         var time = v.element.attr('data-time');
                         time = Date.today().setHours(time);
+                        if(desc != v.element.find('input').attr('data-old')) {
+                            v.updateMark(id, time, desc);
+                        }
                         v.setMark(id, desc);
-                        v.updateMark(id, time, desc);
+
+                        //v.updateMark(id, time, desc);
                     }
                 });
                 mark.edit();
@@ -724,8 +731,10 @@ $(function(){
                     var desc = mark.element.find('input').val();
                     var time = mark.element.attr('data-time');
                     time = Date.today().setHours(time);
+                    if(desc != mark.element.find('input').attr('data-old')) {
+                        mark.updateMark(id, time, desc);
+                    }
                     mark.setMark(id, desc);
-                    mark.updateMark(id, time, desc);
                 }
             });
             /*
