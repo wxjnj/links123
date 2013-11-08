@@ -30,7 +30,7 @@ $(function(){
                 }, 200);
             });
 
-            $('.weather-find-region-box').find('.content').on('mouseenter', '.region-tab-li', function(){
+            $('.weather-find-region-box').find('.content').on('click', '.region-tab-li', function(){
                 $('.region-tab-li').removeClass('active');
                 $(this).addClass('active');
                 var cur = $(this).html();
@@ -43,17 +43,16 @@ $(function(){
                 if (event.keyCode == 13) {
                     var c = $(this).val();
                     self.load(c);
+                    
                 }
             });
-
             self.showIcon();
         },
 
         load: function(c){
-
             var self = this;
             $('.weather-find-region-box').hide();
-
+            
             self.show(c, '', 'loading', 'loading');
 
             $.ajax({
@@ -63,7 +62,7 @@ $(function(){
             }).fail(function(){
 
             }).done(function(d){
-
+                $.cookies.set('weather_region', d.c, { expiresAt: (new Date).add_day(365) });
                 if(d.t == 'NA') {
                     d.t = d.d1.l + '-' + d.d1.h;
                 }

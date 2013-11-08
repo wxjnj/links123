@@ -25,29 +25,29 @@ $(function() {
 	User.Init();
 	THL.Init();
 	Theme.Init();
-	// $("#direct_text").autocomplete("/Home/Link/tag", {
-	// 	dataType : "json",
-	// 	minChars : 1,
-	// 	'async': true,
-	// 	width : 298,
-	// 	scroll : false,
-	// 	matchContains : true,
-	// 	parse : function(data) {
-	// 		return $.map(data, function(row) {
-	// 			return {
-	// 				data : row,
-	// 				value : row.tag,
-	// 				result : row.tag
-	// 			};
-	// 		});
-	// 	},
-	// 	formatItem : function(item) {
-	// 		return item.tag;
-	// 	}
-	// }).result(function(e, item) {
-	// 	$('#direct_text').val(item.tag);
-	// 	$('#frm_drct').submit();
-	// });
+	 $("#direct_text").autocomplete("/Home/Link/tag", {
+	 	dataType : "json",
+	 	minChars : 1,
+	 	'async': true,
+	 	width : 298,
+	 	scroll : false,
+	 	matchContains : true,
+	 	parse : function(data) {
+	 		return $.map(data, function(row) {
+	 			return {
+	 				data : row,
+	 				value : row.tag,
+	 				result : row.tag
+	 			};
+	 		});
+	 	},
+	 	formatItem : function(item) {
+	 		return item.tag;
+	 	}
+	 }).result(function(e, item) {
+	 	$('#direct_text').val(item.tag);
+	 	$('#frm_drct').submit();
+	 });
 });
 
 // 登录注册dialog弹出后，阻止mousemove事件冒泡，避免焦点丢失
@@ -706,6 +706,12 @@ var Theme = {
 		var self = this;
 		var isImgSrc = false;
 
+		$('#K_change_skin_btn').on('click', function(){
+			if($('.skin-list').is(':hidden')){
+				$('.skin-list').fadeIn(150);
+			}
+		});
+		/*
 		$('#K_change_skin_btn').on('mouseenter', function(){
 			clearTimeout(self.timer);
 			self.timer = null;
@@ -719,6 +725,7 @@ var Theme = {
 					$('.skin-list').hide();
 				},500);
 		});
+		*/
 
 		$('#K_change_skin_btn_old').on('mouseleave', '.skin-list',function(){
 			clearTimeout(self.timer);

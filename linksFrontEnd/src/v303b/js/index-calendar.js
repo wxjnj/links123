@@ -65,7 +65,6 @@ $(function(){
     
 });
 
-
 /*
  *   Calendar
  */
@@ -127,6 +126,8 @@ $(function(){
             }else{
                 self.G = 2;
             }
+
+            self.idController = 0;
 
             self.defaultMarkTitle = '新建日程';
             self.type = type || 'Date';
@@ -436,13 +437,16 @@ $(function(){
                         //self.MainView.renderMarks();
                     });
             }
-        },
+        }
+        /*,
 
         //新建和更新日程: id==null为新建，有id值为更新
         update: function(id, time, desc, element){
             
             var self = this;
             var url, data;
+
+            var type;
 
             if((!id || id == 0 ) && (!desc || desc.search('来创建今天新的日程吧') >= 0)) {
                 //self.marksStore = {};
@@ -454,12 +458,14 @@ $(function(){
             User.CheckLogin();
 
             if(!id || id == 0 ) {
+                type = 'add';
                 url = URL + '/addSchedule';
                 data = {
                     time: time/1000,
                     desc: desc
                 };
             }else{
+                type = 'update';
                 url = URL + '/updateSchedule';
                 data = {
                     time: time/1000,
@@ -471,13 +477,21 @@ $(function(){
                 url: url,
                 data: data
             }).fail(function(c, e){
-                }).done(function(d){
-                    if(id != 'null'){
-                    //    element.attr('data-id', d);
+            }).done(function(d){
+
+            });
+
+            
+            if(type == 'update'){
+                $.each(self.marksStore[self.currentMarkId][self.currentDate], function(k, v){
+                    if(v.id == id) {
+                        v.desc = desc;
                     }
-                    self.marksStore = {};
-                    self.loadMarks();
                 });
+            }
+            
+            //self.marksStore = {};
+            //self.loadMarks();
         },
         //删除任务
         deleteMark: function(id){
@@ -488,12 +502,173 @@ $(function(){
                     id: id
                 }
             }).fail(function(c, e){
-                }).done(function(d){
-                    self.marksStore = {};
-                    self.loadMarks();
-                });
+            }).done(function(d){
+                //self.marksStore = {};
+                //self.loadMarks();
+            });
+
+            $.each(self.marksStore[self.currentMarkId][self.currentDate], function(k, v){
+                if(v.id == id) {
+                    self.marksStore[self.currentMarkId][self.currentDate].splice(k, 1);
+                }
+            });
         }
+        */
     };
+
+    var MarkLine = new Class;
+    MarkLine.include({
+        init: function(index){
+            var self = this;
+            self.format(index);
+        },
+        format: function(index){
+            var self = this;
+            var tem;
+            if(index < 10) {
+                tem = '0' + index;
+            }else{
+                tem = index;
+            }
+            self.element = $('<li class="line_'+index+'" data-time="'+index+'"><b class="dot"></b><span class="time">'+tem+':00</span><span class="desc"><a class="add-btn" href="javascript:;">增加日程</a></span></li>');
+
+        },
+        refresh: function(){
+            var self = this;
+            self.element.find('.desc').html('<a class="add-btn" href="javascript:;">增加日程</a>');
+        },
+        edit: function(){
+            var self = this;
+            var el = self.element;
+            if(el.find('.desc-content').size()){
+                var x = el.find('.desc-content').attr('title');
+                var d = el.find('.desc');
+                var c = el.find('.desc-content').attr('data-color');
+                d.html('<div class="desc-input-div"><input type="text" data-old="' + x + '" data-color="' + c + '" value="' + x + '" /><!--b class="blue" data-code="b"></b><b class="green" data-code="g"></b><b class="red" data-code="r"></b--></div>');
+                d.find('input').select();
+                d.find('.' + c).addClass('active');    
+            }else{
+                var d = el.find('.desc')//.parent('.desc');
+                d.html('<div class="desc-input-div"><input type="text" value="" /><!--b class="blue active" data-code="b"></b><b class="green" data-code="g"></b><b class="red" data-code="r"></b--></div>');
+                d.find('input').select();
+                el.append('<a class="delete-btn" href="javascript:;">×</a>')
+            }
+
+        },
+        setMark: function(id, desc){
+            var self = this;
+            var tem, color;
+
+            if(!desc) {
+                self.refresh();
+                return;
+            }
+
+            if(desc.search(Calendar.DateView.colorCode) >= 0){
+                tem = desc.split(Calendar.DateView.colorCode);
+                color = Calendar.DateView.colors[tem[1]];
+                desc = tem[0];
+            }else{
+                color = 'blue';
+            }
+            if(desc.length > 15) {
+                short_desc = desc.substring(0, 13) + '...';
+            }else{
+                short_desc = desc;
+            }
+            self.element.find('.desc').html('<a class="desc-content ' + color + '" data-color="' + color + '" title="' + desc + '" href="javascript:;">' + short_desc + '</a>');
+            self.element.append('<a class="delete-btn" href="javascript:;">×</a>');
+            self.element.attr('data-id', id);
+        },
+        deleteMark: function(){
+            var self = this;
+            var id = self.element.attr('data-id');
+            self.element.find('.desc').html('<a class="add-btn" href="javascript:;">增加日程</a>');
+            self.element.removeAttr('data-id')
+            Calendar.request({
+                url: URL + '/delSchedule',
+                data: {
+                    id: id
+                }
+            }).fail(function(c, e){
+            }).done(function(d){
+                //self.marksStore = {};
+                //self.loadMarks();
+            });
+            $.each(Calendar.marksStore[Calendar.currentMarkId][Calendar.currentDate], function(k, v){
+                if(!v) return;
+                if(v.id == id) {
+                    Calendar.marksStore[Calendar.currentMarkId][Calendar.currentDate].splice(k, 1);
+                }
+            });
+
+            if(Calendar.marksStore[Calendar.currentMarkId][Calendar.currentDate].length == 0){
+                Calendar.marksStore = {};
+                Calendar.loadMarks();
+            }
+        },
+        updateMark: function(id, time, desc){
+            var self = this;
+            var url, data;
+
+            var type;
+
+            if((id == 0) && (!desc || desc == '来创建今天新的日程吧！')) {
+                return;
+            }
+
+            User.CheckLogin();
+
+            if(!id || id == 0 ) {
+                type = 'add';
+                url = URL + '/addSchedule';
+                data = {
+                    time: time/1000,
+                    desc: desc
+                };
+            }else{
+                type = 'update';
+                url = URL + '/updateSchedule';
+                data = {
+                    time: time/1000,
+                    desc: desc,
+                    id: id
+                };
+            }
+            Calendar.request({
+                url: url,
+                data: data
+            }).fail(function(c, e){
+            }).done(function(d){
+                if(type == 'add') {
+                    Calendar.marksStore[Calendar.currentMarkId][Calendar.currentDate].push({
+                        id: d,
+                        time: time,
+                        desc: desc
+                    });
+                    self.element.attr('data-id', d);
+                }
+            });
+
+            if(type == 'update') {
+                $.each(Calendar.marksStore[Calendar.currentMarkId][Calendar.currentDate], function(k, v){
+                    if(v.id == id) {
+                        v.desc = desc;
+                    }
+                });
+            }
+
+            $.each(Calendar.marksStore[Calendar.currentMarkId][Calendar.currentDate], function(k, v){
+                if(!v) return;
+                if(v.id == 0){
+                    Calendar.marksStore[Calendar.currentMarkId][Calendar.currentDate].splice(k, 1);
+                    var tt = $('.cal-date-marks-table').find('[data-id=0]').attr('data-time');
+                    Calendar.DateView.all_lis[tt].refresh();
+                }
+            });
+
+        }
+    });
 
     Calendar.DateView = {
         Init: function() {
@@ -516,94 +691,51 @@ $(function(){
 
             $('.cal-date-marks-table').on('click', 'li', function(){
                 if($(this).find('input').size()) return;
-
-                if($(this).find('.desc-content').size()){
-
-                    var x = $(this).find('.desc-content').attr('title');
-                    var d = $(this).find('.desc');
-                    var c = $(this).find('.desc-content').attr('data-color');
-                    d.html('<div class="desc-input-div"><input type="text" data-old="' + x + '" data-color="' + c + '" value="' + x + '" /><!--b class="blue" data-code="b"></b><b class="green" data-code="g"></b><b class="red" data-code="r"></b--></div>');
-                    d.find('input').select();
-                    d.find('.' + c).addClass('active');
-                    
-
-                }else{
-                    var d = $(this).find('.desc')//.parent('.desc');
-                    d.html('<div class="desc-input-div"><input type="text" value="" /><!--b class="blue active" data-code="b"></b><b class="green" data-code="g"></b><b class="red" data-code="r"></b--></div>');
-                    d.find('input').select();   
-
-                }
-                $(this).append('<a class="delete-btn" href="javascript:;">×</a>')
-
-                return false;
+                var time = $(this).attr('data-time');
+                var mark = self.all_lis[time];
+                $.each(self.all_lis, function(k, v){
+                    if(v.element.find('.desc-input-div').size()){
+                        var id = v.element.attr('data-id');
+                        var desc = v.element.find('input').val();
+                        var time = v.element.attr('data-time');
+                        time = Date.today().setHours(time);
+                        v.setMark(id, desc);
+                        v.updateMark(id, time, desc);
+                    }
+                });
+                mark.edit();
             });
 
 
             $('.cal-date-marks-table').on('click', '.delete-btn', function(){
                 var li = $(this).parent('li');
-                var id = li.attr('data-id');
-                if(li.find('input').size()) {
-                    var input = li.find('input');
-                    var desc = input.attr('data-old')// + self.colorCode + input.attr('data-color').charAt(0);
-                    var h = li.attr('data-time');
-                    var time = Date.today();
-                    var id = li.attr('data-id');
-                    time.setHours(h);
-                    Calendar.update(id, time, desc);
-                }
-                if(id && id != 0){
-                    Calendar.deleteMark(id);
-                }
+                var time = li.attr('data-time');
+                self.all_lis[time].deleteMark();
                 return false;
             });
 
-            /*
-            $('.cal-date-marks-table').on('click', '.desc-content', function(){
-                if($(this).find('input').size()) return;
-                var x = $(this).attr('title');
-                var d = $(this).parent('.desc');
-                var c = $(this).attr('data-color');
-                d.html('<div class="desc-input-div"><input type="text" data-old="' + x + '" data-color="' + c + '" value="' + x + '" /><!--b class="blue" data-code="b"></b><b class="green" data-code="g"></b><b class="red" data-code="r"></b--></div>');
-                d.find('input').select();
-                d.find('.' + c).addClass('active');
-            });
-            */
-
-            $('.cal-date-marks-table').on('click', '.desc-input-div b', function(){
-                $(this).siblings('b').removeClass('active').end().addClass('active');
-            });
-
-
             $('.cal-date-marks-table').on('keydown', 'input', function(e){
                 if(e.keyCode == 13){
-                    var input = $(this);
-                    var li = input.parents('li');
-                    var desc = input.val()// + self.colorCode + li.find('.active').attr('data-code');
-                    var h = li.attr('data-time');
-                    var time = Date.today();
-                    var id = li.attr('data-id');
-                    time.setHours(h);
-                    Calendar.update(id, time, desc);
-                }else if(e.keyCode == 27){
-                    var input = $(this);
-                    var li = input.parents('li');
-                    var desc = input.attr('data-old')// + self.colorCode + input.attr('data-color').charAt(0);
-                    var h = li.attr('data-time');
-                    var time = Date.today();
-                    var id = li.attr('data-id');
-                    time.setHours(h);
-                    Calendar.update(id, time, desc);
+                    var time = $(this).parents('li').attr('data-time');
+                    var mark = self.all_lis[time];
+                    var id = mark.element.attr('data-id');
+                    var desc = mark.element.find('input').val();
+                    var time = mark.element.attr('data-time');
+                    time = Date.today().setHours(time);
+                    mark.setMark(id, desc);
                 }
-            });/*.on('mouseout', 'input', function(){
-                var input = $(this);
-                var li = input.parents('li');
-                var desc = input.val()// + self.colorCode + li.find('.active').attr('data-code');
-                var h = li.attr('data-time');
-                var time = Date.today();
-                var id = li.attr('data-id');
-                time.setHours(h);
-                Calendar.update(id, time, desc);
-            });*/
+            });
+
+            $('.cal-date-marks-table').on('blur', 'input', function(e){
+                var time = $(this).parents('li').attr('data-time');
+                var mark = self.all_lis[time];
+                var id = mark.element.attr('data-id');
+                var desc = mark.element.find('input').val();
+                var time = mark.element.attr('data-time');
+                time = Date.today().setHours(time);
+                mark.setMark(id, desc);
+                mark.updateMark(id, time, desc);
+            });
 
         },
         renderMarks: function() {
@@ -617,19 +749,14 @@ $(function(){
             var lis = '';
             var count = 0;
 
-            var all_lis = '';
+            var all_lis = self.all_lis = {};
             var tem = '';
+            $('.cal-date-marks-table').empty();
             for(var i = 0; i < 24; i+=2) {
-                if(i < 10) {
-                    tem = '0' + i;
-                }else{
-                    tem = i;
-                }
-                all_lis += '<li class="line_'+i+'" data-time="'+i+'"><b class="dot"></b><span class="time">'+tem+':00</span><span class="desc"><a class="add-btn" href="javascript:;">增加日程</a></span></li>';
+                all_lis[i] = new MarkLine(i);
+                $('.cal-date-marks-table').append(all_lis[i].element);
             }
 
-
-            $('.cal-date-marks-table').html(all_lis);
             var v;
             var len = marks.length;
             var h;
@@ -642,34 +769,11 @@ $(function(){
             for(var i = 0; i < len; i++){
                 v = marks[i];
                 h = (new Date(v.time * 1000)).getHours();
-                desc = v.desc;
-                if(desc.search(self.colorCode) >= 0){
-                    tem = desc.split(self.colorCode);
-                    color = self.colors[tem[1]];
-                    desc = tem[0];
-                }else{
-                    color = 'blue';
-                }
-
                 if(h % 2 != 0) h -= 1;
-                line = $('.cal-date-marks-table').find('.line_' + h);
-                if(h < 10) h = '0' + h;
-                line.find('.time').html(h + ':00');
-
-                if(desc.length > 15) {
-                    short_desc = desc.substring(0, 13) + '...';
-                }else{
-                    short_desc = desc;
-                }
-                /*
-                if(!line.find('.add-btn').size()){
-                    continue;
-                }*/
-
-                line.find('.desc').html('<a class="desc-content ' + color + '" data-color="' + color + '" title="' + desc + '" href="javascript:;">' + short_desc + '</a>');
-                line.append('<a class="delete-btn" href="javascript:;">×</a>');
-                line.attr('data-id', v.id);
+                all_lis[h].setMark(v.id, v.desc);
             }
+
+
             $('.cal-date-marks-table').find('li:last').css({
                 'border': 0,
                 'height': '35px'
