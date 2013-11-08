@@ -1314,10 +1314,11 @@ class IndexAction extends CommonAction {
     protected function getWeatherData() {
         
         $weather = A('Home/Weather');
-        $data = json_decode($weather->getJsonData());
+        $city_id = $_COOKIE['weather_region'];
+        $data = json_decode($weather->getJsonData($city_id));
         $weatherData = array(
             'city' => $data->n,
-            'temp' => $data->t,
+            'temp' => $data->t == 'NA' ? $data->d1->l . '-' . $data->d1->h : $data->t,
             'sun'  => $data->s,
             'air'  => $data->i->aq->label
         );

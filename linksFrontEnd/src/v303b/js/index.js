@@ -140,26 +140,23 @@ var ZhiDaLan = { // 直达框
 	}
 };
 
-
 var Zld = { // 自留地
 	IsSortable: false,
 	//是否为拖拽点击，true则不打开自留地网址
-	Resize: function() {
-		//自适应算法
+	_resizeLine: function(start){
+
 		var box = $('#J_sortable');
-
-		//先恢复默认值
-		box.find('.nm').removeAttr('style').css({
-			'padding-left': self.holderPaddingLeft,
-			'padding-right': self.holderPaddingRight
-		});
-
 		var boxWidth = box.width();
-		var lis = box.find('li');
+		if(start == 0){
+			var lis = box.find('li');
+		}else{
+			var lis = box.find('li:gt('+(start)+')');
+		}
 
 		var liWidth = 0;
 		var overIndex = null;
 		var fstLineWidth = null;
+
 		$.each(lis, function(k, v) {
 			liWidth += ($(v).width() + 5);
 			if (!overIndex && liWidth > boxWidth) {
@@ -167,9 +164,10 @@ var Zld = { // 自留地
 				fstLineWidth = liWidth - $(v).width() - 5;
 			}
 		});
+		overIndex += start;
 
-		lis.find('.nm').trigger('mouseout');
-		if (liWidth <= boxWidth) return;
+		//lis.find('.nm').trigger('mouseout');
+		if (liWidth <= boxWidth) return false;
 		if (boxWidth - fstLineWidth > 65) {
 			var w = lis.eq(overIndex).width() + 5 - (boxWidth - fstLineWidth);
 			var xw = Math.ceil(w / (overIndex + 1) / 2);
@@ -201,7 +199,31 @@ var Zld = { // 自留地
 				});
 			});		
 
-		}
+		}	
+		return overIndex;	
+	},
+	Resize: function() {
+		//自适应算法
+		var self = this;
+		var box = $('#J_sortable');
+
+		//先恢复默认值
+		box.find('.nm').removeAttr('style').css({
+			'padding-left': self.holderPaddingLeft,
+			'padding-right': self.holderPaddingRight
+		});
+		var oi;
+		var s = 0;
+		
+		oi = self._resizeLine(s);
+		//oi = self._resizeLine(oi-1);
+		/*
+		do{
+			oi = self._resizeLine(s);
+			s = oi;
+		}while(oi !== false);
+		*/
+
 	},
 	Init: function() {
 		var self = this;
@@ -485,111 +507,6 @@ var Zld = { // 自留地
 		return hl;
 	}
 };
-
-/*
-
-var MusicPlayer = {
-	Init: function() {
-		var self = this;
-		$('#J_Music').find('.top-mv .nm a').on('click', function() {
-			self.Play($(this).data('url'), 1);
-			return false;
-		});
-		$('#J_Music').find('.hot-music a').on('click', function() {
-			self.Play($(this).data('url'), 2, $(this).closest('li').data('id'));
-			return false;
-		})
-
-		$('#J_Music').on('mouseenter', '.top-mv li', function() {
-			$(this).find('.music-controller').show();
-		});
-
-		var ctrls = $('.music-controller');
-		ctrls.on('mouseleave', function() {
-			if ($(this).find('.pause').length) return;
-			$(this).hide();
-		}).on('click', '.go', function() {
-			var b = $(this);
-			b.removeClass('go').addClass('pause');
-			$('.music .on').removeClass('on');
-			var url = b.parent('.music-controller').siblings('.nm').find('a').addClass('on').attr('data-url');
-			self.Play(url);
-			b.parents('li').siblings('li').find('.big').removeClass('pause').addClass('go').parent('.music-controller').hide();
-		}).on('click', '.pause, .stop', function() {
-			var b = $(this);
-			b.removeClass('pause').addClass('go');
-			$('.music .on').removeClass('on');
-			self.Stop();
-			b.parent('.music-controller').hide();
-		}).on('click', '.next', function() {
-			$(this).parent('.music-controller').show().find('.big').removeClass('go').addClass('pause')
-			var on = $('.music .on');
-			var id;
-			if (on.length == 0 || on.parents('.top-mv').length != 0) {
-				id = 1;
-			} else {
-				id = on.parent('li').attr('data-id') * 1 + 1;
-			}
-			on.removeClass('on');
-			if ($('.song' + id).length == 0) id = 1;
-			var url = $('.song' + id).find('a').addClass('on').attr('data-url');
-			self.Play(url);
-			$(this).parents('li').siblings('li').find('.big').removeClass('pause').addClass('go').parent('.music-controller').hide();
-		}).on('click', '.prev', function() {
-			$(this).parent('.music-controller').show().find('.big').removeClass('go').addClass('pause');
-			var on = $('.music .on');
-			var id;
-			var last_id = $('.hot-music').find('li:last').attr('data-id');
-			if (on.length == 0 || on.parents('.top-mv').length != 0) {
-				id = last_id;
-			} else {
-				id = on.parent('li').attr('data-id') * 1 - 1;
-			}
-			on.removeClass('on');
-			if ($('.song' + id).length == 0) id = last_id;
-			var url = $('.song' + id).find('a').addClass('on').attr('data-url');
-			self.Play(url);
-			$(this).parents('li').siblings('li').find('.big').removeClass('pause').addClass('go').parent('.music-controller').hide();
-		});
-
-	},
-	Play: function(url, type, id) { //type=1 专辑 type=2 单曲
-		$('#J_Music').find('.top-mv li').eq(0).trigger('mouseover');
-
-		var mc = $('#J_Music').find('.music-control');
-		//$('.music-controller').find('.big').removeClass('go').addClass('pause');
-		if (id) {
-			$('.top' + 1).find('.music-controller').show().find('.big').removeClass('go').addClass('pause');
-			$('.top' + 2).find('.music-controller').hide().find('.big').removeClass('pause').addClass('go');
-		}
-
-		if (!$('#J_MusicPlayer').size()) {
-			//兼容模式下iframe display:none 不播 包括父级 display:none 也不播
-			//TODO
-			$('body').append('<p style="height:0;overflow:hidden;"><iframe id="J_MusicPlayer" frameborder="0" style="visibility:hidden;" src="' + url + '"></iframe></p>');
-		} else {
-			$('#J_MusicPlayer').attr('src', url);
-		}
-
-		$('#J_MusicPlayer').data('type', type);
-		$('#J_MusicPlayer').data('currid', id ? id: 0);
-		if (type == 1) {
-			//TODO
-		} else if (type == 2) {
-			$('.top-mv .nm a').removeClass('on');
-			var o = $('.song' + id);
-			o.siblings().find('a').removeClass('on');
-			o.find('a').addClass('on');
-		}
-	},
-	Stop: function() {
-		$('.hot-music>ul>li>a').removeClass('on');
-		$('.top-mv .nm a').removeClass('on');
-		$('#J_MusicPlayer').size() && $('#J_MusicPlayer').remove();
-	}
-};
-
-*/
 
 
 var HelpMouse = {
