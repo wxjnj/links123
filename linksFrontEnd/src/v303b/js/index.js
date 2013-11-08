@@ -583,7 +583,7 @@ var HelpMouse = {
 				}
 			} //else{
 
-			if ((mousePos.y < zld_top_pos) && (mousePos.x > search_text_left_end_pos)) {
+			if ((mousePos.y < app_top_pos) && (mousePos.x > search_text_left_end_pos)) {
 				if ($('#J_thl_div').is(':hidden') && $('#J_thl_div').attr('data-hide') == 'true') {
 					$('#J_thl_div').attr('data-hide', 'false').show();
 				}

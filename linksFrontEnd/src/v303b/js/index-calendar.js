@@ -18,7 +18,7 @@ $(function(){
         $('.pic-news-tabs').find('a').removeClass('active');
         $(this).addClass('active');
         changeNews();
-        autoChangeNews();
+        //autoChangeNews();
     }).on('mouseenter', 'a', function(){
         var $this = $(this)
         clearTimeout(window.newsTimer);
@@ -28,7 +28,7 @@ $(function(){
         changeNews();
         //autoChangeNews();
     }).on('mouseout', 'a', function(){
-        autoChangeNews();
+        //autoChangeNews();
     });
 
     function autoChangeNews(){
@@ -45,8 +45,9 @@ $(function(){
             $('.pic-news-tabs').find('a:eq(' + o + ')').addClass('active');
 
             changeNews();
-
-            autoChangeNews()
+            if(o != 0){
+                autoChangeNews()
+            }
         }, 5000);
     }
 

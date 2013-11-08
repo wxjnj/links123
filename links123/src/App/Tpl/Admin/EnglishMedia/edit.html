@@ -2,6 +2,7 @@
 <include file="Public:header" />
 <load href="__PUBLIC__/skin/easyui/themes/metro/easyui.css" />
 <load href="__PUBLIC__/Js/Jquery/jquery.js" />
+<load href="__PUBLIC__/Js/Jquery/jqueryform.js" />
 <load href="__PUBLIC__/skin/easyui/locale/easyui-lang-zh_CN.js" /> 
 <load href="__PUBLIC__/skin/easyui/jquery.easyui.min.js" />
 
@@ -98,7 +99,7 @@
                         <textarea style="height: 40px;width: 600px;" name="media_thumb_img">{$vo.media_thumb_img}</textarea>
                         <a id="media_thumb_btn" href="javascript:;">查看</a>
                         <img id="thumb_img" style="width: 320px; height: 240px; display: none; position: absolute; right: 20px;" src="{$vo.media_thumb_img}" />
-                        <!--<a href="javascript:;" id='upload_thumb_btn'>上传缩略图</a>-->
+                        <a href="javascript:;" id='upload_thumb_btn'>上传缩略图</a>
                     </td>
                 </tr>
                 <tr>
@@ -135,15 +136,42 @@
     </div>
 </div>
 <div id="import_dialog" class="easyui-dialog" style="width:250px;height:auto;" data-options="title:'请选择导入文件',shadow:false,modal:true,closed:true,closable:true">
-    <form method='post' id="frm_att" action="{:C('VIDEO_UPLOAD_PATH')}upload_file.php" enctype="multipart/form-data">
+    <form method='post' id="frm_att" action="{:C('VIDEO_UPLOAD_PATH')}upload_image.php" enctype="multipart/form-data">
         <input name="file" id="file_att" type="file" />
-        <input type="hidden" name="folder" value="Excels" />
-        <input type="hidden" name="id" value="att" />
+        <input type="hidden" name="token" value="{$token}" />
+        <input type="hidden" name="path" value="{$upload_path}" />
+        <input type="hidden" name="file_name" value="{$file_name}" />
     </form>
+</div>
+<div id="dialog" class="easyui-dialog" style="width:225px;height:auto;" data-options="title:'导入试题中',shadow:false,modal:true,closed:true,closable:false">
+    <img style="" src="__PUBLIC__/Images/loading.gif" />
 </div>
 
 <script type="text/javascript">
+    function showRequest(formData, jqForm, options) {
+        $("#dialog").window({title: "上传缩略图中..."});
+        $("#dialog").window("open");
+        return true;
+    }
+    //
+    function showResponse(responseText, statusText)  {
+        $("#file_att").val('');
+        $("#dialog").window("close");
+        responseText = jQuery.parseJSON(responseText);
+        alert(responseText.info);
+        if(responseText.status){
+            $("[name='media_thumb_img']").text("{:C('VIDEO_UPLOAD_PATH')}"+responseText.data['save_path']+responseText.data['save_name']+"."+responseText.data['extension']);
+            $("#thumb_img").attr("src","{:C('VIDEO_UPLOAD_PATH')}"+responseText.data['save_path']+responseText.data['save_name']+"."+responseText.data['extension']+"?"+Date.parse(new Date()));
+        }
+        //alert('status: ' + statusText + '\n\nresponseText: \n' + responseText);
+    }
     $(function() {
+        
+        var options = {beforeSubmit: showRequest,success: showResponse};
+        $("#frm_att").submit(function() {
+            $(this).ajaxSubmit(options); 
+            return false;
+        });
         
         $("#file_att").change(function(){
             if ( $(this).val() != '' ) {
@@ -165,6 +193,7 @@
                 $(this).text("隐藏");
             }
         })
+        
         var object = $("input[name='object']").val();
         $("#object_" + object).css("color", "#FF0000").siblings("label").css("color", "#000000");
         var level = $("input[name='level']").val();

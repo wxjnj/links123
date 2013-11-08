@@ -240,7 +240,15 @@ class EnglishMediaAction extends CommonAction {
             $vo['media_text_url'] = "http://".$vo['media_source_url'];
         }
         $host = explode('.', parse_url($vo['media_source_url'], PHP_URL_HOST));
-        var_dump($host);
+        if(!isset($host[1])){
+            $host[1] = "others";
+        }
+        $upload_path = $host[1]."/".date("Ymd",$vo['created'])."/";
+        $file_name = md5($vo['media_source_url']);
+        $token = md5($upload_path.date("Ymd")."!@#$%");
+        $this->assign("file_name",$file_name);
+        $this->assign("upload_path",$upload_path);
+        $this->assign("token",$token);
 
         //科目列表
         $object_list = D("EnglishObject")->where("`status`=1")->order("sort")->select();
@@ -276,21 +284,6 @@ class EnglishMediaAction extends CommonAction {
             $model->difficulty = 3;
         } else {
             $model->difficulty = 2;
-        }
-        if (!empty($_FILES['img']['name'])) {
-            import("@.ORG.UploadFile");
-            $upload = new UploadFile();
-            $upload->maxSize = 11000000; // 设置附件上传大小
-            $upload->allowExts = array('jpeg', 'jpg', 'png', 'gif'); // 设置附件上传类型
-            $upload->saveRule = time();
-            $dir_name = date("Ym");
-            $upload->savePath = C("ENGLISH_MEDIA_IMG_PATH") . "/" . $dir_name . "/"; // 设置附件上传目录
-            if (!$upload->upload()) {// 上传错误提示错误信息
-                $this->error($upload->getErrorMsg());
-            } else {// 上传成功 获取上传文件信息
-                $info = $upload->getUploadFileInfo();
-                $model->media_thumb_img = $dir_name . "/" . $info[0]['savename'];
-            }
         }
         $media_id = $media['media_id'] = $model->id;
         $media['media_source_url'] = $model->media_source_url;
