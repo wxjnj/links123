@@ -269,8 +269,9 @@ class EnglishMediaAction extends CommonAction {
             if(!isset($host[1])){
                 $host[1] = "others";
             }
-            $upload_path = "/mnt/www/video/".$host[1]."/".date("Ymd",$media_info['created'])."/";
+            $upload_path = $host[1]."/".date("Ymd",$media_info['created'])."/";
             $file_name = md5($media_info['media_source_url']);
+            $token = md5($upload_path.$file_name.date("Ymd")."!@#$%");
             import("@.ORG.UploadFile");
             $upload = new UploadFile();
             $upload->maxSize = 11000000; // 设置附件上传大小
@@ -281,13 +282,21 @@ class EnglishMediaAction extends CommonAction {
                 $this->error($upload->getErrorMsg());
             } else {// 上传成功 获取上传文件信息
                 $info = $upload->getUploadFileInfo();
-                $conn_id = ftp_ssl_connect(C("VIDEO_UPLOAD_PATH"));
-                $login_result = ftp_login($conn_id, "root", "L1i2n3kS");
-                if(false === $login_result){
+                
+                
+                $ch = curl_init();
+                $data = array('file'=>'@'. realpath($info[0]['savepath'] . $info[0]['savename']),'token'=>$token,"file_name"=>$file_name,"path"=>$upload_path);
+                curl_setopt($ch,CURLOPT_URL,C("VIDEO_UPLOAD_PATH")."upload_image.php");
+                curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
+                curl_setopt($ch,CURLOPT_POST,true);
+                curl_setopt($ch,CURLOPT_POSTFIELDS,$data);
+                $result = curl_exec($ch);
+                curl_close($ch);
+                $ret = json_decode($result);
+                if($ret.status === false){
                     $model->rollback();
-                    $this->error("编辑失败");
+                    $this->error($ret.info);
                 }
-                $upload = ftp_put($conn_id, $upload_path.$file_name . "." . $info[0]['extension'],$info[0]['savepath'] . $info[0]['savename'], FTP_BINARY);
                 $model->media_thumb_img = C("VIDEO_UPLOAD_PATH") . $upload_path . $file_name . "." . $info[0]['extension'];
             }
         }
