@@ -779,7 +779,7 @@ $( function($) {
 			];
 
 
-			self.changeMode('normal', true);
+			self.changeMode('mini', true);
 			var lis = '';
 			var divs = '';
 			$.each(self.music_channel_list, function(k, v){
@@ -929,7 +929,7 @@ $( function($) {
 			$('.mini_current_channel').find('.mini_music_channel_btn').appendTo('.mini_channel_list');
 			$('.mini_music_channel_' + id).appendTo('.mini_current_channel');
 		},
-		changeMode: function(mode, isFirst){
+		changeMode: function(mode, isFirst, iconClick){
 			var self = this;
 			if(!isFirst && parseInt($('#J_box_music').css('left')) != 0){
 				self.changeNormalPosition();
@@ -1012,6 +1012,7 @@ $( function($) {
 		$('a[data-href="#J_box_music"]').on('click', function(){
 			setTimeout(function(){
 				MusicBox.changeMode('normal');
+				MusicBox.changeNormalPosition();
 			}, 0);
 		});
 
