@@ -146,18 +146,16 @@ var Zld = { // 自留地
 	_resizeLine: function(start){
 
 		//console.log('=======================');
-
+		//console.log(start);
 		var box = $('#J_sortable');
 		var boxWidth = box.width();
 		if(start == 0){
 			var lis = box.find('li');
+			start = -1;
 		}else{
-			//修正pos偏移 （非完美 需要重新在算法里排查）
-			//if(box.find('li:eq('+(start + 1)+')').find('.nm').css('padding-left') != '25px'){
-			//	start += 1;
-			//}
 			var lis = box.find('li:gt('+(start)+')');
 		}
+		//console.log(lis[0]);
 
 		var liWidth = 0;
 		var overIndex = null;
@@ -167,19 +165,18 @@ var Zld = { // 自留地
 			liWidth += ($(v).width() + 5);
 			if (!overIndex && liWidth > boxWidth) {
 				overIndex = k;
-				fstLineWidth = liWidth - $(v).width() - 5;
+				fstLineWidth = liWidth - $(v).width();
 			}
 		});
 
 		if (liWidth <= boxWidth) return false;
 
 		oi = overIndex + start;
-		
+		//console.log(boxWidth - fstLineWidth);
 		if (boxWidth - fstLineWidth > 55) {
 			var w = lis.eq(overIndex).width() + 5 - (boxWidth - fstLineWidth);
 			var xw = Math.floor(w / (overIndex + 1) / 2);
-			var diff = w - xw * (overIndex + 1) * 2 + 2;
-
+			var diff = w - xw * (overIndex + 1) * 2;
 			var s = lis.filter(':lt(' + (overIndex + 1) + ')');
 			$.each(s, function(k, v) {
 				var opl = $(v).find('.nm').css('padding-left');
@@ -199,12 +196,12 @@ var Zld = { // 自留地
 					'padding-right': opr - xw + 'px'
 				});
 			});
+			oi += 1;
 		} else if(boxWidth - fstLineWidth <= 55 && boxWidth - fstLineWidth > 0) { 
 			// 差距过小，使用本行增加宽度适应行宽
 			var w = boxWidth - fstLineWidth;
-			var xw = Math.floor(w / (overIndex) / 2) - 2;
-			var diff = w - xw * 2 * overIndex;
-
+			var xw = Math.floor(w / (overIndex) / 2);
+			var diff = w - xw * 2 * overIndex ;
 			var s = lis.filter(':lt(' + overIndex + ')');
 			$.each(s, function(k, v){
 				var opl = $(v).find('.nm').css('padding-left');
@@ -223,7 +220,7 @@ var Zld = { // 自留地
 					'padding-left': opl + xw + 'px',
 					'padding-right': opr + xw + 'px'
 				});
-			});		
+			});
 		}
 		return oi;	
 	},
@@ -239,11 +236,18 @@ var Zld = { // 自留地
 		});
 		var oi;
 		var s = 0;
-		
+		//oi = self._resizeLine(s);
+		//oi = self._resizeLine(oi);
+		//oi = self._resizeLine(oi);
+		//oi = self._resizeLine(oi);
+		//oi = self._resizeLine(oi);
+		//oi = self._resizeLine(oi);
+		/**/
 		do{
 			oi = self._resizeLine(s);
 			s = oi;
 		}while(oi !== false);
+		/**/
 
 	},
 	Init: function() {
