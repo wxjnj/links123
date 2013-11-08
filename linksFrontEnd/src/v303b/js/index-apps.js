@@ -793,8 +793,9 @@ $( function($) {
 
 			//默认播放第一个频道
 			if($.cookies.get('music_box_v303_close') != 1){
-				$('.music-close-tip').show();   // 关闭提示
+				//$('.music-close-tip').show();   // 关闭提示
 				self.play();
+				self.pause();
 			}else{
 				self.play();
 				self.pause();
