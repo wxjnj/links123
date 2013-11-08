@@ -178,7 +178,7 @@ var Zld = { // 自留地
 		if (boxWidth - fstLineWidth > 55) {
 			var w = lis.eq(overIndex).width() + 5 - (boxWidth - fstLineWidth);
 			var xw = Math.floor(w / (overIndex + 1) / 2);
-			var diff = w - xw * (overIndex + 1) * 2 + 1;
+			var diff = w - xw * (overIndex + 1) * 2 + 2;
 
 			var s = lis.filter(':lt(' + (overIndex + 1) + ')');
 			$.each(s, function(k, v) {
@@ -202,7 +202,7 @@ var Zld = { // 自留地
 		} else if(boxWidth - fstLineWidth <= 55 && boxWidth - fstLineWidth > 0) { 
 			// 差距过小，使用本行增加宽度适应行宽
 			var w = boxWidth - fstLineWidth;
-			var xw = Math.floor(w / (overIndex) / 2) - 1;
+			var xw = Math.floor(w / (overIndex) / 2) - 2;
 			var diff = w - xw * 2 * overIndex;
 
 			var s = lis.filter(':lt(' + overIndex + ')');
