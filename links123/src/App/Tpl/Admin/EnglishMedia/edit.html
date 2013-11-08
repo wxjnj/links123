@@ -1,6 +1,9 @@
 <tagLib name="html" />
 <include file="Public:header" />
-<load href="__PUBLIC__/skin/js/jquery-1.8.0.min.js" />
+<load href="__PUBLIC__/skin/easyui/themes/metro/easyui.css" />
+<load href="__PUBLIC__/Js/Jquery/jquery.js" />
+<load href="__PUBLIC__/skin/easyui/locale/easyui-lang-zh_CN.js" /> 
+<load href="__PUBLIC__/skin/easyui/jquery.easyui.min.js" />
 
 <div id="main" class="main" >
     <div class="content">
@@ -95,7 +98,7 @@
                         <textarea style="height: 40px;width: 600px;" name="media_thumb_img">{$vo.media_thumb_img}</textarea>
                         <a id="media_thumb_btn" href="javascript:;">查看</a>
                         <img id="thumb_img" style="width: 320px; height: 240px; display: none; position: absolute; right: 20px;" src="{$vo.media_thumb_img}" />
-                        <!--<input name="img" type="file" />-->
+                        <!--<a href="javascript:;" id='upload_thumb_btn'>上传缩略图</a>-->
                     </td>
                 </tr>
                 <tr>
@@ -131,9 +134,28 @@
         </form>
     </div>
 </div>
+<div id="import_dialog" class="easyui-dialog" style="width:250px;height:auto;" data-options="title:'请选择导入文件',shadow:false,modal:true,closed:true,closable:true">
+    <form method='post' id="frm_att" action="{:C('VIDEO_UPLOAD_PATH')}upload_file.php" enctype="multipart/form-data">
+        <input name="file" id="file_att" type="file" />
+        <input type="hidden" name="folder" value="Excels" />
+        <input type="hidden" name="id" value="att" />
+    </form>
+</div>
 
 <script type="text/javascript">
     $(function() {
+        
+        $("#file_att").change(function(){
+            if ( $(this).val() != '' ) {
+                $("#import_dialog").window("close");
+                $("#frm_att").submit();
+            }
+        });
+        
+        $("#upload_thumb_btn").click(function(){
+            $("#import_dialog").window("open");
+        })
+        
         $("#media_thumb_btn").click(function(){
             if($("#thumb_img").is(":visible")){
                 $("#thumb_img").css("display","none");
