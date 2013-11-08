@@ -618,7 +618,7 @@ $(function(){
                 return;
             }
 
-            User.CheckLogin();
+            //User.CheckLogin();
 
             if(!id || id == 0 ) {
                 type = 'add';
