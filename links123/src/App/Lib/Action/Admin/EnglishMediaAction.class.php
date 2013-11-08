@@ -236,6 +236,11 @@ class EnglishMediaAction extends CommonAction {
         $vo = $model->find($id);
         $vo['name'] = htmlspecialchars($vo['name']);
         $this->assign('vo', $vo);
+        if(!preg_match("/^((http)|(https):\/\/)/i", $vo['media_source_url'])){
+            $vo['media_text_url'] = "http://".$vo['media_source_url'];
+        }
+        $host = explode('.', parse_url($vo['media_source_url'], PHP_URL_HOST));
+        var_dump($host);
 
         //科目列表
         $object_list = D("EnglishObject")->where("`status`=1")->order("sort")->select();
