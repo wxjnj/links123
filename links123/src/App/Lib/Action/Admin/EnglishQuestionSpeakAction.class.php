@@ -1038,6 +1038,13 @@ class EnglishQuestionSpeakAction extends CommonAction {
         $type = 0; //说力
         
         $model = D("EnglishCatquestion");
+        $cat_attr_id = D("EnglishCategory")->where(array("cat_id"=>$cat_id))->getField("cat_attr_id");
+        if($cat_attr_id !== false){
+            $cat_attr_id = sprintf("%03d",decbin($cat_attr_id));
+            $voice = substr($cat_attr_id, 0, 1);
+            $target = substr($cat_attr_id, 1, 1);
+            $pattern = substr($cat_attr_id, 2, 1);
+        }
         $model->startTrans();
         $cat_map = array(
             "cat_id"=>$cat_id,
@@ -1060,9 +1067,9 @@ class EnglishQuestionSpeakAction extends CommonAction {
 
         $ret = $this->cEnglishQuestionLogic->saveProperty(
                                                     $question_id, 
-                                                    null, 
-                                                    null, 
-                                                    null, 
+                                                    $voice, 
+                                                    $target, 
+                                                    $pattern, 
                                                     $level_one, 
                                                     $level_two, 
                                                     $level_thr, 
@@ -1181,6 +1188,12 @@ class EnglishQuestionSpeakAction extends CommonAction {
         $ids = explode(",", $id);
         //删除指定记录
         $model = D("EnglishCatquestion");
+                $total = $model->alias("a")
+                ->join(C("DB_PREFIX")."english_category b on a.cat_id=b.cat_id")->where(array("a.question_id"=>$question_id,"b.level_one"=>array("neq",-1)))->count("a.cat_id");
+        //保证需要有一个分类
+        if(intval($total) == 1){
+            $this->error("最后一个分类，不能删除");
+        }
         $cat_condition = array(
             "cat_id" => array('in', $ids),
             );

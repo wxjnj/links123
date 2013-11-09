@@ -407,6 +407,13 @@ class EnglishQuestionAction extends CommonAction {
             "question_id"=>$question_id,
             "type"=>$type
         );
+        $cat_attr_id = D("EnglishCategory")->where(array("cat_id"=>$cat_id))->getField("cat_attr_id");
+        if($cat_attr_id !== false){
+            $cat_attr_id = sprintf("%03d",decbin($cat_attr_id));
+            $voice = substr($cat_attr_id, 0, 1);
+            $target = substr($cat_attr_id, 1, 1);
+            $pattern = substr($cat_attr_id, 2, 1);
+        }
         $model->startTrans();
         if(false === $model->where($cat_map)->delete()){
             $model->rollback();
@@ -424,9 +431,9 @@ class EnglishQuestionAction extends CommonAction {
 
         $ret = $this->cEnglishQuestionLogic->saveProperty(
                                                     $question_id, 
-                                                    null, 
-                                                    null, 
-                                                    null, 
+                                                    $voice, 
+                                                    $target, 
+                                                    $pattern, 
                                                     $level_one, 
                                                     $level_two, 
                                                     $level_thr, 
@@ -452,6 +459,12 @@ class EnglishQuestionAction extends CommonAction {
         $ids = explode(",", $id);
         //删除指定记录
         $model = D("EnglishCatquestion");
+        $total = $model->alias("a")
+                ->join(C("DB_PREFIX")."english_category b on a.cat_id=b.cat_id")->where(array("a.question_id"=>$question_id,"b.level_one"=>array("neq",-1)))->count("a.cat_id");
+        //保证需要有一个分类
+        if(intval($total) == 1){
+            $this->error("最后一个分类，不能删除");
+        }
         $cat_condition = array(
             "cat_id" => array('in', $ids),
             );
@@ -530,6 +543,7 @@ class EnglishQuestionAction extends CommonAction {
         $model = D("EnglishQuestion");
         $answer = intval($_POST['answer']);
         $optionModel = D("EnglishOptions");
+        $is_empty_question  = intval($_POST['is_empty_question']) == 1 ? true : false;
         $model->startTrans();
         
         //判断题目是否为判断题
@@ -585,7 +599,7 @@ class EnglishQuestionAction extends CommonAction {
         if (!empty($_REQUEST['media_source_url'])) {
             $this->media_text_url = $_REQUEST['media_source_url'];
             $mediaMap = array();
-            $mediaMap['media_source_url'] = ftrim($_REQUEST['media_source_url']);
+            $mediaMap['media_source_url'] = array("like",$_REQUEST['media_source_url']);
             $mediaId = intval($mediaModel->where($mediaMap)->getField('id'));
         }
         if ($mediaId == 0 && !empty($_REQUEST['media_name'])) {
@@ -600,21 +614,23 @@ class EnglishQuestionAction extends CommonAction {
             $model->status = 0;
         }
         //选项是否有重复，有则题目停用
-        if ($model->status == 1 && count(array_unique($_POST['option'])) < count($_POST['option']) && !($is_double_false && $is_double_true)) {
+        if (!$is_empty_question && $model->status == 1 && count(array_unique($_POST['option'])) < count($_POST['option']) && !($is_double_false && $is_double_true)) {
             $model->status = 0;
         }
 
-        $model->answer = $option_id[$answer - 1];
-        if ($model->status == 1 && $answer <= 0 || empty($option_id) || empty($option_id[$answer - 1])) {
+        $model->answer = intval($option_id[$answer - 1]);
+        if (!$is_empty_question && ($model->status == 1 && $answer <= 0 || empty($option_id) || empty($option_id[$answer - 1]))) {
             $model->status = 0;
             $model->answer = 0;
         }
         //保存当前数据对象
         $list = $model->add();
         if ($list !== false) { //保存成功
-            if (false === $optionModel->where("id in (" . implode(",", $option_id) . ")")->setField("question_id", $list)) {
-                $model->rollback();
-                $this->error('新增失败!');
+            if(!empty($option_id)){
+                if (false === $optionModel->where("id in (" . implode(",", $option_id) . ")")->setField("question_id", $list)) {
+                    $model->rollback();
+                    $this->error('新增失败!');
+                }
             }
             $question_id = $list;
         
@@ -662,6 +678,9 @@ class EnglishQuestionAction extends CommonAction {
         $vo['media_name'] = htmlspecialchars($vo['media_name']);
         $vo['name'] = htmlspecialchars($vo['name']);
         $option_list = D("EnglishOptions")->getQuestionOptionList($id, false);
+        if(empty($vo['content'])&& intval($vo['answer']) == 0 && empty($option_list)){
+            $this->assign("is_empty_question",1);
+        }
         $this->assign('option_list', $option_list);
         $this->assign('vo', $vo);
         $this->assign('doubleQuotes', '"');
@@ -679,6 +698,7 @@ class EnglishQuestionAction extends CommonAction {
         $optionModel = D("EnglishOptions");
         $id = intval($_REQUEST['id']);
         $optionModel->startTrans();
+        $is_empty_question  = intval($_POST['is_empty_question']) == 1 ? true : false;
         //删除选项
         $map['question_id'] = $id;
         $optionModel->where($map)->delete();
@@ -760,11 +780,11 @@ class EnglishQuestionAction extends CommonAction {
             $model->status = 0;
         }
         //选项是否有重复，有则题目停用
-        if ($model->status == 1 && count(array_unique($_POST['option'])) < count($_POST['option']) && !($is_double_false && $is_double_true)) {
+        if (!$is_empty_question && $model->status == 1 && count(array_unique($_POST['option'])) < count($_POST['option']) && !($is_double_false && $is_double_true)) {
             $model->status = 0;
         }
         $model->answer = $answer_id;
-        if ($model->status == 1 && ($answer <= 0 || $answer_id == 0)) {
+        if (!$is_empty_question && $model->status == 1 && ($answer <= 0 || $answer_id == 0)) {
             $model->status = 0;
             $model->answer = 0;
         }

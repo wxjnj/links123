@@ -795,7 +795,7 @@ class EnglishMediaAction extends CommonAction {
                 }
                 if(false === $categoryModel->updateCategoryQuestionNumByQuestion($question_ids, false, 0)){
                     $model->rollback();
-                    $this->error('状态禁用失败！');
+                    $this->error('状态启用失败！');
                 }
             }
             if(!empty($question_list)){
@@ -805,15 +805,15 @@ class EnglishMediaAction extends CommonAction {
                 }
                 if(false === $categoryModel->updateCategoryQuestionNumByQuestion($question_ids, false, 1)){
                     $model->rollback();
-                    $this->error('状态禁用失败！');
+                    $this->error('状态启用失败！');
                 }
             }
             
             $model->commit();
-            $this->success('状态禁用成功', $this->getReturnUrl());
+            $this->success('状态启用成功', $this->getReturnUrl());
         } else {
             $model->rollback();
-            $this->error('状态禁用失败！');
+            $this->error('状态启用失败！');
         }
     }
     public function delete() {
@@ -847,7 +847,7 @@ class EnglishMediaAction extends CommonAction {
                 }
                 if(false === $categoryModel->updateCategoryQuestionNumByQuestion($question_ids, true, 0)){
                     $model->rollback();
-                    $this->error('状态禁用失败！');
+                    $this->error('删除失败！');
                 }
             }
             if(!empty($question_list)){
@@ -857,15 +857,15 @@ class EnglishMediaAction extends CommonAction {
                 }
                 if(false === $categoryModel->updateCategoryQuestionNumByQuestion($question_ids, true, 1)){
                     $model->rollback();
-                    $this->error('状态禁用失败！');
+                    $this->error('删除失败！');
                 }
             }
             
             $model->commit();
-            $this->success('状态禁用成功', $this->getReturnUrl());
+            $this->success('删除成功', $this->getReturnUrl());
         } else {
             $model->rollback();
-            $this->error('状态禁用失败！');
+            $this->error('删除失败！');
         }
     }
     
