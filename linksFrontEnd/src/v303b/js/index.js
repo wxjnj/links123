@@ -148,6 +148,8 @@ var Zld = { // 自留地
 		//console.log('=======================');
 		//console.log(start);
 		var box = $('#J_sortable');
+		var m_right = box.find('li:first').css('margin-right');
+		m_right = parseInt(m_right);
 		var boxWidth = box.width();
 		if(start == 0){
 			var lis = box.find('li');
@@ -162,7 +164,7 @@ var Zld = { // 自留地
 		var fstLineWidth = null;
 
 		$.each(lis, function(k, v) {
-			liWidth += ($(v).width() + 5);
+			liWidth += ($(v).width() + m_right);
 			if (!overIndex && liWidth > boxWidth) {
 				overIndex = k;
 				fstLineWidth = liWidth - $(v).width();
@@ -174,7 +176,7 @@ var Zld = { // 自留地
 		oi = overIndex + start;
 		//console.log(boxWidth - fstLineWidth);
 		if (boxWidth - fstLineWidth > 55) {
-			var w = lis.eq(overIndex).width() + 5 - (boxWidth - fstLineWidth);
+			var w = lis.eq(overIndex).width() + m_right - (boxWidth - fstLineWidth);
 			var xw = Math.floor(w / (overIndex + 1) / 2);
 			var diff = w - xw * (overIndex + 1) * 2;
 			var s = lis.filter(':lt(' + (overIndex + 1) + ')');
@@ -259,10 +261,24 @@ var Zld = { // 自留地
 		self.holderPaddingRight = obj.find('.nm').css('padding-right');
 		self.Resize();
 
+		self.zld_tip = $('.zld-tip');
+		self.zld_tip.on('click', '.zld-tip-close', function(){
+			self.zld_tip.hide();
+			$.cookies.set('zld_tip_close', 1,  { expiresAt: (new Date).add_day(365) });
+		});
+
+		/*
+		if(!$.cookies.get('zld_tip_close')){
+			self.zld_tip.show();
+		}
+		*/
 		//self.Resize(); //这里临时执行2次，具体等待@Kevin重构
 		$(document).on('click', '#J_ZldList .add', function() {
 			//if(User.CheckLogin()){
 			self.Create();
+			if(!$.cookies.get('zld_tip_close')){
+				self.zld_tip.show();
+			}
 			//}
 		});
 		$(document).on('click', '#J_ZldList .ctl', function() {
@@ -275,6 +291,9 @@ var Zld = { // 自留地
 			var nm = o.find('b').html();
 			var url = o.data('url');
 			self.Create(id, nm, url);
+			if(!$.cookies.get('zld_tip_close')){
+				self.zld_tip.show();
+			}
 			return false;
 			//			}
 		});
@@ -313,6 +332,9 @@ var Zld = { // 自留地
 					});
 			},
 			stop: function(event, ui) {
+				if(!$.cookies.get('zld_tip_close')){
+					$.cookies.set('zld_tip_close', 1,  { expiresAt: (new Date).add_day(365) });
+				}
 				self.Resize();
 				Zld.IsSortable = false;
 				$(ui.item).find('span').css('cursor', 'pointer');

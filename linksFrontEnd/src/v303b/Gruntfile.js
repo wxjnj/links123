@@ -71,6 +71,12 @@ module.exports = function(grunt) {
 						src: ['**'],
 						dest: '../../dest/v303b/imgs/'
 					}
+					,{
+						expand: true,
+						cwd: 'skins',
+						src: ['**'],
+						dest: '../../dest/v303b/skins/'
+					}
 				]
 			}
 		}

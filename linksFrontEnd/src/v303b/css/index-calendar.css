@@ -464,6 +464,7 @@
 
 .cal-date-marks-table .desc-content,
 .cal-date-marks-table .desc-content:hover {
+	font-size: 14px;
 	color: #fff;
 	display: inline-block;
 	height: 20px;

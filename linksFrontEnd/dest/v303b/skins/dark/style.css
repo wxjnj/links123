@@ -1,0 +1,76 @@
+/*************************************************************
+** dark
+*************************************************************/
+    a, a:hover{
+        color: #fff;
+    }
+    #container{
+        background: url(bg.jpg);
+    }
+    .subcate,
+    .thl a,
+    .header-weather,
+    .header-weather .region{ color: #fff; }
+    .thl .cate,
+    .title-tabs span,
+    .text-news p a, .text-news p a:active,
+    .pic-news-title a,
+    .title-tabs li,
+    .cal-date-marks-table li .time,
+    .extra-calendar .cal-day .cal-mini-month-panel table,
+    .extra-calendar .cal-day .cal-mini-month-panel td a,
+    .text-news .more-news a, .text-news .more-news a:active,
+    .site-info li a, .site-info li a:active, .friend-links li a, .friend-links li a:active,
+    .extra-calendar .cal-header .cal-header-date-prev, .extra-calendar .cal-header .cal-header-date-next, .extra-calendar .cal-header .cal-header-date,
+    .extra-calendar .cal-header button,
+    .site-info{
+        color: #fff;
+    }
+    .thl .cate-in,
+    .thl .cate-in a{ color: #000; }
+    .zld,
+    .zld a,
+    .zld a:hover{
+        color: #fff;
+    }
+    .title-tabs li{
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: 20px;
+    }
+    .title-tabs .active{
+        background: none;
+        border-bottom: 3px solid #9e8686;
+    }
+
+    .pic-news-tabs a{
+        background: #6e848e;
+    }
+    .pic-news-tabs .active,
+    .cal-date-marks-table li .dot,
+    .text-news p b{
+        background: #fff;
+    }
+    .cal-date-marks-table .current-time,
+    .widescreen .extra-calendar .cal-day .cal-mini-month-panel{
+        background: none;
+    }
+    .text-news p a:hover{
+        color: #f00;
+    }
+    .text-news{
+        padding-left: 30px;
+        width: 310px;
+    }
+    .widescreen .text-news{
+        width: 340px;
+    }
+    .more-news{
+        padding-top: 30px;
+    }
+    .widescreen .more-news{
+        padding-top: 20px;
+    }
+    .header-weather .weather-find-region-box{ color: #000; }
+    .header-weather .weather-find-region-box a{ color: #000; }
+    /* 先放这吧，后期再根据调整来整理吧  */

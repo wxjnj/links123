@@ -201,10 +201,10 @@ input:focus{ outline: 0; }
 	background: #fff;
 	border: 0 none;
 	float: left;
-	font-size: 14px;
+	font-size: 15px;
 	height: 16px;
 	line-height: 16px;
-	padding: 7px 0;
+	padding: 6px 0;
 	width: 360px;
 }
 .thl .ctls .btn{
@@ -659,7 +659,9 @@ input:focus{ outline: 0; }
 
 
 /*zld*/
-.zld{}
+.zld {
+	position: relative;
+}
 .zld ul{
 	font-size: 12px;
 	*zoom: 1;
@@ -732,6 +734,26 @@ input:focus{ outline: 0; }
 }
 .zld ul li.add .ctl i{
 	background: url(../imgs/sprite.png) -272px -3px no-repeat;
+}
+
+.zld-tip {
+	width: 166px;
+	height: 45px;
+	background: url(../imgs/zld-tip.png) 0 0 no-repeat;
+	position: absolute;
+	left: -7px;
+	top: -35px;
+	line-height: 38px;
+}
+.zld-tip .content {
+	margin-left: 25px;
+	color: #000;
+}
+.zld-tip .zld-tip-close,
+.zld-tip .zld-tip-close:hover {
+	position: absolute;
+	right: 15px;
+	color: #000;
 }
 
 /* 自留地 按照 窄屏 尺寸 */

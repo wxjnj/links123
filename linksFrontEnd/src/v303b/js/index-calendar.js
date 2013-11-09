@@ -65,7 +65,6 @@ $(function(){
     });
     
 });
-
 /*
  *   Calendar
  */
@@ -239,7 +238,8 @@ $(function(){
             self.setCurrentDate(targetDate);
             self.DateView.miniMonthView.render();
             //self.MainView.renderMonthView();
-            if (self.marksStore[self.currentMarkId]) {
+            var nextDay = Calendar.currentDateObject.add_day(1);
+            if (self.marksStore[self.currentMarkId] && self.marksStore[nextDay.getFullYear() + '-' + nextDay.getMonth()]) {
                 self.DateView.renderMarks();
             } else {
                 self.loadMarks();
@@ -370,8 +370,15 @@ $(function(){
                 var year2 = self.currentWeekEndObject.getFullYear();
                 var month2 = self.currentWeekEndObject.getMonth();
             }
-            //周有跨年和跨月
-            if (self.type == 'Week' && year1 != year2 || month1 != month2) {
+            if(self.type == 'Date'){
+                var nextDay = self.currentDateObject.add_day(1);
+                var year1 = self.currentDateObject.getFullYear();
+                var month1 = self.currentDateObject.getMonth();
+                var year2 = nextDay.getFullYear();
+                var month2 = nextDay.getMonth();
+            }
+            //周有跨年和跨月 || 日视图单日有两天的数据 如果跨月就要双取
+            if ((self.type == 'Week' &&  month1 != month2) || (self.type == 'Date' && month1 != month2) ) {
                 var o1 = self.request({
                     url: URL + '/getSchedule?year=' + year1 + '&month=' + (month1 + 1),
                     type: 'GET'
@@ -415,28 +422,29 @@ $(function(){
                         //self.MainView.renderMarks();
                     });
             } else {
+
                 self.request({
                     url: URL + '/getSchedule?year=' + year + '&month=' + (month + 1),
                     type: 'GET'
                 }).fail(function(c, e) {
-                        self[self.type + 'View'].renderMarks();
-                    }).done(function(d) {
-                        self.ajaxOverlayer.hide();
-                        d = d === null ? [] : d;
-                        if(d.length != 0) {
-                            $.each(d, function(k, v){
-                                $.each(v, function(i, c){
-                                    c.desc = c.content;
-                                    c.time = c.datetime;
-                                });
-                                d[parseInt(k)] = v;
-                                if(parseInt(k) + '' != k) delete d[k];
+                    self[self.type + 'View'].renderMarks();
+                }).done(function(d) {
+                    self.ajaxOverlayer.hide();
+                    d = d === null ? [] : d;
+                    if(d.length != 0) {
+                        $.each(d, function(k, v){
+                            $.each(v, function(i, c){
+                                c.desc = c.content;
+                                c.time = c.datetime;
                             });
-                        }
-                        self.marksStore[self.currentMarkId] = d;
-                        self[self.type + 'View'].renderMarks();
-                        //self.MainView.renderMarks();
-                    });
+                            d[parseInt(k)] = v;
+                            if(parseInt(k) + '' != k) delete d[k];
+                        });
+                    }
+                    self.marksStore[self.currentMarkId] = d;
+                    self[self.type + 'View'].renderMarks();
+                    //self.MainView.renderMarks();
+                });
             }
         }
         /*,
@@ -519,11 +527,11 @@ $(function(){
 
     var MarkLine = new Class;
     MarkLine.include({
-        init: function(index){
+        init: function(index, to){
             var self = this;
-            self.format(index);
+            self.format(index, to);
         },
-        format: function(index){
+        format: function(index, to){
             var self = this;
             var tem;
             if(index < 10) {
@@ -531,7 +539,7 @@ $(function(){
             }else{
                 tem = index;
             }
-            self.element = $('<li class="line_'+index+'" data-time="'+index+'"><b class="dot"></b><span class="time">'+tem+':00</span><span class="desc"><a class="add-btn" href="javascript:;">增加日程</a></span></li>');
+            self.element = $('<li class="line_'+index+'" data-timestamp="' + (to.setHours(index)*1) + '" data-time="'+index+'"><b class="dot"></b><span class="time">'+tem+':00</span><span class="desc"><a class="add-btn" href="javascript:;">增加日程</a></span></li>');
 
         },
         refresh: function(){
@@ -702,8 +710,8 @@ $(function(){
                     if(v.element.find('.desc-input-div').size()){
                         var id = v.element.attr('data-id');
                         var desc = v.element.find('input').val();
-                        var time = v.element.attr('data-time');
-                        time = Date.today().setHours(time);
+                        var time = v.element.attr('data-timestamp');
+                        //time = Date.today().setHours(time);
                         if(desc != v.element.find('input').attr('data-old')) {
                             v.updateMark(id, time, desc);
                         }
@@ -729,8 +737,8 @@ $(function(){
                     var mark = self.all_lis[time];
                     var id = mark.element.attr('data-id');
                     var desc = mark.element.find('input').val();
-                    var time = mark.element.attr('data-time');
-                    time = Date.today().setHours(time);
+                    var time = mark.element.attr('data-timestamp');
+                    //time = Date.today().setHours(time);
                     if(desc != mark.element.find('input').attr('data-old')) {
                         mark.updateMark(id, time, desc);
                     }
@@ -753,22 +761,70 @@ $(function(){
         renderMarks: function() {
             var self = this;
             var tem = Calendar.marksStore[Calendar.currentYear + '-' + Calendar.currentMonth];
+            var arr = [];
+            var marks_currentDay,
+                marks_nextDay, 
+                ct,
+                nextDay,
+                marks,
+                all_lis,
+                timeArray,
+                timeObject,
+                i,
+                len;
             if (tem && tem[Calendar.currentDate]) {
-                var marks = self.marks = tem[Calendar.currentDate];
+                marks_currentDay = tem[Calendar.currentDate];
+                $.each(marks_currentDay, function(k, v){
+                    ct = (new Date(v.time * 1000)).getHours();
+                    if(ct >= 6) arr.push(v);
+                });
+                marks_currentDay = arr;
             } else {
-                var marks = self.marks = [];
+                marks_currentDay = [];
             }
-            var lis = '';
-            var count = 0;
 
-            var all_lis = self.all_lis = {};
-            var tem = '';
+            nextDay = Calendar.currentDateObject.add_day(1);
+            tem = Calendar.marksStore[nextDay.getFullYear() + '-' + nextDay.getMonth()];
+            if(tem && tem[nextDay.getDate()]){
+                marks_nextDay = tem[nextDay.getDate()];
+                arr = [];
+                $.each(marks_nextDay, function(k, v){
+                    ct = (new Date(v.time * 1000)).getHours();
+                    if(ct < 6) arr.push(v);
+                });
+                marks_nextDay = arr;
+            }else{
+                marks_nextDay = [];
+            }
+
+            marks = marks_currentDay.concat(marks_nextDay);
+
+            all_lis = self.all_lis = {};
+
             $('.cal-date-marks-table').empty();
-            for(var i = 0; i < 24; i+=2) {
-                all_lis[i] = new MarkLine(i);
-                $('.cal-date-marks-table').append(all_lis[i].element);
+
+            timeArray = [6, 8, 10, 12, 14, 16, 18, 20, 22, 0, 2, 4];
+
+            timeObject;
+
+            $.each(timeArray, function(k, t){
+                if(t == 0 || t == 2 || t == 4){
+                    timeObject = Calendar.currentDateObject.add_day(1);
+                }else{
+                    timeObject = Calendar.currentDateObject;
+                }
+                all_lis[t] = new MarkLine(t, timeObject);
+                $('.cal-date-marks-table').append(all_lis[t].element);
+            });
+
+            for(i = 0, len = marks.length; i < len; i++){
+                v = marks[i];
+                h = (new Date(v.time * 1000)).getHours();
+                if(h % 2 != 0) h -= 1;
+                all_lis[h].setMark(v.id, v.desc);
             }
 
+            /*
             var v;
             var len = marks.length;
             var h;
@@ -784,18 +840,19 @@ $(function(){
                 if(h % 2 != 0) h -= 1;
                 all_lis[h].setMark(v.id, v.desc);
             }
-
+            */
 
             $('.cal-date-marks-table').find('li:last').css({
                 'border': 0,
                 'height': '35px'
             });
-
+            /*
             if(Calendar.compare(Date.today(), Calendar.currentDateObject) == 0){
                 var h = (new Date()).getHours();
                 if(h % 2 != 0) h -= 1;
                 $('.cal-date-marks-table').find('.line_' + h).addClass('current-time');
             }
+            */
 
         }
     };
@@ -813,7 +870,7 @@ $(function(){
                 Calendar.setCurrentDate(d);
                 Calendar.changeType('Date');
             });
-        },
+        },/*
         renderBurnDownChart: function() {
             var self = this;
             var year = Calendar.currentYear;
@@ -832,7 +889,7 @@ $(function(){
                     }
                 });
             }
-        },
+        },*/
         renderMarks: function() {
             var self = this;
             var marks = Calendar.marksStore[Calendar.currentYear + '-' + Calendar.currentMonth];
