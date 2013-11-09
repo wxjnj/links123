@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<title>隐私数据管理_个人中心</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<link rel="stylesheet" href="__STATIC__/v3/css/base.css" />
+	<link rel="stylesheet" href="__PUBLIC__/User/css/uc-layout.css" />
+	<link rel="stylesheet" href="__PUBLIC__/User/css/uc-style.css" />
+	<link rel="stylesheet" href="__STATIC__/min/?b=v3/css&f=g-uc.css" />
+	<script src="__STATIC__/min/?b=v3/js&f=jquery-1.7.1.min.js"></script>
+	<script src="__PUBLIC__/User/js/comm.js"></script>
+</head>
+<body>
+	<include file="Contorls:header" />
+	<div class="container">
+		<div class="wrap">
+			<div class="sider">
+				<div class="uc-user">
+					<img src="/Public/User/imgs/avator.jpg" alt="" />
+					Elvis (10001)
+				</div>
+				<div class="uc-tips">
+					您已经使用过另客<span>85%</span>的功能，打败了<span>70%</span>的用户。
+				</div>
+				<div class="uc-tips">
+					您还可以使用：<a href="#">添加自留地</a>，<a href="#">英语角</a>
+				</div>
+				<ul class="uc-submenu">
+					<li>
+						<h2><i class="uc-icons-1"></i>个人资料设置</h2>
+						<ul>
+							<li><a href="avator.html">修改头像</a></li>
+							<li><a href="profile.html">基本信息</a></li>
+							<li><a href="edu.html">教育信息</a></li>
+							<li><a href="tag.html">个人标签</a></li>
+							<li><a href="url.html">个性域名</a></li>
+						</ul>
+					</li>
+					<li>
+						<h2><i class="uc-icons-2"></i>帐号安全</h2>
+						<ul>
+							<li><a href="safe.html">安全信息</a></li>
+							<li><a href="pwd.html">修改密码</a></li>
+							<li><a href="pwdprotect.html">密码保护设置</a></li>
+							<li><a href="find.html">帐号申诉</a></li>
+							<li><a href="phone.html">绑定手机</a></li>
+							<li><a href="mail.html">绑定邮箱</a></li>
+						</ul>
+					</li>
+					<li>
+						<h2><i class="uc-icons-3"></i>隐私设置</h2>
+						<ul>
+							<li><a href="common.html">通用</a></li>
+							<li><a href="record.html">聊天记录管理</a></li>
+							<li class="on"><a href="data.html">隐私数据管理</a></li>
+						</ul>
+					</li>
+					<li>
+						<h2><a href="stop.html"><i class="uc-icons-4"></i>停用帐号</a></h2>
+					</li>
+				</ul>
+			</div>
+			<div class="content">
+				<h2 class="c-ttl">隐私数据管理</h2>
+				<div class="data-panel">
+					<div class="data-seo">
+						<h3>搜索引擎收录<span>是否允许搜索引擎搜索到你在另客的信息。</span></h3>
+						<ul>
+							<li><label for=""><input type="checkbox" name="" id=""> 收录相册</label></li>
+							<li><label for=""><input type="checkbox" name="" id=""> 收录个人主页</label></li>
+							<li><label for=""><input type="checkbox" name="" id=""> 收录日志</label></li>
+							<li><label for=""><input type="checkbox" name="" id=""> 收录状态</label></li>
+						</ul>
+						<p class="ctls"><input class="btn-ok" type="submit" value="提交" /></p>
+					</div>
+					<div class="data-my">
+						<h3>清空所有隐私数据<span>注意：为了您的隐私安全，清空的隐私数据将无法找回</span></h3>
+						<p>请输入绑定手机号码获取验证码</p>
+						<p><input class="ipt-m ipt-dis" type="text" /> <a class="btn-v" href="javascript:;">获取验证码</a></p>
+						<p>验证码</p>
+						<p><input class="ipt-s ipt-dis" type="text" /></p>
+						<p class="ctls"><input class="btn-ok" type="submit" value="提交" /></p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<include file="Contorls:footer" />
+</body>
+</html>
