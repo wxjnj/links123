@@ -7,7 +7,7 @@
 	<meta name="Keywords" content="{$keywords}" />
 	<meta name="Description" content="{$description}" />
 	<link rel="stylesheet" href="__STATIC__/min/?b=v303b/css&f=base.css,css.min.css" />
-	<link rel="stylesheet" href="__STATIC__/v303b/skins/dark/style.css" id="J_Skins" />
+	<link rel="stylesheet" href="__STATIC__/v303b/skins/{$theme}/style.css" id="J_Skins" />
 	<script>var $CONFIG = { 'STATIC': '__STATIC__','APP' : '__APP__/', 'URL' : '__URL__', 'PUBLIC' : '__PUBLIC__', 'IsLogin' : <empty name="_SESSION[C('MEMBER_AUTH_KEY')]">1<else />0</empty> };</script>
 </head>
 <body>
@@ -62,36 +62,36 @@
 				<div class="skin-list" style="display: none">
 					<span class="ang"></span>
 					<div class="skin-content">
-						<p style="color:#333!important;text-align:center;line-height:40px;margin-top:10px">coming soon ...</p>
-						<!--div class="subpanel" id="J_skin_selection">
-							<div class="skin-types">
+						<!--p style="color:#333!important;text-align:center;line-height:40px;margin-top:10px">coming soon ...</p-->
+						<div class="subpanel" id="J_skin_selection">
+							<!--div class="skin-types">
 								<a data-id="themes" class="J_link_skin_type">另&nbsp;客</a>
 								<span class="skin-theme-split"> | </span>
 								<volist name="skinCategory" id="vo" key="k">
 									<a data-id="{$vo.categoryId}" class='J_link_skin_type <if condition="$k eq 1">active</if>'>{$vo.categoryName}</a>
 								</volist>
-							</div>
+							</div-->
 							<div id="J_skin_pics" class="skin-pics">
 								<div id="link_skin_themes" class="item">
-									<a data-id="1" data-theme="dark" data-bg="__PUBLIC__/IndexV3/skins/q/01_b.jpg">
-										<img class="m" data-src="__PUBLIC__/IndexV3/skins/q/01_m.jpg" src="" alt="" />
+									<a data-id="1" data-theme="dark" data-bg="__STATIC__/v303b/skins/dark/bg.jpg">
+										<img class="m" data-src="__STATIC__/v303b/skins/dark/bg_s.jpg" src="" alt="" />
 									</a>
-									<a data-id="2" data-theme="light" data-bg="__PUBLIC__/IndexV3/skins/q/02_b.jpg">
-										<img class="m" data-src="__PUBLIC__/IndexV3/skins/q/02_m.jpg" src="" alt="" />
+									<a data-id="2" data-theme="light" data-bg="__STATIC__/v303b/skins/light/bg.png">
+										<img class="m" data-src="__STATIC__/v303b/skins/light/bg_s.jpg" src="" alt="" />
 									</a>
-									<a data-id="3" data-theme="dark_ext" data-bg="__PUBLIC__/IndexV3/skins/q/03_b.jpg">
+									<!--a data-id="3" data-theme="dark_ext" data-bg="__PUBLIC__/IndexV3/skins/q/03_b.jpg">
 										<img class="m" data-src="__PUBLIC__/IndexV3/skins/q/03_m.jpg" src="" alt="" />
-									</a>
+									</a-->
 								</div>
-								<volist name="skinList" id="vo">
+								<!--volist name="skinList" id="vo">
 									<div id="link_skin_{$key}" class='item <if condition="$i eq 1">active</if>'>
 										<volist name="vo" id="skins">
 											<a class="skin-link-btn" data-bg="{$skins.skin}" data-theme="{$skins.theme}" data-id="{$skins.skinId}" class='<if condition="$skins.skinId eq $skinId">active</if>'><img data-src="{$skins.middleSkin}" src=""  alt="" /></a>
 										</volist>
 									</div>
-								</volist>
+								</volist-->
 							</div>
-						</div-->
+						</div>
 					</div>
 				</div>
 			</li>
@@ -202,12 +202,16 @@
 				</li>
 			</ul>
 		</div><!--.zld end-->
+		<style>
+
+		</style>
 		<div class="box box-apps">
 			<div class="box-hd">
 				<div class="app-icon-list">
 					<div class="app-more">
 						<a href="javascript:" class="more"></a><!--em>更多应用</em-->
 						<div class="app-more-box" id="J_AppsMore">
+							<b class="ang ang-back"></b>
 							<b class="ang"></b>
 							<div class="amb-bd">
 								<ul></ul>
@@ -332,20 +336,22 @@
 			</div>
 		</div>
 	</div>
-	<div class="footer-inner">
-		<!-- <h5 class="friend-links-title">友情链接</h5>
-		<ul class="friend-links">
-			<li><a href="#">另客网</a></li>
-		</ul> -->
-		<div class="site-info">
-			<ul>
-				<li><a target="_blank" href="{:U('/About')}">关于我们</a></li>
-				<li><a target="_blank" href="{:U('/Suggestion')}">留言板</a></li>
-				<li><a target="_blank" href="{:U('/Blogroll')}">友情链接</a></li>
-				<li><a target="_blank" href="{:U('/Recommend')}">推荐链接</a></li>
-			</ul>
-			<p>沪ICP备12036721号 &copy; 另客 2013
-			<span style="position:relative;margin-left:20px;top:4px;"><script src="http://s96.cnzz.com/stat.php?id=4907803&web_id=4907803&show=pic1" type="text/javascript"></script></span></p>
+	<div class="footer">
+		<div class="footer-inner">
+			<!-- <h5 class="friend-links-title">友情链接</h5>
+			<ul class="friend-links">
+				<li><a href="#">另客网</a></li>
+			</ul> -->
+			<div class="site-info">
+				<ul>
+					<li><a target="_blank" href="{:U('/About')}">关于我们</a></li>
+					<li><a target="_blank" href="{:U('/Suggestion')}">留言板</a></li>
+					<li><a target="_blank" href="{:U('/Blogroll')}">友情链接</a></li>
+					<li><a target="_blank" href="{:U('/Recommend')}">推荐链接</a></li>
+				</ul>
+				<p>沪ICP备12036721号 &copy; 另客 2013
+				<span style="position:relative;margin-left:20px;top:4px;"><script src="http://s96.cnzz.com/stat.php?id=4907803&web_id=4907803&show=pic1" type="text/javascript"></script></span></p>
+			</div>
 		</div>
 	</div>
 </div><!--#container end-->

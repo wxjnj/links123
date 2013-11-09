@@ -79,7 +79,7 @@
     text-decoration:none
 }
 .skin-list {
-    width: 540px;
+    width: 300px;
     /*height:120px;*/
     top:40px;
     padding-left: 10px;
@@ -88,7 +88,7 @@
     position:absolute;
     /*margin-left:-155px;
     *margin-left: -185px;*/
-    right: 0;
+    right: 125px;
     z-index:11;
     background:#fff;
     box-shadow:0 0 5px #666;
@@ -105,8 +105,14 @@
     border-width:15px;
     border-style:dashed dashed solid;
     border-color:transparent transparent #fff;
-    right: 272px;
+    right: 145px;
     top:-25px
+}
+.widescreen .skin-list {
+    right: 135px;
+}
+.widescreen .skin-list .ang {
+    right: 145px;
 }
 .skin-theme-split {
     color: #333!important;
@@ -126,7 +132,7 @@
 }
 
 .skin-list .skin-pics {
-    padding: 0;
+    padding: 20px 0 10px;
     text-align:center;
     position:relative;
     overflow: hidden;
@@ -135,7 +141,6 @@
     float: left;
     position: relative;
     left: 50%;
-    display:none;
 }
 .skin-list .skin-pics .active {
     display:block

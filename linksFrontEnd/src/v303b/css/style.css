@@ -24,17 +24,6 @@ input:focus{ outline: 0; }
 	z-index: 999;
 }
 
-.footer{
-	width: 100%;
-	background: #fff;
-	color: #000;
-	line-height: 200%;
-	bottom: 0;
-	left: 0;
-	margin: 0 auto;
-	/*width: 960px;*/
-}
-
 .footer-inner {
 	width: 960px;
 }
@@ -48,7 +37,7 @@ input:focus{ outline: 0; }
 	color: #bbbaba;
 }
 .footer img{
-	vertical-align: middle;
+	/*vertical-align: middle;*/
 }
 .container{
 	position: relative;
@@ -208,7 +197,7 @@ input:focus{ outline: 0; }
 	width: 360px;
 }
 .thl .ctls .btn{
-	background: url(../imgs/sprite.png) -5px 0px no-repeat;
+	background: url(../imgs/sprite.png) -5px 1px no-repeat;
 	cursor: pointer;
 	float: right;
 	height: 32px;

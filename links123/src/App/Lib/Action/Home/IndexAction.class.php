@@ -27,6 +27,10 @@ class IndexAction extends CommonAction {
 			$_SESSION['myarea_sort'] = $mbrNow['myarea_sort'] ? explode(',', $mbrNow['myarea_sort']) : '';
 			$_SESSION['app_sort'] = $mbrNow['app_sort'];
 
+			$themeId = session('themeId');
+			if (!$themeId) {
+				$themeId = cookie('themeId');
+			}
 
 		} else {
 			
@@ -37,7 +41,14 @@ class IndexAction extends CommonAction {
 
 				//$_SESSION['app_sort'] = cookie('app_sort');
 			}
+
+			$themeId = session('themeId');
+			if (!$themeId) {
+				$themeId = cookie('themeId');
+			}
 		}
+		$theme = $this->getTheme($themeId);
+		$this->assign('theme', $theme);
 
 		//自留地数据
 		if ($user_id || !$_SESSION['arealist']) {

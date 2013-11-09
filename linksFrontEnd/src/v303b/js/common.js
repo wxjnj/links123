@@ -709,6 +709,12 @@ var Theme = {
 		$('#K_change_skin_btn').on('click', function(){
 			if($('.skin-list').is(':hidden')){
 				$('.skin-list').fadeIn(150);
+				if(!isImgSrc){
+					isImgSrc = true;
+					$(this).find('img').each(function(){
+						$(this).attr('src', $(this).data('src'));
+					});
+				}
 			}
 		});
 		/*
@@ -823,7 +829,7 @@ var Theme = {
 		return false;
 	},
 	SetTheme : function(id, tm, bg) {
-		var tmurl = $CONFIG['PUBLIC'] + '/IndexV3/skins/{0}/style.css';
+		var tmurl = $CONFIG['STATIC'] + '/v303b/skins/{0}/style.css';
 		$('#J_Skins').attr('href', tmurl.replace('{0}', tm));
 		$('#container').css('background-image', 'url(' + bg + ')');
 		$.post(URL + "/updateSkinTheme", {
