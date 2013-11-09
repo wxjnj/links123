@@ -17,9 +17,9 @@ class IndexAction extends CommonAction
 	 * 
 	 * @author slate date:2013-10-30
 	 */
-	public function index()
-	{
+	public function index() {
 		
 		$this->display();
 	}
+	
 }
