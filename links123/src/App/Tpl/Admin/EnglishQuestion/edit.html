@@ -9,8 +9,10 @@
             <table cellpadding=3 cellspacing=3>
                 <tr>
                     <td class="tRight" style="width:70px ;" >名称：</td>
-                    <td class="tLeft" ><input type="text" class="bLeftRequire xhuge" name="name" value="{$vo.name}" />
-                </td>
+                    <td class="tLeft" >
+                        <input type="text" class="bLeftRequire xhuge" name="name" value="{$vo.name}" />
+                        <label><input type="checkbox" name="is_empty_question" value="1" <eq name="is_empty_question" value="1">checked="true"</eq> />空试题</label>(勾选代表虚拟试题，注意！！！)
+                    </td>
                 </tr>
                 <tr>
                     <td class="tRight" >试题：</td>
