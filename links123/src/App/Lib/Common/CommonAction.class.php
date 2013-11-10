@@ -516,7 +516,7 @@ class CommonAction extends Action {
     
     	$theme = $themeList[$themeId];
     	
-    	return $theme ? $theme : 'dark';
+    	return $theme ? $theme : 'light';
     }
     
     /**
