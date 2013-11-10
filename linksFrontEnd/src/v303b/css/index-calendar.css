@@ -207,6 +207,9 @@
 	margin-right: 5px;
 	color: #666;
 }
+.widescreen .cal-date-marks-table li .time {
+	font-size: 12px;
+}
 .cal-date-marks-table li .desc {
 }
 .cal-date-marks-table li .add-btn,

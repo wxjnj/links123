@@ -82,6 +82,10 @@
     color: #0079c1;
 }
 
+.zld ul li {
+    margin: 5px 3px 0 0;
+}
+
 .zld ul li .nm,
 .zld ul li .ctl {
     border: 1px solid #e3e0db;
@@ -258,9 +262,11 @@ body {
 }
 .text-news p a, 
 .text-news p a:active,
-.text-news p a:hover,
 .pic-news-title a {
     color: #666;
+}
+.text-news p a:hover {
+    color: #ff2b06;
 }
 
 .text-news .more-news a, 
