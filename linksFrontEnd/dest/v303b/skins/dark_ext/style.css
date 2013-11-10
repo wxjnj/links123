@@ -1,10 +1,10 @@
 /*************************************************************
-** default - white
+** dark_ext
 *************************************************************/
 
 
 .header {
-    background: url(header_bg.png) 0 0 repeat-x;
+    background: #424143
 }
 
 .logo {
@@ -12,11 +12,12 @@
 }
 
 .weather-icon {
-    background-image: url(weather-icon.png);
+    background-image: url(weather-icon-psd.png);
 }
 
 #container{
     background: url(bg.png) 0 0 repeat;
+    background-size: cover;
 }
 
 /* white */
@@ -29,9 +30,11 @@
 }
 .zdl .btn {
     background-color: #e9e9e9;
-    height: 18px;
-    top: 10px;
+    height: 16px;
+    top: 12px;
+    background-position: -93px -36px;
 }
+
 .nav,
 .nav li {
     border: 0;
@@ -64,7 +67,6 @@
 .thl .ctls {
     background: #f4f4f4;
     box-shadow: inset 1px 1px 2px #aaa;
-    border: 1px solid #d7d7d7;
 }
 .thl .ctls .ipt {
     background: transparent;
@@ -73,23 +75,18 @@
 .thl .subcate a.on:hover,
 .thl .cate a.on,
 .thl .cate a.on:hover,
-.header-weather .region,
 .thl .subcate a:hover,
 .thl .cate a:hover,
 .thl .cate-in a:hover {
-    color: #0079c1;
+    color: #ff2b06;
+}
+.header-weather .region {
+    color: #424143;
 }
 
 .zld ul li .nm,
 .zld ul li .ctl {
-    border: 1px solid #e3e0db;
-    background: url(zld-btn-back.png) 0 0 repeat-x;
-}
-.zld ul li .nm {
-    border-right: 0;
-}
-.zld ul li .ctl {
-    border-left: 0;
+    background: url(/v303b/imgs/op30.png) 0 0 repeat-x;
 }
 .zld ul li .ctl i {
     width: 26px;
@@ -112,16 +109,34 @@
 
 .zld ul li .nm:hover,
 .zld ul li .ctl:hover {
-    box-shadow:inset 1px 1px 5px #ccc;
+    background-color: transparent;
+    background: url(/v303b/imgs/op30.png) 0 0 repeat-x;
+    box-shadow:inset 1px 1px 5px #666;
 }
 
 .app-icon-list .app-more .more {
+    margin-right: -5px;
     background-image: url(sprite.png);
     background-repeat: no-repeat;
 }
+            
+.app-icon-list .ang {
+    opacity: 1;
+    border-width: 13px
+}
+.app-icon-list .ang-back {
+    border-color: transparent transparent #bbb;
+    right: 15px;
+    top: -27px;
+    border-width: 13px
+}
 
-.cal-date-marks-table .blue {
-    background: url(mark-back.png) 0 0 repeat-x;
+.cal-date-marks-table li .blue {
+    background: transparent;
+    color: #424143;
+}
+.cal-date-marks-table .desc-content:hover {
+    color: #424143;
 }
 
 .extra-calendar .cal-header .cal-header-date-prev,
@@ -132,29 +147,22 @@
 
 .extra-calendar .cal-day .cal-mini-month-panel td .active, 
 .extra-calendar .cal-day .cal-mini-month-panel th .active {
-    background: url(sprite.png) -95px -4px no-repeat;
+    background: url(sprite.png) -96px -4px no-repeat;
+    text-shadow: none;
 }
 
 
 body {
-    color: #666;
-}
-.zld ul li .nm:hover,
-.zld ul li .ctl:hover {
-    background: #eeeeee;    
-}
-.zld ul li .nm:hover {
-    box-shadow:inset 0px 1px 5px #ddd;
-}
-.zld ul li .ctl:hover {
-    box-shadow:inset 1px 1px 3px #ddd;
+    color: #424143;
 }
 
+
+
 .box-apps {
-    border-top: 1px solid #ddd;
+    border-top: 1px solid #919191;
 }
 .box .box-hd {
-    border-top: 1px solid #fff;
+    border-top: 1px solid #dbdbdb;
 }
 
 .app-icon-list .app-more .more {
@@ -164,7 +172,6 @@ body {
     background-position: -62px -1px;
     border-radius: 30px;
     background-color: #eee;
-    border: 1px solid #e3e0db;
 }
 .app-icon-list .app-more .more:hover {
     box-shadow:inset 1px 1px 3px #ddd;  
@@ -174,27 +181,27 @@ body {
 }
 .extra-box {
     width: 463px;
-    border-top: 1px solid #ddd;
+    border-top: 1px solid #919191;
     border-bottom: 0;
 }
 .title-tabs {
     padding: 10px 0;
     margin: 0;
-    border-top: 1px solid #fff;
+    border-top: 1px solid #dbdbdb;
 }
 .cal-header {
-    border-top: 1px solid #fff;
-    border-bottom: 1px solid #ddd;
+    border-top: 1px solid #dbdbdb;
+    border-bottom: 1px solid #bbb;
 }
 .cal-date-marks-table {
     margin-top: -1px;
-    border-right: 1px solid #ddd;
+    border-right: 1px solid #bbb;
 }
 .extra-calendar .cal-day .cal-mini-month-panel {
-    border-left: 1px solid #fff;
+    border-left: 1px solid #eee;
 }
 .extra-calendar .cal-body {
-    border-top: 1px solid #fff;
+    border-top: 1px solid #eee;
 }
 .desc-input-div {
     background: transparent;
@@ -207,12 +214,18 @@ body {
     box-shadow: inset 1px 1px 4px #ccc;
     border-radius: 2px;
 }
+.extra-calendar .cal-day .cal-mini-month-panel .another-month a,
+.extra-calendar .cal-day .cal-mini-month-panel .another-month a:hover,
+.extra-calendar .cal-month .another-month a,
+.extra-calendar .cal-month .another-month a:hover {
+    color: #bbb;
+}
 
 
 .thl a,
 .thl .cate-in a,
 .header-weather {
-    color: #666;
+    color: #424143;
 }
 
 .title-tabs li{
@@ -222,17 +235,22 @@ body {
     margin-left: 20px;
 }
 .title-tabs span {
-    color: #666;
+    color: #424143;
 }
 .title-tabs .active{
-    color: #666;
+    color: #424143;
     background: none;
-    border-bottom: 3px solid #0079c1;
+    border-bottom: 3px solid #323440;
 }
 
 .pic-news-tabs a {
     height: 4px;
 }
+.pic-news-tabs .active {
+    background: #323440;
+}
+
+
 .text-news {
     width: 320px;
 }
@@ -240,22 +258,22 @@ body {
 .text-news p a:active,
 .text-news p a:hover,
 .pic-news-title a {
-    color: #666;
+    color: #424143;
 }
 
 .text-news .more-news a, 
 .text-news .more-news a:active,
 .text-news .more-news a:hover {
-    color: #0079c1;
+    color: #323440;
 }
 
 .extra-calendar .cal-header .cal-view-select-btn:hover,
 .extra-calendar .cal-header .active {
-    border-bottom: 3px solid #0079c1;
+    border-bottom: 3px solid #323440;
 }
 
 .cal-date-marks-table li .dot {
-    background: #666;
+    background: #424143;
 }
 
 .extra-calendar .cal-header .cal-header-date-prev {
@@ -270,32 +288,48 @@ body {
 .extra-calendar .cal-day .cal-mini-month-panel th a,
 .extra-calendar .cal-header button,
 .extra-calendar .cal-header .cal-header-date {
-    color: #666;
+    color: #424143;
 }
 
 .cal-date-marks-table li {
-    border-bottom: 1px dashed #dcdcdc;
+    border-bottom: 1px dashed #bbb;
 }
 
 .cal-date-marks-table .blue {
     font-size: 12px;
     height: 16px;
     line-height: 16px;
-    border: 1px solid #2971c7;
-    text-shadow: 1px 1px 1px #2971c7;
+    border: 0;
+    color: #424143;
+    text-shadow: 1px 1px 1px #fff;
 }
 
+.cal-month table th, .cal-week table th {
+    border-right: 1px solid #ddd;
+}
+
+.cal-month table td, .cal-week table td {
+    border-top: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+}
+
+.extra-calendar .cal-month table, .extra-calendar .cal-week table {
+    width: 465px;
+}
 
 .footer {
-    margin-top: 50px;
-    color: #fff;
-    box-shadow: inset 0 5px 5px #777;
-    background: #8d8c8f;
+    width: 960px;
+    margin: 50px auto 0;
+    border-top: 1px solid #919191;
 }
 
+.widescreen .footer,
+.widescreen .footer-inner  {
+    width: 1172px;
+}
 
 .site-info li a, .site-info li a:active, .friend-links li a, .friend-links li a:active {
-    color: #fff;
+    color: #424143;
 }
 
 .widescreen .extra-box {
@@ -339,3 +373,31 @@ body {
     height: 16px;
     line-height: 16px;
 }
+
+.apps .nm,
+.title-tabs span, 
+.text-news p a, 
+.text-news p a:active, 
+.pic-news-title a, 
+.title-tabs li, 
+.cal-date-marks-table li .time, 
+.extra-calendar .cal-day .cal-mini-month-panel table, 
+.extra-calendar .cal-day .cal-mini-month-panel td a, 
+.text-news .more-news a, 
+.text-news .more-news a:active, 
+.site-info li a, 
+.site-info li a:active, 
+.friend-links li a, 
+.friend-links li a:active, 
+.extra-calendar .cal-header .cal-header-date-prev, 
+.extra-calendar .cal-header .cal-header-date-next, 
+.extra-calendar .cal-header .cal-header-date, 
+.extra-calendar .cal-header button, 
+.site-info {
+    text-shadow: 1px 1px 1px #fff;
+}
+
+.widescreen .extra-calendar .cal-header .cal-view-select-btn:hover, .widescreen .extra-calendar .cal-header .active {
+    border-bottom: 3px solid #424143;
+}
+

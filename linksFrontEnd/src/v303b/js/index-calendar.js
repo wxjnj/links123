@@ -1,13 +1,4 @@
 $(function(){
-    /*
-    $('.title-tabs').on('click', 'li', function(){
-        $('.title-tabs').find('li').removeClass('active');
-        $(this).addClass('active');
-        var t = $(this).attr('data-tab');
-        $('.social-box').hide();
-        $('.social-' + t).show()
-    });
-    */
 
     window.newsTimer = null;
     changeNews();
@@ -65,6 +56,7 @@ $(function(){
     });
     
 });
+
 /*
  *   Calendar
  */
@@ -137,9 +129,10 @@ $(function(){
             self.marksStore = {};
             self.timer = null;
             var today = self.today = Date.today();
-            self.tooltip = $('<div class="calendar-tip"><div class="content"></div><span class="ang"></span></div>');
+            self.tooltip = $('<div class="calendar-tip"><div class="content"></div><span class="ang1"></span><span class="ang"></span></div>');
             self.ajaxOverlayer = $('.cal-ajax-overlayer');
             self.setCurrentDate(today);
+
             $('.cal-header-date-prev').on('click', function() {
                 self.prevView();
             });
@@ -152,6 +145,60 @@ $(function(){
                 self.changeType(type);
             });
 
+            $('#container').on('click', function(e){
+                self.tooltip.hide();
+                e = $.event.fix(e);
+                if(e.target == this) {
+                    Calendar.setCurrentDate(Date.today());
+                    Calendar.changeType('Date');
+                }
+            }).on('mouseover', function(e){
+                e = $.event.fix(e);
+                if(e.target == this && !self.tooltip.is(':hidden')){
+                    self.tooltip.hide();
+                }
+            });
+
+            $('.cal-body').on('mouseover', '.cal-month td, .cal-week td', function(){
+                var td = $(this);
+
+                if(td.find('a').size()){
+                    var year = td.find('a').attr('data-year');
+                    var month = td.find('a').attr('data-month');
+                    var date = td.find('a').attr('data-date');
+                }else{
+                    var year = td.attr('data-year');
+                    var month = td.attr('data-month');
+                    var date = td.attr('data-date');
+                }
+
+                var marks = self.marksStore[year + '-' + month][date] || null;
+                var tem = '';
+
+                if(!marks){
+                    tem = '<p>暂无日程</p>';
+                }else{
+                    $.each(marks, function(k, v){
+                        var time = new Date(v.time * 1000);
+                        time = time.getHours();
+                        if(time % 2 != 0) time -= 1;
+                        if(time < 10) time = '0' + time;
+                        tem += '<p>' + time + ':00-' + v.desc + '</p>';
+                    });
+                }
+
+                var top = td.offset().top;
+                var left = td.offset().left + td.width() / 2;
+
+                self.tooltip.find('.content').html(tem).end().appendTo('#container');
+
+                top -= self.tooltip.height() + 10 ;
+                self.tooltip.css({
+                    top: top + 'px',
+                    left: left + 'px'
+                }).show();
+             });
+
             /**/
             self.DateView.Init();
             self.MonthView.Init();
@@ -160,6 +207,15 @@ $(function(){
             self.DateView.mainPanel.show();
             self.loadMarks();
             /**/
+        },
+        ReInit: function(){
+            var self = this;
+            self.DateView.Init();
+            self.MonthView.Init();
+            self.WeekView.Init();
+            self.DateView.miniMonthView.render();
+            self.DateView.mainPanel.show();
+            self.loadMarks();
         },
         showDate: function() {
             var self = this;
@@ -212,20 +268,9 @@ $(function(){
             if (targetType == 'Month') {
                 Calendar.MonthView.tableView.render();
             }
-            cur.renderMarks();
+            Calendar.loadMarks();
+            //cur.renderMarks();
         },
-        /*
-        MainViewChangeFunc: function(t) {
-            var self = this;
-            var targetDate = new Date(self.currentYear, self.currentMonth, t);
-            self.setCurrentDate(targetDate);
-            self.MainView.renderMonthView();
-            if (self.marksStore[self.currentMarkId]) {
-                self.DateView.renderMarks();
-            } else {
-                self.loadMarks();
-            }
-        },*/
         prevView: function() {
             this[this.type + 'PrevView']();
         },
@@ -364,11 +409,17 @@ $(function(){
             var self = this;
             var year = self.currentYear;
             var month = self.currentMonth;
+
+            var dateArray = [];
             if (self.type == 'Week') {
                 var year1 = self.currentWeekStartObject.getFullYear();
                 var month1 = self.currentWeekStartObject.getMonth();
                 var year2 = self.currentWeekEndObject.getFullYear();
                 var month2 = self.currentWeekEndObject.getMonth();
+                if(Calendar.marksStore[year1 + '-' + month1] === undefined){
+                    dateArray.push({y:year1, m:month1});
+                }
+                if(month2 != month1) dateArray.push({y:year2, m:month2});
             }
             if(self.type == 'Date'){
                 var nextDay = self.currentDateObject.add_day(1);
@@ -376,153 +427,68 @@ $(function(){
                 var month1 = self.currentDateObject.getMonth();
                 var year2 = nextDay.getFullYear();
                 var month2 = nextDay.getMonth();
+                if(Calendar.marksStore[year1 + '-' + month1] === undefined){
+                    dateArray.push({y:year1, m:month1});
+                }
+                if(month2 != month1) dateArray.push({y:year2, m:month2});
             }
-            //周有跨年和跨月 || 日视图单日有两天的数据 如果跨月就要双取
-            if ((self.type == 'Week' &&  month1 != month2) || (self.type == 'Date' && month1 != month2) ) {
-                var o1 = self.request({
-                    url: URL + '/getSchedule?year=' + year1 + '&month=' + (month1 + 1),
+            if(self.type == 'Month'){
+                var year1 = self.currentDateObject.getFullYear();
+                var month1 = self.currentDateObject.getMonth();
+                var prevMonthObject = new Date(year1, month1 - 1);
+                var nextMonthObject = new Date(year1, month1 + 1);
+                var year2 = prevMonthObject.getFullYear();
+                var month2 = prevMonthObject.getMonth();
+                var year3 = nextMonthObject.getFullYear();
+                var month3 = nextMonthObject.getMonth();
+                if(Calendar.marksStore[year1 + '-' + month1] === undefined){
+                    dateArray.push({y:year1, m:month1});
+                }
+                if(Calendar.marksStore[year2 + '-' + month2] === undefined){
+                    dateArray.push({y:year2, m:month2});
+                }
+                if(Calendar.marksStore[year3 + '-' + month3] === undefined){
+                    dateArray.push({y:year3, m:month3});
+                }
+            }
+
+            if(dateArray.length == 0){
+                self[self.type + 'View'].renderMarks();
+                return;
+            }
+            //周有跨年和跨月 || 日视图单日有两天的数据 如果跨月就要双取 || 月视图会跨三个月
+            self.ajaxArray = [];
+            $.each(dateArray, function(k, v){
+                var o = self.request({
+                    url: URL + '/getSchedule?year=' + v.y + '&month=' + (v.m + 1),
                     type: 'GET'
                 });
-                var o2 = self.request({
-                    url: URL + '/getSchedule?year=' + year2 + '&month=' + (month2 + 1),
-                    type: 'GET'
-                });
+                self.ajaxArray.push(o);
+            });
 
-                $.when(o1, o2).fail(function(c, e) {
-                    self[self.type + 'View'].renderMarks();
-                }).done(function(d1, d2) {
-                        self.ajaxOverlayer.hide();
-                        d1 = d1 === null ? [] : d1;
-                        d2 = d2 === null ? [] : d2;
+            $.when.apply(self, self.ajaxArray).done(function(){
+                var datas = Array.prototype.splice.call(arguments, 0);
 
-                        if(d1.length != 0) {
-                            $.each(d1, function(k, v){
-                                $.each(v, function(i, c){
-                                    c.desc = c.content;
-                                    c.time = c.datetime;
-                                });
-                                d1[parseInt(k)] = v;
-                                if(parseInt(k) + '' != k) delete d1[k];
-                            });
-                        }
-                        if(d2.length != 0) {
-                            $.each(d2, function(k, v){
-                                $.each(v, function(i, c){
-                                    c.desc = c.content;
-                                    c.time = c.datetime;
-                                });
-                                d2[parseInt(k)] = v;
-                                if(parseInt(k) + '' != k) delete d2[k];
-                            });
-                        }
+                $.each(datas, function(k, data){
 
-                        self.marksStore[year1 + '-' + month1] = d1;
-                        self.marksStore[year2 + '-' + month2] = d2;
-                        self[self.type + 'View'].renderMarks();
-                        //self.MainView.renderMarks();
-                    });
-            } else {
-
-                self.request({
-                    url: URL + '/getSchedule?year=' + year + '&month=' + (month + 1),
-                    type: 'GET'
-                }).fail(function(c, e) {
-                    self[self.type + 'View'].renderMarks();
-                }).done(function(d) {
-                    self.ajaxOverlayer.hide();
-                    d = d === null ? [] : d;
-                    if(d.length != 0) {
-                        $.each(d, function(k, v){
+                    data = data === null ? [] : data;
+                    if(data.length != 0) {
+                        $.each(data, function(k, v){
                             $.each(v, function(i, c){
                                 c.desc = c.content;
                                 c.time = c.datetime;
                             });
-                            d[parseInt(k)] = v;
-                            if(parseInt(k) + '' != k) delete d[k];
+                            data[parseInt(k)] = v;
+                            if(parseInt(k) + '' != k) delete data[k];
                         });
                     }
-                    self.marksStore[self.currentMarkId] = d;
-                    self[self.type + 'View'].renderMarks();
-                    //self.MainView.renderMarks();
+                    self.marksStore[dateArray[k].y + '-' + dateArray[k].m] = data;
                 });
-            }
-        }
-        /*,
 
-        //新建和更新日程: id==null为新建，有id值为更新
-        update: function(id, time, desc, element){
-            
-            var self = this;
-            var url, data;
+                self[self.type + 'View'].renderMarks();
 
-            var type;
-
-            if((!id || id == 0 ) && (!desc || desc.search('来创建今天新的日程吧') >= 0)) {
-                //self.marksStore = {};
-                //self.loadMarks();
-                Calendar.DateView.renderMarks();
-                return;
-            }
-
-            User.CheckLogin();
-
-            if(!id || id == 0 ) {
-                type = 'add';
-                url = URL + '/addSchedule';
-                data = {
-                    time: time/1000,
-                    desc: desc
-                };
-            }else{
-                type = 'update';
-                url = URL + '/updateSchedule';
-                data = {
-                    time: time/1000,
-                    desc: desc,
-                    id: id
-                };
-            }
-            self.request({
-                url: url,
-                data: data
-            }).fail(function(c, e){
-            }).done(function(d){
-
-            });
-
-            
-            if(type == 'update'){
-                $.each(self.marksStore[self.currentMarkId][self.currentDate], function(k, v){
-                    if(v.id == id) {
-                        v.desc = desc;
-                    }
-                });
-            }
-            
-            //self.marksStore = {};
-            //self.loadMarks();
-        },
-        //删除任务
-        deleteMark: function(id){
-            var self = this;
-            self.request({
-                url: URL + '/delSchedule',
-                data: {
-                    id: id
-                }
-            }).fail(function(c, e){
-            }).done(function(d){
-                //self.marksStore = {};
-                //self.loadMarks();
-            });
-
-            $.each(self.marksStore[self.currentMarkId][self.currentDate], function(k, v){
-                if(v.id == id) {
-                    self.marksStore[self.currentMarkId][self.currentDate].splice(k, 1);
-                }
             });
         }
-        */
     };
 
     var MarkLine = new Class;
@@ -691,8 +657,12 @@ $(function(){
 
             self.miniMonthView = new MiniMonthView;
             self.miniMonthElement.on('click', 'a', function() {
+                var y = $(this).attr('data-year');
+                var m = $(this).attr('data-month');
                 var d = $(this).attr('data-date');
-                Calendar.DateChangeFunc(d);
+                //Calendar.DateChangeFunc(d);
+                Calendar.setCurrentDate(new Date(y, m, d));
+                Calendar.changeType('Date');
             });
 
             self.colorCode = '#!4587';
@@ -711,18 +681,14 @@ $(function(){
                         var id = v.element.attr('data-id');
                         var desc = v.element.find('input').val();
                         var time = v.element.attr('data-timestamp');
-                        //time = Date.today().setHours(time);
                         if(desc != v.element.find('input').attr('data-old')) {
                             v.updateMark(id, time, desc);
                         }
                         v.setMark(id, desc);
-
-                        //v.updateMark(id, time, desc);
                     }
                 });
                 mark.edit();
             });
-
 
             $('.cal-date-marks-table').on('click', '.delete-btn', function(){
                 var li = $(this).parent('li');
@@ -745,17 +711,6 @@ $(function(){
                     mark.setMark(id, desc);
                 }
             });
-            /*
-            $('.cal-date-marks-table').on('blur', 'input', function(e){
-                var time = $(this).parents('li').attr('data-time');
-                var mark = self.all_lis[time];
-                var id = mark.element.attr('data-id');
-                var desc = mark.element.find('input').val();
-                var time = mark.element.attr('data-time');
-                time = Date.today().setHours(time);
-                mark.setMark(id, desc);
-                mark.updateMark(id, time, desc);
-            });*/
 
         },
         renderMarks: function() {
@@ -824,36 +779,10 @@ $(function(){
                 all_lis[h].setMark(v.id, v.desc);
             }
 
-            /*
-            var v;
-            var len = marks.length;
-            var h;
-            var line;
-            var desc;
-            var color;
-            var tem;
-            var short_desc;
-
-            for(var i = 0; i < len; i++){
-                v = marks[i];
-                h = (new Date(v.time * 1000)).getHours();
-                if(h % 2 != 0) h -= 1;
-                all_lis[h].setMark(v.id, v.desc);
-            }
-            */
-
             $('.cal-date-marks-table').find('li:last').css({
                 'border': 0,
                 'height': '35px'
             });
-            /*
-            if(Calendar.compare(Date.today(), Calendar.currentDateObject) == 0){
-                var h = (new Date()).getHours();
-                if(h % 2 != 0) h -= 1;
-                $('.cal-date-marks-table').find('.line_' + h).addClass('current-time');
-            }
-            */
-
         }
     };
     Calendar.MonthView = {
@@ -863,50 +792,45 @@ $(function(){
             self.tableElement = self.mainPanel.find('table');
             self.tableView = new MonthTable;
             self.tableElement.on('click', 'td', function() {
-                var y = Calendar.currentYear;
-                var m = Calendar.currentMonth;
+                var y = $(this).find('a').attr('data-year');//Calendar.currentYear;
+                var m = $(this).find('a').attr('data-month');//Calendar.currentMonth;
                 var d = $(this).find('a').attr('data-date');
                 d = new Date(y, m, d);
                 Calendar.setCurrentDate(d);
                 Calendar.changeType('Date');
             });
-        },/*
-        renderBurnDownChart: function() {
-            var self = this;
-            var year = Calendar.currentYear;
-            var month = Calendar.currentMonth;
-            var todayDate = Calendar.today.getDate();
-
-            if (year <= Calendar.today.getFullYear() && month < Calendar.today.getMonth()) {
-                self.tableElement.find('td').addClass('month_pass_date');
-            } else if (year == Calendar.today.getFullYear() && month == Calendar.today.getMonth()) {
-                self.tableElement.find('td').each(function(k, v) {
-                    var cur = $(v).find('a').attr('data-date');
-                    if (cur != - 1 && cur < todayDate) {
-                        $(v).addClass('month_pass_date');
-                    } else if (cur == todayDate) {
-                        self.todayElement = $(v);
-                    }
-                });
-            }
-        },*/
+        },
         renderMarks: function() {
             var self = this;
-            var marks = Calendar.marksStore[Calendar.currentYear + '-' + Calendar.currentMonth];
-            if (marks) {
-                self.marks = marks;
-            } else {
-                self.marks = marks = {};
-            }
+            var year1 = Calendar.currentDateObject.getFullYear();
+            var month1 = Calendar.currentDateObject.getMonth();
+            var prevMonthObject = new Date(year1, month1 - 1);
+            var nextMonthObject = new Date(year1, month1 + 1);
+            var year2 = prevMonthObject.getFullYear();
+            var month2 = prevMonthObject.getMonth();
+            var year3 = nextMonthObject.getFullYear();
+            var month3 = nextMonthObject.getMonth();
+
+            var marks1 = Calendar.marksStore[year1 + '-' + month1] || {};
+            var marks2 = Calendar.marksStore[year2 + '-' + month2] || {};
+            var marks3 = Calendar.marksStore[year3 + '-' + month3] || {};
+
+            var marks = {};
+            marks[year1 + '-' + month1] = marks1; 
+            marks[year2 + '-' + month2] = marks2; 
+            marks[year3 + '-' + month3] = marks3;
+
             $.each(marks, function(k, v) {
-                var cur = self.tableElement.find('.td_' + k).parent('td');
-                $.each(v, function(i, n) {
-                    var top = parseInt(i / 7) * 7 + 5;
-                    var left = i % 7 * 7 + 5;
-                    top = 'top:' + top + 'px;';
-                    left = 'left:' + left + 'px;';
-                    var style = top + left;
-                    cur.append('<b class="month_task_dot" style="' + style + '"></b>');
+                $.each(v, function(d, m){
+                    var cur = self.tableElement.find('.td_' + k + '-' + d).parent('td');
+                    $.each(m, function(i, n) {
+                        var top = parseInt(i / 7) * 7 + 5;
+                        var left = i % 7 * 7 + 5;
+                        top = 'top:' + top + 'px;';
+                        left = 'left:' + left + 'px;';
+                        var style = top + left;
+                        cur.append('<b class="month_task_dot" style="' + style + '"></b>');
+                    });
                 });
             });
         }
@@ -983,16 +907,18 @@ $(function(){
             var arr = [];
             var i;
             for (i = 1; i <= len; i++) {
-                arr.push(i);
+                arr.push(new Date(Calendar.currentYear, Calendar.currentMonth, i));
             }
+            var currentMonthFirstDay = arr[0];
             for (i = 1, len = startWeekDay == 0 ? 7 - weekStart : startWeekDay - weekStart; i <= len; i++) {
-                arr.unshift(0);
+                arr.unshift(currentMonthFirstDay.add_day(-i));
             }
+            var currentMonthLastDay = arr[arr.length - 1];
             len = arr.length % 7;
             if (!len == 0) {
                 len = 7 - len;
                 for (i = 1; i <= len; i++) {
-                    arr.push( - 1);
+                    arr.push(currentMonthLastDay.add_day(i));
                 }
             }
             self.baseArray = arr;
@@ -1003,15 +929,24 @@ $(function(){
                 self.initBaseArray(Calendar.currentYear, Calendar.currentMonth);
             }
             var baseArray = self.baseArray;
-            var o;
+            var o, y, m, d, c;
             var table = '';
             for (var i = 0, len = baseArray.length; i < len; i++) {
                 o = baseArray[i];
-                if (o == 0 || o == - 1) {
-                    o = '<td class="op-td-'+i%7+'"><a data-date="' + o + '" style="display:none"></a></td>';
-                } else {
-                    o = '<td class="op-td-'+i%7+'"><a class="td_' + o + '" href="javascript:;" data-date="' + o + '">' + o + '</a></td>';
+
+                y = o.getFullYear();
+                m = o.getMonth();
+                d = o.getDate();
+
+                c = 'current-month';
+                if(m != Calendar.currentMonth){
+                    c = 'another-month';
                 }
+
+                o = '<td class="op-td-'+ (i%7) + ' ' + c + '"><a class="td_' + y+ '-' + m + '-' + d + 
+                    '" href="javascript:;" data-year="' + y + '" data-month="' + m + '" data-date="' + d + 
+                    '">' + d + '</a></td>';
+
                 if ((i + 1) % 7 == 0) {
                     o += '</tr>'
                 }
@@ -1035,7 +970,8 @@ $(function(){
             } else {
                 $(wrap).html(table);
             }
-            wrap.find('.td_' + Calendar.currentDate).addClass('active');
+            wrap.find('.td_' + Calendar.currentYear + '-' + Calendar.currentMonth + 
+                '-' + Calendar.currentDate).addClass('active');
         }
     });
     //月级视图的月历
@@ -1050,7 +986,8 @@ $(function(){
             } else {
                 $(wrap).html(table);
             }
-            wrap.find('.td_' + Calendar.currentDate).addClass('active');
+            wrap.find('.td_' + Calendar.currentYear + '-' + Calendar.currentMonth + 
+                '-' + Calendar.currentDate).addClass('active');
             if(self.baseArray.length / 7 == 5){
                 wrap.find('td, th').removeClass('more-line');
             }else{

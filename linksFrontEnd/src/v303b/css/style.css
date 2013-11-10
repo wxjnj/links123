@@ -466,7 +466,7 @@ input:focus{ outline: 0; }
 */
 /*app-icon-list*/
 .app-icon-list{
-	display: none;
+	/*display: none;*/
 	height: 18px;
 	position: relative;
 	z-index: 9999;
@@ -475,6 +475,7 @@ input:focus{ outline: 0; }
 	float: right;
 }
 .app-icon-list .app-more{
+	display: none;
 	position: relative;
 	float: right;
 	cursor: pointer;

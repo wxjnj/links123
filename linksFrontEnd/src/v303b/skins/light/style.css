@@ -33,6 +33,7 @@
     top: 12px;
     background-position: -93px -36px;
 }
+
 .nav,
 .nav li {
     border: 0;
@@ -220,6 +221,12 @@ body {
     box-shadow: inset 1px 1px 4px #ccc;
     border-radius: 2px;
 }
+.extra-calendar .cal-day .cal-mini-month-panel .another-month a,
+.extra-calendar .cal-day .cal-mini-month-panel .another-month a:hover,
+.extra-calendar .cal-month .another-month a,
+.extra-calendar .cal-month .another-month a:hover {
+    color: #bbb;
+}
 
 
 .thl a,
@@ -298,6 +305,18 @@ body {
     text-shadow: 1px 1px 1px #2971c7;
 }
 
+.cal-month table th, .cal-week table th {
+    border-right: 1px solid #ddd;
+}
+
+.cal-month table td, .cal-week table td {
+    border-top: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+}
+
+.extra-calendar .cal-month table, .extra-calendar .cal-week table {
+    width: 465px;
+}
 
 .footer {
     margin-top: 50px;

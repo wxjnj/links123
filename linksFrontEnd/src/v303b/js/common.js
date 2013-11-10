@@ -835,6 +835,9 @@ var Theme = {
 		$.post(URL + "/updateSkinTheme", {
 			'themeId' : id
 		});
+		setTimeout(function(){
+			Zld.Resize();
+		}, 100);
 		//this.hasBack();
 		return false;
 	},

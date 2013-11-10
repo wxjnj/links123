@@ -45,7 +45,7 @@ $(function() {
 		$('body').trigger('screenchange'); //触发body上自定义的方法screenchange
 
 		Zld.Resize();
-		Calendar.Init();
+		Calendar.ReInit();
 	});
 
 	(function(){ //app图标相关
@@ -60,10 +60,10 @@ $(function() {
 				needLen = wideLen;
 			}
 			if(appsListLen<= needLen){ 
-				$('.app-icon-list').hide();
+				$('.app-icon-list .app-more').hide();
 				return;
 			}
-			$('.app-icon-list').show();
+			$('.app-icon-list .app-more').show();
 
 			var panel = $('.app-icon-list').find('ul');
 			panel.empty();
@@ -144,24 +144,33 @@ var Zld = { // 自留地
 	IsSortable: false,
 	//是否为拖拽点击，true则不打开自留地网址
 	_resizeLine: function(start){
-
 		//console.log('=======================');
 		//console.log(start);
-		var box = $('#J_sortable');
-		var m_right = box.find('li:first').css('margin-right');
+		var box = $('#J_sortable'),
+			boxWidth = box.width(),
+			lis, 
+			randomDiff, 
+			w, 
+			xw, 
+			diff, 
+			s,
+			oi,
+			opl, 
+			opr,
+			m_right = box.find('li:first').css('margin-right'),
+			liWidth = 0,
+			overIndex = null,
+			fstLineWidth = null;
+
 		m_right = parseInt(m_right);
-		var boxWidth = box.width();
+
 		if(start == 0){
-			var lis = box.find('li');
+			lis = box.find('li');
 			start = -1;
 		}else{
-			var lis = box.find('li:gt('+(start)+')');
+			lis = box.find('li:gt('+(start)+')');
 		}
 		//console.log(lis[0]);
-
-		var liWidth = 0;
-		var overIndex = null;
-		var fstLineWidth = null;
 
 		$.each(lis, function(k, v) {
 			liWidth += ($(v).width() + m_right);
@@ -174,15 +183,17 @@ var Zld = { // 自留地
 		if (liWidth <= boxWidth) return false;
 
 		oi = overIndex + start;
-		//console.log(boxWidth - fstLineWidth);
+
+		randomDiff = start == -1 ? 0 : Math.random() * 15 + 5;
+
 		if (boxWidth - fstLineWidth > 55) {
-			var w = lis.eq(overIndex).width() + m_right - (boxWidth - fstLineWidth);
-			var xw = Math.floor(w / (overIndex + 1) / 2);
-			var diff = w - xw * (overIndex + 1) * 2;
-			var s = lis.filter(':lt(' + (overIndex + 1) + ')');
+			w = lis.eq(overIndex).width() + m_right - (boxWidth - fstLineWidth);
+			xw = Math.floor(w / (overIndex + 1) / 2);
+			diff = w - xw * (overIndex + 1) * 2 + randomDiff;
+			s = lis.filter(':lt(' + (overIndex + 1) + ')');
 			$.each(s, function(k, v) {
-				var opl = $(v).find('.nm').css('padding-left');
-				var opr = $(v).find('.nm').css('padding-right');
+				opl = $(v).find('.nm').css('padding-left');
+				opr = $(v).find('.nm').css('padding-right');
 				opl = parseInt(opl);
 				if(diff > 0) {
 					opl -= 1;
@@ -201,13 +212,13 @@ var Zld = { // 自留地
 			oi += 1;
 		} else if(boxWidth - fstLineWidth <= 55 && boxWidth - fstLineWidth > 0) { 
 			// 差距过小，使用本行增加宽度适应行宽
-			var w = boxWidth - fstLineWidth;
-			var xw = Math.floor(w / (overIndex) / 2);
-			var diff = w - xw * 2 * overIndex ;
-			var s = lis.filter(':lt(' + overIndex + ')');
+			w = boxWidth - fstLineWidth;
+			xw = Math.floor(w / (overIndex) / 2);
+			diff = w - xw * 2 * overIndex - randomDiff;
+			s = lis.filter(':lt(' + overIndex + ')');
 			$.each(s, function(k, v){
-				var opl = $(v).find('.nm').css('padding-left');
-				var opr = $(v).find('.nm').css('padding-right');
+				opl = $(v).find('.nm').css('padding-left');
+				opr = $(v).find('.nm').css('padding-right');
 				opl = parseInt(opl);
 				if(diff > 0){
 					opl += 1;
@@ -238,18 +249,10 @@ var Zld = { // 自留地
 		});
 		var oi;
 		var s = 0;
-		//oi = self._resizeLine(s);
-		//oi = self._resizeLine(oi);
-		//oi = self._resizeLine(oi);
-		//oi = self._resizeLine(oi);
-		//oi = self._resizeLine(oi);
-		//oi = self._resizeLine(oi);
-		/**/
 		do{
 			oi = self._resizeLine(s);
 			s = oi;
 		}while(oi !== false);
-		/**/
 
 	},
 	Init: function() {
@@ -267,12 +270,6 @@ var Zld = { // 自留地
 			$.cookies.set('zld_tip_close', 1,  { expiresAt: (new Date).add_day(365) });
 		});
 
-		/*
-		if(!$.cookies.get('zld_tip_close')){
-			self.zld_tip.show();
-		}
-		*/
-		//self.Resize(); //这里临时执行2次，具体等待@Kevin重构
 		$(document).on('click', '#J_ZldList .add', function() {
 			//if(User.CheckLogin()){
 			self.Create();
