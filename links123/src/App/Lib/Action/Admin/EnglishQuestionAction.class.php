@@ -413,15 +413,6 @@ class EnglishQuestionAction extends CommonAction {
         $category["level_thr"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("3");
 
         $this->assign("category", $category);
-
-		//读取自动调整的系统默认值
-		$webSettingsModel = D("WebSettings");
-		$system_change = array(
-			"change_num"=>$webSettingsModel->getwebSettings("ENGLISH_QUESTION_CHANGE_NUM"),
-			"change_ratio"=>$webSettingsModel->getwebSettings("ENGLISH_QUESTION_ERROR_RATIO"),
-			"change_level"=>$webSettingsModel->getwebSettings("ENGLISH_QUESTION_CHANGE_LEVEL")
-		);
-		$this->assign("system_change",$system_change);
         
         $this->display();
     }
