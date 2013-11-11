@@ -134,6 +134,54 @@ class EnglishMediaModel extends CommonModel {
             return true;
         }
     }
+    public function  setSpecialRecommend($media,$recommend){
+        if(!$media['media_id']){
+            $media['media_id'] = $media['id'];
+        }
+        $englishCatquestionModel = D('EnglishCatquestion');
+        $englishQuestionModel = D('EnglishQuestion');
+        $englishCatgoryModel = D('EnglishCategory');
+        //查询特别推荐的分类id
+        $recommend_cat_id = intval($englishCatgoryModel->where(array('cat_attr_id' => 7, 'level_one' => -1, 'level_two' => -1, 'level_thr' => -1))->getField("cat_id"));
+        $question = $englishQuestionModel->where(array('media_id' => $media['media_id']))->find();//是否有试题
+        //给特别推荐添加空试题，添加分类  @author slate date:2013-11-02
+        if ($recommend == 1) {
+            if (!$question['id']) {
+                $question_id = $englishQuestionModel->add(array('media_id' => $media['media_id'], 'name' => $media['name'], 'media_text_url' => $media['media_source_url'], 'status' => 1));
+                if ($question_id) {
+                    if ($recommend_cat_id) {
+                        $englishCatquestionModel->add(array('cat_id' => $recommend_cat_id, 'question_id' => $question_id,'type' => 1, 'status' => 1));
+                    }
+                }
+            }else{
+                //存在试题，则关联试题到特别推荐分类
+                $recommend_cat_map = array(
+                    "question_id"=>$question['id'],
+                    "type" => 1,
+                    "cat_id" => $recommend_cat_id
+                );
+                $cat_id = $englishCatquestionModel->where($recommend_cat_map)->getField("cat_id");
+                if (intval($cat_id) == 0){
+                    if(false === $englishCatquestionModel->add($recommend_cat_map)){
+                        return false;
+                    }
+                }
+            }
+        }else{
+            if (!$question['id']) {
+                //存在试题，则删除试题和特别推荐分类和的关联
+                $recommend_cat_map = array(
+                    "question_id" => $question['id'],
+                    "type" => 1,
+                    "cat_id" => $recommend_cat_id
+                );
+                if(false === $englishCatquestionModel->where($recommend_cat_map)->delete()){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 
     /**
      * 获取特别推荐的视频列表

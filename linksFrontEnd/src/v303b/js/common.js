@@ -25,47 +25,48 @@ $(function() {
 	User.Init();
 	THL.Init();
 	Theme.Init();
-	// $("#direct_text").autocomplete("/Home/Link/tag", {
-	// 	dataType : "json",
-	// 	minChars : 1,
-	// 	'async': true,
-	// 	width : 298,
-	// 	scroll : false,
-	// 	matchContains : true,
-	// 	parse : function(data) {
-	// 		return $.map(data, function(row) {
-	// 			return {
-	// 				data : row,
-	// 				value : row.tag,
-	// 				result : row.tag
-	// 			};
-	// 		});
-	// 	},
-	// 	formatItem : function(item) {
-	// 		return item.tag;
-	// 	}
-	// }).result(function(e, item) {
-	// 	$('#direct_text').val(item.tag);
-	// 	$('#frm_drct').submit();
-	// });
+	 $("#direct_text").autocomplete("/Home/Link/tag", {
+	 	dataType : "json",
+	 	minChars : 1,
+	 	'async': true,
+	 	width : 298,
+	 	scroll : false,
+	 	matchContains : true,
+	 	parse : function(data) {
+	 		return $.map(data, function(row) {
+	 			return {
+	 				data : row,
+	 				value : row.tag,
+	 				result : row.tag
+	 			};
+	 		});
+	 	},
+	 	formatItem : function(item) {
+	 		return item.tag;
+	 	}
+	 }).result(function(e, item) {
+	 	$('#direct_text').val(item.tag);
+	 	$('#frm_drct').submit();
+	 });
 });
 
 // 登录注册dialog弹出后，阻止mousemove事件冒泡，避免焦点丢失
 $(document).on('mousemove', '.ui-widget-overlay', function(e){
 	e.stopPropagation();
 });
+
 var User = {
 	Init : function() {
 		var self = this;
 		$('.uc-menu .nm').on('mouseenter', function() {
-            clearTimeout(self.menuTimer);
-            self.menuTimer = null;
+			clearTimeout(self.menuTimer);
+			self.menuTimer = null;
 			$(this).find('ul, .ang').show();
 		}).on('mouseleave', function() {
-            var cur = $(this);
-            self.menuTimer = setTimeout(function(){
-                cur.find('ul, .ang').hide();
-            }, 500);
+			var cur = $(this);
+			self.menuTimer = setTimeout(function(){
+				cur.find('ul, .ang').hide();
+			}, 500);
 		});
 		$('.J_SignUp').on('click', function() {
 			self.Reg();
@@ -237,6 +238,7 @@ var User = {
 	},
 	Login : function(msg) {
 		var self = this;
+
 		if (!$('#J_Login').size()) {
 			var hl = '';
 			hl = hl + '<div class="lk-dialog lk-dialog-login" id="J_Login">';
@@ -278,14 +280,17 @@ var User = {
 				open : function() {
 					setTimeout(function() {
 						obj.find('input[name="user"]').select();
+						obj.find('.close').on('click', function(e) {
+							obj.dialog('close');
+							obj.remove();
+							return false;
+						});
 					}, 20);
+					
 				}
 			});
 
-			obj.find('.close').on('click', function() {
-				obj.dialog('close');
-				return false;
-			});
+
 			obj.find('.fgpass').on('click', function() {
 				obj.dialog('close');
 				self.FindPass();
@@ -405,9 +410,11 @@ var User = {
 
 				});
 
+				
 				return false;
 			});
 		} else {
+
 			var obj = $('#J_Login');
 			obj.find('input[name="user"]').val('');
 			obj.find('input[name="password"]').val('');
@@ -423,6 +430,7 @@ var User = {
 	},
 	FindPass : function() {
 		if (!$('#J_FindPass').size()) {
+
 			var hl = '';
 			hl = hl + '<div class="lk-dialog lk-dialog-fpass" id="J_FindPass">';
 			hl = hl + '	<div class="lkd-hd">';
@@ -447,9 +455,12 @@ var User = {
 			hl = hl + '		<a class="lkd-btn" href="javascript:;">发送验证邮件</a>';
 			hl = hl + '	</div>';
 			hl = hl + '</div>';
+
 			$('body').append(hl);
 
+			
 			var obj = $('#J_FindPass');
+
 
 			obj.dialog({
 				autoOpen : true,
@@ -534,9 +545,11 @@ var User = {
 	}
 };
 
+
+
 var THL = {
 	conf : {
-		topnm : 34,
+		topnm : 32,
 		topex : 64
 	},
 	Init : function() {
@@ -552,10 +565,11 @@ var THL = {
 			$("#search_text").select();
 		});
 		//移入糖葫芦区域 显示糖葫芦, 选中 文本
-
+		/*
 		$('.J_thl_area').mouseleave(function() {
 			$('#J_thl_div').hide();
 		});
+		*/
 		//移除糖葫芦主区域 隐藏糖葫芦
 
 		$(".J_thlz a").click(function() {//糖葫芦籽点击
@@ -609,7 +623,12 @@ var THL = {
 		});
 
 		$(document).mouseup(function(ev) {// 搜索文本框始终获取焦点
-			if (document.activeElement.tagName == 'SELECT' || document.activeElement.tagName == "INPUT" || document.activeElement.tagName == "TEXTAREA" || document.activeElement.tagName == "IFRAME" || document.activeElement.id == "direct_text" || document.activeElement.id == "search_text" || document.activeElement.id == "search_text") {
+			if (document.activeElement.tagName == 'SELECT' ||
+				document.activeElement.tagName == "INPUT" ||
+				document.activeElement.tagName == "TEXTAREA" ||
+				document.activeElement.tagName == "IFRAME" ||
+				document.activeElement.id == "direct_text" ||
+				document.activeElement.id == "search_text") {
 				return;
 			}
 			var txt = '';
@@ -687,21 +706,34 @@ var Theme = {
 		var self = this;
 		var isImgSrc = false;
 
+		$('#K_change_skin_btn').on('click', function(){
+			if($('.skin-list').is(':hidden')){
+				$('.skin-list').fadeIn(150);
+				if(!isImgSrc){
+					isImgSrc = true;
+					$(this).find('img').each(function(){
+						$(this).attr('src', $(this).data('src'));
+					});
+				}
+			}
+		});
+		/*
 		$('#K_change_skin_btn').on('mouseenter', function(){
-            clearTimeout(self.timer);
-            self.timer = null;
-            if($('.skin-list').is(':hidden')){
-                $('.skin-list').fadeIn(150);
-            }
+			clearTimeout(self.timer);
+			self.timer = null;
+			if($('.skin-list').is(':hidden')){
+				$('.skin-list').fadeIn(150);
+			}
 		}).on('mouseleave', function(){
-                clearTimeout(self.timer);
-                self.timer = null;
-                self.timer = setTimeout(function(){
-                    $('.skin-list').hide();
-                },500);
-        });
+				clearTimeout(self.timer);
+				self.timer = null;
+				self.timer = setTimeout(function(){
+					$('.skin-list').hide();
+				},500);
+		});
+		*/
 
-        $('#K_change_skin_btn_old').on('mouseleave', '.skin-list',function(){
+		$('#K_change_skin_btn_old').on('mouseleave', '.skin-list',function(){
 			clearTimeout(self.timer);
 			self.timer = null;
 			self.timer = setTimeout(function(){
@@ -713,13 +745,13 @@ var Theme = {
 				self.timer = null;
 			}
 		}).on('mouseover', function(){
-                if(!isImgSrc){
-                    isImgSrc = true;
-                    $(this).find('img').each(function(){
-                        $(this).attr('src', $(this).data('src'));
-                    });
-                }
-            });
+				if(!isImgSrc){
+					isImgSrc = true;
+					$(this).find('img').each(function(){
+						$(this).attr('src', $(this).data('src'));
+					});
+				}
+			});
 
 		//靠右的皮肤 图例靠右显示
 		//$('#J_skin_pics').find('.item:eq(3)').css('text-align','center')
@@ -797,12 +829,15 @@ var Theme = {
 		return false;
 	},
 	SetTheme : function(id, tm, bg) {
-		var tmurl = $CONFIG['PUBLIC'] + '/IndexV3/skins/{0}/style.css';
+		var tmurl = $CONFIG['STATIC'] + '/v303b/skins/{0}/style.css';
 		$('#J_Skins').attr('href', tmurl.replace('{0}', tm));
 		$('#container').css('background-image', 'url(' + bg + ')');
 		$.post(URL + "/updateSkinTheme", {
 			'themeId' : id
 		});
+		setTimeout(function(){
+			Zld.Resize();
+		}, 100);
 		//this.hasBack();
 		return false;
 	},

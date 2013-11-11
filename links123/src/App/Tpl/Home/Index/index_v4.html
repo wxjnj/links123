@@ -7,7 +7,7 @@
 	<meta name="Keywords" content="{$keywords}" />
 	<meta name="Description" content="{$description}" />
 	<link rel="stylesheet" href="__STATIC__/min/?b=v303b/css&f=base.css,css.min.css" />
-	<!--link rel="stylesheet" href="__PUBLIC__/IndexV3/skins/{$theme}/style.css" id="J_Skins" /-->
+	<link rel="stylesheet" href="__STATIC__/v303b/skins/{$theme}/style.css" id="J_Skins" />
 	<script>var $CONFIG = { 'STATIC': '__STATIC__','APP' : '__APP__/', 'URL' : '__URL__', 'PUBLIC' : '__PUBLIC__', 'IsLogin' : <empty name="_SESSION[C('MEMBER_AUTH_KEY')]">1<else />0</empty> };</script>
 </head>
 <body>
@@ -27,7 +27,8 @@
 		</ul>
 		<div class="uc">
 			<empty name="_SESSION[C('MEMBER_AUTH_KEY')]">
-				<a class="join J_SignUp" href="javascript:;">注&nbsp;册</a><a class="login J_SignIn" href="javascript:;">登&nbsp;录</a>
+				<a class="login J_SignIn" href="javascript:;">登&nbsp;录</a>
+				<a class="join J_SignUp" href="javascript:;">注&nbsp;册</a>
 				<else />
 				<img class="uc-avatar" src="__PUBLIC__/Uploads/Faces/{$Think.session.face}" />
 				<div class="uc-menu">
@@ -61,33 +62,34 @@
 				<div class="skin-list" style="display: none">
 					<span class="ang"></span>
 					<div class="skin-content">
+						<!--p style="color:#333!important;text-align:center;line-height:40px;margin-top:10px">coming soon ...</p-->
 						<div class="subpanel" id="J_skin_selection">
-							<div class="skin-types">
+							<!--div class="skin-types">
 								<a data-id="themes" class="J_link_skin_type">另&nbsp;客</a>
 								<span class="skin-theme-split"> | </span>
 								<volist name="skinCategory" id="vo" key="k">
 									<a data-id="{$vo.categoryId}" class='J_link_skin_type <if condition="$k eq 1">active</if>'>{$vo.categoryName}</a>
 								</volist>
-							</div>
+							</div-->
 							<div id="J_skin_pics" class="skin-pics">
 								<div id="link_skin_themes" class="item">
-									<a data-id="1" data-theme="dark" data-bg="__PUBLIC__/IndexV3/skins/q/01_b.jpg">
-										<img class="m" data-src="__PUBLIC__/IndexV3/skins/q/01_m.jpg" src="" alt="" />
+									<a data-id="2" data-theme="light" data-bg="__STATIC__/v303b/skins/light/bg.png">
+										<img class="m" data-src="__STATIC__/v303b/skins/light/bg_s.jpg" src="" alt="" />
 									</a>
-									<a data-id="2" data-theme="light" data-bg="__PUBLIC__/IndexV3/skins/q/02_b.jpg">
-										<img class="m" data-src="__PUBLIC__/IndexV3/skins/q/02_m.jpg" src="" alt="" />
+									<a data-id="1" data-theme="dark" data-bg="__STATIC__/v303b/skins/dark/bg.jpg">
+										<img class="m" data-src="__STATIC__/v303b/skins/dark/bg_s.jpg" src="" alt="" />
 									</a>
-									<a data-id="3" data-theme="dark_ext" data-bg="__PUBLIC__/IndexV3/skins/q/03_b.jpg">
-										<img class="m" data-src="__PUBLIC__/IndexV3/skins/q/03_m.jpg" src="" alt="" />
+									<a data-id="3" data-theme="dark_ext" data-bg="__STATIC__/v303b/skins/dark_ext/bg.png">
+										<img class="m" data-src="__STATIC__/v303b/skins/dark_ext/bg_s.png" src="" alt="" />
 									</a>
 								</div>
-								<volist name="skinList" id="vo">
+								<!--volist name="skinList" id="vo">
 									<div id="link_skin_{$key}" class='item <if condition="$i eq 1">active</if>'>
 										<volist name="vo" id="skins">
 											<a class="skin-link-btn" data-bg="{$skins.skin}" data-theme="{$skins.theme}" data-id="{$skins.skinId}" class='<if condition="$skins.skinId eq $skinId">active</if>'><img data-src="{$skins.middleSkin}" src=""  alt="" /></a>
 										</volist>
 									</div>
-								</volist>
+								</volist-->
 							</div>
 						</div>
 					</div>
@@ -101,67 +103,83 @@
 		</ul><!-- // .screen-theme -->
 	</div>
 </div><!--#header end-->
-<div class="under-header">
-	<div class="under-header-inner">
-		<div class="ci-hd J_thl_area">
-			<h1><a class="logo" href="/" rel="home">另客网</a></h1>
-			<div class="thl">
-				<form action="" id="searchForm">
-					<input name="thl" id="J_thl" type="hidden" value="">
-					<input name="tid" id="J_tid" type="hidden" value="">
-					<input name="q" id="J_q" type="hidden" value="">
-					<input type="text" value="" style="display:none;" />
-					<input type="hidden" id="tidNow" value="{$tidNow}" />
-					<div class="cate cate-in" id="J_thl_div" >
-						<volist name="thl_list" id="vo" key="m"><a <eq name="thlNow" value="$vo['thl']">class="on"</eq> href="#">{$vo['thl']}</a><if condition='$m neq 12'><span class="thl-keyword-span">-</span></if></volist>
-					</div>
-					<div class="subcate">
-						<dl>
-							<volist name="thl_list" id="vo" key="i">
-								<dd class="J_thlz" <neq name="vo['thl']" value="$thlNow">style="display:none;"</neq> >
-								<volist name="vo['thlz']" id="thlz" key="j"><a <if condition='$thlz["id"] eq $tidNow'>class="on"</if> href="#" title="{$thlz['tip']}" ndk="{$thlz['needkey']}" url="{$thlz['url']}" tid="{$thlz['id']}" tag_name="{$thlz['url_tag_name']}">{$thlz['name']}</a><neq name="vo['thlz_len']" value="$j"><span class="thl-keyword-span">-</span></neq></volist>
-								</dd>
-							</volist>
-						</dl>
-					</div>
-					<div class="ctls">
-						<input type="text" id="search_text" class="ipt" x-webkit-speech lang="zh-CN" value="{$_COOKIE['keyword']}" autocomplete="off" />
-						<input type="hidden" id="search_text_o" />
-						<input class="btn" type="submit" value="" id="btn_search" />
-					</div>
-				</form>
-			</div>
-			<div class="header-weather">
-				<span class="region">{$weatherData['city']}</span>
-				<span class="degree">{$weatherData['temp']}°</span>
-				<span class="info">{$weatherData['sun']}，空气质量{$weatherData['air']}</span>
-			</div><!-- // .header-weather -->
-		</div>
-	</div>
-</div>
 
-<div class="big-pic">
-	<div class="big-pic-inner">
-		<div id="K_banner_01">
-			<a href="http://en.links123.cn/" target="_blank">
-				<img src="__STATIC__/v303b/imgs/big-pic-01.png" usemap="K_banner_01_map" />
-			</a>
-			<map id="K_banner_01_map" name="K_banner_01_map">
-				<area class="doll" shape ="rect" coords ="30,177,159,356" href ="http://en.links123.cn/" target ="_blank" alt="老外在隔壁" />
-				<area class="doll" shape ="rect" coords ="243,144,376,358" href ="http://en.links123.cn/" target ="_blank" alt="老外在隔壁" />
-				<area class="doll" shape ="rect" coords ="459,163,574,359" href ="http://en.links123.cn/" target ="_blank" alt="老外在隔壁" />
-				<area class="doll" shape ="rect" coords ="676,146,787,358" href ="http://en.links123.cn/" target ="_blank" alt="老外在隔壁" />
-				<area class="doll" shape ="rect" coords ="866,168,965,350" href ="http://en.links123.cn/" target ="_blank" alt="老外在隔壁" />
-				<area shape ="rect" coords ="521,34,979,120" href ="http://en.links123.cn/" target ="_blank" alt="老外在隔壁" />
-			</map>
-			<img id="K_banner_01_arrow" src="__STATIC__/v303b/imgs/banner-arrow.png" />
-		</div>
-
-	</div>
-</div>
 <div class="container" id="container" <if condition="$skinId">style="background-image:url({$skin})"</if>>
+
 	<div class="container-inner">
+
+
+		<div class="under-header">
+			<div class="under-header-inner">
+				<div class="ci-hd J_thl_area">
+					<h1><a class="logo" href="/" rel="home">另客网</a></h1>
+					<div class="thl">
+						<form action="" id="searchForm">
+							<input name="thl" id="J_thl" type="hidden" value="">
+							<input name="tid" id="J_tid" type="hidden" value="">
+							<input name="q" id="J_q" type="hidden" value="">
+							<input type="text" value="" style="display:none;" />
+							<input type="hidden" id="tidNow" value="{$tidNow}" />
+							<div class="cate cate-in" id="J_thl_div" >
+								<volist name="thl_list" id="vo" key="m"><a <eq name="thlNow" value="$vo['thl']">class="on"</eq> href="#">{$vo['thl']}</a><if condition='$m neq 12'>-</if></volist>
+							</div>
+							<div class="subcate">
+								<dl>
+									<volist name="thl_list" id="vo" key="i">
+										<dd class="J_thlz" <neq name="vo['thl']" value="$thlNow">style="display:none;"</neq> >
+										<volist name="vo['thlz']" id="thlz" key="j"><a <if condition='$thlz["id"] eq $tidNow'>class="on"</if> href="#" title="{$thlz['tip']}" ndk="{$thlz['needkey']}" url="{$thlz['url']}" tid="{$thlz['id']}" tag_name="{$thlz['url_tag_name']}">{$thlz['name']}</a><neq name="vo['thlz_len']" value="$j">-</neq></volist>
+										</dd>
+									</volist>
+								</dl>
+							</div>
+							<div class="ctls">
+								<input type="text" id="search_text" class="ipt" x-webkit-speech lang="zh-CN" value="{$_COOKIE['keyword']}" autocomplete="off" />
+								<input type="hidden" id="search_text_o" />
+								<input class="btn" type="submit" value="" id="btn_search" />
+							</div>
+						</form>
+					</div>
+					<div class="header-weather">
+						<span class="region">{$weatherData['city']}</span>
+						<span class="degree">{$weatherData['temp']}°</span>
+						<span class="info"><b class="weather-icon"></b><b class="weather-desc">{$weatherData['sun']}</b>，空气{$weatherData['air']}</span>			
+						<div class="weather-find-region-box" style="display:none">
+							<span class="ang1"></span>
+							<span class="ang2"></span>
+							<div class="content">
+								搜索: <input class="region-name-input" type="text" size="20" /><br />
+								<div class="region-ul"></div>
+							</div>
+						</div>
+					</div><!-- // .header-weather -->
+				</div>
+			</div>
+		</div>
+		<!-- <if condition="$_COOKIE.big_pic_01_clicked != 1">
+		<div class="big-pic">
+			<div class="big-pic-inner">
+				<div id="K_banner_01">
+					<a href="http://en.links123.cn/" target="_blank">
+						<img id="K_banner_01_img" src="__STATIC__/v303b/imgs/big-pic-01.png" usemap="K_banner_01_map" />
+					</a>
+					<map id="K_banner_01_map" name="K_banner_01_map">
+						<area class="doll" shape ="rect" coords ="30,177,159,356" href ="http://en.links123.cn/" target ="_blank" alt="老外在隔壁" />
+						<area class="doll" shape ="rect" coords ="243,144,376,358" href ="http://en.links123.cn/" target ="_blank" alt="老外在隔壁" />
+						<area class="doll" shape ="rect" coords ="459,163,574,359" href ="http://en.links123.cn/" target ="_blank" alt="老外在隔壁" />
+						<area class="doll" shape ="rect" coords ="676,146,787,358" href ="http://en.links123.cn/" target ="_blank" alt="老外在隔壁" />
+						<area class="doll" shape ="rect" coords ="866,168,965,350" href ="http://en.links123.cn/" target ="_blank" alt="老外在隔壁" />
+						<area shape ="rect" coords ="521,34,979,120" href ="http://en.links123.cn/" target ="_blank" alt="老外在隔壁" />
+					</map>
+					<img id="K_banner_01_arrow" src="__STATIC__/v303b/imgs/banner-arrow.png" />
+				</div>
+			</div>
+		</div>
+		</if> -->
 		<div class="zld" id="J_ZldList">
+			<div class="zld-tip" style="display:none">
+				<a href="javascript:;" class="zld-tip-close">×</a>
+				<div class="content">标签可以拖拽排序！</div>
+			</div>
 			<form action="{:U('Link/index')}?mod=myarea" id="J_MyAreaForm" target="_blank" method="post"><input type="hidden" name="url" value="" /></form>
 			<ul id="J_sortable">
 				<volist name="_SESSION['myarea_sort']" id="areaid">
@@ -174,22 +192,26 @@
 				</volist>			
 				<li class="add">
 					<span class="ctl"><i>+</i></span>
-					<empty name="_SESSION[C('MEMBER_AUTH_KEY')]">
+					<!-- <empty name="_SESSION[C('MEMBER_AUTH_KEY')]">
 					<div class="mini-tip zld-mini-tip">
 						<div class="mini-tip-l"></div>
 						<div class="mini-tip-c">请登陆后添加网址</div>
 						<div class="mini-tip-r"></div>
 					</div>
-					</empty>
+					</empty> -->
 				</li>
 			</ul>
 		</div><!--.zld end-->
+		<style>
+
+		</style>
 		<div class="box box-apps">
 			<div class="box-hd">
 				<div class="app-icon-list">
 					<div class="app-more">
-						<a href="javascript:" class="more"></a><em>更多应用</em>
+						<a href="javascript:" class="more"></a><!--em>更多应用</em-->
 						<div class="app-more-box" id="J_AppsMore">
+							<b class="ang ang-back"></b>
 							<b class="ang"></b>
 							<div class="amb-bd">
 								<ul></ul>
@@ -203,6 +225,9 @@
 					<ul id="J_Apps">
 						<volist name="app_list" id="vo">
 							<li id="{$vo.appId}" <if condition="$vo.appClass neq ''">class="{$vo.appClass}"</if>>
+							<if condition="$vo.appId eq '1'"><i class="hot"></i></if>
+							<if condition="$vo.appId eq '2'"><i class="hot"></i></if>
+							<if condition="$vo.appId eq '3'"><i class="hot"></i></if>
 							<a data-href="{$vo.appLink}" <if condition="$vo.isTarget eq '1'">target="_blank"</if> class="{$vo.linkClass}">
 							<if condition="$vo.appName eq '日&nbsp;历'">
 								<p class="ct">
@@ -237,7 +262,22 @@
 					<!--<a href="javascript:;">+</a>  -->
 					<ul>
 						<li data-tab="news" class="active">头条</li>
-						<!--<li data-tab="digs">文摘</li>  -->
+						<li data-tab="digs">
+							文摘
+							<div class="mini-tip news-mini-tip">
+								<div class="mini-tip-l"></div>
+								<div class="mini-tip-c">coming soon...</div>
+								<div class="mini-tip-r"></div>
+							</div>
+						</li>
+						<li data-tab="social">
+							社交
+							<div class="mini-tip news-mini-tip">
+								<div class="mini-tip-l"></div>
+								<div class="mini-tip-c">coming soon...</div>
+								<div class="mini-tip-r"></div>
+							</div>
+						</li>
 					</ul>
 				</div>
 				<!-- 标签 
@@ -258,7 +298,6 @@
 							<img src="" />
 						</div>
 						<div class="pic-news-tabs">
-						
 							<a class="active" href="javascript:;" data-tab="0"></a>
 							<a href="javascript:;" data-tab="1"></a>
 							<a href="javascript:;" data-tab="2"></a>
@@ -269,13 +308,13 @@
 					</div>
 					<div class="text-news">
 					<volist name="hotNewsData" id="news">
-						<p><a href="{$news.url}" target="_blank">{$news.title}</a></p>
+						<p><b></b><a href="{$news.url}" target="_blank" rel="external nofollow">{$news.title}</a></p>
 					</volist>
 					<volist name="imgNewsData" id="news" offset="1" length="6">
-						<p><a href="{$news.url}" target="_blank">{$news.title}</a></p>
+						<p><b></b><a href="{$news.url}" target="_blank" rel="external nofollow">{$news.title}</a></p>
 					</volist>
 						<!-- <p class="wide-news"><a href="#"></a></p> -->
-						<p class="more-news"><a href="http://sh.qihoo.com/index.html" target="_blank">更多新闻</a></p>
+						<p class="more-news"><a href="http://sh.qihoo.com/index.html" target="_blank" rel="external nofollow">更多新闻</a></p>
 					</div>
 				</div>
 				<div class="social-digs social-box" style="display: none">
@@ -297,24 +336,25 @@
 			</div>
 		</div>
 	</div>
-</div><!--#container end-->
-<div class="footer">
-	<div class="footer-inner">
-		<!-- <h5 class="friend-links-title">友情链接</h5>
-		<ul class="friend-links">
-			<li><a href="#">另客网</a></li>
-		</ul> -->
-		<div class="site-info">
-			<ul>
-				<li><a target="_blank" href="{:U('/About')}">关于我们</a></li>
-				<li><a target="_blank" href="{:U('/Suggestion')}">留言板</a></li>
-				<li><a target="_blank" href="{:U('/Blogroll')}">友情链接</a></li>
-				<li><a target="_blank" href="{:U('/Recommend')}">推荐链接</a></li>
-			</ul>
-			<p>沪ICP备12036721号 &copy; 另客 2013<script src="http://s96.cnzz.com/stat.php?id=4907803&web_id=4907803&show=pic1" type="text/javascript"></script></p>
+	<div class="footer">
+		<div class="footer-inner">
+			<!-- <h5 class="friend-links-title">友情链接</h5>
+			<ul class="friend-links">
+				<li><a href="#">另客网</a></li>
+			</ul> -->
+			<div class="site-info">
+				<ul>
+					<li><a target="_blank" href="{:U('/About')}">关于我们</a></li>
+					<li><a target="_blank" href="{:U('/Suggestion')}">留言板</a></li>
+					<li><a target="_blank" href="{:U('/Blogroll')}">友情链接</a></li>
+					<li><a target="_blank" href="{:U('/Recommend')}">推荐链接</a></li>
+				</ul>
+				<p>沪ICP备12036721号 &copy; 另客 2013
+				<span style="position:relative;margin-left:20px;top:4px;"><script src="http://s96.cnzz.com/stat.php?id=4907803&web_id=4907803&show=pic1" type="text/javascript"></script></span></p>
+			</div>
 		</div>
 	</div>
-</div>
+</div><!--#container end-->
 <script src="__STATIC__/min/?b=v303b/js&f=jquery-1.7.1.min.js,jquery.cookies.2.2.0.min.js,jquery.plugins.js,index.js"></script>
 </body>
 </html>

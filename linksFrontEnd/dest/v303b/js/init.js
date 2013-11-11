@@ -1,10 +1,10 @@
-/*! Links123CN - v4.0.0 - 2013-11-04 */
+/*! Links123CN - v4.0.0 - 2013-11-10 */
 function createCookie(c, d, f, e) {
 	var e = (e) ? e : "/";
 	if (f) {
 		var b = new Date();
 		b.setTime(b.getTime() + (f * 24 * 60 * 60 * 1000));
-		var a = "; expires=" + b.toGMTString()
+		var a = "; expires=" + b.toGMTString() + ";path=/"
 	} else {
 		var a = ""
 	}

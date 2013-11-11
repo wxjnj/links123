@@ -793,8 +793,9 @@ $( function($) {
 
 			//默认播放第一个频道
 			if($.cookies.get('music_box_v303_close') != 1){
-				$('.music-close-tip').show();   // 关闭提示
+				//$('.music-close-tip').show();   // 关闭提示
 				self.play();
+				self.pause();
 			}else{
 				self.play();
 				self.pause();
@@ -884,6 +885,12 @@ $( function($) {
 				self.play();
 			});
 
+			$('.mini_current_channel').click(function(){
+				if(!$('#K_303_music_iframe').attr('src')){
+					self.play();
+				}
+			});
+
 		},
 		close: function(){
 			$('#J_box_music').hide();
@@ -922,7 +929,7 @@ $( function($) {
 			$('.mini_current_channel').find('.mini_music_channel_btn').appendTo('.mini_channel_list');
 			$('.mini_music_channel_' + id).appendTo('.mini_current_channel');
 		},
-		changeMode: function(mode, isFirst){
+		changeMode: function(mode, isFirst, iconClick){
 			var self = this;
 			if(!isFirst && parseInt($('#J_box_music').css('left')) != 0){
 				self.changeNormalPosition();
@@ -937,12 +944,14 @@ $( function($) {
 				if($(window).height() < 560){
 					$('.normal_music_box').css({
 						'bottom': 'auto',
-						'top' : '0'
+						'top' : '0',
+						'position' : 'absolute'
 					});
 				}else{
 					$('.normal_music_box').css({
-						'bottom': -t,
-						'top' : 'auto'
+						'bottom': 0, //-t, // 这里fixed了，bottom为负值，啥意思？
+						'top' : 'auto',
+						'position' : 'fixed'
 					});
 				}
 			}
@@ -999,15 +1008,16 @@ $( function($) {
 	};
 
 	window.onload = function(){
-		$('a[data-href="#J_box_music"]').trigger('click');
+		//$('a[data-href="#J_box_music"]').trigger('click');
 		$('a[data-href="#J_box_music"]').on('click', function(){
 			setTimeout(function(){
 				MusicBox.changeMode('normal');
+				MusicBox.changeNormalPosition();
 			}, 0);
 		});
 
 	};
-/*
+/**/
 
 	var K_appId = '#J_box_music';
 	if(!$(K_appId).size()){
@@ -1016,6 +1026,6 @@ $( function($) {
 	$('a[data-href="#J_box_music"]').data('links_app') || $('a[data-href="#J_box_music"]').data('links_app', new App(K_appId));
 	var K_app = $('a[data-href="#J_box_music"]').data('links_app');
 	K_app.show();
-*/
+/**/
 
 }(jQuery));

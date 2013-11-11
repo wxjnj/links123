@@ -5,15 +5,15 @@
 .login,
 .join{
 	display: block;
-	float: left;
+	float: right;
 	height: 28px;
 	line-height: 28px;
 	margin: 6px 0 0 5px;
 	width: 78px;
 	text-align: center;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	border-radius: 5px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
 }
 .join{
 	background: #238b3a;

@@ -164,7 +164,7 @@ class EnglishQuestionAction extends CommonAction {
         } else {
             $count = $model->where($map)->count('id');
         }
-        //echo $model->getlastsql()."<br />";
+//        echo $model->getlastsql()."<br />";
         if ($count > 0) {
             import("@.ORG.Page");
             //创建分页对象
@@ -322,32 +322,32 @@ class EnglishQuestionAction extends CommonAction {
     public function insertProperty() {
         $question_id = isset($_REQUEST["question_id"]) ? intval($_REQUEST["question_id"]) : 0;
         
-        $voice       = isset($_REQUEST["voice"])     ? intval($_REQUEST["voice"])     : 1;
-        //$target      = isset($_REQUEST["target"])    ? intval($_REQUEST["target"])    : 1;
-        $pattern     = isset($_REQUEST["pattern"])   ? intval($_REQUEST["pattern"])   : 1;
         $level_one   = isset($_REQUEST["level_one"]) ? intval($_REQUEST["level_one"]) : 0;
         $level_two   = isset($_REQUEST["level_two"]) ? intval($_REQUEST["level_two"]) : 0;
         $level_thr   = isset($_REQUEST["level_thr"]) ? intval($_REQUEST["level_thr"]) : 0;
         $status      = isset($_REQUEST["status"])    ? intval($_REQUEST["status"])    : 1;
         $type        = isset($_REQUEST["type"])      ? intval($_REQUEST["type"])      : 1;
-        $target      = $type == 0 ? 0 : 1;
 
-
+        $model = D("EnglishCatquestion");
+        $model->startTrans();
         $ret = $this->cEnglishQuestionLogic->saveProperty(
                                                     $question_id, 
-                                                    $voice, 
-                                                    $target, 
-                                                    $pattern, 
+                                                    null, 
+                                                    null, 
+                                                    null, 
                                                     $level_one, 
                                                     $level_two, 
                                                     $level_thr, 
                                                     $status, 
-                                                    $type
+                                                    $type,
+                                                    true
                                                 );
         if ($ret === false) {
+            $model->rollback();
             $this->error($this->cEnglishQuestionLogic->getErrorMessage());
             return;
         }
+        $model->commit();
         $this->success('添加分类属性成功');
     }
     function editProperty(){
@@ -394,15 +394,12 @@ class EnglishQuestionAction extends CommonAction {
         
         
         
-        $voice       = isset($_REQUEST["voice"])     ? intval($_REQUEST["voice"])     : 1;
-        $pattern     = isset($_REQUEST["pattern"])   ? intval($_REQUEST["pattern"])   : 1;
         $level_one   = isset($_REQUEST["level_one"]) ? intval($_REQUEST["level_one"]) : 0;
         $level_two   = isset($_REQUEST["level_two"]) ? intval($_REQUEST["level_two"]) : 0;
         $level_thr   = isset($_REQUEST["level_thr"]) ? intval($_REQUEST["level_thr"]) : 0;
         $status      = isset($_REQUEST["status"])    ? intval($_REQUEST["status"])    : 1;
         //$type        = isset($_REQUEST["type"])      ? intval($_REQUEST["type"])      : 1;
         $type = 1; //听力
-        $target      = $type == 0 ? 0 : 1;
         
         $model = D("EnglishCatquestion");
         $cat_map = array(
@@ -410,6 +407,14 @@ class EnglishQuestionAction extends CommonAction {
             "question_id"=>$question_id,
             "type"=>$type
         );
+        $cat_attr_id = D("EnglishCategory")->where(array("cat_id"=>$cat_id))->getField("cat_attr_id");
+        if($cat_attr_id !== false){
+            $cat_attr_id = sprintf("%03d",decbin($cat_attr_id));
+            $voice = substr($cat_attr_id, 0, 1);
+            $target = substr($cat_attr_id, 1, 1);
+            $pattern = substr($cat_attr_id, 2, 1);
+        }
+        $model->startTrans();
         if(false === $model->where($cat_map)->delete()){
             $model->rollback();
             $this->error("操作失败");
@@ -433,7 +438,8 @@ class EnglishQuestionAction extends CommonAction {
                                                     $level_two, 
                                                     $level_thr, 
                                                     $status, 
-                                                    $type
+                                                    $type,
+                                                    false
                                                 );
         if ($ret === false) {
             $model->rollback();
@@ -453,6 +459,12 @@ class EnglishQuestionAction extends CommonAction {
         $ids = explode(",", $id);
         //删除指定记录
         $model = D("EnglishCatquestion");
+        $total = $model->alias("a")
+                ->join(C("DB_PREFIX")."english_category b on a.cat_id=b.cat_id")->where(array("a.question_id"=>$question_id,"b.level_one"=>array("neq",-1)))->count("a.cat_id");
+        //保证需要有一个分类
+        if(intval($total) == 1){
+            $this->error("最后一个分类，不能删除");
+        }
         $cat_condition = array(
             "cat_id" => array('in', $ids),
             );
@@ -515,10 +527,14 @@ class EnglishQuestionAction extends CommonAction {
 
 
     public function add() {
-        $object_list = D("EnglishObject")->where("`status`=1")->order("sort")->select();
-        $this->assign("object_list", $object_list);
-        $level_list = D("EnglishLevel")->where("`status`=1")->order("sort")->select();
-        $this->assign("level_list", $level_list);
+        //@ 一级类目
+        $category["level_one"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("1");
+        //@ 二级类目
+        $category["level_two"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("2");
+        
+        $category["level_thr"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("3");
+
+        $this->assign("category", $category);
 
         $this->display();
     }
@@ -527,8 +543,9 @@ class EnglishQuestionAction extends CommonAction {
         $model = D("EnglishQuestion");
         $answer = intval($_POST['answer']);
         $optionModel = D("EnglishOptions");
+        $is_empty_question  = intval($_POST['is_empty_question']) == 1 ? true : false;
         $model->startTrans();
-
+        
         //判断题目是否为判断题
         $is_double_true = false; //是否为True文字选项
         $is_double_false = false; //是否为False文字选项
@@ -582,7 +599,7 @@ class EnglishQuestionAction extends CommonAction {
         if (!empty($_REQUEST['media_source_url'])) {
             $this->media_text_url = $_REQUEST['media_source_url'];
             $mediaMap = array();
-            $mediaMap['media_source_url'] = ftrim($_REQUEST['media_source_url']);
+            $mediaMap['media_source_url'] = array("like",$_REQUEST['media_source_url']);
             $mediaId = intval($mediaModel->where($mediaMap)->getField('id'));
         }
         if ($mediaId == 0 && !empty($_REQUEST['media_name'])) {
@@ -597,21 +614,51 @@ class EnglishQuestionAction extends CommonAction {
             $model->status = 0;
         }
         //选项是否有重复，有则题目停用
-        if ($model->status == 1 && count(array_unique($_POST['option'])) < count($_POST['option']) && !($is_double_false && $is_double_true)) {
+        if (!$is_empty_question && $model->status == 1 && count(array_unique($_POST['option'])) < count($_POST['option']) && !($is_double_false && $is_double_true)) {
             $model->status = 0;
         }
 
-        $model->answer = $option_id[$answer - 1];
-        if ($model->status == 1 && $answer <= 0 || empty($option_id) || empty($option_id[$answer - 1])) {
+        $model->answer = intval($option_id[$answer - 1]);
+        if (!$is_empty_question && ($model->status == 1 && $answer <= 0 || empty($option_id) || empty($option_id[$answer - 1]))) {
             $model->status = 0;
             $model->answer = 0;
         }
         //保存当前数据对象
         $list = $model->add();
         if ($list !== false) { //保存成功
-            if (false === $optionModel->where("id in (" . implode(",", $option_id) . ")")->setField("question_id", $list)) {
+            if(!empty($option_id)){
+                if (false === $optionModel->where("id in (" . implode(",", $option_id) . ")")->setField("question_id", $list)) {
+                    $model->rollback();
+                    $this->error('新增失败!');
+                }
+            }
+            $question_id = $list;
+        
+            $voice       = intval($_REQUEST["voice"]) ;
+            $pattern     = intval($_REQUEST["pattern"]);
+            $level_one   = intval($_REQUEST["level_one"]);
+            $level_two   = intval($_REQUEST["level_two"]);
+            $level_thr   = intval($_REQUEST["level_thr"]);
+            $status      = intval($_REQUEST["status"]);
+            $type        = 1;//听力
+            $target      = 1;//听力
+
+
+            $ret = $this->cEnglishQuestionLogic->saveProperty(
+                                                        $question_id, 
+                                                        $voice, 
+                                                        $target, 
+                                                        $pattern, 
+                                                        $level_one, 
+                                                        $level_two, 
+                                                        $level_thr, 
+                                                        $status, 
+                                                        $type,
+                                                        true
+                                                    );
+            if ($ret === false) {
                 $model->rollback();
-                $this->error('新增失败!');
+                $this->error($this->cEnglishQuestionLogic->getErrorMessage());
             }
             $model->commit();
             $this->success('新增成功!', cookie('_currentUrl_'));
@@ -631,6 +678,9 @@ class EnglishQuestionAction extends CommonAction {
         $vo['media_name'] = htmlspecialchars($vo['media_name']);
         $vo['name'] = htmlspecialchars($vo['name']);
         $option_list = D("EnglishOptions")->getQuestionOptionList($id, false);
+        if(empty($vo['content'])&& intval($vo['answer']) == 0 && empty($option_list)){
+            $this->assign("is_empty_question",1);
+        }
         $this->assign('option_list', $option_list);
         $this->assign('vo', $vo);
         $this->assign('doubleQuotes', '"');
@@ -648,6 +698,7 @@ class EnglishQuestionAction extends CommonAction {
         $optionModel = D("EnglishOptions");
         $id = intval($_REQUEST['id']);
         $optionModel->startTrans();
+        $is_empty_question  = intval($_POST['is_empty_question']) == 1 ? true : false;
         //删除选项
         $map['question_id'] = $id;
         $optionModel->where($map)->delete();
@@ -713,12 +764,14 @@ class EnglishQuestionAction extends CommonAction {
             $this->media_text_url = ftrim($_REQUEST['media_source_url']);
             $mediaMap = array();
             $mediaMap['media_source_url'] = $_REQUEST['media_source_url'];
-            $mediaId = intval($mediaModel->where($mediaMap)->getField('id'));
+            $mediaInfo = $mediaModel->where($mediaMap)->find();
+            $mediaId = intval($mediaInfo['id']);
         }
         if ($mediaId == 0 && !empty($_REQUEST['media_name'])) {
             $mediaMap = array();
             $mediaMap['name'] = $_REQUEST['media_name'];
-            $mediaId = intval($mediaModel->where($mediaMap)->getField('id'));
+            $mediaInfo = $mediaModel->where($mediaMap)->find();
+            $mediaId = intval($mediaInfo['id']);
         }
         //
         //媒体id为零，将试题置为禁用
@@ -727,11 +780,11 @@ class EnglishQuestionAction extends CommonAction {
             $model->status = 0;
         }
         //选项是否有重复，有则题目停用
-        if ($model->status == 1 && count(array_unique($_POST['option'])) < count($_POST['option']) && !($is_double_false && $is_double_true)) {
+        if (!$is_empty_question && $model->status == 1 && count(array_unique($_POST['option'])) < count($_POST['option']) && !($is_double_false && $is_double_true)) {
             $model->status = 0;
         }
         $model->answer = $answer_id;
-        if ($model->status == 1 && ($answer <= 0 || $answer_id == 0)) {
+        if (!$is_empty_question && $model->status == 1 && ($answer <= 0 || $answer_id == 0)) {
             $model->status = 0;
             $model->answer = 0;
         }
@@ -740,6 +793,23 @@ class EnglishQuestionAction extends CommonAction {
             $model->rollback();
             $this->error('编辑失败！');
         }
+        //更新分类试题数量
+        if($_POST['old_status'] == 1){
+            if($_POST['status'] != 1 && $mediaInfo['status'] == 1){
+                if(false == D("EnglishCategory")->updateCategoryQuestionNumByQuestion($id, true, 1)){
+                    $model->rollback();
+                    $this->error('编辑失败！');
+                }
+            }
+        }else{
+            if($_POST['status'] == 1 && $mediaInfo['status'] == 1){
+                if(false == D("EnglishCategory")->updateCategoryQuestionNumByQuestion($id, false, 1)){
+                    $model->rollback();
+                    $this->error('编辑失败！');
+                }
+            }
+        }
+        
         $model->commit();
         $this->success("编辑成功！");
     }
@@ -1139,61 +1209,63 @@ class EnglishQuestionAction extends CommonAction {
                         Log::write("导入听力试题，未找到对应的媒体：".$media_data['media_source_url'], Log::INFO);
                     }
 
-                    //插入答案
-                    $option_id = array();
-                    //判断题目是否是判断题
-                    $is_double_true = false; //是否为True文字选项
-                    $is_double_false = false; //是否为False文字选项
-                    foreach ($data['option'] as $key => $value) {
-                        if (preg_match("/True.?/i", $value)) {
-                            $is_double_true = true;
-                        }
-                        if (preg_match("/False.?/i", $value)) {
-                            $is_double_false = true;
-                        }
-                    }
-                    //选项是否有重复，有则题目停用
-                    if (count(array_unique($data['option'])) < count($data['option']) && !($is_double_false && $is_double_true)) {
-                        $data['status'] = 0;
-                        Log::write("导入听力试题，有重复选项，锁住：".$data['name'], Log::INFO);
-                    }
-                    //
-                    //依次存入选项，不知道问题id
-                    $option_data['created'] = $time;
-                    $index = array(1, 2, 3, 4); //选择序号数组
-                    foreach ($data['option'] as $key => $value) {
-                        if (!empty($value)) {
-                            $d_1 = preg_match("/all(\s)+of(\s)+the(\s+)above.?/i", $value);
-                            $d_2 = preg_match("/none(\s)+of(\s)+the(\s)+above.?/i", $value);
-                            $d_3 = preg_match("/either(\s)+B(\s)+or(\s)+C.?/i", $value);
-                            $d_4 = preg_match("/(both(\s)+)?B(\s)+and(\s)+C.?/i", $value);
-                            $c_1 = preg_match("/(both(\s)+A)?(\s)+and(\s)+B.?/i", $value);
-                            $c_2 = preg_match("/either(\s)+A(\s)+or(\s)+B.?/i", $value);
-                            $option_data['content'] = $value;
-                            $option_data['sort'] = current($index); //选项排序等于当前最前面序号
-                            if ($d_1 || $d_2 || $d_3 || $d_4) {
-                                $option_data['sort'] = 4; //D
-                            } else if ($c_1 || $c_2) {
-                                $option_data['sort'] = 3; //C
+                    if($data['answer'] != -1){
+                        //插入答案
+                        $option_id = array();
+                        //判断题目是否是判断题
+                        $is_double_true = false; //是否为True文字选项
+                        $is_double_false = false; //是否为False文字选项
+                        foreach ($data['option'] as $key => $value) {
+                            if (preg_match("/True.?/i", $value)) {
+                                $is_double_true = true;
                             }
-                            unset($index[array_search($option_data['sort'], $index)]); //已排序的序号删除
+                            if (preg_match("/False.?/i", $value)) {
+                                $is_double_false = true;
+                            }
+                        }
+                        //选项是否有重复，有则题目停用
+                        if (count(array_unique($data['option'])) < count($data['option']) && !($is_double_false && $is_double_true)) {
+                            $data['status'] = 0;
+                            Log::write("导入听力试题，有重复选项，锁住：".$data['name'], Log::INFO);
+                        }
+                        //
+                        //依次存入选项，不知道问题id
+                        $option_data['created'] = $time;
+                        $index = array(1, 2, 3, 4); //选择序号数组
+                        foreach ($data['option'] as $key => $value) {
+                            if (!empty($value)) {
+                                $d_1 = preg_match("/all(\s)+of(\s)+the(\s+)above.?/i", $value);
+                                $d_2 = preg_match("/none(\s)+of(\s)+the(\s)+above.?/i", $value);
+                                $d_3 = preg_match("/either(\s)+B(\s)+or(\s)+C.?/i", $value);
+                                $d_4 = preg_match("/(both(\s)+)?B(\s)+and(\s)+C.?/i", $value);
+                                $c_1 = preg_match("/(both(\s)+A)?(\s)+and(\s)+B.?/i", $value);
+                                $c_2 = preg_match("/either(\s)+A(\s)+or(\s)+B.?/i", $value);
+                                $option_data['content'] = $value;
+                                $option_data['sort'] = current($index); //选项排序等于当前最前面序号
+                                if ($d_1 || $d_2 || $d_3 || $d_4) {
+                                    $option_data['sort'] = 4; //D
+                                } else if ($c_1 || $c_2) {
+                                    $option_data['sort'] = 3; //C
+                                }
+                                unset($index[array_search($option_data['sort'], $index)]); //已排序的序号删除
 
-                            $ret = $optionModel->add($option_data);
-                            if (false === $ret) {
-                                $model->rollback();
-                                Log::write("导入失败，添加试题选项失败：".$optionModel->getLastSql(), Log::ERR);
-                                die(json_encode(array("info" => "导入失败，添加试题选项失败！", "status" => false)));
+                                $ret = $optionModel->add($option_data);
+                                if (false === $ret) {
+                                    $model->rollback();
+                                    Log::write("导入失败，添加试题选项失败：".$optionModel->getLastSql(), Log::ERR);
+                                    die(json_encode(array("info" => "导入失败，添加试题选项失败！", "status" => false)));
+                                }
+                                array_push($option_id, $ret); //保存增加的id数组，用于更新选项对应的问题id
                             }
-                            array_push($option_id, $ret); //保存增加的id数组，用于更新选项对应的问题id
                         }
-                    }
-                    //答案id
-                    $data['answer'] = $option_id[$data['answer'] - 1];
-                    //没有答案或者不是双选下选项小于4
-                    if ($data['answer'] == 0 || (count($option_id) < 4 && !($is_double_false && $is_double_true))) {
-                        $data['status'] = 0;
-                        $data['answer'] = 0;
-                        Log::write("导入听力试题，选项小于四个或没有答案，锁住：".$data['name'], Log::INFO);
+                        //答案id
+                        $data['answer'] = $option_id[$data['answer'] - 1];
+                        //没有答案或者不是双选下选项小于4
+                        if ($data['answer'] == 0 || (count($option_id) < 4 && !($is_double_false && $is_double_true))) {
+                            $data['status'] = 0;
+                            $data['answer'] = 0;
+                            Log::write("导入听力试题，选项小于四个或没有答案，锁住：".$data['name'], Log::INFO);
+                        }
                     }
 
                     
@@ -1424,7 +1496,7 @@ class EnglishQuestionAction extends CommonAction {
                 $object_level_one_id = $value['id'];
             }
         }
-        $ret = $model->where($map)->select();
+        $ret = $model->where($map)->group("englishQuestion.id")->select();
         $optionsModel = D("EnglishOptions");
         foreach ($ret as $key => $value) {
             $options = $optionsModel->where("question_id=" . $value['id'])->order("sort asc")->select();
@@ -1563,7 +1635,6 @@ class EnglishQuestionAction extends CommonAction {
         $name = $this->getActionName();
         $model = D($name);
         $categoryModel = D("EnglishCategory");
-        $catquestionModel =  D("EnglishCatquestion");
         $pk = $model->getPk();
         $id = $_REQUEST [$pk];
         $condition = array($pk => array('in', $id));
@@ -1573,27 +1644,16 @@ class EnglishQuestionAction extends CommonAction {
         );
         $q_map['question.id'] = array('in',$id);
         $q_list = $model->alias("question")->join(C("DB_PREFIX")."english_media media on media.id=question.media_id")->field("question.id")->where($q_map)->select();
+        foreach ($q_list as $value) {
+            $question_ids[] = $value['id'];
+        }
         $model->startTrans();
-        $time = time();
         $list = $model->forbid($condition);
         
         if ($list !== false) {
-            foreach ($q_list as $value){
-                $cat_question_map = array(
-                    "question_id"=>$value['id'],
-                    "type"=>1,
-                    "status"=>1
-                );
-                $cat_list = $catquestionModel->where($cat_question_map)->select();
-                foreach($cat_list as $v){
-                    $data['question_num'] = array('exp','question_num-1');
-                    $data['updated'] = $time;
-                    $ret = $categoryModel->where(array("cat_id"=>$v['cat_id']))->save($data);
-                    if(false === $ret){
-                        $model->rollback();
-                        $this->error('状态禁用失败！');
-                    }
-                }
+            if(false === $categoryModel->updateCategoryQuestionNumByQuestion($question_ids, true, 1)){
+                $model->rollback();
+                $this->error('状态禁用失败！');
             }
             $model->commit();
             $this->success('状态禁用成功', $this->getReturnUrl());
@@ -1607,44 +1667,92 @@ class EnglishQuestionAction extends CommonAction {
         $name = $this->getActionName();
         $model = D($name);
         $categoryModel = D("EnglishCategory");
-        $catquestionModel =  D("EnglishCatquestion");
         $pk = $model->getPk();
         $id = $_REQUEST [$pk];
         //获取被禁用的试题列表，为更新分类下的试题数量准备
         $condition = array($pk => array('in', $id));
         $q_map = array(
-            "question.status"=>0,
-            "media.status"=>0
+            "question.status"=>array("neq",1),
+            "media.status"=>1
         );
         $q_map['question.id'] = array('in',$id);
         $q_list = $model->alias("question")->join(C("DB_PREFIX")."english_media media on media.id=question.media_id")->field("question.id")->where($q_map)->select();
+        foreach ($q_list as $value) {
+            $question_ids[] = $value['id'];
+        }
         $model->startTrans();
-        $time = time();
         $list = $model->resume($condition);
         
         if ($list !== false) {
-            foreach ($q_list as $value){
-                $cat_question_map = array(
-                    "question_id"=>$value['id'],
-                    "type"=>1,
-                    "status"=>1
-                );
-                $cat_list = $catquestionModel->where($cat_question_map)->select();
-                foreach($cat_list as $v){
-                    $data['question_num'] = array('exp','question_num+1');
-                    $data['updated'] = $time;
-                    $ret = $categoryModel->where(array("cat_id"=>$v['cat_id']))->save($data);
-                    if(false === $ret){
-                        $model->rollback();
-                        $this->error('状态启用失败！');
-                    }
-                }
+            if(false === $categoryModel->updateCategoryQuestionNumByQuestion($question_ids, false, 1)){
+                $model->rollback();
+                $this->error('状态启用失败！');
             }
             $model->commit();
             $this->success('状态启用成功', $this->getReturnUrl());
         } else {
             $model->rollback();
             $this->error('状态启用失败！');
+        }
+    }
+    public function delete() {
+        $name = $this->getActionName();
+        $model = D($name);
+        $categoryModel = D("EnglishCategory");
+        $pk = $model->getPk();
+        $id = $_REQUEST [$pk];
+        $condition = array($pk => array('in', $id));
+        $q_map = array(
+            "question.status"=>1,
+            "media.status"=>1
+        );
+        $q_map['question.id'] = array('in',$id);
+        $q_list = $model->alias("question")->join(C("DB_PREFIX")."english_media media on media.id=question.media_id")->field("question.id")->where($q_map)->select();
+        foreach ($q_list as $value) {
+            $question_ids[] = $value['id'];
+        }
+        $model->startTrans();
+        $list = $model->where($condition)->setField("status",-1);
+        
+        if ($list !== false) {
+            if(false === $categoryModel->updateCategoryQuestionNumByQuestion($question_ids, true, 1)){
+                $model->rollback();
+                $this->error('删除失败！');
+            }
+            $model->commit();
+            $this->success('删除成功', $this->getReturnUrl());
+        } else {
+            $model->rollback();
+            $this->error('删除失败！');
+        }
+    }
+
+    public function voice(){
+        if($this->isAjax()){
+            $id = intval($_REQUEST['id']);
+            $model = D("EnglishCatquestion");
+            $model->startTrans();
+            $ret  = $this->cEnglishQuestionLogic->setQuestionCatAttrId($id,"voice",1);
+            if(false === $ret){
+                $model->rollback();
+                $this->ajaxReturn("",  $this->cEnglishQuestionLogic->getErrorMessage(),false);
+            }
+            $model->commit();
+            $this->ajaxReturn($ret, "操作成功",true);
+        }
+    }
+    public function pattern(){
+        if($this->isAjax()){
+            $id = intval($_REQUEST['id']);
+            $model = D("EnglishCatquestion");
+            $model->startTrans();
+            $ret  = $this->cEnglishQuestionLogic->setQuestionCatAttrId($id,"pattern",1);
+            if(false === $ret){
+                $model->rollback();
+                $this->ajaxReturn("",  $this->cEnglishQuestionLogic->getErrorMessage(),false);
+            }
+            $model->commit();
+            $this->ajaxReturn($ret, "操作成功",true);
         }
     }
 

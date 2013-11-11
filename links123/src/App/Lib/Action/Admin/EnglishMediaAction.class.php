@@ -205,41 +205,6 @@ class EnglishMediaAction extends CommonAction {
         if (false === $model->create()) {
             $this->error($model->getError());
         }
-        //为设置难度准备
-        $levels = D("EnglishLevel")->order("`sort` ASC")->select();
-        foreach ($levels as $value) {
-            $level_list[$value['id']] = $value;
-            $level_name_list_info[$value['name']] = $value;
-        }
-        //在指定范围内的指定对应的难度值
-        if ($level_list[intval($_REQUEST['level'])]['sort'] <= $level_name_list_info['小六']['sort']) {
-            $model->difficulty = 1;
-        } else if ($level_list[intval($_REQUEST['level'])]['sort'] >= $level_name_list_info['大一']['sort']) {
-            $model->difficulty = 3;
-        } else {
-            $model->difficulty = 2;
-        }
-        if (intval($_REQUEST['special_recommend']) == 1) {
-            $_REQUEST['recommend'] = 1;
-        }
-        if (intval($_REQUEST['recommend']) == 1) {
-            $recommendId = D("EnglishMediaRecommend")->getRecommendIdByObjectOrSubject($_REQUEST['object'], $_REQUEST['subject']);
-            if ($recommendId == false) {
-                $model->rollback();
-                //失败提示
-                $this->error('新增失败!');
-            }
-            $model->recommend = intval($recommendId);
-        }
-        if (intval($_REQUEST['ted']) == 1) {
-            $tedId = D("EnglishMediaTed")->getTedIdByObjectOrSubject($_REQUEST['object'], $_REQUEST['subject']);
-            if ($tedId == false) {
-                $model->rollback();
-                //失败提示
-                $this->error('新增失败!');
-            }
-            $model->ted = intval($tedId);
-        }
        
         $media['media_source_url'] = $model->media_source_url;
         $media['name'] = $model->name;
@@ -248,26 +213,13 @@ class EnglishMediaAction extends CommonAction {
         
         $media_id = $media['media_id'] = $list;
         if ($list !== false) { //保存成功
+            if(false === $model->setSpecialRecommend($media, $_POST['special_recommend'])){
+                $model->rollback();
+                $this->error("编辑失败");
+            }
             $model->commit();
            
-            //给特别推荐添加空试题，添加分类  @author slate date:2013-11-02
-            if (intval($_REQUEST['special_recommend']) == 1) {
-            	$englishQuestionModel = M('EnglishQuestion');
-            	$question = $englishQuestionModel->where(array('media_id' => $media_id))->find();
-            	if (!$question['id']) {
-            		$question_id = $englishQuestionModel->add(array('media_id' => $media_id, 'name' => $media['name'], 'media_text_url' => $media['media_source_url'],'status' => 1));
-            		if ($question_id) {
-            		$englishCatgoryModel = D('EnglishCategory');
-            			$cat = $englishCatgoryModel->where(array('cat_attr_id' => 7,'level_one' => -1, 'level_two' => -1, 'level_thr' => -1))->find();
-            			if ($cat['cat_id']) {
-            				$englishCatquestionModel = D('EnglishCatquestion');
-            				$catquestion_id = $englishCatquestionModel->add(array('cat_id' => $cat['cat_id'], 'question_id' => $question_id,'type' => 1, 'status' => 1));
-            			}
-            		}
-            	}
-            } 
             //TODO 推荐视频解析 @author slate date 20131001
-            //$model->analysisMediaPlayCode($media);
             $this->analysisMediaPlayCode($media_id);
             
             $this->success('新增成功!', cookie('_currentUrl_'));
@@ -305,86 +257,113 @@ class EnglishMediaAction extends CommonAction {
         $name = $this->getActionName();
         $model = D($name);
         $model->startTrans();
+        $media_info = $model->find($_POST['id']);
         if (false === $model->create()) {
             $this->error($model->getError());
         }
-        $levels = D("EnglishLevel")->order("`sort` ASC")->select();
-        foreach ($levels as $key => $value) {
-            $level_list[$value['id']] = $value;
-            $level_name_list_info[$value['name']] = $value;
-        }
-        if ($level_list[intval($_REQUEST['level'])]['sort'] <= $level_name_list_info['小六']['sort']) {
-            $model->difficulty = 1;
-        } else if ($level_list[intval($_REQUEST['level'])]['sort'] >= $level_name_list_info['大一']['sort']) {
-            $model->difficulty = 3;
-        } else {
-            $model->difficulty = 2;
-        }
         if (!empty($_FILES['img']['name'])) {
+            if(!preg_match("/^((http)|(https):\/\/)/i", $media_info['media_source_url'])){
+                $media_info['media_text_url'] = "http://".$media_info['media_source_url'];
+            }
+            $host = explode('.', parse_url($media_info['media_source_url'], PHP_URL_HOST));
+            if(!isset($host[1])){
+                $host[1] = "others";
+            }
+            $upload_path = $host[1]."/".date("Ymd",$media_info['created'])."/";
+            $file_name = md5($media_info['media_source_url']);
+            $token = md5($upload_path.$file_name.date("Ymd")."!@#$%");
             import("@.ORG.UploadFile");
             $upload = new UploadFile();
             $upload->maxSize = 11000000; // 设置附件上传大小
             $upload->allowExts = array('jpeg', 'jpg', 'png', 'gif'); // 设置附件上传类型
-            $upload->saveRule = time();
-            $dir_name = date("Ym");
-            $upload->savePath = C("ENGLISH_MEDIA_IMG_PATH") . "/" . $dir_name . "/"; // 设置附件上传目录
+            $upload->saveRule = uniqid();
+            $upload->savePath = "./Public/Uploads/Temp/"; // 设置附件上传目录
             if (!$upload->upload()) {// 上传错误提示错误信息
                 $this->error($upload->getErrorMsg());
             } else {// 上传成功 获取上传文件信息
                 $info = $upload->getUploadFileInfo();
-                $model->media_thumb_img = $dir_name . "/" . $info[0]['savename'];
+                
+                
+                $ch = curl_init();
+                $data = array('file'=>'@'. realpath($info[0]['savepath'] . $info[0]['savename']),'token'=>$token,"file_name"=>$file_name,"path"=>$upload_path);
+                curl_setopt($ch,CURLOPT_URL,C("VIDEO_UPLOAD_PATH")."upload_image.php");
+                curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
+                curl_setopt($ch,CURLOPT_POST,true);
+                curl_setopt($ch,CURLOPT_POSTFIELDS,$data);
+                $result = curl_exec($ch);
+                curl_close($ch);
+                $ret = json_decode($result);
+                if($ret.status === false){
+                    $model->rollback();
+                    $this->error($ret.info);
+                }
+                $model->media_thumb_img = C("VIDEO_UPLOAD_PATH") . $upload_path . $file_name . "." . $info[0]['extension'];
             }
         }
-        if (intval($_REQUEST['special_recommend']) == 1) {
-            $_REQUEST['recommend'] = 1;
-        }
-        if (intval($_REQUEST['recommend']) == 1) {
-            $recommendId = D("EnglishMediaRecommend")->getRecommendIdByObjectOrSubject($_REQUEST['object'], $_REQUEST['subject']);
-            if (false == $recommendId) {
-                //错误提示
-                $model->rollback();
-                $this->error('编辑失败!');
-            }
-            if (intval($recommendId) > 0) {
-                $model->recommend = $recommendId;
-            }
-        }
-        if (intval($_REQUEST['ted']) == 1) {
-            $tedId = D("EnglishMediaTed")->getTedIdByObjectOrSubject($_REQUEST['object'], $_REQUEST['subject']);
-            if (false == $tedId) {
-                //错误提示
-                $model->rollback();
-                $this->error('编辑失败!');
-            }
-            if (intval($tedId) > 0) {
-                $model->ted = $tedId;
-            }
-        }
+        
         $media_id = $media['media_id'] = $model->id;
         $media['media_source_url'] = $model->media_source_url;
         $media['name'] = $model->name;
         // 更新数据
         $list = $model->save();
         if (false !== $list) {
-            $model->commit();
-            
-            //给特别推荐添加空试题，添加分类  @author slate date:2013-11-02
-            if (intval($_REQUEST['special_recommend']) == 1) {
-            	$englishQuestionModel = D('EnglishQuestion');
-            	$question = $englishQuestionModel->where(array('media_id' => $media_id))->find();
-            	if (!$question['id']) {
-            		$question_id = $englishQuestionModel->add(array('media_id' => $media_id, 'name' => $media['name'], 'media_text_url' => $media['media_source_url'], 'status' => 1));
-            		if ($question_id) {
-            			$englishCatgoryModel = D('EnglishCategory');
-            			$cat = $englishCatgoryModel->where(array('cat_attr_id' => 7, 'level_one' => -1, 'level_two' => -1, 'level_thr' => -1))->find();
-            			if ($cat['cat_id']) {
-            				$englishCatquestionModel = D('EnglishCatquestion');
-            				$englishCatquestionModel->add(array('cat_id' => $cat['cat_id'], 'question_id' => $question_id,'type' => 1, 'status' => 1));
-            			}
-            		}
-            	}
+            if(false === $model->setSpecialRecommend($media_id, $_POST['special_recommend'])){
+                $model->rollback();
+                $this->error("编辑失败");
             }
             
+            $categoryModel = D("EnglishCategory");
+            $questionModel = D("EnglishQuestion");
+            $questionSpeakModel = D("EnglishQuestionSpeak");
+            $q_map['media_id'] = array("in", $media_id);
+            $q_map['status'] = 1;
+            $question_list = $questionModel->field("id")->where($q_map)->select();
+            $question_speak_list = $questionSpeakModel->field("id")->where($q_map)->select();
+            //更新分类试题数量
+            if($_POST['old_status'] == 1 && $_POST['status'] != 1){
+                if(!empty($question_speak_list)){
+                    $question_ids = array();
+                    foreach($question_speak_list as $value){
+                        $question_ids[] = $value['id'];
+                    }
+                    if(false === $categoryModel->updateCategoryQuestionNumByQuestion($question_ids, true, 0)){
+                        $model->rollback();
+                        $this->error('编辑失败！');
+                    }
+                }
+                if(!empty($question_list)){
+                    $question_ids = array();
+                    foreach($question_list as $value){
+                        $question_ids[] = $value['id'];
+                    }
+                    if(false === $categoryModel->updateCategoryQuestionNumByQuestion($question_ids, true, 1)){
+                        $model->rollback();
+                        $this->error('编辑失败！');
+                    }
+                }
+            }elseif($_POST['old_status'] != 1 && $_POST['status'] == 1){
+                if(!empty($question_speak_list)){
+                    $question_ids = array();
+                    foreach($question_speak_list as $value){
+                        $question_ids[] = $value['id'];
+                    }
+                    if(false === $categoryModel->updateCategoryQuestionNumByQuestion($question_ids, false, 0)){
+                        $model->rollback();
+                        $this->error('编辑失败！');
+                    }
+                }
+                if(!empty($question_list)){
+                    $question_ids = array();
+                    foreach($question_list as $value){
+                        $question_ids[] = $value['id'];
+                    }
+                    if(false === $categoryModel->updateCategoryQuestionNumByQuestion($question_ids, false, 1)){
+                        $model->rollback();
+                        $this->error('编辑失败！');
+                    }
+                }
+            }
+            $model->commit();
             //TODO 推荐视频解析 @author slate date 20131001
             if (!$model->play_code) {
 	            
@@ -402,6 +381,7 @@ class EnglishMediaAction extends CommonAction {
     private function analysisMediaPlayCode($media_id) {
         $model = D("EnglishMedia");
         $media = $model->find($media_id);
+        $media['media_local_path'] = $media['local_path'];
         $saveData = array();
         $saveData['id'] = $media['id'];
         $saveData['priority_type'] = empty($media['priority_type'])? 1 : $media['priority_type'];
@@ -629,6 +609,7 @@ class EnglishMediaAction extends CommonAction {
     public function setSpecialRecommend() {
         if ($this->isAjax()) {
             $model = D("EnglishMedia");
+            $model->startTrans();
             $data = array();
             $map['id'] = $_REQUEST['id'];
             $now_special_recommend = $model->where($map)->getField("special_recommend");
@@ -638,8 +619,15 @@ class EnglishMediaAction extends CommonAction {
                 $special_recommend = 1;
             }
             if(false === $model->where($map)->setField("special_recommend",$special_recommend)){
+                $model->rollback();
                 $this->ajaxReturn("", "操作失败", false);
             }
+            $media = $model->find($map['id']);
+            if(false === $model->setSpecialRecommend($media, $special_recommend)){
+                $model->rollback();
+                $this->ajaxReturn("", "操作失败", false);
+            }
+            $model->commit();
             $data['special_recommend'] = $special_recommend;
             $this->ajaxReturn($data, "操作成功", true);
         }
@@ -728,7 +716,6 @@ class EnglishMediaAction extends CommonAction {
         $name = $this->getActionName();
         $model = D($name);
         $categoryModel = D("EnglishCategory");
-        $catquestionModel =  D("EnglishCatquestion");
         $questionModel = D("EnglishQuestion");
         $questionSpeakModel = D("EnglishQuestionSpeak");
         $pk = $model->getPk();
@@ -736,12 +723,11 @@ class EnglishMediaAction extends CommonAction {
         $condition = array($pk => array('in', $id));
         $old_media_list = $model->field("id,status")->where($condition)->select();
         $model->startTrans();
-        $time = time();
         $list = $model->forbid($condition);
         
         if ($list !== false) {
             foreach($old_media_list as $value){
-                if($value['status'] == 0){
+                if($value['status'] != 1){
                     continue;
                 }
                 $media_ids[] = $value['id'];
@@ -750,36 +736,201 @@ class EnglishMediaAction extends CommonAction {
             $q_map['status'] = 1;
             $question_list = $questionModel->field("id,1 as type")->where($q_map)->select();
             $question_speak_list = $questionSpeakModel->field("id,0 as type")->where($q_map)->select();
-            if(empty($question_speak_list)){
-                $q_list = $question_list;
-            }elseif(empty($question_list)){
-                $q_list = $question_speak_list;
-            }else{
-                $q_list = array_merge($question_speak_list,$question_list);
-            }
-            
-            foreach ($q_list as $question){
-                $cat_question_map = array(
-                    "question_id"=>$question['id'],
-                    "type"=>$question['type'],
-                    "status"=>1
-                );
-                $cat_list = $catquestionModel->where($cat_question_map)->select();
-                foreach($cat_list as $v){
-                    $data['question_num'] = array('exp','question_num-1');
-                    $data['updated'] = $time;
-                    $ret = $categoryModel->where(array("cat_id"=>$v['cat_id']))->save($data);
-                    if(false === $ret){
-                        $model->rollback();
-                        $this->error('状态禁用失败！');
-                    }
+            if(!empty($question_speak_list)){
+                $question_ids = array();
+                foreach($question_speak_list as $value){
+                    $question_ids[] = $value['id'];
+                }
+                if(false === $categoryModel->updateCategoryQuestionNumByQuestion($question_ids, true, 0)){
+                    $model->rollback();
+                    $this->error('状态禁用失败！');
                 }
             }
+            if(!empty($question_list)){
+                $question_ids = array();
+                foreach($question_list as $value){
+                    $question_ids[] = $value['id'];
+                }
+                if(false === $categoryModel->updateCategoryQuestionNumByQuestion($question_ids, true, 1)){
+                    $model->rollback();
+                    $this->error('状态禁用失败！');
+                }
+            }
+            
             $model->commit();
             $this->success('状态禁用成功', $this->getReturnUrl());
         } else {
             $model->rollback();
             $this->error('状态禁用失败！');
+        }
+    }
+    public function resume() {
+        $name = $this->getActionName();
+        $model = D($name);
+        $categoryModel = D("EnglishCategory");
+        $questionModel = D("EnglishQuestion");
+        $questionSpeakModel = D("EnglishQuestionSpeak");
+        $pk = $model->getPk();
+        $id = $_REQUEST [$pk];
+        $condition = array($pk => array('in', $id));
+        $old_media_list = $model->field("id,status")->where($condition)->select();
+        $model->startTrans();
+        $list = $model->resume($condition);
+        
+        if ($list !== false) {
+            foreach($old_media_list as $value){
+                if($value['status'] == 1){
+                    continue;
+                }
+                $media_ids[] = $value['id'];
+            }
+            $q_map['media_id'] = array("in", $media_ids);
+            $q_map['status'] = 1;
+            $question_list = $questionModel->field("id,1 as type")->where($q_map)->select();
+            $question_speak_list = $questionSpeakModel->field("id,0 as type")->where($q_map)->select();
+            if(!empty($question_speak_list)){
+                $question_ids = array();
+                foreach($question_speak_list as $value){
+                    $question_ids[] = $value['id'];
+                }
+                if(false === $categoryModel->updateCategoryQuestionNumByQuestion($question_ids, false, 0)){
+                    $model->rollback();
+                    $this->error('状态启用失败！');
+                }
+            }
+            if(!empty($question_list)){
+                $question_ids = array();
+                foreach($question_list as $value){
+                    $question_ids[] = $value['id'];
+                }
+                if(false === $categoryModel->updateCategoryQuestionNumByQuestion($question_ids, false, 1)){
+                    $model->rollback();
+                    $this->error('状态启用失败！');
+                }
+            }
+            
+            $model->commit();
+            $this->success('状态启用成功', $this->getReturnUrl());
+        } else {
+            $model->rollback();
+            $this->error('状态启用失败！');
+        }
+    }
+    public function delete() {
+        $name = $this->getActionName();
+        $model = D($name);
+        $categoryModel = D("EnglishCategory");
+        $questionModel = D("EnglishQuestion");
+        $questionSpeakModel = D("EnglishQuestionSpeak");
+        $pk = $model->getPk();
+        $id = $_REQUEST [$pk];
+        $condition = array($pk => array('in', $id));
+        $old_media_list = $model->field("id,status")->where($condition)->select();
+        $model->startTrans();
+        $list = $model->where($condition)->setField("status",-1);
+        
+        if ($list !== false) {
+            foreach($old_media_list as $value){
+                if($value['status'] != 1){
+                    continue;
+                }
+                $media_ids[] = $value['id'];
+            }
+            $q_map['media_id'] = array("in", $media_ids);
+            $q_map['status'] = 1;
+            $question_list = $questionModel->field("id,1 as type")->where($q_map)->select();
+            $question_speak_list = $questionSpeakModel->field("id,0 as type")->where($q_map)->select();
+            if(!empty($question_speak_list)){
+                $question_ids = array();
+                foreach($question_speak_list as $value){
+                    $question_ids[] = $value['id'];
+                }
+                if(false === $categoryModel->updateCategoryQuestionNumByQuestion($question_ids, true, 0)){
+                    $model->rollback();
+                    $this->error('删除失败！');
+                }
+            }
+            if(!empty($question_list)){
+                $question_ids = array();
+                foreach($question_list as $value){
+                    $question_ids[] = $value['id'];
+                }
+                if(false === $categoryModel->updateCategoryQuestionNumByQuestion($question_ids, true, 1)){
+                    $model->rollback();
+                    $this->error('删除失败！');
+                }
+            }
+            
+            $model->commit();
+            $this->success('删除成功', $this->getReturnUrl());
+        } else {
+            $model->rollback();
+            $this->error('删除失败！');
+        }
+    }
+    
+    /**
+	 * @desc 排序
+	 */
+	public function special_recommend_sort(){
+		$sortId = $this->_param('sortId');
+		$model = D("EnglishMedia");
+		$map = array();
+		$map['status'] = 1;
+        $map['special_recommend'] = 1;
+        $thumb = $this->_param("thumb");
+        if(isset($thumb)){
+            if($thumb == 1){
+                $map['media_thumb_img'] = array("neq","");
+            }else{
+                $map['media_thumb_img'] = array("eq","");
+            }
+        }else{
+            $thumb = -1;
+        }
+        $this->assign("thumb",$thumb);
+        $sortList = $model->where($map)->order('special_recommend_sort ASC,id asc')->select();
+        foreach ($sortList as &$value) {
+        	$value['txt_show'] = $value['name']."　　　　　";
+        }
+        $this->assign("sortList", $sortList);
+        $this->display("special_recommend_sort");
+        return;
+    }
+    public function saveSort() {
+        $seqNoList = $_POST ['seqNoList'];
+        if (!empty($seqNoList)) {
+            //更新数据对象
+            $name = $this->getActionName();
+            $model = D($name);
+            $col = explode(',', $seqNoList);
+            //启动事务
+            $model->startTrans();
+            $result = true;
+            foreach ($col as $val) {
+                $val = explode(':', $val);
+                $sort = $model->where("id = '%s'", $val[0])->getField('special_recommend_sort');
+                if ($sort == $val[1]) {
+                    continue;
+                }
+                $model->id = $val[0];
+                $model->special_recommend_sort = $val[1];
+                $temp_result = $model->save();
+                if (!$temp_result) {
+                    $result = false;
+                    Log::write('保存排序失败：' . $model->getLastSql(), Log::SQL);
+                }
+            }
+
+            if ($result) {
+                $model->commit();
+                //采用普通方式跳转刷新页面
+                $this->success('更新成功');
+            } else {
+                // 回滚事务
+                $model->rollback();
+                $this->error($model->getError());
+            }
         }
     }
 

@@ -365,12 +365,14 @@ class EnglishQuestionSpeakAction extends CommonAction {
         if (!empty($_REQUEST['media_source_url'])) {
             $mediaMap = array();
             $mediaMap['media_source_url'] = ftrim($_REQUEST['media_source_url']);
-            $mediaId = intval($mediaModel->where($mediaMap)->getField('id'));
+            $mediaInfo = $mediaModel->where($mediaMap)->find();
+            $mediaId = intval($mediaInfo['id']);
         }
         if ($mediaId == 0 && !empty($_REQUEST['media_name'])) {
             $mediaMap = array();
             $mediaMap['name'] = $_REQUEST['media_name'];
-            $mediaId = intval($mediaModel->where($mediaMap)->getField('id'));
+            $mediaInfo = $mediaModel->where($mediaMap)->find();
+            $mediaId = intval($mediaInfo['id']);
         }
         //
         //媒体id为零，将试题置为禁用
@@ -414,6 +416,23 @@ class EnglishQuestionSpeakAction extends CommonAction {
                     $model->where(array("id" => $id))->setField("status", 0);
                 }
             }
+            //更新分类试题数量
+            if($_POST['old_status'] == 1){
+                if($_POST['status'] != 1 && $mediaInfo['status'] == 1){
+                    if(false == D("EnglishCategory")->updateCategoryQuestionNumByQuestion($id, true, 0)){
+                        $model->rollback();
+                        $this->error('编辑失败！');
+                    }
+                }
+            }else{
+                if($_POST['status'] == 1 && $mediaInfo['status'] == 1){
+                    if(false == D("EnglishCategory")->updateCategoryQuestionNumByQuestion($id, false, 0)){
+                        $model->rollback();
+                        $this->error('编辑失败！');
+                    }
+                }
+            }
+
             $model->commit();
             $this->success('编辑成功!', cookie('_currentUrl_'));
         } else {
@@ -938,33 +957,33 @@ class EnglishQuestionSpeakAction extends CommonAction {
     public function insertProperty() {
         $question_id = isset($_REQUEST["question_id"]) ? intval($_REQUEST["question_id"]) : 0;
         
-        $voice       = isset($_REQUEST["voice"])     ? intval($_REQUEST["voice"])     : 1;
-        //$target      = isset($_REQUEST["target"])    ? intval($_REQUEST["target"])    : 1;
-        $pattern     = isset($_REQUEST["pattern"])   ? intval($_REQUEST["pattern"])   : 1;
         $level_one   = isset($_REQUEST["level_one"]) ? intval($_REQUEST["level_one"]) : 0;
         $level_two   = isset($_REQUEST["level_two"]) ? intval($_REQUEST["level_two"]) : 0;
         $level_thr   = isset($_REQUEST["level_thr"]) ? intval($_REQUEST["level_thr"]) : 0;
         $status      = isset($_REQUEST["status"])    ? intval($_REQUEST["status"])    : 1;
         $type        = isset($_REQUEST["type"])      ? intval($_REQUEST["type"])      : 0;
         $type = 0;//说力
-        $target      = $type == 0 ? 0 : 1;
-
-
+        
+        $model = D("EnglishCatquestion");
+        $model->startTrans();
         $ret = $this->cEnglishQuestionLogic->saveProperty(
                                                     $question_id, 
-                                                    $voice, 
-                                                    $target, 
-                                                    $pattern, 
+                                                    null, 
+                                                    null, 
+                                                    null, 
                                                     $level_one, 
                                                     $level_two, 
                                                     $level_thr, 
                                                     $status, 
-                                                    $type
+                                                    $type,
+                                                    true
                                                 );
         if ($ret === false) {
+            $model->rollback();
             $this->error($this->cEnglishQuestionLogic->getErrorMessage());
             return;
         }
+        $model->commit();
         $this->success('添加分类属性成功');
     }
     
@@ -1012,17 +1031,21 @@ class EnglishQuestionSpeakAction extends CommonAction {
         
         
         
-        $voice       = isset($_REQUEST["voice"])     ? intval($_REQUEST["voice"])     : 1;
-        $pattern     = isset($_REQUEST["pattern"])   ? intval($_REQUEST["pattern"])   : 1;
         $level_one   = isset($_REQUEST["level_one"]) ? intval($_REQUEST["level_one"]) : 0;
         $level_two   = isset($_REQUEST["level_two"]) ? intval($_REQUEST["level_two"]) : 0;
         $level_thr   = isset($_REQUEST["level_thr"]) ? intval($_REQUEST["level_thr"]) : 0;
         $status      = isset($_REQUEST["status"])    ? intval($_REQUEST["status"])    : 1;
-        //$type        = isset($_REQUEST["type"])      ? intval($_REQUEST["type"])      : 1;
         $type = 0; //说力
-        $target      = $type == 0 ? 0 : 1;
         
         $model = D("EnglishCatquestion");
+        $cat_attr_id = D("EnglishCategory")->where(array("cat_id"=>$cat_id))->getField("cat_attr_id");
+        if($cat_attr_id !== false){
+            $cat_attr_id = sprintf("%03d",decbin($cat_attr_id));
+            $voice = substr($cat_attr_id, 0, 1);
+            $target = substr($cat_attr_id, 1, 1);
+            $pattern = substr($cat_attr_id, 2, 1);
+        }
+        $model->startTrans();
         $cat_map = array(
             "cat_id"=>$cat_id,
             "question_id"=>$question_id,
@@ -1051,7 +1074,8 @@ class EnglishQuestionSpeakAction extends CommonAction {
                                                     $level_two, 
                                                     $level_thr, 
                                                     $status, 
-                                                    $type
+                                                    $type,
+                                                    false
                                                 );
         if ($ret === false) {
             $model->rollback();
@@ -1065,7 +1089,6 @@ class EnglishQuestionSpeakAction extends CommonAction {
         $name = $this->getActionName();
         $model = D($name);
         $categoryModel = D("EnglishCategory");
-        $catquestionModel =  D("EnglishCatquestion");
         $pk = $model->getPk();
         $id = $_REQUEST [$pk];
         $condition = array($pk => array('in', $id));
@@ -1075,35 +1098,85 @@ class EnglishQuestionSpeakAction extends CommonAction {
         );
         $q_map['question.id'] = array('in',$id);
         $q_list = $model->alias("question")->join(C("DB_PREFIX")."english_media media on media.id=question.media_id")->field("question.id")->where($q_map)->select();
+        foreach ($q_list as $value) {
+            $question_ids[] = $value['id'];
+        }
         $model->startTrans();
-        $time = time();
         $list = $model->forbid($condition);
         
         if ($list !== false) {
-            foreach ($q_list as $value){
-                if($value['status'] == 1){
-                    $cat_question_map = array(
-                        "question_id"=>$value['id'],
-                        "type"=>0,
-                        "status"=>1
-                    );
-                    $cat_list = $catquestionModel->where($cat_question_map)->select();
-                    foreach($cat_list as $v){
-                        $data['question_num'] = array('exp','question_num-1');
-                        $data['updated'] = $time;
-                        $ret = $categoryModel->where(array("cat_id"=>$v['cat_id']))->save($data);
-                        if(false === $ret){
-                            $model->rollback();
-                            $this->error('状态禁用失败！');
-                        }
-                    }
-                }
+            if(false === $categoryModel->updateCategoryQuestionNumByQuestion($question_ids, true, 0)){
+                $model->rollback();
+                $this->error('状态禁用失败！');
             }
             $model->commit();
             $this->success('状态禁用成功', $this->getReturnUrl());
         } else {
             $model->rollback();
             $this->error('状态禁用失败！');
+        }
+    }
+    public function resume() {
+        $name = $this->getActionName();
+        $model = D($name);
+        $categoryModel = D("EnglishCategory");
+        $pk = $model->getPk();
+        $id = $_REQUEST [$pk];
+        //获取被禁用的试题列表，为更新分类下的试题数量准备
+        $condition = array($pk => array('in', $id));
+        $q_map = array(
+            "question.status"=>array("neq",1),
+            "media.status"=>1
+        );
+        $q_map['question.id'] = array('in',$id);
+        $q_list = $model->alias("question")->join(C("DB_PREFIX")."english_media media on media.id=question.media_id")->field("question.id")->where($q_map)->select();
+        foreach ($q_list as $value) {
+            $question_ids[] = $value['id'];
+        }
+        $model->startTrans();
+        $list = $model->resume($condition);
+        
+        if ($list !== false) {
+            if(false === $categoryModel->updateCategoryQuestionNumByQuestion($question_ids, false, 0)){
+                $model->rollback();
+                $this->error('状态启用失败！');
+            }
+            $model->commit();
+            $this->success('状态启用成功', $this->getReturnUrl());
+        } else {
+            $model->rollback();
+            $this->error('状态启用失败！');
+        }
+    }
+    public function delete() {
+        $name = $this->getActionName();
+        $model = D($name);
+        $categoryModel = D("EnglishCategory");
+        $pk = $model->getPk();
+        $id = $_REQUEST [$pk];
+        $condition = array($pk => array('in', $id));
+        $q_map = array(
+            "question.status"=>1,
+            "media.status"=>1
+        );
+        $q_map['question.id'] = array('in',$id);
+        $q_list = $model->alias("question")->join(C("DB_PREFIX")."english_media media on media.id=question.media_id")->field("question.id")->where($q_map)->select();
+        foreach ($q_list as $value) {
+            $question_ids[] = $value['id'];
+        }
+        $model->startTrans();
+        $list = $model->where($condition)->setField("status",-1);
+        
+        if ($list !== false) {
+            if(false === $categoryModel->updateCategoryQuestionNumByQuestion($question_ids, true, 0)){
+                $model->rollback();
+                $this->error('删除失败！');
+            }
+            $model->commit();
+            $this->success('删除成功', $this->getReturnUrl());
+        } else {
+            $model->rollback();
+            $this->error('删除失败！');
         }
     }
     public function delProperty(){
@@ -1115,6 +1188,12 @@ class EnglishQuestionSpeakAction extends CommonAction {
         $ids = explode(",", $id);
         //删除指定记录
         $model = D("EnglishCatquestion");
+                $total = $model->alias("a")
+                ->join(C("DB_PREFIX")."english_category b on a.cat_id=b.cat_id")->where(array("a.question_id"=>$question_id,"b.level_one"=>array("neq",-1)))->count("a.cat_id");
+        //保证需要有一个分类
+        if(intval($total) == 1){
+            $this->error("最后一个分类，不能删除");
+        }
         $cat_condition = array(
             "cat_id" => array('in', $ids),
             );
@@ -1171,6 +1250,35 @@ class EnglishQuestionSpeakAction extends CommonAction {
             $this->error('删除失败！');
         }
                 
+    }
+    
+    public function voice(){
+        if($this->isAjax()){
+            $id = intval($_REQUEST['id']);
+            $model = D("EnglishCatquestion");
+            $model->startTrans();
+            $ret  = $this->cEnglishQuestionLogic->setQuestionCatAttrId($id,"voice",0);
+            if(false === $ret){
+                $model->rollback();
+                $this->ajaxReturn("",  $this->cEnglishQuestionLogic->getErrorMessage(),false);
+            }
+            $model->commit();
+            $this->ajaxReturn($ret, "操作成功",true);
+        }
+    }
+    public function pattern(){
+        if($this->isAjax()){
+            $id = intval($_REQUEST['id']);
+            $model = D("EnglishCatquestion");
+            $model->startTrans();
+            $ret  = $this->cEnglishQuestionLogic->setQuestionCatAttrId($id,"pattern",0);
+            if(false === $ret){
+                $model->rollback();
+                $this->ajaxReturn("",  $this->cEnglishQuestionLogic->getErrorMessage(),false);
+            }
+            $model->commit();
+            $this->ajaxReturn($ret, "操作成功",true);
+        }
     }
 }
 

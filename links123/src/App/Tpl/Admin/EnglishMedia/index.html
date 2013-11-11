@@ -18,6 +18,7 @@
             <html:imageBtn name="forbid" click="forbid()" style="hMargin fLeft" />
             <html:imageBtn name="delete" click="del()" style="hMargin fLeft" />
             <html:imageBtn name="resume" click="resume()" style="hMargin fLeft" />
+            <a href="javascript:special_recommend_sort()">特别推荐排序</a>
             <!--
             <select id="selectSubjectSource" style='float:left;margin:0 5px;'>
                 <option value='-1'>选择专题</option>
@@ -527,6 +528,9 @@
                 $("#load_dialog").window("close");
             }, "json")
         })
+    }
+    function special_recommend_sort(){
+        window.location.href = "__URL__/special_recommend_sort";
     }
 </script>
 </html>

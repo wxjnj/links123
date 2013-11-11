@@ -29,9 +29,12 @@ class EnglishQuestionLogic {
 		}
 		$ret   = D('EnglishCatquestion')->getQuestionProperty($question_id, $question_type);
         foreach($ret as $key=>$value){
-            if($default_list[$value["level_two"]] == 1){
+            if($value["level_one"] == -1){
                 unset($ret[$key]);
                 continue;
+            }
+            if($default_list[$value["level_two"]] == 1){
+                $ret[$key]['is_default'] = 1;
             }
 			$cat_attr_id = sprintf("%03d", decbin($value["cat_attr_id"]));
 			$ret[$key]["voice"]   = substr($cat_attr_id, 0, 1);
@@ -51,19 +54,20 @@ class EnglishQuestionLogic {
 
 	/**
 	* 保存题目所属的分类
-	* @param [Integer] $question_id
-	* @param [Integer] $voice
-	* @param [Integer] $target
-	* @param [Integer] $pattern
-	* @param [Integer] $level_one
-	* @param [Integer] $level_two
-	* @param [Integer] $level_thr
-	* @param [Integer] $status
-	* @param [Integer] $type
+	* @param [int] $question_id
+	* @param [int] $voice
+	* @param [int] $target
+	* @param [int] $pattern
+	* @param [int] $level_one
+	* @param [int] $level_two
+	* @param [int] $level_thr
+	* @param [int] $status
+	* @param [int] $type
+     * @param [int] $is_add Description
 	*
 	* @return [Boolean] 
 	*/
-	public function saveProperty($question_id, $voice, $target, $pattern, $level_one, $level_two, $level_thr, $status, $type) {
+	public function saveProperty($question_id, $voice, $target, $pattern, $level_one, $level_two, $level_thr, $status, $type, $is_add = true) {
 		if ($question_id == 0) {
             $this->error_msg = '缺少题目ID';
             return false;
@@ -73,10 +77,101 @@ class EnglishQuestionLogic {
             $this->error_msg = '缺少类目等级参数';
             return false;
         }
+        $catQuestionModel = D("EnglishCatquestion");
+        if(is_null($voice) && is_null($target) && is_null($pattern)){
+            $cat_question_map = array(
+                "a.type" => $type,
+                "a.question_id" => $question_id
+            );
+            $question_cat_attr_id = $catQuestionModel->alias("a")
+                ->join(C("DB_PREFIX")."english_category b on a.cat_id=b.cat_id")
+                ->where($cat_question_map)
+                ->order("a.status desc,a.created desc")
+                ->getField("b.cat_attr_id");
+            $data["cat_attr_id"] = intval($question_cat_attr_id);
+        }else{
+            $data["cat_attr_id"] = bindec($voice . $target . $pattern);
+        }
+        
+        if($is_add){
+            //判断当前一级分类下是否已有分类，不允许一级分类试题对应多个二级
+            $new_map = array(
+                    "b.level_one" => $level_one,
+                    "b.cat_attr_id" => $data["cat_attr_id"],
+                    'a.question_id' => $question_id,
+                    'a.type' => $type
+                );
+                $level_one_cat_id = $catQuestionModel->alias("a")
+                        ->join(C("DB_PREFIX")."english_category b on a.cat_id=b.cat_id")
+                        ->where($new_map)
+                        ->getField("a.cat_id");
+            if(intval($level_one_cat_id) > 0){
+                $this->error_msg = '当前一级分类已存在，不允许试题对应多个一级分类';
+                return false;
+            }
+        }
+        
+        //准备字典
+        $levelnames = D('EnglishLevelname')->order("sort asc")->select();
+        $difficulty_list = array();//难度列表
+        $grad_list = array();//年级列表
+        $grade_name_list = array();
+        $object_level_one_id = 7;//使用年级的一级分类id
+        $object_level_two_id = 0;
+        //找到难度列表、年级列表和使用年级的一级分类id
+        foreach($levelnames as $each_lv) {
 
-        $data["cat_attr_id"] = bindec($voice . $target . $pattern);
+            if($each_lv['id'] == $level_one){
+                $level_one_info = $each_lv;
+            }
+            if($each_lv['id'] == $level_two){
+                $level_two_info = $each_lv;
+            }
+
+            if($each_lv['level'] == 1){
+                if($each_lv['default'] == 1){
+                    $object_level_one_id = $each_lv['id'];
+                }
+            }elseif($each_lv['level'] == 3){
+                if($each_lv['name'] == "初级"){
+                    $difficulty_list["初级"] = $each_lv['id'];
+                }else if($each_lv['name'] == "中级"){
+                    $difficulty_list["中级"] = $each_lv['id'];
+                }else if($each_lv['name'] == "高级"){
+                    $difficulty_list["高级"] = $each_lv['id'];
+                }else{
+                    $grad_list[$each_lv['name']] = $each_lv['id'];
+                    $grade_name_list[$each_lv['name']] = $each_lv;
+                }
+            }else{
+                if($each_lv['default'] == 1){
+                    $object_level_two_id = $each_lv['id'];
+                }
+            }
+        }
         $data["level_one"]   = $level_one;
         $data["level_two"]   = $level_two;
+        //查找这个试题的年级，自动生成三级目录
+        if($level_one != $object_level_one_id){
+            $new_map = array(
+                "b.level_one" => $object_level_one_id,
+                'a.question_id' => $question_id,
+                'a.type' => $type
+            );
+            $grade_level_thr_sort = $catQuestionModel->alias("a")
+                    ->join(C("DB_PREFIX")."english_category b on a.cat_id=b.cat_id")
+                    ->where($new_map)
+                    ->getField("level_thr_sort");
+            if(intval($grade_level_thr_sort) > 0){
+                if ($grade_level_thr_sort <= $grade_name_list['小六']['sort']) {
+                    $level_thr = $difficulty_list["初级"];
+                } else if ($grade_level_thr_sort >= $grade_name_list['大一']['sort']) {
+                    $level_thr = $difficulty_list["高级"];
+                } else {
+                    $level_thr = $difficulty_list["中级"];
+                }
+            }
+        }
         $data["level_thr"]   = $level_thr;
        
         $englishCategoryModel = D('EnglishCategory');
@@ -94,44 +189,15 @@ class EnglishQuestionLogic {
         $time = time();
         //需要添加到的分类是否存在
         $cate_ret = $englishCategoryModel->where($data)->find();
+//        echo $englishCategoryModel->getLastSql();exit;
         //添加到的分类不存在
         if (!isset($cate_ret["cat_id"])) {
-            //准备字典
-            $levelnames = D('EnglishLevelname')->order("sort asc")->select();
-            $difficulty_list = array();//难度列表
-            $grad_list = array();//年级列表
-            $object_level_one_id = 7;//使用年级的一级分类id
-            //找到难度列表、年级列表和使用年级的一级分类id
-            foreach($levelnames as $each_lv) {
-                
-                if($each_lv['id'] == $level_one){
-                    $level_one_info = $each_lv;
-                }
-                if($each_lv['id'] == $level_two){
-                    $level_two_info = $each_lv;
-                }
-                
-                if($each_lv['level'] == 1){
-                    if($each_lv['default'] == 1){
-                        $object_level_one_id = $each_lv['id'];
-                    }
-                }elseif($each_lv['level'] == 3){
-                    if($each_lv['name'] == "初级"){
-                        $difficulty_list["初级"] = $each_lv['id'];
-                    }else if($each_lv['name'] == "中级"){
-                        $difficulty_list["中级"] = $each_lv['id'];
-                    }else if($each_lv['name'] == "高级"){
-                        $difficulty_list["高级"] = $each_lv['id'];
-                    }else{
-                        $grad_list[$each_lv['name']] = $each_lv['id'];
-                    }
-                }
-            }
+            
             $level_sort = $englishCategoryModel->where(array("cat_attr_id"=>$data['cat_attr_id'],"level_one"=>$level_one,"level_two"=>$level_two,"level_one_sort"=>array("gt",0),"level_two_sort"=>array("gt",0)))->find();
             $level_one_sort = intval($level_sort['level_one_sort']) > 0 ? intval($level_sort['level_one_sort']) : $level_one_info['sort'];
             $level_two_sort = intval($level_sort['level_two_sort']) > 0 ? intval($level_sort['level_two_sort']) : $level_two_info['sort'];
             //获取对应的三级分类列表
-            if($cate_ret['level_one'] == $object_level_one_id){
+            if($level_one == $object_level_one_id){
                 $level_thr_list = $grad_list;
             }else{
                 $level_thr_list = $difficulty_list;
@@ -181,7 +247,9 @@ class EnglishQuestionLogic {
         } else {
             $catquestion_data = array(
                                     "cat_id"      => $cate_ret["cat_id"], 
-                                    "question_id" => $question_id);
+                                    "question_id" => $question_id,
+                                    "type"        => $type
+                    );
             $catquestion_ret  = $englishCatquestionModel->where($catquestion_data)->find();
             if (!isset($catquestion_ret["cat_id"])) {
                 $catquestion_data = array(
@@ -191,24 +259,230 @@ class EnglishQuestionLogic {
                                     "updated"     => $time,
                                     "type"        => $type, 
                                     "status"      => $status);
-                $catq_add_ret = $englishCatquestionModel->data($catquestion_data)->add();
+                $catq_add_ret = $englishCatquestionModel->add($catquestion_data);
                 if ($catq_add_ret === false) {
-                    echo $englishCatquestionModel->getLastSql();exit;
                     $this->error_msg = '(#102)添加类目失败';
                     return false;
                 }
                 
                 if(!empty($question_info)){
                     //@ 需要更新EnglishCatquestion 题目数＋1
-                    $englishCategoryModel->where(array('cat_id' => $cate_ret["cat_id"]))->setInc('question_num');
+                    if(false === $englishCategoryModel->where(array('cat_id' => $cate_ret["cat_id"]))->setInc('question_num')){
+                        $this->error_msg = '(#103)更新分类有效试题数量失败';
+                        return false;
+                    }
                 }
             } else {
                 $this->error_msg = '已经添加过此类目和题目的对应属性';
                 return false;
             }
         }
+        //添加综合的分类
+        if($level_one == $object_level_one_id && $level_two != $object_level_two_id){
+            $map = array();
+            $map['cat_attr_id'] = $data["cat_attr_id"];
+            $map['level_one'] = $level_one;
+            $map['level_two'] = $object_level_two_id;
+            $map['level_thr'] = $level_thr;
+            $object_cat_id = $englishCategoryModel->where($map)->getField("cat_id");
+            if(intval($object_cat_id) == 0){
+                $this->error_msg = '添加到综合分类失败[#105]';
+                return false;
+            }
+            
+            //去除旧的综合关联
+            $old_cat_map = array(
+                "a.question_id"=>$question_id,
+                "a.type"=>$type,
+                "b.level_one"=>$object_level_one_id,
+                "b.level_two"=>$object_level_two_id
+            );
+            $old_cat_list = $englishCatquestionModel->alias("a")
+                    ->field("a.cat_id")
+                    ->join(C("DB_PREFIX")."english_category b on a.cat_id=b.cat_id")
+                    ->where($old_cat_map)
+                    ->select();
+            if(!empty($old_cat_list)){
+                $old_cat_id = array();
+                foreach ($old_cat_list as $value){
+                    $old_cat_id[] = $value['cat_id'];
+                }
+                $englishCatquestionModel->where(array("cat_id"=>array("in",$old_cat_id),"question_id"=>$question_id,"type"=>$type))->delete();
+            }
+            $new_cat_data = array(
+                                "cat_id"      => $object_cat_id, 
+                                "question_id" => $question_id, 
+                                "created"     => $time,
+                                "type"        => $type, 
+                                "status"      => $status);
+            $new_ret = $englishCatquestionModel->add($new_cat_data);
+            if (false === $new_ret) {
+                $this->error_msg = '(#106)添加试题类目关联失败';
+                return false;
+            }
+
+            if(!empty($question_info)){
+                //@ 需要更新EnglishCatquestion 题目数＋1
+                if(false === $englishCategoryModel->where(array('cat_id' => $object_cat_id))->setInc('question_num')){
+                    $this->error_msg = '(#107)更新分类有效试题数量失败';
+                    return false;
+                }
+            }
+            
+        }
         return true;
 	}
+    public function setQuestionCatAttrId($id, $type = "voice",$question_type = 1){
+        if($id == 0){
+            $this->error_msg = "请指定操作对象";
+            return false;
+        }
+        $time = time();
+        $catQuestionModel = D("EnglishCatquestion");
+        $categoryModel = D("EnglishCategory");
+        $map = array();
+        $map['a.question_id'] = $id;
+        $map['a.type'] = $question_type;
+        //查询试题的所有分类列表
+        $cat_list = $catQuestionModel->alias("a")
+                ->join(C("DB_PREFIX")."english_category b on a.cat_id=b.cat_id")
+                ->where($map)
+                ->order("a.status desc,a.created asc")
+                ->select();
+        Log::write("查询：".$catQuestionModel->getLastSql(), log::SQL);
+        //查询试题是否可用
+        if($question_type == 1){
+            $questionModel = D("EnglishQuestion");
+        }else{
+            $questionModel = D("EnglishQuestionSpeak");
+        }
+        $question_info = $questionModel->alias("a")
+                ->join(C("DB_PREFIX")."english_media b on a.media_id = b.id")
+                ->where(array("a.id"=>$id,"a.status"=>1,"b.status"=>1))
+                ->find();
+        $new_cat_attr_id = 7;
+        if(false !== $cat_list && !empty($cat_list)){
+            //计算新的cat_attr_id
+            $question_cat_attr_id = $cat_list[0]["cat_attr_id"];
+            $bin_cat = sprintf("%03d",decbin($question_cat_attr_id));
+            $voice = substr($bin_cat, 0, 1);
+            $target = substr($bin_cat, 1, 1);
+            $pattern = substr($bin_cat, 2, 1);
+            if($$type == 1){
+                $$type = 0;
+            }else{
+                $$type = 1;
+            }
+            $new_cat_attr_id = bindec($voice."".$target."".$pattern);
+            if($new_cat_attr_id >= 0 && $new_cat_attr_id <= 7){
+                //准备字典
+                $levelnames = D('EnglishLevelname')->order("sort asc")->select();
+                $difficulty_list = array();//难度列表
+                $grad_list = array();//年级列表
+                $object_level_one_id = 7;//使用年级的一级分类id
+                //找到难度列表、年级列表和使用年级的一级分类id
+                foreach($levelnames as $each_lv) {
+
+                    if($each_lv['level'] == 1){
+                        if($each_lv['default'] == 1){
+                            $object_level_one_id = $each_lv['id'];
+                        }
+                    }elseif($each_lv['level'] == 3){
+                        if($each_lv['name'] == "初级"){
+                            $difficulty_list["初级"] = $each_lv['id'];
+                        }else if($each_lv['name'] == "中级"){
+                            $difficulty_list["中级"] = $each_lv['id'];
+                        }else if($each_lv['name'] == "高级"){
+                            $difficulty_list["高级"] = $each_lv['id'];
+                        }else{
+                            $grad_list[$each_lv['name']] = $each_lv['id'];
+                        }
+                    }
+                }
+                //删除原有的试题分类关联
+                if(false === $catQuestionModel->where(array("question_id"=>$id))->delete()){
+                    $this->error_msg = "删除原有分类失败[#000]";
+                    return false;
+                }
+                //循环查找新的分类，并关联试题
+                foreach($cat_list as $value){
+                    //原来分类的有效试题数更新
+                    if(!empty($question_info)){
+                        $categoryModel->where(array("cat_id"=>$value['cat_id']))->setDec("question_num");
+                        Log::write("更新分类试题数量：".$categoryModel->getLastSql(), log::SQL);
+                    }
+                    $new_cat_map = array();
+                    $new_cat_map['cat_attr_id'] = $new_cat_attr_id;
+                    $new_cat_map['level_one'] = $value['level_one'];
+                    $new_cat_map['level_two'] = $value['level_two'];
+                    $new_cat_map['level_thr'] = $value['level_thr'];
+                    $new_cat_id = $categoryModel->where($new_cat_map)->getField("cat_id");
+                    Log::write("查询分类：".$categoryModel->getLastSql(), log::SQL);
+                    if(false === $new_cat_id){
+                        $this->error_msg = "查找新分类失败[#001]";
+                        return false;
+                    }
+                    //没有找到，则增加
+                    if(intval($new_cat_id) == 0){
+                        if($value['level_one'] == $object_level_one_id){
+                            $level_thr_list = $grad_list;
+                        }else{
+                            $level_thr_list = $difficulty_list;
+                        }
+                        $k = 0;
+                        foreach($level_thr_list as $level_thr){
+                            $new_cat_map['level_thr'] = $level_thr;
+                            if(intval($categoryModel->where($new_cat_map)->getField("cat_id")) > 0){
+                                continue;
+                            }
+                            $new_cat_map['created'] = $new_cat_map['updated'] = $time;
+                            $new_cat_map['level_one_sort'] = $value['level_one_sort'];
+                            $new_cat_map['level_two_sort'] = $value['level_two_sort'];
+                            $new_cat_map['level_thr_sort'] = ++$k;
+                            if($level_thr == $value['level_thr'] && !empty($question_info)){
+                                $new_cat_map['question_num'] = 1;
+                            }else{
+                                $new_cat_map['question_num'] = 0;
+                            }
+                            $new_id = $categoryModel->add($new_cat_map);
+                            Log::write("增加分类：".$categoryModel->getLastSql(), log::SQL);
+                            if(false === $new_id){
+                                $this->error_msg = "增加新分类失败[#002]";
+                                return false;
+                            }
+                            if($level_thr == $value['level_thr']){
+                                $new_cat_id = $new_id;
+                            }
+                        }
+                    }else{
+                        if(!empty($question_info)){
+                            if(false === $categoryModel->where(array("cat_id"=>$new_cat_id))->setInc("question_num")){
+                                $this->error_msg = "更新分类的试题数量[#005]";
+                                return false;
+                            }
+                            Log::write("更新分类试题数量：".$categoryModel->getLastSql(), log::SQL);
+                        }
+                    }
+                    //关联分类和试题
+                    $cat_question_data = array(
+                        "cat_id" => $new_cat_id,
+                        'type' => $question_type,
+                        "question_id" => $id
+                    );
+                    if(false === $catQuestionModel->add($cat_question_data)){
+                        $this->error_msg = "增加试题分类关联失败[#003]";
+                        Log::write("更新分类试题关联：".$catQuestionModel->getLastSql(), log::SQL);
+                        return false;
+                    }
+                    Log::write("更新分类试题关联：".$catQuestionModel->getLastSql(), log::SQL);
+                }
+                return $$type;
+            }else{
+                $this->error_msg = "指定的大分类属性错误[#004]";
+                return false;
+            }
+        }
+    }
 
 	public function forbidCatetoryOfQuestion($cat_id, $question_id) {
 		$ret = D('EnglishCatquestion')->forbidCatQuestionById($cat_id, $question_id, 0);

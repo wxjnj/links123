@@ -823,8 +823,8 @@ div.gt-baf-translations {
 	cursor: pointer;
 	display:none;
     position: absolute;
-    top: -25px;
-    left: 44px;
+    top: -23px;
+    left: 38px;
     color: #333;
     width:80px;
     height: 35px;
@@ -840,7 +840,7 @@ div.gt-baf-translations {
     z-index: 9999;
 }
 .normal_music_box {
-    position: absolute;
+    position: fixed;
     width: 840px;
     height: 550px;
     bottom: 0;
@@ -1006,7 +1006,8 @@ div.gt-baf-translations {
     width: 280px;
     height: 30px;
     background: #eee;
-    box-shadow:0 0 5px #666;
+    /*box-shadow:0 0 5px #666;*/
+    border: 1px solid #d9d9d9;
 }
 .mini_music_box .normal_music_iframe_box {
     /*display: none;*/
