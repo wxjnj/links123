@@ -44,7 +44,7 @@
 
 		<div class="list" >
 			<div id="result" class="result none"></div>
-			<html:list id="checkList" name="node" style="list" checkbox="true" action="true" datasource="property" show="id:编号|10%,voice_name:语音,target_name:训练,pattern_name:形式,level_one_name:一级类目,level_two_name:二级类目,level_thr_name:三级类目" actionlist="foreverdel:删除,edit:编辑" />
+			<html:list id="checkList" name="node" style="list" checkbox="true" action="true" datasource="property" show="id:编号|10%,voice_name:语音,target_name:训练,pattern_name:形式,level_one_name:一级类目,level_two_name:二级类目,level_thr_name:三级类目" actionlist="foreverdel:删除,edit:编辑,auto:自动设置" />
 		</div>
 	</div>
 </div>
@@ -68,6 +68,10 @@
     }
     function edit(id){
         location.href ="__URL__/editProperty/id/"+id+"/question_id/"+$("#question_id").val();
+    }
+
+    function auto(id){
+	    location.href ="__URL__/autoProperty/id/"+id+"/question_id/"+$("#question_id").val();
     }
     $(function() {
         

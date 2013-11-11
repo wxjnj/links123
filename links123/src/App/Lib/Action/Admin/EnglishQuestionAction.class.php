@@ -312,6 +312,7 @@ class EnglishQuestionAction extends CommonAction {
 
         $this->assign("category", $category);
         $this->assign("qid", intval($_REQUEST["qid"]));
+
         $this->display();
     }
 
@@ -350,6 +351,44 @@ class EnglishQuestionAction extends CommonAction {
         $model->commit();
         $this->success('添加分类属性成功');
     }
+	function autoProperty(){
+		$model = D("EnglishCatquestion");
+		$cat_id = intval($_REQUEST['id']);
+		$question_id = intval($_REQUEST['question_id']);
+		if($cat_id == 0 || $question_id == 0){
+			$this->error("非法操作");
+		}
+		$cat_info = $model->where(array('cat_id'=>$cat_id,'question_id'=>$question_id))->find();
+		$this->assign("info",$cat_info);
+		//读取自动调整的系统默认值
+		$webSettingsModel = D("WebSettings");
+		$system_change = array(
+			"change_num"=>$webSettingsModel->getwebSettings("ENGLISH_QUESTION_CHANGE_NUM"),
+			"change_ratio"=>$webSettingsModel->getwebSettings("ENGLISH_QUESTION_ERROR_RATIO"),
+			"change_level"=>$webSettingsModel->getwebSettings("ENGLISH_QUESTION_CHANGE_LEVEL")
+		);
+		$this->assign("system_change",$system_change);
+		$this->display();
+	}
+	function setProperty(){
+		$question_id = intval(($_REQUEST["question_id"]));
+		if($question_id == 0){
+			$this->error("非法操作");
+		}
+		$cat_id = intval($_REQUEST['cat_id']);
+		if($cat_id == 0){
+			$this->error("非法操作");
+		}
+
+		$change_num  = isset($_REQUEST["change_num"]) ? intval($_REQUEST["change_num"]) : 0;
+		$change_ratio = isset($_REQUEST["change_ratio"]) ? intval($_REQUEST["change_ratio"]) : 0;
+		$change_level = isset($_REQUEST["change_level"]) ? intval($_REQUEST["change_level"]) : 0;
+
+		$model = D("EnglishCatquestion");
+		$ret = $model->where(array('cat_id'=>$cat_id,'question_id'=>$question_id))->data(array("change_num"=>$change_num,"change_ratio"=>$change_ratio,"change_level"=>$change_level))->save();
+
+		$this->success('编辑分类属性成功');
+	}
     function editProperty(){
         $model = D("EnglishCategory");
         $cat_id = intval($_REQUEST['id']);
@@ -374,6 +413,15 @@ class EnglishQuestionAction extends CommonAction {
         $category["level_thr"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("3");
 
         $this->assign("category", $category);
+
+		//读取自动调整的系统默认值
+		$webSettingsModel = D("WebSettings");
+		$system_change = array(
+			"change_num"=>$webSettingsModel->getwebSettings("ENGLISH_QUESTION_CHANGE_NUM"),
+			"change_ratio"=>$webSettingsModel->getwebSettings("ENGLISH_QUESTION_ERROR_RATIO"),
+			"change_level"=>$webSettingsModel->getwebSettings("ENGLISH_QUESTION_CHANGE_LEVEL")
+		);
+		$this->assign("system_change",$system_change);
         
         $this->display();
     }

@@ -5,6 +5,7 @@ class WebSettingsModel extends CommonModel {
 		array('setting_value', 'require', '设置内容必须'),
 		array('setting_name', 'require', '设置名称必须')
 	);
+	static private $_webSettingsArr = array();
 	
 	public $_auto =	array(
 		array('create_time', 'time', self::MODEL_INSERT, 'function'),
@@ -12,15 +13,15 @@ class WebSettingsModel extends CommonModel {
 	
 	//得到网站设置:
 	public function getwebSettings($settingMark=null){
-		$webSettingsArr = S("webSettingsArr");
-		if (empty($webSettingsArr)){
-			$webSettingsArr=$this->select();
-			S("webSettingsArr",$webSettingsArr);
+		//$webSettingsArr = S("webSettingsArr");
+		if (empty(static::$_webSettingsArr)){
+			static::$_webSettingsArr=$this->select();
+			//S("webSettingsArr",$webSettingsArr);
 		}
-		if (empty($settingMark) || empty($webSettingsArr)){
-			return $webSettingsArr ;
+		if (empty($settingMark)){
+			return static::$_webSettingsArr ;
 		}
-		foreach ($webSettingsArr as $k=>$v) {
+		foreach (static::$_webSettingsArr as $k=>$v) {
 			if ($v['setting_mark'] == $settingMark){
 				return $v['setting_value'];
 			}

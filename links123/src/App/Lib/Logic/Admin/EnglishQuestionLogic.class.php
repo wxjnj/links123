@@ -220,6 +220,7 @@ class EnglishQuestionLogic {
                     $level_thr_map['level_one_sort'] = $level_one_sort;
                     $level_thr_map['level_two_sort'] = $level_two_sort;
                     $level_thr_map['level_thr_sort'] = $k;
+
                     $new_cat_id = $englishCategoryModel->add($level_thr_map);
                     if(false === $new_cat_id){
                         $this->error_msg = '(#100)添加类目失败';
