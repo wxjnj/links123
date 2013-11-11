@@ -71,16 +71,21 @@
 .thl .ctls .ipt {
     background: transparent;
 }
+
+.header-weather .region,
+{
+    color: #0079c1;
+}
 .thl .subcate a.on, 
 .thl .subcate a.on:hover,
 .thl .cate a.on,
 .thl .cate a.on:hover,
-.header-weather .region,
 .thl .subcate a:hover,
 .thl .cate a:hover,
 .thl .cate-in a:hover {
-    color: #0079c1;
+    color: #fc2a06;
 }
+
 
 .zld ul li {
     margin: 5px 3px 0 0;
@@ -257,9 +262,7 @@ body {
 .pic-news-tabs a {
     height: 4px;
 }
-.text-news {
-    width: 320px;
-}
+
 .text-news p a, 
 .text-news p a:active,
 .pic-news-title a {
@@ -341,7 +344,7 @@ body {
 }
 
 .widescreen .text-news {
-    width: 350px;
+    width: 320px;
 }
 .widescreen .pic-news-title {
     font-size: 16px;
