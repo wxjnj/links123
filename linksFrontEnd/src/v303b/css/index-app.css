@@ -1,4 +1,4 @@
-/*apps*/
+/* apps */
 .zld-mini-tip{
 	display: none;
 	width: 120px;
@@ -112,7 +112,7 @@
 	font-size: 40px;
 	font-weight: bold;
 	font-style: normal;
-	font-family: arial;
+	font-family: Arial;
 	margin-top: -5px;
 }
 .apps ul li.today b,
