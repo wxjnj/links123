@@ -307,7 +307,7 @@ class EnglishMediaAction extends CommonAction {
         // 更新数据
         $list = $model->save();
         if (false !== $list) {
-            if(false === $model->setSpecialRecommend($media_id, $_POST['special_recommend'])){
+            if(false === $model->setSpecialRecommend($media, $_POST['special_recommend'])){
                 $model->rollback();
                 $this->error("编辑失败");
             }
