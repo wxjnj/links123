@@ -42,7 +42,7 @@ class WebSettingsAction extends CommonAction {
 		}
 		$this->display();
 	}
-	
+
 	
 	/**
 	 * @desc 网站基本设置 修改页面
@@ -65,9 +65,8 @@ class WebSettingsAction extends CommonAction {
         
 		if ($this->isPost()){
 			if ($model->where("id = %d", array($this->_post("id")))->setField("setting_value", $this->_post("setting_value"))){
-				R('/Admin/Public/clearCache', array(RUNTIME_PATH.'Temp'));
-				$model->getwebSettings();
-				$this->success ('修改成功!', __URL__);
+				$model->updatewebSettings();
+				$this->success('修改成功!', __URL__);
 			}else {
 				$this->error ('修改失败!');
 			}
