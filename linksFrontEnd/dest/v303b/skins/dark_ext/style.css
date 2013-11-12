@@ -251,9 +251,6 @@ body {
 }
 
 
-.text-news {
-    width: 320px;
-}
 .text-news p a, 
 .text-news p a:active,
 .text-news p a:hover,
@@ -337,7 +334,7 @@ body {
 }
 
 .widescreen .text-news {
-    width: 350px;
+    width: 320px;
 }
 .widescreen .pic-news-title {
     font-size: 16px;

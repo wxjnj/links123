@@ -469,7 +469,7 @@ input:focus{ outline: 0; }
 	/*display: none;*/
 	height: 18px;
 	position: relative;
-	z-index: 9999;
+	/*z-index: 9999;*/
 }
 .app-icon-list em{
 	float: right;

@@ -560,19 +560,25 @@ $(function(){
             var id = self.element.attr('data-id');
             self.element.find('.desc').html('<a class="add-btn" href="javascript:;">增加日程</a>');
             self.element.removeAttr('data-id');
-            $.each(Calendar.marksStore[Calendar.currentMarkId][Calendar.currentDate], function(k, v){
-                if(!v) return;
-                if(v.id == id) {
-                    Calendar.marksStore[Calendar.currentMarkId][Calendar.currentDate].splice(k, 1);
-                }
-            });
-
-            if(Calendar.marksStore[Calendar.currentMarkId][Calendar.currentDate].length == 0){
-                Calendar.marksStore = {};
-                Calendar.loadMarks();
+            if(Calendar.marksStore[Calendar.currentMarkId] && Calendar.marksStore[Calendar.currentMarkId][Calendar.currentDate]){
+                $.each(Calendar.marksStore[Calendar.currentMarkId][Calendar.currentDate], function(k, v){
+                    if(!v) return;
+                    if(v.id == id) {
+                        Calendar.marksStore[Calendar.currentMarkId][Calendar.currentDate].splice(k, 1);
+                    }
+                });
             }
-
-            if(id == 0 || !id) return;
+            if(id == 0 || !id) {
+                if(!Calendar.marksStore[Calendar.currentMarkId][Calendar.currentDate] || 
+                    Calendar.marksStore[Calendar.currentMarkId][Calendar.currentDate].length == 0){
+                    if(Calendar.compare(Calendar.currentDateObject, Date.today()) == 0){
+                        Calendar.marksStore = {};
+                        Calendar.loadMarks();
+                    }
+                
+                }
+                return;
+            }
             Calendar.request({
                 url: URL + '/delSchedule',
                 data: {
@@ -580,6 +586,15 @@ $(function(){
                 }
             }).fail(function(c, e){
             }).done(function(d){
+                //检查是否是清空当天日程，true -> 重新加载
+                if(!Calendar.marksStore[Calendar.currentMarkId][Calendar.currentDate] || 
+                    Calendar.marksStore[Calendar.currentMarkId][Calendar.currentDate].length == 0){
+                    if(Calendar.compare(Calendar.currentDateObject, Date.today()) == 0){
+                        Calendar.marksStore = {};
+                        Calendar.loadMarks();
+                    }
+                
+                }
             });
 
         },
@@ -614,12 +629,16 @@ $(function(){
                     id: id
                 };
             }
+
             Calendar.request({
                 url: url,
                 data: data
             }).fail(function(c, e){
             }).done(function(d){
                 if(type == 'add') {
+                    if(!Calendar.marksStore[Calendar.currentMarkId][Calendar.currentDate]){
+                        Calendar.marksStore[Calendar.currentMarkId][Calendar.currentDate] = [];
+                    }
                     Calendar.marksStore[Calendar.currentMarkId][Calendar.currentDate].push({
                         id: d,
                         time: time,
@@ -635,6 +654,12 @@ $(function(){
                         v.desc = desc;
                     }
                 });
+            }
+            if(!Calendar.marksStore[Calendar.currentMarkId]){
+                Calendar.marksStore[Calendar.currentMarkId] = {};
+            }
+            if(!Calendar.marksStore[Calendar.currentMarkId][Calendar.currentDate]){
+                Calendar.marksStore[Calendar.currentMarkId][Calendar.currentDate] = [];
             }
 
             $.each(Calendar.marksStore[Calendar.currentMarkId][Calendar.currentDate], function(k, v){
@@ -656,6 +681,15 @@ $(function(){
             self.miniMonthElement = $('.cal-mini-month-panel').find('tbody');
 
             self.miniMonthView = new MiniMonthView;
+
+
+            self.colorCode = '#!4587';
+            self.colors = {
+                'b' : 'blue',
+                'g' : 'green',
+                'r' : 'red'
+            };
+
             self.miniMonthElement.on('click', 'a', function() {
                 var y = $(this).attr('data-year');
                 var m = $(this).attr('data-month');
@@ -664,13 +698,6 @@ $(function(){
                 Calendar.setCurrentDate(new Date(y, m, d));
                 Calendar.changeType('Date');
             });
-
-            self.colorCode = '#!4587';
-            self.colors = {
-                'b' : 'blue',
-                'g' : 'green',
-                'r' : 'red'
-            };
 
             $('.cal-date-marks-table').on('click', 'li', function(){
                 if($(this).find('input').size()) return;
