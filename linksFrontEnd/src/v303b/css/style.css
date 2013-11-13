@@ -28,10 +28,6 @@ input:focus{ outline: 0; }
 	width: 960px;
 }
 
-.widescreen .footer-inner {
-	width: 1112px;
-}
-
 .footer a,
 .footer a:hover{
 	color: #bbbaba;
@@ -836,6 +832,10 @@ input:focus{ outline: 0; }
 .site-info li a:hover,
 .friend-links li a:hover {
 	color: #fc2a06;
+}
+.site-info img{
+    margin-left: 10px;
+    vertical-align: middle;
 }
 
 .site-info {

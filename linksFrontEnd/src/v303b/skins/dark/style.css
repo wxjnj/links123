@@ -24,7 +24,7 @@ a, a:hover{
     padding-left: 17px;
     padding-right: 17px;
     color: #fff;
-    text-shadow: 1px 1px 1px #000;
+    /*text-shadow: 1px 1px 1px #000;*/
 }
 
 .zld ul li .nm,
@@ -33,10 +33,10 @@ a, a:hover{
 }
 
 .zld ul li b {
-    text-shadow: 1px 1px 1px #444;
+    /*text-shadow: 1px 1px 1px #444;*/
 }
 .header-weather {
-    text-shadow: 1px 1px 1px #666;
+    /*text-shadow: 1px 1px 1px #666;*/
 }
 .zld ul li.add .ctl {
     border-radius: 30px;  
@@ -261,7 +261,6 @@ a, a:hover{
 
 .zdl .ipt {
     font-size: 12px;
-    text-shadow: 1px 1px 1px #fff;
     background: #e9e9e9;
     box-shadow: inset 1px 1px 4px #333;
 }
@@ -285,17 +284,17 @@ a, a:hover{
 }
 .uc-menu .nm {
     background: #e9e9e9;
-    box-shadow: inset 1px 1px 4px #666;
+    /*box-shadow: inset 1px 1px 4px #666;*/
     line-height: 25px;
 }
 
 .subcate a {
-    text-shadow: 1px 1px 1px #000;
+    /*text-shadow: 1px 1px 1px #000;*/
 }
 
 .cal-date-marks-table .blue {
     background: none;
-    text-shadow: 1px 1px 1px #000;
+    /*text-shadow: 1px 1px 1px #000;*/
 }
 
 .apps .nm,
@@ -318,7 +317,7 @@ a, a:hover{
 .extra-calendar .cal-header .cal-header-date, 
 .extra-calendar .cal-header button, 
 .site-info {
-    text-shadow: 1px 1px 1px #000;
+    /*text-shadow: 1px 1px 1px #000;*/
 }
 .title-tabs li:hover .news-mini-tip {
     text-shadow: none;
