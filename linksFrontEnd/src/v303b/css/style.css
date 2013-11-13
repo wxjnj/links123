@@ -193,7 +193,7 @@ input:focus{ outline: 0; }
 	width: 360px;
 }
 .thl .ctls .btn{
-	background: url(../imgs/sprite.png) -5px 1px no-repeat;
+	background: url(../imgs/sprite.png) -5px 0 no-repeat;
 	cursor: pointer;
 	float: right;
 	height: 32px;
@@ -365,7 +365,7 @@ input:focus{ outline: 0; }
 	width: 306px;
 	height: 442px;
 }
-.pics .items li{    
+.pics .items li{
 	overflow: hidden;
 	float: left;
 }
@@ -711,6 +711,9 @@ input:focus{ outline: 0; }
 .zld ul li .ctl:hover{
 	box-shadow:inset 0px 0 5px #ccc;
 }
+.zld ul li.add{
+    margin-left: 15px;
+}
 .zld ul li.add .ctl{
 	cursor: pointer;
 	color: transparent;
@@ -851,6 +854,8 @@ input:focus{ outline: 0; }
 }
 .site-info p{
 	float: right;
+    height: 29px;
+    line-height: 29px;
 }
 
 

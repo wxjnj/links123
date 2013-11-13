@@ -114,8 +114,8 @@
 .extra-calendar .cal-header .cal-header-date-prev,
 .extra-calendar .cal-header .cal-header-date-next,
 .extra-calendar .cal-header .cal-header-date {
-	font-family: Arial;
-	font-size:14px;
+	font-family: arial;
+	font-size: 14px;
 	font-weight:800;
 	color: #000;
 }
@@ -123,29 +123,29 @@
 .widescreen .extra-calendar .cal-header .cal-header-date-prev,
 .widescreen .extra-calendar .cal-header .cal-header-date-next,
 .widescreen .extra-calendar .cal-header .cal-header-date {
-	font-size:16px;
+	font-size: 16px;
 }
 
-.extra-calendar .cal-header button {
+.extra-calendar .cal-header button{
 	cursor:pointer;
 	color:#000;
 	border:0;
+    text-align: center;
 	background-color:transparent
 }
 .extra-calendar .cal-header .cal-view-select-btn {
 	display:inline-block;
-	width:28px;
-	height:28px
+    margin-left: 10px;
+    padding-bottom: 3px;
+    border-bottom: 3px solid transparent;
+	height: 28px;
+    width: 17px;
 }
 .extra-calendar .cal-header .cal-view-select-btn:hover,
 .extra-calendar .cal-header .active {
 	display:inline-block;
 	background: none;
-	width: 22px;
 	height: 22px;
-	margin-left:3px;
-	margin-right:3px;
-	padding-bottom:3px;
 	border-bottom: 3px solid #aaa;
 }
 
@@ -153,10 +153,6 @@
 .widescreen .extra-calendar .cal-header .active {
 	display:inline-block;
 	background: none;
-	width: 28px;
-	height: 25px;
-	margin: 0;
-	padding: 3px;
 	border-bottom: 3px solid #aaa;
 }
 
@@ -229,6 +225,9 @@
 	right: 5px;
 	top: 0;
 	display: none;
+    font-family: arial;
+    font-size: 16px;
+    font-weight: bold;
 }
 
 .cal-date-marks-table li:hover .add-btn {
