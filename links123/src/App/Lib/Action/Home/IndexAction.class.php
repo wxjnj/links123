@@ -1386,15 +1386,16 @@ class IndexAction extends CommonAction {
     			$news[] = array('url' => $this->tp_match('/href="(.*?)"/is', $v), 'title' => trim(str_replace("\n", '', strip_tags($v))), 'img' => '');
     		}
     		
-    		preg_match_all('/<li class="focal f16">(.*?)<\/li>/is', $str, $match);
+    		$newsStr = $this->tp_match('/<ul class="hot_list"(.*?)<\/ul>/is', $str);
+    		preg_match_all('/<li>(.*?)<\/li>/is', $newsStr, $match);
     		foreach ($match[1] as $k => $v) {
     			$news[] = array('url' => $this->tp_match('/href="(.*?)"/is', $v), 'title' => trim(str_replace("\n", '', strip_tags($v))), 'img' => '');
     		}
-    
-    		preg_match_all('/<div class="image">(.*?)<\/div>/is', $str, $match);
-    		foreach ($match[1] as $k => $v) {
-    			if ($k >= (count($match[1])-1)) continue;
-    			$imgNews[] = array('url' => stripslashes($this->tp_match('/href="(.*?)"/is', $v)), 'title' => trim($this->tp_match('/title="(.*?)"/is', $v)), 'img' => $this->tp_match('/src="(.*?)"/is', $v));
+    		
+    		$imgNewsStr = $this->tp_match('/<ul class="focuslist">(.*?)<\/ul>/is', $str);
+    		preg_match_all('/<li(.*?)<\/li>/is', $imgNewsStr, $match);
+    		foreach ($match[0] as $k => $v) {
+    			$imgNews[] = array('url' => stripslashes($this->tp_match('/href="(.*?)"/is', $v)), 'title' => str_replace('"', '“',trim($this->tp_match('/<span class="title">(.*?)<\/span>/is', $v))), 'img' => $this->tp_match('/src="(.*?)"/is', $v));
     		}
     		$hotNews = array('news' => $news, 'imgNews' => $imgNews);
     		S('hotNewsList', $hotNews, 14400);
