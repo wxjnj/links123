@@ -369,3 +369,22 @@ body {
     border-bottom: 3px solid #424143;
 }
 
+
+.cal-date-marks-table li .delete-btn {
+    color: #fff;
+    display: inline-block;
+    background: url(close.png) 0 0 no-repeat;
+    height: 12px;
+    line-height: 12px;
+    width: 12px;
+    position: absolute;
+    overflow: hidden;
+    top: 9px;
+    right: 9px;
+    color: transparent;
+    text-decoration: none;
+    text-align: center;
+}
+.cal-date-marks-table li .delete-btn:hover {
+    background-position: 0 -12px;
+}

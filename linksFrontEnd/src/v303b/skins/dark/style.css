@@ -291,17 +291,19 @@ a, a:hover{
 
 .cal-date-marks-table li .delete-btn {
     color: #fff;
-    font-family: Arial;
-    font-size: 10px;
+    display: inline-block;
+    background: url(close.png) 0 0 no-repeat;
+    height: 11px;
+    line-height: 11px;
+    width: 11px;
+    position: absolute;
+    overflow: hidden;
+    top: 9px;
+    right: 9px;
+    color: transparent;
+    text-decoration: none;
+    text-align: center;
 }
 .cal-date-marks-table li .delete-btn:hover {
-    width: 13px;
-    height: 13px;
-    line-height: 13px;
-    text-align: center;
-    position: absolute;
-    top: 9px;
-    right: 2px;
-    text-decoration: none;
-    display: inline-block;
+    background-position: 0 -11px;
 }
