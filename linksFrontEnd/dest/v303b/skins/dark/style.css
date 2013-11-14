@@ -282,10 +282,11 @@ a, a:hover{
 
 
 .extra-calendar .cal-day .cal-mini-month-panel .another-month a{
-    color: #666;
+    color: #c3b8b0;
 }
 .extra-calendar .cal-day .cal-mini-month-panel td .active {
-    border-radius: 30px;
+    background: none;
+    background: url(op20.png) 0 0 no-repeat;
 }
 
 .cal-date-marks-table li .delete-btn {
