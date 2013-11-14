@@ -24,7 +24,6 @@ a, a:hover{
     padding-left: 17px;
     padding-right: 17px;
     color: #fff;
-    text-shadow: 1px 1px 1px #000;
 }
 
 .zld ul li .nm,
@@ -32,12 +31,6 @@ a, a:hover{
     background: url(/v303b/imgs/op30.png);
 }
 
-.zld ul li b {
-    text-shadow: 1px 1px 1px #444;
-}
-.header-weather {
-    text-shadow: 1px 1px 1px #666;
-}
 .zld ul li.add .ctl {
     border-radius: 30px;  
 }
@@ -175,10 +168,6 @@ a, a:hover{
 .header-weather .weather-find-region-box a{ color: #000; }
 /* 先放这吧，后期再根据调整来整理吧  */
 
-.header-weather .weather-find-region-box {
-    text-shadow: none; 
-}
-
 .extra-box {
     width: 463px;
 }
@@ -261,12 +250,8 @@ a, a:hover{
 
 .zdl .ipt {
     font-size: 12px;
-    text-shadow: 1px 1px 1px #fff;
-    background: #e9e9e9;
-    box-shadow: inset 1px 1px 4px #333;
 }
 .zdl .btn {
-    background-color: #e9e9e9;
     height: 16px;
     top: 12px;
     background-position: -93px -36px;
@@ -285,47 +270,19 @@ a, a:hover{
 }
 .uc-menu .nm {
     background: #e9e9e9;
-    box-shadow: inset 1px 1px 4px #666;
     line-height: 25px;
 }
 
 .subcate a {
-    text-shadow: 1px 1px 1px #000;
 }
 
 .cal-date-marks-table .blue {
     background: none;
-    text-shadow: 1px 1px 1px #000;
 }
 
-.apps .nm,
-.title-tabs span, 
-.text-news p a, 
-.text-news p a:active, 
-.pic-news-title a, 
-.title-tabs li, 
-.cal-date-marks-table li .time, 
-.extra-calendar .cal-day .cal-mini-month-panel table, 
-.extra-calendar .cal-day .cal-mini-month-panel td a, 
-.text-news .more-news a, 
-.text-news .more-news a:active, 
-.site-info li a, 
-.site-info li a:active, 
-.friend-links li a, 
-.friend-links li a:active, 
-.extra-calendar .cal-header .cal-header-date-prev, 
-.extra-calendar .cal-header .cal-header-date-next, 
-.extra-calendar .cal-header .cal-header-date, 
-.extra-calendar .cal-header button, 
-.site-info {
-    text-shadow: 1px 1px 1px #000;
-}
-.title-tabs li:hover .news-mini-tip {
-    text-shadow: none;
-}
 
 .extra-calendar .cal-day .cal-mini-month-panel .another-month a{
-    color: #aaa;
+    color: #666;
 }
 .extra-calendar .cal-day .cal-mini-month-panel td .active {
     border-radius: 30px;
@@ -337,8 +294,6 @@ a, a:hover{
     font-size: 10px;
 }
 .cal-date-marks-table li .delete-btn:hover {
-    background: #79929a;
-    border-radius: 20px;
     width: 13px;
     height: 13px;
     line-height: 13px;
