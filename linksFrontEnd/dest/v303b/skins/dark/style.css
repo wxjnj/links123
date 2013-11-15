@@ -142,12 +142,18 @@ a, a:hover{
 }
 
 .pic-news-tabs a{
-    background: #6e848e;
+    background: #fff;
 }
 .pic-news-tabs .active,
 .cal-date-marks-table li .dot,
 .text-news p b{
     background: #fff;
+}
+.pic-news-tabs .active{
+    filter:alpha(opacity=30);
+    -moz-opacity: 0.3;
+    -khtml-opacity: 0.3;
+    opacity: 0.3;
 }
 .cal-date-marks-table .current-time,
 .widescreen .extra-calendar .cal-day .cal-mini-month-panel{
