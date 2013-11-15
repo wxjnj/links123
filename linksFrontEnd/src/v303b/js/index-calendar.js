@@ -553,13 +553,16 @@ $(function(){
                 short_desc = desc;
             }
             self.element.find('.desc').html('<a class="desc-content ' + color + '" data-color="' + color + '" title="' + escape(short_desc) + '" href="javascript:;">' + short_desc + '</a>');
-            self.element.append('<a class="delete-btn" href="javascript:;">×</a>');
+            if(!self.element.find('.delete-btn').size()){
+                self.element.append('<a class="delete-btn" href="javascript:;">×</a>');
+            }
             self.element.attr('data-id', id);
         },
         deleteMark: function(){
             var self = this;
             var id = self.element.attr('data-id');
             self.element.find('.desc').html('<a class="add-btn" href="javascript:;">增加日程</a>');
+            self.element.find('.delete-btn').remove();
             self.element.removeAttr('data-id');
             if(Calendar.marksStore[Calendar.currentMarkId] && Calendar.marksStore[Calendar.currentMarkId][Calendar.currentDate]){
                 $.each(Calendar.marksStore[Calendar.currentMarkId][Calendar.currentDate], function(k, v){
