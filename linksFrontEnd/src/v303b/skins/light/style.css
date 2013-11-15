@@ -373,3 +373,27 @@ body {
     height: 16px;
     line-height: 16px;
 }
+
+
+.cal-date-marks-table li .delete-btn {
+    color: #fff;
+    display: inline-block;
+    background: url(close.png) 0 0 no-repeat;
+    height: 13px;
+    line-height: 13px;
+    width: 13px;
+    position: absolute;
+    overflow: hidden;
+    top: 7px;
+    right: 9px;
+    color: transparent;
+    text-decoration: none;
+    text-align: center;
+}
+.cal-date-marks-table li .delete-btn:hover {
+    background-position: 0 -13px;
+}
+
+.widescreen .cal-date-marks-table li .delete-btn{
+    top: 9px;
+}
