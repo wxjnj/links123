@@ -142,6 +142,10 @@ a, a:hover{
 }
 
 .pic-news-tabs a{
+    filter:alpha(opacity=30);
+    -moz-opacity: 0.3;
+    -khtml-opacity: 0.3;
+    opacity: 0.3;
     background: #fff;
 }
 .pic-news-tabs .active,
@@ -150,10 +154,10 @@ a, a:hover{
     background: #fff;
 }
 .pic-news-tabs .active{
-    filter:alpha(opacity=30);
-    -moz-opacity: 0.3;
-    -khtml-opacity: 0.3;
-    opacity: 0.3;
+    filter:alpha(opacity=100);
+    -moz-opacity: 1;
+    -khtml-opacity: 1;
+    opacity: 1;
 }
 .cal-date-marks-table .current-time,
 .widescreen .extra-calendar .cal-day .cal-mini-month-panel{
