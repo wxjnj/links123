@@ -1566,26 +1566,4 @@ class IndexAction extends CommonAction {
     	return $hotNews;
     } 
     
-    /**
-     * 获取和生成游客记录
-     */
-    protected function get_member_guest() {
-    	$member_guest_id = cookie(md5('member_guest'));
-    	if (!$member_guest_id || $member_guest_id > 0) {
-    	
-    		$guestModel = M('MemberGuest');
-    	
-    		$guest_id = $guestModel->add(array('create_time' => time(), 'status' => 1));
-    		if ($guest_id) {
-    				
-    			$member_guest_id = - $guest_id;
-    			if ($guestModel->where(array('id' => $guest_id))->save(array('mid' => $member_guest_id))) {
-    	
-    				cookie(md5('member_guest'), $member_guest_id, 365*24*60*60);
-    			}
-    		}
-    	} 
-    	
-    	return $member_guest_id;
-    }
 }
