@@ -670,8 +670,11 @@ $(function(){
                 if(!v) return;
                 if(v.id == 0){
                     Calendar.marksStore[Calendar.currentMarkId][Calendar.currentDate].splice(k, 1);
-                    var tt = $('.cal-date-marks-table').find('[data-id=0]').attr('data-time');
-                    Calendar.DateView.all_lis[tt].refresh();
+                    var o =  $('.cal-date-marks-table').find('[data-id=0]'); // 跨时间会发生当前找不到id=0
+                    if(o.size()){
+                        var tt = o.attr('data-time');
+                        Calendar.DateView.all_lis[tt].refresh();
+                    }
                 }
             });
 
