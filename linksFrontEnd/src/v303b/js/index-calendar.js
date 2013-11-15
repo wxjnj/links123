@@ -519,8 +519,8 @@ $(function(){
                 var x = el.find('.desc-content').attr('title');
                 var d = el.find('.desc');
                 var c = el.find('.desc-content').attr('data-color');
-                d.html('<div class="desc-input-div"><input type="text" data-old="' + x + '" data-color="' + c + '" value="' + x + '" /><!--b class="blue" data-code="b"></b><b class="green" data-code="g"></b><b class="red" data-code="r"></b--></div>');
-                d.find('input').select();
+                d.html('<div class="desc-input-div"><input type="text" data-old="' + x + '" data-color="' + c + '" value="" /><!--b class="blue" data-code="b"></b><b class="green" data-code="g"></b><b class="red" data-code="r"></b--></div>');
+                d.find('input').val(unescape(x)).select();
                 d.find('.' + c).addClass('active');    
             }else{
                 var d = el.find('.desc')//.parent('.desc');
@@ -551,7 +551,8 @@ $(function(){
             }else{
                 short_desc = desc;
             }
-            self.element.find('.desc').html('<a class="desc-content ' + color + '" data-color="' + color + '" title="' + desc + '" href="javascript:;">' + short_desc + '</a>');
+
+            self.element.find('.desc').html('<a class="desc-content ' + color + '" data-color="' + color + '" title="' + escape(short_desc) + '" href="javascript:;">' + short_desc + '</a>');
             self.element.append('<a class="delete-btn" href="javascript:;">×</a>');
             self.element.attr('data-id', id);
         },
@@ -708,7 +709,7 @@ $(function(){
                         var id = v.element.attr('data-id');
                         var desc = v.element.find('input').val();
                         var time = v.element.attr('data-timestamp');
-                        if(desc != v.element.find('input').attr('data-old')) {
+                        if(escape(desc) != v.element.find('input').attr('data-old')) {
                             v.updateMark(id, time, desc);
                         }
                         v.setMark(id, desc);
@@ -732,7 +733,7 @@ $(function(){
                     var desc = mark.element.find('input').val();
                     var time = mark.element.attr('data-timestamp');
                     //time = Date.today().setHours(time);
-                    if(desc != mark.element.find('input').attr('data-old')) {
+                    if(escape(desc) != mark.element.find('input').attr('data-old')) {
                         mark.updateMark(id, time, desc);
                     }
                     mark.setMark(id, desc);

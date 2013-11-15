@@ -79,7 +79,7 @@
     text-decoration:none
 }
 .skin-list {
-    width: 300px;
+    width: 600px;
     /*height:120px;*/
     top:40px;
     padding-left: 10px;
@@ -138,6 +138,7 @@
     overflow: hidden;
 }
 .skin-list .skin-pics .item {
+    display: none;
     float: left;
     position: relative;
     left: 50%;

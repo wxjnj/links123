@@ -779,7 +779,7 @@ $( function($) {
 			];
 
 
-			self.changeMode('mini', true);
+			self.changeMode('normal', true);
 			var lis = '';
 			var divs = '';
 			$.each(self.music_channel_list, function(k, v){

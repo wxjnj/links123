@@ -64,13 +64,13 @@
 					<div class="skin-content">
 						<!--p style="color:#333!important;text-align:center;line-height:40px;margin-top:10px">coming soon ...</p-->
 						<div class="subpanel" id="J_skin_selection">
-							<!--div class="skin-types">
+							<div class="skin-types">
 								<a data-id="themes" class="J_link_skin_type">另&nbsp;客</a>
 								<span class="skin-theme-split"> | </span>
 								<volist name="skinCategory" id="vo" key="k">
 									<a data-id="{$vo.categoryId}" class='J_link_skin_type <if condition="$k eq 1">active</if>'>{$vo.categoryName}</a>
 								</volist>
-							</div-->
+							</div>
 							<div id="J_skin_pics" class="skin-pics">
 								<div id="link_skin_themes" class="item">
 									<a data-id="2" data-theme="light" data-bg="__STATIC__/v303b/skins/light/bg.png">
@@ -83,13 +83,13 @@
 										<img class="m" data-src="__STATIC__/v303b/skins/dark_ext/bg_s.png" src="" alt="" />
 									</a>
 								</div>
-								<!--volist name="skinList" id="vo">
+								<volist name="skinList" id="vo">
 									<div id="link_skin_{$key}" class='item <if condition="$i eq 1">active</if>'>
 										<volist name="vo" id="skins">
 											<a class="skin-link-btn" data-bg="{$skins.skin}" data-theme="{$skins.theme}" data-id="{$skins.skinId}" class='<if condition="$skins.skinId eq $skinId">active</if>'><img data-src="{$skins.middleSkin}" src=""  alt="" /></a>
 										</volist>
 									</div>
-								</volist-->
+								</volist>
 							</div>
 						</div>
 					</div>
