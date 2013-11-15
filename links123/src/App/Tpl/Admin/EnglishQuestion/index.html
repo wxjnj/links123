@@ -129,7 +129,7 @@
 
         <div class="list" >
             
-            <html:list id="checkList" name="category" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,name|htmlspecialchars:名称:edit,created|toDateShort:发布时间,cat_attr_id|getVoiceNameFromAttrId:语音:voice|id,cat_attr_id|getPatternNameFromAttrId:形式:pattern|id,special_recommend|getYorN:特别推荐:special_recommend|media_id,status|getStatus:状态" actionlist="property:分类,edit:编辑" />
+            <html:list id="checkList" name="category" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,name|htmlspecialchars:名称:edit,created|toDateShort:发布时间,cat_attr_id|getVoiceNameFromAttrId:语音:voice|id,cat_attr_id|getPatternNameFromAttrId:形式,special_recommend|getYorN:特别推荐:special_recommend|media_id,status|getStatus:状态" actionlist="property:分类,edit:编辑" />
         </div>
 
         <div class="page">{$page}</div>
