@@ -711,9 +711,6 @@ input:focus{ outline: 0; }
 .zld ul li .ctl:hover{
 	box-shadow:inset 0px 0 5px #ccc;
 }
-.zld ul li.add{
-    margin-left: 15px;
-}
 .zld ul li.add .ctl{
 	cursor: pointer;
 	color: transparent;

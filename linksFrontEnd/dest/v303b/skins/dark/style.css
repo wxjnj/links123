@@ -36,7 +36,7 @@ a, a:hover{
 }
 .zld ul li.add .ctl i {
     background-image: url(sprite.png);
-    background-position: -32px -1px;
+    background-position: -31px -1px;
     background-repeat: no-repeat
 }
 
@@ -95,7 +95,7 @@ a, a:hover{
     border-top: 1px solid #ddd;
 }
 .extra-box {
-    border-top: 2px solid #ddd;
+    border-top: 1px solid #ddd;
 }
 .cal-date-marks-table li {
     border-bottom: 1px dashed #ddd;
