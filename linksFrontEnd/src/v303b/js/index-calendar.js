@@ -551,8 +551,8 @@ $(function(){
             }else{
                 short_desc = desc;
             }
-
-            self.element.find('.desc').html('<a class="desc-content ' + color + '" data-color="' + color + '" title="' + escape(short_desc) + '" href="javascript:;">' + unescape(short_desc) + '</a>');
+            short_desc = $('<div/>').html(short_desc).text(); //后台传输过来的数据会编码html，利用这个解码
+            self.element.find('.desc').html('<a class="desc-content ' + color + '" data-color="' + color + '" title="' + escape(short_desc) + '" href="javascript:;">' + short_desc + '</a>');
             self.element.append('<a class="delete-btn" href="javascript:;">×</a>');
             self.element.attr('data-id', id);
         },
