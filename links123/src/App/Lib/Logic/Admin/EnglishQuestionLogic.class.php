@@ -78,7 +78,7 @@ class EnglishQuestionLogic {
             return false;
         }
         $catQuestionModel = D("EnglishCatquestion");
-        if(is_null($voice) && is_null($target) && is_null($pattern)){
+        if(is_null($voice) || is_null($target) || is_null($pattern)){
             $cat_question_map = array(
                 "a.type" => $type,
                 "a.question_id" => $question_id
@@ -88,10 +88,20 @@ class EnglishQuestionLogic {
                 ->where($cat_question_map)
                 ->order("a.status desc,a.created desc")
                 ->getField("b.cat_attr_id");
-            $data["cat_attr_id"] = intval($question_cat_attr_id);
-        }else{
-            $data["cat_attr_id"] = bindec($voice . $target . $pattern);
+            $question_voice = substr(sprintf("%03d",  decbin($question_cat_attr_id)), 0,1);
+            $question_target = substr(sprintf("%03d",  decbin($question_cat_attr_id)), 1,1);
+            $question_pattern = substr(sprintf("%03d",  decbin($question_cat_attr_id)), 2,1);
+            if(is_null($voice)){
+                $voice = $question_voice;
+            }
+            if(is_null($target)){
+                $target = $question_target;
+            }
+            if(is_null($pattern)){
+                $pattern = $question_pattern;
+            }
         }
+        $data["cat_attr_id"] = bindec($voice . $target . $pattern);
         
         if($is_add){
             //判断当前一级分类下是否已有分类，不允许一级分类试题对应多个二级

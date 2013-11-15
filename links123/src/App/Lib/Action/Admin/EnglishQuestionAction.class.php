@@ -328,6 +328,7 @@ class EnglishQuestionAction extends CommonAction {
         $level_thr   = isset($_REQUEST["level_thr"]) ? intval($_REQUEST["level_thr"]) : 0;
         $status      = isset($_REQUEST["status"])    ? intval($_REQUEST["status"])    : 1;
         $type        = isset($_REQUEST["type"])      ? intval($_REQUEST["type"])      : 1;
+        $pattern        = isset($_REQUEST["pattern"])      ? intval($_REQUEST["pattern"])      : 1;
 
         $model = D("EnglishCatquestion");
         $model->startTrans();
@@ -335,7 +336,7 @@ class EnglishQuestionAction extends CommonAction {
                                                     $question_id, 
                                                     null, 
                                                     null, 
-                                                    null, 
+                                                    $pattern, 
                                                     $level_one, 
                                                     $level_two, 
                                                     $level_thr, 
