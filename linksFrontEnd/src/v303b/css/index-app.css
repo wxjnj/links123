@@ -64,9 +64,9 @@
 .apps ul li{
 	cursor: pointer;
 	display: inline;
-	margin-left: 27px;
+	margin-left: 25px;
 	float: left;
-	width: 78px;
+	width: 80px;
 	height: 100px;
 	text-align: center;
 	position: relative;
