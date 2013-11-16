@@ -125,7 +125,7 @@ a, a:hover{
     color: #fff;
 }
 .thl .cate-in,
-.thl .cate-in a{ color: #000; }
+.thl .cate-in a{ color: #666; }
 .zld,
 .zld a,
 .zld a:hover{
@@ -138,7 +138,7 @@ a, a:hover{
 }
 .title-tabs .active{
     background: none;
-    border-bottom: 3px solid #d3cacc;
+    border-bottom: 3px solid #fff;
 }
 
 .pic-news-tabs a{
@@ -194,7 +194,7 @@ a, a:hover{
 .widescreen .extra-calendar .cal-header .active,
 .extra-calendar .cal-header .cal-view-select-btn:hover, 
 .extra-calendar .cal-header .active {
-    border-bottom: 3px solid #d3cacc;
+    border-bottom: 3px solid #fff;
 }
 
 .extra-calendar .cal-month table th, .extra-calendar .cal-week table th {

@@ -47,7 +47,6 @@ input:focus{ outline: 0; }
 .under-header-inner {
 	position: relative;
 	width: 960px;
-	height: 120px;
 	margin: 0 auto;
 }
 
@@ -63,8 +62,8 @@ input:focus{ outline: 0; }
 	position: relative;
 }
 .ci-hd{
-	padding-top: 20px;
-	height: 115px;
+	padding-top: 35px;
+	height: 100px;
 	position: relative;
 }
 .ci-bd{
@@ -124,7 +123,7 @@ input:focus{ outline: 0; }
 	background: url(../imgs/logo2.png) 0 0 no-repeat;
 	position: absolute;
 	left: 0;
-	top: 35px;
+	top: 45px;
 	height: 55px;
 	overflow: hidden;
 	text-indent: -999px;
@@ -178,9 +177,9 @@ input:focus{ outline: 0; }
 	background: #fff;
 	height: 30px;
 	padding: 0 10px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	border-radius: 5px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
 }
 .thl .ctls .ipt{
 	background: #fff;
@@ -463,8 +462,10 @@ input:focus{ outline: 0; }
 /*app-icon-list*/
 .app-icon-list{
 	/*display: none;*/
-	height: 18px;
-	position: relative;
+    padding: 10px 0 0 0;
+    height: 18px;
+    position: relative;
+    margin-bottom: -20px;
 	/*z-index: 9999;*/
 }
 .app-icon-list em{
@@ -572,7 +573,7 @@ input:focus{ outline: 0; }
 	display:none;
 }
 .thl{
-	margin-left: 275px;
+	margin: 0 auto;
 	width: 410px;
 }
 .thl .ctls .ipt{
@@ -619,10 +620,6 @@ input:focus{ outline: 0; }
 	height: 390px;
 }
 */
-
-.thl .ctls {
-	border: 1px solid #d1d1d1;
-}
 
 .big-pic {
 	width: 100%;
@@ -892,7 +889,6 @@ input:focus{ outline: 0; }
 
 */
 .widescreen .thl{
-	margin-left: 380px; 
 	width: 460px;
 }
 .widescreen .thl .ctls .ipt{

@@ -60,7 +60,7 @@
 }
 .thl .ctls {
     background: #f4f4f4;
-    box-shadow: inset 1px 1px 2px #aaa;
+    /*box-shadow: inset 1px 1px 2px #aaa;*/
     border: 1px solid #d7d7d7;
 }
 .thl .ctls .ipt {
@@ -250,6 +250,9 @@ body {
 .title-tabs .active{
     color: #666;
     background: none;
+    border-bottom: 3px solid #0079c1;
+}
+.widescreen .extra-calendar .cal-header .active{
     border-bottom: 3px solid #0079c1;
 }
 

@@ -88,16 +88,17 @@
 	/*display:block*/
 }
 .uc-menu ul {
-	background:#fff;
-	display:none;
-	position:absolute;
-	z-index:2000;
-	right:0;
-	top:38px;
-	width:174px;
-	-moz-border-radius:5px;
-	-webkit-border-radius:5px;
-	border-radius:5px
+	background: #fff;
+	display: none;
+	position: absolute;
+	z-index: 2000;
+    box-shadow: 0 0 5px #666;
+	right: 0;
+	top: 38px;
+	width: 174px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px
 }
 .uc-menu ul li {
 	padding:0;
@@ -105,15 +106,16 @@
 	line-height:18px
 }
 .uc-menu ul li a {
-	color:#727171;
-	display:block;
-	width:174px;
-	height:30px;
-	line-height:30px
+	color: #727171;
+	display: block;
+	width: 174px;
+	height: 30px;
+	line-height: 30px
 }
 .uc-menu ul li a:hover {
 	background:#4daf7b;
-	color:#fff
+	color:#fff;
+    text-decoration: none;
 }
 .uc-menu ul li.logout a {
 	-moz-border-radius:0 0 5px 5px;
