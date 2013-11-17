@@ -302,7 +302,7 @@ input:focus{ outline: 0; }
 }
 
 .box-apps .box-bd {
-	padding-top: 10px;
+	padding-top: 0;
 }
 
 .box-apps {
@@ -543,8 +543,9 @@ input:focus{ outline: 0; }
     color: #0c0b0b;
 }
 .app-icon-list ul li:hover,
+.app-icon-list ul li:hover .nm,
 .app-icon-list ul li a:hover,
-.app-icon-list ul li a:hover .nm{
+.app-icon-list ul li .nm:hover{
     color: #fc2a06;
     text-decoration: none;
 }
@@ -940,9 +941,6 @@ input:focus{ outline: 0; }
 */
 .widescreen .uc-avatar {
 	float:right;
-}
-.widescreen .box-apps .box-bd{
-	padding-top: 0;
 }
 
 
