@@ -385,3 +385,7 @@ body {
 .widescreen .cal-date-marks-table li .delete-btn{
     top: 9px;
 }
+
+.cal-date-marks-table li .add-btn{
+    color: #424143;
+}
