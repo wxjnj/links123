@@ -724,38 +724,44 @@ $(function(){
                 mark.edit();
             });
 
-            $('.cal-date-marks-table').on('click', '.delete-btn', function(){
-                var li = $(this).parent('li');
-                var time = li.attr('data-time');
-                self.all_lis[time].deleteMark();
-                return false;
-            });
+            $('.cal-date-marks-table')
+                .off('click', '.delete-btn')
+                .on('click', '.delete-btn', function(){
+                    var li = $(this).parent('li');
+                    var time = li.attr('data-time');
+                    self.all_lis[time].deleteMark();
+                    return false;
+                });
 
-            $('.cal-date-marks-table').on('keydown', 'input', function(e){
-                if(e.keyCode == 13){
-                    var time = $(this).parents('li').attr('data-time');
-                    var mark = self.all_lis[time];
-                    var id = mark.element.attr('data-id');
-                    var desc = mark.element.find('input').val();
-                    var time = mark.element.attr('data-timestamp');
-                    //time = Date.today().setHours(time);
-                    if(escape(desc) != mark.element.find('input').attr('data-old')) {
-                        mark.updateMark(id, time, desc);
+            $('.cal-date-marks-table')
+                .off('keydown', 'input')
+                .on('keydown', 'input', function(e){
+                    if(e.keyCode == 13){
+                        var time = $(this).parents('li').attr('data-time');
+                        var mark = self.all_lis[time];
+                        var id = mark.element.attr('data-id');
+                        var desc = mark.element.find('input').val();
+                        var time = mark.element.attr('data-timestamp');
+                        //time = Date.today().setHours(time);
+                        if(escape(desc) != mark.element.find('input').attr('data-old')) {
+                            mark.updateMark(id, time, desc);
+                        }
+                        mark.setMark(id, desc);
                     }
-                    mark.setMark(id, desc);
-                }
-            }).on('blur', 'input', function(e){ //失去焦点时候执行上面的回车方法 TODO
-                    var time = $(this).parents('li').attr('data-time');
-                    var mark = self.all_lis[time];
-                    var id = mark.element.attr('data-id');
-                    var desc = mark.element.find('input').val();
-                    var time = mark.element.attr('data-timestamp');
-                    //time = Date.today().setHours(time);
-                    if(escape(desc) != mark.element.find('input').attr('data-old')) {
-                        mark.updateMark(id, time, desc);
-                    }
-                    mark.setMark(id, desc);
-            });
+                })
+                .off('blur', 'input')
+                .on('blur', 'input', function(e){ //失去焦点时候执行上面的回车方法 TODO
+                        var time = $(this).parents('li').attr('data-time');
+                        var mark = self.all_lis[time];
+                        var id = mark.element.attr('data-id');
+                        var desc = mark.element.find('input').val();
+                        var time = mark.element.attr('data-timestamp');
+                        //time = Date.today().setHours(time);
+                        if(escape(desc) != mark.element.find('input').attr('data-old')) {
+                            mark.updateMark(id, time, desc);
+                        }
+                        mark.setMark(id, desc);
+                });
 
         },
         renderMarks: function() {
