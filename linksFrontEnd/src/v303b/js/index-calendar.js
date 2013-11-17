@@ -747,20 +747,12 @@ $(function(){
                             mark.updateMark(id, time, desc);
                         }
                         mark.setMark(id, desc);
+                        return false;
                     }
                 })
                 .off('blur', 'input')
-                .on('blur', 'input', function(e){ //失去焦点时候执行上面的回车方法 TODO
-                        var time = $(this).parents('li').attr('data-time');
-                        var mark = self.all_lis[time];
-                        var id = mark.element.attr('data-id');
-                        var desc = mark.element.find('input').val();
-                        var time = mark.element.attr('data-timestamp');
-                        //time = Date.today().setHours(time);
-                        if(escape(desc) != mark.element.find('input').attr('data-old')) {
-                            mark.updateMark(id, time, desc);
-                        }
-                        mark.setMark(id, desc);
+                .on('blur', 'input', function(e){ //如何从次执行blur，会被多少执行TODO
+//                    console.log(2);
                 });
 
         },
