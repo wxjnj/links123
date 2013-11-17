@@ -49,7 +49,7 @@ $(function() {
 	});
 
 	(function(){ //app图标相关
-		var nmlLen = 9, wideLen = 11;
+		var nmlLen = 9, wideLen = 10;
 		var appsList = $('#J_Apps>li');
 		var appsListLen = appsList.size();
 
