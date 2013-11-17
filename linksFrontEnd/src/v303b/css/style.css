@@ -461,12 +461,9 @@ input:focus{ outline: 0; }
 */
 /*app-icon-list*/
 .app-icon-list{
-	/*display: none;*/
     padding: 10px 0 0 0;
     height: 18px;
     position: relative;
-    margin-bottom: -20px;
-	/*z-index: 9999;*/
 }
 .app-icon-list em{
 	float: right;
@@ -539,7 +536,7 @@ input:focus{ outline: 0; }
 	text-align: center;
 	width: 90px;
 	float: right;
-	height: 100px;
+	height: 110px;
 	cursor: pointer;
 }
 .app-icon-list ul li a{

@@ -230,7 +230,7 @@
 .pic-news-tabs a {
 	display: block;
 	float: left;
-	width: 36px;
+	width: 37px;
 	height: 3px;
 	margin-left: 2px;
 	background: #d1d1d1;
@@ -249,24 +249,24 @@
 }
 
 .widescreen .pic-news-tabs a {
-	width: 51px;
+	width: 52px;
 	height: 4px;
-	margin-left: 3px;
+	margin-left: 2px;
 }
 
 .widescreen .pic-news {
-	width: 215px;
+	width: 214px;
 }
 .widescreen .social-box .pics-box {
-	width: 212px;
+	width: 214px;
 	height: 135px;
 }
 .widescreen .pic-news-title {
-	width: 215px;
+	width: 214px;
 	line-height: 24px;
 }
 .widescreen .pic-news-desc {
-	width: 215px;
+	width: 214px;
 	line-height: 24px;
 }
 .widescreen .text-news {
