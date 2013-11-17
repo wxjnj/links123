@@ -1,0 +1,5 @@
+
+#update 2013-11-17
+INSERT INTO `lnk_app` VALUES ('11', '快递查询', '__STATIC__/v3/imgs/app/app-kuaidi.png', '#J_box_kuaidi', '', 'J_app_trig', '0', '1.0', '0', '另客团队', '0', '0', '0');
+INSERT INTO `lnk_app` VALUES ('12', '查违章', '__STATIC__/v3/imgs/app/app-weiche.png', '#J_box_weiche', '', 'J_app_trig', '0', '1.0', '0', '另客团队', '0', '0', '0');
+INSERT INTO `lnk_app` VALUES ('13', '万能转换', '__STATIC__/v3/imgs/app/app-zhuanhuan.png', 'http://www.zhuan-huan.com/', '', 'J_app_link', '1', '1.0', '0', '另客团队', '0', '0', '0');

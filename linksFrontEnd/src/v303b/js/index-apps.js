@@ -452,6 +452,14 @@ $( function($) {
 				return false;
 			});
 		},
+		
+		'#J_box_kuaidi' : function() {
+			$('#J_box_kuaidi_iframe').attr('src', 'http://baidu.kuaidi100.com/index2.html');
+		},
+		
+		'#J_box_weiche' : function() {
+			$('#J_box_weiche_iframe').attr('src', 'http://app.weiche.me/');
+		},
 
 		'#J_box_translate' : function() {
 			var translateLang = 0;
