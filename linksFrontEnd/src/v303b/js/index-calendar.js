@@ -61,11 +61,13 @@ $(function(){
  *   Calendar
  */
 (function() {
+    //config参数目前没有使用到，保留备用
     var config = {};
     config.CHS_WEEKS = ['一', '二', '三', '四', '五', '六', '日'];
     config.CHS_MONTHS = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二'];
     config.ENG_WEEKS = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
     config.ENG_MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'Auguest', 'September', 'October', 'November', 'December'];
+
     function countObjLength(o) {
         var count = 0,
             i;
@@ -113,21 +115,28 @@ $(function(){
         Init: function(type) {
             var self = this;
 
+            /*
             if($('body').hasClass('widescreen')){
                 self.G = 3;
             }else{
                 self.G = 2;
             }
+            */
 
-            self.idController = 0;
+            //self.idController = 0;
 
-            self.defaultMarkTitle = '新建日程';
+            //self.defaultMarkTitle = '新建日程';
+
             self.type = type || 'Date';
             $('.cal-view-select-btn').removeClass('active');
             $('.cal-view-select-btn-' + self.type.toLowerCase()).addClass('active');
             self.weekStart = 1;
+
+            //缓存日程安排的变量
             self.marksStore = {};
-            self.timer = null;
+
+            //self.timer = null;
+
             var today = self.today = Date.today();
             self.tooltip = $('<div class="calendar-tip"><div class="content"></div><span class="ang1"></span><span class="ang"></span></div>');
             self.ajaxOverlayer = $('.cal-ajax-overlayer');
@@ -161,25 +170,33 @@ $(function(){
 
             $('.cal-body').on('mouseover', '.cal-month td, .cal-week td', function(){
                 var td = $(this);
+                var year, 
+                    month,
+                    date,
+                    marks,
+                    time,
+                    top,
+                    left,
+                    tem;
 
                 if(td.find('a').size()){
-                    var year = td.find('a').attr('data-year');
-                    var month = td.find('a').attr('data-month');
-                    var date = td.find('a').attr('data-date');
+                    year = td.find('a').attr('data-year');
+                    month = td.find('a').attr('data-month');
+                    date = td.find('a').attr('data-date');
                 }else{
-                    var year = td.attr('data-year');
-                    var month = td.attr('data-month');
-                    var date = td.attr('data-date');
+                    year = td.attr('data-year');
+                    month = td.attr('data-month');
+                    date = td.attr('data-date');
                 }
 
-                var marks = self.marksStore[year + '-' + month][date] || null;
-                var tem = '';
+                marks = self.marksStore[year + '-' + month][date] || null;
+                tem = '';
 
                 if(!marks){
                     tem = '<p>暂无日程</p>';
                 }else{
                     $.each(marks, function(k, v){
-                        var time = new Date(v.time * 1000);
+                        time = new Date(v.time * 1000);
                         time = time.getHours();
                         if(time % 2 != 0) time -= 1;
                         if(time < 10) time = '0' + time;
@@ -187,8 +204,8 @@ $(function(){
                     });
                 }
 
-                var top = td.offset().top;
-                var left = td.offset().left + td.width() / 2;
+                top = td.offset().top;
+                left = td.offset().left + td.width() / 2;
 
                 self.tooltip.find('.content').html(tem).end().appendTo('#container');
 
@@ -199,14 +216,15 @@ $(function(){
                 }).show();
              });
 
-            /**/
+            self.ReInit();
+            /*
             self.DateView.Init();
             self.MonthView.Init();
             self.WeekView.Init();
             self.DateView.miniMonthView.render();
             self.DateView.mainPanel.show();
             self.loadMarks();
-            /**/
+            */
         },
         ReInit: function(){
             var self = this;
@@ -217,12 +235,16 @@ $(function(){
             self.DateView.mainPanel.show();
             self.loadMarks();
         },
+        /*
+            格式化日程表顶部显示的日期（周视图有跨月和跨年的情况）
+        */
         showDate: function() {
-            var self = this;
-            var type = self.type;
-            var currentDate = self.currentDate;
-            var currentMonth = self.currentMonth;
-            var currentYear = self.currentYear;
+            var self = this,
+                type = self.type,
+                currentDate = self.currentDate,
+                currentMonth = self.currentMonth,
+                currentYear = self.currentYear;
+
             if (type == 'Date') {
                 self.date_text = currentYear + '年' + (currentMonth + 1) + '月' + currentDate + '日';
             }
@@ -258,13 +280,14 @@ $(function(){
             this.DateView.mainPanel.hide();
             this.WeekView.mainPanel.hide();
             this.MonthView.mainPanel.hide();
+
             var cur = this[targetType + 'View'];
             cur.mainPanel.show();
             //this.MainView.renderMonthView();
             if (targetType == 'Date') {
                 Calendar.DateView.miniMonthView.render();
             }
-            if (targetType == 'Week') {}
+            //if (targetType == 'Week') {}
             if (targetType == 'Month') {
                 Calendar.MonthView.tableView.render();
             }
@@ -300,10 +323,9 @@ $(function(){
             var self = this;
             var targetDate = new Date(self.currentYear, self.currentMonth, t);
             self.setCurrentDate(targetDate);
-            var id_start = self.currentWeekStartObject.getFullYear() + '-' + self.currentWeekStartObject.getMonth();
-            var id_end = self.currentWeekEndObject.getFullYear() + '-' + self.currentWeekEndObject.getMonth();
             //self.MainView.renderMonthView();
-            if (self.marksStore[id_start] && self.marksStore[id_end]) {
+            if (self.marksStore[self.currentWeekStartObject.getFullYear() + '-' + self.currentWeekStartObject.getMonth()] && 
+                self.marksStore[self.currentWeekEndObject.getFullYear() + '-' + self.currentWeekEndObject.getMonth()]) {
                 self.WeekView.renderMarks();
             } else {
                 self.loadMarks();
@@ -432,6 +454,7 @@ $(function(){
                 }
                 if(month2 != month1) dateArray.push({y:year2, m:month2});
             }
+
             if(self.type == 'Month'){
                 var year1 = self.currentDateObject.getFullYear();
                 var month1 = self.currentDateObject.getMonth();
@@ -458,17 +481,18 @@ $(function(){
             }
             //周有跨年和跨月 || 日视图单日有两天的数据 如果跨月就要双取 || 月视图会跨三个月
             self.ajaxArray = [];
+            var o;
             $.each(dateArray, function(k, v){
-                var o = self.request({
+                o = self.request({
                     url: URL + '/getSchedule?year=' + v.y + '&month=' + (v.m + 1),
                     type: 'GET'
                 });
                 self.ajaxArray.push(o);
             });
 
+            var datas;
             $.when.apply(self, self.ajaxArray).done(function(){
-                var datas = Array.prototype.splice.call(arguments, 0);
-
+                datas = Array.prototype.splice.call(arguments, 0);
                 $.each(datas, function(k, data){
 
                     data = data === null ? [] : data;
@@ -491,6 +515,11 @@ $(function(){
         }
     };
 
+    /*
+        日视图的单条日程类
+
+        封装增删改（查由Calendar控制）
+    */
     var MarkLine = new Class;
     MarkLine.include({
         init: function(index, to){
@@ -604,9 +633,8 @@ $(function(){
         },
         updateMark: function(id, time, desc){
             var self = this;
-            var url, data;
+            var url, data, type;
 
-            var type;
             if((id == 0) && (!desc || desc == '来创建今天新的日程吧！')) {
                 return;
             }
@@ -645,7 +673,7 @@ $(function(){
                     }
                     Calendar.marksStore[Calendar.currentMarkId][Calendar.currentDate].push({
                         id: d,
-                        time: time,
+                        time: time / 1000,
                         desc: desc
                     });
                     self.element.attr('data-id', d);
@@ -688,7 +716,6 @@ $(function(){
             self.miniMonthElement = $('.cal-mini-month-panel').find('tbody');
 
             self.miniMonthView = new MiniMonthView;
-
 
             self.colorCode = '#!4587';
             self.colors = {
@@ -734,33 +761,34 @@ $(function(){
                 });
 
             $('.cal-date-marks-table')
-                .off('keydown', 'input')
-                .on('keydown', 'input', function(e){
+                .off('blur keyup', 'input')
+                .on('blur keyup', 'input', function(e){
                     if(e.keyCode == 13){
-                        var time = $(this).parents('li').attr('data-time');
-                        var mark = self.all_lis[time];
-                        var id = mark.element.attr('data-id');
-                        var desc = mark.element.find('input').val();
-                        var time = mark.element.attr('data-timestamp');
-                        //time = Date.today().setHours(time);
-                        if(escape(desc) != mark.element.find('input').attr('data-old')) {
-                            mark.updateMark(id, time, desc);
-                        }
-                        mark.setMark(id, desc);
-                        return false;
+                        //触发blur，且只触发一次
+                        $(this)[0].blur();
                     }
                 })
                 .off('blur', 'input')
-                .on('blur', 'input', function(e){ //如何从次执行blur，会被多少执行TODO
-//                    console.log(2);
+                .on('blur', 'input', function(e){
+                    var time = $(this).parents('li').attr('data-time');
+                    var mark = self.all_lis[time];
+                    var id = mark.element.attr('data-id');
+                    var desc = mark.element.find('input').val();
+                    time = mark.element.attr('data-timestamp');
+                    //time = Date.today().setHours(time);
+                    if(escape(desc) != mark.element.find('input').attr('data-old')) {
+                        mark.updateMark(id, time, desc);
+                    }
+                    mark.setMark(id, desc);
+                    return false;
                 });
 
         },
         renderMarks: function() {
-            var self = this;
-            var tem = Calendar.marksStore[Calendar.currentYear + '-' + Calendar.currentMonth];
-            var arr = [];
-            var marks_currentDay,
+            var self = this,
+                tem = Calendar.marksStore[Calendar.currentYear + '-' + Calendar.currentMonth],
+                arr = [],
+                marks_currentDay,
                 marks_nextDay, 
                 ct,
                 nextDay,
@@ -770,6 +798,7 @@ $(function(){
                 timeObject,
                 i,
                 len;
+
             if (tem && tem[Calendar.currentDate]) {
                 marks_currentDay = tem[Calendar.currentDate];
                 $.each(marks_currentDay, function(k, v){
@@ -863,15 +892,16 @@ $(function(){
             marks[year2 + '-' + month2] = marks2; 
             marks[year3 + '-' + month3] = marks3;
 
+            var cur, top, left, style;
             $.each(marks, function(k, v) {
                 $.each(v, function(d, m){
-                    var cur = self.tableElement.find('.td_' + k + '-' + d).parent('td');
+                    cur = self.tableElement.find('.td_' + k + '-' + d).parent('td');
                     $.each(m, function(i, n) {
-                        var top = parseInt(i / 7) * 7 + 5;
-                        var left = i % 7 * 7 + 5;
+                        top = parseInt(i / 7) * 7 + 5;
+                        left = i % 7 * 7 + 5;
                         top = 'top:' + top + 'px;';
                         left = 'left:' + left + 'px;';
-                        var style = top + left;
+                        style = top + left;
                         cur.append('<b class="month_task_dot" style="' + style + '"></b>');
                     });
                 });
