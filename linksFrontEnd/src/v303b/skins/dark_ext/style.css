@@ -140,7 +140,12 @@
 
 .extra-calendar .cal-day .cal-mini-month-panel td .active, 
 .extra-calendar .cal-day .cal-mini-month-panel th .active {
-    background: url(sprite.png) -96px -4px no-repeat;
+    width: 18px;
+    height: 18px;
+    line-height: 19px;
+    border-radius: 30px;
+    margin: 2px 0 0 2px;
+    background: #424143;/*url(sprite.png) -96px -4px no-repeat;*/
 }
 
 
@@ -153,9 +158,9 @@ body {
 .box-apps {
     border-top: 1px solid #919191;
 }
-.box .box-hd {
+/*.box .box-hd {
     border-top: 1px solid #dbdbdb;
-}
+}*/
 
 .app-icon-list .app-more .more {
     width: 25px;
@@ -163,7 +168,7 @@ body {
     display: block;
     background-position: -62px -1px;
     border-radius: 30px;
-    background-color: #eee;
+    /*background-color: #eee;*/
 }
 .box-apps .box-bd {
     padding-top: 0;
@@ -176,21 +181,21 @@ body {
 .title-tabs {
     padding: 10px 0;
     margin: 0;
-    border-top: 1px solid #dbdbdb;
+    /*border-top: 1px solid #dbdbdb;*/
 }
 .cal-header {
-    border-top: 1px solid #dbdbdb;
-    border-bottom: 1px solid #bbb;
+    /*border-top: 1px solid #dbdbdb;*/
+    border-bottom: 1px solid #919191;
 }
 .cal-date-marks-table {
     margin-top: -1px;
-    border-right: 1px solid #bbb;
+    border-right: 1px solid #919191;
 }
 .extra-calendar .cal-day .cal-mini-month-panel {
-    border-left: 1px solid #eee;
+    /*border-left: 1px solid #eee;*/
 }
 .extra-calendar .cal-body {
-    border-top: 1px solid #eee;
+    border-top: 0;
 }
 .desc-input-div {
     background: transparent;
@@ -252,7 +257,7 @@ body {
 
 .extra-calendar .cal-header .cal-view-select-btn:hover,
 .extra-calendar .cal-header .active {
-    border-bottom: 3px solid #fff;
+    border-bottom: 3px solid #424143;
 }
 
 .cal-date-marks-table li .dot {
@@ -275,7 +280,7 @@ body {
 }
 
 .cal-date-marks-table li {
-    border-bottom: 1px dashed #bbb;
+    border-bottom: 1px dashed #919191;
 }
 
 .cal-date-marks-table .blue {
@@ -287,12 +292,12 @@ body {
 }
 
 .cal-month table th, .cal-week table th {
-    border-right: 1px solid #ddd;
+    border-right: 1px solid #919191;
 }
 
 .cal-month table td, .cal-week table td {
-    border-top: 1px solid #ddd;
-    border-right: 1px solid #ddd;
+    border-top: 1px solid #919191;
+    border-right: 1px solid #919191;
 }
 
 .extra-calendar .cal-month table, .extra-calendar .cal-week table {
