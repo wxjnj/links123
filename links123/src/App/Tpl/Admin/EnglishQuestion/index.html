@@ -174,7 +174,7 @@
     $(function(){
         $("#listRows,#listRows_input").change(function(){
             $.cookie("listRows",this.value);
-            window.location.href = $(".page input").eq(1).attr("url");
+            location.reload();
         })
         $("#J_createTime").focus(function() {
             WdatePicker({dateFmt: 'yyyy-MM-dd', maxDate: "%y-%M-%d",onpicked:function(){
@@ -227,7 +227,7 @@
         })
         
         /* 直达 */
-        $(".page input").eq(1).keydown(function(event) {
+        $(".page input").keydown(function(event) {
             if (event.keyCode == 13) {	// 回车
                 if ($(this).val() != '' && !isNaN($(this).val())) {
                     window.location.href = $(this).attr("url") + "&p=" + $(this).val();
