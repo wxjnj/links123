@@ -4,6 +4,7 @@
 <load href="__PUBLIC__/skin/easyui/themes/metro/easyui.css" />
 <load href="__PUBLIC__/Js/Jquery/jquery.js" />
 <load href="__PUBLIC__/Js/Jquery/jqueryform.js" />
+<load href="__PUBLIC__/Js/Jquery/jquery.cookie.js" />
 <load href="__PUBLIC__/Js/My97DatePicker/WdatePicker.js" />
 <load href="__PUBLIC__/skin/easyui/locale/easyui-lang-zh_CN.js" /> 
 <load href="__PUBLIC__/skin/easyui/jquery.easyui.min.js" />
@@ -132,7 +133,15 @@
             <html:list id="checkList" name="category" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,name|htmlspecialchars:名称:edit,created|toDateShort:发布时间,cat_attr_id|getVoiceNameFromAttrId:语音:voice|id,cat_attr_id|getPatternNameFromAttrId:形式,special_recommend|getYorN:特别推荐:special_recommend|media_id,status|getStatus:状态" actionlist="property:分类,edit:编辑" />
         </div>
 
-        <div class="page">{$page}</div>
+        <div class="page">
+            选择 <select name="listRows" id="listRows">
+                <volist name="listRows_options" id="listRow_option">
+                    <option value="{$listRow_option.key}" <eq name="listRows" value="$listRow_option['key']">selected="true"</eq>>{$listRow_option.name}</option>
+                </volist>
+            </select>
+            &nbsp;&nbsp;
+            每页 <input value="{$listRows}" name="listRows_input" style="width:30px;" id="listRows_input"> 条 &nbsp;&nbsp;共{$page}
+        </div>
 
     </div>
 
@@ -163,6 +172,10 @@
 </div>
 <script type="text/javascript">
     $(function(){
+        $("#listRows,#listRows_input").change(function(){
+            $.cookie("listRows",this.value);
+            location.reload();
+        })
         $("#J_createTime").focus(function() {
             WdatePicker({dateFmt: 'yyyy-MM-dd', maxDate: "%y-%M-%d",onpicked:function(){
                     $("[name='search']").click();

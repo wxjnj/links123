@@ -169,10 +169,19 @@ class EnglishQuestionAction extends CommonAction {
             import("@.ORG.Page");
             //创建分页对象
             if (!empty($_REQUEST ['listRows'])) {
-                $listRows = $_REQUEST ['listRows'];
+            	if(!empty($_COOKIE['listRows']) && $_COOKIE['listRows'] !=$_REQUEST ['listRows']){
+            		$listRows = $_COOKIE ['listRows'];
+            	}else{
+            		$listRows = $_REQUEST ['listRows'];
+            	}
             } else {
-                $listRows = '20';
+            	if(!empty($_COOKIE['listRows'])){
+            		$listRows = $_COOKIE ['listRows'];
+            	}else{
+            		$listRows = '20';
+            	}
             }
+            $param['listRows'] = $listRows;
             $p = new Page($count, $listRows);
             //分页查询数据
             $voList = $model->where($map)->order("`" . $order . "` " . $sort)->limit($p->firstRow . ',' . $p->listRows)->group("englishQuestion.id")->select();
@@ -197,6 +206,7 @@ class EnglishQuestionAction extends CommonAction {
             $this->assign('sortImg', $sortImg);
             $this->assign('sortType', $sortAlt);
             $this->assign("page", $page);
+            $this->assign("listRows", $listRows);
         }
         cookie('_currentUrl_', __URL__ . '/index?' . $_SESSION[C('SEARCH_PARAMS_KEY')]);
         return;
@@ -245,12 +255,19 @@ class EnglishQuestionAction extends CommonAction {
         
         $this->assign("category", $category);
         $this->assign("type", 1);//听力
-
+        
+		//listRows_options
+        $this->assign("listRows_options", array(
+        	array('key'=>20,'name'=>"20"),
+        	array('key'=>100,'name'=>"100"),
+        	array('key'=>200,'name'=>"200"),
+        ));
         $this->assign("param", $param);
         foreach ($param as $key => $value) {
             $param_str.=$key . "=" . $value . "&";
         }
         $this->assign("param_str", $param_str);
+  
         $this->display();
         return;
     }
