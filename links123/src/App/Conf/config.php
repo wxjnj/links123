@@ -37,5 +37,5 @@ return array(
 		'__STATIC__'            => 'http://a.links123.net', 				// 更改默认的/Public 替换规则
 	),
     "VIDEO_UPLOAD_PATH" 		=>  "http://121.199.26.124/" 				//英语角视频存储路径
-    ,"COOKIE_DOMAIN"            =>  ".links123.net"
+    ,"COOKIE_DOMAIN"            =>  "joseph.desk.links123.de"
 );
