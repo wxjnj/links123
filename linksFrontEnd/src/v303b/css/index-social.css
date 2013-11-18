@@ -95,12 +95,13 @@
 }
 
 .social-box .pics-box {
-	width: 150px;
-	height: 82px;
+	width: 154px;
+	height: 97px;
 	overflow: hidden;
 }
 .social-box .pics-box img{
 	width: 100%;
+    height: 100%;
 }
 .pic-news-title {
 	width: 155px;
@@ -126,7 +127,7 @@
 
 .text-news {
 	float: right;
-	width: 290px;
+	width: 260px;
 }
 .text-news p {
 	line-height: 100%;
@@ -156,6 +157,7 @@
 .text-news .more-news a:active {
 	margin-top: 15px;
 	color: #3b76b3;
+    font-weight: bold;
 	text-decoration: underline;
 }
 
@@ -220,7 +222,7 @@
 
 
 .pic-news-tabs {
-	width: 155px;
+	width: 156px;
 	overflow: hidden;
 	margin-top: 5px;
 	margin-left: -2px;
@@ -228,7 +230,7 @@
 .pic-news-tabs a {
 	display: block;
 	float: left;
-	width: 36px;
+	width: 37px;
 	height: 3px;
 	margin-left: 2px;
 	background: #d1d1d1;
@@ -247,28 +249,28 @@
 }
 
 .widescreen .pic-news-tabs a {
-	width: 51px;
+	width: 52px;
 	height: 4px;
-	margin-left: 3px;
+	margin-left: 2px;
 }
 
 .widescreen .pic-news {
-	width: 215px;
+	width: 214px;
 }
 .widescreen .social-box .pics-box {
-	width: 215px;
-	height: 113px;
+	width: 214px;
+	height: 135px;
 }
 .widescreen .pic-news-title {
-	width: 215px;
+	width: 214px;
 	line-height: 24px;
 }
 .widescreen .pic-news-desc {
-	width: 215px;
+	width: 214px;
 	line-height: 24px;
 }
 .widescreen .text-news {
-	width: 320px;
+	width: 290px;
 	font-size: 13px;
 }
 .widescreen .wide-news {

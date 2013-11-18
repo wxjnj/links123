@@ -207,7 +207,13 @@ var AppsTpl = {
                 <a class="normal_music_box_size_btn size_normal" href="javascript:;" data-size="normal">中</a>\
                 <a class="normal_music_box_size_btn size_fullscreen" href="javascript:;" data-size="fullscreen">大</a>\
             </div>\
-        </div>'
+        </div>',
+        '#J_box_kuaidi':  '<div style="display:none;" id="J_box_kuaidi" class="box_with_iframe_list"> \
+			<iframe id="J_box_kuaidi_iframe" width="540px" height="389px" scrolling="no" frameborder="0" style="" allowtransparency="true" src=""></iframe> \
+		</div>',
+        '#J_box_weiche':  '<div style="display:none;" id="J_box_weiche" class="box_with_iframe_list"> \
+			<iframe id="J_box_weiche_iframe" width="534px" height="364px" scrolling="no" frameborder="0" style="" allowtransparency="true" src=""></iframe> \
+		</div>'
 };
 
 

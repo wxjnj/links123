@@ -128,6 +128,8 @@ $(window).load(function() {
                 $("#rid").val(cid);
                 $("#frm_links").find("input[name='cid']").val(cid);
                 changeCat();
+                //百度ajax统计
+                _hmt.push(['_trackPageview', $(this).attr('href')]);
                 return false;
             }
         })
@@ -142,6 +144,9 @@ function siderLinksBindClickEvent() {
             $("#cid").val(cid);
             $("#frm_links").find("input[name='cid']").val(cid);
             changeCat();
+            
+            //百度ajax统计
+            _hmt.push(['_trackPageview', $(this).attr('href')]);
             return false;
         }
     })

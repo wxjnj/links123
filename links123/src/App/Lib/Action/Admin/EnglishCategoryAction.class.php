@@ -178,7 +178,10 @@ class EnglishCategoryAction extends CommonAction{
         $levelNameModel  = D("EnglishLevelname");
         $categoryModel = D("EnglishCategory");
         $levelNameModel->startTrans();
-        $new_info = $levelNameModel->where(array("name",array("like",$data['name']),"level"=>$level))->find();
+        $map = array();
+        $map['name'] = array("like",$data['name']);
+        $map['level'] = $level;
+        $new_info = $levelNameModel->where($map)->find();
         if(!empty($new_info)){
             $this->error("需要添加的分类已存在！");
         }

@@ -24,12 +24,8 @@
 
 .zdl .ipt {
     font-size: 12px;
-    text-shadow: 1px 1px 1px #fff;
-    background: #e9e9e9;
-    box-shadow: inset 1px 1px 4px #333;
 }
 .zdl .btn {
-    background-color: #e9e9e9;
     height: 16px;
     top: 12px;
     background-position: -93px -36px;
@@ -44,7 +40,6 @@
     padding-left: 17px;
     padding-right: 17px;
     color: #fff;
-    text-shadow: 1px 1px 1px #333;
 }
 
 .screen-theme .change-theme-btn {
@@ -61,12 +56,10 @@
 }
 .uc-menu .nm {
     background: #e9e9e9;
-    box-shadow: inset 1px 1px 4px #666;
     line-height: 25px;
 }
 .thl .ctls {
     background: #f4f4f4;
-    box-shadow: inset 1px 1px 2px #aaa;
 }
 .thl .ctls .ipt {
     background: transparent;
@@ -75,10 +68,12 @@
 .thl .subcate a.on:hover,
 .thl .cate a.on,
 .thl .cate a.on:hover,
-.thl .subcate a:hover,
-.thl .cate a:hover,
-.thl .cate-in a:hover {
+.thl .subcate a:hover {
     color: #ff2b06;
+}
+.thl .cate-in,
+.thl .cate-in a{
+    color: #666;
 }
 .header-weather .region {
     color: #424143;
@@ -98,7 +93,6 @@
 }
 
 .zld ul .add .ctl {
-    border-left: 1px solid #e3e0db;
     padding: 2px;
     border-radius: 30px;
     margin-top: 4px;
@@ -111,7 +105,6 @@
 .zld ul li .ctl:hover {
     background-color: transparent;
     background: url(/v303b/imgs/op30.png) 0 0 repeat-x;
-    box-shadow:inset 1px 1px 5px #666;
 }
 
 .app-icon-list .app-more .more {
@@ -148,7 +141,6 @@
 .extra-calendar .cal-day .cal-mini-month-panel td .active, 
 .extra-calendar .cal-day .cal-mini-month-panel th .active {
     background: url(sprite.png) -96px -4px no-repeat;
-    text-shadow: none;
 }
 
 
@@ -172,9 +164,6 @@ body {
     background-position: -62px -1px;
     border-radius: 30px;
     background-color: #eee;
-}
-.app-icon-list .app-more .more:hover {
-    box-shadow:inset 1px 1px 3px #ddd;  
 }
 .box-apps .box-bd {
     padding-top: 0;
@@ -211,7 +200,6 @@ body {
     height: 11px;
     line-height: 11px;
     border: 2px solid #a8c0ce;
-    box-shadow: inset 1px 1px 4px #ccc;
     border-radius: 2px;
 }
 .extra-calendar .cal-day .cal-mini-month-panel .another-month a,
@@ -221,12 +209,6 @@ body {
     color: #bbb;
 }
 
-
-.thl a,
-.thl .cate-in a,
-.header-weather {
-    color: #424143;
-}
 
 .title-tabs li{
     padding-bottom: 0;
@@ -240,7 +222,7 @@ body {
 .title-tabs .active{
     color: #424143;
     background: none;
-    border-bottom: 3px solid #323440;
+    border-bottom: 3px solid #fff;
 }
 
 .pic-news-tabs a {
@@ -264,9 +246,13 @@ body {
     color: #323440;
 }
 
+.text-news p b{
+    background: #424143;
+}
+
 .extra-calendar .cal-header .cal-view-select-btn:hover,
 .extra-calendar .cal-header .active {
-    border-bottom: 3px solid #323440;
+    border-bottom: 3px solid #fff;
 }
 
 .cal-date-marks-table li .dot {
@@ -298,7 +284,6 @@ body {
     line-height: 16px;
     border: 0;
     color: #424143;
-    text-shadow: 1px 1px 1px #fff;
 }
 
 .cal-month table th, .cal-week table th {
@@ -371,30 +356,36 @@ body {
     line-height: 16px;
 }
 
-.apps .nm,
-.title-tabs span, 
-.text-news p a, 
-.text-news p a:active, 
-.pic-news-title a, 
-.title-tabs li, 
-.cal-date-marks-table li .time, 
-.extra-calendar .cal-day .cal-mini-month-panel table, 
-.extra-calendar .cal-day .cal-mini-month-panel td a, 
-.text-news .more-news a, 
-.text-news .more-news a:active, 
-.site-info li a, 
-.site-info li a:active, 
-.friend-links li a, 
-.friend-links li a:active, 
-.extra-calendar .cal-header .cal-header-date-prev, 
-.extra-calendar .cal-header .cal-header-date-next, 
-.extra-calendar .cal-header .cal-header-date, 
-.extra-calendar .cal-header button, 
-.site-info {
-    text-shadow: 1px 1px 1px #fff;
-}
-
-.widescreen .extra-calendar .cal-header .cal-view-select-btn:hover, .widescreen .extra-calendar .cal-header .active {
+.title-tabs .active,
+.widescreen .extra-calendar .cal-header .cal-view-select-btn:hover,
+.widescreen .extra-calendar .cal-header .active {
     border-bottom: 3px solid #424143;
 }
 
+
+.cal-date-marks-table li .delete-btn {
+    color: #fff;
+    display: inline-block;
+    background: url(close.png) 0 0 no-repeat;
+    height: 12px;
+    line-height: 12px;
+    width: 12px;
+    position: absolute;
+    overflow: hidden;
+    top: 7px;
+    right: 9px;
+    color: transparent;
+    text-decoration: none;
+    text-align: center;
+}
+.cal-date-marks-table li .delete-btn:hover {
+    background-position: 0 -12px;
+}
+
+.widescreen .cal-date-marks-table li .delete-btn{
+    top: 9px;
+}
+
+.cal-date-marks-table li .add-btn{
+    color: #424143;
+}

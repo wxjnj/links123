@@ -519,8 +519,8 @@ $(function(){
                 var x = el.find('.desc-content').attr('title');
                 var d = el.find('.desc');
                 var c = el.find('.desc-content').attr('data-color');
-                d.html('<div class="desc-input-div"><input type="text" data-old="' + x + '" data-color="' + c + '" value="' + x + '" /><!--b class="blue" data-code="b"></b><b class="green" data-code="g"></b><b class="red" data-code="r"></b--></div>');
-                d.find('input').select();
+                d.html('<div class="desc-input-div"><input type="text" data-old="' + x + '" data-color="' + c + '" value="" /><!--b class="blue" data-code="b"></b><b class="green" data-code="g"></b><b class="red" data-code="r"></b--></div>');
+                d.find('input').val(unescape(x)).select();
                 d.find('.' + c).addClass('active');    
             }else{
                 var d = el.find('.desc')//.parent('.desc');
@@ -546,19 +546,23 @@ $(function(){
             }else{
                 color = 'blue';
             }
+            desc = $('<div/>').html(desc).text(); //后台传输过来的数据会编码html，利用这个解码
             if(desc.length > 15) {
                 short_desc = desc.substring(0, 13) + '...';
             }else{
                 short_desc = desc;
             }
-            self.element.find('.desc').html('<a class="desc-content ' + color + '" data-color="' + color + '" title="' + desc + '" href="javascript:;">' + short_desc + '</a>');
-            self.element.append('<a class="delete-btn" href="javascript:;">×</a>');
+            self.element.find('.desc').html('<a class="desc-content ' + color + '" data-color="' + color + '" title="' + escape(short_desc) + '" href="javascript:;">' + short_desc + '</a>');
+            if(!self.element.find('.delete-btn').size()){
+                self.element.append('<a class="delete-btn" href="javascript:;">×</a>');
+            }
             self.element.attr('data-id', id);
         },
         deleteMark: function(){
             var self = this;
             var id = self.element.attr('data-id');
             self.element.find('.desc').html('<a class="add-btn" href="javascript:;">增加日程</a>');
+            self.element.find('.delete-btn').remove();
             self.element.removeAttr('data-id');
             if(Calendar.marksStore[Calendar.currentMarkId] && Calendar.marksStore[Calendar.currentMarkId][Calendar.currentDate]){
                 $.each(Calendar.marksStore[Calendar.currentMarkId][Calendar.currentDate], function(k, v){
@@ -666,8 +670,11 @@ $(function(){
                 if(!v) return;
                 if(v.id == 0){
                     Calendar.marksStore[Calendar.currentMarkId][Calendar.currentDate].splice(k, 1);
-                    var tt = $('.cal-date-marks-table').find('[data-id=0]').attr('data-time');
-                    Calendar.DateView.all_lis[tt].refresh();
+                    var o =  $('.cal-date-marks-table').find('[data-id=0]'); // 跨时间会发生当前找不到id=0
+                    if(o.size()){
+                        var tt = o.attr('data-time');
+                        Calendar.DateView.all_lis[tt].refresh();
+                    }
                 }
             });
 
@@ -708,7 +715,7 @@ $(function(){
                         var id = v.element.attr('data-id');
                         var desc = v.element.find('input').val();
                         var time = v.element.attr('data-timestamp');
-                        if(desc != v.element.find('input').attr('data-old')) {
+                        if(escape(desc) != v.element.find('input').attr('data-old')) {
                             v.updateMark(id, time, desc);
                         }
                         v.setMark(id, desc);
@@ -717,27 +724,36 @@ $(function(){
                 mark.edit();
             });
 
-            $('.cal-date-marks-table').on('click', '.delete-btn', function(){
-                var li = $(this).parent('li');
-                var time = li.attr('data-time');
-                self.all_lis[time].deleteMark();
-                return false;
-            });
+            $('.cal-date-marks-table')
+                .off('click', '.delete-btn')
+                .on('click', '.delete-btn', function(){
+                    var li = $(this).parent('li');
+                    var time = li.attr('data-time');
+                    self.all_lis[time].deleteMark();
+                    return false;
+                });
 
-            $('.cal-date-marks-table').on('keydown', 'input', function(e){
-                if(e.keyCode == 13){
-                    var time = $(this).parents('li').attr('data-time');
-                    var mark = self.all_lis[time];
-                    var id = mark.element.attr('data-id');
-                    var desc = mark.element.find('input').val();
-                    var time = mark.element.attr('data-timestamp');
-                    //time = Date.today().setHours(time);
-                    if(desc != mark.element.find('input').attr('data-old')) {
-                        mark.updateMark(id, time, desc);
+            $('.cal-date-marks-table')
+                .off('keydown', 'input')
+                .on('keydown', 'input', function(e){
+                    if(e.keyCode == 13){
+                        var time = $(this).parents('li').attr('data-time');
+                        var mark = self.all_lis[time];
+                        var id = mark.element.attr('data-id');
+                        var desc = mark.element.find('input').val();
+                        var time = mark.element.attr('data-timestamp');
+                        //time = Date.today().setHours(time);
+                        if(escape(desc) != mark.element.find('input').attr('data-old')) {
+                            mark.updateMark(id, time, desc);
+                        }
+                        mark.setMark(id, desc);
+                        return false;
                     }
-                    mark.setMark(id, desc);
-                }
-            });
+                })
+                .off('blur', 'input')
+                .on('blur', 'input', function(e){ //如何从次执行blur，会被多少执行TODO
+//                    console.log(2);
+                });
 
         },
         renderMarks: function() {

@@ -27,6 +27,12 @@ class IndexAction extends CommonAction {
 			$_SESSION['myarea_sort'] = $mbrNow['myarea_sort'] ? explode(',', $mbrNow['myarea_sort']) : '';
 			$_SESSION['app_sort'] = $mbrNow['app_sort'];
 
+			//取出皮肤ID和模板ID
+			$skinId = session('skinId');
+			if (!$skinId) {
+				$skinId = cookie('skinId');
+			}
+			
 			$themeId = session('themeId');
 			if (!$themeId) {
 				$themeId = cookie('themeId');
@@ -42,11 +48,29 @@ class IndexAction extends CommonAction {
 				//$_SESSION['app_sort'] = cookie('app_sort');
 			}
 
+			//取出皮肤ID和模板ID
+			$skinId = session('skinId');
+			if (!$skinId) {
+				$skinId = cookie('skinId');
+			}
 			$themeId = session('themeId');
 			if (!$themeId) {
 				$themeId = cookie('themeId');
 			}
 		}
+		
+		//快捷皮肤
+		$skins = $this->getSkins();
+		if ($skinId) {
+			$skin = $skins['skin'][$skinId]['skinId'];
+			if (!$skin) $skinId = '';
+			$themeId = $skins['skin'][$skinId]['themeId'];
+			$this->assign("skinId", $skinId);
+			$this->assign("skin", $skin);
+		}
+		$this->assign("skinList", $skins['list']);
+		$this->assign("skinCategory", $skins['category']);
+		
 		$theme = $this->getTheme($themeId);
 		$this->assign('theme', $theme);
 
@@ -1064,6 +1088,145 @@ class IndexAction extends CommonAction {
 	
 	}
 	
+	public function getNote() {
+	
+		$user_id = intval(session(C('MEMBER_AUTH_KEY')));
+	
+		$stauts = 1;
+		$nowTime = time();
+		$today = intval(date('d', $nowTime));
+	
+		if (!$user_id) {
+	
+			$user_id = $this->get_member_guest();
+		}
+	
+		if ($user_id) {
+			$noteModel = new NoteModel();
+	
+			$data = $noteModel->getNotesByUser($user_id);
+	
+		}
+	
+		$this->ajaxReturn($data, '', $stauts);
+	}
+	
+	/**
+	 * 添加/更新便签
+	 *
+	 * @param id：便签ID，有ID为更新，无ID为添加
+	 * @param pageX：坐标X
+	 * @param pageY: 坐标Y
+	 * @param background：背景色
+	 * @param content：便签内容
+	 * 
+	 * @return json：status=0,删除失败;status=1,删除成功;
+	 *
+	 * @author slate date:2013-11-15
+	 */
+	public function updateNote() {
+	
+		$id = $this->_param('id');
+		$pageX = intval($this->_param('pageX'));
+		$pageY = intval($this->_param('pageY'));
+		$background = $this->_param('background');
+		$content = $this->_param('content');
+	
+		$user_id = intval(session(C('MEMBER_AUTH_KEY')));
+	
+		$status = 0;
+	
+		if ($id) {
+	
+			$now = time();
+	
+			$saveData = array();
+			
+			if ($content) {
+				$saveData['content'] = $content;
+			}
+			
+			if ($pageX) {
+				$saveData['pageX'] = $pageX;
+				$saveData['pageY'] = $pageY;
+			}
+			
+			if ($background) {
+				$saveData['background'] = $background;
+			}
+	
+			if (!$user_id) {
+					
+				$user_id = $this->get_member_guest();
+			}
+				
+			if ($user_id) {
+				
+				$noteModel = new NoteModel();
+				if ($id) {
+					if ($noteModel->updateNote($id, $user_id, $saveData)) {
+		
+						$status = 1;
+					}
+				} else {
+					
+					$saveData['created'] = $now;
+					$id = $noteModel->addNote($saveData);
+					if ($id) {
+						$status = 1;
+					}
+				}
+			} else {
+	
+				$status = -1;
+			}
+		}
+		
+		$this->ajaxReturn(array('id' => $id), '', $stauts);
+	}
+	
+	/**
+	 * 删除便签
+	 * 
+	 * @param id：便签ID
+	 * 
+	 * @return json：status=0,删除失败;status=1,删除成功;
+	 * 
+	 * @author slate date:2013-11-15
+	 */
+	public function delNote() {
+	
+		$id = $this->_param('id');
+	
+		$user_id = intval(session(C('MEMBER_AUTH_KEY')));
+	
+		$status = 0;
+	
+		if ($id) {
+	
+			if (!$user_id) {
+					
+				$user_id = $this->get_member_guest();
+			}
+				
+			if ($user_id) {
+	
+				$noteModel = new NoteModel();
+	
+				if ($noteModel->delNote($id, $user_id)) {
+	
+					$status = 1;
+				}
+	
+			} else {
+	
+				$status = -1;
+			}
+		}
+	
+		$this->ajaxReturn('', '', $stauts);
+	}
+	
 	/**
 	 * @name delArea
 	 * @desc 删除自留地
@@ -1386,15 +1549,16 @@ class IndexAction extends CommonAction {
     			$news[] = array('url' => $this->tp_match('/href="(.*?)"/is', $v), 'title' => trim(str_replace("\n", '', strip_tags($v))), 'img' => '');
     		}
     		
-    		preg_match_all('/<li class="focal f16">(.*?)<\/li>/is', $str, $match);
+    		$newsStr = $this->tp_match('/<ul class="hot_list"(.*?)<\/ul>/is', $str);
+    		preg_match_all('/<li>(.*?)<\/li>/is', $newsStr, $match);
     		foreach ($match[1] as $k => $v) {
     			$news[] = array('url' => $this->tp_match('/href="(.*?)"/is', $v), 'title' => trim(str_replace("\n", '', strip_tags($v))), 'img' => '');
     		}
-    
-    		preg_match_all('/<div class="image">(.*?)<\/div>/is', $str, $match);
-    		foreach ($match[1] as $k => $v) {
-    			if ($k >= (count($match[1])-1)) continue;
-    			$imgNews[] = array('url' => stripslashes($this->tp_match('/href="(.*?)"/is', $v)), 'title' => trim($this->tp_match('/title="(.*?)"/is', $v)), 'img' => $this->tp_match('/src="(.*?)"/is', $v));
+    		
+    		$imgNewsStr = $this->tp_match('/<ul class="focuslist">(.*?)<\/ul>/is', $str);
+    		preg_match_all('/<li(.*?)<\/li>/is', $imgNewsStr, $match);
+    		foreach ($match[0] as $k => $v) {
+    			$imgNews[] = array('url' => stripslashes($this->tp_match('/href="(.*?)"/is', $v)), 'title' => str_replace('"', '“',trim($this->tp_match('/<span class="title">(.*?)<\/span>/is', $v))), 'img' => $this->tp_match('/src="(.*?)"/is', $v));
     		}
     		$hotNews = array('news' => $news, 'imgNews' => $imgNews);
     		S('hotNewsList', $hotNews, 14400);
@@ -1402,26 +1566,4 @@ class IndexAction extends CommonAction {
     	return $hotNews;
     } 
     
-    /**
-     * 获取和生成游客记录
-     */
-    protected function get_member_guest() {
-    	$member_guest_id = cookie(md5('member_guest'));
-    	if (!$member_guest_id) {
-    	
-    		$guestModel = M('MemberGuest');
-    	
-    		$guest_id = $guestModel->add(array('create_time' => time(), 'status' => 1));
-    		if ($guest_id) {
-    				
-    			$member_guest_id = - $guest_id;
-    			if ($guestModel->where(array('id' => $guest_id))->save(array('mid' => $member_guest_id))) {
-    	
-    				cookie(md5('member_guest'), $member_guest_id, 365*24*60*60);
-    			}
-    		}
-    	} 
-    	
-    	return $member_guest_id;
-    }
 }

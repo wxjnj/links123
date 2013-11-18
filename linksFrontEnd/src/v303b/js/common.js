@@ -113,6 +113,7 @@ var User = {
 			hl = hl + '		<a class="lkd-login" href="javascript:;">已有帐号！登录！</a>';
 			hl = hl + '	</div>';
 			hl = hl + '</div>';
+
 			$('body').append(hl);
 
 			var obj = $('#J_Reg');
@@ -121,6 +122,8 @@ var User = {
 
 			obj.dialog({
 				autoOpen : true,
+                show: { effect: "fade" },
+                hide: { effect: "fade" },
 				width : 384,
 				modal : true,
 				resizable : false,
@@ -274,6 +277,8 @@ var User = {
 
 			obj.dialog({
 				autoOpen : true,
+                show: { effect: "fade" },
+                hide: { effect: "fade" },
 				width : 384,
 				modal : true,
 				resizable : false,
@@ -464,6 +469,8 @@ var User = {
 
 			obj.dialog({
 				autoOpen : true,
+                show: { effect: "fade" },
+                hide: { effect: "fade" },
 				width : 390,
 				modal : true,
 				resizable : false,
@@ -818,7 +825,7 @@ var Theme = {
 		$('.footer, .container').removeClass('no-background-color');
 	},*/
 	SetBackGround : function(id, tm, bg) {
-		var tmurl = $CONFIG['PUBLIC'] + '/IndexV3/skins/{0}/style.css';
+		var tmurl = $CONFIG['STATIC'] + '/v303b/skins/{0}/style.css';
 		$('#J_Skins').attr('href', tmurl.replace('{0}', tm));
 		$('#container').css('background-image', 'url(' + bg + ')');
 

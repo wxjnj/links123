@@ -307,7 +307,7 @@ class EnglishMediaAction extends CommonAction {
         // 更新数据
         $list = $model->save();
         if (false !== $list) {
-            if(false === $model->setSpecialRecommend($media_id, $_POST['special_recommend'])){
+            if(false === $model->setSpecialRecommend($media, $_POST['special_recommend'])){
                 $model->rollback();
                 $this->error("编辑失败");
             }
@@ -399,31 +399,36 @@ class EnglishMediaAction extends CommonAction {
         } else {
             //play_code为空，则进行视频解析
             if (!$media['play_code']) {
-                //视频解析库
-                import("@.ORG.VideoHooks");
-                $videoHooks = new VideoHooks();
+                if($media['play_type'] == 5){
+                    $media['play_code'] = $media['media_source_url'];
+                    $saveData['play_code'] = $media['media_source_url'];
+                }else{
+                    //视频解析库
+                    import("@.ORG.VideoHooks");
+                    $videoHooks = new VideoHooks();
 
-                $media['media_source_url'] = trim(str_replace(' ', '', $media['media_source_url']));
-                $videoInfo = $videoHooks->analyzer($media['media_source_url']);
+                    $media['media_source_url'] = trim(str_replace(' ', '', $media['media_source_url']));
+                    $videoInfo = $videoHooks->analyzer($media['media_source_url']);
 
-                $play_code = $videoInfo['swf'];
+                    $play_code = $videoInfo['swf'];
 
-                $media_thumb_img = $videoInfo['img'];
+                    $media_thumb_img = $videoInfo['img'];
 
-                //解析成功，保存视频解析地址
-                if (!$videoHooks->getError() && $play_code) {
+                    //解析成功，保存视频解析地址
+                    if (!$videoHooks->getError() && $play_code) {
 
-                    $play_type = $videoInfo['media_type'];
-                    $saveData['media_thumb_img'] = $media_thumb_img;
-                    $saveData['play_code'] = $play_code;
-                    $saveData['play_type'] = $play_type;
-                } else {
-                    if ($media['media_local_path']) {
-                        $saveData['priority_type'] = 2;
-                        $saveData['play_type'] = 4;
-                        $saveData['play_code'] = $media['local_path'];
+                        $play_type = $videoInfo['media_type'];
+                        $saveData['media_thumb_img'] = $media_thumb_img;
+                        $saveData['play_code'] = $play_code;
+                        $saveData['play_type'] = $play_type;
                     } else {
-                        $saveData['status'] = 0;
+                        if ($media['media_local_path']) {
+                            $saveData['priority_type'] = 2;
+                            $saveData['play_type'] = 4;
+                            $saveData['play_code'] = $media['local_path'];
+                        } else {
+                            $saveData['status'] = 0;
+                        }
                     }
                 }
             } else {
