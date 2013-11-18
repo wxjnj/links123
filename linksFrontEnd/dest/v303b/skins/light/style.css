@@ -60,7 +60,7 @@
 }
 .thl .ctls {
     background: #f4f4f4;
-    box-shadow: inset 1px 1px 2px #aaa;
+    /*box-shadow: inset 1px 1px 2px #aaa;*/
     border: 1px solid #d7d7d7;
 }
 .thl .ctls .ipt {
@@ -252,6 +252,9 @@ body {
     background: none;
     border-bottom: 3px solid #0079c1;
 }
+.widescreen .extra-calendar .cal-header .active{
+    border-bottom: 3px solid #0079c1;
+}
 
 .pic-news-tabs a {
     height: 4px;
@@ -396,4 +399,8 @@ body {
 
 .widescreen .cal-date-marks-table li .delete-btn{
     top: 9px;
+}
+
+.cal-date-marks-table li .add-btn{
+    color: #666;
 }

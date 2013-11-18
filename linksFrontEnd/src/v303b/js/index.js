@@ -49,7 +49,7 @@ $(function() {
 	});
 
 	(function(){ //app图标相关
-		var nmlLen = 9, wideLen = 11;
+		var nmlLen = 9, wideLen = 10;
 		var appsList = $('#J_Apps>li');
 		var appsListLen = appsList.size();
 
@@ -309,6 +309,11 @@ var Zld = { // 自留地
 			items: '> li:not(.add)',
 			start: function(event, ui) {
 				$(ui.item).find('span').css('cursor', 'move');
+
+                //自留地开始拖动的时候，关闭tips
+                if($('.zld-tip').size()){
+                    $('.zld-tip').find('.zld-tip-close').trigger('click');
+                }
 			},
 			update: function(event, ui) {
 				$(ui.item).find('span').css('cursor', 'pointer');
@@ -489,6 +494,8 @@ var Zld = { // 自留地
 
 			obj.dialog({
 				autoOpen: false,
+                show: { effect: "fade" },
+                hide: { effect: "fade" },
 				width: 384,
 				modal: true,
 				resizable: false,

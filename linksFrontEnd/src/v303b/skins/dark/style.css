@@ -36,7 +36,7 @@ a, a:hover{
 }
 .zld ul li.add .ctl i {
     background-image: url(sprite.png);
-    background-position: -32px -1px;
+    background-position: -31px -1px;
     background-repeat: no-repeat
 }
 
@@ -95,7 +95,7 @@ a, a:hover{
     border-top: 1px solid #ddd;
 }
 .extra-box {
-    border-top: 2px solid #ddd;
+    border-top: 1px solid #ddd;
 }
 .cal-date-marks-table li {
     border-bottom: 1px dashed #ddd;
@@ -125,7 +125,7 @@ a, a:hover{
     color: #fff;
 }
 .thl .cate-in,
-.thl .cate-in a{ color: #000; }
+.thl .cate-in a{ color: #666; }
 .zld,
 .zld a,
 .zld a:hover{
@@ -138,16 +138,26 @@ a, a:hover{
 }
 .title-tabs .active{
     background: none;
-    border-bottom: 3px solid #d3cacc;
+    border-bottom: 3px solid #fff;
 }
 
 .pic-news-tabs a{
-    background: #6e848e;
+    filter:alpha(opacity=30);
+    -moz-opacity: 0.3;
+    -khtml-opacity: 0.3;
+    opacity: 0.3;
+    background: #fff;
 }
 .pic-news-tabs .active,
 .cal-date-marks-table li .dot,
 .text-news p b{
     background: #fff;
+}
+.pic-news-tabs .active{
+    filter:alpha(opacity=100);
+    -moz-opacity: 1;
+    -khtml-opacity: 1;
+    opacity: 1;
 }
 .cal-date-marks-table .current-time,
 .widescreen .extra-calendar .cal-day .cal-mini-month-panel{
@@ -184,7 +194,7 @@ a, a:hover{
 .widescreen .extra-calendar .cal-header .active,
 .extra-calendar .cal-header .cal-view-select-btn:hover, 
 .extra-calendar .cal-header .active {
-    border-bottom: 3px solid #d3cacc;
+    border-bottom: 3px solid #fff;
 }
 
 .extra-calendar .cal-month table th, .extra-calendar .cal-week table th {

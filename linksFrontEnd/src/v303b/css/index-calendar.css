@@ -135,7 +135,7 @@
 }
 .extra-calendar .cal-header .cal-view-select-btn {
 	display:inline-block;
-    margin-left: 10px;
+    margin-left: 15px;
     padding-bottom: 3px;
     border-bottom: 3px solid transparent;
 	height: 28px;
@@ -208,16 +208,17 @@
 }
 .cal-date-marks-table li .desc {
 }
-.cal-date-marks-table li .add-btn,
-.cal-date-marks-table li .add-btn:hover {
+.cal-date-marks-table li .add-btn {
 	display: none;
 	padding: 0 4px;
 	height: 30px;
 	line-height: 30px;
 	margin-left: 44px;
-	background: #a9a9a9;
 	color: #fff;
 	text-decoration: none;
+}
+.cal-date-marks-table li .add-btn:hover{
+    background: url(../imgs/op20.png);
 }
 .cal-date-marks-table li .delete-btn {
 	color: #000;

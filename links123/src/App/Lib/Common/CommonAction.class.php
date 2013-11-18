@@ -516,7 +516,7 @@ class CommonAction extends Action {
     
     	$theme = $themeList[$themeId];
     	
-    	return $theme ? $theme : 'light';
+    	return $theme ? $theme : 'dark';
     }
     
     /**
@@ -576,6 +576,43 @@ class CommonAction extends Action {
     		}
     	}
     	return $str;
+    }
+    
+    /**
+     * 获取和生成游客记录
+     */
+    protected function get_member_guest() {
+    	$member_guest_id = cookie(md5('member_guest'));
+    	if (!$member_guest_id || $member_guest_id > 0) {
+    		 
+    		$guestModel = M('MemberGuest');
+    		 
+    		$guest_id = $guestModel->add(array('create_time' => time(), 'status' => 1));
+    		if ($guest_id) {
+    
+    			$member_guest_id = - $guest_id;
+    			if ($guestModel->where(array('id' => $guest_id))->save(array('mid' => $member_guest_id))) {
+    				 
+    				cookie(md5('member_guest'), $member_guest_id, 365*24*60*60);
+    			}
+    		}
+    	}
+    	 
+    	return $member_guest_id;
+    }
+    
+    /**
+     * 同步日程表
+     */
+    public function synchronize_schedule($user_id, $member_guest_id) {
+//     	try {
+// 	    	$model = M();
+// 	    	$model->query("INSERT INTO `lnk_schedule`(`mid`,`datetime`,`content`,`status`,`create_time`,`update_time`,`year`,`month`,`day`) SELECT $user_id,`datetime`,`content`,`status`,`create_time`,`update_time`,`year`,`month`,`day` FROM `lnk_schedule` WHERE `mid`=$member_guest_id AND `isbind`=0");
+	    	
+// 	    	$model->query("UPDATE `lnk_schedule` SET `isbind`=1 WHERE `mid`=$member_guest_id AND `isbind`=0");
+//     	} catch (Exception $e) {
+    		
+//     	}
     }
 }
 

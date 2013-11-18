@@ -47,7 +47,6 @@ input:focus{ outline: 0; }
 .under-header-inner {
 	position: relative;
 	width: 960px;
-	height: 120px;
 	margin: 0 auto;
 }
 
@@ -63,8 +62,8 @@ input:focus{ outline: 0; }
 	position: relative;
 }
 .ci-hd{
-	padding-top: 20px;
-	height: 115px;
+	padding-top: 35px;
+	height: 100px;
 	position: relative;
 }
 .ci-bd{
@@ -124,7 +123,7 @@ input:focus{ outline: 0; }
 	background: url(../imgs/logo2.png) 0 0 no-repeat;
 	position: absolute;
 	left: 0;
-	top: 35px;
+	top: 45px;
 	height: 55px;
 	overflow: hidden;
 	text-indent: -999px;
@@ -178,9 +177,9 @@ input:focus{ outline: 0; }
 	background: #fff;
 	height: 30px;
 	padding: 0 10px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	border-radius: 5px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
 }
 .thl .ctls .ipt{
 	background: #fff;
@@ -303,7 +302,7 @@ input:focus{ outline: 0; }
 }
 
 .box-apps .box-bd {
-	padding-top: 10px;
+	padding-top: 0;
 }
 
 .box-apps {
@@ -462,10 +461,9 @@ input:focus{ outline: 0; }
 */
 /*app-icon-list*/
 .app-icon-list{
-	/*display: none;*/
-	height: 18px;
-	position: relative;
-	/*z-index: 9999;*/
+    padding: 10px 0 0 0;
+    height: 18px;
+    position: relative;
 }
 .app-icon-list em{
 	float: right;
@@ -538,12 +536,18 @@ input:focus{ outline: 0; }
 	text-align: center;
 	width: 90px;
 	float: right;
-	height: 100px;
+	height: 110px;
 	cursor: pointer;
 }
-.app-icon-list ul li a,
-.app-icon-list ul li a:hover{
-	color: #0c0b0b;
+.app-icon-list ul li a{
+    color: #0c0b0b;
+}
+.app-icon-list ul li:hover,
+.app-icon-list ul li:hover .nm,
+.app-icon-list ul li a:hover,
+.app-icon-list ul li .nm:hover{
+    color: #fc2a06;
+    text-decoration: none;
 }
 
 /*960*/
@@ -572,7 +576,7 @@ input:focus{ outline: 0; }
 	display:none;
 }
 .thl{
-	margin-left: 275px;
+	margin: 0 auto;
 	width: 410px;
 }
 .thl .ctls .ipt{
@@ -619,10 +623,6 @@ input:focus{ outline: 0; }
 	height: 390px;
 }
 */
-
-.thl .ctls {
-	border: 1px solid #d1d1d1;
-}
 
 .big-pic {
 	width: 100%;
@@ -710,9 +710,6 @@ input:focus{ outline: 0; }
 }
 .zld ul li .ctl:hover{
 	box-shadow:inset 0px 0 5px #ccc;
-}
-.zld ul li.add{
-    margin-left: 15px;
 }
 .zld ul li.add .ctl{
 	cursor: pointer;
@@ -895,7 +892,6 @@ input:focus{ outline: 0; }
 
 */
 .widescreen .thl{
-	margin-left: 380px; 
 	width: 460px;
 }
 .widescreen .thl .ctls .ipt{
@@ -945,9 +941,6 @@ input:focus{ outline: 0; }
 */
 .widescreen .uc-avatar {
 	float:right;
-}
-.widescreen .box-apps .box-bd{
-	padding-top: 0;
 }
 
 
