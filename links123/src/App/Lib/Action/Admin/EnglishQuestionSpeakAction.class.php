@@ -385,8 +385,8 @@ class EnglishQuestionSpeakAction extends CommonAction {
                         $temp['created'] = $time;
                         $temp['updated'] = $time;
                         $temp['content'] = $value;
-                        $temp['start_time'] = intval($sentence_start_arr[$key]);
-                        $temp['end_time'] = intval($sentence_end_arr[$key]);
+                        $temp['start_time'] = floatval($sentence_start_arr[$key]);
+                        $temp['end_time'] = floatval($sentence_end_arr[$key]);
                         array_push($datalist, $temp);
                     }
                 }
@@ -502,8 +502,8 @@ class EnglishQuestionSpeakAction extends CommonAction {
                         $temp['created'] = $time;
                         $temp['updated'] = $time;
                         $temp['content'] = $value;
-                        $temp['start_time'] = intval($sentence_start_arr[$key]);
-                        $temp['end_time'] = intval($sentence_end_arr[$key]);
+                        $temp['start_time'] = floatval($sentence_start_arr[$key]);
+                        $temp['end_time'] = floatval($sentence_end_arr[$key]);
                         array_push($datalist, $temp);
                     }
                 }
