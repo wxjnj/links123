@@ -250,15 +250,15 @@ var Zld = { // 自留地
 		var oi;
 		var s = 0;
 
-		var line_count = 0;
+		//var line_count = 0;
 		do{
 			oi = self._resizeLine(s);
 			s = oi;
-			line_count++;
+			//line_count++;
 		}while(oi !== false);
 
 		//超过两行 行高减小8
-		if(line_count > 2) {
+		if(box.height() > 90) {
 			box.addClass('manylines');
 			/*
 			box.find('.nm').css({
