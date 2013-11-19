@@ -154,7 +154,7 @@ var AppsTpl = {
 				</div> \
 				<iframe id="J_calc_iframe" width="540px" height="530px" scrolling="no" frameborder="0" style="" allowtransparency="true" src=""></iframe> \
 			</div>',
-	'#J_box_note': '<div id="J_box_note" style="display: none" class="J_box_note"> \
+	'#J_box_note': '<div style="display: none" class="J_box_note"> \
 				<div class="box_note_header"> \
 					<a href="#" class="btn_add">add</a> \
 					<div class="colors-wrap"> \
@@ -167,7 +167,7 @@ var AppsTpl = {
 					</div> \
 					<a href="#" class="btn_clear">clear</a> \
 				</div> \
-				<div> \
+				<div class="box_note_textarea_box"> \
 					<textarea></textarea> \
 				</div> \
 			</div>',
