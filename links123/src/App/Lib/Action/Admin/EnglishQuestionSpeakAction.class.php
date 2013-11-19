@@ -9,7 +9,8 @@ class EnglishQuestionSpeakAction extends CommonAction {
     
     protected $cEnglishQuestionLogic  = null;
     protected $cEnglishLevelnameLogic = null;
-    
+    protected $forbid_reason_options = array();
+    protected $del_reason_options = array();
     public function _initialize() {
         $this->cEnglishQuestionLogic  = new EnglishQuestionLogic();
         $this->cEnglishLevelnameLogic = new EnglishLevelnameLogic();
@@ -73,12 +74,27 @@ class EnglishQuestionSpeakAction extends CommonAction {
             $map['englishMedia.special_recommend'] = intval($_REQUEST['special_recommend']);
             $param['special_recommend'] = intval($_REQUEST['special_recommend']);
         }
+        
+        //状态
         if (isset($_REQUEST['status'])) {
-            if ($_REQUEST['status'] != -2) {
-                $map['englishQuestionSpeak.status'] = intval($_REQUEST['status']);
-            }
-            $param['status'] = intval($_REQUEST['status']);
+        	if ($_REQUEST['status'] != -2) {
+        		$map['englishQuestionSpeak.status'] = intval($_REQUEST['status']);
+        	}
+        	$param['status'] = intval($_REQUEST['status']);
+        	if($param['status'] == 0){
+        		$param['forbid_reason'] = isset($_REQUEST['forbid_reason'])?$_REQUEST['forbid_reason']:'';
+        		if($param['forbid_reason'] != ''){
+        			$map['englishQuestionSpeak.forbid_reason'] = $param['forbid_reason'];
+        		}
+        	}
+        	if($param['status'] == -1){
+        		$param['del_reason'] = isset($_REQUEST['del_reason'])?$_REQUEST['del_reason']:'';
+        		if($param['del_reason'] != ''){
+        			$map['englishQuestionSpeak.del_reason'] = $param['del_reason'];
+        		}
+        	}
         }
+        
         //是否存在本地视频文件
         if (isset($_REQUEST['has_local_path'])) {
             if (intval($_REQUEST['has_local_path']) == 0) {
@@ -164,10 +180,19 @@ class EnglishQuestionSpeakAction extends CommonAction {
             import("@.ORG.Page");
             //创建分页对象
             if (!empty($_REQUEST ['listRows'])) {
-                $listRows = $_REQUEST ['listRows'];
+            	if(!empty($_COOKIE['listRows']) && $_COOKIE['listRows'] !=$_REQUEST ['listRows']){
+            		$listRows = $_COOKIE ['listRows'];
+            	}else{
+            		$listRows = $_REQUEST ['listRows'];
+            	}
             } else {
-                $listRows = '20';
+            	if(!empty($_COOKIE['listRows'])){
+            		$listRows = $_COOKIE ['listRows'];
+            	}else{
+            		$listRows = '20';
+            	}
             }
+            $param['listRows'] = $listRows;
             $p = new Page($count, $listRows);
             //分页查询数据
             $voList = $model->where($map)->order("`" . $order . "` " . $sort)->limit($p->firstRow . ',' . $p->listRows)->group("englishQuestionSpeak.id")->select();
@@ -192,12 +217,50 @@ class EnglishQuestionSpeakAction extends CommonAction {
             $this->assign('sortImg', $sortImg);
             $this->assign('sortType', $sortAlt);
             $this->assign("page", $page);
+            $this->assign("listRows", $listRows);
         }
         cookie('_currentUrl_', __URL__ . '/index?' . $_SESSION[C('SEARCH_PARAMS_KEY')]);
         return;
     }
+    
+    /**
+     * 解析英语角试题删除、禁用原因
+     * @author Joseph $date2013-11-19$
+     */
+    protected  function parseReaseOption($t)
+    {
+    	$a = array();
+    	foreach ($t as $v){
+    		$v = trim($v);
+    		if($v){
+    			$a[] =array('key'=>$v,'name'=>$v);
+    		}
+    	}
+    	return $a;
+    }
+    /**
+     * 获取英语角试题删除、禁用原因
+     * @author Joseph $date2013-11-19$
+     */
+    protected function getStatusReason()
+    {
+    	$variableModel = D("Variable");
+    	$forbid_reason_options = $variableModel->getVariable('english_question_forbid_reason');
+    	$del_reason_options = $variableModel->getVariable('english_question_del_reason');
+    	if($forbid_reason_options){
+    		$t = explode("\n", $forbid_reason_options);
+    		$this->forbid_reason_options = $this->parseReaseOption($t);
+    	}
+    	if($del_reason_options){
+    		$t = explode("\n", $del_reason_options);
+    		$this->del_reason_options = $this->parseReaseOption($t);
+    	}
+    	$this->assign("forbid_reason_options", $this->forbid_reason_options);
+    	$this->assign("del_reason_options", $this->del_reason_options);
+    }
 
     public function index() {
+    	$this->getStatusReason();
         //列表过滤器，生成查询Map对象
         $map = array();
         $param = array();
@@ -241,7 +304,13 @@ class EnglishQuestionSpeakAction extends CommonAction {
         $this->assign("category", $category);
         
         $this->assign("type", 0);//说力
-
+        //listRows_options
+        $this->assign("listRows_options", array(
+        		array('key'=>5,'name'=>"5"),
+        		array('key'=>20,'name'=>"20"),
+        		array('key'=>100,'name'=>"100"),
+        		array('key'=>200,'name'=>"200"),
+        ));
         $this->assign("param", $param);
         foreach ($param as $key => $value) {
             $param_str.=$key . "=" . $value . "&";
@@ -251,6 +320,10 @@ class EnglishQuestionSpeakAction extends CommonAction {
         return;
     }
 
+    public function add() {
+    	$this->getStatusReason();
+    	$this->display();
+    }
     public function insert() {
         $model = D("EnglishQuestionSpeak");
         $model->startTrans();
@@ -279,7 +352,21 @@ class EnglishQuestionSpeakAction extends CommonAction {
         if ($model->status == 1 && $mediaId == 0) {
             $model->status = 0;
         }
-
+        
+        //状态原因
+        if($model->status == 0){//禁用
+        	$model->fordib_reason = $_REQUEST['fordib_reason'];
+        	$model->del_reason = '';
+        }
+        if($model->status == -1){//删除
+        	$model->del_reason = $_REQUEST['del_reason'];
+        	$model->fordib_reason = '';
+        }
+        if($model->status == 1){//启用
+        	$model->fordib_reason = '';
+        	$model->del_reason = '';
+        }
+        
         //保存当前数据对象
         $question_id = $model->add();
         if ($question_id !== false) { //保存成功
@@ -317,15 +404,20 @@ class EnglishQuestionSpeakAction extends CommonAction {
                 }
             }
             $model->commit();
-            $this->success('新增成功!', cookie('_currentUrl_'));
+            if(intval($_POST['return_close']) == 1){
+            	echo '<script type="text/javascript">alert("编辑成功！");window.close()</script>';
+            }else{
+            	$this->success("新增成功！");
+            }
+            #$this->success('新增成功!', cookie('_currentUrl_'));
         } else {
             $model->rollback();
             //失败提示
             $this->error('新增失败!');
         }
     }
-
     public function edit() {
+    	$this->getStatusReason();
         $name = $this->getActionName();
         $model = M($name);
         $id = intval($_REQUEST [$model->getPk()]);
@@ -341,7 +433,7 @@ class EnglishQuestionSpeakAction extends CommonAction {
         $this->assign('sentence_list', $sentence_list);
         $this->assign('vo', $vo);
         $this->assign('doubleQuotes', '"');
-
+        
         $this->display();
     }
 
@@ -380,7 +472,19 @@ class EnglishQuestionSpeakAction extends CommonAction {
         if ($model->status == 1 && $mediaId == 0) {
             $model->status = 0;
         }
-
+    	//状态原因
+        if($model->status == 0){//禁用
+        	$model->fordib_reason = $_REQUEST['fordib_reason'];
+        	$model->del_reason = '';
+        }
+        if($model->status == -1){//删除
+        	$model->del_reason = $_REQUEST['del_reason'];
+        	$model->fordib_reason = '';
+        }
+        if($model->status == 1){//启用
+        	$model->fordib_reason = '';
+        	$model->del_reason = '';
+        }
         //保存当前数据对象
         $ret = $model->save();
         if ($ret !== false) { //保存成功
@@ -434,7 +538,12 @@ class EnglishQuestionSpeakAction extends CommonAction {
             }
 
             $model->commit();
-            $this->success('编辑成功!', cookie('_currentUrl_'));
+            if(intval($_POST['return_close']) == 1){
+            	echo '<script type="text/javascript">alert("编辑成功！");window.close()</script>';
+            }else{
+            	$this->success("编辑成功！");
+            }
+            //$this->success('编辑成功!', cookie('_currentUrl_'));
         } else {
             $model->rollback();
             //失败提示
@@ -1091,6 +1200,7 @@ class EnglishQuestionSpeakAction extends CommonAction {
         $categoryModel = D("EnglishCategory");
         $pk = $model->getPk();
         $id = $_REQUEST [$pk];
+        $forbid_reason = $_REQUEST ['reason'];
         $condition = array($pk => array('in', $id));
         $q_map = array(
             "question.status"=>1,
@@ -1102,8 +1212,12 @@ class EnglishQuestionSpeakAction extends CommonAction {
             $question_ids[] = $value['id'];
         }
         $model->startTrans();
-        $list = $model->forbid($condition);
-        
+        //$list = $model->forbid($condition);
+        $list = $model->where($condition)->save(array(
+        		'status'=>0,
+        		'forbid_reason'=>$forbid_reason,
+        		//'updated'=>time()
+        ));
         if ($list !== false) {
             if(false === $categoryModel->updateCategoryQuestionNumByQuestion($question_ids, true, 0)){
                 $model->rollback();
@@ -1154,6 +1268,7 @@ class EnglishQuestionSpeakAction extends CommonAction {
         $categoryModel = D("EnglishCategory");
         $pk = $model->getPk();
         $id = $_REQUEST [$pk];
+        $del_reason = $_REQUEST ['reason'];
         $condition = array($pk => array('in', $id));
         $q_map = array(
             "question.status"=>1,
@@ -1165,8 +1280,12 @@ class EnglishQuestionSpeakAction extends CommonAction {
             $question_ids[] = $value['id'];
         }
         $model->startTrans();
-        $list = $model->where($condition)->setField("status",-1);
-        
+        //$list = $model->where($condition)->setField("status",-1);
+        $list = $model->where($condition)->save(array(
+        		'status'=>-1,
+        		'del_reason'=>$del_reason,
+        		//'updated'=>time()
+        ));
         if ($list !== false) {
             if(false === $categoryModel->updateCategoryQuestionNumByQuestion($question_ids, true, 0)){
                 $model->rollback();

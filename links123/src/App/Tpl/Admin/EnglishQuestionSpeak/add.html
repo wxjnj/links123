@@ -4,7 +4,7 @@
 
 <div id="main" class="main" >
     <div class="content add_question">
-        <div class="title">新增英语角说力试题[ <a href="__URL__">返回列表</a> ]</div>
+        <div class="title">新增英语角说力试题[ <a href="javascript:window.close();">返回列表</a> ]</div>
         <form method='post' id="form1" action="__URL__/insert/" >
             <table cellpadding=3 cellspacing=3>
                 <tr>
@@ -39,10 +39,34 @@
                         <label><input type="radio" name="status" value="-1" />删除</label>
                     </td>
                 </tr>
+                <tr id="forbid_tr" style="display:none" >
+                    <td class="tRight" >禁用原因：</td>
+                    <td class="tLeft" >
+                        <select name="forbid_reason" id="forbid_reason">
+                            <option value="">请选择</option>
+                            <volist name="forbid_reason_options" id="forbid_reason_option">
+                                <option value="{$forbid_reason_option.key}" >{$forbid_reason_option.name}</option>
+                            </volist>
+                        </select>
+                    </td>
+                </tr>
+                <tr id="del_tr" style="display:none">
+                    <td class="tRight" >删除原因：</td>
+                    <td class="tLeft" >
+                        <select name="del_reason" id="del_reason">
+                            <option value="">请选择</option>
+                            <volist name="del_reason_options" id="del_reason_option">
+                                <option value="{$del_reason_option.key}">{$del_reason_option.name}</option>
+                            </volist>
+                        </select>
+                    </td>
+                </tr>
                 <tr>
                     <td></td>
                     <td class="center">
+                        <input type="hidden" value="0" name="return_close" id="return_close"/>
                         <input type="button" id="J_submitBtn" value="保 存" class="small submit" />&nbsp;
+                        <input type="submit" value="保存关闭" onclick="save_close()" class="small submit">&nbsp;
                         <input type="reset" class="submit small" value="清 空" >
                     </td>
                 </tr>
@@ -51,6 +75,9 @@
     </div>
 </div>
 <script type="text/javascript">
+    function save_close(){
+        $("#return_close").val("1");
+    }
     $(function(){
         $("#J_addSentence").click(function(){
             addSentence();
@@ -64,6 +91,22 @@
                 return false;
             }
             $("#form1").submit();
+        });
+         $("[name='status']").click(function() {
+            var v = parseInt(this.value);
+            if(v == 1 ){
+                //启用
+                $("#del_tr").hide();
+                $("#forbid_tr").hide();
+            }else if( v == -1){
+                //删除
+                $("#del_tr").show();
+                $("#forbid_tr").hide();
+            }else{
+                //禁用
+                $("#del_tr").hide();
+                $("#forbid_tr").show();
+            }
         })
     })
     function addSentence(){
