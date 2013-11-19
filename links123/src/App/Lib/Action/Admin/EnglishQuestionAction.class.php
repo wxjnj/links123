@@ -11,6 +11,21 @@ class EnglishQuestionAction extends CommonAction {
     public function _initialize() {
         $this->cEnglishQuestionLogic  = new EnglishQuestionLogic();
         $this->cEnglishLevelnameLogic = new EnglishLevelnameLogic();
+        $this->forbid_reason_options = array(
+        	array('key'=>1,'name'=>"没有本地视频"),
+        	array('key'=>2,'name'=>"视频错误"),
+        	array('key'=>3,'name'=>"外链变更"),
+        	array('key'=>4,'name'=>"图像不清楚"),
+        	array('key'=>5,'name'=>"其他原因"),
+        );
+        $this->del_reason_options = array(
+        	array('key'=>1,'name'=>"无视频"),
+        	array('key'=>2,'name'=>"重复"),
+        	array('key'=>3,'name'=>"外链变更"),
+        	array('key'=>4,'name'=>"不能播放"),
+        	array('key'=>5,'name'=>"错误"),
+        	array('key'=>6,'name'=>"其他原因"),
+        );
         parent::_initialize();
     }
 
@@ -71,22 +86,20 @@ class EnglishQuestionAction extends CommonAction {
             $map['englishMedia.special_recommend'] = intval($_REQUEST['special_recommend']);
             $param['special_recommend'] = intval($_REQUEST['special_recommend']);
         }
-        
-        //状态
         if (isset($_REQUEST['status'])) {
             if ($_REQUEST['status'] != -2) {
                 $map['englishQuestion.status'] = intval($_REQUEST['status']);
             }
             $param['status'] = intval($_REQUEST['status']);
             if($param['status'] == 0){
-            	$param['forbid_reason'] = isset($_REQUEST['forbid_reason'])?$_REQUEST['forbid_reason']:'';
-            	if($param['forbid_reason'] != ''){
+            	$param['forbid_reason'] = isset($_REQUEST['forbid_reason'])?intval($_REQUEST['forbid_reason']):0;
+            	if($param['forbid_reason'] > 0){
             		$map['englishQuestion.forbid_reason'] = $param['forbid_reason'];
             	}
             }
             if($param['status'] == -1){
-            	$param['del_reason'] = isset($_REQUEST['del_reason'])?$_REQUEST['del_reason']:'';
-            	if($param['del_reason'] != ''){
+            	$param['del_reason'] = isset($_REQUEST['del_reason'])?intval($_REQUEST['del_reason']):0;
+            	if($param['del_reason'] > 0){
             		$map['englishQuestion.del_reason'] = $param['del_reason'];
             	}
             }
@@ -201,7 +214,7 @@ class EnglishQuestionAction extends CommonAction {
             $p = new Page($count, $listRows);
             //分页查询数据
             $voList = $model->where($map)->order("`" . $order . "` " . $sort)->limit($p->firstRow . ',' . $p->listRows)->group("englishQuestion.id")->select();
-            //echo $model->getlastsql();
+//            echo $model->getlastsql();
             //分页跳转的时候保证查询条件
             foreach ($param as $key => $val) {
                 //$p->parameter .= "$key=" . urlencode ( $val ) . "&";
@@ -227,44 +240,8 @@ class EnglishQuestionAction extends CommonAction {
         cookie('_currentUrl_', __URL__ . '/index?' . $_SESSION[C('SEARCH_PARAMS_KEY')]);
         return;
     }
-    /**
-     * 解析英语角试题删除、禁用原因
-     * @author Joseph $date2013-11-19$
-     */
-    protected  function parseReaseOption($t)
-    {
-    	$a = array();
-    	foreach ($t as $v){
-    		$v = trim($v);
-    		if($v){
-    			$a[] =array('key'=>$v,'name'=>$v);
-    		}
-    	}
-    	return $a;
-    }
-    /**
-     * 获取英语角试题删除、禁用原因
-     * @author Joseph $date2013-11-19$
-     */
-    protected function getStatusReason()
-    {
-    	$variableModel = D("Variable");
-    	$forbid_reason_options = $variableModel->getVariable('english_question_forbid_reason');
-    	$del_reason_options = $variableModel->getVariable('english_question_del_reason');
-    	if($forbid_reason_options){
-    		$t = explode("\n", $forbid_reason_options);
-    		$this->forbid_reason_options = $this->parseReaseOption($t);
-    	}
-    	if($del_reason_options){
-    		$t = explode("\n", $del_reason_options);
-    		$this->del_reason_options = $this->parseReaseOption($t);
-    	}
-    	$this->assign("forbid_reason_options", $this->forbid_reason_options);
-    	$this->assign("del_reason_options", $this->del_reason_options);
-    }
     
     public function index() {
-    	$this->getStatusReason();
         //列表过滤器，生成查询Map对象
         $map = array();
         $param = array();
@@ -310,6 +287,7 @@ class EnglishQuestionAction extends CommonAction {
         
 		//listRows_options
         $this->assign("listRows_options", array(
+        	array('key'=>5,'name'=>"5"),
         	array('key'=>20,'name'=>"20"),
         	array('key'=>100,'name'=>"100"),
         	array('key'=>200,'name'=>"200"),
@@ -319,10 +297,11 @@ class EnglishQuestionAction extends CommonAction {
             $param_str.=$key . "=" . $value . "&";
         }
         $this->assign("param_str", $param_str);
+        $this->assign("forbid_reason_options", $this->forbid_reason_options);
+        $this->assign("del_reason_options", $this->del_reason_options);
         $this->display();
         return;
     }
-    
     public function getLevelList(){
         if($this->isAjax()){
             $level = intval($_REQUEST['level']) > 0 ? intval($_REQUEST['level']) : 1;
@@ -596,7 +575,6 @@ class EnglishQuestionAction extends CommonAction {
 
     public function add() {
         //@ 一级类目
-    	$this->getStatusReason();
         $category["level_one"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("1");
         //@ 二级类目
         $category["level_two"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("2");
@@ -604,6 +582,8 @@ class EnglishQuestionAction extends CommonAction {
         $category["level_thr"] = $this->cEnglishLevelnameLogic->getCategoryLevelListBy("3");
 
         $this->assign("category", $category);
+        $this->assign("forbid_reason_options", $this->forbid_reason_options);
+        $this->assign("del_reason_options", $this->del_reason_options);
         $this->display();
     }
 
@@ -691,18 +671,17 @@ class EnglishQuestionAction extends CommonAction {
             $model->status = 0;
             $model->answer = 0;
         }
-     	//状态原因
         if($model->status == 0){//禁用
-        	$model->fordib_reason = $_REQUEST['fordib_reason'];
-        	$model->del_reason = '';
+        	$model->fordib_reason = intval(empty($_REQUEST['fordib_reason'])?0:$_REQUEST['fordib_reason']);
+        	$model->del_reason = 0;
         }
-        if($model->status == -1){//删除
-        	$model->del_reason = $_REQUEST['del_reason'];
-        	$model->fordib_reason = '';
+        if($model->status == -1){//禁用
+        	$model->del_reason = intval(empty($_REQUEST['del_reason'])?0:$_REQUEST['del_reason']);
+        	$model->fordib_reason = 0;
         }
         if($model->status == 1){//启用
-        	$model->fordib_reason = '';
-        	$model->del_reason = '';
+        	$model->fordib_reason = 0;
+        	$model->del_reason = 0;
         }
         //保存当前数据对象
         $list = $model->add();
@@ -742,12 +721,7 @@ class EnglishQuestionAction extends CommonAction {
                 $this->error($this->cEnglishQuestionLogic->getErrorMessage());
             }
             $model->commit();
-            if(intval($_POST['return_close']) == 1){
-            	echo '<script type="text/javascript">alert("编辑成功！");window.close()</script>';
-            }else{
-            	$this->success("新增成功！");
-            }
-            #$this->success('新增成功!', cookie('_currentUrl_'));
+            $this->success('新增成功!', cookie('_currentUrl_'));
         } else {
             $model->rollback();
             //失败提示
@@ -756,7 +730,6 @@ class EnglishQuestionAction extends CommonAction {
     }
 
     public function edit() {
-    	$this->getStatusReason();
         $name = $this->getActionName();
         $model = M($name);
         $id = intval($_REQUEST [$model->getPk()]);
@@ -776,6 +749,8 @@ class EnglishQuestionAction extends CommonAction {
         $this->assign("object_list", $object_list);
         $level_list = D("EnglishLevel")->where("`status`=1")->order("sort")->select();
         $this->assign("level_list", $level_list);
+        $this->assign("forbid_reason_options", $this->forbid_reason_options);
+        $this->assign("del_reason_options", $this->del_reason_options);
         $this->display();
     }
 
@@ -874,19 +849,17 @@ class EnglishQuestionAction extends CommonAction {
             $model->status = 0;
             $model->answer = 0;
         }
-        
-        //状态原因
         if($model->status == 0){//禁用
-        	$model->fordib_reason = $_REQUEST['fordib_reason'];
-        	$model->del_reason = '';
+        	$model->fordib_reason = intval(empty($_REQUEST['fordib_reason'])?0:$_REQUEST['fordib_reason']);
+        	$model->del_reason = 0;
         }
-        if($model->status == -1){//删除
-        	$model->del_reason = $_REQUEST['del_reason'];
-        	$model->fordib_reason = '';
+        if($model->status == -1){//禁用
+        	$model->del_reason = intval(empty($_REQUEST['del_reason'])?0:$_REQUEST['del_reason']);
+        	$model->fordib_reason = 0;
         }
         if($model->status == 1){//启用
-        	$model->fordib_reason = '';
-        	$model->del_reason = '';
+        	$model->fordib_reason = 0;
+        	$model->del_reason = 0;
         }
         //$model->updated = time();
         //保存当前数据对象
@@ -938,7 +911,6 @@ class EnglishQuestionAction extends CommonAction {
     //excel导入
     public function excel_insert() {
         if ($this->isPost()) {
-            header("Content-type:text/html;charset=utf8");
             /**$上传excel文件 开始*/
             //
             import("@.ORG.UploadFile");
@@ -964,7 +936,6 @@ class EnglishQuestionAction extends CommonAction {
             
             //引入类
             error_reporting(E_ALL);
-            setlocale(LC_ALL, 'zh_CN'); 
             date_default_timezone_set('Asia/Shanghai');
 
             vendor('PHPExcel.Classes.PHPExcel.IOFactory');
@@ -980,7 +951,7 @@ class EnglishQuestionAction extends CommonAction {
             $dest = str_replace('uploads.txt', 'Excels/' . $uploadList[0]['savename'], $path);
             
             Log::write("导入听力试题，excel表为:".$dest, Log::INFO);
-            
+
             $objPHPExcel = $objReader->load($dest);
             
             /**$数据准备 开始*/
@@ -1001,14 +972,10 @@ class EnglishQuestionAction extends CommonAction {
             $level_two_max_sort = 0;
             $object_level_one_id = 0;//选择课程 分类的id
             $target = 1;//听力
-            $level_sort = array();
             $difficulty_list = array();//新分类的默认难度id
             foreach($levelnames as $key=>$each_lv) {
                 $levelnames[$key]["name"] = $each_lv["name"] = preg_replace("/\s+/", '', $each_lv["name"]); //将开头或结尾的一个或多个半角空格转换为空
-                if(!$level_name_list[$each_lv["name"]]){
-                    $level_name_list[$each_lv["name"]] = $each_lv["id"];
-                }
-                $level_sort[$each_lv["id"]] = $each_lv["sort"];
+                $level_name_list[$each_lv["name"]] = $each_lv["id"];
                 if($each_lv['level'] == 1){
                     $level_one_list[$each_lv["name"]] = $each_lv["id"];
                     if($each_lv['default'] == 1){
@@ -1033,7 +1000,6 @@ class EnglishQuestionAction extends CommonAction {
                 "level_two"=>array("gt",0),
                 "level_thr"=>array("gt",0)
             );
-            $level_map['b.name'] = array(array('exp','not like "%初级%"'), array('exp','not like "%中级%"'), array('exp','not like "%高级%"'),'and'); 
             $level_thr_ret = $categoryModel
                     ->alias("cat")
                     ->join(C("DB_PREFIX")."english_levelname b on cat.level_thr=b.id")
@@ -1204,13 +1170,11 @@ class EnglishQuestionAction extends CommonAction {
                                 Log::write("查询【".$value['level_two_name']."】的三级分类:".$categoryModel->getLastSql(), Log::INFO);
                                 if(intval($this_cat_id) == 0){
                                     $cat_data['level_thr_sort'] = ++$sort;
-                                    $cat_data['level_two_sort'] = ++$level_two_max_sort;
-                                    $cat_data['level_one_sort'] = $level_sort[$value['level_one']];
                                     $cat_data['updated'] = $cat_data['created'] = $time;
                                     $new_cat_id = $categoryModel->add($cat_data);
                                     if(FALSE === $new_cat_id){
                                         $model->rollback();
-                                        Log::write("导入失败，新增分类失败！：".$categoryModel->getLastSql(), Log::ERR);
+                                        Log::write("导入失败，新增分类失败！：".$categoryModel->getLastSql(), Log::ERR, true);
                                         die(json_encode(array("info" => "导入失败，新增分类失败！", "status" => false)));
                                     }
                                     Log::write("新增【".$value['level_two_name']."】的三级分类:".$categoryModel->getLastSql(), Log::INFO);
