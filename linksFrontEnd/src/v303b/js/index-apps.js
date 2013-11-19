@@ -171,7 +171,12 @@ $( function($) {
 				.prepend('<div class="links123-close-wrap"><a href="#">x</a></div>')
 				//.appendTo('body')
 				.fadeIn(self.animateSpeed)
-				.draggable({handle: '.box_note_header'})
+				.draggable({
+					handle: '.box_note_header',
+					stop: function(){
+						self.update(o.find('textarea'));
+					}
+				})
 				.attr('data-id', v.id)
 				.find('textarea').css('background-color', v.background).focus();
 
