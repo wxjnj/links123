@@ -911,6 +911,7 @@ class EnglishQuestionAction extends CommonAction {
     //excel导入
     public function excel_insert() {
         if ($this->isPost()) {
+            header("Content-type:text/html;charset=utf8");
             /**$上传excel文件 开始*/
             //
             import("@.ORG.UploadFile");
@@ -936,6 +937,7 @@ class EnglishQuestionAction extends CommonAction {
             
             //引入类
             error_reporting(E_ALL);
+            setlocale(LC_ALL, 'zh_CN'); 
             date_default_timezone_set('Asia/Shanghai');
 
             vendor('PHPExcel.Classes.PHPExcel.IOFactory');
@@ -951,7 +953,7 @@ class EnglishQuestionAction extends CommonAction {
             $dest = str_replace('uploads.txt', 'Excels/' . $uploadList[0]['savename'], $path);
             
             Log::write("导入听力试题，excel表为:".$dest, Log::INFO);
-
+            
             $objPHPExcel = $objReader->load($dest);
             
             /**$数据准备 开始*/
