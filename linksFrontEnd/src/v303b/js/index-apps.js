@@ -204,8 +204,10 @@ $( function($) {
 			var content = ta.val();
 			var background = ta.css('background-color').colorHex();
 			if(id != '' && content == ''){
-				ta.parents('.J_box_note').attr('data-id', '');
+				ta.parents('.J_box_note').remove()//.attr('data-id', '');
 				NoteController.del(id);
+				return;
+			}else if(id == '' && content == ''){
 				return;
 			}
 
