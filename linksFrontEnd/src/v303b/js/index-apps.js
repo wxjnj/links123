@@ -191,7 +191,10 @@ $( function($) {
 		del: function(id){
 			$.ajax({
 				url: URL + '/delNote',
-				type: 'GET'
+				data: {
+					id: id
+				},
+				type: 'POST'
 			}).done(function(){
 				//
 			});
@@ -203,6 +206,7 @@ $( function($) {
 			if(id != '' && content == ''){
 				ta.parents('.J_box_note').attr('data-id', '');
 				NoteController.del(id);
+				return;
 			}
 
 			var data = {};
