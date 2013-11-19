@@ -6,6 +6,7 @@
 
 $( function($) {
 
+	// background-color值的存取统一使用16进制表示
 	String.prototype.colorHex = function(){
 		var that = this;
 		if(/^(rgb|RGB)/.test(that)){
@@ -44,6 +45,9 @@ $( function($) {
 		/delNote
 	*/
 	var NoteController = {
+
+		animateSpeed: 100,
+
 		refresh: function(){
 
 			var self = this;
@@ -62,13 +66,15 @@ $( function($) {
 				$(document).on('click', '.J_box_note .colors-wrap a', function(){
 					textareaBg = '' + $(this).css('background-color');
 					$(this).parents('.J_box_note').find('textarea').css('background-color', textareaBg);
+
+					//切换颜色不会触发textarea的blur 需要手动更新
+					self.update($(this).parents('.J_box_note').find('textarea'));
 				})
 				.on('click', '.J_box_note .btn_add', function() {
 					var el = $(this).parents('.J_box_note');
-
 					var left = parseInt(el.offset().left) + 20;
 					var top = parseInt(el.offset().top) + 20;
-					NoteController.createNoteElement({
+					self.createNoteElement({
 						id: '',
 						pageX: left,
 						pageY: top,
@@ -76,16 +82,29 @@ $( function($) {
 						content: ''
 					});
 				})
-				.on('click', '.J_box_note .links123-close-wrap a', function(){
-					$(this).parents('.J_box_note').remove();
+				.on('click', '.J_box_note .links123-close-wrap a', function(e){
+					//self.update($(this).parents('.J_box_note').find('textarea'));
+					//$(this).parents('.J_box_note').find('textarea')[0].blur();
+					$(this).parents('.J_box_note').fadeOut(self.animateSpeed, function(){
+						$(this).remove();
+					});
 				})
-				.on('click', '.J_box_note .btn_clear', function(){
+				.on('click', '.J_box_note .btn_clear', function(e){
+					//var id = $(this).parents('.J_box_note').attr('data-id');
+					//if(id != ''){
+						//$(this).parents('.J_box_note').attr('data-id', '');
+						//self.del(id);
+					//}
 					$(this).parents('.J_box_note').find('textarea').remove();
 					$(this).parents('.J_box_note').find('.box_note_textarea_box').append('<textarea></textarea>');
 					$(this).parents('.J_box_note').find('textarea').focus();
 				})
-				.on('blur', '.J_box_note textarea', function(){
-					NoteController.update($(this));
+				.on('blur', '.J_box_note textarea', function(e){
+					var li = $(this).parents('.J_box_note');
+
+					setTimeout(function(){
+						self.update(li.find('textarea'));
+					}, 0);
 				});
 				self.hasBindEvent = true;
 			}
@@ -93,6 +112,18 @@ $( function($) {
 		format: function(d){
 			var self = this;
 			var data;
+			/* 测试数据
+			d = {
+				status: 1,
+				data: [
+					{id: 1, pageX: '20px', pageY: '20px', background: '#fff', content: '111'},
+					{id: 2, pageX: '40px', pageY: '40px', background: '#333', content: '222'},
+					{id: 3, pageX: '60px', pageY: '60px', background: '#999', content: '333'},
+					{id: 4, pageX: '80px', pageY: '80px', background: '#ff0', content: '444'},
+					{id: 5, pageX: '100px', pageY: '100px', background: '#08c', content: '555'}
+				]
+			};
+			*/
 			if(!d || d.status == 0 || d.data == null){
 				data = [{
 					id: '',
@@ -111,6 +142,7 @@ $( function($) {
 			});
 		},
 		createNoteElement: function(v){
+			var self = this;
 			if(!v){
 				v = {
 					id: '',
@@ -138,7 +170,7 @@ $( function($) {
 				.addClass('links123-app-frame')
 				.prepend('<div class="links123-close-wrap"><a href="#">x</a></div>')
 				//.appendTo('body')
-				.show()
+				.fadeIn(self.animateSpeed)
 				.draggable({handle: '.box_note_header'})
 				.attr('data-id', v.id)
 				.find('textarea').css('background-color', v.background).focus();
@@ -164,6 +196,7 @@ $( function($) {
 			var content = ta.val();
 			var background = ta.css('background-color').colorHex();
 			if(id != '' && content == ''){
+				ta.parents('.J_box_note').attr('data-id', '');
 				NoteController.del(id);
 			}
 
@@ -181,7 +214,7 @@ $( function($) {
 			}).done(function(d){
 				ta.parents('.J_box_note').attr('data-id', d.id);
 			});
-		},
+		}
 	};
 
 	/*

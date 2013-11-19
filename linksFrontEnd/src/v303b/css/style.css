@@ -722,6 +722,24 @@ input:focus{ outline: 0; }
 	background: url(../imgs/sprite.png) -272px -3px no-repeat;
 }
 
+/*多于2行 便签高度减小*/
+.zld .manylines li .nm{
+	height: 16px;
+	line-height: 16px;
+	padding: 6px 25px 6px 25px;
+}
+.zld .manylines li .ctl{
+	padding: 1px;
+}
+.zld .manylines li {
+	height: 28px;
+	line-height: 28px;
+}
+.zld .manylines .add .ctl {
+	margin-top: 0;
+}
+
+
 .zld-tip {
 	width: 166px;
 	height: 45px;
