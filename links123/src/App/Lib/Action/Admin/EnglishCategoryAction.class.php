@@ -344,7 +344,7 @@ class EnglishCategoryAction extends CommonAction{
         }
         //
         $map= array();
-        $cat_data['status'] = $data['status'];
+//        $cat_data['status'] = $data['status'];
         $cat_data['updated'] = $time;
         if($level == 1){
             $cat_data['level_one_sort'] = $data['sort'];
