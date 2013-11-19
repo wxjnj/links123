@@ -159,8 +159,8 @@ $( function($) {
 			var fixedStyle = {};
 
 			if(v.pageX){
-				fixedStyle.left = v.pageX;
-				fixedStyle.top = v.pageY;
+				fixedStyle.left = v.pageX == '' ? v.pageX : v.pageX + 'px';
+				fixedStyle.top = v.pageY == '' ? v.pageY : v.pageY + 'px';
 			}else{
 				fixedStyle.left = parseInt($(window).width()) / 2 - o.outerWidth() / 2;
 				fixedStyle.top = parseInt($(window).height()) / 2 + $(window).scrollTop() - o.outerHeight() / 2;
@@ -204,15 +204,15 @@ $( function($) {
 			if(id) data.id = id;
 			data.content = content;
 			data.background = background;
-			data.pageX = ta.parents('.J_box_note').css('left');
-			data.pageY = ta.parents('.J_box_note').css('top');
+			data.pageX = parseInt(ta.parents('.J_box_note').css('left'));
+			data.pageY = parseInt(ta.parents('.J_box_note').css('top'));
 
 			$.ajax({
 				url: URL + '/updateNote',
 				type: 'POST',
 				data: data
 			}).done(function(d){
-				ta.parents('.J_box_note').attr('data-id', d.id);
+				ta.parents('.J_box_note').attr('data-id', d.data.id);
 			});
 		}
 	};
