@@ -43,7 +43,7 @@
                     <td class="tRight" >禁用原因：</td>
                     <td class="tLeft" >
                         <select name="forbid_reason" id="forbid_reason">
-                            <option value="0">请选择</option>
+                            <option value="">请选择</option>
                             <volist name="forbid_reason_options" id="forbid_reason_option">
                                 <option value="{$forbid_reason_option.key}" >{$forbid_reason_option.name}</option>
                             </volist>
@@ -54,7 +54,7 @@
                     <td class="tRight" >删除原因：</td>
                     <td class="tLeft" >
                         <select name="del_reason" id="del_reason">
-                            <option value="0">请选择</option>
+                            <option value="">请选择</option>
                             <volist name="del_reason_options" id="del_reason_option">
                                 <option value="{$del_reason_option.key}">{$del_reason_option.name}</option>
                             </volist>
@@ -98,16 +98,12 @@
                 //启用
                 $("#del_tr").hide();
                 $("#forbid_tr").hide();
-                //$("#forbid_reason").val('0');
-                //$("#del_reason").val('0')
             }else if( v == -1){
                 //删除
                 $("#del_tr").show();
                 $("#forbid_tr").hide();
-                //$("#forbid_reason").val('0');
             }else{
                 //禁用
-                //$("#del_reason").val('0')
                 $("#del_tr").hide();
                 $("#forbid_tr").show();
             }
