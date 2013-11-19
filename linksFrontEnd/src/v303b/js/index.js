@@ -244,8 +244,8 @@ var Zld = { // 自留地
 
 		//先恢复默认值
 		box.find('.nm').removeAttr('style').css({
-			'padding-left': self.holderPaddingLeft,
-			'padding-right': self.holderPaddingRight
+			//'padding-left': self.holderPaddingLeft,
+			//'padding-right': self.holderPaddingRight
 		});
 		var oi;
 		var s = 0;
