@@ -1223,7 +1223,7 @@ class IndexAction extends CommonAction {
 			}
 		}
 	
-		$this->ajaxReturn('', '', $stauts);
+		$this->ajaxReturn('', '', $status);
 	}
 	
 	/**
