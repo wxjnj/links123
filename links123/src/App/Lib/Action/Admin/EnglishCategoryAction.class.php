@@ -36,15 +36,15 @@ class EnglishCategoryAction extends CommonAction{
         $param['sort'] = $sort;
         $group = 'category.level_one';
         $flag = "level_one";
-        $field = 'category.*,category.cat_id as id,levelname.name as name, levelname.id as level_id, sum(category.question_num) as num,category.level_one_sort as sort,levelname.`default`';
+        $field = 'category.*,category.cat_id as id,levelname.name as name, levelname.id as level_id, sum(category.question_num) as num,category.level_one_sort as sort,levelname.`default`,levelname.status as category_status';
         if ($param['level_one'] > 0) {
-            $field = 'category.*,category.cat_id as id,levelname.name as name, levelname.id as level_id, sum(category.question_num) as num,category.level_two_sort as sort,levelname.`default`';
+            $field = 'category.*,category.cat_id as id,levelname.name as name, levelname.id as level_id, sum(category.question_num) as num,category.level_two_sort as sort,levelname.`default`,category.status as category_status';
             $group .= ' , category.level_two';
             $flag = "level_two";
         }
 
         if ($param['level_two'] > 0) {
-            $field = 'category.*,category.cat_id as id,levelname.name as name, levelname.id as level_id, sum(category.question_num) as num,category.level_thr_sort as sort,levelname.`default`';
+            $field = 'category.*,category.cat_id as id,levelname.name as name, levelname.id as level_id, sum(category.question_num) as num,category.level_thr_sort as sort,levelname.`default`,category.status as category_status';
             $group .= ' , category.level_thr';
             $flag = "level_thr";
         }
