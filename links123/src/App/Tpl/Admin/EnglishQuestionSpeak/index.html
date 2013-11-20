@@ -145,7 +145,7 @@
 
 
         <div class="list" >
-            <html:list id="checkList" name="category" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,name:名称:edit_popup,created|toDateShort:发布时间,cat_attr_id|getVoiceNameFromAttrId:语音:voice|id,cat_attr_id|getPatternNameFromAttrId:形式:pattern|id,special_recommend|getYorN:特别推荐:special_recommend|media_id,status|getStatus:状态" actionlist="property:分类,edit_popup:编辑" />
+            <html:list id="checkList" name="category" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,name:名称:edit_popup,created|toDateShort:发布时间,cat_attr_id|getVoiceNameFromAttrId:语音:voice|id,cat_attr_id|getPatternNameFromAttrId:形式:pattern|id,special_recommend|getYorN:特别推荐:special_recommend|media_id,status|getStatus:状态" actionlist="property:分类,edit_popup:编辑,show_stats:统计" />
         </div>
 
         <div class="page">
@@ -209,6 +209,21 @@
     <form id="J_fileDownloadForm" action='__URL__/download_excel'>
         <input id="J_fileName" name='filename' type="hidden" value='' />
     </form>
+</div>
+<div id="stats_dialog" class="easyui-dialog" style="width:250px;height:auto;" data-options="title:'统计项查看',shadow:false,modal:true,closed:true,closable:true">
+	<table id="statsList" class="list" cellpadding=0 cellspacing=0 >
+		<tr class="row" >
+		<th width="40%">浏览数</th>
+		<th width=>赞数</th>
+		<th width=>收藏数</th>
+		<volist name="list" id="stats" >
+			<tr class="row rowx row{$stats.id}" style="display:none;">
+				<td>{$stats.view_num}</td>
+				<td>{$stats.like_num}</td>
+				<td>{$stats.collect_num}</td>
+			</tr>
+		</volist>
+	</table>
 </div>
 <input type="hidden" value="" id="key_values">
 
@@ -333,6 +348,12 @@
         var url = URL+"/edit/id/"+keyValue;
         window.open (url,'newwindow','height=600,width=1013,top=130,left=260,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no') 
 
+    }
+    function show_stats(id){
+	    $("#stats_dialog").window({title: "统计项"});
+	    $("#stats_dialog .rowx").hide();
+	    $("#stats_dialog .row"+id).show();
+	    $("#stats_dialog").window("open");
     }
     $(function(){
         $("#listRows,#listRows_input").change(function(){

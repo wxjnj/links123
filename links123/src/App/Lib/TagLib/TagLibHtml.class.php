@@ -10,7 +10,8 @@ class TagLibHtml extends TagLib{
         'list'      =>  array('attr'=>'id,pk,style,action,actionlist,show,datasource,checkbox','close'=>0),
         'imagebtn'  =>  array('attr'=>'id,name,value,type,style,click','close'=>0),
         'checkbox'  =>  array('attr'=>'name,checkboxes,checked,separator','close'=>0),
-        'radio'     =>  array('attr'=>'name,radios,checked,separator','close'=>0)
+        'radio'     =>  array('attr'=>'name,radios,checked,separator','close'=>0),
+		'stats'     =>  array('attr'=>'id,pk,style,show,datasource','close'=>0)
         );
 
     /**
@@ -549,4 +550,87 @@ class TagLibHtml extends TagLib{
         $parseStr	.= "\n<!-- Think 系统列表组件结束 -->\n";
         return $parseStr;
     }
+	/**
+	+----------------------------------------------------------
+	 * stats标签解析
+	 * 格式： <html:stats datasource="" show="" />
+	 *
+	+----------------------------------------------------------
+	 * @access public
+	+----------------------------------------------------------
+	 * @param string $attr 标签属性
+	+----------------------------------------------------------
+	 * @return string
+	+----------------------------------------------------------
+	 */
+	public function _stats($attr) {
+		$tag        = $this->parseXmlAttr($attr,'stats');
+		$id         = $tag['id'];                       //表格ID
+		$datasource = $tag['datasource'];               //列表显示的数据源VoList名称
+		$pk         = empty($tag['pk'])?'id':$tag['pk'];//主键名，默认为id
+		$style      = $tag['style'];                    //样式名
+		$name       = !empty($tag['name'])?$tag['name']:'vo';                 //Vo对象名
+		$hidden     = empty($tag['hidden']) ? false : true;//是否隐藏
+		if(substr($tag['show'],0,1)=='$') {
+			$show   = $this->tpl->get(substr($tag['show'],1));
+		}else {
+			$show   = $tag['show'];
+		}
+		$show       = explode(',',$show);                //列表显示字段列表
+
+		//显示开始
+		$parseStr	= "<!-- Think 系统统计列表组件开始 -->\n";
+		$parseStr  .= '<table id="'.$id.'" class="'.$style.'" cellpadding=0 cellspacing=0 >';
+		$parseStr  .= '<tr class="row" >';
+		//列表需要显示的字段
+		$fields = array();
+		foreach($show as $val) {
+			$fields[] = explode(':',$val);
+		}
+		foreach($fields as $field) {//显示指定的字段
+			$property = explode('|',$field[0]);
+			$showname = explode('|',$field[1]);
+			if(isset($showname[1])) {
+				$parseStr .= '<th width="'.$showname[1].'">';
+			}else {
+				$parseStr .= '<th>';
+			}
+			$showname[2] = isset($showname[2])?$showname[2]:$showname[0];
+			$parseStr .= $showname[0].'</th>';
+
+		}
+		$parseStr .= '<volist name="'.$datasource.'" id="'.$name.'" >';
+		$parseStr .= '<tr class="row rowx row{$'.$name.'.'.$pk.'}" ';
+		if($hidden) $parseStr = ' style="display:none;">';
+		foreach($fields as $field) {
+			//显示定义的列表字段
+			$parseStr   .=  '<td>';
+			if(strpos($field[0],'^')) {
+				$property = explode('^',$field[0]);
+				foreach ($property as $p){
+					$unit = explode('|',$p);
+					if(count($unit)>1) {
+						$parseStr .= '{$'.$name.'.'.$unit[0].'|'.$unit[1].'} ';
+					}else {
+						$parseStr .= '{$'.$name.'.'.$p.'} ';
+					}
+				}
+			}else{
+				$property = explode('|',$field[0]);
+				if(count($property)>1) {
+					$parseStr .= '{$'.$name.'.'.$property[0].'|'.$property[1].'}';
+				}else {
+					$parseStr .= '{$'.$name.'.'.$field[0].'}';
+				}
+			}
+			if(!empty($field[2])) {
+				$parseStr .= '</a>';
+			}
+			$parseStr .= '</td>';
+
+		}
+		$parseStr	.= '</tr></volist></table>';
+		$parseStr	.= "\n<!-- Think 系统统计列表组件结束 -->\n";
+		return $parseStr;
+	}
 }
