@@ -303,6 +303,7 @@ input:focus{ outline: 0; }
 
 .box-apps .box-bd {
 	padding-top: 0;
+	position: relative;
 }
 
 .box-apps {
@@ -758,6 +759,9 @@ input:focus{ outline: 0; }
 	position: absolute;
 	right: 15px;
 	color: #000;
+}
+#app-tip {
+	top: -35px;
 }
 
 /* 自留地 按照 窄屏 尺寸 */

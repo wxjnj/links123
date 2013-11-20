@@ -6,6 +6,19 @@
 
 $( function($) {
 
+	$('#app-tip').on('click', '.zld-tip-close', function(){
+		$('#app-tip').hide();
+		$.cookies.set('app_tip_close', 1,  { expiresAt: (new Date).add_day(365) });
+	});
+
+	$('.box-apps').on('mouseenter', function(){
+		if(!$.cookies.get('app_tip_close')){
+			$('#app-tip').show();
+		}
+	}).on('mouseleave', function(){
+		$('#app-tip').hide();
+	});
+
 	// background-color值的存取统一使用16进制表示
 	String.prototype.colorHex = function(){
 		var that = this;
