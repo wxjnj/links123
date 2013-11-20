@@ -28,6 +28,7 @@ $(function() {
 	 $("#direct_text").autocomplete("/Home/Link/tag", {
 	 	dataType : "json",
 	 	minChars : 1,
+	 	selectFirst: false,	//默认不选择第一个
 	 	'async': true,
 	 	width : 298,
 	 	scroll : false,
