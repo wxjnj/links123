@@ -53,7 +53,7 @@
 
 			<input type="hidden" id='level' name="level" value="{$level}"/>
 
-			<html:list id="checkList" name="node" param="{$param_str}" style="list" checkbox="true" action="true" datasource="list" show="cat_id:编号|5%,name:名称:child|level_id,sort:序号,num:试题数量,default|getYorN:默认分类,created|toDate:发布时间,updated|toDate:更新时间,category_status|getStatus:状态" actionlist="status|showStatus=$node['cat_id'],edit:编辑:level_id,foreverdel:删除" />
+			<html:list id="checkList" name="node" param="{$param_str}" style="list" checkbox="true" action="true" datasource="list" show="cat_id:编号|5%,name:名称:child|level_id,sort:序号,num:试题数量,default|getYorN:默认分类,created|toDate:发布时间,updated|toDate:更新时间,category_status|getStatus:状态" actionlist="category_status|showStatus=$node['cat_id'],edit:编辑:level_id,foreverdel:删除" />
             <div class="page">{$page}</div>
         </div>
 	</div>

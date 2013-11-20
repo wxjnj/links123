@@ -413,6 +413,12 @@ class EnglishCategoryAction extends CommonAction{
                 $levelnameModel->rollback();
                 $this->error('操作失败');
             }
+            if($level == 1){
+                if(false === $levelnameModel->where(array("id"=>$value['level_one']))->setField("status",0)){
+                    $levelnameModel->rollback();
+                    $this->error('操作失败');
+                }
+            }
         }
         $levelnameModel->commit();
         $this->success('操作成功');
@@ -441,6 +447,12 @@ class EnglishCategoryAction extends CommonAction{
             if(false === $categoryModel->where($cat_map)->setField("status",1)){
                 $levelnameModel->rollback();
                 $this->error('操作失败');
+            }
+            if($level == 1){
+                if(false === $levelnameModel->where(array("id"=>$value['level_one']))->setField("status",1)){
+                    $levelnameModel->rollback();
+                    $this->error('操作失败');
+                }
             }
         }
         $levelnameModel->commit();
