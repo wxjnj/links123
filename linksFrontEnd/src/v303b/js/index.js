@@ -311,7 +311,7 @@ var Zld = { // 自留地
 			//}
 		});
 		$(document).on('click', '#J_ZldList .ctl', function() {
-			//			if(User.CheckLogin()){
+			//if(User.CheckLogin()){
 			if ($(this).hasClass('add')) {
 				return false;
 			}

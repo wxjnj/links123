@@ -540,6 +540,8 @@ $(function(){
         refresh: function(){
             var self = this;
             self.element.find('.desc').html('<a class="add-btn" href="javascript:;">增加日程</a>');
+            self.element.find('.delete-btn').remove();
+            self.element.removeAttr('data-id');
         },
         edit: function(){
             var self = this;
@@ -562,7 +564,7 @@ $(function(){
         setMark: function(id, desc){
             var self = this;
             var tem, color;
-
+            desc = $.trim(desc);
             if(!desc) {
                 self.refresh();
                 return;
@@ -635,9 +637,12 @@ $(function(){
             var self = this;
             var url, data, type;
 
+            desc = $.trim(desc);
+
             if((id == 0) && (!desc || desc == '来创建今天新的日程吧！')) {
                 return;
             }
+
             if(!desc){
                 self.deleteMark();
                 return;
@@ -698,7 +703,7 @@ $(function(){
                 if(!v) return;
                 if(v.id == 0){
                     Calendar.marksStore[Calendar.currentMarkId][Calendar.currentDate].splice(k, 1);
-                    var o =  $('.cal-date-marks-table').find('[data-id=0]'); // 跨时间会发生当前找不到id=0
+                    var o = $('.cal-date-marks-table').find('[data-id=0]'); // 跨时间会发生当前找不到id=0
                     if(o.size()){
                         var tt = o.attr('data-time');
                         Calendar.DateView.all_lis[tt].refresh();
