@@ -10,7 +10,8 @@ class TagLibHtml extends TagLib{
         'list'      =>  array('attr'=>'id,pk,style,action,actionlist,show,datasource,checkbox','close'=>0),
         'imagebtn'  =>  array('attr'=>'id,name,value,type,style,click','close'=>0),
         'checkbox'  =>  array('attr'=>'name,checkboxes,checked,separator','close'=>0),
-        'radio'     =>  array('attr'=>'name,radios,checked,separator','close'=>0)
+        'radio'     =>  array('attr'=>'name,radios,checked,separator','close'=>0),
+		'stats'     =>  array('attr'=>'id,pk,style,show,datasource','close'=>0)
         );
 
     /**
