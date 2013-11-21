@@ -10,11 +10,10 @@
 
 
 include "WXClass.class.php";
-
 $options = array(
     'token'=>'lkw' //填写你设定的key
 );
-$wxObj= new Wechat($options);
+$wxObj= new WXClass($options);
 $wxObj->valid();
 $type = $wxObj->getRev()->getRevType();
 switch($type) {
