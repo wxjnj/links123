@@ -248,9 +248,9 @@ input:focus{ outline: 0; }
 	border: 0 none;
 	float: left;
 	font-size: 14px;
-	height: 16px;
-	line-height: 16px;
-	padding: 9px 0;
+	height: 22px;
+	line-height: 22px;
+	padding: 4px 0;
 	width: 415px;
 	width: 360px;
 }
@@ -337,7 +337,6 @@ a{color:#727171}
   width: 410px;
 }
 .thl .ctls {background: #fff;height: 30px;}
-.thl .ctls .ipt {padding: 7px 0;}
 .thl .cate {top: 31px;}
 
 
