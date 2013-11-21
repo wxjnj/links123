@@ -291,7 +291,9 @@ a, a:hover{
 }
 
 
-.extra-calendar .cal-day .cal-mini-month-panel .another-month a{
+.extra-calendar .cal-day .cal-mini-month-panel .another-month a,
+.extra-calendar .cal-month .another-month a,
+.extra-calendar .cal-month .another-month a:hover{
     color: #c3b8b0;
 }
 .extra-calendar .cal-day .cal-mini-month-panel td .active {

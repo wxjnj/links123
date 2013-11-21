@@ -161,14 +161,18 @@ $(function(){
                     Calendar.setCurrentDate(Date.today());
                     Calendar.changeType('Date');
                 }
-            }).on('mouseover', function(e){
+            }).on('mouseleave', 'td', function(e){
                 e = $.event.fix(e);
                 if(e.target == this && !self.tooltip.is(':hidden')){
                     self.tooltip.hide();
                 }
             });
 
-            $('.cal-body').on('mouseover', '.cal-month td, .cal-week td', function(){
+            $('.cal-body').on('mouseover', '.cal-month td a, .cal-week td a, .cal-month td b, .cal-week td b', function(e){
+                e.preventDefault();
+            });
+
+            $('.cal-body').on('mouseover', '.cal-month td, .cal-week td', function(e){
                 var td = $(this);
                 var year, 
                     month,
@@ -191,8 +195,8 @@ $(function(){
 
                 marks = self.marksStore[year + '-' + month][date] || null;
                 tem = '';
-
                 if(!marks){
+                    return;
                     tem = '<p>暂无日程</p>';
                 }else{
                     $.each(marks, function(k, v){
@@ -206,10 +210,9 @@ $(function(){
 
                 top = td.offset().top;
                 left = td.offset().left + td.width() / 2;
-
                 self.tooltip.find('.content').html(tem).end().appendTo('#container');
 
-                top -= self.tooltip.height() + 10 ;
+                top -= self.tooltip.height() + 20;
                 self.tooltip.css({
                     top: top + 'px',
                     left: left + 'px'
