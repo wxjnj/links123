@@ -186,9 +186,9 @@ input:focus{ outline: 0; }
 	border: 0 none;
 	float: left;
 	font-size: 15px;
-	height: 16px;
-	line-height: 16px;
-	padding: 6px 0;
+	height: 22px;
+	line-height: 22px;
+	padding: 3px 0;
 	width: 360px;
 }
 .thl .ctls .btn{
