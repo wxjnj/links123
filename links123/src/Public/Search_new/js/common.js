@@ -7,7 +7,7 @@ $(function(){
 var THL = {
 	conf : {
 		topnm : 34,
-		topex : 64
+		topex : 59
 	},
 	Init : function(){
 		var self = this;
