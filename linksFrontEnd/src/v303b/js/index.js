@@ -296,22 +296,31 @@ var Zld = { // 自留地
 		self.holderPaddingRight = obj.find('.nm').css('padding-right');
 		self.Resize();
 
-		self.zld_tip = $('.zld-tip');
+		self.zld_tip = $('#zld-tip');
 		self.zld_tip.on('click', '.zld-tip-close', function(){
 			self.zld_tip.hide();
 			$.cookies.set('zld_tip_close', 1,  { expiresAt: (new Date).add_day(365) });
 		});
 
-		$(document).on('click', '#J_ZldList .add', function() {
-			//if(User.CheckLogin()){
-			self.Create();
+		$('#J_ZldList').on('mouseenter', function(){
 			if(!$.cookies.get('zld_tip_close')){
 				self.zld_tip.show();
 			}
+		}).on('mouseleave', function(){
+			self.zld_tip.hide();
+		});
+
+		$(document).on('click', '#J_ZldList .add', function() {
+			//if(User.CheckLogin()){
+			self.Create();
+			/*
+			if(!$.cookies.get('zld_tip_close')){
+				self.zld_tip.show();
+			}*/
 			//}
 		});
 		$(document).on('click', '#J_ZldList .ctl', function() {
-			//			if(User.CheckLogin()){
+			//if(User.CheckLogin()){
 			if ($(this).hasClass('add')) {
 				return false;
 			}
@@ -320,9 +329,11 @@ var Zld = { // 自留地
 			var nm = o.find('b').html();
 			var url = o.data('url');
 			self.Create(id, nm, url);
+			/*
 			if(!$.cookies.get('zld_tip_close')){
 				self.zld_tip.show();
 			}
+			*/
 			return false;
 			//			}
 		});
@@ -343,8 +354,8 @@ var Zld = { // 自留地
 				$(ui.item).find('span').css('cursor', 'move');
 
                 //自留地开始拖动的时候，关闭tips
-                if($('.zld-tip').size()){
-                    $('.zld-tip').find('.zld-tip-close').trigger('click');
+                if($('#zld-tip').size()){
+                    $('#zld-tip').find('.zld-tip-close').trigger('click');
                 }
 			},
 			update: function(event, ui) {
@@ -377,6 +388,12 @@ var Zld = { // 自留地
 		$('#J_sortable').sortable('enable');
 
 		$('#J_Apps').sortable({
+			start: function(){
+                //开始拖动的时候，关闭tips
+                if($('#app-tip').size()){
+                    $('#app-tip').find('.zld-tip-close').trigger('click');
+                }
+			},
 			update: function(event, ui) {
 				$.post(
 					URL + '/sortApp', {
