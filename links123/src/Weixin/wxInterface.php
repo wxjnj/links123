@@ -21,8 +21,8 @@ switch($type) {
     case WXClass::MSGTYPE_TEXT:
         $userinput=$wxObj->getRevContent();
         $matches=array();
-        if(preg_match("/天气\@(\w+)/",$userinput,$matches)){
-            $city=$matches[0];
+        if(preg_match("/天气@(\W+)/",$userinput,$matches)){
+            $city=$matches[1];
             $outputstr=Api::getWeather($city);
             $wxObj->text($outputstr)->reply();
         }
