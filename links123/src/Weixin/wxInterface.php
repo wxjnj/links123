@@ -25,8 +25,9 @@ switch($type) {
             $city=$matches[1];
             $outputstr=Api::getWeather($city);
             $wxObj->text($outputstr)->reply();
+        }else{
+             $wxObj->text("你好，欢迎你访问另客网，另客网的网址是：http://www.links123.cn")->reply();
         }
-        $wxObj->text("你好，欢迎你访问另客网，另客网的网址是：http://www.links123.cn")->reply();
         break;
     case WXClass::MSGTYPE_EVENT:
         if( $wxObj->getEventType()=="subscribe"){
