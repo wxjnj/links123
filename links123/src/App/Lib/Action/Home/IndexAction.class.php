@@ -39,9 +39,12 @@ class IndexAction extends CommonAction {
 			}
 
 		} else {
-			
-			$this->get_member_guest();
-			
+
+            $user_id=$this->get_member_guest();
+            $guestModel= M("MemberGuest");
+            $mbrNow = $guestModel->where(array('mid' => $user_id))->find();
+            $_SESSION['myarea_sort'] = $mbrNow['myarea_sort'] ? explode(',', $mbrNow['myarea_sort']) : '';
+            $_SESSION['app_sort'] = $mbrNow['app_sort'];
 
 			if (!$_SESSION['app_sort']) {
 
@@ -58,7 +61,28 @@ class IndexAction extends CommonAction {
 				$themeId = cookie('themeId');
 			}
 		}
-		
+
+        $guestModel = M("MemberGuest");
+       // var_dump($guestModel->where(array('mid' => $user_id)));exit;
+        if (!$guestModel->where(array('mid' => $user_id))->find())
+        {
+            //Save guset memmber start
+            $now = time();
+            $saveData = array(
+                'mid' => $user_id,
+                'create_time' => $now,
+                'status' => '1',
+                'myarea_sort' => '',
+                'theme' => '0',
+                'app_sore' => ''
+            );
+
+            $id = $guestModel->add($saveData);
+            //Save end
+
+        }
+
+
 		//快捷皮肤
 		$skins = $this->getSkins();
 		if ($skinId) {
@@ -310,20 +334,29 @@ class IndexAction extends CommonAction {
 
 		$skinId = intval($this->_param('skinId'));
 
-		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+        $result = true;
+        if(intval($_SESSION[C('MEMBER_AUTH_KEY')])>0)
+        {
+            $user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
 
-		$result = true;
+            $memberModel = M("MemberGuest");
+            if (!$memberModel->where(array('id' => $user_id))->setField('skin' , $skinId)->save()) {
 
-		if ($user_id) {
+                $result = false;
+            }
+        }
+        else
+        {
+            $user_id = $this->get_member_guest();
 
-			$memberModel = M("member");
+            $memberModel = M("MemberGuest");
+            if (!$memberModel->where(array('mid' => $user_id))->setField('skin' , $skinId)->save()) {
 
-			if (!$memberModel->where(array('id' => $user_id))->setField('skin' , $skinId)) {
+                $result = false;
+            }
+        }
 
-				$result = false;
-			}
 
-		}
 
 		if ($skinId) {
 			session('skinId', $skinId);
@@ -348,21 +381,24 @@ class IndexAction extends CommonAction {
 	public function updateSkinTheme() {
 
 		$themeId = intval($this->_param('themeId'));
+        $result = true;
+        if(intval($_SESSION[C('MEMBER_AUTH_KEY')])>0)
+        {
+            $user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+            $memberModel = M("MemberGuest");
+            if (!$memberModel->where(array('id' => $user_id))->setField('theme' , $themeId)) {
+                $result = false;
+            }
+        }
+        else
+        {
+            $user_id = $this->get_member_guest();
 
-		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
-
-		$result = true;
-
-		if ($user_id) {
-
-			$memberModel = M("member");
-
-			if (!$memberModel->where(array('id' => $user_id))->setField('theme' , $themeId)) {
-
-				$result = false;
-			}
-
-		}
+            $memberModel = M("MemberGuest");
+            if (!$memberModel->where(array('mid' => $user_id))->setField('theme' , $themeId)) {
+                $result = false;
+            }
+        }
 
 		session('themeId', $themeId);
 		cookie('themeId', $themeId, array('expire' => 0));
@@ -381,18 +417,29 @@ class IndexAction extends CommonAction {
 
 		$themeId = $this->_param('themeId');
 
-		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+        if(intval($_SESSION[C('MEMBER_AUTH_KEY')])>0)
+        {
+            $user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+            $memberModel = M("MemberGuest");
+            if (!$memberModel->where(array('id' => $user_id))->setField('theme' , $themeId)) {
+                $result = false;
+            }
+        }
+        else
+        {
+            $user_id = $this->get_member_guest();
+
+            $memberModel = M("MemberGuest");
+            if (!$memberModel->where(array('mid' => $user_id))->setField('theme' , $themeId)) {
+                $result = false;
+            }
+        }
 
 		$result = true;
 
 		if ($user_id) {
 
-			$memberModel = M("member");
 
-			if (!$memberModel->where(array('id' => $user_id))->setField('theme' , $themeId)) {
-
-				$result = false;
-			}
 
 		}
 
@@ -1236,8 +1283,15 @@ class IndexAction extends CommonAction {
 	public function delArea() {
 	
 		$id = $this->_param('web_id');
-	
-		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+
+        if(intval($_SESSION[C('MEMBER_AUTH_KEY')])>0)
+        {
+            $user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+        }
+        else
+        {
+            $user_id = $this->get_member_guest();
+        }
 	
 		$result = 0;
 	
@@ -1283,7 +1337,46 @@ class IndexAction extends CommonAction {
 		echo $result;
 	
 	}
-	
+
+    /**
+     * @name addArea
+     * @desc 添加我的地盘
+     * @param string web_url
+     * @param string web_name
+     * @return 成功:1; 失败:0; 未登录或登录已失效: -1
+     * @author slate date:2013-11-22
+     */
+    public function addArea() {
+        $url = $this->_param('web_url');
+        $webname = $this->_param('web_name');
+        $id = $this->_param('web_id');
+        if(intval($_SESSION[C('MEMBER_AUTH_KEY')])>0)
+        {
+            $user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+        }
+        else
+        {
+            $user_id = $this->get_member_guest();
+        }
+        //添加当前链接信息
+        $myAreaModel = M("MyArea");
+        $now = time();
+        $saveData = array(
+            'web_name' => $webname,
+            'url' => $url,
+            'mid' => $user_id,
+            'create_time' => $now,
+            'myarea_button_click_num' => '0',
+            'click_num' => date('Y', '0')
+        );
+
+        $id = $myAreaModel->add($saveData);
+        if($id)
+        {
+          $result=1;
+        }
+        return $result;
+    }
 	/**
 	 * @name updateArea
 	 * @desc 更新我的地盘
@@ -1293,18 +1386,25 @@ class IndexAction extends CommonAction {
 	 * @author slate date:2013-09-14
 	 */
 	public function updateArea() {
-	
+
 		$url = $this->_param('web_url');
 		$webname = $this->_param('web_name');
 		$id = $this->_param('web_id');
-	
-		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
-	
+	    if(intval($_SESSION[C('MEMBER_AUTH_KEY')])>0)
+        {
+            $user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+        }
+		else
+        {
+            $user_id = $this->get_member_guest();
+        }
+
 		$result = 0;
         //判断session是否为空
         if(!$_SESSION['arealist']){
             $_SESSION['arealist'] = D("Myarea")->where(array("mid" => $user_id))->select();
         }
+
 		if ($user_id) {
 			$myarea = M("Myarea");
 			$memberModel =  M("Member");
@@ -1324,8 +1424,21 @@ class IndexAction extends CommonAction {
 					'web_name' => $webname,
 					'create_time' => $now
 			);
-	
+
 			if (!$id) {
+                $myAreaModel = M("MyArea");
+                $now = time();
+                $saveData = array(
+                    'web_name' => $webname,
+                    'url' => $url,
+                    'mid' => $user_id,
+                    'create_time' => $now,
+                    'myarea_button_click_num' => '0',
+                    'click_num' => '0'
+                );
+
+                $id = $myAreaModel->add($saveData);
+
 				$saveData['mid'] = $user_id;
 				$id = $myarea->add($saveData);
 				if ($id) {
@@ -1351,6 +1464,19 @@ class IndexAction extends CommonAction {
 				}
 			}
 		} else {
+            $user_id= $user_id = $this->get_member_guest();
+            $myarea = M("Myarea");
+            $memberModel =  M("Member");
+            //判断session是否为空
+            if(!$_SESSION['myarea_sort']){
+                $myarea_sort = $memberModel->where(array('id' => $user_id))->getField("myarea_sort");
+                if(false !== $myarea_sort && !empty($myarea_sort)){
+                    $_SESSION['myarea_sort'] = explode(",", $myarea_sort);
+                }else{
+                    $_SESSION['myarea_sort'] = array_keys($_SESSION['arealist']);
+                }
+            }
+
             //判断session是否为空
             if(!$_SESSION['myarea_sort']){
                 $_SESSION['myarea_sort'] = array_keys($_SESSION['arealist']);
@@ -1387,16 +1513,21 @@ class IndexAction extends CommonAction {
 				
 			
 			$_SESSION['myarea_sort'] = $area_list;
-				
-			$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
-				
-			$memberModel = M("Member");
-				
-			if ($user_id) {
-	
-				$memberModel->where(array('id' => $user_id))->save(array('myarea_sort' => implode(',', $area_list)));
-					
-			}
+
+            if(intval($_SESSION[C('MEMBER_AUTH_KEY')])>0)
+            {
+                $user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+                $memberModel = M("Member");
+                $memberModel->where(array('id' => $user_id))->save(array('myarea_sort' => implode(',', $area_list)));
+            }
+            else
+            {
+                $user_id = $this->get_member_guest();
+                $memberModel = M("MemberGuest");
+                $memberModel->where(array('mid' => $user_id))->save(array('myarea_sort' => implode(',', $area_list)));
+            }
+
+
 				
 		} else {
 				
@@ -1425,19 +1556,37 @@ class IndexAction extends CommonAction {
 	
 				
 			$_SESSION['app_sort'] = $app_sort = implode(',', $appIds);
+
+            if(intval($_SESSION[C('MEMBER_AUTH_KEY')])>0)
+            {
+                $user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+                $memberModel = M("Member");
+
+                if ($user_id) {
+
+                    $memberModel->where(array('id' => $user_id))->save(array('app_sort' => $app_sort));
+
+                } else {
+
+                    cookie('app_sort', $app_sort, array('expire' => 0));
+                }
+            }
+            else
+            {
+                $user_id = $this->get_member_guest();
+                $memberModel = M("MemberGuest");
+
+                if ($user_id) {
+
+                    $memberModel->where(array('mid' => $user_id))->save(array('app_sort' => $app_sort));
+
+                } else {
+
+                    cookie('app_sort', $app_sort, array('expire' => 0));
+                }
+            }
 	
-			$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
-	
-			$memberModel = M("Member");
-	
-			if ($user_id) {
-	
-				$memberModel->where(array('id' => $user_id))->save(array('app_sort' => $app_sort));
-					
-			} else {
-				
-				cookie('app_sort', $app_sort, array('expire' => 0));
-			}
+
 	
 		} else {
 	
