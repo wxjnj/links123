@@ -19,11 +19,11 @@
 	font-size:0;
 	overflow:hidden;
 	position:absolute;
-	border-width:15px;
+	border-width:5px;
 	border-style:solid dashed dashed;
 	border-color:#fff transparent transparent;
-	left:65px;
-	bottom:-25px
+	left:75px;
+	bottom:-10px
 }
 .calendar-tip .ang1 {
 	width:0;
@@ -31,11 +31,11 @@
 	font-size:0;
 	overflow:hidden;
 	position:absolute;
-	border-width:13px;
+	border-width:6px;
 	border-style:solid dashed dashed;
 	border-color:#ccc transparent transparent;
-	left:67px;
-	bottom:-26px
+	left:75px;
+	bottom:-12px
 }
 .extra-calendar .cal-close {
 	background: transparent url(/v3/imgs/app/links-app-frame/close.png) 0 -60px no-repeat;
