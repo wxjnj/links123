@@ -1,8 +1,8 @@
 //检查必要库
 (function(){
-    document.write('<link media="screen" href="http://a.links123.cn/v303b/linksMusicBox/links-musicbox.css" type="text/css" rel="stylesheet" >');
-    window.jQuery || document.write('<script src="http://a.links123.cn/v303b/js/jquery-1.7.1.min.js"></script>');
-    window.jQuery.fn.draggable || document.write('<script src="http://a.links123.cn/v303b/js/jquery.plugins.js"></script>');
+    document.write('<link media="screen" href="http://a.links123.net/v303b/linksMusicBox/links-musicbox.css" type="text/css" rel="stylesheet" >');
+    window.jQuery || document.write('<script src="http://a.links123.net/v303b/js/jquery-1.7.1.min.js"></script>');
+    window.jQuery.fn.draggable || document.write('<script src="http://a.links123.net/v303b/js/jquery.plugins.js"></script>');
     //window.jQuery.fn.cookies || document.write('<script src="http://a.links123.cn/v303b/js/jquery.cookies.2.2.0.min.js"></script>');
 })();
 
