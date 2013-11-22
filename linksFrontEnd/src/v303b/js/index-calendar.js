@@ -45,7 +45,8 @@ $(function(){
     function changeNews(){
         var idx = $('.pic-news-tabs').find('.active').attr('data-tab');
         var o = news[idx];
-        $('.pic-news').find('img').attr('src', o.img).end()
+        $('.pic-news').find('img').attr('src', o.img).parent('a').attr('href', o.url);
+        $('.pic-news')
             .find('.pic-news-title').html('<a target="_blank" href="'+ o.url +'">' + o.title + '</a>').end()
             .find('.pic-news-desc a').attr('href', o.url).html(o.desc);
     }
