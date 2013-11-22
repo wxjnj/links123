@@ -691,8 +691,25 @@ $( function($) {
 
 		'#J_box_calc' : function() {
 			$('#J_calc_iframe').attr('src', 'http://qiqiapp3.duapp.com/yuyinjisuanqi/');
+			$('#J_calc_iframe').attr('height', '480px');
 			$('#J_box_calc_list a').click(function() {
-				$('#J_calc_iframe').attr('src', $(this).attr('data-url'));
+				var current = $(this);
+				$('#J_calc_iframe').attr('src', current.attr('data-url'));
+				switch(current.attr('title')){
+					case '语音计算器':
+						$('#J_calc_iframe').attr('height', '480px');
+						break;
+					case '计算器美女语音版':
+						$('#J_calc_iframe').attr('height', '530px');
+						break;
+					case '科学计算器':
+					case '按揭房贷计算器':
+						$('#J_calc_iframe').attr('height', '620px');
+						break;
+					case '汇率换算':
+						$('#J_calc_iframe').attr('height', '320px');
+						break;
+				}
 				return false;
 			});
 		},
