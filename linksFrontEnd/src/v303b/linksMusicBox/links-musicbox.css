@@ -1,17 +1,17 @@
 #J_box_music {
     font-size:12px;
 }
-a {
+#J_box_music a {
     text-decoration:none;
 }
-a:hover {
+#J_box_music a:hover {
     text-decoration:underline;
 }
-ul,ol {
+#J_box_music ul,#J_box_music ol {
     padding:0;
     list-style:none;
 }
-.music-close-tip {
+#J_box_music .music-close-tip {
     cursor:pointer;
     display:none;
     position:absolute;
@@ -24,7 +24,7 @@ ul,ol {
     text-align:center;
     background:url(../imgs/app/music-close-tip-ang.png) 0 0 no-repeat;
 }
-.mini_music_box .music-close-tip {
+#J_box_music .mini_music_box .music-close-tip {
     left:275px;
 }
 #J_box_music {
@@ -51,7 +51,7 @@ ul,ol {
     margin:20px;
     position:absolute;
 }
-.normal_music_channel_list {
+#J_box_music .normal_music_channel_list {
     width:48px;
     height:548px;
     background:#eee;
@@ -59,56 +59,56 @@ ul,ol {
     position:absolute;
     right:0;
 }
-.normal_music_channel_list li {
+#J_box_music .normal_music_channel_list li {
     width:27px;
     margin:0 auto;
     padding:5px 10px;
 }
-.normal_music_channel_list li a {
+#J_box_music .normal_music_channel_list li a {
     display:block;
     width:27px;
     height:27px;
     background-image:url(../imgs/app/music_box_channel_logos.png);
     background-repeat:no-repeat;
 }
-.normal_music_channel_list .active {
+#J_box_music .normal_music_channel_list .active {
     background:#85c794;
 }
-.normal_music_channel_baidu {
+#J_box_music .normal_music_channel_baidu {
     background-position:0 0;
 }
-.normal_music_channel_st {
+#J_box_music .normal_music_channel_st {
     background-position:-27px 0;
 }
-.normal_music_channel_yinyuetai {
+#J_box_music .normal_music_channel_yinyuetai {
     background-position:-54px 0;
 }
-.normal_music_channel_beiwa {
+#J_box_music .normal_music_channel_beiwa {
     background-position:0 -27px;
 }
-.normal_music_channel_kugou {
+#J_box_music .normal_music_channel_kugou {
     background-position:-27px -27px;
 }
-.normal_music_channel_duomi {
+#J_box_music .normal_music_channel_duomi {
     background-position:-54px -27px;
 }
-.normal_music_channel_kuwo {
+#J_box_music .normal_music_channel_kuwo {
     background-position:0 -54px;
 }
-.normal_music_channel_duole {
+#J_box_music .normal_music_channel_duole {
     background-position:-27px -54px;
 }
-.normal_music_channel_xiami {
+#J_box_music .normal_music_channel_xiami {
     background-position:-54px -54px;
 }
-.normal_music_channel_douban {
+#J_box_music .normal_music_channel_douban {
     background-position:0 -81px;
 }
-.normal_music_box_close_btn {
+#J_box_music .normal_music_box_close_btn {
     color:#333;
     margin-left:35px;
 }
-.normal_music_box_toggle_btn {
+#J_box_music .normal_music_box_toggle_btn {
     color:#fff;
     display:block;
     margin:5px auto;
@@ -122,7 +122,7 @@ ul,ol {
     -moz-border-radius:16px;
     -webkit-border-radius:16px;
 }
-.normal_music_box_size_btn {
+#J_box_music .normal_music_box_size_btn {
     display:block;
     width:22px;
     height:22px;
@@ -136,7 +136,7 @@ ul,ol {
     background:#777;
     margin:10px auto;
 }
-.mini_music_box_size_btn {
+#J_box_music .mini_music_box_size_btn {
     display:block;
     width:18px;
     height:18px;
@@ -151,10 +151,10 @@ ul,ol {
     float:left;
     margin:6px 0 0 8px;
 }
-.normal_music_channel_list .size_s {
+#J_box_music .normal_music_channel_list .size_s {
     margin-top:30px;
 }
-.active-size {
+#J_box_music .active-size {
     background:#85c794;
 }
 .fullscreen_music_box {
