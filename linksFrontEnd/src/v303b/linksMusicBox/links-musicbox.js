@@ -353,7 +353,7 @@ function linksMusicBoxLoad(){
         script.src = url;
         document.getElementsByTagName("head")[0].appendChild(script);   
     }      
-    document.write('<link media="screen" href="http://a.links123.net/v303b/linksMusicBox/links-musicbox.css" type="text/css" rel="stylesheet" >');
+    document.write('<link media="screen" href="http://a.links123.net/v303b/linksMusicBox/links-musicbox.css?20131123" type="text/css" rel="stylesheet" >');
     if(!window.jQuery){
         loadScript('http://a.links123.net/v303b/js/jquery-1.7.1.min.js', function(){
             if(!window.jQuery.fn.draggable){

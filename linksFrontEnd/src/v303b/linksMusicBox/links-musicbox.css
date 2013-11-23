@@ -9,6 +9,7 @@
 }
 #J_box_music ul,#J_box_music ol {
     padding:0;
+    margin:0;
     list-style:none;
 }
 #J_box_music .music-close-tip {
