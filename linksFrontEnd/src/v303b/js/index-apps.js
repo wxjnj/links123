@@ -4,6 +4,21 @@
  * @datetime: 2013-09-25 13:05
  */
 
+//定时器，用于跨日切换页面上日期数字
+var init_today = Date.today();
+var currentDayTiemr = setInterval(function(){
+
+	var o = Calendar.compare(init_today, Date.today());
+	if(o != 0){
+		//clearInterval(currentDayTiemr);
+		//currentDayTiemr = null;
+		init_today = Date.today();
+		$('#index-today-bar').find('b').html(Calendar.dateTitleConfig[init_today.getDay()]);
+		$('#index-today-bar').find('i').html(init_today.getDate());
+	}
+
+}, 30000);
+
 $( function($) {
 
 	$('#app-tip').on('click', '.zld-tip-close', function(){
