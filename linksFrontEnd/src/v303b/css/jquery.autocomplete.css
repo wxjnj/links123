@@ -32,6 +32,7 @@
     background-color: #EEE;
 }
 
+/* 搜索框自动填充 */
 .ac_results_search {
     background-color: #FFFFFF;
     border: 1px solid #CCCCCC;
@@ -40,8 +41,8 @@
     overflow: hidden;
     padding: 0;
     z-index: 99999;
-    margin-left: -10px;
     width: 410px!important;
+    margin-left: -10px;
 }
 .ac_results_search ul {
     list-style: none outside none;
