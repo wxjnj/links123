@@ -8,6 +8,7 @@
 	<meta name="Description" content="{$description}" />
 	<link rel="stylesheet" href="__STATIC__/min/?b=v303b/css&f=base.css,css.min.css" />
 	<link rel="stylesheet" href="__STATIC__/v303b/skins/{$theme}/style.css" id="J_Skins" />
+    <link rel="stylesheet" href="__PUBLIC__/Css/jquery.ui.autocomplete.css">
 	<script>var $CONFIG = { 'STATIC': '__STATIC__','APP' : '__APP__/', 'URL' : '__URL__', 'PUBLIC' : '__PUBLIC__', 'IsLogin' : <empty name="_SESSION[C('MEMBER_AUTH_KEY')]">1<else />0</empty> };</script>
 
 	<script>
@@ -143,12 +144,27 @@
 									</volist>
 								</dl>
 							</div>
+                            <script type="text/javascript" src="__PUBLIC__/Js/ui/jquery.js"></script>
+                            <script type="text/javascript" src="__PUBLIC__/Js/ui/jquery.ui.core.js"></script>
+                            <script type="text/javascript" src="__PUBLIC__/Js/ui/jquery.ui.widget.js"></script>
+                            <script type="text/javascript" src="__PUBLIC__/Js/ui/jquery.ui.position.js"></script>
+                            <script type="text/javascript" src="__PUBLIC__/Js/ui/jquery.ui.autocomplete.js"></script>
+                            <script type="text/javascript">
+                                $(function(){
+                                    $( "#search_text" ).autocomplete({
+                                        source:"Index/searchSupplement",
+                                        minLength: 1,
+                                        autoFocus: true
+                                    });
+                                });
+                            </script>
 							<div class="ctls">
 								<input type="text" id="search_text" class="ipt" x-webkit-speech lang="zh-CN" value="{$_COOKIE['keyword']}" autocomplete="off" />
 								<input type="hidden" id="search_text_o" />
 								<input class="btn" type="submit" value="" id="btn_search" />
 							</div>
 						</form>
+
 					</div>
 					<div class="header-weather">
 						<span class="region">{$weatherData['city']}</span>

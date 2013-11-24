@@ -1564,5 +1564,23 @@ class IndexAction extends CommonAction {
     	}
     	return $hotNews;
     } 
+
+	/**
+     * 搜索框自动填充
+     */
+
+	public function searchSupplement() {
+	
+		$q = $_GET["term"];
+		$abcs = mb_convert_encoding(trim($q),"utf-8","gb2312");           //接收传送过来的关键值
+		$skey = file_get_contents("http://suggestion.baidu.com/su?wd=".urlencode($q)."");        //访问百度页面
+		preg_match('/\[(.*?)\]/',$skey,$m);    //通过正则去掉
+		$s = explode(',',$m[1]);    
+		foreach($s as $k=>$v){
+			$s[$k] = iconv("gb2312","UTF-8",substr($v,1,-1));
+		}
+		echo json_encode($s);
+	 }
+
     
 }
