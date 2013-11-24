@@ -65,8 +65,16 @@ $(function() {
 	}).result(function(e, item) {
 		$('#search_text').val(item);
 		setTimeout(function(){
-			$("#btn_search").trigger('click');
-		});
+			$("#search_text").select();
+			var keyword = $.trim($("#search_text").val());
+			$.cookies.set('keyword', keyword);
+			//保存keyword
+			keyword = keyword.replace('http://', '');
+			keyword = encodeURIComponent(keyword);
+			var url = $(".J_thlz a.on").attr("url").replace('keyword', keyword);
+			var tid = $(".J_thlz a.on").attr("tid");
+			THL.go(url, tid, keyword);
+		}, 0);
 	});
 
 	// 切换宽屏
