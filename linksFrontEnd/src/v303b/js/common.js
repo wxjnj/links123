@@ -25,30 +25,30 @@ $(function() {
 	User.Init();
 	THL.Init();
 	Theme.Init();
-	 $("#direct_text").autocomplete("/Home/Link/tag", {
-	 	dataType : "json",
-	 	minChars : 1,
-	 	selectFirst: false,	//默认不选择第一个
-	 	'async': true,
-	 	width : 298,
-	 	scroll : false,
-	 	matchContains : true,
-	 	parse : function(data) {
-	 		return $.map(data, function(row) {
-	 			return {
-	 				data : row,
-	 				value : row.tag,
-	 				result : row.tag
-	 			};
-	 		});
-	 	},
-	 	formatItem : function(item) {
-	 		return item.tag;
-	 	}
-	 }).result(function(e, item) {
-	 	$('#direct_text').val(item.tag);
-	 	$('#frm_drct').submit();
-	 });
+	$("#direct_text").autocomplete("/Home/Link/tag", {
+		dataType : "json",
+		minChars : 1,
+		selectFirst: false,	//默认不选择第一个
+		'async': true,
+		width : 298,
+		scroll : false,
+		matchContains : true,
+		parse : function(data) {
+			return $.map(data, function(row) {
+				return {
+					data : row,
+					value : row.tag,
+					result : row.tag
+				};
+			});
+		},
+		formatItem : function(item) {
+			return item.tag;
+		}
+	}).result(function(e, item) {
+		$('#direct_text').val(item.tag);
+		$('#frm_drct').submit();
+	});
 });
 
 // 登录注册dialog弹出后，阻止mousemove事件冒泡，避免焦点丢失

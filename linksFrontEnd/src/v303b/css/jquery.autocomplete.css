@@ -31,3 +31,42 @@
 .ac_over {
     background-color: #EEE;
 }
+
+.ac_results_search {
+    background-color: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    border-radius: 3px;
+    margin-top: 2px;
+    overflow: hidden;
+    padding: 0;
+    z-index: 99999;
+    margin-left: -10px;
+    width: 410px!important;
+}
+.ac_results_search ul {
+    list-style: none outside none;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    width: 100%;
+}
+.ac_results_search li {
+    cursor: default;
+    display: block;
+    font: 13px/16px arial;
+    margin: 0;
+    overflow: hidden;
+    padding: 5px;
+    text-align: left;
+    color: #000;
+}
+.ac_loading {
+    /*background: url("images/indicator.gif") no-repeat scroll right center #FFFFFF;*/
+}
+.ac_over {
+    background-color: #EEE;
+}
+
+.widescreen .ac_results_search {
+    width: 460px!important;
+}

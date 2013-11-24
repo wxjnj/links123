@@ -42,6 +42,12 @@ $(function() {
 		}
 	});
 
+	// 搜索框
+	$( "#search_text" ).autocomplete("/Index/searchSupplement", {
+    	minChars: 1,
+    	resultsClass: "ac_results_search"
+	});
+
 	// 切换宽屏
 	$('.screen-change-btn').on('click', 'a', function() {
 		if ($(this).attr('data-size') == 'wide') {
@@ -60,7 +66,6 @@ $(function() {
 	(function(){ //app图标相关
 		var nmlLen = 9, wideLen = 10;
 		var appsList = $('#J_Apps>li');
-		
 
 		var appPkg = window.appPkg = function(type){
 
