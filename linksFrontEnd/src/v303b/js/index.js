@@ -52,19 +52,20 @@ $(function() {
 		async: true,
 		matchContains : true,
 		parse : function(data) {
+			console.log(data);
 			return $.map(data, function(row) {
 				return {
 					data : row,
-					value : row.tag,
-					result : row.tag
+					value : row,
+					result : row
 				};
 			});
 		},
 		formatItem : function(item) {
-			return item.tag;
+			return item;
 		}
 	}).result(function(e, item) {
-		$('#search_text').val(item.tag);
+		$('#search_text').val(item);
 		$('#searchForm').submit();
 	});
 
