@@ -1571,7 +1571,7 @@ class IndexAction extends CommonAction {
 
 	public function searchSupplement() {
 	
-		$q = $_GET["term"];
+		$q = $_GET["q"];
 		$abcs = mb_convert_encoding(trim($q),"utf-8","gb2312");           //接收传送过来的关键值
 		$skey = file_get_contents("http://suggestion.baidu.com/su?wd=".urlencode($q)."");        //访问百度页面
 		preg_match('/\[(.*?)\]/',$skey,$m);    //通过正则去掉
