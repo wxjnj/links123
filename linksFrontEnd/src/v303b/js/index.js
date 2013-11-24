@@ -64,7 +64,9 @@ $(function() {
 		}
 	}).result(function(e, item) {
 		$('#search_text').val(item);
-		$('#searchForm').submit();
+		setTimeout(function(){
+			$("#btn_search").trigger('click');
+		});
 	});
 
 	// 切换宽屏
