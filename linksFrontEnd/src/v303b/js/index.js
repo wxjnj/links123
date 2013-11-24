@@ -43,12 +43,16 @@ $(function() {
 	});
 
 	// 搜索框
-	$( "#search_text" ).autocomplete("/Index/searchSupplement", {
+	$("#search_text").autocomplete({
+		source: "/Index/searchSupplement?" + $("#search_text").val(),
 		dataType : "json",
     	minChars: 1,
     	resultsClass: "ac_results_search",
 		selectFirst: false,	//默认不选择第一个
 		async: true,
+		extraParams: {
+			term: true
+		},
 		parse : function(data) {
 			//data -> ['', '']
 			return $.map(data, function(row) {
