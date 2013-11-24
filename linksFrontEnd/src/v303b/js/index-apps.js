@@ -6,8 +6,11 @@
 
 //定时器，用于跨日切换页面上日期数字
 var init_today = Date.today();
-var currentDayTiemr = setInterval(function(){
 
+//var countDownTimer = null;
+//var countDownController = 0;
+
+var currentDayTimer = setInterval(function(){
 	var o = Calendar.compare(init_today, Date.today());
 	if(o != 0){
 		//clearInterval(currentDayTiemr);
@@ -15,9 +18,17 @@ var currentDayTiemr = setInterval(function(){
 		init_today = Date.today();
 		$('#index-today-bar').find('b').html(Calendar.dateTitleConfig[init_today.getDay()]);
 		$('#index-today-bar').find('i').html(init_today.getDate());
+		Calendar.setCurrentDate(init_today);
+		Calendar.ReInit();
+	}else{
+		var now = new Date();
+		if(now.getHours() == 23 && now.getMinutes() == 59 && now.getSeconds() > 56){
+			$('.cal-ajax-overlayer').show().find('.content').html(now.toString('HH:mm:ss'));
+		}else{
+			$('.cal-ajax-overlayer').hide();
+		}
 	}
-
-}, 30000);
+}, 1000);
 
 $( function($) {
 

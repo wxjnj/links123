@@ -1,3 +1,7 @@
+/*
+    Author: kevin@links123.cn
+*/
+
 function linksMusicBoxLoad(){
 
     /* 用户配置参数，稍后开放（参数参见MusicBox.config）
@@ -17,7 +21,7 @@ function linksMusicBoxLoad(){
             <a class="mini_music_box_size_btn size_mini"href="javascript:;"data-size="mini">小</a>\
             <a class="mini_music_box_size_btn size_normal"href="javascript:;"data-size="normal">中</a>\
             <a class="mini_music_box_size_btn size_fullscreen"href="javascript:;"data-size="fullscreen">大</a>\
-            <a href="http://www.links123.cn/" target="_blank" style="position: absolute;right: 20px;line-height: 32px;">links123.cn</a>\
+            <a href="http://www.links123.cn/" target="_blank" style="position: absolute;right: 20px;line-height: 32px;">另客网</a>\
         </div>\
         <div class="normal_music_iframe_box">\
             <iframe id="K_303_music_iframe"allowtransparency="true"frameborder="0"style=""></iframe>\
@@ -38,6 +42,7 @@ function linksMusicBoxLoad(){
             <a class="normal_music_box_size_btn size_nimi"href="javascript:;"data-size="mini">小</a>\
             <a class="normal_music_box_size_btn size_normal"href="javascript:;"data-size="normal">中</a>\
             <a class="normal_music_box_size_btn size_fullscreen"href="javascript:;"data-size="fullscreen">大</a>\
+            <a href="http://www.links123.cn/" target="_blank" style="display:block;text-align:center">另客网</a>\
         </div>\
     </div>';
     

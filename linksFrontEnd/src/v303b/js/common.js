@@ -54,6 +54,11 @@ $(function() {
 // 登录注册dialog弹出后，阻止mousemove事件冒泡，避免焦点丢失
 $(document).on('mousemove', '.ui-widget-overlay', function(e){
 	e.stopPropagation();
+}).on('keydown', function(e){	//焦点不在输入框 ，同样判断是否登录
+	if($('#J_Login').size() && e.keyCode == 13) {
+		$('#J_Login').find('.lkd-reg').trigger('click');
+		return false;
+	}	
 });
 
 var User = {
