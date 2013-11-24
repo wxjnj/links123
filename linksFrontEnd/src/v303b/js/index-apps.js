@@ -4,7 +4,257 @@
  * @datetime: 2013-09-25 13:05
  */
 
+//定时器，用于跨日切换页面上日期数字
+var init_today = Date.today();
+var currentDayTiemr = setInterval(function(){
+
+	var o = Calendar.compare(init_today, Date.today());
+	if(o != 0){
+		//clearInterval(currentDayTiemr);
+		//currentDayTiemr = null;
+		init_today = Date.today();
+		$('#index-today-bar').find('b').html(Calendar.dateTitleConfig[init_today.getDay()]);
+		$('#index-today-bar').find('i').html(init_today.getDate());
+	}
+
+}, 30000);
+
 $( function($) {
+
+	$('#app-tip').on('click', '.zld-tip-close', function(){
+		$('#app-tip').hide();
+		$.cookies.set('app_tip_close', 1,  { expiresAt: (new Date).add_day(365) });
+	});
+
+	$('.box-apps').on('mouseenter', function(){
+		if(!$.cookies.get('app_tip_close')){
+			$('#app-tip').show();
+		}
+	}).on('mouseleave', function(){
+		$('#app-tip').hide();
+	});
+
+	// background-color值的存取统一使用16进制表示
+	String.prototype.colorHex = function(){
+		var that = this;
+		if(/^(rgb|RGB)/.test(that)){
+			var aColor = that.replace(/(?:\(|\)|rgb|RGB)*/g,"").split(",");
+			var strHex = "#";
+			for(var i=0; i<aColor.length; i++){
+				var hex = Number(aColor[i]).toString(16);
+				if(hex === "0"){
+					hex += hex;	
+				}
+				strHex += hex;
+			}
+			if(strHex.length !== 7){
+				strHex = that;	
+			}
+			return strHex;
+		}else if(reg.test(that)){
+			var aNum = that.replace(/#/,"").split("");
+			if(aNum.length === 6){
+				return that;	
+			}else if(aNum.length === 3){
+				var numHex = "#";
+				for(var i=0; i<aNum.length; i+=1){
+					numHex += (aNum[i]+aNum[i]);
+				}
+				return numHex;
+			}
+		}else{
+			return that;	
+		}
+	};
+
+	/*
+		/getNote
+		/updateNote
+		/delNote
+	*/
+	var NoteController = {
+
+		animateSpeed: 100,
+
+		refresh: function(){
+
+			var self = this;
+
+			if($('.J_box_note').size()){
+				//全部关闭
+				$('.J_box_note').each(function(k, v){
+					$(v).find('.links123-close-wrap a').click();
+				});
+				return;
+			}
+
+			self.get();
+
+			if(!self.hasBindEvent){
+				$(document).on('click', '.J_box_note .colors-wrap a', function(){
+					textareaBg = '' + $(this).css('background-color');
+					$(this).parents('.J_box_note').find('textarea').css('background-color', textareaBg);
+
+					//切换颜色不会触发textarea的blur 需要手动更新
+					self.update($(this).parents('.J_box_note').find('textarea'));
+				})
+				.on('click', '.J_box_note .btn_add', function() {
+					var el = $(this).parents('.J_box_note');
+					var left = parseInt(el.offset().left) + 20;
+					var top = parseInt(el.offset().top) + 20;
+					self.createNoteElement({
+						id: '',
+						pageX: left,
+						pageY: top,
+						background: '#fff',
+						content: ''
+					});
+				})
+				.on('click', '.J_box_note .links123-close-wrap a', function(e){
+					//self.update($(this).parents('.J_box_note').find('textarea'));
+					//$(this).parents('.J_box_note').find('textarea')[0].blur();
+					$(this).parents('.J_box_note').fadeOut(self.animateSpeed, function(){
+						$(this).remove();
+					});
+				})
+				.on('click', '.J_box_note .btn_clear', function(e){
+					//var id = $(this).parents('.J_box_note').attr('data-id');
+					//if(id != ''){
+						//$(this).parents('.J_box_note').attr('data-id', '');
+						//self.del(id);
+					//}
+					$(this).parents('.J_box_note').find('textarea').remove();
+					$(this).parents('.J_box_note').find('.box_note_textarea_box').append('<textarea></textarea>');
+					$(this).parents('.J_box_note').find('textarea').focus();
+				})
+				.on('blur', '.J_box_note textarea', function(e){
+					var li = $(this).parents('.J_box_note');
+
+					setTimeout(function(){
+						self.update(li.find('textarea'));
+					}, 0);
+				});
+				self.hasBindEvent = true;
+			}
+		},
+		format: function(d){
+			var self = this;
+			var data;
+			/* 测试数据
+			d = {
+				status: 1,
+				data: [
+					{id: 1, pageX: '20px', pageY: '20px', background: '#fff', content: '111'},
+					{id: 2, pageX: '40px', pageY: '40px', background: '#333', content: '222'},
+					{id: 3, pageX: '60px', pageY: '60px', background: '#999', content: '333'},
+					{id: 4, pageX: '80px', pageY: '80px', background: '#ff0', content: '444'},
+					{id: 5, pageX: '100px', pageY: '100px', background: '#08c', content: '555'}
+				]
+			};
+			*/
+			if(!d || d.status == 0 || d.data == null){
+				data = [{
+					id: '',
+					pageX: '',
+					pageY: '',
+					background: '#fff',
+					content: ''
+				}];
+			}else{
+				data = d.data;
+			}
+
+			$.each(data, function(k, v){
+				NoteController.createNoteElement(v);
+				//$(window).height();
+			});
+		},
+		createNoteElement: function(v){
+			var self = this;
+			if(!v){
+				v = {
+					id: '',
+					pageX: '',
+					pageY: '',
+					background: '#fff',
+					content: ''
+				};
+			}
+			var o = $(AppsTpl['#J_box_note']);
+			o.find('textarea').val(v.content);
+			o.appendTo('body');
+
+			var fixedStyle = {};
+
+			if(v.pageX){
+				fixedStyle.left = v.pageX == '' ? v.pageX : v.pageX + 'px';
+				fixedStyle.top = v.pageY == '' ? v.pageY : v.pageY + 'px';
+			}else{
+				fixedStyle.left = parseInt($(window).width()) / 2 - o.outerWidth() / 2;
+				fixedStyle.top = parseInt($(window).height()) / 2 + $(window).scrollTop() - o.outerHeight() / 2;
+			}
+
+			o.css(fixedStyle)
+				.addClass('links123-app-frame')
+				.prepend('<div class="links123-close-wrap"><a href="#">x</a></div>')
+				//.appendTo('body')
+				.fadeIn(self.animateSpeed)
+				.draggable({
+					handle: '.box_note_header',
+					stop: function(){
+						self.update(o.find('textarea'));
+					}
+				})
+				.attr('data-id', v.id)
+				.find('textarea').css('background-color', v.background).focus();
+
+		},
+		get: function(){
+			var self = this;
+			$.ajax({
+				url: URL + '/getNote',
+				type: 'GET',
+			}).always(self.format);
+		},
+		del: function(id){
+			$.ajax({
+				url: URL + '/delNote',
+				data: {
+					id: id
+				},
+				type: 'POST'
+			}).done(function(){
+				//
+			});
+		},
+		update: function(ta){
+			var id = ta.parents('.J_box_note').attr('data-id');
+			var content = ta.val();
+			var background = ta.css('background-color').colorHex();
+			if(id != '' && content == ''){
+				ta.parents('.J_box_note').remove()//.attr('data-id', '');
+				NoteController.del(id);
+				return;
+			}else if(id == '' && content == ''){
+				return;
+			}
+
+			var data = {};
+			if(id) data.id = id;
+			data.content = content;
+			data.background = background;
+			data.pageX = parseInt(ta.parents('.J_box_note').css('left'));
+			data.pageY = parseInt(ta.parents('.J_box_note').css('top'));
+
+			$.ajax({
+				url: URL + '/updateNote',
+				type: 'POST',
+				data: data
+			}).done(function(d){
+				ta.parents('.J_box_note').attr('data-id', d.data.id);
+			});
+		}
+	};
 
 	/*
 	 * app开关触发器
@@ -12,6 +262,10 @@ $( function($) {
 	$.fn.links123_apptrigers = function(selector) {
 		this.on('click', selector, function() {
 			var appId = $(this).data('href');
+			if(appId == '#J_box_note') {
+				NoteController.refresh();
+				return false;
+			}
 			if(!$(appId).size()){
 				$('body').append(AppsTpl[appId]);
 			}
@@ -42,7 +296,7 @@ $( function($) {
 		this.appId = appId;
 		this.$elem = $(appId);
 		this.$elem.addClass('links123-app-frame');
-		if(appId != '#J_box_music'){
+		if(appId != '#J_box_music' && appId != '#J_box_note'){
 			this.initStyle();
 			this.bindEvent();
 		}
@@ -170,6 +424,7 @@ $( function($) {
 	 */
 	var callbacks = {
 		'#J_box_note' : function(app) {
+			/*
 			var $note = app.$elem;
 			var $textarea = $note.find('textarea');
 			var textareaBg = null;
@@ -192,7 +447,10 @@ $( function($) {
 			});
 			// 删除
 			$note.on('click', '.btn_clear', function() {
-				$textarea.val('').select();
+				$textarea.val('').remove()//select();
+				$note.find('.box_note_textarea_box').html('<textarea></textarea>');
+				$textarea = $note.find('textarea');
+				$textarea.focus();
 				remember();
 			});
 			// remember
@@ -209,6 +467,7 @@ $( function($) {
 				$textarea.css('background', $.cookies.get('links123_note_bg'));
 				//!!$.cookies.get('links123_note_content') && $textarea.val( $.cookies.get('links123_note_content') );
 			}
+			*/
 
 		},
 
@@ -447,8 +706,25 @@ $( function($) {
 
 		'#J_box_calc' : function() {
 			$('#J_calc_iframe').attr('src', 'http://qiqiapp3.duapp.com/yuyinjisuanqi/');
+			$('#J_calc_iframe').attr('height', '480px');
 			$('#J_box_calc_list a').click(function() {
-				$('#J_calc_iframe').attr('src', $(this).attr('data-url'));
+				var current = $(this);
+				$('#J_calc_iframe').attr('src', current.attr('data-url'));
+				switch(current.attr('title')){
+					case '语音计算器':
+						$('#J_calc_iframe').attr('height', '480px');
+						break;
+					case '计算器美女语音版':
+						$('#J_calc_iframe').attr('height', '530px');
+						break;
+					case '科学计算器':
+					case '按揭房贷计算器':
+						$('#J_calc_iframe').attr('height', '620px');
+						break;
+					case '汇率换算':
+						$('#J_calc_iframe').attr('height', '320px');
+						break;
+				}
 				return false;
 			});
 		},

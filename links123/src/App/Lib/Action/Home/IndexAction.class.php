@@ -1136,53 +1136,52 @@ class IndexAction extends CommonAction {
 	
 		$status = 0;
 	
-		if ($id) {
 	
-			$now = time();
-	
-			$saveData = array();
-			
-			if ($content) {
-				$saveData['content'] = $content;
-			}
-			
-			if ($pageX) {
-				$saveData['pageX'] = $pageX;
-				$saveData['pageY'] = $pageY;
-			}
-			
-			if ($background) {
-				$saveData['background'] = $background;
-			}
-	
-			if (!$user_id) {
-					
-				$user_id = $this->get_member_guest();
-			}
-				
-			if ($user_id) {
-				
-				$noteModel = new NoteModel();
-				if ($id) {
-					if ($noteModel->updateNote($id, $user_id, $saveData)) {
+		$now = time();
+
+		$saveData = array();
 		
-						$status = 1;
-					}
-				} else {
-					
-					$saveData['created'] = $now;
-					$id = $noteModel->addNote($saveData);
-					if ($id) {
-						$status = 1;
-					}
-				}
-			} else {
-	
-				$status = -1;
-			}
+		if ($content) {
+			$saveData['content'] = $content;
 		}
 		
-		$this->ajaxReturn(array('id' => $id), '', $stauts);
+		if ($pageX) {
+			$saveData['pageX'] = $pageX;
+			$saveData['pageY'] = $pageY;
+		}
+		
+		if ($background) {
+			$saveData['background'] = $background;
+		}
+
+		if (!$user_id) {
+				
+			$user_id = $this->get_member_guest();
+		}
+			
+		if ($user_id) {
+			
+			$noteModel = new NoteModel();
+			if ($id) {
+				if ($noteModel->updateNote($id, $user_id, $saveData)) {
+	
+					$status = 1;
+				}
+			} else {
+				
+				$saveData['created'] = $now;
+				$saveData['mid'] = $user_id;
+				$id = $noteModel->addNote($saveData);
+				if ($id) {
+					$status = 1;
+				}
+			}
+		} else {
+
+			$status = -1;
+		}
+		
+		$this->ajaxReturn(array('id' => $id), '', $status);
 	}
 	
 	/**
@@ -1224,7 +1223,7 @@ class IndexAction extends CommonAction {
 			}
 		}
 	
-		$this->ajaxReturn('', '', $stauts);
+		$this->ajaxReturn('', '', $status);
 	}
 	
 	/**

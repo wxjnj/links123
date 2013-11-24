@@ -45,7 +45,8 @@ $(function(){
     function changeNews(){
         var idx = $('.pic-news-tabs').find('.active').attr('data-tab');
         var o = news[idx];
-        $('.pic-news').find('img').attr('src', o.img).end()
+        $('.pic-news').find('img').attr('src', o.img).parent('a').attr('href', o.url);
+        $('.pic-news')
             .find('.pic-news-title').html('<a target="_blank" href="'+ o.url +'">' + o.title + '</a>').end()
             .find('.pic-news-desc a').attr('href', o.url).html(o.desc);
     }
@@ -65,7 +66,7 @@ $(function(){
     var config = {};
     config.CHS_WEEKS = ['一', '二', '三', '四', '五', '六', '日'];
     config.CHS_MONTHS = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二'];
-    config.ENG_WEEKS = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+    config.ENG_WEEKS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     config.ENG_MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'Auguest', 'September', 'October', 'November', 'December'];
 
     function countObjLength(o) {
@@ -112,6 +113,7 @@ $(function(){
 
     //top控制器
     var Calendar = {
+        dateTitleConfig: config,
         Init: function(type) {
             var self = this;
 
@@ -161,14 +163,18 @@ $(function(){
                     Calendar.setCurrentDate(Date.today());
                     Calendar.changeType('Date');
                 }
-            }).on('mouseover', function(e){
+            }).on('mouseleave', 'td', function(e){
                 e = $.event.fix(e);
                 if(e.target == this && !self.tooltip.is(':hidden')){
                     self.tooltip.hide();
                 }
             });
 
-            $('.cal-body').on('mouseover', '.cal-month td, .cal-week td', function(){
+            $('.cal-body').on('mouseover', '.cal-month td a, .cal-week td a, .cal-month td b, .cal-week td b', function(e){
+                e.preventDefault();
+            });
+
+            $('.cal-body').on('mouseover', '.cal-month td, .cal-week td', function(e){
                 var td = $(this);
                 var year, 
                     month,
@@ -191,8 +197,8 @@ $(function(){
 
                 marks = self.marksStore[year + '-' + month][date] || null;
                 tem = '';
-
                 if(!marks){
+                    return;
                     tem = '<p>暂无日程</p>';
                 }else{
                     $.each(marks, function(k, v){
@@ -206,10 +212,9 @@ $(function(){
 
                 top = td.offset().top;
                 left = td.offset().left + td.width() / 2;
-
                 self.tooltip.find('.content').html(tem).end().appendTo('#container');
 
-                top -= self.tooltip.height() + 10 ;
+                top -= self.tooltip.height() + 20;
                 self.tooltip.css({
                     top: top + 'px',
                     left: left + 'px'
@@ -540,6 +545,8 @@ $(function(){
         refresh: function(){
             var self = this;
             self.element.find('.desc').html('<a class="add-btn" href="javascript:;">增加日程</a>');
+            self.element.find('.delete-btn').remove();
+            self.element.removeAttr('data-id');
         },
         edit: function(){
             var self = this;
@@ -562,7 +569,7 @@ $(function(){
         setMark: function(id, desc){
             var self = this;
             var tem, color;
-
+            desc = $.trim(desc);
             if(!desc) {
                 self.refresh();
                 return;
@@ -635,9 +642,12 @@ $(function(){
             var self = this;
             var url, data, type;
 
+            desc = $.trim(desc);
+
             if((id == 0) && (!desc || desc == '来创建今天新的日程吧！')) {
                 return;
             }
+
             if(!desc){
                 self.deleteMark();
                 return;
@@ -698,7 +708,7 @@ $(function(){
                 if(!v) return;
                 if(v.id == 0){
                     Calendar.marksStore[Calendar.currentMarkId][Calendar.currentDate].splice(k, 1);
-                    var o =  $('.cal-date-marks-table').find('[data-id=0]'); // 跨时间会发生当前找不到id=0
+                    var o = $('.cal-date-marks-table').find('[data-id=0]'); // 跨时间会发生当前找不到id=0
                     if(o.size()){
                         var tt = o.attr('data-time');
                         Calendar.DateView.all_lis[tt].refresh();

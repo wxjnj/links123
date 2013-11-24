@@ -23,7 +23,7 @@
 	</script>
 </head>
 <body>
-<script src="__STATIC__/v3/js/init.js"></script>
+<script src="__STATIC__/v303b/js/init.js"></script>
 <div id="J_header" class="header">
 	<div class="header-inner">
 		<div class="zdl">
@@ -203,7 +203,7 @@
 		</div>
 		</if> -->
 		<div class="zld" id="J_ZldList">
-			<div class="zld-tip" style="display:none">
+			<div id="zld-tip" class="zld-tip" style="display:none">
 				<a href="javascript:;" class="zld-tip-close">×</a>
 				<div class="content">标签可以拖动排序！</div>
 			</div>
@@ -241,15 +241,19 @@
 							<b class="ang ang-back"></b>
 							<b class="ang"></b>
 							<div class="amb-bd">
-								<ul></ul>
+								<ul id="J_Apps_more_list" class="connectedSortable"></ul>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 			<div class="box-bd">
+				<div id="app-tip" class="zld-tip" style="display:none">
+					<a href="javascript:;" class="zld-tip-close">×</a>
+					<div class="content">图标可以拖动排序！</div>
+				</div>
 				<div class="apps">
-					<ul id="J_Apps">
+					<ul id="J_Apps" class="connectedSortable">
 						<volist name="app_list" id="vo">
 							<li id="{$vo.appId}" <if condition="$vo.appClass neq ''">class="{$vo.appClass}"</if>>
 							<if condition="$vo.appId eq '1'"><i class="hot"></i></if>
@@ -257,7 +261,7 @@
 							<if condition="$vo.appId eq '3'"><i class="hot"></i></if>
 							<a data-href="{$vo.appLink}" <if condition="$vo.isTarget eq '1'">target="_blank"</if> class="{$vo.linkClass}">
 							<if condition="$vo.appName eq '日&nbsp;历'">
-								<p class="ct">
+								<p class="ct" id="index-today-bar">
 									<b>{:date('D')}</b>
 									<i>{:date('d')}</i>
 								</p>
@@ -322,7 +326,7 @@
 				<div class="social-news social-box">
 					<div class="pic-news">
 						<div class="pics-box">
-							<img src="" />
+							<a href="#" target="_blank"><img src="" /></a>
 						</div>
 						<div class="pic-news-tabs">
 							<a class="active" href="javascript:;" data-tab="0"></a>

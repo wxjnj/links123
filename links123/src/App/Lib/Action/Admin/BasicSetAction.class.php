@@ -217,7 +217,34 @@ class BasicSetAction extends CommonAction {
         $variableModel->setVariable("english_tourist_record_save_time", $stime * 24, "英语角游客记录保留时间，单位小时");
         $this->success("设置英语角游客记录保存时间成功");
     }
-
+    /**
+     * 设置英语角试题禁用原因
+     * @author Joseph $date2013-11-19$
+     */
+	function setEnglish_question_forbid_reason(){
+		$english_question_forbid_reason = $this->_post('english_question_forbid_reason');
+		if ($english_question_forbid_reason == '') {
+			$this->error("禁用原因不能为空");
+			exit(0);
+		}
+		$variableModel = D("Variable");
+		$variableModel->setVariable("english_question_forbid_reason", $english_question_forbid_reason, "试题禁用原因");
+		$this->success("设置英语角试题禁用原因成功");
+	}
+	/**
+	 * 设置英语角试题删除原因
+	 * @author Joseph $date2013-11-19$
+	 */
+	function setEnglish_question_del_reason(){
+		$english_question_del_reason = $this->_post('english_question_del_reason');
+		if ($english_question_del_reason == '') {
+			$this->error("原因不能为空");
+			exit(0);
+		}
+		$variableModel = D("Variable");
+		$variableModel->setVariable("english_question_del_reason", $english_question_del_reason, "试题删除原因");
+		$this->success("设置英语角试题删除原因成功");
+	}
     /**
      * 设置关于我们
      * 

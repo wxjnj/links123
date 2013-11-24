@@ -6,7 +6,8 @@
  * @author Adam $date2013.08.26$
  */
 class EnglishMediaAction extends CommonAction {
-
+	protected $forbid_reason_options = array();
+	protected $del_reason_options = array();
     public function _filter(&$map, &$param) {
         if (isset($_REQUEST['name'])) {
             $name = ftrim($_REQUEST['name']);
@@ -45,11 +46,27 @@ class EnglishMediaAction extends CommonAction {
             $map['englishMedia.level'] = intval($_REQUEST['level']);
             $param['level'] = intval($_REQUEST['level']);
         }
+        
         //媒体状态
         if (isset($_REQUEST['status'])) {
-            $map['englishMedia.status'] = intval($_REQUEST['status']);
-            $param['status'] = intval($_REQUEST['status']);
+        	if ($_REQUEST['status'] != -2) {
+        		$map['englishMedia.status'] = intval($_REQUEST['status']);
+        	}
+        	$param['status'] = intval($_REQUEST['status']);
+        	if($param['status'] == 0){
+        		$param['forbid_reason'] = isset($_REQUEST['forbid_reason'])?$_REQUEST['forbid_reason']:'';
+        		if($param['forbid_reason'] != ''){
+        			$map['englishMedia.forbid_reason'] = $param['forbid_reason'];
+        		}
+        	}
+        	if($param['status'] == -1){
+        		$param['del_reason'] = isset($_REQUEST['del_reason'])?$_REQUEST['del_reason']:'';
+        		if($param['del_reason'] != ''){
+        			$map['englishMedia.del_reason'] = $param['del_reason'];
+        		}
+        	}
         }
+        
         //媒体推荐
         if (isset($_REQUEST['recommend'])) {
             if (intval($_REQUEST['recommend']) == 0) {
@@ -116,8 +133,132 @@ class EnglishMediaAction extends CommonAction {
         $param['name'] = $name;
         $this->assign("name", $name);
     }
-
+    protected function _list($model, $map, $param, $sortBy = '', $asc = false) {
+    	//排序字段 默认为主键名
+    	if (isset($_REQUEST ['_order'])) {
+    		$order = $_REQUEST ['_order'];
+    	} else {
+    		$order = !empty($sortBy) ? $sortBy : $model->getPk();
+    	}
+    	$param['order'] = $order;
+    	//排序方式默认按照倒序排列
+    	//接受 sost参数 0 表示倒序 非0都 表示正序
+    	if (isset($_REQUEST ['_sort'])) {
+    		$sort = $_REQUEST ['_sort'] ? 'asc' : 'desc';
+    	} else {
+    		$sort = $asc ? 'desc' : 'asc';
+    	}
+    	$param['sort'] = $sort;
+    	//        dump($param);
+    	//取得满足条件的记录数
+    	if ($model->getModelName() == 'NewsView') {
+    		$count = $model->where($map)->count('news.id');
+    	} elseif ($model->getModelName() == 'ProductView') {
+    		$count = $model->where($map)->count('product.id');
+    	} elseif ($model->getModelName() == 'CasesView') {
+    		$count = $model->where($map)->count('cases.id');
+    	} elseif ($model->getModelName() == 'CategoryView') {
+    		$count = $model->where($map)->count('cat1.id');
+    	} elseif ($model->getModelName() == 'LinksView') {
+    		$count = $model->where($map)->count('links.id');
+    	} elseif ($model->getModelName() == 'AnnouncementView') {
+    		$count = $model->where($map)->count('announcement.id');
+    	} elseif ($model->getModelName() == 'SuggestionView') {
+    		$count = $model->where($map)->count('suggestion.id');
+    	} elseif ($model->getModelName() == 'CatPicView') {
+    		$count = $model->where($map)->count('catPic.id');
+    	} elseif ($model->getModelName() == 'EnglishQuestionView') {
+    		$count = $model->where($map)->count('englishQuestion.id');
+    	}elseif ($model->getModelName() == 'EnglishQuestionSpeakView') {
+    		$count = $model->where($map)->count('englishQuestionSpeak.id');
+    	} elseif ($model->getModelName() == 'EnglishMediaView') {
+    		$count = $model->where($map)->count('englishMedia.id');
+    	} else {
+    		$count = $model->where($map)->count('id');
+    	}
+    	//echo $model->getlastsql()."<br />";
+    	if ($count > 0) {
+    		import("@.ORG.Page");
+    		//创建分页对象
+    		if (!empty($_REQUEST ['listRows'])) {
+            	if(!empty($_COOKIE['listRows']) && $_COOKIE['listRows'] !=$_REQUEST ['listRows']){
+            		$listRows = $_COOKIE ['listRows'];
+            	}else{
+            		$listRows = $_REQUEST ['listRows'];
+            	}
+            } else {
+            	if(!empty($_COOKIE['listRows'])){
+            		$listRows = $_COOKIE ['listRows'];
+            	}else{
+            		$listRows = '20';
+            	}
+            }
+    		$p = new Page($count, $listRows);
+    		//分页查询数据
+    		$voList = $model->where($map)->order("`" . $order . "` " . $sort)->limit($p->firstRow . ',' . $p->listRows)->select();
+    		//            echo $model->getlastsql();
+    		//分页跳转的时候保证查询条件
+    		foreach ($param as $key => $val) {
+    			//$p->parameter .= "$key=" . urlencode ( $val ) . "&";
+    			$p->parameter .= "$key=" . $val . "&";
+    		}
+    		$this->assign('param', $p->parameter);
+    		$_SESSION[C('SEARCH_PARAMS_KEY')] = $p->parameter . "p=" . $_REQUEST['p'];
+    		//分页显示
+    		$page = $p->show();
+    		//列表排序显示
+    		$sortImg = $sort; //排序图标
+    		$sortAlt = $sort == 'desc' ? '升序排列' : '倒序排列'; //排序提示
+    		$sort = $sort == 'desc' ? 1 : 0; //排序方式
+    		//模板赋值显示
+    		$this->assign('list', $voList);
+    		$this->assign('sort', $sort);
+    		$this->assign('order', $order);
+    		$this->assign('sortImg', $sortImg);
+    		$this->assign('sortType', $sortAlt);
+    		$this->assign("page", $page);
+    		$this->assign("listRows", $listRows);
+    	}
+    	cookie('_currentUrl_', __URL__ . '/index?' . $_SESSION[C('SEARCH_PARAMS_KEY')]);
+    	return;
+    }
+    /**
+     * 解析英语角试题删除、禁用原因
+     * @author Joseph $date2013-11-19$
+     */
+    protected  function parseReaseOption($t)
+    {
+    	$a = array();
+    	foreach ($t as $v){
+    		$v = trim($v);
+    		if($v){
+    			$a[] =array('key'=>$v,'name'=>$v);
+    		}
+    	}
+    	return $a;
+    }
+    /**
+     * 获取英语角试题删除、禁用原因
+     * @author Joseph $date2013-11-19$
+     */
+    protected function getStatusReason()
+    {
+    	$variableModel = D("Variable");
+    	$forbid_reason_options = $variableModel->getVariable('english_question_forbid_reason');
+    	$del_reason_options = $variableModel->getVariable('english_question_del_reason');
+    	if($forbid_reason_options){
+    		$t = explode("\n", $forbid_reason_options);
+    		$this->forbid_reason_options = $this->parseReaseOption($t);
+    	}
+    	if($del_reason_options){
+    		$t = explode("\n", $del_reason_options);
+    		$this->del_reason_options = $this->parseReaseOption($t);
+    	}
+    	$this->assign("forbid_reason_options", $this->forbid_reason_options);
+    	$this->assign("del_reason_options", $this->del_reason_options);
+    }
     public function index() {
+    	$this->getStatusReason();
         //列表过滤器，生成查询Map对象
         $map = array();
         $param = array();
@@ -143,6 +284,13 @@ class EnglishMediaAction extends CommonAction {
         $recommend_list = D("EnglishMediaRecommend")->getList("status=1", "`sort` ASC");
         $this->assign("recommend_list", $recommend_list);
         //
+        //listRows_options
+        $this->assign("listRows_options", array(
+        		array('key'=>5,'name'=>"5"),
+        		array('key'=>20,'name'=>"20"),
+        		array('key'=>100,'name'=>"100"),
+        		array('key'=>200,'name'=>"200"),
+        ));
         $this->assign("param", $param);
         foreach ($param as $key => $value) {
             $param_str.=$key . "=" . $value . "&";
@@ -182,6 +330,7 @@ class EnglishMediaAction extends CommonAction {
     }
 
     public function add() {
+    	$this->getStatusReason();
         //科目列表
         $object_list = D("EnglishObject")->where("`status`=1")->order("sort")->select();
         $this->assign("object_list", $object_list);
@@ -194,7 +343,6 @@ class EnglishMediaAction extends CommonAction {
         //推荐分类列表
         $recommend_list = D("EnglishMediaRecommend")->where("`status`=1")->order("`sort`")->select();
         $this->assign("recommend_list", $recommend_list);
-
         $this->display();
     }
 
@@ -208,6 +356,21 @@ class EnglishMediaAction extends CommonAction {
        
         $media['media_source_url'] = $model->media_source_url;
         $media['name'] = $model->name;
+        
+        //状态原因
+        if($model->status == 0){//禁用
+        	$model->fordib_reason = $_REQUEST['fordib_reason'];
+        	$model->del_reason = '';
+        }
+        if($model->status == -1){//删除
+        	$model->del_reason = $_REQUEST['del_reason'];
+        	$model->fordib_reason = '';
+        }
+        if($model->status == 1){//启用
+        	$model->fordib_reason = '';
+        	$model->del_reason = '';
+        }
+        
         //保存当前数据对象
         $list = $model->add();
         
@@ -221,8 +384,12 @@ class EnglishMediaAction extends CommonAction {
            
             //TODO 推荐视频解析 @author slate date 20131001
             $this->analysisMediaPlayCode($media_id);
-            
-            $this->success('新增成功!', cookie('_currentUrl_'));
+            if(intval($_POST['return_close']) == 1){
+            	echo '<script type="text/javascript">alert("编辑成功！");window.close()</script>';
+            }else{
+            	$this->success("新增成功！");
+            }
+            #$this->success('新增成功!', cookie('_currentUrl_'));
         } else {
             $model->rollback();
             //失败提示
@@ -231,6 +398,7 @@ class EnglishMediaAction extends CommonAction {
     }
 
     public function edit() {
+    	$this->getStatusReason();
         $model = D("EnglishMedia");
         $id = intval($_REQUEST["id"]);
         $vo = $model->find($id);
@@ -249,7 +417,6 @@ class EnglishMediaAction extends CommonAction {
         //推荐分类列表
         $recommend_list = D("EnglishMediaRecommend")->where("`status`=1")->order("`sort`")->select();
         $this->assign("recommend_list", $recommend_list);
-
         $this->display();
     }
 
@@ -304,6 +471,21 @@ class EnglishMediaAction extends CommonAction {
         $media_id = $media['media_id'] = $model->id;
         $media['media_source_url'] = $model->media_source_url;
         $media['name'] = $model->name;
+        
+    	//状态原因
+        if($model->status == 0){//禁用
+        	$model->fordib_reason = $_REQUEST['fordib_reason'];
+        	$model->del_reason = '';
+        }
+        if($model->status == -1){//删除
+        	$model->del_reason = $_REQUEST['del_reason'];
+        	$model->fordib_reason = '';
+        }
+        if($model->status == 1){//启用
+        	$model->fordib_reason = '';
+        	$model->del_reason = '';
+        }
+        
         // 更新数据
         $list = $model->save();
         if (false !== $list) {
@@ -363,6 +545,7 @@ class EnglishMediaAction extends CommonAction {
                     }
                 }
             }
+            
             $model->commit();
             //TODO 推荐视频解析 @author slate date 20131001
             if (!$model->play_code) {
@@ -371,7 +554,12 @@ class EnglishMediaAction extends CommonAction {
             }
             
             //成功提示
-            $this->success('编辑成功!', cookie('_currentUrl_'));
+            if(intval($_POST['return_close']) == 1){
+            	echo '<script type="text/javascript">alert("编辑成功！");window.close()</script>';
+            }else{
+            	$this->success("编辑成功！");
+            }
+            #$this->success('编辑成功!', cookie('_currentUrl_'));
         } else {
             $model->rollback();
             //错误提示
@@ -725,11 +913,16 @@ class EnglishMediaAction extends CommonAction {
         $questionSpeakModel = D("EnglishQuestionSpeak");
         $pk = $model->getPk();
         $id = $_REQUEST [$pk];
+        $forbid_reason = $_REQUEST ['reason'];
         $condition = array($pk => array('in', $id));
         $old_media_list = $model->field("id,status")->where($condition)->select();
         $model->startTrans();
-        $list = $model->forbid($condition);
-        
+        //$list = $model->forbid($condition);
+        $list = $model->where($condition)->save(array(
+        		'status'=>0,
+        		'forbid_reason'=>$forbid_reason,
+        		//'updated'=>time()
+        ));
         if ($list !== false) {
             foreach($old_media_list as $value){
                 if($value['status'] != 1){
@@ -829,11 +1022,16 @@ class EnglishMediaAction extends CommonAction {
         $questionSpeakModel = D("EnglishQuestionSpeak");
         $pk = $model->getPk();
         $id = $_REQUEST [$pk];
+        $del_reason = $_REQUEST ['reason'];
         $condition = array($pk => array('in', $id));
         $old_media_list = $model->field("id,status")->where($condition)->select();
         $model->startTrans();
-        $list = $model->where($condition)->setField("status",-1);
-        
+        //$list = $model->where($condition)->setField("status",-1);
+        $list = $model->where($condition)->save(array(
+        		'status'=>-1,
+        		'del_reason'=>$del_reason,
+        		//'updated'=>time()
+        ));
         if ($list !== false) {
             foreach($old_media_list as $value){
                 if($value['status'] != 1){

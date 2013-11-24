@@ -1201,3 +1201,7 @@ div.gt-baf-translations {
 	text-align: center;
 	margin-top: 30px;
 }
+
+.box_note_header {
+	cursor: move;
+}

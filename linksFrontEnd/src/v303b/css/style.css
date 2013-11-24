@@ -186,9 +186,9 @@ input:focus{ outline: 0; }
 	border: 0 none;
 	float: left;
 	font-size: 15px;
-	height: 16px;
-	line-height: 16px;
-	padding: 6px 0;
+	height: 22px;
+	line-height: 22px;
+	padding: 3px 0;
 	width: 360px;
 }
 .thl .ctls .btn{
@@ -303,6 +303,7 @@ input:focus{ outline: 0; }
 
 .box-apps .box-bd {
 	padding-top: 0;
+	position: relative;
 }
 
 .box-apps {
@@ -722,6 +723,24 @@ input:focus{ outline: 0; }
 	background: url(../imgs/sprite.png) -272px -3px no-repeat;
 }
 
+/*多于2行 便签高度减小*/
+.zld .manylines li .nm{
+	height: 16px;
+	line-height: 16px;
+	padding: 6px 29px 6px 29px;
+}
+.zld .manylines li .ctl{
+	padding: 1px;
+}
+.zld .manylines li {
+	height: 28px;
+	line-height: 28px;
+}
+.zld .manylines .add .ctl {
+	margin-top: 0;
+}
+
+
 .zld-tip {
 	width: 166px;
 	height: 45px;
@@ -740,6 +759,9 @@ input:focus{ outline: 0; }
 	position: absolute;
 	right: 15px;
 	color: #000;
+}
+#app-tip {
+	top: -35px;
 }
 
 /* 自留地 按照 窄屏 尺寸 */

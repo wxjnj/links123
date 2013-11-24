@@ -15,11 +15,11 @@
         <div>
         </div>
         <div class="operate" >
-            <html:imageBtn name="add" click="add()" style="hMargin fLeft" />
-            <html:imageBtn name="edit" click="edit()" style="hMargin fLeft" />
-            <html:imageBtn name="delete" click="del()" style="hMargin fLeft" />
-            <html:imageBtn name="forbid" click="forbid()" style="hMargin fLeft" />
-            <html:imageBtn name="resume" click="resume()" style="hMargin fLeft" />
+            <html:imageBtn name="add" click="add_popup()" style="hMargin fLeft" />
+            <html:imageBtn name="edit" click="edit_popup()" style="hMargin fLeft" />
+            <html:imageBtn name="delete" click="del1()" style="hMargin fLeft" />
+            <html:imageBtn name="forbid" click="forbid1()" style="hMargin fLeft" />
+            <html:imageBtn name="resume" click="resume1()" style="hMargin fLeft" />
             <html:imageBtn name="myimport" click="import_excel()" style="hMargin fLeft" />
             <html:imageBtn name="myexport" click="export_to_excel()" style="hMargin fLeft" />
             <select id="selectSubjectSource" style='display: none;float:left;margin:0 5px;'>
@@ -98,12 +98,31 @@
                     </label>&nbsp;
                     <label>
                         <input class="checkbox" type="checkbox" value="0" name="status" <eq name="param['status']" value="0">checked="checked"</eq>>
-                        禁用
+                        禁用 
                     </label>&nbsp;
+                    <eq name="param['status']" value="0">
+                    <b>原因</b>
+                    <select name="forbid_reason" id="forbid_reason">
+                        <option value="">全部</option>
+                        <volist name="forbid_reason_options" id="forbid_reason_option">
+                            <option value="{$forbid_reason_option.key}" <eq name="param['forbid_reason']" value="$forbid_reason_option['key']">selected="true"</eq>>{$forbid_reason_option.name}</option>
+                        </volist>
+                    </select>
+                    &nbsp;</eq>
                     <label>
                         <input class="checkbox" type="checkbox" value="-1" name="status" <eq name="param['status']" value="-1">checked="checked"</eq>>
                         已删除
-                    </label>&nbsp;&nbsp;
+                    </label>
+                    <eq name="param['status']" value="-1">
+                        <b>原因</b>
+                        <select name="del_reason" id="del_reason">
+                            <option value="">全部</option>
+                            <volist name="del_reason_options" id="del_reason_option">
+                                <option value="{$del_reason_option.key}" <eq name="param['del_reason']" value="$del_reason_option['key']">selected="true"</eq>>{$del_reason_option.name}</option>
+                            </volist>
+                        </select>
+                    </eq>
+                    &nbsp;&nbsp;
                     缩略图：
                     <label>
                         <input class="checkbox" type="checkbox" value="1" name="thumb" <eq name="param['thumb']" value="1">checked="checked"</eq>>
@@ -130,21 +149,47 @@
 
         <div class="list" >
             
-            <html:list id="checkList" name="category" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,name|htmlspecialchars:名称:edit,created|toDateShort:发布时间,cat_attr_id|getVoiceNameFromAttrId:语音:voice|id,cat_attr_id|getPatternNameFromAttrId:形式,special_recommend|getYorN:特别推荐:special_recommend|media_id,status|getStatus:状态" actionlist="property:分类,edit:编辑" />
+            <html:list id="checkList" name="category" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,name|htmlspecialchars:名称:edit_popup,created|toDateShort:发布时间,cat_attr_id|getVoiceNameFromAttrId:语音:voice|id,cat_attr_id|getPatternNameFromAttrId:形式,special_recommend|getYorN:特别推荐:special_recommend|media_id,status|getStatus:状态,view_num:浏览数,like_num:赞数,collect_num:收藏数" actionlist="property:分类,edit_popup:编辑" />
         </div>
 
         <div class="page">
+            <if condition="$page neq ''">
             选择 <select name="listRows" id="listRows">
                 <volist name="listRows_options" id="listRow_option">
                     <option value="{$listRow_option.key}" <eq name="listRows" value="$listRow_option['key']">selected="true"</eq>>{$listRow_option.name}</option>
                 </volist>
             </select>
             &nbsp;&nbsp;
-            每页 <input value="{$listRows}" name="listRows_input" style="width:30px;" id="listRows_input"> 条 &nbsp;&nbsp;共{$page}
+            每页 <input value="{$listRows}" name="listRows_input" style="width:30px;" id="listRows_input"> 条 &nbsp;&nbsp;共
+            </if>
+            {$page}
         </div>
 
     </div>
 
+</div>
+
+<div id="del_reason_dialog" class="easyui-dialog" style="width:350px;height:auto;" data-options="title:'请选择删除原因',shadow:false,modal:true,closed:true,closable:true">
+    <h2 style="color:red;font-size:20px;padding:20px 15px;">请选择删除原因</h2>
+    <select name="del_reason1" id="del_reason1" style="margin-left:20px">
+        <option value="">请选择</option>
+        <volist name="del_reason_options" id="del_reason_option">
+            <option value="{$del_reason_option.key}">{$del_reason_option.name}</option>
+        </volist>
+    </select>
+    <br>
+    <button onclick="del_or_forbid('delete')" style="margin:20px;">提交</button>
+</div>
+<div id="forbid_reason_dialog" class="easyui-dialog" style="width:350px;height:auto;" data-options="title:'请选择禁用原因',shadow:false,modal:true,closed:true,closable:true">
+    <h2 style="color:red;font-size:20px;padding:20px 15px;">请选择禁用原因</h2>
+    <select name="forbid_reason1" id="forbid_reason1" style="margin-left:20px">
+        <option value="">请选择</option>
+        <volist name="forbid_reason_options" id="forbid_reason_option">
+            <option value="{$forbid_reason_option.key}">{$forbid_reason_option.name}</option>
+        </volist>
+    </select>
+    <br>
+    <button onclick="del_or_forbid('forbid')" style="margin:20px;">提交</button>
 </div>
 <div id="import_dialog" class="easyui-dialog" style="width:250px;height:auto;" data-options="title:'请选择导入文件',shadow:false,modal:true,closed:true,closable:true">
     <form method='post' id="frm_att" action="__URL__/excel_insert" enctype="multipart/form-data">
@@ -170,11 +215,133 @@
         <input id="J_fileName" name='filename' type="hidden" value='' />
     </form>
 </div>
+<input type="hidden" value="" id="key_values">
 <script type="text/javascript">
+    function del_or_forbid(type){
+        var keyValue = $("#key_values").val();
+        var r;
+        if(type == 'delete'){
+            r = $("#del_reason1").val();
+        }else{
+            r = $("#forbid_reason1").val();
+        }
+        if(r == ''){
+            alert("请选择原因！")
+            return;
+        }
+        if (window.confirm('确实要删除选择项吗？')) {
+            location.href = URL + "/"+type+"/id/" + keyValue+"/reason/"+r;
+            //ThinkAjax.send(URL+"/delete/","id="+keyValue+'&ajax=1',doDelete);
+        }
+    }
+    function del1(id) {
+        var keyValue;
+        if (id) {
+            keyValue = id;
+        } else {
+            keyValue = getSelectCheckboxValues();
+        }
+        if (!keyValue) {
+            alert('请选择删除项！');
+            return false;
+        }
+        $("#del_reason_dialog").window("open");
+        $("#key_values").val(keyValue);
+        return;
+        
+    }
+
+    function forbid1(id) {
+        var keyValue;
+        if (id) {
+            keyValue = id;
+        } else {
+            keyValue = getSelectCheckboxValues();
+        }
+        if (!keyValue) {
+            alert('请选择禁用项！');
+            return false;
+        }
+        $("#forbid_reason_dialog").window("open");
+        $("#key_values").val(keyValue);
+        return;
+    }
+
+    function resume1(id) {
+        var keyValue;
+        if (id) {
+            keyValue = id;
+        } else {
+            keyValue = getSelectCheckboxValues();
+        }
+        if (!keyValue) {
+            alert('请选择操作项！');
+            return false;
+        }
+        var status = $("[name='status']:checked").attr("value");
+        if(status == undefined){
+            alert("请先筛选禁用或删除的记录");
+            return;
+        }
+        status = parseInt(status);
+        if(status == 1){
+            alert("请先筛选禁用或删除的记录");
+            return;
+        }
+        if (status == 0){
+            if($("#forbid_reason").val() == ''){
+                alert("请选择禁用原因！");
+                $("#forbid_reason").focus();
+                return false;
+            }
+        }
+        if (status == -1){
+            if($("#del_reason").val() == ''){
+                alert("请选择删除原因！")
+                $("#del_reason").focus();
+                return false;
+            }
+        }
+        if (window.confirm('确定操作吗？')) {
+            window.location.href = URL + '/resume/id/' + keyValue;
+        }
+    }
+
+    function reload_list(){
+        //window.location.href = $(".page input").eq(1).attr("url");
+        $("[name='search']").click();
+    }
+    function add_popup(id) {
+        var url;
+        if (id) {
+            url = URL + "/add/id/" + id;
+        } else {
+            url = URL + "/add/";
+        }
+        window.open (url,'newwindow','height=600,width=1013,top=130,left=260,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no') 
+    }
+    function edit_popup(id){
+        var keyValue;
+        if (id)
+        {
+            keyValue = id;
+        }else {
+            keyValue = getSelectCheckboxValue();
+        }
+        if (!keyValue)
+        {
+            alert('请选择编辑项！');
+            return false;
+        }
+        //location.href =  URL+"/edit/id/"+keyValue;
+        var url = URL+"/edit/id/"+keyValue;
+        window.open (url,'newwindow','height=600,width=1013,top=130,left=260,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no') 
+
+    }
     $(function(){
         $("#listRows,#listRows_input").change(function(){
             $.cookie("listRows",this.value);
-            window.location.href = $(".page input").eq(1).attr("url");
+            reload_list();
         })
         $("#J_createTime").focus(function() {
             WdatePicker({dateFmt: 'yyyy-MM-dd', maxDate: "%y-%M-%d",onpicked:function(){
@@ -197,10 +364,13 @@
         $(".search .checkbox").click(function(){
             $("[name='"+$(this).attr("name")+"']").not("[value='"+$(this).val()+"']").removeAttr("checked");
             $("[name='search']").click();
+        });
+        $("#forbid_reason,#del_reason").change(function(){
+            $("[name='search']").click();
         })
         $("[name='level_one'],[name='level_two'],[name='level_thr']").change(function() {
             //$("[name='search']").click();
-        })
+        });
         $(".operate input[name='special_recommend']").click(function() {
             if ($(this).val() == 1) {
                 if (!$(".operate input[name='recommend'][value='1']").attr("checked")) {

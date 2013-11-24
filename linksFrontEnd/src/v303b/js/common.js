@@ -28,6 +28,7 @@ $(function() {
 	 $("#direct_text").autocomplete("/Home/Link/tag", {
 	 	dataType : "json",
 	 	minChars : 1,
+	 	selectFirst: false,	//默认不选择第一个
 	 	'async': true,
 	 	width : 298,
 	 	scroll : false,
@@ -159,7 +160,7 @@ var User = {
 
 			$(document).on('mouseenter', '#J_Reg input[name="user"], #J_Reg input[name="password"], #J_Reg input[name="email"], #J_Reg input[name="vcode"]', function() {
 				$(this).select();
-			}).on('mousemove', '#J_Reg input[name="user"], #J_Reg input[name="password"], #J_Reg input[name="email"], #J_Reg input[name="vcode"]', function(){
+			}).on('mousemove', '#J_Reg input[name="user"], #J_Reg input[name="password"], #J_Reg input[name="email"], #J_Reg input[name="vcode"]', function(e){
 				//禁用冒泡 避免触发糖葫芦的焦点
 				e.stopPropagation();
 				return false;
@@ -290,7 +291,7 @@ var User = {
 							obj.remove();
 							return false;
 						});
-					}, 20);
+					}, 500);
 					
 				}
 			});
@@ -305,7 +306,7 @@ var User = {
 				self.Reg();
 			});
 
-			obj.find('input[name="password"]').on('keydown', function(event) {
+			obj.on('keydown', 'input[name="password"], input[name="user"]',function(event) {
 				if (event.keyCode == 13) {
 					obj.find('.lkd-reg').trigger('click');
 					return false;
@@ -477,7 +478,7 @@ var User = {
 				open : function() {
 					setTimeout(function() {
 						obj.find('input[name="email"]').select();
-					}, 20);
+					}, 500);
 				}
 			});
 

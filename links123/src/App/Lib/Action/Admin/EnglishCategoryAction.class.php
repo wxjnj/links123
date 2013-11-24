@@ -36,15 +36,15 @@ class EnglishCategoryAction extends CommonAction{
         $param['sort'] = $sort;
         $group = 'category.level_one';
         $flag = "level_one";
-        $field = 'category.*,category.cat_id as id,levelname.name as name, levelname.id as level_id, sum(category.question_num) as num,category.level_one_sort as sort,levelname.`default`';
+        $field = 'category.*,category.cat_id as id,levelname.name as name, levelname.id as level_id, sum(category.question_num) as num,category.level_one_sort as sort,levelname.`default`,levelname.status as category_status';
         if ($param['level_one'] > 0) {
-            $field = 'category.*,category.cat_id as id,levelname.name as name, levelname.id as level_id, sum(category.question_num) as num,category.level_two_sort as sort,levelname.`default`';
+            $field = 'category.*,category.cat_id as id,levelname.name as name, levelname.id as level_id, sum(category.question_num) as num,category.level_two_sort as sort,levelname.`default`,category.status as category_status';
             $group .= ' , category.level_two';
             $flag = "level_two";
         }
 
         if ($param['level_two'] > 0) {
-            $field = 'category.*,category.cat_id as id,levelname.name as name, levelname.id as level_id, sum(category.question_num) as num,category.level_thr_sort as sort,levelname.`default`';
+            $field = 'category.*,category.cat_id as id,levelname.name as name, levelname.id as level_id, sum(category.question_num) as num,category.level_thr_sort as sort,levelname.`default`,category.status as category_status';
             $group .= ' , category.level_thr';
             $flag = "level_thr";
         }
@@ -344,7 +344,7 @@ class EnglishCategoryAction extends CommonAction{
         }
         //
         $map= array();
-        $cat_data['status'] = $data['status'];
+//        $cat_data['status'] = $data['status'];
         $cat_data['updated'] = $time;
         if($level == 1){
             $cat_data['level_one_sort'] = $data['sort'];
@@ -413,6 +413,12 @@ class EnglishCategoryAction extends CommonAction{
                 $levelnameModel->rollback();
                 $this->error('操作失败');
             }
+            if($level == 1){
+                if(false === $levelnameModel->where(array("id"=>$value['level_one']))->setField("status",0)){
+                    $levelnameModel->rollback();
+                    $this->error('操作失败');
+                }
+            }
         }
         $levelnameModel->commit();
         $this->success('操作成功');
@@ -441,6 +447,12 @@ class EnglishCategoryAction extends CommonAction{
             if(false === $categoryModel->where($cat_map)->setField("status",1)){
                 $levelnameModel->rollback();
                 $this->error('操作失败');
+            }
+            if($level == 1){
+                if(false === $levelnameModel->where(array("id"=>$value['level_one']))->setField("status",1)){
+                    $levelnameModel->rollback();
+                    $this->error('操作失败');
+                }
             }
         }
         $levelnameModel->commit();

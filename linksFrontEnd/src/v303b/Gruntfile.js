@@ -54,8 +54,11 @@ module.exports = function(grunt) {
 					],
 					'../../dest/v303b/css/base.css' : 'css/base.css',
 					'~temp/g-uc.css' : 'css/g-uc.css',
-					'../../dest/v303b/js/init.js' : 'js/init.js',
-					'../../dest/v303b/js/jquery.cookies.2.2.0.min.js' : 'js/jquery.cookies.2.2.0.min.js'
+					'~temp/init.js' : 'js/init.js',
+					'../../dest/v303b/js/jquery.cookies.2.2.0.min.js' : 'js/jquery.cookies.2.2.0.min.js',
+					//音乐盒外部引用
+					'~temp/links-musicbox.css': 'linksMusicBox/links-musicbox.css',
+					'~temp/links-musicbox.js': 'linksMusicBox/links-musicbox.js'	
 				}
 			}
 		}
@@ -84,15 +87,18 @@ module.exports = function(grunt) {
 			main: {
 				files: {
 					'../../dest/v303b/css/css.min.css' : ['~temp/css.css'],
-					'../../dest/v303b/css/g-uc.css' : ['~temp/g-uc.css']
+					'../../dest/v303b/css/g-uc.css' : ['~temp/g-uc.css'],
+					'../../dest/v303b/linksMusicBox/links-musicbox.css' : ['~temp/links-musicbox.css']
 				}
 			}
 		}
 		,uglify: {
 			main: {
 				files: {
+					'../../dest/v303b/js/init.js' : ['~temp/init.js'],
 					'../../dest/v303b/js/jquery.plugins.js' : ['~temp/jquery.plugins.js'],
-					'../../dest/v303b/js/index.js' : ['~temp/index.js']
+					'../../dest/v303b/js/index.js' : ['~temp/index.js'],
+					'../../dest/v303b/linksMusicBox/links-musicbox.js': ['~temp/links-musicbox.js']
 				}
 			}
 		}
