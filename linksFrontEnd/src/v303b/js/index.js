@@ -44,15 +44,13 @@ $(function() {
 
 	// 搜索框
 	$( "#search_text" ).autocomplete("/Index/searchSupplement", {
+		dataType : "json",
     	minChars: 1,
     	resultsClass: "ac_results_search",
-		dataType : "json",
-		minChars : 1,
 		selectFirst: false,	//默认不选择第一个
 		async: true,
-		matchContains : true,
 		parse : function(data) {
-			console.log(data);
+			//data -> ['', '']
 			return $.map(data, function(row) {
 				return {
 					data : row,
