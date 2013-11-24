@@ -45,7 +45,27 @@ $(function() {
 	// 搜索框
 	$( "#search_text" ).autocomplete("/Index/searchSupplement", {
     	minChars: 1,
-    	resultsClass: "ac_results_search"
+    	resultsClass: "ac_results_search",
+		dataType : "json",
+		minChars : 1,
+		selectFirst: false,	//默认不选择第一个
+		async: true,
+		matchContains : true,
+		parse : function(data) {
+			return $.map(data, function(row) {
+				return {
+					data : row,
+					value : row.tag,
+					result : row.tag
+				};
+			});
+		},
+		formatItem : function(item) {
+			return item.tag;
+		}
+	}).result(function(e, item) {
+		$('#search_text').val(item.tag);
+		$('#searchForm').submit();
 	});
 
 	// 切换宽屏

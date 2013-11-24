@@ -29,7 +29,7 @@ $(function() {
 		dataType : "json",
 		minChars : 1,
 		selectFirst: false,	//默认不选择第一个
-		'async': true,
+		async: true,
 		width : 298,
 		scroll : false,
 		matchContains : true,
