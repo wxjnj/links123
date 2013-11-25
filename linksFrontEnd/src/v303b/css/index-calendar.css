@@ -19,11 +19,11 @@
 	font-size:0;
 	overflow:hidden;
 	position:absolute;
-	border-width:15px;
+	border-width:5px;
 	border-style:solid dashed dashed;
 	border-color:#fff transparent transparent;
-	left:65px;
-	bottom:-25px
+	left:75px;
+	bottom:-10px
 }
 .calendar-tip .ang1 {
 	width:0;
@@ -31,11 +31,11 @@
 	font-size:0;
 	overflow:hidden;
 	position:absolute;
-	border-width:13px;
+	border-width:6px;
 	border-style:solid dashed dashed;
 	border-color:#ccc transparent transparent;
-	left:67px;
-	bottom:-26px
+	left:75px;
+	bottom:-12px
 }
 .extra-calendar .cal-close {
 	background: transparent url(/v3/imgs/app/links-app-frame/close.png) 0 -60px no-repeat;
@@ -47,18 +47,25 @@
 	z-index: 1000;
 	font-size: 0;
 }
+.extra-calendar {
+	position: relative;
+}
 .extra-calendar .cal-ajax-overlayer {
 	position:absolute;
-	top:0;
-	bottom:0;
-	width:100%
+	top:50%;
+	left:50%;
+	margin-top: -20px;
+	margin-left: -5px;
+	width:100px;
+	height:40px;
+	line-height:40px;
 }
 .extra-calendar .cal-ajax-overlayer .layer {
 	position:absolute;
 	top:0;
 	bottom:0;
 	width:100%;
-	background:transparent;
+	background:#000;
 	filter:alpha(opacity=30);
 	-moz-opacity:.3;
 	-khtml-opacity:.3;
@@ -68,9 +75,9 @@
 	position:absolute;
 	z-index:10;
 	color:#fff;
-	width:100%;
+	margin:0 auto;
 	text-align:center;
-	top:50%
+	width: 100%;
 }
 
 
@@ -135,12 +142,13 @@
 }
 .extra-calendar .cal-header .cal-view-select-btn {
 	display:inline-block;
-    margin-left: 15px;
+    margin-left: 25px;
     padding-bottom: 3px;
     border-bottom: 3px solid transparent;
 	height: 28px;
     width: 17px;
 }
+
 .extra-calendar .cal-header .cal-view-select-btn:hover,
 .extra-calendar .cal-header .active {
 	display:inline-block;

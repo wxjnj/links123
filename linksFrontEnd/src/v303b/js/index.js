@@ -31,7 +31,51 @@ $(function() {
 		window.open($(this).attr('url'));
 	});
 
-	$('#J_Apps').sortable();
+	$('#J_Apps, #J_Apps_more_list').sortable({
+		connectWith: ".connectedSortable",
+		sort: function(e, ui){
+			if(ui.item.parent('#J_Apps').size()){
+				window.appPkg();
+			}else{
+				window.appPkg(-1);
+			}
+		}
+	});
+
+	// 搜索框
+	$("#search_text").autocomplete("/Index/searchSupplement", {
+		dataType : "json",
+    	minChars: 1,
+    	resultsClass: "ac_results_search",
+		selectFirst: false,	//默认不选择第一个
+		async: true,
+		parse : function(data) {
+			//data -> ['', '']
+			return $.map(data, function(row) {
+				return {
+					data : row,
+					value : row,
+					result : row
+				};
+			});
+		},
+		formatItem : function(item) {
+			return item;
+		}
+	}).result(function(e, item) {
+		$('#search_text').val(item);
+		setTimeout(function(){
+			$("#search_text").select();
+			var keyword = $.trim($("#search_text").val());
+			$.cookies.set('keyword', keyword);
+			//保存keyword
+			keyword = keyword.replace('http://', '');
+			keyword = encodeURIComponent(keyword);
+			var url = $(".J_thlz a.on").attr("url").replace('keyword', keyword);
+			var tid = $(".J_thlz a.on").attr("tid");
+			THL.go(url, tid, keyword);
+		}, 0);
+	});
 
 	// 切换宽屏
 	$('.screen-change-btn').on('click', 'a', function() {
@@ -51,9 +95,13 @@ $(function() {
 	(function(){ //app图标相关
 		var nmlLen = 9, wideLen = 10;
 		var appsList = $('#J_Apps>li');
-		var appsListLen = appsList.size();
 
-		var appPkg = function(){
+		var appPkg = window.appPkg = function(type){
+
+			type = type || 0;
+
+			var appsListLen = $('#J_Apps').find('li').size() + $('#J_Apps_more_list').find('li').size();
+
 			var isWide = $('body').is('.widescreen');
 			var needLen = nmlLen;
 			if(isWide){
@@ -66,16 +114,18 @@ $(function() {
 			$('.app-icon-list .app-more').show();
 
 			var panel = $('.app-icon-list').find('ul');
-			panel.empty();
+			$('#J_Apps').find('li:gt(' + (needLen + type) + ')').appendTo(panel);
+			/*
 			appsList.each(function(index, el){
 				if(index>needLen - 1){
-					panel.append($(el).clone());
+					panel.append($(el));
 				}
-			});
+			});*/
 		}
-		appPkg();
+		appPkg(-1);
 		$('body').on('screenchange', function(){
-			appPkg();
+			$('#J_Apps_more_list').find('li').appendTo('#J_Apps');
+			appPkg(-1);
 		});
 		$('.app-more').on('mouseenter', function(){
 			$('.app-more-box').show();
@@ -395,9 +445,12 @@ var Zld = { // 自留地
                 }
 			},
 			update: function(event, ui) {
+				var b = $('#J_Apps_more_list').sortable('toArray');
+				var a = $('#J_Apps').sortable('toArray');
+				a = a.concat(b);
 				$.post(
 					URL + '/sortApp', {
-						'appIds': $(this).sortable('toArray')
+						'appIds': a
 					},
 					function(data) {
 						if (data == 1) {

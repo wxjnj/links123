@@ -4,6 +4,32 @@
  * @datetime: 2013-09-25 13:05
  */
 
+//定时器，用于跨日切换页面上日期数字
+var init_today = Date.today();
+
+//var countDownTimer = null;
+//var countDownController = 0;
+
+var currentDayTimer = setInterval(function(){
+	var o = Calendar.compare(init_today, Date.today());
+	if(o != 0){
+		//clearInterval(currentDayTiemr);
+		//currentDayTiemr = null;
+		init_today = Date.today();
+		$('#index-today-bar').find('b').html(Calendar.dateTitleConfig[init_today.getDay()]);
+		$('#index-today-bar').find('i').html(init_today.getDate());
+		Calendar.setCurrentDate(init_today);
+		Calendar.ReInit();
+	}else{
+		var now = new Date();
+		if(now.getHours() == 23 && now.getMinutes() == 59 && now.getSeconds() > 56){
+			$('.cal-ajax-overlayer').show().find('.content').html(now.toString('HH:mm:ss'));
+		}else{
+			$('.cal-ajax-overlayer').hide();
+		}
+	}
+}, 1000);
+
 $( function($) {
 
 	$('#app-tip').on('click', '.zld-tip-close', function(){
@@ -691,8 +717,25 @@ $( function($) {
 
 		'#J_box_calc' : function() {
 			$('#J_calc_iframe').attr('src', 'http://qiqiapp3.duapp.com/yuyinjisuanqi/');
+			$('#J_calc_iframe').attr('height', '480px');
 			$('#J_box_calc_list a').click(function() {
-				$('#J_calc_iframe').attr('src', $(this).attr('data-url'));
+				var current = $(this);
+				$('#J_calc_iframe').attr('src', current.attr('data-url'));
+				switch(current.attr('title')){
+					case '语音计算器':
+						$('#J_calc_iframe').attr('height', '480px');
+						break;
+					case '计算器美女语音版':
+						$('#J_calc_iframe').attr('height', '530px');
+						break;
+					case '科学计算器':
+					case '按揭房贷计算器':
+						$('#J_calc_iframe').attr('height', '620px');
+						break;
+					case '汇率换算':
+						$('#J_calc_iframe').attr('height', '320px');
+						break;
+				}
 				return false;
 			});
 		},

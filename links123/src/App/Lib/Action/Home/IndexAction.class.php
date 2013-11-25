@@ -27,36 +27,25 @@ class IndexAction extends CommonAction {
 			$_SESSION['myarea_sort'] = $mbrNow['myarea_sort'] ? explode(',', $mbrNow['myarea_sort']) : '';
 			$_SESSION['app_sort'] = $mbrNow['app_sort'];
 
-			//取出皮肤ID和模板ID
-			$skinId = session('skinId');
-			if (!$skinId) {
-				$skinId = cookie('skinId');
-			}
-			
-			$themeId = session('themeId');
-			if (!$themeId) {
-				$themeId = cookie('themeId');
-			}
-
 		} else {
 			
 			$this->get_member_guest();
-			
 
 			if (!$_SESSION['app_sort']) {
 
 				//$_SESSION['app_sort'] = cookie('app_sort');
 			}
 
-			//取出皮肤ID和模板ID
-			$skinId = session('skinId');
-			if (!$skinId) {
-				$skinId = cookie('skinId');
-			}
-			$themeId = session('themeId');
-			if (!$themeId) {
-				$themeId = cookie('themeId');
-			}
+		}
+		
+		//取出皮肤ID和模板ID
+		$skinId = session('skinId');
+		if (!$skinId) {
+			$skinId = cookie('skinId');
+		}
+		$themeId = session('themeId');
+		if (!$themeId) {
+			$themeId = cookie('themeId');
 		}
 		
 		//快捷皮肤
@@ -73,17 +62,22 @@ class IndexAction extends CommonAction {
 		
 		$theme = $this->getTheme($themeId);
 		$this->assign('theme', $theme);
-
+		
+		
 		//自留地数据
 		if ($user_id || !$_SESSION['arealist']) {
-			$areaList = $myareaModel->where(array('mid' => $user_id))->select();
+			$areaList = $myareaModel->where(array('mid' => $user_id))->order('sort asc')->select();
 
 			if ($areaList) {
 				$_SESSION['arealist'] = array();
 			}
 
 			foreach ($areaList as $value) {
-				$_SESSION['arealist'][$value['id']] = $value;
+				if ($user_id) {
+					$_SESSION['arealist'][$value['id']] = $value;
+				} else {
+					$_SESSION['arealist'][$value['sort']] = $value;
+				}
 			}
 		}
 		if (!$_SESSION['myarea_sort']) {
@@ -109,137 +103,6 @@ class IndexAction extends CommonAction {
 	}
 	
 	/**
-	 * @desc 新首页
-	 *
-	 * @author slate date:2013-09-06
-	 */
-	public function indexV3() {
-		import("@.ORG.String");
-		//自留地
-		$myareaModel = M("Myarea");
-		$scheduleModel = M("Schedule");
-
-		$user_id = intval($this->_session(C('MEMBER_AUTH_KEY')));
-		if ($user_id) {
-			$memberModel = M("Member");
-			$mbrNow = $memberModel->where(array('id' => $user_id))->find();
-			$_SESSION['myarea_sort'] = $mbrNow['myarea_sort'] ? explode(',', $mbrNow['myarea_sort']) : '';
-			$_SESSION['app_sort'] = $mbrNow['app_sort'];
-			
-			//取出皮肤ID和模板ID
-			$skinId = session('skinId');
-			if (!$skinId) {
-				$skinId = cookie('skinId');
-			}
-			
-			$themeId = session('themeId');
-			if (!$themeId) {
-				$themeId = cookie('themeId');
-			}
-		} else {
-			
-			//取出皮肤ID和模板ID
-			$skinId = session('skinId');
-			if (!$skinId) {
-				$skinId = cookie('skinId');
-			}
-			$themeId = session('themeId');
-			if (!$themeId) {
-				$themeId = cookie('themeId');
-			}
-			
-			if (!$_SESSION['app_sort']) {
-				
-				$_SESSION['app_sort'] = cookie('app_sort');
-			}
-		}
-		
-		//快捷皮肤
-		$skins = $this->getSkins();
-		if ($skinId) {
-			$skin = $skins['skin'][$skinId]['skinId'];
-			if (!$skin) $skinId = '';
-			$themeId = $skins['skin'][$skinId]['themeId'];
-			$this->assign("skinId", $skinId);
-			$this->assign("skin", $skin);
-		}
-		$this->assign("skinList", $skins['list']);
-		$this->assign("skinCategory", $skins['category']);
-		
-		$theme = $this->getTheme($themeId);
-		$this->assign('theme', $theme);
-		
-		//自留地数据
-		if ($user_id || !$_SESSION['arealist']) {	
-			$areaList = $myareaModel->where(array('mid' => $user_id))->select();
-			
-			if ($areaList) {
-				$_SESSION['arealist'] = array();
-			}
-			
-			foreach ($areaList as $value) {
-				$_SESSION['arealist'][$value['id']] = $value;
-			}
-		}
-		if (!$_SESSION['myarea_sort']) {
-			
-			$_SESSION['myarea_sort'] = array_keys($_SESSION['arealist']);
-		}
-		
-		//热门音乐
-		$this->assign('homeMusics', $this->getHomeMusics());
-		
-		//推荐电影
-        $this->assign('homeMovies', $this->getHomeMovies());
-        
-		//TED 发现
-		$ted_list = S('ted_list');
-		if (!$ted_list) {
-			
-			$variableModel = M('Variable');
-			$linksModel = M("Links");
-			
-			$ted_list = array();
-			$home_ted_hot_list = S('home_ted_hot');
-			if (!$home_ted_hot_list) {
-				
-				$home_ted_hot_list = $variableModel->where(array('vname' => 'home_ted_hot'))->find();
-				$home_ted_hot_list =  unserialize($home_ted_hot_list['value_varchar']);
-				S('home_ted_hot', $home_ted_hot_list);
-			}
-			
-			$ted_ids = implode(',', array_keys($home_ted_hot_list));
-			$result = $linksModel->where('id in ('.$ted_ids.')')->select();
-			
-			$ted_list = array();
-			foreach ($result as $value) {
-				
-				$ted_list[$value['id']] = array(
-						'id' => $value['id'], 
-						'title' => $value['title'], 
-						'link_cn_img' => $value['link_cn_img'], 
-						'status' => $home_ted_hot_list[$value['id']], 
-						'sintro' => String::msubstr($value["intro"], 0, 50),
-						'create_time' => date('Y-m-d H:i:s', $value['create_time']),
-				);
-			}
-					
-			S('ted_list', $ted_list);
-		}
-		$this->assign('ted_list', $ted_list);
-		
-		//图片精选
-		
-		//APP应用
-		$app_list = $this->getApps($_SESSION['app_sort']);
-		$this->assign('app_list', $app_list);
-		
-		
-		$this->getHeaderInfo();
-		$this->display('index_v3');
-	}
-	
-	/**
 	 * @desc 另客导航3.0
 	 * 
 	 * @author slate date:2013-10-1
@@ -248,53 +111,6 @@ class IndexAction extends CommonAction {
 		
 		$this->getHeaderInfo();
 		$this->display('hao');
-	}
-	
-	/**
-	 * @desc 首页2.0
-	 * @author slate date: 2013-08-20
-	 */
-	public function old_index() {
-		import("@.ORG.String");
-	
-		// 公告
-		$announce = M("Announcement");
-		$announces = $announce->where('status = 1')->order('sort ASC, create_time DESC')->select();
-		
-		$skins = $this->getSkins();
-		
-		// 我的地盘
-		$myarea = M("Myarea");
-		session('arealist_default', $myarea->where('mid=0')->order('sort ASC')->select());
-		
-		//存在用户登录，获取用户的我的地盘
-		$memberAuthKey = $this->_session(C('MEMBER_AUTH_KEY'));
-	
-		if ($memberAuthKey) {
-			
-			$areaList = $myarea->where(array('mid' => $memberAuthKey))->order('sort ASC')->select();
-			session('arealist', $areaList ? $areaList : session('arealist_default'));
-			
-			$skinId = session('skinId');
-			if (!$skinId) {
-				$skinId = cookie('skinId');
-			}
-		} else {
-			
-			$areaList = $this->_session('arealist');
-			!empty($areaList) || session('arealist', session('arealist_default'));
-			
-			$skinId = cookie('skinId');
-		}
-		
-		$this->assign("announces", $announces);
-		$this->assign("skinId", $skinId);
-		$this->assign("skin", $skins['skin'][$skinId]);
-		$this->assign("skinList", $skins['list']);
-		$this->assign("skinCategory", $skins['category']);
-	
-		$this->getHeaderInfo();
-		$this->display('new_index');
 	}
 	
 	/**
@@ -1564,5 +1380,23 @@ class IndexAction extends CommonAction {
     	}
     	return $hotNews;
     } 
+
+	/**
+     * 搜索框自动填充
+     */
+
+	public function searchSupplement() {
+	
+		$q = $_GET["q"];
+		$abcs = mb_convert_encoding(trim($q),"utf-8","gb2312");           //接收传送过来的关键值
+		$skey = file_get_contents("http://suggestion.baidu.com/su?wd=".urlencode($q)."");        //访问百度页面
+		preg_match('/\[(.*?)\]/',$skey,$m);    //通过正则去掉
+		$s = explode(',',$m[1]);    
+		foreach($s as $k=>$v){
+			$s[$k] = iconv("gb2312","UTF-8",substr($v,1,-1));
+		}
+		echo json_encode($s);
+	 }
+
     
 }
