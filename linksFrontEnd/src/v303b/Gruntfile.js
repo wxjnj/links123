@@ -15,6 +15,7 @@ module.exports = function(grunt) {
 				files: {
 					'~temp/css.css' : [
 						'css/jquery-ui.css',
+						//'css/jquery-ui-1.10.3.custom.min.css',
 						'css/style.css',
 						'css/g-theme.css',
 						'css/g-dialog.css',
@@ -33,9 +34,10 @@ module.exports = function(grunt) {
 					],
 					'~temp/jquery.plugins.js' : [
 						'js/jquery.placeholder.js',
-						'js/jquery-ui.min.js',
+						//'js/jquery-ui.min.js',
+						'js/jquery-ui-1.9.2.custom.min.js',
 						'js/json2.js',
-						'js/jquery.dropdown.js',
+						//'js/jquery.dropdown.js',
 						//'js/jquery.slides.js',
 						'js/jquery.autocomplete.js'
 					],
@@ -48,7 +50,7 @@ module.exports = function(grunt) {
 						'js/index-calendar.js',
 						'js/detect.js',
 						'js/index-apps-tpl.js',
-						'js/index-apps.js',
+						'js/index-apps.js'//,
 						//'jplayer/jquery.jplayer.min.js',
 						//'jplayer/jplayer.playlist.min.js'
 					],

@@ -1,7 +1,6 @@
 var APP = $CONFIG['APP'];
 var URL = $CONFIG['URL'];
 var PUBLIC = $CONFIG['PUBLIC'];
-
 $(function() {
 
 	Zld.Init();
@@ -32,6 +31,7 @@ $(function() {
 	});
 
 	$('#J_Apps, #J_Apps_more_list').sortable({
+		tolerance: 'pointer',
 		connectWith: ".connectedSortable",
 		sort: function(e, ui){
 			if(ui.item.parent('#J_Apps').size()){
@@ -399,6 +399,7 @@ var Zld = { // 自留地
 		});
 
 		$('#J_sortable').sortable({
+			tolerance: 'pointer',
 			items: '> li:not(.add)',
 			start: function(event, ui) {
 				$(ui.item).find('span').css('cursor', 'move');
