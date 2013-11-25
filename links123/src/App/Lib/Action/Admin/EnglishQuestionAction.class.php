@@ -214,6 +214,7 @@ class EnglishQuestionAction extends CommonAction {
             $p = new Page($count, $listRows);
             //分页查询数据
             $voList = $model->where($map)->order("`" . $order . "` " . $sort)->limit($p->firstRow . ',' . $p->listRows)->group("englishQuestion.id")->select();
+           
 //            echo $model->getlastsql();
             //分页跳转的时候保证查询条件
             foreach ($param as $key => $val) {
@@ -972,10 +973,14 @@ class EnglishQuestionAction extends CommonAction {
             $level_two_max_sort = 0;
             $object_level_one_id = 0;//选择课程 分类的id
             $target = 1;//听力
+            $level_sort = array();
             $difficulty_list = array();//新分类的默认难度id
             foreach($levelnames as $key=>$each_lv) {
                 $levelnames[$key]["name"] = $each_lv["name"] = preg_replace("/\s+/", '', $each_lv["name"]); //将开头或结尾的一个或多个半角空格转换为空
-                $level_name_list[$each_lv["name"]] = $each_lv["id"];
+                if(!$level_name_list[$each_lv["name"]]){
+                    $level_name_list[$each_lv["name"]] = $each_lv["id"];
+                }
+                $level_sort[$each_lv["id"]] = $each_lv["sort"];
                 if($each_lv['level'] == 1){
                     $level_one_list[$each_lv["name"]] = $each_lv["id"];
                     if($each_lv['default'] == 1){
@@ -1000,6 +1005,7 @@ class EnglishQuestionAction extends CommonAction {
                 "level_two"=>array("gt",0),
                 "level_thr"=>array("gt",0)
             );
+            $level_map['b.name'] = array(array('exp','not like "%初级%"'), array('exp','not like "%中级%"'), array('exp','not like "%高级%"'),'and'); 
             $level_thr_ret = $categoryModel
                     ->alias("cat")
                     ->join(C("DB_PREFIX")."english_levelname b on cat.level_thr=b.id")
@@ -1170,11 +1176,13 @@ class EnglishQuestionAction extends CommonAction {
                                 Log::write("查询【".$value['level_two_name']."】的三级分类:".$categoryModel->getLastSql(), Log::INFO);
                                 if(intval($this_cat_id) == 0){
                                     $cat_data['level_thr_sort'] = ++$sort;
+                                    $cat_data['level_two_sort'] = ++$level_two_max_sort;
+                                    $cat_data['level_one_sort'] = $level_sort[$value['level_one']];
                                     $cat_data['updated'] = $cat_data['created'] = $time;
                                     $new_cat_id = $categoryModel->add($cat_data);
                                     if(FALSE === $new_cat_id){
                                         $model->rollback();
-                                        Log::write("导入失败，新增分类失败！：".$categoryModel->getLastSql(), Log::ERR, true);
+                                        Log::write("导入失败，新增分类失败！：".$categoryModel->getLastSql(), Log::ERR);
                                         die(json_encode(array("info" => "导入失败，新增分类失败！", "status" => false)));
                                     }
                                     Log::write("新增【".$value['level_two_name']."】的三级分类:".$categoryModel->getLastSql(), Log::INFO);
