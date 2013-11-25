@@ -41,6 +41,47 @@ $(function() {
 			}
 		}
 	});
+	$('#J_Apps').attr('data-sort', false);
+	$('#J_Apps').sortable({
+		tolerance: 'pointer',
+		//helper: 'clone',
+		start: function(event, ui){
+            //开始拖动的时候，关闭tips
+            if($('#app-tip').size()){
+                $('#app-tip').find('.zld-tip-close').trigger('click');
+            }
+		},
+		stop: function(){
+			$('#J_Apps').attr('data-sort', true);
+		},
+		update: function(event, ui) {
+			var b = $('#J_Apps_more_list').sortable('toArray');
+			var a = $('#J_Apps').sortable('toArray');
+			$('#J_Apps').attr('data-sort', false);
+			a = a.concat(b);
+			$.post(
+				URL + '/sortApp', {
+					'appIds': a
+				},
+				function(data) {
+					if (data == 1) {
+						//成功
+					} else if (data == 0) {
+						//失败
+					} else {
+						//失败
+					}
+				});
+		}
+	});
+	$('#J_Apps').sortable('enable');
+	$('#J_Apps_more_list').sortable({
+		tolerance: 'pointer',
+		//helper: 'clone',
+		stop: function(){
+			$('#J_Apps').attr('data-sort', true);
+		}
+	});
 
 	// 搜索框
 	$("#search_text").autocomplete("/Index/searchSupplement", {
@@ -438,33 +479,7 @@ var Zld = { // 自留地
 		});
 		$('#J_sortable').sortable('enable');
 
-		$('#J_Apps').sortable({
-			start: function(){
-                //开始拖动的时候，关闭tips
-                if($('#app-tip').size()){
-                    $('#app-tip').find('.zld-tip-close').trigger('click');
-                }
-			},
-			update: function(event, ui) {
-				var b = $('#J_Apps_more_list').sortable('toArray');
-				var a = $('#J_Apps').sortable('toArray');
-				a = a.concat(b);
-				$.post(
-					URL + '/sortApp', {
-						'appIds': a
-					},
-					function(data) {
-						if (data == 1) {
-							//成功
-						} else if (data == 0) {
-							//失败
-						} else {
-							//失败
-						}
-					});
-			}
-		});
-		$('#J_Apps').sortable('enable');
+
 
 		$(document).on('click', '#J_Zld .lkd-add, #J_Zld .lkd-edit', function() {
 
