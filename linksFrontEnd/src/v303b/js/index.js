@@ -444,7 +444,9 @@ var Zld = { // 自留地
 			items: '> li:not(.add)',
 			start: function(event, ui) {
 				$(ui.item).find('span').css('cursor', 'move');
-
+				//修正部分浏览器拖动时错位的问题
+				var w = $(ui.item).width();
+				$(ui.item).css('width', w + 2 + 'px');
                 //自留地开始拖动的时候，关闭tips
                 if($('#zld-tip').size()){
                     $('#zld-tip').find('.zld-tip-close').trigger('click');
