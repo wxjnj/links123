@@ -9,6 +9,7 @@ function createCookie(c, d, f, e) {
 	}
 	document.cookie = c + "=" + d + a; // + "; path=" + e
 }
+
 function readCookie(b) {
 	var e = b + "=";
 	var a = document.cookie.split(";");
@@ -24,7 +25,7 @@ function readCookie(b) {
 	return null
 }
 var screenStyle = '';
-if(screen.width >= 1280){
+if(screen.width >= 1366){	//13寸主流目前是1366
 	screenStyle = 'widescreen';
 }
 if(readCookie('screenStyle') == 'wide'){
@@ -32,4 +33,5 @@ if(readCookie('screenStyle') == 'wide'){
 }else if(readCookie('screenStyle') == 'nml'){
 	screenStyle = '';
 }
+
 document.getElementsByTagName('body')[0].className = screenStyle;

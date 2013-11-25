@@ -15,10 +15,16 @@
 			'IsLogin' : <empty name="_SESSION[C('MEMBER_AUTH_KEY')]">1<else />0</empty>
 		};
 	</script>
+  <style>
+  #container{
+    background: url(http://a.links123.cn/v303b/skins/{$theme}/bg.jpg);
+    background-size: cover;
+  }
+  </style>
 </head>
 <body>
 <script src="__PUBLIC__/Search_new/js/init.js"></script>
-<div id="container">
+<div id="container" <if condition="$skinId">style="background-image:url({$skin})"</if>>
   <div id="search-result-page-header">
     <div class="container-inner">
       <div class="ci-hd J_thl_area">

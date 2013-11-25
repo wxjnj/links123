@@ -45,7 +45,8 @@ $(function(){
     function changeNews(){
         var idx = $('.pic-news-tabs').find('.active').attr('data-tab');
         var o = news[idx];
-        $('.pic-news').find('img').attr('src', o.img).end()
+        $('.pic-news').find('img').attr('src', o.img).parent('a').attr('href', o.url);
+        $('.pic-news')
             .find('.pic-news-title').html('<a target="_blank" href="'+ o.url +'">' + o.title + '</a>').end()
             .find('.pic-news-desc a').attr('href', o.url).html(o.desc);
     }
@@ -65,7 +66,7 @@ $(function(){
     var config = {};
     config.CHS_WEEKS = ['一', '二', '三', '四', '五', '六', '日'];
     config.CHS_MONTHS = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二'];
-    config.ENG_WEEKS = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+    config.ENG_WEEKS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     config.ENG_MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'Auguest', 'September', 'October', 'November', 'December'];
 
     function countObjLength(o) {
@@ -112,6 +113,7 @@ $(function(){
 
     //top控制器
     var Calendar = {
+        dateTitleConfig: config,
         Init: function(type) {
             var self = this;
 
