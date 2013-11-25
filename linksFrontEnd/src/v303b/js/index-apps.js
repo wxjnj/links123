@@ -272,6 +272,10 @@ $( function($) {
 	 */
 	$.fn.links123_apptrigers = function(selector) {
 		this.on('click', selector, function() {
+			if($('#J_Apps').attr('data-sort') == 'true'){
+				$('#J_Apps').attr('data-sort', 'false')
+				return false;
+			}
 			var appId = $(this).data('href');
 			if(appId == '#J_box_note') {
 				NoteController.refresh();
@@ -290,9 +294,17 @@ $( function($) {
 	$('#J_AppsMore').links123_apptrigers('.J_app_trig');
 	
 	$('#J_Apps').on('click', '.J_app_link', function(){
+		if($('#J_Apps').attr('data-sort') == 'true'){
+			$('#J_Apps').attr('data-sort', 'false')
+			return false;
+		}
 		window.open($(this).data('href'));
 	});
 	$(document).on('click', '#J_AppsMore .J_app_link', function(){
+		if($('#J_Apps').attr('data-sort') == 'true'){
+			$('#J_Apps').attr('data-sort', 'false')
+			return false;
+		}
 		window.open($(this).data('href'));
 	});
 

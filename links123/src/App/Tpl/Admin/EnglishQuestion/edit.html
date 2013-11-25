@@ -15,6 +15,10 @@
                     </td>
                 </tr>
                 <tr>
+                    <td class="tRight" >排序：</td>
+                    <td class="tLeft" ><input type="text" class="bLeftRequire small" name="sort" <if condition="strstr($vo['sort'], $doubleQuotes) neq ''">value='{$vo.sort}'<else />value="{$vo.sort}"</if> /></td>
+                </tr>
+                <tr>
                     <td class="tRight" >试题：</td>
                     <td class="tLeft" ><input type="text" class="bLeftRequire large" name="content" <if condition="strstr($vo['content'], $doubleQuotes) neq ''">value='{$vo.content}'<else />value="{$vo.content}"</if> /></td>
                 </tr>
@@ -64,7 +68,7 @@
                     <td class="tRight" >禁用原因：</td>
                     <td class="tLeft" >
                         <select name="forbid_reason" id="forbid_reason">
-                            <option value="">请选择</option>
+                            <option value="0">请选择</option>
                             <volist name="forbid_reason_options" id="forbid_reason_option">
                                 <option value="{$forbid_reason_option.key}" <eq name="vo['forbid_reason']" value="$forbid_reason_option['key']">selected="true"</eq>>{$forbid_reason_option.name}</option>
                             </volist>
@@ -75,7 +79,7 @@
                     <td class="tRight" >删除原因：</td>
                     <td class="tLeft" >
                         <select name="del_reason" id="del_reason">
-                            <option value="">请选择</option>
+                            <option value="0">请选择</option>
                             <volist name="del_reason_options" id="del_reason_option">
                                 <option value="{$del_reason_option.key}" <eq name="vo['del_reason']" value="$del_reason_option['key']">selected="true"</eq>>{$del_reason_option.name}</option>
                             </volist>
@@ -110,14 +114,18 @@
                 //启用
                 $("#del_tr").hide();
                 $("#forbid_tr").hide();
+                //$("#forbid_reason").val('0');
+                //$("#del_reason").val('0')
             }else if( v == -1){
                 //删除
-                $("#del_tr").show();
+                $("#del_tr").show(100);
                 $("#forbid_tr").hide();
+                //$("#forbid_reason").val('0');
             }else{
                 //禁用
+                //$("#del_reason").val('0')
                 $("#del_tr").hide();
-                $("#forbid_tr").show();
+                $("#forbid_tr").show(100);
             }
         })
     })
