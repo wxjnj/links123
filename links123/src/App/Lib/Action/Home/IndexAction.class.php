@@ -63,7 +63,6 @@ class IndexAction extends CommonAction {
 		$theme = $this->getTheme($themeId);
 		$this->assign('theme', $theme);
 		
-		
 		//自留地数据
 		if ($user_id || !$_SESSION['arealist']) {
 			$areaList = $myareaModel->where(array('mid' => $user_id))->order('sort asc')->select();
@@ -73,11 +72,7 @@ class IndexAction extends CommonAction {
 			}
 
 			foreach ($areaList as $value) {
-				if ($user_id) {
 					$_SESSION['arealist'][$value['id']] = $value;
-				} else {
-					$_SESSION['arealist'][$value['sort']] = $value;
-				}
 			}
 		}
 		if (!$_SESSION['myarea_sort']) {
@@ -1370,10 +1365,10 @@ class IndexAction extends CommonAction {
     			$news[] = array('url' => $this->tp_match('/href="(.*?)"/is', $v), 'title' => trim(str_replace("\n", '', strip_tags($v))), 'img' => '');
     		}
     		
-    		$imgNewsStr = $this->tp_match('/<ul class="focuslist">(.*?)<\/ul>/is', $str);
+    		$imgNewsStr = $this->tp_match('/<ul class="contents">(.*?)<\/ul>/is', $str);
     		preg_match_all('/<li(.*?)<\/li>/is', $imgNewsStr, $match);
     		foreach ($match[0] as $k => $v) {
-    			$imgNews[] = array('url' => stripslashes($this->tp_match('/href="(.*?)"/is', $v)), 'title' => str_replace('"', '“',trim($this->tp_match('/<span class="title">(.*?)<\/span>/is', $v))), 'img' => $this->tp_match('/src="(.*?)"/is', $v));
+    			$imgNews[] = array('url' => stripslashes($this->tp_match('/href="(.*?)"/is', $v)), 'title' => str_replace('"', '“',trim(strip_tags($this->tp_match('/<div class="text">(.*?)<\/div>/is', $v)))), 'img' => $this->tp_match('/src="(.*?)"/is', $v));
     		}
     		$hotNews = array('news' => $news, 'imgNews' => $imgNews);
     		S('hotNewsList', $hotNews, 14400);
