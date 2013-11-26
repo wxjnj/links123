@@ -13,7 +13,6 @@ $( function($) {
 		this.on('click', selector, function() {
 			var appId = $(this).data('href');
 			if(!$(appId).size()){
-				console.log($(appId));
 				$('body').append(AppsTpl[appId]);
 			}
 			$(this).data('links_app') || $(this).data('links_app', new App(appId));
@@ -23,9 +22,13 @@ $( function($) {
 		});
 	}
 	$('#J_Apps').links123_apptrigers('.J_app_trig');
+	$('#J_AppsMore').links123_apptrigers('.J_app_trig');
 	
 	$('#J_Apps').on('click', '.J_app_link', function(){
-	  window.open($(this).data('href'));
+		window.open($(this).data('href'));
+	});
+	$(document).on('click', '#J_AppsMore .J_app_link', function(){
+		window.open($(this).data('href'));
 	});
 
 	/*
@@ -38,9 +41,11 @@ $( function($) {
 	var App = function(appId) {
 		this.appId = appId;
 		this.$elem = $(appId);
-		this.$elem.addClass('links123-app-frame');
-		this.initStyle();
-		this.bindEvent();
+        this.$elem.addClass('links123-app-frame');
+        if(appId != '#J_box_music'){
+            this.initStyle();
+            this.bindEvent();
+        }
 		apps.push(this);
 		callbacks[appId] && callbacks[appId](this);
 	};
@@ -706,129 +711,270 @@ $( function($) {
 
 		'#J_box_weather' : function() {
 			//解决safari禁用第三方cookie造成天气控件不显示的bug
-			if ($.browser.safari && navigator.userAgent.toLowerCase().match(/chrome/) == null) {
-				var weatherPlugin = '<iframe frameborder="0" scrolling="no" src="/Home/weather/index_new.html" ' + 'style="z-index: 99999; width: 380px; height: 220px; border: 0px;"></iframe>';
+			//if ($.browser.safari && navigator.userAgent.toLowerCase().match(/chrome/) == null) {
+				var weatherPlugin = '<iframe frameborder="0" scrolling="no" src="/Weather/index_new.html" ' + 'style="z-index: 99999; width: 380px; height: 220px; border: 0px;"></iframe>';
 				$('#J_box_weather').find('.K_weather_box').remove().end().append(weatherPlugin);
-			}else{
-				var html = '<script src="http://ext.weather.com.cn/47111.js"></script>';
-				$('#J_box_weather').find('.K_weather_box').html(html);
-			}
+			//}
 		},
 		
 		'#J_box_music' : function( app ){
 
-		  //MacQQbrowser启用定制版豆瓣fm（iframe直接嵌入无法遮盖）
-		  //qq的web播放器一样不能被遮盖，所以这里嵌入ipad播放器
-		  //等MacQQbrowser升级的时候，需要重新检查这里
-		  var ua = detect.parse(navigator.userAgent);
-		  if(ua.browser.isMacQQBrowser){
-		  	app.$elem.find('.douban-source').attr('data-href', '/Index/dbfm.html');
-		  	app.$elem.find('.qq-source').attr('data-href', 'http://soso.music.qq.com/ipad/player.html').attr('data-height', '430');
-		  }
-
-		  //启用拖动
-		  app.enableDrag('.music_icon');
-		  //复写默认的点击关闭函数
-		  app.$closeBtn.unbind('click');
-		  app.$closeBtn.bind('click', function(){
-		  	if( $(this).hasClass('closed') ){
-		  		app.show();
-		  	}else{
-		  		app.$elem.css({
-		  			'bottom': '10px',
-		  			'top': 'auto'
-		  		});
-				app.close();
-		  	}
-		  });
-		  //音乐app的关闭效果跟常规不同，它是向左侧寻边收缩，所以重写音乐app的关闭函数
-		  app.close = function(){
-		  	var w = parseInt( app.$elem.outerWidth() );
-		  	var mL = parseInt( app.$elem.css("margin-left") );
-		  	app.$elem.css({
-		  		'position' : 'fixed',
-		  		'left' : 0 - w - mL + 5 + 'px'
-		  	});
-		  	app.$elem.find('.music-close-wrap').hide();
-		  	app.$closeBtn.addClass('closed');
-		  }
-		  //音乐app增加关闭&清除iframe.src的按钮
-		  app.$elem.find('.music-close-wrap a').on('click', function(){
-		  	app.$elem.fadeOut(function(){
-		  		app.$elem.css({
-		  			'bottom': '10px',
-		  			'top': 'auto'
-		  		});
-		  	});
-		  	$('#J_iframe').find('iframe').removeAttr('src');
-		  });
-
-		  // 音乐app在切换提供商以后会进行大小重设
-		  var appPositionReset = function(){
-		  	var mL = parseInt( app.$elem[0].style.marginLeft );
-		  	if(app.$elem.css('bottom') == '10px'){
-		  		app.$elem.css({
-		  			'position' : 'fixed',
-		  			'left' : (0 - mL - 3) + 'px'
-		  		});
-		  	}
-		  };
-		  app.show = function(){
-		  	app.$elem.find('.music-close-wrap').show();
-		  	appPositionReset();
-		  	//完全关闭后再次打开，需要重新载入面板及频道
-		  	if(app.$elem.is(':hidden')){
-		  		app.$elem.show();
-		  		$submenu.children(':first-child').children('a').click();
-		  	}
-		  	//app.$elem.css('display' , 'block');
-		  	app.$closeBtn.removeClass('closed');
-		  }
-		  // 加载
-		  var $submenu = $('#J_with_submenu').find('.submenu');
-		  var $rootMenu = $('#J_with_submenu').children('a').children('.J_root_menu');
-		  $submenu.on('click', 'a', function(){
-		    $(this).parent().siblings().removeClass('hide last');
-		    $(this).parent().addClass('hide').removeClass('last');
-		    $rootMenu.html($(this).html());
-		    // 给最后一个添加圆角
-		    var currentMenu = $submenu.children('[class!=hide]');
-		    $(currentMenu[currentMenu.length - 1]).addClass('last');
-		    // 选择音乐频道
-		    selectChannel( $(this) );
-		  });
-		  // 根据选中的提供商重设app大小
-		  var resetAppSizeByProvider = function( $providerBtn ){
-		  	$("#J_box_music").css({
-		      'margin-left' : '-' + $providerBtn.data('width')/2 + 'px',
-		      'margin-top' : '-' + $providerBtn.data('height')/2 + 'px'
-		    });
-		    $('#J_music_iframe_wrap').css({
-		    	'width' : $providerBtn.data('width'),
-		    	'height' : $providerBtn.data('height')
-		    });
-		  };
-		  var musicAppInitOnlyOnce = function(){
-		  	var $firstProvider = $submenu.children(':first-child').children('a'); // 使用按钮关联提供商的尺寸
-		  	$firstProvider.data('width')
-		  };
-		  var selectChannel = function( btn ){
-		  	if(btn.hasClass('qq-source') && (ua.browser.family == 'Firefox' || ua.browser.family == 'IE' || navigator.userAgent.search('OPR'))){
-		  		$('#K_qq_music_browser_tip').show();
-		  	}else{
-		  		$('#K_qq_music_browser_tip').hide();
-		  	}
-		  	var iframe = '<iframe scrolling="no" height="'+btn.data('height')+'" width="'+btn.data('width')+'" frameborder="0" style="overflow:hidden" allowtransparency="true" src="'+btn.data('href')+'"></iframe>'
-		    resetAppSizeByProvider( btn );
-		    $('#J_iframe').html( iframe );
-        appPositionReset();
-		  };
-		  
-		  // 默认加载第一个
-		  $submenu.children(':first-child').children('a').click();
-		  app.close();
-		  app.$elem.fadeIn();
+            MusicBox.Init();
+            app.show = function(){
+                //完全关闭后再次打开，需要重新载入面板及频道
+                if(app.$elem.is(':hidden')){
+                    app.$elem.show();
+                    MusicBox.play();
+                }
+            }
 		}
 	}
+
+
+    var MusicBox = {
+        Init: function(){
+            var self = this;
+            self.music_channel_list = [
+                {
+                    id: 'douban',
+                    name: '豆瓣FM',
+                    url: 'http://douban.fm/partner/playerhao123'
+                },{
+                    id: 'xiami',
+                    name: '虾米音乐',
+                    url: 'http://www.xiami.com/kuang/hao123/'
+                },{
+                    id: 'baidu',
+                    name: '百度随心听',
+                    url: 'http://fm.baidu.com/?embed=hao123"'
+                },{
+                    id: 'duole',
+                    name: '多乐音乐',
+                    url: 'http://www.duole.com/application/qihu360'
+                },{
+                    id: 'kugou',
+                    name: '酷狗音乐',
+                    url: 'http://web.kugou.com/default.html'
+                },{
+                    id: 'duomi',
+                    name: '多米音乐',
+                    url: 'http://app.duomiyy.com/webradio/hao123/'
+                },{
+                    id: 'kuwo',
+                    name: '酷我音乐',
+                    url: 'http://player.kuwo.cn/webmusic/web/play'
+                },{
+                    id: 'beiwa',
+                    name: '贝瓦儿歌',
+                    url: 'http://app.beva.com/360/fm'
+                },{
+                    id: 'yinyuetai',
+                    name: '音悦台',
+                    url: 'http://www.yinyuetai.com/baidu/hao123'
+                },{
+                    id: 'st',
+                    name: 'SongTest',
+                    url: 'http://www.songtaste.com/radio.php'
+                }
+            ];
+
+
+            self.changeMode('normal', true);
+            var lis = '';
+            var divs = '';
+            $.each(self.music_channel_list, function(k, v){
+                lis += '<li><a class="normal_music_channel_btn normal_music_channel_' + v.id + '" href="javascript:;" data-url="' + v.url + '" data-channel="' + v.id + '"></a></li>'
+                divs += '<div class="mini_music_channel_btn mini_music_channel_' + v.id + '" data-url="' + v.url + '" data-channel="' + v.id + '"><b></b><span>' + v.name + '</span></div>';
+            });
+            $('.normal_music_channel_list').find('ul').html(lis);
+            $('.mini_channel_list').html(divs);
+
+            $('#J_box_music').show();
+
+            //默认播放第一个频道
+            if($.cookies.get('music_box_v303_close') != 1){
+                $('.music-close-tip').show();   // 关闭提示
+                self.play();
+            }
+
+            //绑定事件
+            $('.normal_music_channel_list').on('click', '.normal_music_channel_btn', function(){
+                var id = $(this).attr('data-channel');
+                var url = $(this).attr('data-url');
+                self.play(id, url);
+            });
+            $('.mini_channel_list').on('click', '.mini_music_channel_btn', function(){
+                var id = $(this).attr('data-channel');
+                var url = $(this).attr('data-url');
+                self.play(id, url);
+                return false;
+            });
+
+            $('#J_box_music').draggable({handle: '.mini_music_channel_list'});
+
+            $('.normal_music_box_size_btn, .mini_music_box_size_btn').click(function(){
+                var mode = $(this).attr('data-size');
+                self.changeMode(mode);
+            });
+
+            $('.mini_channel_list').on('mouseover', '.mini_music_channel_btn', function(){
+                $('.mini_music_channel_btn').removeClass('hover_class');
+                $(this).addClass('hover_class');
+            }).on('mouseout', '.mini_music_channel_btn', function(){
+                $(this).removeClass('hover_class');
+            })
+
+            $('.mini_music_channel_select').mouseover(function(){
+                if(!$('.mini_channel_list').is(':hidden')) return;
+                var h = $('.mini_channel_list').height();
+                var bt = $('.mini_music_box').css('top');
+                var bh = $('.mini_music_box').height();
+                var wh = $(window).height();
+                bt = bt == 'auto' ? wh - bh : parseInt(bt);
+                if(wh - bt - bh <= h){
+                    $('.mini_channel_list').css('margin-top', - (h + bh - 8) + 'px');
+                }else{
+                    $('.mini_channel_list').css('margin-top', '0');
+                }
+                $('.mini_channel_list').show();
+            }).mouseout(function(){
+                $('.mini_music_channel_btn').removeClass('hover_class');
+                $('.mini_channel_list').hide();
+            });
+
+            $('.normal_music_box_close_btn, .mini_music_box_close_btn').click(function(){
+                self.close();
+            });
+
+            $('.normal_music_box_toggle_btn').click(function(){
+                self.changeNormalPosition();
+            });
+
+            $(document).on('keydown', function(e){
+                if (e.keyCode == 27) {
+                    var mode1 = $('.active-size').hasClass('size_fullscreen');
+                    var mode2 = $('.active-size').hasClass('size_normal');
+                    if(mode1){
+                        self.changeMode('normal');
+                    }else if(mode2 && parseInt($('#J_box_music').css('left')) == 0){
+                        self.changeNormalPosition();
+                    }
+                }
+            });
+        },
+        close: function(){
+            $('#J_box_music').hide();
+            $('#K_303_music_iframe').attr('src', '');
+            $.cookies.set('music_box_v303_close', '1', { expiresAt: (new Date).add_day(365) });
+
+        },
+        play: function(id, url){
+            var self = this;
+            if(arguments.length == 0){
+                var defaultChannel = self.music_channel_list[0]
+                id = defaultChannel.id;
+                url = defaultChannel.url;
+            }
+            $('.normal_music_channel_list').find('li').removeClass('active');
+            $('.normal_music_channel_' + id).closest('li').addClass('active');
+            $('#K_303_music_iframe').attr('src', url);
+            $('.mini_current_channel').find('.mini_music_channel_btn').appendTo('.mini_channel_list');
+            $('.mini_music_channel_' + id).appendTo('.mini_current_channel');
+        },
+        changeMode: function(mode, isFirst){
+            var self = this;
+            if(!isFirst && parseInt($('#J_box_music').css('left')) != 0){
+                self.changeNormalPosition();
+            }
+
+            var t = $(window).scrollTop();
+            var h = $(window).height() / 2;
+
+
+            $('#J_box_music').attr('class', '').addClass(mode +'_music_box');
+
+            if(mode == 'normal'){
+                if($(window).height() < 560){
+                    $('.normal_music_box').css({
+                        'bottom': 'auto',
+                        'top' : '0'
+                    });
+                }else{
+                    $('.normal_music_box').css({
+                        'bottom': -t,
+                        'top' : 'auto'
+                    });
+                }
+            }
+            if(mode == 'mini'){
+                $('.mini_music_box').css({
+                    'bottom' : 0,//-t + h,
+                    'top' : 'auto'
+                });
+            }
+            if(mode == 'fullscreen'){
+                $('.fullscreen_music_box').css({
+                    bottom:0,
+                    top:0,
+                    left:0,
+                    right:0
+                });
+                var ww = $('.normal_music_iframe_box').width();
+                var hh = $('.normal_music_iframe_box').height();
+                $('#K_303_music_iframe').width(ww - 40).height(hh - 40);
+            }else{
+                $('#K_303_music_iframe').width(749).height(508);
+            }
+
+
+            $('.normal_music_box_size_btn, .mini_music_box_size_btn').removeClass('active-size');
+            $('.size_' + mode).addClass('active-size');
+        },
+        changeNormalPosition: function(){
+
+            var self = this;
+            var mode = $('.active-size').hasClass('size_fullscreen');
+            if(mode){
+                self.changeMode('normal');
+            }
+
+            var st = $('#J_box_music').css('left');
+            var tit, pos;
+
+            st = parseInt(st);
+            if(st != 0){
+                tit = '收起';
+                pos = '0';
+                if(!$('#K_303_music_iframe').attr('src')){
+                    self.play();
+                }
+            }else{
+                tit = '展开';
+                pos = '-789px';
+            }
+            $('#J_box_music').animate({'left': pos});
+            $('.normal_music_box_toggle_btn').html(tit);
+        }
+    };
+
+    window.onload = function(){
+        $('a[data-href="#J_box_music"]').trigger('click');
+        $('a[data-href="#J_box_music"]').on('click', function(){
+            setTimeout(function(){
+                MusicBox.changeMode('normal');
+            }, 0);
+        });
+
+    };
+/*
+
+    var K_appId = '#J_box_music';
+    if(!$(K_appId).size()){
+        $('body').append(AppsTpl[K_appId]);
+    }
+    $('a[data-href="#J_box_music"]').data('links_app') || $('a[data-href="#J_box_music"]').data('links_app', new App(K_appId));
+    var K_app = $('a[data-href="#J_box_music"]').data('links_app');
+    K_app.show();
+*/
 
 }(jQuery));

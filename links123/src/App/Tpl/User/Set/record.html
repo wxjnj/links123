@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<title>聊天记录管理_个人中心</title>
+    <include file="Set/Contorls:meta" />
+</head>
+<body>
+	<include file="Set/Contorls:header" />
+	<div class="container">
+		<div class="wrap">
+            <include file="Set/Contorls:left" />
+			<div class="content">
+				<h2 class="c-ttl">聊天记录管理</h2>
+				<div class="record-panel">
+					<div class="record-x">
+						<h3>聊天记录漫游</h3>
+						<ul>
+							<li><label for=""><input type="checkbox" name="" id=""> 开启</label></li>
+							<li><label for=""><input type="checkbox" name="" id=""> 关闭</label></li>
+						</ul>
+						<p>您已与2013-10-27日将聊天记录漫游升级为 200 条聊天记录，2013-11-27日可再次免费升级为漫游400条，</p>
+						<p>您也可使用 <span class="aline">35另币</span> 升级。<a class="aline" href="#">如何获取另币</a></p>
+						<p class="ctls"><input class="btn-ok" type="submit" value="提交" /></p>
+					</div>
+					<div class="record-empty">
+						<h3>清空聊天记录<span>注意：为了您的隐私安全，清空的聊天记录将不再能找回请慎用此功能。</span></h3>
+						<p>清空聊天记录前请输入密码确认</p>
+						<p><input class="ipt-m ipt-dis" type="text" /></p>
+						<p class="ctls"><input class="btn-ok" type="submit" value="提交" /></p>
+					</div>
+					<div class="record-protect">
+						<h3>聊天记录密码保护<span>查看聊天记录时需要输入密码</span></h3>
+						<p>聊天记录密码设置</p>
+						<p><input class="ipt-m ipt-dis" type="text" /></p>
+						<p>确认密码</p>
+						<p><input class="ipt-m ipt-dis" type="text" /></p>
+						<p class="ctls"><input class="btn-ok" type="submit" value="提交" /></p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<include file="Set/Contorls:footer" />
+</body>
+</html>

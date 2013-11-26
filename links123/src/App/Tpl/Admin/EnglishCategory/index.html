@@ -1,0 +1,150 @@
+<tagLib name="html" />
+<include file="Public:header" />
+<load href="__PUBLIC__/Js/Jquery/jquery.js" />
+<script language="javascript">
+	function add() {
+//		location.href = URL + "/add/level_one/" + document.getElementById('type').value;
+        location.href = "__URL__/add?level={$level}&level_one={$Think.get.level_one}&level_two={$Think.get.level_two}";
+	}
+</script>
+
+<div id="main" class="main" >
+	<div class="content" >
+		<div class="operate" >
+			<html:imageBtn name="add" click="add()" style="hMargin fLeft" />
+            <!--<html:imageBtn name="sort" click="sort()" style="hMargin fLeft" />-->
+            <html:imageBtn name="forbid" click="forbid()" style="hMargin fLeft" />
+            <!--<html:imageBtn name="delete" click="foreverdel()" style="hMargin fLeft" />-->
+            <html:imageBtn name="resume" click="resume()" style="hMargin fLeft" />&nbsp;&nbsp;
+            <a href="javascript:resetQuestionNum();">重置分类题目数量</a>
+            &nbsp;&nbsp;
+            <neq name='level' value='1'>
+                <a href='__URL__'>[返回一级分类列表]</a>&nbsp;&nbsp;
+            <else />
+                一级分类列表
+            </neq>
+            
+            <if condition="$level eq 1">
+                <!--<a href="#">{$level_one_info.name}</a>-->
+            <elseif  condition="$level eq 2" />
+                <a href="__URL__/index?level=2&level_one={$level_one_info.id}">{$level_one_info.name}</a> > 二级分类列表
+            <else />
+                <a href="__URL__/index?level=2&level_one={$level_one_info.id}">{$level_one_info.name}</a> > <a href="#">{$level_two_info.name}</a> > 三级分类列表
+            </if>
+		</div>
+
+		<form method='post' action="__URL__/index">
+			<div class="rSearch">
+				<div class="fLeft">按照名称查询：
+					<span id="key">
+						<input type="text" name="name" value="{$name}" class="medium" />
+					</span>
+				</div>
+				<html:imageBtn type="submit" name="search" style="hMargin fLeft" />
+				<input type="hidden" id="type" name="type" value="{$type}" />
+			</div>
+	
+			<div id="searchM" class="none search cBoth" />
+			</div>
+		</form>
+
+		<div class="list" >
+			<div id="result" class="result none"></div>
+
+			<input type="hidden" id='level' name="level" value="{$level}"/>
+
+			<html:list id="checkList" name="node" param="{$param_str}" style="list" checkbox="true" action="true" datasource="list" show="cat_id:编号|5%,name:名称:child|level_id,sort:序号,num:试题数量,default|getYorN:默认分类,created|toDate:发布时间,updated|toDate:更新时间,category_status|getStatus:状态" actionlist="category_status|showStatus=$node['cat_id'],edit:编辑:level_id,foreverdel:删除" />
+            <div class="page">{$page}</div>
+        </div>
+	</div>
+
+	<div>
+	<span>
+		注：<br/>
+			&nbsp;&nbsp;一级类目代表：选择课程，选择专题，精选TED等<br/>
+			&nbsp;&nbsp;二级类目代表：语文，数学等<br/>
+			&nbsp;&nbsp;三级类目代表：等级或者难度，比如幼儿园，小一等<br/>
+	</span>
+	</div>
+</div>
+<script type="text/javascript">
+    function resetQuestionNum(){
+        if (window.confirm('！注意，确实操作吗？')) {
+             window.location.href = "{:U('Admin/EnglishCategory/resetCategoryQuestionNum')}";
+        }
+    }
+    $(function() {
+        /* 直达 */
+        $(".page input").keydown(function(event) {
+            if (event.keyCode == 13) {	// 回车
+                if ($(this).val() != '' && !isNaN($(this).val())) {
+                    window.location.href = $(this).attr("url") + "&p=" + $(this).val();
+                }
+            }
+        });
+    })
+    function child(id){
+        if(!id){
+            alert("非法操作");
+        }
+        var level = "{$level|default=1}";
+        if(level == 1){
+            location.href = "__URL__/index?level=2&level_one="+id;
+        }else if(level == 2){
+            location.href = "__URL__/index?level=3&level_one={$Think.get.level_one}&level_two="+id;
+        }
+            
+    }
+    function edit(id) {
+        var cat_id = $("a[href=\"javascript:edit('"+id+"')\"]").parents("tr").children("td:eq(1)").text();
+		location.href = URL + "/edit/id/"+id+"/cat_id/"+cat_id+"/level/"+$("#level").val();
+	}
+    function forbid(id) {
+        var keyValue;
+        if (id) {
+            keyValue = id;
+        } else {
+            keyValue = getSelectCheckboxValues();
+        }
+        if (!keyValue) {
+            alert('请选择禁用项！');
+            return false;
+        }
+
+        if (window.confirm('确实操作吗？')) {
+            window.location.href = URL + "/forbid/id/"+keyValue+"/level/"+$("#level").val();
+        }
+    }
+    function resume(id) {
+        var keyValue;
+        if (id) {
+            keyValue = id;
+        } else {
+            keyValue = getSelectCheckboxValues();
+        }
+        if (!keyValue) {
+            alert('请选择操作项！');
+            return false;
+        }
+
+        if (window.confirm('确定操作吗？')) {
+            window.location.href = URL + '/resume/id/' + keyValue+"/level/"+$("#level").val();
+        }
+    }
+    function foreverdel(id) {
+        var keyValue;
+        if (id) {
+            keyValue = id;
+        } else {
+            keyValue = getSelectCheckboxValues();
+        }
+        if (!keyValue) {
+            alert('请选择操作项！');
+            return false;
+        }
+
+        if (window.confirm('确认永久删除操作？！')) {
+            window.location.href = URL + '/foreverdelete/id/' + keyValue+"/level/"+$("#level").val();
+        }
+    }
+</script>

@@ -1,16 +1,16 @@
 <div class="cal-header">
 	<table width="100%">
 		<tr>
-			<td class="tr">
+			<td class="tr" width="40px">
 				<button class="cal-header-date-prev"></button>
 			</td>
 			<td class="tc">
 				<h5 class="cal-header-date" data-date="2013/01/01" data-date2="2013/01/31">2013年01月01日</h5>
 			</td>
-			<td class="tl">
+			<td class="tl" width="40px">
 				<button class="cal-header-date-next"></button>
 			</td>
-			<td class="tr pr20">
+			<td class="tr pr10">
 				<button class="cal-view-select-btn cal-view-select-btn-month" data-type="Month">月</button>
 				<button class="cal-view-select-btn cal-view-select-btn-week" data-type="Week">周</button>
 				<button class="cal-view-select-btn cal-view-select-btn-date active" data-type="Date">日</button>
@@ -20,6 +20,16 @@
 </div>
 <div class="cal-body">
 	<div class="cal-day" style="display:none">
+		<!--div class="cal-day-burn-down-chart">
+			<div class="chart">
+				<h5 class="time-show">00:00</h5>
+			</div>
+			<div class="chart-body"></div>
+		</div-->
+		<ul class="cal-date-marks-table">
+		</ul>
+		
+		<input style="display:none" type="text" />
 		<div class="cal-mini-month-panel">
 			<table>
 				<thead>
@@ -32,16 +42,11 @@
 				</tbody>
 			</table>
 		</div>
-		<div class="cal-day-note-list">
+		<!--div class="cal-day-note-list">
 			<h6>全天事件 - <b class="marks-count"></b>件</h6>
 			<ul class="cal-day-ul"></ul>
-		</div>
-		<div class="cal-day-burn-down-chart">
-			<div class="chart">
-				<h5 class="time-show">00:00</h5>
-			</div>
-			<div class="chart-body"></div>
-		</div>
+		</div-->
+
 	</div>
 	<div class="cal-week" style="display:none">
 		<table>
@@ -90,5 +95,7 @@
 
 <div class="cal-ajax-overlayer" style="display:none">
 	<div class="layer"></div>
-	<div class="content">加载中...</div>
+	<div class="content"></div>
 </div>
+
+

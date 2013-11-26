@@ -121,6 +121,8 @@ $(function() {
 	// 弹出页
 	$(".newWin").click(function() {
 		myWinOpen($(this).attr('url'), '', '');
+		//百度ajax统计
+        _hmt.push(['_trackPageview', $(this).attr('url')]);
 	});
 
 	// 时钟

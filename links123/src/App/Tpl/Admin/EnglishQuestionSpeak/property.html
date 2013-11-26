@@ -3,16 +3,13 @@
 <load href="__PUBLIC__/Js/Jquery/jquery.js" />
 <script language="javascript">
 	function add() {
-		location.href = URL + "/addProperty/type/{$Think.get.type}/qid/{$Think.get.qid}";
+		location.href = URL + "/addProperty?type={$Think.get.type}&qid={$Think.get.qid}";
 	}
 	function forbid(id) {
 		location.href = URL + "/forbid/id/" + id + "/qid/" + document.getElementById('question_id').value;
 	}
 	function resume(id) {
 		location.href = URL + "/resume/id/" + id + "/qid/" + document.getElementById('question_id').value;
-	}
-	function foreverdel(id) {
-		location.href = URL + "/foreverdel/id/" + id + "/qid/" + document.getElementById('question_id').value;
 	}
 	
 </script>
@@ -47,11 +44,31 @@
 
 		<div class="list" >
 			<div id="result" class="result none"></div>
-			<html:list id="checkList" name="node" style="list" checkbox="true" action="true" datasource="property" show="id:编号|10%,voice_name:语音,target_name:训练,pattern_name:形式,level_one_name:一级类目,level_two_name:二级类目,level_thr_name:三级类目" actionlist="foreverdel:删除" />
+			<html:list id="checkList" name="node" style="list" checkbox="true" action="true" datasource="property" show="id:编号|10%,voice_name:语音,target_name:训练,pattern_name:形式,level_one_name:一级类目,level_two_name:二级类目,level_thr_name:三级类目" actionlist="foreverdel:删除,edit:编辑" />
 		</div>
 	</div>
 </div>
 <script type="text/javascript">
+    function foreverdel(id) {
+        var question_id = $("#question_id").val();
+        var keyValue;
+        if (id) {
+            keyValue = id;
+        } else {
+            keyValue = getSelectCheckboxValues();
+        }
+        if (!keyValue) {
+            alert('请选择删除项！');
+            return false;
+        }
+
+        if (window.confirm('确实要永久删除选择项吗？')) {
+            location.href = URL + "/delProperty/id/" + keyValue+"/question_id/"+question_id;
+        }
+    }
+    function edit(id){
+        location.href ="__URL__/editProperty/id/"+id+"/question_id/"+$("#question_id").val();
+    }
     $(function() {
         
     })

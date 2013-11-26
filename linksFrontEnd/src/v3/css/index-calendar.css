@@ -67,7 +67,7 @@
 	-webkit-border-radius: 20px;
 }
 .cal_v303_mark_list_wrap {
-	width: 239px;
+	width: 237px;
 	height: 150px;
 	float: left;
 	padding-left: 10px;
@@ -79,9 +79,9 @@
 	height: 120px;
 }
 .cal_v303_mark_list_wrap li {
-	height: 29px;
-	line-height: 29px;
-	border-bottom: 1px solid #aaa;
+    height: 29px;
+    line-height: 29px;
+    border-bottom: 1px solid #aaa;
 }
 .cal_v303_mark_list_wrap li b {
 	display: inline-block;
@@ -102,7 +102,7 @@
 	float: right;
 }
 .cal_v303_mark_bottom_btns {
-	width: 239px;
+	width: 237px;
 	height: 30px;
 	line-height: 30px;
 }
@@ -198,6 +198,16 @@
 	border-color:#fff transparent transparent;
 	left:65px;
 	bottom:-25px
+}
+.extra-calendar .cal-close {
+	background: transparent url(/v3/imgs/app/links-app-frame/close.png) 0 -60px no-repeat;
+	width: 30px;
+	height: 30px;
+	position: absolute;
+	right: -16px;
+	top: -16px;
+	z-index: 1000;
+	font-size: 0;
 }
 .extra-calendar .cal-ajax-overlayer {
 	position:absolute;
@@ -393,7 +403,6 @@
 	-webkit-border-radius:5px
 }
 .extra-calendar .cal-day .cal-day-burn-down-chart .cal-day-event-item .time {
-	float:left;
 	margin-left:5px
 }
 .extra-calendar .cal-day .cal-day-burn-down-chart .cal-day-event-item .desc {
@@ -402,7 +411,8 @@
 }
 .extra-calendar .cal-day .cal-day-burn-down-chart .cal-day-event-item .enter {
 	display:none;
-	color:#502d5c
+	color:#502d5c;
+	float:right;
 }
 .extra-calendar .cal-day .cal-day-burn-down-chart .cal-day-event-item .delete {
 	color:#502d5c;
@@ -563,7 +573,7 @@
 }
 .widescreen .cal_v303_mark_list_wrap,
 .widescreen .cal_v303_mark_bottom_btns {
-	width: 329px;
+	width: 327px;
 	height: 200px;
 }
 .widescreen .cal_v303_mark_list_wrap ul {
@@ -579,65 +589,65 @@
 	display: inline-block;
 }
 .widescreen .cal_v303_new_mark b {
-	margin-top: 11px;
+    margin-top: 11px;
 }
 
 /* 针对Firefox不支持table中的absolute进行修正 */
 @-moz-document url-prefix() {
+
+	.extra-calendar .cal-header {
+		width: 579px;
+	}
+	.extra-calendar .cal-month table,
+	.extra-calendar .cal-week table {
+		width: 597px;
+		height: 50px;
+	}
+
 	.extra-calendar .cal-month table td,
 	.extra-calendar .cal-week table td {
-		display: block;
+		display: inline-block;
 	}
 	.extra-calendar .cal-week table tbody{
-		width: 594px;
+		width: 597px;
 	}
 	.extra-calendar .cal-month table th,
 	.extra-calendar .cal-week table th {
-		width: 78px;
+		width: 79px;
+		display: block;
+		float: left;
+		line-height: 50px;
+		position: relative;
+		margin-right: 2px;
 	}
 
+	.extra-calendar .cal-month table td,
 	.extra-calendar .cal-week table td {
 		width: 81px;
 		height: 293px;
-		position: absolute;
-	}
-
-	.extra-calendar .cal-month table .op-td-1,
-	.extra-calendar .cal-week table .td_2 {
-		width: 81px;
-		margin-left: 83px;
-	}
-	.extra-calendar .cal-month table .op-td-2,
-	.extra-calendar .cal-week table .td_3 {
-		width: 81px;
-		margin-left: 166px;
-	}
-	.extra-calendar .cal-month table .op-td-3,
-	.extra-calendar .cal-week table .td_4 {
-		width: 80px;
-		margin-left: 249px;
-	}
-	.extra-calendar .cal-month table .op-td-4,
-	.extra-calendar .cal-week table .td_5 {
-		width: 81px;
-		margin-left: 331px;
-	}
-	.extra-calendar .cal-month table .op-td-5,
-	.extra-calendar .cal-week table .td_6 {
-		width: 81px;
-		margin-left: 414px;
-	}
-	.extra-calendar .cal-month table .op-td-6,
-	.extra-calendar .cal-week table .td_7 {
-		width: 81px;
-		margin-left: 497px;
-	}
-
-	.extra-calendar .cal-month table td {
+		display: block;
+		position: relative;
 		float: left;
-		position: absolute;
-		width: 81px;
-		height: 57px;
-		line-height: 57px;
+		margin-right: 2px;
 	}
+	.extra-calendar .cal-month table td {
+		height: 60px;
+		line-height: 60px;
+	}
+
+	.extra-calendar .cal-day .cal-day-burn-down-chart {
+		width:357px;
+	}
+	.extra-calendar .cal-day .cal-day-burn-down-chart .chart-body {
+		width:357px;
+	}
+	.extra-calendar .cal-day .cal-day-burn-down-chart .chart {
+		width:357px;
+	}
+	.extra-calendar .cal-day .cal-day-burn-down-chart .cal-day-event-item {
+		width:347px;
+		padding:0 5px;
+	}
+
 }
+

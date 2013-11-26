@@ -1,0 +1,184 @@
+@charset "utf-8";
+/* CSS Document */
+body, div, dl, dt, dd, ul, ol, li,h1, h2, h3, h4, h5, h6, pre, code,form, fieldset, legend, input, button,textarea, p, blockquote, th, td, img{margin: 0;padding: 0;font-family:'微软雅黑','宋体';font-size:14px;}
+ul, ol, li{list-style:none outside none;}
+.bodybg{background: url("../images/st_bg.jpg") repeat fixed center #72A8D6;}
+img{border:0px;}
+
+.fl{float:left;}
+.fr{float:right;}
+.fc{clear:both;}
+.overflow{ overflow:hidden;}
+
+a.ablue:link {color:#000;text-decoration:none;} /*未点时链接 */
+a.ablue:visited {color:#000;text-decoration:none;} /*已点过的链接 */
+a.ablue:hover {color:#000;text-decoration:underline;} /*光标移上时的链接 */
+a.ablue:active {} /*点击时的样式 */
+
+a:link {color:#0079c1;text-decoration:none;} /*未点时链接 */
+a:visited {color:#0079c1;text-decoration:none;} /*已点过的链接 */
+a:hover {color:#0079c1;text-decoration:underline;} /*光标移上时的链接 */
+a:active {} /*点击时的样式 */
+
+.bk5{height:5px; font-size:0;}
+.bk10{height:10px; font-size:0;}
+.bk15{height:15px; font-size:0;}
+
+/*头部*/
+.head{ background:url(../images/headBg.png) 0 0 repeat-x; width:100%; height:40px;}
+.head .content{ width:1100px; margin:0 auto;}
+.head a.logo{ padding:4px 0 0 0; display:block; width:145px; margin:0 30px 0 0; }
+
+.headSearch{position:relative; width:230px;}
+.input_a{border-radius:5px; background:#e9e9e9; box-shadow: inset 1px 1px 5px #999; height:23px; line-height:23px; color:#727272; margin:6px 0 0 0; padding:2px 5px; border:0; width:220px; font-size:13px;}
+.zoomIcon{ background:url(../images/inputIcon.png) 0 0 no-repeat; width:25px; height:25px; position:absolute; right:0px; top:7px; cursor:pointer;}
+
+.userSearch{position:relative; width:230px;}
+.listIcon{ background:url(../images/inputIcon.png) 0 -25px no-repeat; width:25px; height:25px; position:absolute; right:0px; top:7px; cursor:pointer;}
+.headerImg img{ padding:6px 10px 0 0 ;}
+
+.mainNav{margin:6px 0 0 0;}
+.mainNav li{ float:left; font-size:13px; height:25px; line-height:25px; padding:0 20px; color:#FFF; text-shadow:1px 1px 0 #000;}
+.mainNav li a{color:#FFF; text-shadow:1px 1px 0 #000;}
+
+/*主体内容*/
+.mainBox{}
+.mainBox{width:1098px; margin:0 auto; border:1px solid #ccc; border-top:none; overflow:hidden; padding:0 0 15px 0;}
+.mainBox .leftCenterBox{ width:818px; float:left;}
+.mainBox .leftBox{ width:278px; margin:0 10px; float:left}
+.mainBox .centerBox{ width:520px; float:left;}
+.mainBox .rightBox{ width:260px; float:left; margin:0 10px;}
+
+.coverBox{ position:relative;margin:0 0 15px 0;}
+.coverBox > img{ display:block;}
+.coverNav{ background:#efefef; border:1px solid #dddddd; border-top:none; height:45px; padding:0 0 0 215px;}
+.coverNav li{float:left; margin:0 15px; padding:0 10px; height:45px; line-height:45px; }
+.coverNav li a{text-shadow:#fff 1px 1px 0; color:#0079c1; font-weight:bold; font-size:15px;}
+.coverNav li.cur{ box-shadow: inset 0 0 8px #999; background:#dedede;}
+.coverNav li.cur a{text-shadow:#fff 1px 1px 0; color:#666666; font-weight:bold; font-size:15px;}
+
+.coverHeader{ width:180px; height:240px; position:absolute; bottom:10px; left:10px; box-shadow: 0 0 5px #999; background:#fff; padding:5px;}
+.coverInfo{ overflow:hidden; padding:5px 0 0 0;}
+.coverInfo li{ float:left; width:45px; text-align:center; padding:5px;}
+.coverInfo li span{font-size:18px; font-weight:normal; color:#303030;}
+.coverInfo li p{ font-size:13px; color:#303030;}
+.coverInfo li.c{ border-left:1px solid #ccc; border-right:1px solid #ccc;}
+
+.coverID{ position:absolute; left:230px; bottom:60px; text-shadow:#363636 1px 1px 2px; color:#FFF}
+.coverID span{ display:block; font-size:16px;}
+.coverID p{font-size:22px;}
+
+.coverBtn{ position:absolute; right:20px; bottom:70px;}
+.coverBtn .friBtn{ background:url(../images/btn01.png) 0 0 no-repeat; width:96px; height:28px; line-height:26px; text-align:center; color:#666; cursor:pointer;}
+.coverBtn .goodBtn{ background:url(../images/btn01.png) 0 -28px no-repeat; width:81px; height:28px; line-height:26px;margin:0 0 0 10px; padding:0 0 0 15px; text-align:center; color:#FFF;cursor:pointer;}
+
+.cBox01{ border:1px solid #ccc; padding:15px; margin:0 0 15px 0; overflow:hidden;}
+.cBox01 > p{ color:#505a64; font-size:13px; line-height:20px;}
+.cBox01 .levelBox{color:#505a64; font-size:13px; line-height:20px;}
+.cBox01 span.fl{ display:block;}
+
+.userPo{overflow:hidden;}
+.userPo img{ display:block; width:50px; height:50px;}
+.userPo .userPoCon{float:left; width:430px; margin:0 0 0 8px; display:inline;}
+.userPo h4 a{color:#0079c1; font-weight:bold;}
+.userPo p{color:#505a64; font-size:12px;}
+.userMap{margin:10px 0;}
+
+/*small icon*/
+.diamond{ background:url(../images/icon_small.png) 0 0 no-repeat; width:20px; height:20px;}
+.i_add{padding:0 0 0 20px; background:url(../images/icon_small.png) 0 -20px no-repeat;}
+.i_work{padding:0 0 0 20px; background:url(../images/icon_small.png) 0 -42px no-repeat;}
+.i_from{padding:0 0 0 20px; background:url(../images/icon_small.png) 0 -64px no-repeat;}
+.i_study{padding:0 0 0 20px; background:url(../images/icon_small.png) 0 -86px no-repeat;}
+.i_good{padding:0 0 0 20px; background:url(../images/icon_small.png) 0 -108px no-repeat;}
+.i_reply{padding:0 0 0 20px; background:url(../images/icon_small.png) 0 -128px no-repeat;}
+.i_face{background:url(../images/icon_small.png) 0 -148px no-repeat; height:27px; width:20px; margin:0 3px; cursor:pointer;}
+.i_loadImg{background:url(../images/icon_small.png) 0 -174px no-repeat; height:27px; width:20px; cursor:pointer;}
+
+.level{padding:0 0 0 10px; font-weight:bold; font-size:14px; color:#F00;
+    background:-webkit-gradient(linear,0% 0%,0% 100%,from(#fbd03a), to(#d81005));-webkit-text-fill-color: transparent;	-webkit-background-clip: text;}
+
+.footnote01{ border-top:1px solid #ccc; border-bottom:1px solid #ccc; height:30px; line-height:30px; font-size:11px;}
+.footnote01 span{ color:#CCC;}
+.footnote02{ border-bottom:1px solid #ccc; height:30px; line-height:30px; font-size:11px; }
+.footnote02 span{ color:#CCC;}
+.userComment .all{height:30px; line-height:30px; font-size:11px;}
+.userComment .po{ overflow:hidden; margin:0 0 10px 0;}
+.userComment .po img,.userComment .reply img{ width:30px; height:30px;}
+.userComment .pocon{float:left; width:440px; margin:0 0 0 8px; display:inline;}
+.userComment .pocon .pouc{ height:16px; line-height:12px;}
+.userComment .pocon .pouc h4{ display:inline; font-size:12px;}
+.userComment .pocon .pouc span{ font-size:12px; color:#999;}
+.userComment .pocon .poInfo{ font-size:11px;}
+.userComment .pocon .poInfo span{ color:#999;}
+.userComment .reply .replyBox{ float:left; margin:0 0 0 8px; display:inline; padding:2px 0 0 0 ;}
+
+.cBox02{ border:1px solid #ccc; margin:0 0 15px 0;}
+
+.cBox02 .title{height:25px; line-height:25px; border-top:1px solid #fff; border-bottom:1px solid #ccc; background:#efefef; padding:0 15px; }
+.cBox02 .title{ position:relative;}
+.cBox02 .title .arrow{ position:absolute; bottom:-1px; left:35px; width:13px; height:6px; background:url(../images/arrow.png) 0 0 no-repeat;}
+.cBox02 .title h3{color:#666666; font-size:12px; font-weight:normal;}
+.cBox02 .title h3.iconH3_01{ padding:0 0 0 20px; background:url(../images/icon_title.png) 0 0 no-repeat;}
+.cBox02 .title h3.iconH3_02{ padding:0 0 0 20px; background:url(../images/icon_title.png) 0 -25px no-repeat;}
+.cBox02 .title a{ display:block; font-size:12px;}
+.cBox02 .con{padding:15px; overflow:hidden;}
+.cBox02 .con p{ color:#505a64; font-size:13px; line-height:22px;}
+.cBox02 .userPhotos li{ float:left; width:80px; height:80px; margin-bottom:3px;}
+.cBox02 .userPhotos li.c{margin:0 3px 3px 3px; display:inline;}
+
+.cBox02 .userTags{ overflow:hidden; margin: 0 0 6px 0;}
+.cBox02 .userTags li{ float:left; height:20px; line-height:20px; padding:0 10px 0 16px; color:#8f8f8f; font-size:13px;}
+.input_b{border-radius:2px; background:#f3f3f3; box-shadow: inset 1px 1px 5px #999; height:23px; line-height:23px; color:#727272; padding:2px 5px; border:0; width:280px; font-size:13px;}
+
+.dot01{ background:url(../images/icon_dotted.png) 0 0 no-repeat;}
+.dot02{ background:url(../images/icon_dotted.png) 0 -20px no-repeat;}
+.dot03{ background:url(../images/icon_dotted.png) 0 -40px no-repeat;}
+.dot04{ background:url(../images/icon_dotted.png) 0 -60px no-repeat;}
+.dot05{ background:url(../images/icon_dotted.png) 0 -80px no-repeat;}
+
+.btn{ background:url(../images/btn01.png) 0 -58px no-repeat; width:92px; height:27px; margin:0 0 0 10px; cursor:pointer;}
+.btn{font-size:13px; color:#FFF; line-height:27px; text-align:center;}
+
+.cBox03{ margin-bottom:15px;}
+.cBox03 .title{ background:#efefef; border-top:1px solid #fff; box-shadow: 0 0 2px #999; height:22px; line-height:22px; padding:0 10px;}
+.cBox03 .title h3{color:#666666; font-size:12px; font-weight:normal;}
+.cBox03 .title a{ display:block; font-size:12px;}
+.cBox03 .con{padding:10px;}
+.cBox03 .con .addUser li{ display:block; overflow:hidden; padding:3px 0;}
+.cBox03 .con .addUser img{ width:24px; height:24px;}
+.cBox03 .con .addUser span{ display:block; font-size:12px; color:#999; line-height:24px; padding:0 10px;}
+.cBox03 .con .addUser .addBtn{}
+
+.introMpage{ overflow:hidden;}
+.introMpage img{ width:50px; height:50px;}
+.introMpage .introMpageCon{float:left; margin:0 0 0 8px; display:inline;}
+.introMpage h4 a{color:#0079c1; font-weight:bold;}
+.introMpage .introM02{color:#505a64; font-size:12px; line-height:20px; padding:5px 0;}
+.introMpage .goodNum{color:#505a64; font-size:12px; height:20px; line-height:16px; margin:5px 0 0 0;}
+
+.topic li{ height:20px; line-height:20px;}
+.topic li a{ font-size:12px;}
+
+.addBtn{ background:url(../images/btn01.png) 0 -105px no-repeat; height:18px; line-height:16px; width:30px; padding-left:16px; font-size:11px; color:#666666; text-shadow:1px 1px 0 #fff; cursor:pointer;}
+.addBtn2{ background:url(../images/btn01.png) 0 -86px no-repeat; height:18px; line-height:16px; width:49px; padding-left:16px; font-size:11px; color:#666666; text-shadow:1px 1px 0 #fff; cursor:pointer;}
+
+/*footer*/
+.footer{width:1100px; margin:0 auto; padding:10px 0;}
+.fNav{ height:30px; overflow:hidden;}
+.fNav li{ float:left; padding:0 20px;  line-height:30px;}
+.fNav li a{ font-size:13px}
+.copyRight{ padding:0 0 0 20px; line-height:30px; font-size:13px; color:#999;}
+
+
+
+
+
+
+
+
+
+
+
+
+

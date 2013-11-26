@@ -41,6 +41,20 @@ class LinkAction extends CommonAction {
 		
 	}
 	
+	public function tag() {
+	    $tag = cleanParam($this->_param('q'));
+		$tag = str_replace('。', '.', $tag);
+	    $dl = M('directLinks');
+	    $condition['tag'] = array('like', $tag . '%');
+	    $condition['status'] = 1;
+	    $list = $dl->field(array('tag', 'url'))->where($condition)->limit(15)->order('tag asc')->select();
+	    if ($list && count ( $list ) > 0) {
+	        echo json_encode($list);
+	    } else {
+	        echo '[]';
+	    }
+	}
+	
 	/**
 	 * @name direct
 	 * @desc 直达网址

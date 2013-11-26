@@ -1,0 +1,125 @@
+/* apps */
+.zld-mini-tip{
+	display: none;
+	width: 120px;
+	top: -4px;
+	left: 37px;
+}
+
+.app-add:hover .zld-mini-tip,
+.add:hover .zld-mini-tip{
+	display: block;
+}
+
+.app-add .zld-mini-tip{
+	display: none;
+	width: 120px;
+	top: -10px;
+	left: 18px;
+}
+
+
+.apps {
+	position: relative;
+	padding-top: 10px;
+}
+.app-add {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+}
+.app-add a {
+	display: block;
+	width: 22px;
+	height: 22px;
+	background: #a9a9a9;
+	color: #fff;
+	line-height: 22px;
+	text-align: center;
+	font-size: 14px;
+	font-weight: 800;
+	border-radius: 30px;
+	-moz-border-radius:30px;
+	-webkit-border-radius:30px
+}
+.apps{
+	/*overflow: hidden;*/
+	margin: 0 auto;
+	padding-bottom: 20px;
+}
+.apps ul{
+	*zoom: 1;
+	height: 101px;
+	overflow: hidden;
+}
+.apps ul:after{
+	content: '\0020';
+	display: block;
+	height: 0;
+	clear: both;
+}
+.apps ul li{
+	cursor: pointer;
+	display: inline;
+	float: left;
+	width: 104px;
+	text-align: center;
+	position: relative;
+}
+.apps ul li .hot{
+	display: block;
+	height: 38px;
+	width: 40px;
+	background: url(../imgs/hot.png) 0 0 no-repeat;
+	position: absolute;
+	top: 1px;
+	left: 13px;
+}
+.apps ul li:hover,
+.apps ul li:hover a,
+.apps ul li:hover a:hover{
+	text-decoration: none;
+	color: #fc2a06;
+}
+.apps ul li img{
+	vertical-align: middle;
+	height: 80px;
+	width: 80px; /* 这里强制图片为统一尺寸，否则hot图标对不齐 && 啥时候又换成80X80了？ */
+}
+.apps ul li .av,
+.apps ul li .ct{
+	margin-bottom: 7px;
+}
+.box-apps ul li.today{
+	background: url(../imgs/app/app-date.png) center top no-repeat;
+}
+.box-apps ul li.today .ct{
+	height: 80px;
+	width: 80px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.box-apps ul li.today b{
+	color: #000;
+	font-size: 12px;
+	padding-top: 10px;
+}
+.box-apps ul li.today i{
+	color: #cb2d40;
+	font-size: 40px;
+	font-weight: bold;
+	font-style: normal;
+	font-family: Arial;
+	margin-top: -5px;
+}
+.box-apps ul li.today b,
+.box-apps ul li.today i{
+	display: block;
+	text-align: center;
+}
+.widescreen .apps ul li{
+	width: 115px;
+}
+.widescreen .apps ul li .hot{
+    left: 18px;
+}

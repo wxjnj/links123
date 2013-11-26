@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<title>停用帐号_个人中心</title>
+    <include file="Set/Contorls:meta" />
+</head>
+<body>
+	<include file="Set/Contorls:header" />
+	<div class="container">
+		<div class="wrap">
+            <include file="Set/Contorls:left" />
+			<div class="content">
+				<h2 class="c-ttl">停用帐号</h2>
+				<div class="stop-panel">
+					<div class="tabs">
+						<a class="btn-stopphone" href="javascript:;">通过绑定手机</a><a class="btn-stopmail" href="javascript:;">通过绑定邮箱</a><a class="btn-stopqs" href="javascript:;">通过密保问题</a>
+					</div>
+					<div class="cnt">
+						<div class="stopphone">
+							<p>请输入绑定的邮箱地址</p>
+							<p><input class="ipt-m ipt-dis" type="text" /></p>
+							<p class="ctls"><input class="btn-findmail" type="submit" value="提交" /></p>
+						</div>
+						<div class="stopmail">
+							<p>请输入绑定手机号码获取验证码</p>
+							<p><input class="ipt-m ipt-dis" type="text" /> <a class="btn-v" href="javascript:;">免费获取验证码</a></p>
+							<p>验证码</p>
+							<p><input class="ipt-s ipt-dis" type="text" /></p>
+							<p class="ctls"><input class="btn-stop" type="submit" value="提交" /></p>
+						</div>
+						<div class="stopqs">
+							<table class="tb-form">
+								<tr>
+									<td class="a">问题一</td>
+									<td class="b"><input class="ipt-m" type="text" /></td>
+								</tr>
+								<tr>
+									<td class="a">答案</td>
+									<td class="b"><input class="ipt-m ipt-dis" type="text" /></td>
+								</tr>
+								<tr>
+									<td class="a">问题二</td>
+									<td class="b"><input class="ipt-m" type="text" /></td>
+								</tr>
+								<tr>
+									<td class="a">答案</td>
+									<td class="b"><input class="ipt-m ipt-dis" type="text" /></td>
+								</tr>
+								<tr>
+									<td class="a">问题三</td>
+									<td class="b"><input class="ipt-m" type="text" /></td>
+								</tr>
+								<tr>
+									<td class="a">答案</td>
+									<td class="b"><input class="ipt-m ipt-dis" type="text" /></td>
+								</tr>
+								<tr>
+									<td></td>
+									<td><input class="btn-stop" type="submit" value="提交" /></td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<include file="Set/Contorls:footer" />
+</body>
+</html>

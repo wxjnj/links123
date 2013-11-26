@@ -1,0 +1,648 @@
+.calendar-tip {
+	display:none;
+	width:150px;
+	padding:5px;
+	position: absolute;
+	background:#fff;
+	box-shadow:0 0 5px #666;
+	left:50%;
+	margin-left:-80px;
+	color:#000;
+	z-index:20;
+	border-radius:5px;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px
+}
+.calendar-tip .ang {
+	width:0;
+	height:0;
+	font-size:0;
+	overflow:hidden;
+	position:absolute;
+	border-width:5px;
+	border-style:solid dashed dashed;
+	border-color:#fff transparent transparent;
+	left:75px;
+	bottom:-10px
+}
+.calendar-tip .ang1 {
+	width:0;
+	height:0;
+	font-size:0;
+	overflow:hidden;
+	position:absolute;
+	border-width:6px;
+	border-style:solid dashed dashed;
+	border-color:#ccc transparent transparent;
+	left:75px;
+	bottom:-12px
+}
+.extra-calendar .cal-close {
+	background: transparent url(/v3/imgs/app/links-app-frame/close.png) 0 -60px no-repeat;
+	width: 30px;
+	height: 30px;
+	position: absolute;
+	right: -16px;
+	top: -16px;
+	z-index: 1000;
+	font-size: 0;
+}
+.extra-calendar {
+	position: relative;
+}
+.extra-calendar .cal-ajax-overlayer {
+	position:absolute;
+	top:50%;
+	left:50%;
+	margin-top: -20px;
+	margin-left: -5px;
+	width:100px;
+	height:40px;
+	line-height:40px;
+}
+.extra-calendar .cal-ajax-overlayer .layer {
+	position:absolute;
+	top:0;
+	bottom:0;
+	width:100%;
+	background:#000;
+	filter:alpha(opacity=30);
+	-moz-opacity:.3;
+	-khtml-opacity:.3;
+	opacity:.3
+}
+.extra-calendar .cal-ajax-overlayer .content {
+	position:absolute;
+	z-index:10;
+	color:#fff;
+	margin:0 auto;
+	text-align:center;
+	width: 100%;
+}
+
+
+.widescreen .extra-calendar .cal-header {
+	width:578px;
+	height: 46px;
+}
+.extra-calendar .cal-header .tc {
+	text-align:center
+}
+.extra-calendar .cal-header .tr {
+	text-align:right
+}
+.extra-calendar .cal-header .pr10 {
+	padding-right:10px
+}
+.extra-calendar .cal-header td {
+	height: 34px;
+	line-height: 34px
+}
+.widescreen .extra-calendar .cal-header td {
+	height: 46px;
+	line-height: 46px
+}
+
+
+.extra-calendar .cal-header .cal-header-date-prev,
+.extra-calendar .cal-header .cal-header-date-next {
+	width:30px;
+	height:30px;
+	display:block
+}
+.extra-calendar .cal-header .cal-header-date-prev {
+	float:right;
+	background:url(../imgs/sprite.png) -180px -30px no-repeat
+}
+.extra-calendar .cal-header .cal-header-date-next {
+	float:left;
+	background:url(../imgs/sprite.png) -210px -30px no-repeat
+}
+.extra-calendar .cal-header .cal-header-date-prev,
+.extra-calendar .cal-header .cal-header-date-next,
+.extra-calendar .cal-header .cal-header-date {
+	font-family: arial;
+	font-size: 14px;
+	font-weight:800;
+	color: #000;
+}
+
+.widescreen .extra-calendar .cal-header .cal-header-date-prev,
+.widescreen .extra-calendar .cal-header .cal-header-date-next,
+.widescreen .extra-calendar .cal-header .cal-header-date {
+	font-size: 16px;
+}
+
+.extra-calendar .cal-header button{
+	cursor:pointer;
+	color:#000;
+	border:0;
+    text-align: center;
+	background-color:transparent
+}
+.extra-calendar .cal-header .cal-view-select-btn {
+	display:inline-block;
+    margin-left: 25px;
+    padding-bottom: 3px;
+    border-bottom: 3px solid transparent;
+	height: 28px;
+    width: 17px;
+}
+
+.extra-calendar .cal-header .cal-view-select-btn:hover,
+.extra-calendar .cal-header .active {
+	display:inline-block;
+	background: none;
+	height: 22px;
+	border-bottom: 3px solid #aaa;
+}
+
+.widescreen .extra-calendar .cal-header .cal-view-select-btn:hover,
+.widescreen .extra-calendar .cal-header .active {
+	display:inline-block;
+	background: none;
+	border-bottom: 3px solid #aaa;
+}
+
+
+.extra-calendar .cal-body {
+	width:473px;
+	height:298px;
+	border-top:1px solid #ededed;
+}
+.widescreen .extra-calendar .cal-body {
+	width:578px;
+	height:363px;
+}
+
+
+.cal-date-marks-table {
+	width: 290px;
+	border-right: 1px solid #ededed;
+	height: 313px;
+}
+.cal-date-marks-table li {
+	width: 100%;
+	overflow: hidden;
+	height: 25px;
+	line-height: 25px;
+	border-bottom: 1px dashed #ededed;
+	position: relative;
+}
+.cal-date-marks-table .current-time {
+	background: #f6f4f1;
+}
+
+.cal-date-marks-table li .dot {
+	display: block;
+	float: left;
+	position: relative;
+	width: 3px;
+	height: 3px;
+	background: #333;
+	margin: 10px 5px 0 0;
+}
+.cal-date-marks-table li .time {
+	display: block;
+	font-family: Arial;
+	width: 31px;
+	font-size: 10px;
+	float: left;
+	margin-right: 5px;
+	color: #666;
+}
+.widescreen .cal-date-marks-table li .time {
+	font-size: 12px;
+}
+.cal-date-marks-table li .desc {
+}
+.cal-date-marks-table li .add-btn {
+	display: none;
+	padding: 0 4px;
+	height: 30px;
+	line-height: 30px;
+	margin-left: 44px;
+	color: #fff;
+	text-decoration: none;
+}
+.cal-date-marks-table li .add-btn:hover{
+    background: url(../imgs/op20.png);
+}
+.cal-date-marks-table li .delete-btn {
+	color: #000;
+	position: absolute;
+	right: 5px;
+	top: 0;
+	display: none;
+    font-family: arial;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.cal-date-marks-table li:hover .add-btn {
+	display: block;
+}
+.cal-date-marks-table li:hover .delete-btn {
+	display: block;
+}
+
+.widescreen .cal-date-marks-table {
+	width: 393px;
+	height: 375px
+}
+
+
+
+.widescreen .cal-date-marks-table li {
+	height: 30px;
+	line-height: 30px;
+}
+
+.widescreen .cal-date-marks-table li .dot {
+	margin: 12px 5px 0 0;
+}
+.widescreen .cal-date-marks-table li .add-btn {
+	/*margin-top: 7px;*/
+}
+
+
+.cal-month table th,
+.cal-week table th {
+	border-right:1px solid #ededed;
+}
+.cal-month table td,
+.cal-week table td {
+	border-top: 1px solid #ededed;
+	border-right: 1px solid #ededed;
+}
+
+
+.widescreen .extra-calendar .cal-day {
+	width:578px;
+	height:363px
+}
+.extra-calendar .cal-day-ul {
+	color: #333;
+}
+.extra-calendar .cal-day .cal-mini-month-panel {
+	overflow:hidden;
+	width:180px;
+	height: 363px;
+	margin: -310px 0 0 291px;
+}
+.widescreen .extra-calendar .cal-day .cal-mini-month-panel {
+	overflow:hidden;
+	width:220px;
+	height:190px;
+	background:#fff;
+	margin: -377px 0 0 395px;
+}
+
+
+
+.extra-calendar .cal-day .cal-mini-month-panel table {
+	margin-left:0;
+	margin-top:0;
+	color:#333;
+}
+.widescreen .extra-calendar .cal-day .cal-mini-month-panel table {
+	margin-left:10px;
+	margin-top:10px;
+}
+
+.extra-calendar .cal-day .cal-mini-month-panel td,
+.extra-calendar .cal-day .cal-mini-month-panel th {
+	text-align:center;
+	width:25px;
+	height:25px
+}
+.widescreen .extra-calendar .cal-day .cal-mini-month-panel td,
+.widescreen .extra-calendar .cal-day .cal-mini-month-panel th {
+
+	text-align:center;
+	width:28px;
+	height:25px
+}
+
+.extra-calendar .cal-day .cal-mini-month-panel td a,
+.extra-calendar .cal-day .cal-mini-month-panel th a {
+	font-family: Arial;
+	font-size: 10px;
+	color:#333;
+	text-align:center;
+	display:inline-block;
+	width:20px;
+	height:20px;
+	line-height:20px
+}
+.extra-calendar .cal-day .cal-mini-month-panel td .active,
+.extra-calendar .cal-day .cal-mini-month-panel th .active {
+	background:#a9a9a9;
+	color:#fff;
+}
+.extra-calendar .cal-day .cal-day-note-list {
+	width:160px;
+	height:105px;
+	margin-top:2px;
+	padding:10px;
+	background:#fff;
+	line-height:200%
+}
+.widescreen .extra-calendar .cal-day .cal-day-note-list {
+	width:190px;
+	height:151px;
+	margin-top:2px;
+	padding:10px 15px;
+}
+.extra-calendar .cal-day .cal-day-note-list h6 {
+	color:#333;
+}
+.extra-calendar .cal-day .cal-day-note-list ul {
+	padding-left:10px;
+	list-style:disc
+}
+.widescreen .extra-calendar .cal-day .cal-day-note-list ul {
+	padding-left:15px;
+	list-style:disc
+}
+
+
+.extra-calendar .cal-month,.extra-calendar .cal-week {
+	height:315px
+}
+.widescreen .extra-calendar .cal-month,.widescreen .extra-calendar .cal-week {
+	height:378px
+}
+.extra-calendar .cal-month table,
+.extra-calendar .cal-week table {
+	border-spacing:0;
+	border-collapse:separate;
+	text-align:center;
+	width:475px;
+	margin-left: -1px;
+	height:100%;
+	*height: auto;
+	*text-align: left;
+}
+.widescreen .extra-calendar .cal-month table,
+.widescreen .extra-calendar .cal-week table {
+	width:582px;
+}
+
+.extra-calendar .cal-month table a,
+.extra-calendar .cal-week table a,
+.extra-calendar .cal-month table a:active,
+.extra-calendar .cal-week table a:active,
+.extra-calendar .cal-month table a:hover,
+.extra-calendar .cal-week table a:hover {
+	color:#502d5c
+}
+
+.extra-calendar .cal-month table td,
+.extra-calendar .cal-week table td {
+	cursor: pointer;
+	color:#333;
+	position:relative;
+}
+
+
+
+
+/*
+.extra-calendar .cal-week table td {
+	*height:293px;
+}
+.extra-calendar .cal-month table td {
+	*height: 57px;
+}*/
+
+.extra-calendar .cal-month table td .month_task_dot,
+.extra-calendar .cal-week table td .month_task_dot {
+	display:inline-block;
+	width:5px;
+	height:5px;
+	border-radius:20px;
+	-moz-border-radius:20px;
+	-webkit-border-radius:20px;
+	background:#a9a9a9;
+	position:absolute
+}
+.extra-calendar .cal-month table td .week-mark-line,
+.extra-calendar .cal-week table td .week-mark-line {
+	position:absolute;
+	width:100%
+}
+.extra-calendar .cal-month table td .week-mark-line b,
+.extra-calendar .cal-week table td .week-mark-line b {
+	display:inline-block;
+	width:6px;
+	height:6px;
+	border-radius:15px;
+	-moz-border-radius:15px;
+	-webkit-border-radius:15px;
+	background:#a9a9a9;
+}
+.extra-calendar .cal-month table td .week-mark-line span,
+.extra-calendar .cal-week table td .week-mark-line span {
+	display:inline-block;
+	width:70%;
+	margin-left:5px;
+	border-bottom:1px dashed #a9a9a9
+}
+.extra-calendar .cal-month table td .chart,
+.extra-calendar .cal-week table td .chart {
+	width:100%;
+	height:3px;
+	position:absolute;
+	top:0;
+	background:#a9a9a9
+}
+.extra-calendar .cal-month table td .chart .time-show,
+.extra-calendar .cal-week table td .chart .time-show {
+	color:#fff;
+	font-size:12px;
+	font-weight:100;
+	position:absolute;
+	left:5px;
+	bottom:2px
+}
+.extra-calendar .cal-month table th,
+.extra-calendar .cal-week table th {
+	padding:1px;
+	color:#000;
+	height:50px;
+	overflow:hidden;
+}
+.widescreen .extra-calendar .cal-month table th,
+.widescreen .extra-calendar .cal-week table th {
+	padding:1px;
+	color:#000;
+	height:60px;
+	overflow:hidden;
+}
+
+
+.cal-date-marks-table .desc-content,
+.cal-date-marks-table .desc-content:hover {
+	font-size: 13px;
+	color: #fff;
+	display: inline-block;
+	height: 20px;
+	line-height: 20px;
+	padding: 0 8px;
+	border-radius: 3px;
+	text-decoration: none;
+}
+.cal-date-marks-table .blue {
+	background: #79abe6;
+}
+.cal-date-marks-table .green {
+	background: #81c7d4;
+}
+.cal-date-marks-table .red {
+	background: #e0ada2;
+}
+
+.desc-input-div {
+	padding: 0;
+	display: inline-block;
+	background: transparent;
+	width: 220px;
+}
+.desc-input-div input {
+	border: 0;
+	height: 15px;
+	line-height: 15px;
+	padding: 5px;
+	width: 200px;
+}
+.desc-input-div b {
+	display: inline-block;
+	width: 12px;
+	height: 12px;
+	border-radius: 10px;
+	cursor: pointer;
+	margin-left: 5px;
+}
+.desc-input-div .blue {
+	background: #79abe6;
+}
+.desc-input-div .green {
+	background: #81c7d4;
+}
+.desc-input-div .red {
+	background: #e0ada2;
+}
+.desc-input-div .active {
+	border:1px solid #333;
+	width:10px;
+	height:10px;
+}
+
+
+
+.widescreen .extra-calendar .cal-body {
+	width:578px;
+}
+.widescreen .desc-input-div{
+	width: 320px;
+}
+.widescreen .desc-input-div input{
+	padding: 8px 5px;
+	width: 300px;
+}
+
+
+/* 针对Firefox不支持table中的absolute进行修正 */
+@-moz-document url-prefix() {
+
+
+
+	.widescreen .extra-calendar .cal-month table,
+	.widescreen .extra-calendar .cal-week table {
+		width: 597px;
+		height: 50px;
+	}
+
+	.extra-calendar .cal-month table,
+	.extra-calendar .cal-week table {
+		width: 480px;
+	}
+
+	.extra-calendar .cal-month table td,
+	.extra-calendar .cal-week table td {
+		display: inline-block;
+	}
+	.widescreen .extra-calendar .cal-week table tbody{
+		width: 597px;
+	}
+	.extra-calendar .cal-month table th,
+	.extra-calendar .cal-week table th {
+		width: 65px;
+		display: block;
+		float: left;
+		line-height: 50px;
+		position: relative;
+		/*margin-right: 2px;*/
+	}
+	.widescreen .extra-calendar .cal-month table th,
+	.widescreen .extra-calendar .cal-week table th {
+		width: 80px;
+		display: block;
+		float: left;
+		line-height: 50px;
+		position: relative;
+		/*margin-right: 2px;*/
+	}
+	.extra-calendar .cal-month table td,
+	.extra-calendar .cal-week table td {
+		width: 67px;
+		height: 415px;
+		display: block;
+		position: relative;
+		float: left;
+	   /* margin-right: 2px;*/
+	}
+
+	.widescreen .extra-calendar .cal-month table td,
+	.widescreen .extra-calendar .cal-week table td {
+		width: 82px;
+		height: 297px;
+		display: block;
+		position: relative;
+		float: left;
+		/*margin-right: 2px;*/
+	}
+	.extra-calendar .cal-month table td {
+		height: 51.5px;
+		line-height: 51px;
+		/*39*/
+	}
+	.extra-calendar .cal-month table .more-line {
+		height: 42px;
+		line-height: 42px;
+	}
+	.widescreen .extra-calendar .cal-month table .more-line {
+		height: 51px;
+		line-height: 51px;
+	}
+	.widescreen .extra-calendar .cal-month table td {
+		height: 62px;
+		line-height: 62px;
+	}
+	/*
+		.widescreen .extra-calendar .cal-day .cal-day-burn-down-chart {
+			width:357px;
+		}
+		.widescreen .extra-calendar .cal-day .cal-day-burn-down-chart .chart-body {
+			width:357px;
+		}
+		.widescreen .extra-calendar .cal-day .cal-day-burn-down-chart .chart {
+			width:357px;
+		}
+		.widescreen .extra-calendar .cal-day .cal-day-burn-down-chart .cal-day-event-item {
+			width:347px;
+			padding:0 5px;
+		}
+	*/
+}

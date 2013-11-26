@@ -1,6 +1,10 @@
 <tagLib name="html" />
 <include file="Public:header" />
-<load href="__PUBLIC__/skin/js/jquery-1.8.0.min.js" />
+<load href="__PUBLIC__/skin/easyui/themes/metro/easyui.css" />
+<load href="__PUBLIC__/Js/Jquery/jquery.js" />
+<load href="__PUBLIC__/Js/Jquery/jqueryform.js" />
+<load href="__PUBLIC__/skin/easyui/locale/easyui-lang-zh_CN.js" /> 
+<load href="__PUBLIC__/skin/easyui/jquery.easyui.min.js" />
 
 <div id="main" class="main" >
     <div class="content">
@@ -11,6 +15,7 @@
                     <td class="tRight" >媒体名称：</td>
                     <td class="tLeft" ><input type="text" class="bLeftRequire large" name="name" value="{$vo.name}" /></td>
                 </tr>
+                <!--
                 <tr>
                     <td class="tRight" ></td>
                     <td class="tLeft" >
@@ -54,29 +59,31 @@
                     </label>
                 </volist>
                 </td>
+                -->
                 <tr>
                     <td class="tRight" >媒体播放类型：</td>
                     <td class="tLeft" >
                         <label><input type="radio" name="play_type" value="0" <eq name='vo["play_type"]' value='0'>checked="checked"</eq> />正常URL播放</label>&nbsp;&nbsp;
                         <label><input type="radio" name="play_type" value="1" <eq name='vo["play_type"]' value='1'>checked="checked"</eq> />Object内嵌播放</label>&nbsp;&nbsp;
                         <label><input type="radio" name="play_type" value="2" <eq name='vo["play_type"]' value='2'>checked="checked"</eq> />iframe内嵌播放</label>&nbsp;&nbsp;
-                        <label><input type="radio" name="play_type" value="3" <eq name='vo["play_type"]' value='2'>checked="checked"</eq> />swfobject插件播放</label>&nbsp;&nbsp;
-                        <label><input type="radio" name="play_type" value="4" <eq name='vo["play_type"]' value='4'>checked="checked"</eq> />本地视频播放</label>
+                        <label><input type="radio" name="play_type" value="3" <eq name='vo["play_type"]' value='3'>checked="checked"</eq> />swfobject插件播放</label>&nbsp;&nbsp;
+                        <label><input type="radio" name="play_type" value="4" <eq name='vo["play_type"]' value='4'>checked="checked"</eq> />本地视频播放</label>&nbsp;&nbsp;
+                        <label><input type="radio" name="play_type" value="5" <eq name='vo["play_type"]' value='5'>checked="checked"</eq> />弹出框引用播放</label>
                 </tr>
                 <tr>
                     <td class="tRight" >媒体优先播放：</td>
                     <td class="tLeft" >
                         <label><input type="radio" name="priority_type" value="1" <eq name='vo["priority_type"]' value='1'>checked="checked"</eq> />外链</label>&nbsp;
                         <label><input type="radio" name="priority_type" value="2" <eq name='vo["priority_type"]' value='2'>checked="checked"</eq> />本地</label>&nbsp;&nbsp;
-                        推荐视频：
-                        <label><input type="radio" name="recommend" value="1" <neq name='vo["recommend"]' value='0'>checked="checked"</neq> />是</label>&nbsp;
-                        <label><input type="radio" name="recommend" value="0" <eq name='vo["recommend"]' value='0'>checked="checked"</eq> />否</label>&nbsp;&nbsp;
+<!--                        推荐视频：
+                        <label><input type="radio" name="recommend" value="1" <neq name='vo["recommend"]' value='1'>checked="checked"</neq> />是</label>&nbsp;
+                        <label><input type="radio" name="recommend" value="0" <eq name='vo["recommend"]' value='0'>checked="checked"</eq> />否</label>&nbsp;&nbsp;-->
                         特别推荐：
                         <label><input type="radio" name="special_recommend" value="1" <eq name='vo["special_recommend"]' value='1'>checked="checked"</eq> />是</label>&nbsp;&nbsp;
                         <label><input type="radio" name="special_recommend" value="0" <eq name='vo["special_recommend"]' value='0'>checked="checked"</eq> />否</label>&nbsp;&nbsp;
-                        TED：
+                        <!--TED：
                         <label><input type="radio" name="ted" value="1" <neq name='vo["ted"]' value='0'>checked="checked"</neq> />是</label>&nbsp;&nbsp;
-                        <label><input type="radio" name="ted" value="0" <eq name='vo["ted"]' value='0'>checked="checked"</eq> />否</label>
+                        <label><input type="radio" name="ted" value="0" <eq name='vo["ted"]' value='0'>checked="checked"</eq> />否</label>-->
                     </td>
                 </tr>
                 <tr>
@@ -93,7 +100,7 @@
                         <textarea style="height: 40px;width: 600px;" name="media_thumb_img">{$vo.media_thumb_img}</textarea>
                         <a id="media_thumb_btn" href="javascript:;">查看</a>
                         <img id="thumb_img" style="width: 320px; height: 240px; display: none; position: absolute; right: 20px;" src="{$vo.media_thumb_img}" />
-                        <!--<input name="img" type="file" />-->
+                        <input type="file" name="img" />
                     </td>
                 </tr>
                 <tr>
@@ -116,11 +123,36 @@
                         </select>	
                     </td>
                 </tr>
+                <tr id="forbid_tr" <if condition="$vo['status'] eq 0"><else />style="display:none"</if> >
+                    <td class="tRight" >原因：</td>
+                    <td class="tLeft" >
+                        <select name="forbid_reason" id="forbid_reason">
+                            <option value="">请选择</option>
+                            <volist name="forbid_reason_options" id="forbid_reason_option">
+                                <option value="{$forbid_reason_option.key}" <eq name="vo['forbid_reason']" value="$forbid_reason_option['key']">selected="true"</eq>>{$forbid_reason_option.name}</option>
+                            </volist>
+                        </select>
+                    </td>
+                </tr>
+                <tr id="del_tr" <if condition="$vo['status'] eq -1"><else />style="display:none"</if>>
+                    <td class="tRight" >原因：</td>
+                    <td class="tLeft" >
+                        <select name="del_reason" id="del_reason">
+                            <option value="">请选择</option>
+                            <volist name="del_reason_options" id="del_reason_option">
+                                <option value="{$del_reason_option.key}" <eq name="vo['del_reason']" value="$del_reason_option['key']">selected="true"</eq>>{$del_reason_option.name}</option>
+                            </volist>
+                        </select>
+                    </td>
+                </tr>
                 <tr>
                     <td></td>
                     <td class="center">
                         <input type="hidden" value="{$vo.id}" name="id" />
+                        <input type="hidden" value="0" name="return_close" id="return_close"/>
+                        <input type="hidden" value="{$vo.status}" name="old_status" />
                         <input type="submit" value="保 存" class="small submit">&nbsp;
+                        <input type="submit" value="保存关闭" onclick="save_close()" class="small submit">&nbsp;
                         <input type="reset" class="submit small" value="清 空" >
                     </td>
                 </tr>
@@ -130,7 +162,26 @@
 </div>
 
 <script type="text/javascript">
+    function save_close(){
+        $("#return_close").val("1");
+    }
     $(function() {
+        $("[name='status']").change(function() {
+            var v = parseInt(this.value);
+            if(v == 1 ){
+                //启用
+                $("#del_tr").hide();
+                $("#forbid_tr").hide();
+            }else if( v == -1){
+                //删除
+                $("#del_tr").show();
+                $("#forbid_tr").hide();
+            }else{
+                //禁用
+                $("#del_tr").hide();
+                $("#forbid_tr").show();
+            }
+        })
         $("#media_thumb_btn").click(function(){
             if($("#thumb_img").is(":visible")){
                 $("#thumb_img").css("display","none");
@@ -140,6 +191,7 @@
                 $(this).text("隐藏");
             }
         })
+        
         var object = $("input[name='object']").val();
         $("#object_" + object).css("color", "#FF0000").siblings("label").css("color", "#000000");
         var level = $("input[name='level']").val();

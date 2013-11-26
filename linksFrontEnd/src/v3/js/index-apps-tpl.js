@@ -174,41 +174,32 @@ var AppsTpl = {
 	'#J_box_weather': '<div style="display:none" id="J_box_weather"> \
 				<div class="K_weather_box" style="width: 380px; height: 220px;"></div> \
 			</div>',
-	'#J_box_music':  '<div style="display:none;"  id="J_box_music"> \
-			<div class="music_icon"></div> \
-			<div id="J_music_iframe_wrap" style="position: relative;"> \
-				<div class="channel-select-box"> \
-					选择电台 : \
-					<span id="J_with_submenu" class="with-submenu" style="position:relative;z-index:10"> <a><span class="J_root_menu"></span> <span class="down-arrow"></span></a> \
-						<div class="submenu-wrap"> \
-							<ul class="submenu"> \
-								<li> \
-									<a class="kugou-source" data-href="http://web.kugou.com/default.html" data-width="320" data-height="140">酷狗音乐</a> \
-								</li> \
-								<li> \
-									<a class="xiami-source" data-href="http://www.xiami.com/kuang/hao123/" data-width="530" data-height="280">虾米音乐</a> \
-								</li> \
-								<li> \
-									<a class="qq-source"  data-href="http://y.qq.com/player/" data-width="360" data-height="380">QQ音乐</a> \
-								</li> \
-								<li> \
-									<a class="douban-source"  data-href="http://douban.fm/swf/53053/radioplayer.swf" data-width="450" data-height="170">豆瓣音乐</a> \
-								</li> \
-							</ul> \
-						</div>  \
-					</span> \
-					<iframe id="K_ie_flash_overlayer" allowtransparency="true" frameborder="0" style=""></iframe> \
-				</div> \
-				<div id="K_qq_music_browser_tip" style="display:none"> \
-					<iframe allowtransparency="true" frameborder="0" style=""></iframe> \
-					<p>收听QQ音乐，建议使用 Chrome、Safari 浏览器。</p> \
-				</div> \
-				<div id="J_iframe"> \
-					<iframe scrolling="no" frameborder="0" allowtransparency="true" src=""></iframe> \
-				</div> \
-			</div> \
-			<div class="music-close-wrap" style="display:none"><a href="#">x</a></div> \
-		</div>'
+    '#J_box_music': '<div id="J_box_music" class="normal_music_box" style="display: none">\
+            <div class="mini_music_channel_list">\
+                <div class="mini_music_channel_select">\
+                    <div class="mini_current_channel"></div><i class="mini_music_ang"></i>\
+                    <div class="mini_channel_list">\
+                    </div>\
+                </div>\
+                <a class="mini_music_box_close_btn" href="javascript:;">×</a>\
+                <a class="mini_music_box_size_btn size_mini" href="javascript:;" data-size="mini">小</a>\
+                <a class="mini_music_box_size_btn size_normal" href="javascript:;" data-size="normal">中</a>\
+                <a class="mini_music_box_size_btn size_fullscreen" href="javascript:;" data-size="fullscreen">大</a>\
+            </div>\
+            <div class="normal_music_iframe_box">\
+                <iframe id="K_303_music_iframe" allowtransparency="true" frameborder="0" style=""></iframe>\
+            </div>\
+            <div class="normal_music_channel_list">\
+                <div class="music-close-tip">听烦了</div>\
+                <a class="normal_music_box_close_btn" href="javascript:;">×</a>\
+                <a href="javascript:;" class="normal_music_box_toggle_btn">展开</a>\
+                <ul>\
+                </ul>\
+                <a class="normal_music_box_size_btn size_nimi" href="javascript:;" data-size="mini">小</a>\
+                <a class="normal_music_box_size_btn size_normal" href="javascript:;" data-size="normal">中</a>\
+                <a class="normal_music_box_size_btn size_fullscreen" href="javascript:;" data-size="fullscreen">大</a>\
+            </div>\
+        </div>'
 };
 
 

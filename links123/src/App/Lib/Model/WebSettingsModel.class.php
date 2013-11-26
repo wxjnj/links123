@@ -9,15 +9,18 @@ class WebSettingsModel extends CommonModel {
 	public $_auto =	array(
 		array('create_time', 'time', self::MODEL_INSERT, 'function'),
 	);
-	
+	public function updatewebSettings(){
+		$webSettingsArr=$this->select();
+		S("webSettingsArr",$webSettingsArr);
+		return $webSettingsArr;
+	}
 	//得到网站设置:
 	public function getwebSettings($settingMark=null){
 		$webSettingsArr = S("webSettingsArr");
 		if (empty($webSettingsArr)){
-			$webSettingsArr=$this->select();
-			S("webSettingsArr",$webSettingsArr);
+			$webSettingsArr = $this->updatewebSettings();
 		}
-		if (empty($settingMark) || empty($webSettingsArr)){
+		if (empty($settingMark)){
 			return $webSettingsArr ;
 		}
 		foreach ($webSettingsArr as $k=>$v) {

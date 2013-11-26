@@ -3,13 +3,7 @@
 class EnglishQuestionModel extends CommonModel {
 
     protected $_validate = array(
-        array("name", "require", "名称必须"),
-//        array("voice", "require", "口音（美音/英音）必须"),
-        array("target", "require", "目标（听力/说力）必须"),
-//        array("pattern", "require", "形式（视频/音频）必须"),
-//        array("object", "require", "学科必须"),
-//        array("level", "require", "等级必须"),
-        array("content", "require", "试题必须")
+        array("name", "require", "名称必须")
     );
     protected $_auto = array(
         array("created", "time", 1, "function"),

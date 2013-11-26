@@ -14,65 +14,8 @@ class IndexAction extends CommonAction {
 	 * 
 	 * @author slate date:2013-10-07
 	 */
-	public function indexV4() {
-        
-        //气象数据
-        $this->assign('weatherData', $this->getWeatherData());
-        
-        //推荐电影
-        $this->assign('homeMovies', $this->getHomeMovies());
-
-        //推荐音乐
-        $this->assign('homeMusics', $this->getHomeMusics());
-        
-		//自留地
-		$myareaModel = M("Myarea");
-		$scheduleModel = M("Schedule");
-
-		$user_id = intval($this->_session(C('MEMBER_AUTH_KEY')));
-		if ($user_id) {
-			$memberModel = M("Member");
-			$mbrNow = $memberModel->where(array('id' => $user_id))->find();
-			$_SESSION['myarea_sort'] = $mbrNow['myarea_sort'] ? explode(',', $mbrNow['myarea_sort']) : '';
-			$_SESSION['app_sort'] = $mbrNow['app_sort'];
-
-			$themeId = session('themeId');
-			if (!$themeId) {
-				$themeId = cookie('themeId');
-			}
-		} else {
-
-			//取出皮肤ID和模板ID
-			$themeId = session('themeId');
-			if (!$themeId) {
-				$themeId = cookie('themeId');
-			}
-
-			if (!$_SESSION['app_sort']) {
-
-				$_SESSION['app_sort'] = cookie('app_sort');
-			}
-		}
-
-		if(!$themeId || strpos($themeId, 'theme')) { //暂时只有1和2
-			$themeId = 'theme-purple';
-		}
-
-		$this->assign('themeId', $themeId);
-
-		$app_list = $this->getApps($_SESSION['app_sort']);
-		$this->assign('app_list', $app_list);
-		$this->getHeaderInfo();
-		$this->display('index_v4');
-	}
-	
-	/**
-	 * @desc 新首页
-	 *
-	 * @author slate date:2013-09-06
-	 */
 	public function index() {
-		
+		import("@.ORG.String");
 		//自留地
 		$myareaModel = M("Myarea");
 		$scheduleModel = M("Schedule");
@@ -83,33 +26,26 @@ class IndexAction extends CommonAction {
 			$mbrNow = $memberModel->where(array('id' => $user_id))->find();
 			$_SESSION['myarea_sort'] = $mbrNow['myarea_sort'] ? explode(',', $mbrNow['myarea_sort']) : '';
 			$_SESSION['app_sort'] = $mbrNow['app_sort'];
-			
-			//取出皮肤ID和模板ID
-			$skinId = session('skinId');
-			if (!$skinId) {
-				$skinId = cookie('skinId');
-			}
-			
-			$themeId = session('themeId');
-			if (!$themeId) {
-				$themeId = cookie('themeId');
-			}
+
 		} else {
 			
-			//取出皮肤ID和模板ID
-			$skinId = session('skinId');
-			if (!$skinId) {
-				$skinId = cookie('skinId');
-			}
-			$themeId = session('themeId');
-			if (!$themeId) {
-				$themeId = cookie('themeId');
-			}
-			
+			$this->get_member_guest();
+
 			if (!$_SESSION['app_sort']) {
-				
-				$_SESSION['app_sort'] = cookie('app_sort');
+
+				//$_SESSION['app_sort'] = cookie('app_sort');
 			}
+
+		}
+		
+		//取出皮肤ID和模板ID
+		$skinId = session('skinId');
+		if (!$skinId) {
+			$skinId = cookie('skinId');
+		}
+		$themeId = session('themeId');
+		if (!$themeId) {
+			$themeId = cookie('themeId');
 		}
 		
 		//快捷皮肤
@@ -128,98 +64,42 @@ class IndexAction extends CommonAction {
 		$this->assign('theme', $theme);
 		
 		//自留地数据
-		if ($user_id || !$_SESSION['arealist']) {	
-			$areaList = $myareaModel->where(array('mid' => $user_id))->select();
-			
+		if ($user_id || !$_SESSION['arealist']) {
+			$areaList = $myareaModel->where(array('mid' => $user_id))->order('sort asc')->select();
+
 			if ($areaList) {
 				$_SESSION['arealist'] = array();
 			}
-			
+
 			foreach ($areaList as $value) {
-				$_SESSION['arealist'][$value['id']] = $value;
+					$_SESSION['arealist'][$value['id']] = $value;
 			}
 		}
 		if (!$_SESSION['myarea_sort']) {
-			
+
 			$_SESSION['myarea_sort'] = array_keys($_SESSION['arealist']);
 		}
-	
-		//日程表
-		if ($user_id) {
-			
-			$schedule_list = $scheduleModel->where(array('mid' => $user_id, 'status' => 0))->select();
-		} else {
-			
-			$schedule_list = cookie(md5('schedule_list'));
-			if (!$schedule_list[0]) {
-				$schedule_list = $scheduleModel->where(array('mid' => 0, 'status' => 0))->select();
-			}
-			
-			cookie(md5('schedule_list'), $schedule_list);
-		}
-		
-		if (!$schedule_list[0]['datetime']) {
-			$schedule_list[0]['datetime'] = time();
-			$schedule_list[0]['content'] = '快来创建第一个日程';
-		}
-		
-		$this->assign('schedule_list', $schedule_list);
-		
-		//热门音乐
-		$songList = $this->getDayhotMusic();
-		shuffle($songList['top']);
-		shuffle($songList['fair']);
-		$songTopList = array_chunk($songList['top'], 2, true);
-		$songTopList = $songTopList[0];
-		$songFairList = array_chunk($songList['fair'], 20, true);
-		$songFairList = $songFairList[0];
-		
-		$this->assign('songTopList', $songTopList);
-		$this->assign('songFairList', $songFairList);
-		
-		//豆瓣电影信息 0正在上映 1即将上映
-// 		$movieList = $this->getDoubanMovieInfo();
-// 		$nowplayingmovie = $movieList[0];
-//      $latermovie = $movieList[1];
-        
-		//TED 发现
-		$ted_list = S('ted_list');
-		if (!$ted_list) {
-			
-			$variableModel = M('Variable');
-			$linksModel = M("Links");
-			
-			$ted_list = array();
-			$home_ted_hot_list = S('home_ted_hot');
-			if (!$home_ted_hot_list) {
-				
-				$home_ted_hot_list = $variableModel->where(array('vname' => 'home_ted_hot'))->find();
-				$home_ted_hot_list =  unserialize($home_ted_hot_list['value_varchar']);
-				S('home_ted_hot', $home_ted_hot_list);
-			}
-			
-			$ted_ids = implode(',', array_keys($home_ted_hot_list));
-			$result = $linksModel->where('id in ('.$ted_ids.')')->select();
-			
-			$ted_list = array();
-			foreach ($result as $value) {
-				
-				$ted_list[$value['id']] = array('id' => $value['id'], 'title' => $value['title'], 'link_cn_img' => $value['link_cn_img'], 'status' => $home_ted_hot_list[$value['id']]);
-			}
-					
-			S('ted_list', $ted_list);
-		}
-		$this->assign('ted_list', $ted_list);
-		
-		//图片精选
-		
+
 		//APP应用
 		$app_list = $this->getApps($_SESSION['app_sort']);
 		$this->assign('app_list', $app_list);
-		
-		
+
+        //气象数据
+        $this->assign('weatherData', $this->getWeatherData());
+        
+        //新闻信息
+        $hotNews = $this->getHotNews();
+        $englishNews = $this->getEnglishNews();
+        shuffle($hotNews['imgNews']);
+        $this->assign('hotNewsData',  $hotNews['news']);
+        $this->assign('imgNewsData',  $hotNews['imgNews']);
+        
+        //英文
+        $this->assign('enNewsData',  $englishNews['news']);
+        $this->assign('enImgNewsData',  $englishNews['imgNews']);
+        
 		$this->getHeaderInfo();
-		$this->display('index_v3');
+		$this->display('index_v4');
 	}
 	
 	/**
@@ -231,53 +111,6 @@ class IndexAction extends CommonAction {
 		
 		$this->getHeaderInfo();
 		$this->display('hao');
-	}
-	
-	/**
-	 * @desc 首页2.0
-	 * @author slate date: 2013-08-20
-	 */
-	public function old_index() {
-		import("@.ORG.String");
-	
-		// 公告
-		$announce = M("Announcement");
-		$announces = $announce->where('status = 1')->order('sort ASC, create_time DESC')->select();
-		
-		$skins = $this->getSkins();
-		
-		// 我的地盘
-		$myarea = M("Myarea");
-		session('arealist_default', $myarea->where('mid=0')->order('sort ASC')->select());
-		
-		//存在用户登录，获取用户的我的地盘
-		$memberAuthKey = $this->_session(C('MEMBER_AUTH_KEY'));
-	
-		if ($memberAuthKey) {
-			
-			$areaList = $myarea->where(array('mid' => $memberAuthKey))->order('sort ASC')->select();
-			session('arealist', $areaList ? $areaList : session('arealist_default'));
-			
-			$skinId = session('skinId');
-			if (!$skinId) {
-				$skinId = cookie('skinId');
-			}
-		} else {
-			
-			$areaList = $this->_session('arealist');
-			!empty($areaList) || session('arealist', session('arealist_default'));
-			
-			$skinId = cookie('skinId');
-		}
-		
-		$this->assign("announces", $announces);
-		$this->assign("skinId", $skinId);
-		$this->assign("skin", $skins['skin'][$skinId]);
-		$this->assign("skinList", $skins['list']);
-		$this->assign("skinCategory", $skins['category']);
-	
-		$this->getHeaderInfo();
-		$this->display('new_index');
 	}
 	
 	/**
@@ -872,35 +705,75 @@ class IndexAction extends CommonAction {
 	}
 	
 	/**
+	 * @desc 获取日程
+	 * 
+	 * @param String year
+	 * @param String month
+	 * @return
+	 * @author slate date:2013-10-27
+	 */
+	public function getSchedule() {
+		$year = intval($this->_param('year'));
+		$month = intval($this->_param('month'));
+		
+		$user_id = intval(session(C('MEMBER_AUTH_KEY')));
+		
+		$stauts = 1;
+		$data  = array();
+		$nowTime = time();
+		$today = intval(date('d', $nowTime));
+		
+		if (!$user_id) {
+				
+			$user_id = $this->get_member_guest();
+		}
+		
+		if ($user_id) {
+			$scheduleModel = M("Schedule");
+		
+			$result = $scheduleModel->where(array('mid' => $user_id,'status' =>0 , 'year' => $year, 'month' => $month))->select();
+		
+			foreach ($result as $k => $v) {
+				$data[$v['day']][] = $v;
+			}
+			
+		}
+		
+		if (!$data[$today]) {
+			$data[$today][] = array('id' => 0, 'content' => '来创建今天新的日程吧！', 'datetime' => $nowTime, 'stauts' => 0);
+		}
+		
+		$this->ajaxReturn($data, '', $stauts);
+	}
+	/**
 	 * @name addSchedule
 	 * @desc 添加日程
-	 * @param string content
-	 * @param string datetime
+	 * @param string desc
+	 * @param string time
 	 * @return 成功:1; 失败:0; 未登录或登录已失效: -1
 	 * @author slate date:2013-09-14
 	 */
 	public function addSchedule() {
 	
-		$content = $this->_param('content');
-		$datetime = $this->_param('datetime');
+		$content = $this->_param('desc');
+		$datetime = intval($this->_param('time'));
 	
-		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+		$user_id = intval(session(C('MEMBER_AUTH_KEY')));
 	
 		$result = 0;
 	
-		if ($user_id) {
+		if (!$user_id) {
+			
+			$user_id = $this->get_member_guest();
+		}
+		
+		if ($user_id && $content) {
+			
 			$scheduleModel = M("Schedule");
 	
 			$now = time();
 				
-			if ($datetime) {
-	
-				$datetime = str_replace(array('月','日'), '-', $datetime);
-	
-				$datetime = strtotime('2013-' . $datetime);
-	
-				$datetime = $datetime ? $datetime : $now;
-			}
+			$datetime = $datetime ? $datetime : $now;
 	
 			$saveData = array(
 					'mid' => $user_id,
@@ -908,7 +781,10 @@ class IndexAction extends CommonAction {
 					'datetime' => $datetime,
 					'status' => 0,
 					'create_time' => $now,
-					'update_time' => $now
+					'update_time' => $now,
+					'year' => date('Y', $datetime),
+					'month' => date('m', $datetime),
+					'day' => date('d', $datetime)
 			);
 	
 			$id = $scheduleModel->add($saveData);
@@ -932,18 +808,18 @@ class IndexAction extends CommonAction {
 	 * @name updateSchedule
 	 * @desc 更新日程表
 	 * @param int id
-	 * @param String content
-	 * @param String datetime
+	 * @param String desc
+	 * @param String time
 	 * @return 成功:1; 失败:0;
 	 * @author slate date:2013-09-14
 	 */
 	public function updateSchedule() {
 	
 		$id = $this->_param('id');
-		$content = $this->_param('content');
-		$datetime = $this->_param('datetime');
+		$content = $this->_param('desc');
+		$datetime = $this->_param('time');
 	
-		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+		$user_id = intval(session(C('MEMBER_AUTH_KEY')));
 	
 		$result = 0;
 	
@@ -951,23 +827,24 @@ class IndexAction extends CommonAction {
 				
 			$now = time();
 				
-			if ($datetime) {
-	
-				$datetime = str_replace(array('月','日'), '-', $datetime);
-	
-				$datetime = strtotime('2013-' . $datetime);
-	
-				$datetime = $datetime ? $datetime : $now;
-			}
+			$datetime = $datetime ? $datetime : $now;
 	
 			$saveData = array(
 					'content' => $content,
 					'datetime' => $datetime,
-					'update_time' => $now
+					'update_time' => $now,
+					'year' => date('Y', $datetime),
+					'month' => date('m', $datetime),
+					'day' => date('d', $datetime)
 			);
 				
 			$result = 1;
-				
+			
+			if (!$user_id) {
+			
+				$user_id = $this->get_member_guest();
+			}
+			
 			if ($user_id) {
 				$scheduleModel = M("Schedule");
 					
@@ -975,11 +852,10 @@ class IndexAction extends CommonAction {
 						
 					$result = 0;
 				}
-			}
+			} else {
 				
-			$schedule_list = cookie(md5('schedule_list'));
-			$schedule_list[$id] = array_merge($schedule_list[$id], $saveData);
-			cookie(md5('schedule_list'), $schedule_list);
+				$result = -1;
+			}				
 		}
 			
 		echo $result;
@@ -996,14 +872,19 @@ class IndexAction extends CommonAction {
 	
 		$id = $this->_param('id');
 	
-		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+		$user_id = intval(session(C('MEMBER_AUTH_KEY')));
 	
 		$result = 0;
 	
 		if ($id) {
 				
 			$result = 1;
-				
+			
+			if (!$user_id) {
+			
+				$user_id = $this->get_member_guest();
+			}
+			
 			if ($user_id) {
 	
 				$scheduleModel = M("Schedule");
@@ -1013,15 +894,152 @@ class IndexAction extends CommonAction {
 					$result = 0;
 				}
 	
-			}
+			} else {
 				
-			$schedule_list = cookie(md5('schedule_list'));
-			unset($schedule_list[array_search($id, $schedule_list)]);
-			cookie(md5('schedule_list'), $schedule_list);
+				$result = -1;
+			}
 		}
 	
 		echo $result;
 	
+	}
+	
+	public function getNote() {
+	
+		$user_id = intval(session(C('MEMBER_AUTH_KEY')));
+	
+		$stauts = 1;
+		$nowTime = time();
+		$today = intval(date('d', $nowTime));
+	
+		if (!$user_id) {
+	
+			$user_id = $this->get_member_guest();
+		}
+	
+		if ($user_id) {
+			$noteModel = new NoteModel();
+	
+			$data = $noteModel->getNotesByUser($user_id);
+	
+		}
+	
+		$this->ajaxReturn($data, '', $stauts);
+	}
+	
+	/**
+	 * 添加/更新便签
+	 *
+	 * @param id：便签ID，有ID为更新，无ID为添加
+	 * @param pageX：坐标X
+	 * @param pageY: 坐标Y
+	 * @param background：背景色
+	 * @param content：便签内容
+	 * 
+	 * @return json：status=0,删除失败;status=1,删除成功;
+	 *
+	 * @author slate date:2013-11-15
+	 */
+	public function updateNote() {
+	
+		$id = $this->_param('id');
+		$pageX = intval($this->_param('pageX'));
+		$pageY = intval($this->_param('pageY'));
+		$background = $this->_param('background');
+		$content = $this->_param('content');
+	
+		$user_id = intval(session(C('MEMBER_AUTH_KEY')));
+	
+		$status = 0;
+	
+	
+		$now = time();
+
+		$saveData = array();
+		
+		if ($content) {
+			$saveData['content'] = $content;
+		}
+		
+		if ($pageX) {
+			$saveData['pageX'] = $pageX;
+			$saveData['pageY'] = $pageY;
+		}
+		
+		if ($background) {
+			$saveData['background'] = $background;
+		}
+
+		if (!$user_id) {
+				
+			$user_id = $this->get_member_guest();
+		}
+			
+		if ($user_id) {
+			
+			$noteModel = new NoteModel();
+			if ($id) {
+				if ($noteModel->updateNote($id, $user_id, $saveData)) {
+	
+					$status = 1;
+				}
+			} else {
+				
+				$saveData['created'] = $now;
+				$saveData['mid'] = $user_id;
+				$id = $noteModel->addNote($saveData);
+				if ($id) {
+					$status = 1;
+				}
+			}
+		} else {
+
+			$status = -1;
+		}
+		
+		$this->ajaxReturn(array('id' => $id), '', $status);
+	}
+	
+	/**
+	 * 删除便签
+	 * 
+	 * @param id：便签ID
+	 * 
+	 * @return json：status=0,删除失败;status=1,删除成功;
+	 * 
+	 * @author slate date:2013-11-15
+	 */
+	public function delNote() {
+	
+		$id = $this->_param('id');
+	
+		$user_id = intval(session(C('MEMBER_AUTH_KEY')));
+	
+		$status = 0;
+	
+		if ($id) {
+	
+			if (!$user_id) {
+					
+				$user_id = $this->get_member_guest();
+			}
+				
+			if ($user_id) {
+	
+				$noteModel = new NoteModel();
+	
+				if ($noteModel->delNote($id, $user_id)) {
+	
+					$status = 1;
+				}
+	
+			} else {
+	
+				$status = -1;
+			}
+		}
+	
+		$this->ajaxReturn('', '', $status);
 	}
 	
 	/**
@@ -1273,10 +1291,11 @@ class IndexAction extends CommonAction {
     protected function getWeatherData() {
         
         $weather = A('Home/Weather');
-        $data = json_decode($weather->getJsonData());
+        $city_id = $_COOKIE['weather_region'];
+        $data = json_decode($weather->getJsonData($city_id));
         $weatherData = array(
             'city' => $data->n,
-            'temp' => $data->t,
+            'temp' => $data->t == 'NA' ? $data->d1->l . '-' . $data->d1->h : $data->t,
             'sun'  => $data->s,
             'air'  => $data->i->aq->label
         );
@@ -1325,4 +1344,116 @@ class IndexAction extends CommonAction {
         
         return $result;
     }
+    
+    /**
+     * 抓取360热门新闻头条
+     */
+    protected function getHotNews() {
+    
+    	$hotNews = S('hotNewsList');
+    
+    	if (!$hotNews) {
+    
+    		$url = 'http://sh.qihoo.com/index.html';
+    
+    		$str = file_get_contents($url);
+    		$news = $imgNews = array();
+    		preg_match_all('/<p class="title">(.*?)<\/p>/is', $str, $match);
+    		
+    		foreach ($match[1] as $k => $v) {
+    			$news[] = array('url' => $this->tp_match('/href="(.*?)"/is', $v), 'title' => trim(str_replace("\n", '', strip_tags($v))), 'img' => '');
+    		}
+    		
+    		$newsStr = $this->tp_match('/<div class="mod-top20"(.*?)<\/div>/is', $str);
+    		preg_match_all('/<li>(.*?)<\/li>/is', $newsStr, $match);
+    		foreach ($match[1] as $k => $v) {
+    			$news[] = array('url' => $this->tp_match('/href="(.*?)"/is', $v), 'title' => trim($this->tp_match('/title="(.*?)"/is', $v)), 'img' => '');
+    		}
+    		
+    		$imgNewsStr = $this->tp_match('/<ul class="contents">(.*?)<\/ul>/is', $str);
+    		preg_match_all('/<li(.*?)<\/li>/is', $imgNewsStr, $match);
+    		foreach ($match[0] as $k => $v) {
+    			$imgNews[] = array('url' => stripslashes($this->tp_match('/href="(.*?)"/is', $v)), 'title' => str_replace('"', '“',trim(strip_tags($this->tp_match('/<div class="text">(.*?)<\/div>/is', $v)))), 'img' => $this->tp_match('/src="(.*?)"/is', $v));
+    		}
+    		$hotNews = array('news' => $news, 'imgNews' => $imgNews);
+    		S('hotNewsList', $hotNews, 14400);
+    		
+    		if ($news && $imgNew) {
+	    			S('hotNewsList_back', $hotNews);
+	    		}
+    		}
+    		
+    		if (!$hotNews) {
+    			$hotNews = S('hotNewsList_back');
+    		}
+    	
+    	shuffle($hotNews['news']);
+    	
+    	return $hotNews;
+    } 
+    
+    /**
+     * 抓取英文
+     */
+    protected function getEnglishNews() {
+    	$hotNews = S('EnglishNewsList');
+    	
+    	if (!$hotNews) {
+    	
+    		$url = 'http://www.en84.com/';
+    		$str = file_get_contents($url);
+    		if ($str) {
+    			
+    			$str = iconv('gbk', 'utf8', $str);
+    			
+	    		$news = $imgNews = array();
+	    		
+	    		preg_match_all('/<div class="module cl xl xl1">(.*?)<\/div>/is', $str, $match);
+	    		
+	    		foreach ($match[0] as $matchStr) {
+		    		preg_match_all('/<li>(.*?)<\/li>/is', $matchStr, $match);
+		    		foreach ($match[1] as $k => $v) {
+		    			$news[] = array('url' => $url . $this->tp_match('/href="(.*?)"/is', $v), 'title' => mb_substr(trim(str_replace("\n", '', strip_tags($v))), 0, 24, 'utf8'), 'img' => '');
+		    		}
+	    		}
+	    		$imgNewsStr = $this->tp_match('/<ul class="slideshow">(.*?)<\/ul>/is', $str);
+	    		preg_match_all('/<li(.*?)<\/li>/is', $imgNewsStr, $match);
+	    		foreach ($match[0] as $k => $v) {
+	    			$imgNews[] = array('url' => $url . stripslashes($this->tp_match('/href="(.*?)"/is', $v)), 'title' => str_replace('"', '“',trim(strip_tags($this->tp_match('/<span class="title">(.*?)<\/span>/is', $v)))), 'img' => $url . $this->tp_match('/src="(.*?)"/is', $v));
+	    		}
+	    		$hotNews = array('news' => $news, 'imgNews' => $imgNews);
+	    		S('EnglishNewsList', $hotNews, 28800);
+	    		if ($news && $imgNew) {
+	    			S('EnglishNewsList_back', $hotNews);
+	    		}
+    		}
+    		
+    		if (!$hotNews) {
+    			$hotNews = S('EnglishNewsList_back');
+    		}
+    	}
+    	
+    	shuffle($hotNews['news']);
+    	
+    	return $hotNews;
+    }
+
+	/**
+     * 搜索框自动填充
+     */
+
+	public function searchSupplement() {
+	
+		$q = $_GET["q"];
+		$abcs = mb_convert_encoding(trim($q),"utf-8","gb2312");           //接收传送过来的关键值
+		$skey = file_get_contents("http://suggestion.baidu.com/su?wd=".urlencode($q)."");        //访问百度页面
+		preg_match('/\[(.*?)\]/',$skey,$m);    //通过正则去掉
+		$s = explode(',',$m[1]);    
+		foreach($s as $k=>$v){
+			$s[$k] = iconv("gb2312","UTF-8",substr($v,1,-1));
+		}
+		echo json_encode($s);
+	 }
+
+    
 }

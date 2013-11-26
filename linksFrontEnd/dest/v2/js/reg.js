@@ -201,14 +201,16 @@ $(function() {
 			//
 			$.post(APP+"Members/Login/checkLogin", data, 
 			function(data){
-				if ( data.indexOf("loginOK") >= 0 ) {
-					if(window.opener){
+				var resp = eval('(' + data + ')');
+
+				if(resp.code == 200) {
+					if (window.opener && document.referrer) {
 						window.opener.location.href = document.referrer;
 						//window.opener.location.reload();
 					}
-					window.location.href = APP+"Index";
-				}else{
-					alert(data);
+					window.location.href = APP + "Index";
+				} else {
+					alert(resp.content);
 				}
 			}); 
 		});

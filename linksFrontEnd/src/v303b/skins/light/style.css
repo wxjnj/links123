@@ -1,0 +1,406 @@
+/*************************************************************
+** default - white
+*************************************************************/
+
+
+.header {
+    background: url(header_bg.png) 0 0 repeat-x;
+}
+
+.logo {
+    background: url(logo.png) 0 0 no-repeat;
+}
+
+.weather-icon {
+    background-image: url(weather-icon.png);
+}
+
+#container{
+    background: url(bg.jpg) 0 0 repeat;
+}
+
+/* white */
+
+.zdl .ipt {
+    font-size: 12px;
+}
+.zdl .btn {
+    height: 16px;
+    top: 12px;
+    background-position: -93px -36px;
+}
+
+.nav,
+.nav li {
+    border: 0;
+}
+
+.nav li a {
+    padding-left: 17px;
+    padding-right: 17px;
+    color: #fff;
+}
+
+.screen-theme .change-theme-btn {
+    width: 16px;
+    height: 16px;
+    background-position: -247px -36px;
+    margin-top: 9px;
+    margin-left: 9px;
+
+}
+
+#K_change_skin_btn, .screen-change-btn a {
+    color: #fff;
+}
+.uc-menu .nm {
+    background: #e9e9e9;
+    box-shadow: inset 1px 1px 4px #666;
+    line-height: 25px;
+}
+.thl .ctls {
+    background: #f4f4f4;
+    /*box-shadow: inset 1px 1px 2px #aaa;*/
+    border: 1px solid #d7d7d7;
+}
+.thl .ctls .ipt {
+    background: transparent;
+}
+
+.header-weather .region{
+    color: #0079c1;
+}
+.thl .subcate a.on, 
+.thl .subcate a.on:hover,
+.thl .cate a.on,
+.thl .cate a.on:hover,
+.thl .subcate a:hover,
+.thl .cate a:hover,
+.thl .cate-in a:hover {
+    color: #fc2a06;
+}
+
+
+.zld ul li {
+    margin: 5px 3px 0 0;
+}
+
+.zld ul li .nm,
+.zld ul li .ctl {
+    border: 1px solid #bbb6ad;
+    background: url(zld-btn-back.png) 0 0 repeat-x;
+}
+.zld ul li .nm {
+    border-right: 0;
+}
+.zld ul li .ctl {
+    border-left: 0;
+}
+.zld ul li .ctl i {
+    width: 26px;
+    height: 26px;
+    display: block;
+    background-image: url(sprite.png);
+    background-position: -2px -1px;
+    background-repeat: no-repeat;
+}
+
+.zld ul .add .ctl {
+    border-left: 1px solid #bbb6ad;
+    padding: 2px;
+    border-radius: 30px;
+    margin-top: 4px;
+}
+.zld ul li.add .ctl i {
+    background: url(sprite.png) -31px -1px no-repeat;
+}
+
+.zld ul li .nm:hover,
+.zld ul li .ctl:hover {
+    box-shadow:inset 1px 1px 5px #ccc;
+}
+
+.app-icon-list .app-more .more {
+    margin-right: -5px;
+    background-image: url(sprite.png);
+    background-repeat: no-repeat;
+}
+            
+.app-icon-list .ang {
+    opacity: 1;
+    border-width: 13px
+}
+.app-icon-list .ang-back {
+    border-color: transparent transparent #bbb;
+    right: 15px;
+    top: -27px;
+    border-width: 13px
+}
+
+.cal-date-marks-table .blue {
+    background: url(mark-back.png) 0 0 repeat-x;
+}
+
+.extra-calendar .cal-header .cal-header-date-prev,
+.extra-calendar .cal-header .cal-header-date-next {
+    background-image: url(sprite.png);
+    background-repeat: no-repeat;
+}
+
+.extra-calendar .cal-day .cal-mini-month-panel td .active, 
+.extra-calendar .cal-day .cal-mini-month-panel th .active {
+    background: url(sprite.png) -95px -4px no-repeat;
+}
+
+
+body {
+    color: #666;
+}
+.zld ul li .nm:hover,
+.zld ul li .ctl:hover {
+    background: #eeeeee;    
+}
+.zld ul li .nm:hover {
+    box-shadow:inset 0px 1px 5px #ddd;
+}
+.zld ul li .ctl:hover {
+    box-shadow:inset 1px 1px 3px #ddd;
+}
+
+.box-apps {
+    border-top: 1px solid #ddd;
+}
+.box .box-hd {
+    border-top: 1px solid #fff;
+}
+
+.app-icon-list .app-more .more {
+    width: 25px;
+    height: 25px;
+    display: block;
+    background-position: -62px -1px;
+    border-radius: 30px;
+    background-color: #eee;
+    border: 1px solid #e3e0db;
+}
+.app-icon-list .app-more .more:hover {
+    box-shadow:inset 1px 1px 3px #ddd;  
+}
+.box-apps .box-bd {
+    padding-top: 0;
+}
+.extra-box {
+    width: 463px;
+    border-top: 1px solid #ddd;
+    border-bottom: 0;
+}
+.title-tabs {
+    padding: 10px 0;
+    margin: 0;
+    border-top: 1px solid #fff;
+}
+.cal-header {
+    border-top: 1px solid #fff;
+    border-bottom: 1px solid #ddd;
+}
+.cal-date-marks-table {
+    margin-top: -1px;
+    border-right: 1px solid #ddd;
+}
+.extra-calendar .cal-day .cal-mini-month-panel {
+    border-left: 1px solid #fff;
+}
+.extra-calendar .cal-body {
+    border-top: 1px solid #fff;
+}
+.desc-input-div {
+    background: transparent;
+}
+.desc-input-div input {
+    width: 208px;
+    height: 11px;
+    line-height: 11px;
+    border: 2px solid #a8c0ce;
+    box-shadow: inset 1px 1px 4px #ccc;
+    border-radius: 2px;
+}
+.extra-calendar .cal-day .cal-mini-month-panel .another-month a,
+.extra-calendar .cal-day .cal-mini-month-panel .another-month a:hover,
+.extra-calendar .cal-month .another-month a,
+.extra-calendar .cal-month .another-month a:hover {
+    color: #bbb;
+}
+
+
+.thl a,
+.thl .cate-in a,
+.header-weather {
+    color: #666;
+}
+
+.title-tabs li{
+    padding-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: 20px;
+}
+.title-tabs span {
+    color: #666;
+}
+.title-tabs .active{
+    color: #666;
+    background: none;
+    border-bottom: 3px solid #0079c1;
+}
+.widescreen .extra-calendar .cal-header .active{
+    border-bottom: 3px solid #0079c1;
+}
+
+.pic-news-tabs a {
+    height: 4px;
+}
+
+.text-news p a, 
+.text-news p a:active,
+.pic-news-title a {
+    color: #666;
+}
+.text-news p a:hover {
+    color: #ff2b06;
+}
+
+.text-news .more-news a, 
+.text-news .more-news a:active,
+.text-news .more-news a:hover {
+    color: #0079c1;
+}
+
+.extra-calendar .cal-header .cal-view-select-btn:hover,
+.extra-calendar .cal-header .active {
+    border-bottom: 3px solid #0079c1;
+}
+
+.cal-date-marks-table li .dot {
+    background: #666;
+}
+
+.extra-calendar .cal-header .cal-header-date-prev {
+    background-position: 0 -30px;
+}
+.extra-calendar .cal-header .cal-header-date-next {
+    background-position: -30px -30px;
+}
+
+.extra-calendar .cal-day .cal-mini-month-panel table,
+.extra-calendar .cal-day .cal-mini-month-panel td a, 
+.extra-calendar .cal-day .cal-mini-month-panel th a,
+.extra-calendar .cal-header button,
+.extra-calendar .cal-header .cal-header-date {
+    color: #666;
+}
+
+.cal-date-marks-table li {
+    border-bottom: 1px dashed #dcdcdc;
+}
+
+.cal-date-marks-table .blue {
+    font-size: 12px;
+    height: 16px;
+    line-height: 16px;
+    border: 1px solid #2971c7;
+}
+
+.cal-month table th, .cal-week table th {
+    border-right: 1px solid #ddd;
+}
+
+.cal-month table td, .cal-week table td {
+    border-top: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+}
+
+.extra-calendar .cal-month table, .extra-calendar .cal-week table {
+    width: 465px;
+}
+
+.footer {
+    margin-top: 50px;
+    color: #fff;
+    box-shadow: inset 0 5px 5px #777;
+    background: #8d8c8f;
+}
+
+
+.site-info li a, .site-info li a:active, .friend-links li a, .friend-links li a:active {
+    color: #fff;
+}
+
+.widescreen .extra-box {
+    width: 569px;
+}
+
+.widescreen .text-news {
+    width: 320px;
+}
+.widescreen .pic-news-title {
+    font-size: 16px;
+}
+
+.widescreen .cal-date-marks-table {
+    width: 350px;
+}
+
+.widescreen .extra-calendar .cal-day .cal-mini-month-panel {
+    overflow: hidden;
+    width: 220px;
+    height: 375px;
+    background: transparent;
+    margin: -377px 0 0 351px;
+}
+.widescreen .cal-mini-month-panel table {
+    width: 205px;
+}
+
+.extra-calendar .cal-header .pr10 {
+    padding-right: 0;
+}
+.widescreen .extra-calendar .cal-header .pr10 {
+    padding-right: 10px;
+}
+.widescreen .desc-input-div {
+    width: 280px;
+}
+.widescreen .desc-input-div input {
+    padding: 5px 5px;
+    width: 265px;
+    height: 16px;
+    line-height: 16px;
+}
+
+
+.cal-date-marks-table li .delete-btn {
+    color: #fff;
+    display: inline-block;
+    background: url(close.png) 0 0 no-repeat;
+    height: 13px;
+    line-height: 13px;
+    width: 13px;
+    position: absolute;
+    overflow: hidden;
+    top: 7px;
+    right: 9px;
+    color: transparent;
+    text-decoration: none;
+    text-align: center;
+}
+.cal-date-marks-table li .delete-btn:hover {
+    background-position: 0 -13px;
+}
+
+.widescreen .cal-date-marks-table li .delete-btn{
+    top: 9px;
+}
+
+.cal-date-marks-table li .add-btn{
+    color: #666;
+}

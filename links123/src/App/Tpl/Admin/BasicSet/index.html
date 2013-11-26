@@ -1,9 +1,9 @@
 <tagLib name="html" />
 <include file="Public:header" />
 <load href ="__PUBLIC__/Js/common.js" />
+<load href="__PUBLIC__/Js/editor/kindeditor-min.js" />
 
-<script type="text/javascript" language="JavaScript">
-<!--
+<script type="text/javascript">
 	function fn_sbmt(frm, field){
 		var obj1 = document.getElementById(frm);
 		//var obj2 = document.getElementById(field);
@@ -12,7 +12,19 @@
 		//ThinkAjax.send(obj1.action, temp);
 		obj1.submit();
 	}
-//-->
+	var editor;
+	KindEditor.ready(function(K) {
+		editor = K.create("textarea[name='about_us']", {
+			resizeType : 1,
+			allowPreviewEmoticons : false,
+			allowImageUpload : true,
+			items : [
+				'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
+				'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
+				'insertunorderedlist', '|', 'emoticons', 'link', 'image'],
+			afterBlur: function(){this.sync();}
+		});
+	});
 </script>
 
 <div id="main" class="main" >
@@ -292,7 +304,59 @@
 			</tr>
 		</table>
 	</form>
-    
-
+	<hr>
+	<form method='post' id="frm_setEnglish_question_forbid_reason" action="__URL__/setEnglish_question_forbid_reason" >
+		<table cellpadding=3 cellspacing=3>
+			<tr>
+				<td class="tRight" width="150">英语角试题禁用原因：</td>
+				<td class="tLeft" >
+					<textarea class="bLeft" rows="7" style="width:100px" name="english_question_forbid_reason" style="width:75px;" />{$english_question_forbid_reason['value_varchar']}</textarea>
+					<br><i style="font-size:12px;color:grey">每行一个,不要留空格或空行</i>
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td class="center">
+				<input type="button" value="保 存" class="small submit" onclick="fn_sbmt('frm_setEnglish_question_forbid_reason', 'english_question_forbid_reason');" />&nbsp;
+				</td>
+				<td></td>
+			</tr>
+		</table>
+	</form>
+	<form method='post' id="frm_setEnglish_question_del_reason" action="__URL__/setEnglish_question_del_reason" >
+		<table cellpadding=3 cellspacing=3>
+			<tr>
+				<td class="tRight" width="150">英语角试题删除原因：</td>
+				<td class="tLeft" >
+					<textarea class="bLeft" rows="7" style="width:100px" name="english_question_del_reason" style="width:75px;" />{$english_question_del_reason['value_varchar']}</textarea>
+					<br><i style="font-size:12px;color:grey">每行一个,不要留空格或空行</i>
+				</td>
+			</tr>
+			<tr>
+				<td></td>
+				<td class="center">
+				<input type="button" value="保 存" class="small submit" onclick="fn_sbmt('frm_setEnglish_question_del_reason', 'english_question_del_reason');" />&nbsp;
+				</td>
+				<td></td>
+			</tr>
+		</table>
+	</form>
+	<hr>
+	
+    <form method='post' id="frm_setAboutUs" action="__URL__/setAboutUs" >
+		<table cellpadding=3 cellspacing=3>
+			<tr>
+				<td class="tRight" width="150">关于我们：</td>
+				<td class="tLeft" ><textarea name="about_us" style="width:700px;height:380px;">{$about_us['value_varchar']}</textarea></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td class="center">
+				<input type="submit" value="保 存" class="small submit"  />&nbsp;
+				</td>
+				<td></td>
+			</tr>
+		</table>
+	</form> 
 	</div>
 </div>

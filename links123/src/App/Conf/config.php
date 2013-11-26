@@ -3,7 +3,7 @@ return array(
     'URL_MODEL'                 =>  2,										// 如果你的环境不支持PATHINFO 请设置为3
     
     'DB_TYPE'                   =>  'mysqli',
-	'DB_HOST'                   =>  '127.0.0.1',	 
+	'DB_HOST'                   =>  '10.160.8.46',
 	'DB_NAME'                   =>  'linkstest',	 
 	'DB_USER'                   =>  'root',	 
 	'DB_PWD'                    =>  'linksWsX7066',
@@ -13,7 +13,7 @@ return array(
 	'MEMBER_AUTH_KEY'			=> 'lnkMemberId',
     'SESSION_AUTO_START'        =>	false,
 		
-	'APP_GROUP_LIST' 			=>	'Home,Admin,English,Homepage,Members',	//项目分组设定
+	'APP_GROUP_LIST' 			=>	'Home,Admin,English,Homepage,Members,User',	//项目分组设定
 	'DEFAULT_GROUP'  			=>	'Home',									//默认分组
 	
 	'VAR_PAGE'					=>	'p',

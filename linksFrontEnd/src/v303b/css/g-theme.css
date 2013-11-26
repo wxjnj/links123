@@ -1,0 +1,183 @@
+.no-background-color {
+    background-color: transparent!important;
+}
+
+
+.screen-theme {
+    float:right;
+    color:#c9c9c9;
+    margin-right:60px;
+    line-height:40px;
+}
+.screen-theme li {
+    float:left;
+    margin:0 2px;
+    cursor:pointer
+}
+/*screen btn*/
+#J_Styles ul{
+    float:left;
+}
+.screen-change-btn{
+    line-height:40px;
+    float:left;
+    margin-right:20px;
+}
+#K_change_skin_btn,
+.screen-change-btn a{
+    color:#c9c9c9;
+}
+
+#K_change_skin_btn {
+    display: block;
+    width: 65px;
+    height: 40px;
+    line-height: 40px;
+    overflow: hidden;
+    margin-right: -3px;
+}
+#K_change_skin_btn span{
+    position:relative;
+    margin-left:35px
+}
+
+.widescreen #K_change_skin_btn {
+    width:72px;
+}
+
+#K_change_skin_btn:hover,
+.screen-change-btn a:hover{
+    color:red;
+}
+.screen-change-btn .s-wide{
+    font-size:12px;
+}
+.screen-change-btn .s-960{
+    font-size:14px;
+}
+
+/*screen-theme*/
+.screen-theme .change-theme-btn {
+    width:20px;
+    height:20px;
+    border:2px solid #ccc;
+    border-radius:20px;
+    -moz-border-radius:20px;
+    -webkit-border-radius:20px;
+    margin:7px 5px 0 0;
+    cursor: pointer;
+    display:inline-block;
+    position:absolute;
+    *margin-top:0;
+}
+
+.screen-theme .change-back-btn,.screen-theme .change-screen-btn {
+    color:#c9c9c9
+}
+.screen-theme .change-back-btn:hover,.screen-theme .change-screen-btn:hover {
+    color:#fc2a06;
+    text-decoration:none
+}
+.skin-list {
+    width: 450px;
+    /*height:120px;*/
+    top:40px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    position:absolute;
+    /*margin-left:-155px;
+    *margin-left: -185px;*/
+    right: 125px;
+    z-index:11;
+    background:#fff;
+    box-shadow:0 0 5px #666;
+    border-radius:3px;
+    -moz-border-radius:3px;
+    -webkit-border-radius:3px
+}
+.skin-list .ang {
+    width:0;
+    height:0;
+    font-size:0;
+    overflow:hidden;
+    position:absolute;
+    border-width:15px;
+    border-style:dashed dashed solid;
+    border-color:transparent transparent #fff;
+    right: 145px;
+    top:-25px
+}
+.widescreen .skin-list {
+    right: 135px;
+}
+.widescreen .skin-list .ang {
+    right: 145px;
+}
+.skin-theme-split {
+    color: #333!important;
+}
+.J_link_skin_type {
+    margin: auto 10px;
+    color: #777;
+}
+.skin-types {
+    margin: auto 15px;
+    text-align: center;
+}
+.skin-types .active {
+    color: #333;
+    font-weight: 700;
+    text-decoration: underline;
+}
+
+.skin-list .skin-pics {
+    padding: 10px 0;
+    text-align:center;
+    position:relative;
+    overflow: hidden;
+}
+.skin-list .skin-pics .item {
+    display: none;
+    float: left;
+    position: relative;
+    left: 50%;
+}
+.skin-list .skin-pics .active {
+    display:block
+}
+.skin-list .skin-pics a {
+    display:block;
+    float: left;
+    right: 50%;
+    position: relative;
+    width:60px;
+    height:36px;
+    overflow:hidden;
+    margin:0 2px 5px;
+    border:1px solid #b4b4b4;
+}
+.skin-list .skin-pics a:hover {
+    display:inline-block;
+    width:58px;
+    height:34px;
+    border:2px solid #238b3a;
+}
+.skin-list .skin-pics img {
+    width:60px;
+    height:36px;
+}
+.skin-list .skin-pics a:hover img {
+    margin-top: -1px;
+    margin-left: -1px;
+}
+
+.widescreen .screen-change-btn .s-wide{
+    display: none;
+}
+.widescreen .screen-change-btn .s-960{
+    display: inline;
+}
+.widescreen .screen-theme .change-back-btn {
+    font-size: 14px;
+}

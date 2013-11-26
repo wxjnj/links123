@@ -522,7 +522,7 @@ function getUserNickName($id) {
  */
 function ftrim($str) {
     $str = trim($str);
-    $str = str_replace("　", " ", $str); //将全角空格转换为半角空格
+    $str = preg_replace("/[ ]+/u", ' ', $str);//去掉全角空格;
     $str = preg_replace("/&nbsp;+/", ' ', $str);//去掉&nbsp;
     $str = preg_replace("/(^\s+)|(\s+$)/", '', $str); //将开头或结尾的一个或多个半角空格转换为空
     return $str;

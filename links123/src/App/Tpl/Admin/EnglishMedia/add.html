@@ -4,13 +4,14 @@
 
 <div id="main" class="main" >
     <div class="content">
-        <div class="title">添加英语角媒体[ <a href="__URL__">返回列表</a> ]</div>
+        <div class="title">添加英语角媒体[ <a href="javascript:window.close();">返回列表</a> ]</div>
         <form method='post' id="form1" action="__URL__/insert/" >
             <table cellpadding=3 cellspacing=3>
                 <tr>
                     <td class="tRight" >媒体名称：</td>
                     <td class="tLeft" ><input type="text" class="bLeftRequire large" name="name" value='' /></td>
                 </tr>
+                <!--
                 <tr>
                     <td class="tRight" ></td>
                     <td class="tLeft" >
@@ -55,6 +56,7 @@
                 </volist>
                 </td>
                 </tr>
+                -->
                 <tr>
                     <td class="tRight" >媒体播放类型：</td>
                     <td class="tLeft" >
@@ -62,22 +64,23 @@
                         <label><input type="radio" name="play_type" value="1" />Object内嵌播放</label>&nbsp;&nbsp;
                         <label><input type="radio" name="play_type" value="2" />iframe内嵌播放</label>&nbsp;&nbsp;
                         <label><input type="radio" name="play_type" value="3" />swfobject插件播放</label>&nbsp;&nbsp;
-                        <label><input type="radio" name="play_type" value="4" />本地视频播放</label>
+                        <label><input type="radio" name="play_type" value="4" />本地视频播放</label>&nbsp;&nbsp;
+                        <label><input type="radio" name="play_type" value="5" />弹出框引用播放</label>
                 </tr>
                 <tr>
                     <td class="tRight" >媒体优先播放：</td>
                     <td class="tLeft" >
                         <label><input type="radio" name="priority_type" value="1"  checked="checked"/>外链</label>&nbsp;
                         <label><input type="radio" name="priority_type" value="2" />本地</label>&nbsp;&nbsp;
-                        推荐视频：
+<!--                        推荐视频：
                         <label><input type="radio" name="recommend" value="1" />是</label>&nbsp;
-                        <label><input type="radio" name="recommend" value="0"  checked="checked"/>否</label>&nbsp;&nbsp;
+                        <label><input type="radio" name="recommend" value="0"  checked="checked"/>否</label>&nbsp;&nbsp;-->
                         特别推荐：
                         <label><input type="radio" name="special_recommend" value="1" />是</label>&nbsp;
                         <label><input type="radio" name="special_recommend" value="0"  checked="checked"/>否</label>&nbsp;&nbsp;
-                        TED：
+<!--                        TED：
                         <label><input type="radio" name="ted" value="1" />是</label>&nbsp;
-                        <label><input type="radio" name="ted" value="0"  checked="checked"/>否</label>
+                        <label><input type="radio" name="ted" value="0"  checked="checked"/>否</label>-->
                     </td>
                 </tr>
                 <tr>
@@ -115,10 +118,34 @@
                         </select>	
                     </td>
                 </tr>
+                <tr id="forbid_tr" <if condition="$vo['status'] eq 0"><else />style="display:none"</if> >
+                    <td class="tRight" >原因：</td>
+                    <td class="tLeft" >
+                        <select name="forbid_reason" id="forbid_reason">
+                            <option value="">请选择</option>
+                            <volist name="forbid_reason_options" id="forbid_reason_option">
+                                <option value="{$forbid_reason_option.key}" <eq name="vo['forbid_reason']" value="$forbid_reason_option['key']">selected="true"</eq>>{$forbid_reason_option.name}</option>
+                            </volist>
+                        </select>
+                    </td>
+                </tr>
+                <tr id="del_tr" <if condition="$vo['status'] eq -1"><else />style="display:none"</if>>
+                    <td class="tRight" >原因：</td>
+                    <td class="tLeft" >
+                        <select name="del_reason" id="del_reason">
+                            <option value="">请选择</option>
+                            <volist name="del_reason_options" id="del_reason_option">
+                                <option value="{$del_reason_option.key}" <eq name="vo['del_reason']" value="$del_reason_option['key']">selected="true"</eq>>{$del_reason_option.name}</option>
+                            </volist>
+                        </select>
+                    </td>
+                </tr>
                 <tr>
                     <td></td>
                     <td class="center">
+                        <input type="hidden" value="0" name="return_close" id="return_close"/>
                         <input type="submit" value="保 存" class="small submit">&nbsp;
+                        <input type="submit" value="保存关闭" onclick="save_close()" class="small submit">&nbsp;
                         <input type="reset" class="submit small" value="清 空" >
                     </td>
                 </tr>
@@ -128,8 +155,26 @@
 </div>
 
 <script type="text/javascript">
+    function save_close(){
+        $("#return_close").val("1");
+    }
     $(function() {
-
+        $("[name='status']").change(function() {
+            var v = parseInt(this.value);
+            if(v == 1 ){
+                //启用
+                $("#del_tr").hide();
+                $("#forbid_tr").hide();
+            }else if( v == -1){
+                //删除
+                $("#del_tr").show();
+                $("#forbid_tr").hide();
+            }else{
+                //禁用
+                $("#del_tr").hide();
+                $("#forbid_tr").show();
+            }
+        })
         $(".object_td").children("label").click(function() {
             $(this).css("color", "#FF0000").siblings("label").css("color", "#000000");
             var value = $(this).attr("id").substr($(this).attr("id").indexOf("_") + 1);

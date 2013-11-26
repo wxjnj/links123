@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>个人中心</title>
+    <include file="Set/Contorls:meta" />
+    <script>
+        var $CONFIG = {
+            'APP' : '__APP__/',
+            'URL' : '__URL__',
+            'PUBLIC' : '__PUBLIC__',
+            'IsLogin' : <empty name="_SESSION[C('MEMBER_AUTH_KEY')]">1<else />0</empty>
+        };
+    </script>
+</head>
+<body>
+
+<include file="Set/Contorls:header" />
+
+<div class="container">
+    <div class="wrap">
+
+        <include file="Set/Contorls:left" />
+
+        <div class="content">
+            这个文件是主框架
+            这个位置是主内容
+        </div>
+    </div>
+</div>
+
+<include file="Set/Contorls:footer" />
+
+</body>
+</html>
