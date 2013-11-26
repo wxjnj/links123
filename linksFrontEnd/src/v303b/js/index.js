@@ -181,6 +181,11 @@ var ZhiDaLan = { // 直达框
 		$(document).on('click', function() {
 			$('#direct_text').val($('#direct_text').attr('txt')).addClass('ipton');
 		});
+		$('#direct_text').on('keydown', function(e){
+			if(e.keyCode != 13 && $('#direct_text').val() == $('#direct_text').attr('txt')){
+				$('#direct_text').val('');
+			}
+		});
 		/*
 		$("#header").on('mouseenter', function(){
 			var tag = $.trim($('#direct_text').val());
@@ -230,6 +235,7 @@ var ZhiDaLan = { // 直达框
 		});
 	}
 };
+
 
 var Zld = { // 自留地
 	IsSortable: false,

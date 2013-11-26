@@ -3,6 +3,23 @@ $(function(){
     window.newsTimer = null;
     changeNews();
     autoChangeNews();
+
+    $('#social-title-tabs').on('click', 'li', function(){
+        var tab = $(this).attr('data-tab');
+        if(tab == 'news' || tab == 'ennews'){
+            $('.social-box').hide();
+            $('.social-'+tab).show();
+            $('#social-title-tabs').find('li').removeClass('active');
+            $(this).addClass('active');
+            clearTimeout(window.newsTimer);
+            window.newsTimer = null;
+            $('.pic-news-tabs').find('a').removeClass('active');
+            $('.pic-news-tabs').find('a:first').addClass('active');
+            changeNews();
+            autoChangeNews();
+        }
+    });
+
     $('.pic-news-tabs').on('click', 'a', function(){
         clearTimeout(window.newsTimer);
         window.newsTimer = null;
@@ -11,7 +28,7 @@ $(function(){
         changeNews();
         //autoChangeNews();
     }).on('mouseenter', 'a', function(){
-        var $this = $(this)
+        var $this = $(this);
         clearTimeout(window.newsTimer);
         window.newsTimer = null;
         $('.pic-news-tabs').find('a').removeClass('active');
@@ -43,8 +60,9 @@ $(function(){
     }
 
     function changeNews(){
+        var tab = $('#social-title-tabs').find('.active').attr('data-tab');
         var idx = $('.pic-news-tabs').find('.active').attr('data-tab');
-        var o = news[idx];
+        var o = socialNews[tab][idx];
         $('.pic-news').find('img').attr('src', o.img).parent('a').attr('href', o.url);
         $('.pic-news')
             .find('.pic-news-title').html('<a target="_blank" href="'+ o.url +'">' + o.title + '</a>').end()

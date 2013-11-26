@@ -301,7 +301,6 @@ var User = {
 				}
 			});
 
-
 			obj.find('.fgpass').on('click', function() {
 				obj.dialog('close');
 				self.FindPass();

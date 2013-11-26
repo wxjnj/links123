@@ -272,11 +272,11 @@
 		</div><!-- app-box end -->
 		<div class="extra-wrap">
 			<div class="lft-box extra-box">
-				<div class="title-tabs">
+				<div class="title-tabs" id="social-title-tabs">
 					<span>发现你最喜欢的内容</span>
 					<!--<a href="javascript:;">+</a>  -->
 					<ul>
-						<li data-tab="news" class="active">英文</li>
+						<li data-tab="ennews" class="active">英闻</li>
 						<li data-tab="news">头条</li>
 						<li data-tab="digs">
 							文摘
@@ -306,8 +306,10 @@
 				-->
 				<!-- 头条 -->
 				<script>
-				var news = [ <volist name="imgNewsData" id="news" offset="1" length="4"> { title: '{$news.title}',img: '{$news.img}',url:'{$news.url}',desc:'{$news.desc}' }  <if condition="$i lt 10">,</if> </volist> ];
-				var enNews = [ <volist name="enImgNewsData" id="news" offset="1" length="4"> { title: '{$news.title}',img: '{$news.img}',url:'{$news.url}',desc:'{$news.desc}' }  <if condition="$i lt 10">,</if> </volist> ];
+				var socialNews = {
+					news: [ <volist name="imgNewsData" id="news" offset="1" length="4"> { title: '{$news.title}',img: '{$news.img}',url:'{$news.url}',desc:'{$news.desc}' }  <if condition="$i lt 4">,</if> </volist> ],
+					ennews: [ <volist name="enImgNewsData" id="news" offset="1" length="4"> { title: '{$news.title}',img: '{$news.img}',url:'{$news.url}',desc:'{$news.desc}' }  <if condition="$i lt 4">,</if> </volist> ]
+				};
 				</script>
 				<!-- 英文 -->
 				<div class="social-ennews social-box">
@@ -336,7 +338,7 @@
 					</div>
 				</div>
 				
-				<div class="social-news social-box"  style="display: none">
+				<div class="social-news social-box" style="display: none">
 					<div class="pic-news">
 						<div class="pics-box">
 							<a href="#" target="_blank"><img src="" /></a>
