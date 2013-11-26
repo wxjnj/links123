@@ -89,9 +89,14 @@ class IndexAction extends CommonAction {
         
         //新闻信息
         $hotNews = $this->getHotNews();
+        $englishNews = $this->getEnglishNews();
         shuffle($hotNews['imgNews']);
         $this->assign('hotNewsData',  $hotNews['news']);
         $this->assign('imgNewsData',  $hotNews['imgNews']);
+        
+        //英文
+        $this->assign('enNewsData',  $englishNews['news']);
+        $this->assign('enImgNewsData',  $englishNews['imgNews']);
         
 		$this->getHeaderInfo();
 		$this->display('index_v4');
@@ -1359,10 +1364,10 @@ class IndexAction extends CommonAction {
     			$news[] = array('url' => $this->tp_match('/href="(.*?)"/is', $v), 'title' => trim(str_replace("\n", '', strip_tags($v))), 'img' => '');
     		}
     		
-    		$newsStr = $this->tp_match('/<ul class="hot_list"(.*?)<\/ul>/is', $str);
+    		$newsStr = $this->tp_match('/<div class="mod-top20"(.*?)<\/div>/is', $str);
     		preg_match_all('/<li>(.*?)<\/li>/is', $newsStr, $match);
     		foreach ($match[1] as $k => $v) {
-    			$news[] = array('url' => $this->tp_match('/href="(.*?)"/is', $v), 'title' => trim(str_replace("\n", '', strip_tags($v))), 'img' => '');
+    			$news[] = array('url' => $this->tp_match('/href="(.*?)"/is', $v), 'title' => trim($this->tp_match('/title="(.*?)"/is', $v)), 'img' => '');
     		}
     		
     		$imgNewsStr = $this->tp_match('/<ul class="contents">(.*?)<\/ul>/is', $str);
@@ -1372,9 +1377,66 @@ class IndexAction extends CommonAction {
     		}
     		$hotNews = array('news' => $news, 'imgNews' => $imgNews);
     		S('hotNewsList', $hotNews, 14400);
-    	}
+    		
+    		if ($news && $imgNew) {
+	    			S('hotNewsList_back', $hotNews);
+	    		}
+    		}
+    		
+    		if (!$hotNews) {
+    			$hotNews = S('hotNewsList_back');
+    		}
+    	
+    	shuffle($hotNews['news']);
+    	
     	return $hotNews;
     } 
+    
+    /**
+     * 抓取英文
+     */
+    protected function getEnglishNews() {
+    	$hotNews = S('EnglishNewsList');
+    	
+    	if (!$hotNews) {
+    	
+    		$url = 'http://www.en84.com/';
+    		$str = file_get_contents($url);
+    		if ($str) {
+    			
+    			$str = iconv('gbk', 'utf8', $str);
+    			
+	    		$news = $imgNews = array();
+	    		
+	    		preg_match_all('/<div class="module cl xl xl1">(.*?)<\/div>/is', $str, $match);
+	    		
+	    		foreach ($match[0] as $matchStr) {
+		    		preg_match_all('/<li>(.*?)<\/li>/is', $matchStr, $match);
+		    		foreach ($match[1] as $k => $v) {
+		    			$news[] = array('url' => $url . $this->tp_match('/href="(.*?)"/is', $v), 'title' => mb_substr(trim(str_replace("\n", '', strip_tags($v))), 0, 24, 'utf8'), 'img' => '');
+		    		}
+	    		}
+	    		$imgNewsStr = $this->tp_match('/<ul class="slideshow">(.*?)<\/ul>/is', $str);
+	    		preg_match_all('/<li(.*?)<\/li>/is', $imgNewsStr, $match);
+	    		foreach ($match[0] as $k => $v) {
+	    			$imgNews[] = array('url' => $url . stripslashes($this->tp_match('/href="(.*?)"/is', $v)), 'title' => str_replace('"', '“',trim(strip_tags($this->tp_match('/<span class="title">(.*?)<\/span>/is', $v)))), 'img' => $url . $this->tp_match('/src="(.*?)"/is', $v));
+	    		}
+	    		$hotNews = array('news' => $news, 'imgNews' => $imgNews);
+	    		S('EnglishNewsList', $hotNews, 28800);
+	    		if ($news && $imgNew) {
+	    			S('EnglishNewsList_back', $hotNews);
+	    		}
+    		}
+    		
+    		if (!$hotNews) {
+    			$hotNews = S('EnglishNewsList_back');
+    		}
+    	}
+    	
+    	shuffle($hotNews['news']);
+    	
+    	return $hotNews;
+    }
 
 	/**
      * 搜索框自动填充
