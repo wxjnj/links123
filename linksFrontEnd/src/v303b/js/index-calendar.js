@@ -1,5 +1,32 @@
 $(function(){
 
+    function cutstr(str,len) {
+        var str_length = 0;
+        var str_len = 0;
+        str_cut = new String();
+        str_len = str.length;
+        for(var i = 0;i<str_len;i++) {
+            a = str.charAt(i);
+            str_length++;
+            if(escape(a).length > 4){
+                str_length++;
+            }
+            str_cut = str_cut.concat(a);
+            if(str_length>=len){
+                str_cut = str_cut.concat("...");
+                return str_cut;
+            }
+        }
+        if(str_length<len){
+            return str;
+        }
+    }
+
+    $('.text-news').find('a').each(function(){
+        var t = $(this).html();
+        $(this).html(cutstr(t, 35));
+    });
+
     window.newsTimer = null;
     changeNews();
     autoChangeNews();
@@ -63,6 +90,7 @@ $(function(){
         var tab = $('#social-title-tabs').find('.active').attr('data-tab');
         var idx = $('.pic-news-tabs').find('.active').attr('data-tab');
         var o = socialNews[tab][idx];
+        if(o.length == 0) return;
         $('.pic-news').find('img').attr('src', o.img).parent('a').attr('href', o.url);
         $('.pic-news')
             .find('.pic-news-title').html('<a target="_blank" href="'+ o.url +'">' + o.title + '</a>').end()
