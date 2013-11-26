@@ -9,6 +9,7 @@ function createCookie(c, d, f, e) {
 	}
 	document.cookie = c + "=" + d + a; // + "; path=" + e
 }
+
 function readCookie(b) {
 	var e = b + "=";
 	var a = document.cookie.split(";");

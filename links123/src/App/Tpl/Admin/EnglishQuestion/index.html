@@ -103,7 +103,7 @@
                     <eq name="param['status']" value="0">
                     <b>原因</b>
                     <select name="forbid_reason" id="forbid_reason">
-                        <option value="">全部</option>
+                        <option value="0">全部</option>
                         <volist name="forbid_reason_options" id="forbid_reason_option">
                             <option value="{$forbid_reason_option.key}" <eq name="param['forbid_reason']" value="$forbid_reason_option['key']">selected="true"</eq>>{$forbid_reason_option.name}</option>
                         </volist>
@@ -116,7 +116,7 @@
                     <eq name="param['status']" value="-1">
                         <b>原因</b>
                         <select name="del_reason" id="del_reason">
-                            <option value="">全部</option>
+                            <option value="0">全部</option>
                             <volist name="del_reason_options" id="del_reason_option">
                                 <option value="{$del_reason_option.key}" <eq name="param['del_reason']" value="$del_reason_option['key']">selected="true"</eq>>{$del_reason_option.name}</option>
                             </volist>
@@ -149,7 +149,7 @@
 
         <div class="list" >
             
-            <html:list id="checkList" name="category" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,name|htmlspecialchars:名称:edit_popup,created|toDateShort:发布时间,cat_attr_id|getVoiceNameFromAttrId:语音:voice|id,cat_attr_id|getPatternNameFromAttrId:形式,special_recommend|getYorN:特别推荐:special_recommend|media_id,status|getStatus:状态,view_num:浏览数,like_num:赞数,collect_num:收藏数" actionlist="property:分类,edit_popup:编辑" />
+            <html:list id="checkList" name="category" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,seq:排序,name|htmlspecialchars:名称:edit_popup,created|toDateShort:发布时间,cat_attr_id|getVoiceNameFromAttrId:语音:voice|id,cat_attr_id|getPatternNameFromAttrId:形式,special_recommend|getYorN:特别推荐:special_recommend|media_id,status|getStatus:状态" actionlist="property:分类,edit_popup:编辑" />
         </div>
 
         <div class="page">
@@ -172,7 +172,7 @@
 <div id="del_reason_dialog" class="easyui-dialog" style="width:350px;height:auto;" data-options="title:'请选择删除原因',shadow:false,modal:true,closed:true,closable:true">
     <h2 style="color:red;font-size:20px;padding:20px 15px;">请选择删除原因</h2>
     <select name="del_reason1" id="del_reason1" style="margin-left:20px">
-        <option value="">请选择</option>
+        <option value="0">请选择</option>
         <volist name="del_reason_options" id="del_reason_option">
             <option value="{$del_reason_option.key}">{$del_reason_option.name}</option>
         </volist>
@@ -183,7 +183,7 @@
 <div id="forbid_reason_dialog" class="easyui-dialog" style="width:350px;height:auto;" data-options="title:'请选择禁用原因',shadow:false,modal:true,closed:true,closable:true">
     <h2 style="color:red;font-size:20px;padding:20px 15px;">请选择禁用原因</h2>
     <select name="forbid_reason1" id="forbid_reason1" style="margin-left:20px">
-        <option value="">请选择</option>
+        <option value="0">请选择</option>
         <volist name="forbid_reason_options" id="forbid_reason_option">
             <option value="{$forbid_reason_option.key}">{$forbid_reason_option.name}</option>
         </volist>
@@ -225,7 +225,7 @@
         }else{
             r = $("#forbid_reason1").val();
         }
-        if(r == ''){
+        if(r == '0'){
             alert("请选择原因！")
             return;
         }
@@ -289,14 +289,14 @@
             return;
         }
         if (status == 0){
-            if($("#forbid_reason").val() == ''){
+            if($("#forbid_reason").val() == '0'){
                 alert("请选择禁用原因！");
                 $("#forbid_reason").focus();
                 return false;
             }
         }
         if (status == -1){
-            if($("#del_reason").val() == ''){
+            if($("#del_reason").val() == '0'){
                 alert("请选择删除原因！")
                 $("#del_reason").focus();
                 return false;
