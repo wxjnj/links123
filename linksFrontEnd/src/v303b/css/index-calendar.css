@@ -215,13 +215,18 @@
 	font-size: 12px;
 }
 .cal-date-marks-table li .desc {
+	display: inline-block;
+	position: absolute;
+	left: 45px;
+	right: 0;
+	height: 25px;
 }
 .cal-date-marks-table li .add-btn {
 	display: none;
 	padding: 0 4px;
 	height: 30px;
 	line-height: 30px;
-	margin-left: 44px;
+	/*margin-left: 44px;*/
 	color: #fff;
 	text-decoration: none;
 }
@@ -239,7 +244,7 @@
     font-weight: bold;
 }
 
-.cal-date-marks-table li:hover .add-btn {
+.cal-date-marks-table .desc:hover .add-btn {
 	display: block;
 }
 .cal-date-marks-table li:hover .delete-btn {
@@ -489,7 +494,7 @@
 	display: inline-block;
 	height: 20px;
 	line-height: 20px;
-	padding: 0 8px;
+	padding: 0 8px 0 0;
 	border-radius: 3px;
 	text-decoration: none;
 }
