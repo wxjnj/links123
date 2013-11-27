@@ -12,7 +12,7 @@ class VariableModel extends CommonModel {
 	 * @param string $vname
 	 * @param string $value
 	 * @param string $explain
-	 * @return void
+	 * @return boolean
 	 */
 	
     public function setVariable($vname, $value, $explain) {
@@ -22,12 +22,20 @@ class VariableModel extends CommonModel {
         } else {
             $data['value_varchar'] = $value;
         }
-        $ret = $this->where("vname='%s'", $vname)->save($data);
+        $ret = $this->where("vname='%s'", $vname)->getField("vname");
         
-        if (false !== $ret && $ret < 1) {
+        if (false !== $ret && empty($ret)) {
             $data['vname'] = $vname;
-            $this->add($data);
+            if(false === $this->add($data)){
+                return false;
+            }
+        }else{
+            $ret = $this->where("vname='%s'", $vname)->save($data);
+            if(false === $ret){
+                return false;
+            }
         }
+        return true;
     }
 
     /**

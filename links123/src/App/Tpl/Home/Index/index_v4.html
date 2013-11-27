@@ -381,6 +381,31 @@
 						<p class="more-news"><a href="http://sh.qihoo.com/index.html" target="_blank" rel="external nofollow" title="更多新闻">更多新闻</a></p>
 					</div>
 				</div>
+				
+				<!-- blog New -->
+				<div class="social-ennews social-box" style="display: none">
+					<div class="pic-news">
+						<div class="pics-box">
+							<a href="#" target="_blank"><img src="" /></a>
+						</div>
+						<div class="pic-news-tabs">
+							<a class="active" href="javascript:;" data-tab="0"></a>
+							<a href="javascript:;" data-tab="1"></a>
+							<a href="javascript:;" data-tab="2"></a>
+							<a href="javascript:;" data-tab="3"></a>
+						</div>
+						<h3 class="pic-news-title"></h3>
+						<span class="pic-news-desc"><a href="#"></a></span>
+					</div>
+					<div class="text-news">
+					<volist name="blogNewsData" id="news" >
+						<p><b></b><a href="{$news.url}" target="_blank" title="{$news.title}">{$news.title}</a></p>
+					</volist>
+						<!-- <p class="wide-news"><a href="#"></a></p> -->
+						<p class="more-news"><a href="http://blog.links123.cn/" target="_blank" title="更多新闻">更多博文</a></p>
+					</div>
+				</div>
+				
 				<div class="social-digs social-box" style="display: none">
 					<ul class="lft-digs">
 						<li>
