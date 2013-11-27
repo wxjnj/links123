@@ -1,0 +1,95 @@
+<tagLib name="html" />
+<include file="Public:header" />
+<load href ="__PUBLIC__/Js/common.js" />
+<load href="__PUBLIC__/Js/editor/kindeditor-min.js" />
+
+<script type="text/javascript">
+	function fn_sbmt(frm, field){
+		var obj1 = document.getElementById(frm);
+		//var obj2 = document.getElementById(field);
+
+		//var temp = 'ajax=1&' + field + '=' + obj2.value;
+		//ThinkAjax.send(obj1.action, temp);
+		obj1.submit();
+	}
+//	var editor;
+//	KindEditor.ready(function(K) {
+//		editor = K.create("textarea[name='about_us']", {
+//			resizeType : 1,
+//			allowPreviewEmoticons : false,
+//			allowImageUpload : true,
+//			items : [
+//				'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
+//				'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
+//				'insertunorderedlist', '|', 'emoticons', 'link', 'image'],
+//			afterBlur: function(){this.sync();}
+//		});
+//	});
+</script>
+
+<div id="main" class="main" >
+<div class="content">
+	<div class="title">英语角基本信息设置</div>
+	
+	<form method='post' id="frm1" action="__URL__/setVariable" >
+		<table cellpadding=3 cellspacing=3>
+			<tr>
+				<td class="tRight" width="150">标题：</td>
+				<td class="tLeft" ><input class="bLeft" name="value" style="width:700px;" value="{$EnglishCentralTitle['value_varchar']}" /></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td class="center">
+                <input type="hidden" name="name" value="EnglishCentralTitle" />
+				<input type="button" value="保 存" class="small submit" onclick="fn_sbmt('frm1', 'EnglishCentralTitle');" />&nbsp;
+				<input type="reset" class="submit small" value="清 空" />
+				</td>
+				<td></td>
+			</tr>
+		</table>
+	</form>
+	
+	<hr />
+	
+	<form method='post' id="frm2" action="__URL__/setVariable" >
+		<table cellpadding=3 cellspacing=3>
+			<tr>
+				<td class="tRight" width="150">关键词：</td>
+				<td class="tLeft" ><textarea class="bLeft" name="value" style="width:700px;height:60px;">{$EnglishCentralKeywords['value_varchar']}</textarea></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td class="center">
+                <input type="hidden" name="name" value="EnglishCentralKeywords" />
+				<input type="button" value="保 存" class="small submit" onclick="fn_sbmt('frm2', 'Keywords');" />&nbsp;
+				<input type="reset" class="submit small" value="清 空" />
+				</td>
+				<td></td>
+			</tr>
+		</table>
+	</form>
+	
+	<hr />
+	
+	<form method='post' id="frm3" action="__URL__/setVariable" >
+		<table cellpadding=3 cellspacing=3>
+			<tr>
+				<td class="tRight" width="150">描述：</td>
+				<td class="tLeft" ><textarea class="bLeft" name="value" style="width:700px;height:60px;">{$EnglishCentralDescription['value_varchar']}</textarea></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td class="center">
+                <input type="hidden" name="name" value="EnglishCentralDescription" />
+				<input type="button" value="保 存" class="small submit" onclick="fn_sbmt('frm3', 'Description');" />&nbsp;
+				<input type="reset" class="submit small" value="清 空" />
+				</td>
+				<td></td>
+			</tr>
+		</table>
+	</form>
+	
+	<hr />
+	
+	</div>
+</div>
