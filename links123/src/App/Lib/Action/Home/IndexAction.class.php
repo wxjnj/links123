@@ -90,6 +90,9 @@ class IndexAction extends CommonAction {
         //新闻信息
         $hotNews = $this->getHotNews();
         $englishNews = $this->getEnglishNews();
+
+        $BlogNews = $this->getBlogNews();
+        
         shuffle($hotNews['imgNews']);
         $this->assign('hotNewsData',  $hotNews['news']);
         $this->assign('imgNewsData',  $hotNews['imgNews']);
@@ -97,6 +100,8 @@ class IndexAction extends CommonAction {
         //英文
         $this->assign('enNewsData',  $englishNews['news']);
         $this->assign('enImgNewsData',  $englishNews['imgNews']);
+        
+        $this->assign('blogNewsData', $BlogNews);
         
 		$this->getHeaderInfo();
 		$this->display('index_v4');
@@ -143,7 +148,7 @@ class IndexAction extends CommonAction {
 
 		if ($skinId) {
 			session('skinId', $skinId);
-			cookie('skinId', $skinId, array('expire' => 0));
+			cookie('skinId', $skinId, array('expire' => 31536000));
 		} else {
 			unset($_SESSION['skinId']);
 			cookie('skinId',null);
@@ -181,7 +186,7 @@ class IndexAction extends CommonAction {
 		}
 
 		session('themeId', $themeId);
-		cookie('themeId', $themeId, array('expire' => 0));
+		cookie('themeId', $themeId, array('expire' => 31536000));
 
 		$this->updateSkin(0);
 		$this->ajaxReturn($result);
@@ -213,7 +218,7 @@ class IndexAction extends CommonAction {
 		}
 
 		session('themeId', $themeId);
-		cookie('themeId', $themeId, array('expire' => 0));
+		cookie('themeId', $themeId, array('expire' => 31536000));
 
 		$this->updateSkin(0);
 		$this->ajaxReturn($result);
@@ -1252,7 +1257,7 @@ class IndexAction extends CommonAction {
 					
 			} else {
 				
-				cookie('app_sort', $app_sort, array('expire' => 0));
+				cookie('app_sort', $app_sort, array('expire' => 31536000));
 			}
 	
 		} else {
@@ -1393,7 +1398,7 @@ class IndexAction extends CommonAction {
     } 
     
     /**
-     * 抓取英文
+     * 抓取英闻
      */
     protected function getEnglishNews() {
     	$hotNews = S('EnglishNewsList');
@@ -1435,6 +1440,34 @@ class IndexAction extends CommonAction {
     	
     	shuffle($hotNews['news']);
     	
+    	return $hotNews;
+    }
+    
+    /**
+     * 获取blog文章
+     */
+    protected function getBlogNews() {
+    	$hotNews = S('BlogNewsList');
+    	 
+    	if (!$hotNews) {
+    		 
+    		$url = 'http://blog.links123.cn/newsAPI.php';
+    		$str = file_get_contents($url);
+    		if ($str) {
+    			 
+    			$hotNews = json_decode($str, true);
+    	   
+    			S('BlogNewsList', $hotNews, 28800);
+    			if ($hotNews) {
+    				S('BlogNewsList_back', $hotNews);
+    			}
+    		}
+    
+    		if (!$hotNews) {
+    			$hotNews = S('BlogNewsList_back');
+    		}
+    	}
+    	 
     	return $hotNews;
     }
 

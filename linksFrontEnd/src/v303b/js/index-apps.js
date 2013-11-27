@@ -30,6 +30,15 @@ var currentDayTimer = setInterval(function(){
 	}
 }, 1000);
 
+//点击一个应用窗口，将该窗口挪到最上层
+$(document).on('click', '.links123-app-frame', function(){
+	var o = $(this);
+	var n = o.next('.links123-app-frame:visible').size();
+	if(n != 0){
+		o.appendTo('body');
+	}
+});
+
 $( function($) {
 
 	$('#app-tip').on('click', '.zld-tip-close', function(){
@@ -120,6 +129,7 @@ $( function($) {
 						background: '#fff',
 						content: ''
 					});
+					return false;
 				})
 				.on('click', '.J_box_note .links123-close-wrap a', function(e){
 					//self.update($(this).parents('.J_box_note').find('textarea'));
@@ -193,7 +203,9 @@ $( function($) {
 			}
 			var o = $(AppsTpl['#J_box_note']);
 			o.find('textarea').val(v.content);
+			
 			o.appendTo('body');
+			
 
 			var fixedStyle = {};
 
