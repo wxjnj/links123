@@ -74,3 +74,42 @@ CREATE TABLE IF NOT EXISTS `lnk_password_guard` (
 ALTER TABLE `lnk_member` ADD `mobile` INT NULL COMMENT '手机号',
 ADD `mobile_verify` INT NULL COMMENT '手机验证码';
 
+--
+-- Table structure for table `lnk_privacy`
+--
+
+CREATE TABLE IF NOT EXISTS  `lnk_privacy` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `name_cn` varchar(32) CHARACTER SET utf8 NOT NULL COMMENT '隐私名称',
+  `tip_cn` varchar(64) CHARACTER SET utf8 NOT NULL DEFAULT '' COMMENT '注解说明',
+  `value` int(8) NOT NULL DEFAULT '0' COMMENT '隐私条目数值',
+  `pid` int(11) NOT NULL DEFAULT '0' COMMENT 'parent id.',
+  `seq` int(8) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=25 DEFAULT CHARSET=latin1 COMMENT='通用隐私';
+
+
+INSERT INTO `lnk_privacy` VALUES (1,'评论权限','',0,0,1),(2,'添加好友','',0,0,2),(3,'成就','',0,0,3),(4,'个人信息','',0,0,4),(5,'另客银行','设置另客币财产状况隐私',0,0,5),(6,' 所有人','不包括你的黑名单用户',3,1,1),(7,'可信用户','包括我的好友、另客认证用户、手机绑定用户以及身份验证用户',5,1,2),(8,'仅好友可发表评论','',7,1,3),(9,'允许任何人添加为好友','',3,2,1),(10,'需要验证信息后','',5,2,2),(11,'不允许任何人添加为好友','',7,2,3),(12,'公开','允许他人查看我的成就',3,3,1),(13,'隐私','不允许他人查看我的成就',5,3,2),(14,'允许任何人查看','',3,4,1),(15,'允许可信用户查看','',5,4,2),(16,'仅好友可见','',7,4,3),(17,'我要炫富','所有人可见另客币持有数',3,5,1),(18,'仅好友可见','',5,5,2),(19,'保持低调','仅自己可见',7,5,3),(20,'搜索引擎收录','是否允许搜索引擎搜索到你在另客的信息',0,0,1),(21,'收录相册','',20,3,1),(22,'收录个人主页','',20,5,2),(23,'收录日志','',20,7,3),(24,'收录状态','',20,11,4);
+
+CREATE table IF NOT EXISTS `lnk_privacy_member_index` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `privacy_id` int(11) unsigned NOT NULL COMMENT '对应的隐私项目的外键',
+  `member_id` int(11) unsigned NOT NULL COMMENT '对应成员id',
+  `value` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '计算出的值。',
+  `create_time` int(11) NOT NULL,
+  `update_time` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `member_privacy` (`privacy_id`,`member_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='通用隐私设置表，关联到用户表和隐私表';
+
+CREATE TABLE `lnk_member_chatlogs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `member_id` int(11) NOT NULL,
+  `query_password` varchar(32) NOT NULL COMMENT '查询密码',
+  `salt` char(6) NOT NULL COMMENT '查询密码的salt.',
+  `roaming_status` tinyint(1) NOT NULL DEFAULT '0' COMMENT '聊天记录漫游:1,开启; 0,关闭',
+  `rows_to_keep` int(8) NOT NULL COMMENT '聊天记录条数',
+  `created_time` int(11) NOT NULL,
+  `update_time` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='聊天记录管理表';
