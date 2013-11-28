@@ -146,9 +146,9 @@ class CommonAction extends Action {
 	protected function getHeaderInfo($data=array()) {
 
 		$variable = $this->_getVariable();
-		$title = empty($data['title'])?'另客网 | 领先的全面导航 | 高效的组合搜索 | 独特的英语角':empty($data['title']);
-		$keywords = empty($data['keywords'])?$variable['Keywords']:empty($data['keywords']);
-		$description = empty($data['description'])?$variable['Description']:empty($data['description']);
+		$title = $variable['title'] . (!$data['title'] ? '' : '-' .$data['title']);
+		$keywords = !$data['keywords']?$variable['Keywords']:$data['keywords'];
+		$description = !$data['description']?$variable['Description']:$data['description'];
 		
 		$this->assign('title', $title);
 		$this->assign('keywords', $keywords);
