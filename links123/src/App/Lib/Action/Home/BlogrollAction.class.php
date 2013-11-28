@@ -19,6 +19,8 @@ class BlogrollAction extends CommonAction {
 		$this->assign('outlinklist', $list);
 		$this->assign('banner', $this->getAdvs(3, "banner"));
 		
+		$this->getHeaderInfo(array('title' => '友情链接'));
+		
 		$this->display();
 	}
 }

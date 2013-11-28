@@ -90,21 +90,21 @@
 .apps ul li .ct{
 	margin-bottom: 7px;
 }
-.apps ul li.today{
+.box-apps ul li.today{
 	background: url(../imgs/app/app-date.png) center top no-repeat;
 }
-.apps ul li.today .ct{
+.box-apps ul li.today .ct{
 	height: 80px;
 	width: 80px;
     margin-left: auto;
     margin-right: auto;
 }
-.apps ul li.today b{
+.box-apps ul li.today b{
 	color: #000;
 	font-size: 12px;
 	padding-top: 10px;
 }
-.apps ul li.today i{
+.box-apps ul li.today i{
 	color: #cb2d40;
 	font-size: 40px;
 	font-weight: bold;
@@ -112,8 +112,8 @@
 	font-family: Arial;
 	margin-top: -5px;
 }
-.apps ul li.today b,
-.apps ul li.today i{
+.box-apps ul li.today b,
+.box-apps ul li.today i{
 	display: block;
 	text-align: center;
 }

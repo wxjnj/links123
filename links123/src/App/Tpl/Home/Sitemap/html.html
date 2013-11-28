@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{$title} Archiver</title>
+	<meta name="Keywords" content="{$keywords}" />
+	<meta name="Description" content="{$description}" />
+	<meta name="generator" content="" />
+	<meta name="author" content="" />
+	<meta name="copyright" content="" />
+	<style type="text/css">
+		body {font-family: Verdana;FONT-SIZE: 12px;MARGIN: 0;color: #000000;background: #ffffff;}
+		img {border:0;}
+		ul {overflow:hidden;}
+		li {margin: 8px;float:left;display:inline;}
+		.nav,.content {padding: 8px; border: 1px solid #EEEEEE; clear: both; width: 95%; margin: auto; margin-top: 10px;}
+		#header, #footer { margin: 20px auto;text-align:text;width:960px;}
+	</style>
+</head>
+<body>
+<div id="header">
+	<h2>{$title} Archiver</h2>
+</div>
+	<volist name="cat_list" id="fcat">
+		<notempty name="fcat['id']">
+	<div class="nav">
+		<a href="{:U('Home/Index/nav')}?cat={$fcat.id}" target="_blank"><strong>{$fcat.cat_name}</strong></a>
+	</div>
+	<div class="content">
+		<volist name="fcat['children']" id="cat">
+			<notempty name="cat_links[$cat['id']]">
+		<h3><a href="{:U('Home/Index/nav')}?cat={$cat.id}" target="_blank">{$cat.cat_name}</a></h3>
+		<ul>
+			<volist name="cat_links[$cat['id']]" id="link">
+			<li><a href="{:U('Detail/index')}?id={$link.id}" target="_blank">{$link.title}</a></li>
+			</volist>
+		</ul>
+			</notempty>
+		</volist>
+	</div>
+		</notempty>
+	</volist>
+<div id="footer">
+	<div class="site-info">
+		<ul>
+			<li><a target="_blank" href="{:U('/About')}">关于我们</a></li>
+			<li><a target="_blank" href="{:U('/Suggestion')}">留言板</a></li>
+			<li><a target="_blank" href="{:U('/Blogroll')}">友情链接</a></li>
+			<li><a target="_blank" href="{:U('/Recommend')}">推荐链接</a></li>
+		</ul>
+		<p>沪ICP备12036721号 &copy; 另客 2013 <script src="http://s96.cnzz.com/stat.php?id=4907803&web_id=4907803&show=pic1" type="text/javascript"></script></p>
+	</div>
+</div>
+</body>
+</html>

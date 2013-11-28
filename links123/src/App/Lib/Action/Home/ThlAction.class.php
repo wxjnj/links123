@@ -15,6 +15,41 @@ class ThlAction extends CommonAction {
 	 * @see ThlAction::index()
 	 */
 	public function index() {
+		if ($user_id) {
+			$memberModel = M("Member");
+			$mbrNow = $memberModel->where(array('id' => $user_id))->find();
+
+		} else {
+			
+			$this->get_member_guest();
+
+		}
+
+		//取出皮肤ID和模板ID
+		$skinId = session('skinId');
+		if (!$skinId) {
+			$skinId = cookie('skinId');
+		}
+		$themeId = session('themeId');
+		if (!$themeId) {
+			$themeId = cookie('themeId');
+		}
+		
+		//快捷皮肤
+		$skins = $this->getSkins();
+		if ($skinId) {
+			$skin = $skins['skin'][$skinId]['skinId'];
+			if (!$skin) $skinId = '';
+			$themeId = $skins['skin'][$skinId]['themeId'];
+			$this->assign("skinId", $skinId);
+			$this->assign("skin", $skin);
+		}
+		$this->assign("skinList", $skins['list']);
+		$this->assign("skinCategory", $skins['category']);
+		
+		$theme = $this->getTheme($themeId);
+		$this->assign('theme', $theme);
+		
 		$tid = intval($this->_param('tid'));
 		$thl = $this->_param('thl');
 		if (empty($tid)) {
@@ -38,6 +73,8 @@ class ThlAction extends CommonAction {
 		$this->assign('subUrl', $url);
 		$this->assign("thlNow", $thlInfo['thl']);
 		$this->assign("tidNow", $thlInfo['id']);
+		
+		$this->getHeaderInfo();
 		
 		$this->display();
 	}

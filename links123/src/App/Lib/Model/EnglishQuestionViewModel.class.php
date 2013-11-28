@@ -4,7 +4,7 @@
 class EnglishQuestionViewModel extends ViewModel {
 
     public $viewFields = array(
-        'englishQuestion' => array('id', 'target','media_id', 'media_url', 'media_text_url', 'name', 'answer', 'created', 'updated', 'answer_num', 'status', 'content','view_num','like_num','collect_num','_type' => 'LEFT'),
+        'englishQuestion' => array('id', 'target','media_id', 'media_url', 'media_text_url', 'name', 'answer', 'created', 'updated', 'answer_num', 'status', 'content', 'sort'=>'seq', '_type' => 'LEFT'),
         'englishMedia' => array('englishMedia.media_source_url' => 'media_source_url','englishMedia.special_recommend' => 'special_recommend', '_on' => 'englishQuestion.media_id=englishMedia.id', '_type' => 'LEFT'),
         'englishCatquestion' => array("cat_id", '_on' => 'englishQuestion.id=englishCatquestion.question_id AND englishCatquestion.type=1', '_type' => 'LEFT'),
         'englishCategory' => array("cat_attr_id", '_on' => 'englishCatquestion.cat_id=englishCategory.cat_id', '_type' => 'LEFT'),

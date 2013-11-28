@@ -2,7 +2,6 @@
 <html>
 <head>
 	<include file="Contorls:headlinks" />
-	<link rel="canonical" href="http://links123.cn{$_SERVER['REQUEST_URI']}" />
 </head>
 
 <body>
@@ -48,7 +47,7 @@
 				<ul class="cont_pl_ul">
 				<volist name="cmtList" id="vo">
 					<li>
-						<div class="cont_pl_tx"><img src="__PUBLIC__/Uploads/Faces/{$vo.face}" /></div>
+						<div class="cont_pl_tx"><img src="__PUBLIC__/Uploads/Faces/{$vo.face}" alt="face" /></div>
 						<div class="cont_pl_cont">
 							<p><a class="cont_pl_name">{$vo.nickname}</a>&nbsp;<span>{$vo.create_time}</span></p>
 							<p>

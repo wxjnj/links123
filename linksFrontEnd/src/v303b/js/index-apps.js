@@ -4,6 +4,36 @@
  * @datetime: 2013-09-25 13:05
  */
 
+//定时器，用于跨日切换页面上日期数字
+var init_today = Date.today();
+
+var currentDayTimer = setInterval(function(){
+	var o = Calendar.compare(init_today, Date.today());
+	if(o != 0){
+		init_today = Date.today();
+		$('#index-today-bar').find('b').html(Calendar.dateTitleConfig[init_today.getDay()]);
+		$('#index-today-bar').find('i').html(init_today.getDate());
+		Calendar.setCurrentDate(init_today);
+		Calendar.ReInit();
+	}else{
+		var now = new Date();
+		if(now.getHours() == 23 && now.getMinutes() == 59 && now.getSeconds() > 56){
+			$('.cal-ajax-overlayer').show().find('.content').html(now.toString('HH:mm:ss'));
+		}else{
+			$('.cal-ajax-overlayer').hide();
+		}
+	}
+}, 1000);
+
+//点击一个应用窗口，将该窗口挪到最上层
+$(document).on('click', '.links123-app-frame', function(){
+	var o = $(this);
+	var n = o.next('.links123-app-frame:visible').size();
+	if(n != 0){
+		o.appendTo('body').find('textarea').focus();
+	}
+});
+
 $( function($) {
 
 	$('#app-tip').on('click', '.zld-tip-close', function(){
@@ -94,6 +124,7 @@ $( function($) {
 						background: '#fff',
 						content: ''
 					});
+					return false;
 				})
 				.on('click', '.J_box_note .links123-close-wrap a', function(e){
 					//self.update($(this).parents('.J_box_note').find('textarea'));
@@ -112,9 +143,11 @@ $( function($) {
 					$(this).parents('.J_box_note').find('.box_note_textarea_box').append('<textarea></textarea>');
 					$(this).parents('.J_box_note').find('textarea').focus();
 				})
+				.on('keyup', '.J_box_note textarea', function(){
+					self.update($(this));
+				})
 				.on('blur', '.J_box_note textarea', function(e){
 					var li = $(this).parents('.J_box_note');
-
 					setTimeout(function(){
 						self.update(li.find('textarea'));
 					}, 0);
@@ -167,7 +200,9 @@ $( function($) {
 			}
 			var o = $(AppsTpl['#J_box_note']);
 			o.find('textarea').val(v.content);
+			
 			o.appendTo('body');
+			
 
 			var fixedStyle = {};
 
@@ -246,6 +281,10 @@ $( function($) {
 	 */
 	$.fn.links123_apptrigers = function(selector) {
 		this.on('click', selector, function() {
+			if($('#J_Apps').attr('data-sort') == 'true'){
+				$('#J_Apps').attr('data-sort', 'false')
+				return false;
+			}
 			var appId = $(this).data('href');
 			if(appId == '#J_box_note') {
 				NoteController.refresh();
@@ -264,9 +303,17 @@ $( function($) {
 	$('#J_AppsMore').links123_apptrigers('.J_app_trig');
 	
 	$('#J_Apps').on('click', '.J_app_link', function(){
+		if($('#J_Apps').attr('data-sort') == 'true'){
+			$('#J_Apps').attr('data-sort', 'false')
+			return false;
+		}
 		window.open($(this).data('href'));
 	});
 	$(document).on('click', '#J_AppsMore .J_app_link', function(){
+		if($('#J_Apps').attr('data-sort') == 'true'){
+			$('#J_Apps').attr('data-sort', 'false')
+			return false;
+		}
 		window.open($(this).data('href'));
 	});
 
@@ -285,6 +332,7 @@ $( function($) {
 			this.initStyle();
 			this.bindEvent();
 		}
+
 		apps.push(this);
 		callbacks[appId] && callbacks[appId](this);
 	};
@@ -292,7 +340,18 @@ $( function($) {
 		show : function() {
 			var self = this;
 			// this.$elem.css('display', 'block');
-			this.$elem.fadeIn(function(){
+			if(!this.$elem.is(':hidden')){
+				//return;
+			}
+			if(this.appId == '#J_box_youdao') {
+				$('#youdao_script_loader').remove();
+				var s = document.createElement('script');
+				s.id = 'youdao_script_loader';
+				s.src = 'http://fanyi.youdao.com/openapi.do?keyfrom=links123cn&key=1695588868&type=fanyier&version=1.0&select=on';
+				s.setAttribute('charset', 'utf-8');
+				document.getElementsByTagName("head")[0].appendChild(s);
+			}
+			this.$elem.appendTo('body').fadeIn(function(){
 				if(self.appId == '#J_box_translate'){
 					setTimeout(function(){
 						$('.J_translate_source').select();
@@ -327,12 +386,14 @@ $( function($) {
 			self.$closeBtn.bind('click', function() {
 				self.close();
 			});
-			self.$elem.bind('mousedown keydown', function() {
-				$.map(apps, function(app) {
-					app.$elem.css('z-index', '9000');
-				});
-				self.$elem.css('z-index', '10000');
-			});
+
+			self.$elem.draggable();
+			//self.$elem.bind('mousedown keydown', function() {
+				//$.map(apps, function(app) {
+					//app.$elem.css('z-index', '9000');
+				//});
+				//self.$elem.css('z-index', '10000');
+			//});
 
 			$(document).bind('keyup', function(e) {
 				e.keyCode === 27 && self.close();
@@ -408,7 +469,7 @@ $( function($) {
 	 * 以dom id为key调用对应的函数，每个函数欧诺只会调用一次，而且是按需调用
 	 */
 	var callbacks = {
-		'#J_box_note' : function(app) {
+		//'#J_box_note' : function(app) {
 			/*
 			var $note = app.$elem;
 			var $textarea = $note.find('textarea');
@@ -454,7 +515,7 @@ $( function($) {
 			}
 			*/
 
-		},
+		//},
 
 		'#J_box_mail' : function() {
 			var Config = {
@@ -691,8 +752,25 @@ $( function($) {
 
 		'#J_box_calc' : function() {
 			$('#J_calc_iframe').attr('src', 'http://qiqiapp3.duapp.com/yuyinjisuanqi/');
+			$('#J_calc_iframe').attr('height', '480px');
 			$('#J_box_calc_list a').click(function() {
-				$('#J_calc_iframe').attr('src', $(this).attr('data-url'));
+				var current = $(this);
+				$('#J_calc_iframe').attr('src', current.attr('data-url'));
+				switch(current.attr('title')){
+					case '语音计算器':
+						$('#J_calc_iframe').attr('height', '480px');
+						break;
+					case '计算器美女语音版':
+						$('#J_calc_iframe').attr('height', '530px');
+						break;
+					case '科学计算器':
+					case '按揭房贷计算器':
+						$('#J_calc_iframe').attr('height', '620px');
+						break;
+					case '汇率换算':
+						$('#J_calc_iframe').attr('height', '320px');
+						break;
+				}
 				return false;
 			});
 		},

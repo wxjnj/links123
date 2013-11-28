@@ -146,9 +146,9 @@ class CommonAction extends Action {
 	protected function getHeaderInfo($data=array()) {
 
 		$variable = $this->_getVariable();
-		$title = empty($data['title'])?'另客网 | 领先的全面导航 | 高效的组合搜索 | 独特的英语角':empty($data['title']);
-		$keywords = empty($data['keywords'])?$variable['Keywords']:empty($data['keywords']);
-		$description = empty($data['description'])?$variable['Description']:empty($data['description']);
+		$title = $variable['title'] . (!$data['title'] ? '' : '-' .$data['title']);
+		$keywords = !$data['keywords']?$variable['Keywords']:$data['keywords'];
+		$description = !$data['description']?$variable['Description']:$data['description'];
 		
 		$this->assign('title', $title);
 		$this->assign('keywords', $keywords);
@@ -539,7 +539,7 @@ class CommonAction extends Action {
     	
     		$appModel = M('App');
     		 
-    		$result = $appModel->where(array('status' => 0))->select();
+    		$result = $appModel->where(array('status' => 0))->order('sort asc')->select();
     		 
     		foreach ($result as $value) {
     	
@@ -605,6 +605,10 @@ class CommonAction extends Action {
      * 同步日程表
      */
     public function synchronize_schedule($user_id, $member_guest_id) {
+//     	$scheduleModel = M('Schedule');
+    	
+//     	$guest_schedules = $scheduleModel->where(array('mid' => $member_guest_id, 'isbind' => 0))->select();
+    	
 //     	try {
 // 	    	$model = M();
 // 	    	$model->query("INSERT INTO `lnk_schedule`(`mid`,`datetime`,`content`,`status`,`create_time`,`update_time`,`year`,`month`,`day`) SELECT $user_id,`datetime`,`content`,`status`,`create_time`,`update_time`,`year`,`month`,`day` FROM `lnk_schedule` WHERE `mid`=$member_guest_id AND `isbind`=0");

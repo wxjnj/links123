@@ -1,8 +1,53 @@
 $(function(){
 
+    function cutstr(str,len) {
+        var str_length = 0;
+        var str_len = 0;
+        str_cut = new String();
+        str_len = str.length;
+        for(var i = 0;i<str_len;i++) {
+            a = str.charAt(i);
+            str_length++;
+            if(escape(a).length > 4){
+                str_length++;
+            }
+            str_cut = str_cut.concat(a);
+            if(str_length>=len){
+                str_cut = str_cut.concat("...");
+                return str_cut;
+            }
+        }
+        if(str_length<len){
+            return str;
+        }
+    }
+
+    $('.text-news').find('a').each(function(){
+        var t = $(this).html();
+        $(this).html(cutstr(t, 35));
+    });
+
     window.newsTimer = null;
     changeNews();
     autoChangeNews();
+
+    $('#social-title-tabs').on('click', 'li', function(){
+        var tab = $(this).attr('data-tab');
+        if(tab == 'news' || tab == 'ennews' || tab == 'blognews'){
+            $('.social-box').hide();
+            $('.social-' + tab).show();
+            $('#social-title-tabs').find('li').removeClass('active');
+            $(this).addClass('active');
+            clearTimeout(window.newsTimer);
+            window.newsTimer = null;
+            $('.pic-news-tabs').find('a').removeClass('active');
+            $('.pic-news-tabs').find('a:first').addClass('active');
+
+            changeNews();
+            autoChangeNews();
+        }
+    });
+
     $('.pic-news-tabs').on('click', 'a', function(){
         clearTimeout(window.newsTimer);
         window.newsTimer = null;
@@ -11,7 +56,7 @@ $(function(){
         changeNews();
         //autoChangeNews();
     }).on('mouseenter', 'a', function(){
-        var $this = $(this)
+        var $this = $(this);
         clearTimeout(window.newsTimer);
         window.newsTimer = null;
         $('.pic-news-tabs').find('a').removeClass('active');
@@ -43,9 +88,17 @@ $(function(){
     }
 
     function changeNews(){
+        var tab = $('#social-title-tabs').find('.active').attr('data-tab');
         var idx = $('.pic-news-tabs').find('.active').attr('data-tab');
-        var o = news[idx];
-        $('.pic-news').find('img').attr('src', o.img).end()
+        var o;
+        //if(tab == 'blog'){
+        //    o = socialNews['news'][idx];
+        //}else{
+            o = socialNews[tab][idx];
+        //}
+        if(!o) return;
+        $('.pic-news').find('img').attr('src', o.img).parent('a').attr('href', o.url);
+        $('.pic-news')
             .find('.pic-news-title').html('<a target="_blank" href="'+ o.url +'">' + o.title + '</a>').end()
             .find('.pic-news-desc a').attr('href', o.url).html(o.desc);
     }
@@ -56,7 +109,6 @@ $(function(){
     });
     
 });
-
 /*
  *   Calendar
  */
@@ -65,7 +117,7 @@ $(function(){
     var config = {};
     config.CHS_WEEKS = ['一', '二', '三', '四', '五', '六', '日'];
     config.CHS_MONTHS = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二'];
-    config.ENG_WEEKS = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+    config.ENG_WEEKS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     config.ENG_MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'Auguest', 'September', 'October', 'November', 'December'];
 
     function countObjLength(o) {
@@ -112,6 +164,7 @@ $(function(){
 
     //top控制器
     var Calendar = {
+        dateTitleConfig: config,
         Init: function(type) {
             var self = this;
 

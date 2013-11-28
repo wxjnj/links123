@@ -22,9 +22,9 @@ class LoginAction extends CommonAction
 			exit(0);
 		}
 		$this->assign('banner', $this->getAdvs(4, "banner"));
-		$this->assign('title', '另客岛民请登录，享受您另客岛民专有的服务');
-		$this->assign('Description', '另客会员专区有众多只有会员才能享有的资源和服务');
-                
+		
+		$this->getHeaderInfo(array('title' => '登录'));
+		
 		$this->display();
 	}
 	
@@ -111,6 +111,12 @@ class LoginAction extends CommonAction
 			$auto_login_time = intval(D("Variable")->getVariable("auto_login_time"));
 			cookie("USER_ID", $str, $auto_login_time ? : 60*60*24*7);
 		}
+		
+		//同步游客数据到用户
+// 		$member_guest_id = $this->get_member_guest();
+// 		if ($member_guest_id < 0) {
+// 			$this->synchronize_schedule($mbrNow['id'], $member_guest_id);
+// 		}
 		
 		echo json_encode(array("code"=>200, "content" => "loginOK"));
 	}

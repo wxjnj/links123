@@ -36,8 +36,8 @@ class SuggestionAction extends CommonAction {
 		
 		$this->assign('suglist', $list);
 		$this->assign('banner', $this->getAdvs(3, "banner"));
-		$this->assign('title', '您的意见对另客非常重要！让我们一起努力，让另客变得更好！');
-		$this->assign('Description', '另客的成功离不开您的意见和建议。我们欢迎您给我们提意见，我们将据此不断改进，为您提供更好的服务。');
+		
+		$this->getHeaderInfo(array('title' => '留言板'));
 		
 		$this->display();
 	}
