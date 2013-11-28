@@ -33,7 +33,7 @@ $(function(){
 
     $('#social-title-tabs').on('click', 'li', function(){
         var tab = $(this).attr('data-tab');
-        if(tab == 'news' || tab == 'ennews' || tab == 'blog'){
+        if(tab == 'news' || tab == 'ennews' || tab == 'blognews'){
             $('.social-box').hide();
             $('.social-' + tab).show();
             $('#social-title-tabs').find('li').removeClass('active');
@@ -91,11 +91,11 @@ $(function(){
         var tab = $('#social-title-tabs').find('.active').attr('data-tab');
         var idx = $('.pic-news-tabs').find('.active').attr('data-tab');
         var o;
-        if(tab == 'blog'){
-            o = socialNews['news'][idx];
-        }else{
+        //if(tab == 'blog'){
+        //    o = socialNews['news'][idx];
+        //}else{
             o = socialNews[tab][idx];
-        }
+        //}
         if(!o) return;
         $('.pic-news').find('img').attr('src', o.img).parent('a').attr('href', o.url);
         $('.pic-news')
