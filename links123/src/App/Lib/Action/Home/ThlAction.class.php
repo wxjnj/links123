@@ -74,6 +74,8 @@ class ThlAction extends CommonAction {
 		$this->assign("thlNow", $thlInfo['thl']);
 		$this->assign("tidNow", $thlInfo['id']);
 		
+		$this->getHeaderInfo();
+		
 		$this->display();
 	}
 

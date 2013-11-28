@@ -118,6 +118,7 @@ class DetailAction extends CommonAction
 		
 		$this->assign('linkNow', $linkNow);
 		$this->assign("linkTitle", $linkNow['title']);
+		
 		$this->display();
 	}
 	
@@ -144,7 +145,7 @@ class DetailAction extends CommonAction
 	
 		if ($catid) {
 			$_SESSION['catNow'] = $cat->getById($catid);
-			$_title = $GLOBALS['_title'] . ' | ' . $_SESSION['catNow']['cat_name'] . ' | 另客网';
+			$_title = $GLOBALS['_title'] . ' | ' . $_SESSION['catNow']['cat_name'];
 		} else {
 			$_firstTiles3 = $GLOBALS['firstTiles3'][0] . ($GLOBALS['firstTiles3'][1] ? '、' . $GLOBALS['firstTiles3'][1] . ($GLOBALS['firstTiles3'][2] ? '、' . $GLOBALS['firstTiles3'][2] : '') : '');
 			import("@.ORG.Page");
@@ -156,7 +157,8 @@ class DetailAction extends CommonAction
 			$Description = $variable->getByVname('Description');
 			$GLOBALS['_description'] = $Description['value_varchar'] . '。本页热门网站有：' . $_firstTiles3;
 		}
-		$this->assign('title', $_title);
-		$this->assign('Description', strip_tags(str_replace("\n","",$GLOBALS['_description'])));
+		
+		$this->getHeaderInfo(array('title' => $_title, 'description' => strip_tags(str_replace("\n","",$GLOBALS['_description']))));
+		
 	}
 } 

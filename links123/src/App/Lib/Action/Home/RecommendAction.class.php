@@ -57,8 +57,9 @@ class RecommendAction extends CommonAction {
 		$this->getMyCats($lan);
 		
 		$this->assign('alt', $this->_param('alt'));
-		$this->assign('title', '好东西就应该和大家分享。您推荐的好东西会让另客的内容更加丰富！');
-		$this->assign('Description', '分享您发现的好东西，别人也会和您分享他们的好东西，互动共享让另客教育社区更加生气蓬勃！');
+		
+		$this->getHeaderInfo(array('title' => '推荐链接'));
+		
 		$this->display();
 	}
 	

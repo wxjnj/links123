@@ -22,8 +22,8 @@ class RegisterAction extends CommonAction
 			exit(0);
 		}
 		$this->assign('banner', $this->getAdvs(5, "banner"));
-		$this->assign('title', '还不是岛民？赶快注册另客吧，成为另客会员，你能获得会员专有的服务和资源！');
-		$this->assign('Description', '注册成为另客会员，你能享受更多另客独有的资源和权利，你会不断有惊喜的发现！');
+
+		$this->getHeaderInfo(array('title' => '注册'));
 		
 		$this->display();
 	}
