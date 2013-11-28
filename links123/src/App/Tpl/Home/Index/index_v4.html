@@ -310,7 +310,7 @@
 				var socialNews = {
 					news: [ <volist name="imgNewsData" id="news" offset="1" length="4"> { title: '{$news.title}',img: '{$news.img}',url:'{$news.url}',desc:'{$news.desc}' }  <if condition="$i lt 4">,</if> </volist> ],
 					ennews: [ <volist name="enImgNewsData" id="news" offset="1" length="4"> { title: '{$news.title}',img: '{$news.img}',url:'{$news.url}',desc:'{$news.desc}' }  <if condition="$i lt 4">,</if> </volist> ],
-					blognews: [ <volist name="blogNewsData" id="news" offset="1" length="4"> { title: '{$news.title}',img: '{$news.img}',url:'{$news.url}',desc:'{$news.desc}' }  <if condition="$i lt 4">,</if> </volist> ]
+					blognews: [ <volist name="blogImgNewsData" id="news" offset="1" length="4"> { title: '{$news.title}',img: '{$news.img}',url:'{$news.url}',desc:'{$news.desc}' }  <if condition="$i lt 4">,</if> </volist> ]
 				};
 				</script>
 				<!-- 英闻 -->

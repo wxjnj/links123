@@ -101,7 +101,8 @@ class IndexAction extends CommonAction {
         $this->assign('enNewsData',  $englishNews['news']);
         $this->assign('enImgNewsData',  $englishNews['imgNews']);
         
-        $this->assign('blogNewsData', $BlogNews);
+        $this->assign('blogNewsData', $BlogNews['news']);
+        $this->assign('blogImgNewsData',  $BlogNews['imgNews']);
         
 		$this->getHeaderInfo();
 		$this->display('index_v4');
@@ -1454,10 +1455,19 @@ class IndexAction extends CommonAction {
     		$url = 'http://blog.links123.cn/newsAPI.php';
     		$str = file_get_contents($url);
     		if ($str) {
-    			 
-    			$hotNews = json_decode($str, true);
+    			$str = preg_replace('/\r|\n/is', '', $str);
+    			$news = json_decode($str, true);
+    			
+    			foreach ($news as $k => $v) {
+    				if ($v['img']) {
+    					$imgNews[] = $v;
+    				}
+    			}
     	   
+    			$hotNews = array('news' => $news, 'imgNews' => $imgNews);
+    			
     			S('BlogNewsList', $hotNews, 28800);
+    			
     			if ($hotNews) {
     				S('BlogNewsList_back', $hotNews);
     			}
