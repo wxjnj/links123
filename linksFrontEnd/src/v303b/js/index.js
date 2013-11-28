@@ -64,7 +64,7 @@ $(function() {
 				b.push($(this).attr('data-id'));
 			});
 			$('#J_Apps').find('li').each(function(){
-				b.push($(this).attr('data-id'));
+				a.push($(this).attr('data-id'));
 			});
 
 			$('#J_Apps').attr('data-sort', false);

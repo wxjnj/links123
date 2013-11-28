@@ -1,4 +1,5 @@
 var AppsTpl = {
+	'#J_box_youdao' : '<div id="J_box_youdao"><div id="YOUDAO_FANYIER_WRAPPER" style="margin:0; border:0; padding:0; width:320px; height:240px;"></div></div>',
 	'#J_box_mail' :   '<div class="box-mail" id="J_box_mail"> \
 				<form action="https://ssl.mail.163.com/entry/coremail/fcg/ntesdoor2?df=mail163_letter&from=web&funcid=loginone&iframe=1&language=-1&net=t&passtype=1&product=mail163&race=382_92_196_gz&style=-1" method="post" id="J_mailForm" target="_blank"> \
 					<ul> \

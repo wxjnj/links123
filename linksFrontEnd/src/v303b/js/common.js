@@ -833,7 +833,6 @@ var Theme = {
 		var tmurl = $CONFIG['STATIC'] + '/v303b/skins/{0}/style.css';
 		$('#J_Skins').attr('href', tmurl.replace('{0}', tm));
 		$('#container').css('background-image', 'url(' + bg + ')');
-
 		$.post(URL + "/updateSkin", {
 			'skinId' : id
 		});
