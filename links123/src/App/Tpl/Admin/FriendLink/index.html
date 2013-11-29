@@ -1,0 +1,49 @@
+<tagLib name="html" />
+<include file="Public:header" />
+<load href="__PUBLIC__/Js/Jquery/jquery.js" />
+<div id="main" class="main" >
+	<div class="content" >
+		<div class="title">友情链接</div>
+
+		<div class="operate" >
+			<html:imageBtn name="add" click="add()" style="hMargin fLeft" />
+			<html:imageBtn name="delete" click="foreverdel()" style="hMargin fLeft" />
+			<html:imageBtn name="sort" click="sort()" style="hMargin fLeft" />
+		</div>
+		
+		<form method='post' action="__URL__">
+			<div class="rSearch">
+				<div class="fLeft">网站名称查询：<span id="key"><input type="text" name="web_name" value="{$web_name}" class="medium" ></span></div>
+				<html:imageBtn type="submit" name="search" style="hMargin fLeft" />
+			</div>
+		</form>
+
+		<div class="list" >
+			<html:list id="checkList" name="myarea" param="{$param}" style="list" checkbox="true" action="true" datasource="list" show="id:编号|5%,web_name:网站名称:edit,url|getLinkToHref:链接,created|toDate:发布日期,updated|toDate:更新日期,sort:序号" actionlist="edit:编辑" />
+		</div>
+
+		<div class="page">{$page}</div>
+
+	</div>
+
+</div>
+<script type="text/javascript">
+    $(function(){
+        $("[name='mid']").click(function(){
+            $("[name='mid']").not("[value='"+$(this).val()+"']").removeAttr("checked");
+            $("[name='search']").click();
+        })
+        /* 直达 */
+        $(".page input").keydown(function(event) {
+            if (event.keyCode == 13) {	// 回车
+                if ($(this).val() != '' && !isNaN($(this).val())) {
+                    window.location.href = $(this).attr("url") + "&p=" + $(this).val();
+                }
+            }
+        });
+    })
+</script>
+</body>
+</html>
+
+

@@ -91,7 +91,11 @@ class IndexAction extends CommonAction {
         $hotNews = $this->getHotNews();
         $englishNews = $this->getEnglishNews();
 
-        $BlogNews = $this->getBlogNews();
+        //Blog
+        $blogNews = $this->getBlogNews();
+        
+        //links
+        $friend_links = $this->getFriendLinks();
         
         shuffle($hotNews['imgNews']);
         $this->assign('hotNewsData',  $hotNews['news']);
@@ -101,8 +105,10 @@ class IndexAction extends CommonAction {
         $this->assign('enNewsData',  $englishNews['news']);
         $this->assign('enImgNewsData',  $englishNews['imgNews']);
         
-        $this->assign('blogNewsData', $BlogNews['news']);
-        $this->assign('blogImgNewsData',  $BlogNews['imgNews']);
+        $this->assign('blogNewsData', $blogNews['news']);
+        $this->assign('blogImgNewsData',  $blogNews['imgNews']);
+        
+        $this->assign('friend_links', $friend_links);
         
 		$this->getHeaderInfo();
 		$this->display('index_v4');
@@ -1480,7 +1486,22 @@ class IndexAction extends CommonAction {
     	 
     	return $hotNews;
     }
+    
+    protected function getFriendLinks() {
+    	$friendLinks = S('FriendLinks');
+    
+    	if (!$friendLinks) {
+    		
+    		$friendLinkModel = M('FriendLink');
+    		$friendLinks = $friendLinkModel->where(array('status' => 0))->order('sort asc')->select();
+  
+    		S('FriendLinks', $friendLinks);
+   
+    	}
 
+    	return $friendLinks;
+    }
+    
 	/**
      * 搜索框自动填充
      */
