@@ -51,6 +51,7 @@
 	*zoom: 1;
 	height: 101px;
 	overflow: hidden;
+	width: 960px;
 }
 .apps ul:after{
 	content: '\0020';
@@ -62,7 +63,7 @@
 	cursor: pointer;
 	display: inline;
 	float: left;
-	width: 104px;
+	width: 105px;
 	text-align: center;
 	position: relative;
 }
@@ -81,6 +82,7 @@
 	text-decoration: none;
 	color: #fc2a06;
 }
+.app-icon-list img,
 .apps ul li img{
 	vertical-align: middle;
 	height: 80px;
@@ -90,9 +92,7 @@
 .apps ul li .ct{
 	margin-bottom: 7px;
 }
-.box-apps ul li.today{
-	background: url(../imgs/app/app-date.png) center top no-repeat;
-}
+
 .box-apps ul li.today .ct{
 	height: 80px;
 	width: 80px;
@@ -100,14 +100,16 @@
     margin-right: auto;
 }
 .box-apps ul li.today b{
-	color: #000;
+	color: #fff;
 	font-size: 12px;
 	padding-top: 10px;
+	font-weight: 100;
+	margin-top: -78px;
 }
 .box-apps ul li.today i{
-	color: #cb2d40;
+	color: #fff;
 	font-size: 40px;
-	font-weight: bold;
+	font-weight: 100;
 	font-style: normal;
 	font-family: Arial;
 	margin-top: -5px;
@@ -117,9 +119,31 @@
 	display: block;
 	text-align: center;
 }
+
+.widescreen .apps ul {
+	height: 115px;
+}
+
+.widescreen .box-apps ul li.today .ct {
+	width: 90px;
+	height: 90px;
+}
+.widescreen .box-apps ul li.today b {
+	margin-top: -83px;
+}
+
+.widescreen .apps ul{
+	width: 1170px;
+}
 .widescreen .apps ul li{
 	width: 115px;
 }
 .widescreen .apps ul li .hot{
     left: 18px;
+}
+
+.widescreen .app-icon-list img,
+.widescreen .apps ul li img {
+	width: 90px;
+	height: 90px;
 }

@@ -240,12 +240,10 @@
 					<ul id="J_Apps" class="connectedSortable">
 						<volist name="app_list" id="vo">
 							<li data-id="{$vo.appId}" <if condition="$vo.appClass neq ''">class="{$vo.appClass}"</if>>
-							<if condition="$vo.appId eq '1'"><i class="hot"></i></if>
-							<if condition="$vo.appId eq '2'"><i class="hot"></i></if>
-							<if condition="$vo.appId eq '3'"><i class="hot"></i></if>
 							<a data-href="{$vo.appLink}" <if condition="$vo.isTarget eq '1'">target="_blank"</if> class="{$vo.linkClass}">
 							<if condition="$vo.appName eq '日&nbsp;历'">
 								<p class="ct" id="index-today-bar">
+									<img src="{$vo.appIcon}" />
 									<b>{:date('D')}</b>
 									<i>{:date('d')}</i>
 								</p>
