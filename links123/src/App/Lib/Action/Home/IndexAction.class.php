@@ -1402,12 +1402,13 @@ class IndexAction extends CommonAction {
 		}
 		//如果更新过新闻，则重新缓存
     	if($updateCache) S('hotNewsList', $hotNews);
-		//浏览历史记录长度与分类总数相等
-		$historyCount = count($urlArray);
 		if(empty($_SESSION['news_history'])){
 			//获取游客数据
 			$_SESSION['news_history'] = cookie('news_history');
 		}
+		//浏览历史记录长度与分类总数相等
+		//保证偏好数据有效性及更新频率
+		$historyCount = count($urlArray);
 		if(count($_SESSION['news_history']) > $historyCount){
 			$_SESSION['news_history'] = array_slice($_SESSION['news_history'],-1 * $historyCount);
 			//重新更新用户浏览历史记录
@@ -1421,13 +1422,13 @@ class IndexAction extends CommonAction {
 		}
 
 		//计算用户偏好
-		$user = array();
+		$userInfo = array();
 		if(!empty($_SESSION['news_history'])){
 			foreach($_SESSION['news_history'] as $type){
-				if(empty($user[$type])){
-					$user[$type] = 1;
+				if(empty($userInfo[$type])){
+					$userInfo[$type] = 1;
 				}else{
-					$user[$type]++;
+					$userInfo[$type]++;
 				}
 			}
 		}
@@ -1437,9 +1438,9 @@ class IndexAction extends CommonAction {
 		$list = $other_list = array();
 		foreach($hotNews as $type=>$typelist){
 			if($num == 0) break;
-			if(!empty($user[$type])){
+			if(!empty($userInfo[$type])){
 				//获取当前分类的偏好权重
-				$count = $user[$type];
+				$count = $userInfo[$type];
 				//修正权重：避免用户只能看到某几个分类的新闻，导致产生不了新的偏好
 				//如果不需要考虑，直接注释即可
 				$count = $count > 1 ? $count>>1 : $count;
@@ -1595,7 +1596,7 @@ class IndexAction extends CommonAction {
 		//重新更新用户浏览历史记录
 		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
 		if($user_id){
-			$memberModel =  M("Member");
+			$memberModel = M("Member");
 			$mbrNow = $memberModel->where(array('id' => $user_id))->find();
 			//记录游客数据
 			if(empty($mbrNow['news_history'])) $mbrNow['news_history'] = cookie('news_history');
