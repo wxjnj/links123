@@ -1465,6 +1465,7 @@ class IndexAction extends CommonAction {
     			$news = json_decode($str, true);
     			
     			foreach ($news as $k => $v) {
+    				$v['desc'] = addslashes($v['desc']);
     				if ($v['img']) {
     					$imgNews[] = $v;
     				}
