@@ -27,6 +27,12 @@ $(function(){
         $(this).html(cutstr(t, 35));
     });
 
+    $.each(socialNews, function(k, v){
+        $.each(v, function(idx, val){
+            val.desc = cutstr(val.desc, 120);
+        });
+    });
+
     window.newsTimer = null;
     changeNews();
     autoChangeNews();
