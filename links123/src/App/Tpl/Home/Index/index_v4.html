@@ -306,7 +306,7 @@
 				<!-- 头条 -->
 				<script>
 				var socialNews = {
-					news: [ <volist name="imgNewsData" id="news" offset="1" length="4"> { title: '{$news.title}',img: '{$news.img}',url:'{$news.url}',desc:'{$news.desc}' }  <if condition="$i lt 4">,</if> </volist> ],
+					news: [ <volist name="imgNewsData" id="news" offset="0" length="4"> { title: '{$news.title}',img: '{$news.img}',url:'{$news.url}',desc:'{$news.desc}' }  <if condition="$i lt 4">,</if> </volist> ],
 					ennews: [ <volist name="enImgNewsData" id="news" offset="1" length="4"> { title: '{$news.title}',img: '{$news.img}',url:'{$news.url}',desc:'{$news.desc}' }  <if condition="$i lt 4">,</if> </volist> ],
 					blognews: [ <volist name="blogImgNewsData" id="news" offset="1" length="4"> { title: '{$news.title}',img: '{$news.img}',url:'{$news.url}',desc:'{$news.desc}' }  <if condition="$i lt 4">,</if> </volist> ]
 				};
@@ -327,10 +327,7 @@
 						<span class="pic-news-desc"><a href="#" target="_blank"></a></span>
 					</div>
 					<div class="text-news">
-					<volist name="enNewsData" id="news"  offset="0" length="7">
-						<p><b></b><a href="{$news.url}" target="_blank" rel="external nofollow" title="{$news.title}">{$news.title}</a></p>
-					</volist>
-					<volist name="enImgNewsData" id="news" offset="1" length="6">
+					<volist name="enNewsData" id="news"  offset="0" length="13">
 						<p><b></b><a href="{$news.url}" target="_blank" rel="external nofollow" title="{$news.title}">{$news.title}</a></p>
 					</volist>
 						<!-- <p class="wide-news"><a href="#"></a></p> -->
