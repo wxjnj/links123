@@ -611,6 +611,9 @@ var Zld = { // 自留地
 			hl = hl + '		<a class="close" href="javascript:;">X</a>';
 			hl = hl + '	</div>';
 			hl = hl + '	<div class="lkd-bd">';
+			if ($CONFIG.IsLogin == 1) {
+				hl = hl + '<p class="zld-create-tip">非登录状态，编辑结果不能长期保存。</p>';
+			}
 			hl = hl + '		<form action="">';
 			hl = hl + '			<ul>';
 			hl = hl + '				<li><input class="ipt" type="text" name="name" placeholder="网站名称" /></li>';

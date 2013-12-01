@@ -662,6 +662,12 @@ input:focus{ outline: 0; }
 	vertical-align: middle;
 }
 
+.zld-create-tip {
+	top: -30px;
+	position: relative;
+	color: #f00;
+}
+
 .zld ul li .nm{
 	float:left;
 	cursor: pointer;

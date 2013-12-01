@@ -315,6 +315,14 @@ body {
     background-position: -30px -30px;
 }
 
+
+.extra-calendar .cal-day .cal-mini-month-panel td a, 
+.extra-calendar .cal-day .cal-mini-month-panel th a {
+    width: 15px;
+    height: 15px;
+    line-height: 15px;
+}
+
 .extra-calendar .cal-day .cal-mini-month-panel table,
 .extra-calendar .cal-day .cal-mini-month-panel td a, 
 .extra-calendar .cal-day .cal-mini-month-panel th a,

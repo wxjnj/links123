@@ -26,7 +26,7 @@ class IndexAction extends CommonAction {
 			$mbrNow = $memberModel->where(array('id' => $user_id))->find();
 			$_SESSION['myarea_sort'] = $mbrNow['myarea_sort'] ? explode(',', $mbrNow['myarea_sort']) : '';
 			$_SESSION['app_sort'] = $mbrNow['app_sort'];
-
+			$_SESSION['news_history'] = explode(',',$mbrNow['news_history']);
 		} else {
 			
 			$this->get_member_guest();
@@ -96,10 +96,8 @@ class IndexAction extends CommonAction {
         
         //links
         $friend_links = $this->getFriendLinks();
-        
-        shuffle($hotNews['imgNews']);
-        $this->assign('hotNewsData',  $hotNews['news']);
-        $this->assign('imgNewsData',  $hotNews['imgNews']);
+
+        $this->assign('hotNewsData',  $hotNews);
         
         //英文
         $this->assign('enNewsData',  $englishNews['news']);
@@ -1363,45 +1361,113 @@ class IndexAction extends CommonAction {
     protected function getHotNews() {
     
     	$hotNews = S('hotNewsList');
-    
-    	if (!$hotNews) {
-    
-    		$url = 'http://sh.qihoo.com/index.html';
-    
-    		$str = file_get_contents($url);
-    		$news = $imgNews = array();
-    		preg_match_all('/<p class="title">(.*?)<\/p>/is', $str, $match);
-    		
-    		foreach ($match[1] as $k => $v) {
-    			$news[] = array('url' => $this->tp_match('/href="(.*?)"/is', $v), 'title' => trim(str_replace("\n", '', strip_tags($v))), 'img' => '');
-    		}
-    		
-    		$newsStr = $this->tp_match('/<div class="mod-top20"(.*?)<\/div>/is', $str);
-    		preg_match_all('/<li>(.*?)<\/li>/is', $newsStr, $match);
-    		foreach ($match[1] as $k => $v) {
-    			$news[] = array('url' => $this->tp_match('/href="(.*?)"/is', $v), 'title' => trim($this->tp_match('/title="(.*?)"/is', $v)), 'img' => '');
-    		}
-    		
-    		$imgNewsStr = $this->tp_match('/<ul class="contents">(.*?)<\/ul>/is', $str);
-    		preg_match_all('/<li(.*?)<\/li>/is', $imgNewsStr, $match);
-    		foreach ($match[0] as $k => $v) {
-    			$imgNews[] = array('url' => stripslashes($this->tp_match('/href="(.*?)"/is', $v)), 'title' => str_replace('"', '“',trim(strip_tags($this->tp_match('/<div class="text">(.*?)<\/div>/is', $v)))), 'img' => $this->tp_match('/src="(.*?)"/is', $v));
-    		}
-    		$hotNews = array('news' => $news, 'imgNews' => $imgNews);
-    		S('hotNewsList', $hotNews, 14400);
-    		
-    		if ($news && $imgNew) {
-	    			S('hotNewsList_back', $hotNews);
-	    		}
-    		}
-    		
-    		if (!$hotNews) {
-    			$hotNews = S('hotNewsList_back');
-    		}
-    	
-    	shuffle($hotNews['news']);
-    	
-    	return $hotNews;
+    	//调用分类页面头条，用以判断用户习惯
+    	//$url = 'http://sh.qihoo.com/index.html';
+		//目前每个分类是6条数据
+		$urlArray = array(
+			'http://sh.qihoo.com/china/',
+			'http://sh.qihoo.com/world/',
+			'http://sh.qihoo.com/mil/',
+			'http://sh.qihoo.com/ent/',
+			'http://sh.qihoo.com/sports/',
+			'http://sh.qihoo.com/internet/',
+			'http://sh.qihoo.com/tech/',
+			'http://sh.qihoo.com/finance/',
+			'http://sh.qihoo.com/house/',
+			'http://sh.qihoo.com/edu/',
+			'http://sh.qihoo.com/game/',
+			'http://sh.qihoo.com/health/',
+			'http://sh.qihoo.com/society/'
+		);
+		$time = time();
+		//每次更新1个分类
+		$i=1;
+		$updateCache = false;
+		foreach($urlArray as $type=>$url){
+			if($i==0) break;
+			if(!empty($hotNews[$type]) && $hotNews[$type]['cacheTime'] > $time) continue;
+			if(empty($hotNews[$type])){
+				$hotNews[$type] = array('list'=>array(),'cacheTime'=>0);
+			}else{
+				$i--;
+			}
+			$str = file_get_contents($url);
+			preg_match_all('/<span class="title">(.*?)<\/span>/is', $str, $match);
+			$baseURL = U('clickHotNews').'?redirectURL=%s&type=%s';
+			foreach ($match[1] as $k => $v) {
+				$hotNews[$type]['list'][] = array('url' => sprintf($baseURL,urlencode($this->tp_match('/href="(.*?)"/is', $v)),$type), 'title' => trim(str_replace("\n", '', strip_tags($v))), 'img' => '');
+			}
+			$hotNews[$type]['cacheTime'] = $time + 14400;
+			$updateCache = true;
+		}
+		//如果更新过新闻，则重新缓存
+    	if($updateCache) S('hotNewsList', $hotNews);
+		if(empty($_SESSION['news_history'])){
+			//获取游客数据
+			$_SESSION['news_history'] = cookie('news_history');
+		}
+		//浏览历史记录长度与分类总数相等
+		//保证偏好数据有效性及更新频率
+		$historyCount = count($urlArray);
+		if(count($_SESSION['news_history']) > $historyCount){
+			$_SESSION['news_history'] = array_slice($_SESSION['news_history'],-1 * $historyCount);
+			//重新更新用户浏览历史记录
+			$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+			if($user_id){
+				$memberModel =  M("Member");
+				$memberModel->where(array('id' => $user_id))->save(array('news_history' => implode(',', $_SESSION['news_history'])));
+			}else{
+				cookie('news_history',implode(',', $_SESSION['news_history']));
+			}
+		}
+
+		//计算用户偏好
+		$userInfo = array();
+		if(!empty($_SESSION['news_history'])){
+			foreach($_SESSION['news_history'] as $type){
+				if(empty($userInfo[$type])){
+					$userInfo[$type] = 1;
+				}else{
+					$userInfo[$type]++;
+				}
+			}
+		}
+
+		//根据用户偏好，获取13条新闻
+		$num = 13;
+		$list = $other_list = array();
+		foreach($hotNews as $type=>$typelist){
+			if($num == 0) break;
+			if(!empty($userInfo[$type])){
+				//获取当前分类的偏好权重
+				$count = $userInfo[$type];
+				//修正权重：避免用户只能看到某几个分类的新闻，导致产生不了新的偏好
+				//如果不需要考虑，直接注释即可
+				$count = $count > 1 ? $count>>1 : $count;
+				foreach($typelist['list'] as $key=>$news){
+					if($num == 0) break 2;
+					if($count == 0) break;
+					$list[] = $news;
+					$count--;
+					$num--;
+					unset($hotNews[$type]['list'][$key]);
+				}
+			}
+			$other_list = array_merge($other_list,$typelist['list']);
+		}
+		//随机获取剩余文章数
+		shuffle($other_list);
+		$list = array_merge($list,array_slice($other_list , 0,$num));
+		/*
+		for($i=0;$num>0;$i = (int)$i/2){
+			if($i >= $historyCount || $i == 0) $i=mt_rand(0,$historyCount-1);
+			$count = count($hotNews[$i]['list']);
+			$y = mt_rand(0,$count-1);
+			$list[] = $hotNews[$i]['list'][$y];
+			unset($hotNews[$i]['list'][$y]);
+			$num--;
+		}*/
+    	return $list;
     } 
     
     /**
@@ -1518,7 +1584,30 @@ class IndexAction extends CommonAction {
 			$s[$k] = iconv("gb2312","UTF-8",substr($v,1,-1));
 		}
 		echo json_encode($s);
-	 }
+	}
 
-    
+	/**
+	 * @desc 热门文章点击记录
+	 * @author GO 2013-11-30
+	 */
+    public function clickHotNews(){
+		$redirectURL = $this->_param('redirectURL');
+		$type = $this->_param('type');
+		//记录用户操作
+		//重新更新用户浏览历史记录
+		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+		if($user_id){
+			$memberModel = M("Member");
+			$mbrNow = $memberModel->where(array('id' => $user_id))->find();
+			//记录游客数据
+			if(empty($mbrNow['news_history'])) $mbrNow['news_history'] = cookie('news_history');
+			$memberModel->where(array('id' => $user_id))->save(array('news_history' => empty($mbrNow['news_history']) ? $type : $mbrNow['news_history'].','.$type));
+		}else{
+			$news_history = cookie('news_history');
+			cookie('news_history',empty($news_history) ? $type : $news_history.','.$type);
+		}
+		//继续跳转操作
+		header('Location:'.$redirectURL);
+		exit;
+	}
 }
