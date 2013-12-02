@@ -80,32 +80,15 @@ class IndexAction extends CommonAction {
 			$_SESSION['myarea_sort'] = array_keys($_SESSION['arealist']);
 		}
 
+		//links
+		$friend_links = $this->getFriendLinks();
+		
 		//APP应用
 		$app_list = $this->getApps($_SESSION['app_sort']);
 		$this->assign('app_list', $app_list);
 
         //气象数据
         $this->assign('weatherData', $this->getWeatherData());
-        
-        //新闻信息
-        $hotNews = $this->getHotNews();
-        $englishNews = $this->getEnglishNews();
-
-        //Blog
-        $blogNews = $this->getBlogNews();
-        
-        //links
-        $friend_links = $this->getFriendLinks();
-
-        $this->assign('hotNewsData',  $hotNews['news']);
-		$this->assign('imgNewsData',  $hotNews['imgNews']);
-        
-        //英文
-        $this->assign('enNewsData',  $englishNews['news']);
-        $this->assign('enImgNewsData',  $englishNews['imgNews']);
-        
-        $this->assign('blogNewsData', $blogNews['news']);
-        $this->assign('blogImgNewsData',  $blogNews['imgNews']);
         
         $this->assign('friend_links', $friend_links);
         
@@ -1537,6 +1520,7 @@ class IndexAction extends CommonAction {
     			$news = json_decode($str, true);
     			
     			foreach ($news as $k => $v) {
+    				$v['desc'] = addslashes($v['desc']);
     				if ($v['img']) {
     					$imgNews[] = $v;
     				}
@@ -1614,5 +1598,50 @@ class IndexAction extends CommonAction {
 		//继续跳转操作
 		header('Location:'.$redirectURL);
 		exit;
+	}
+	
+	/**
+	 * @desc 新闻ajax调用接口
+	 * 
+	 * @param type : 栏目类型
+	 * 
+	 * @return json 
+	 * 
+	 * @author slate date:2013-12-02
+	 */
+	public function getNews() {
+		
+		$newsType = intval($this->_param('type'));
+		$data = $newsData =  array();
+
+		$data['column'] = array(
+			array('type' => 0, 'name' => '英闻', 'url' => 'http://www.en84.com/', 'status' => 0),
+			array('type' => 1, 'name' => '头条', 'url' => 'http://sh.qihoo.com/index.html', 'status' => 0),
+			array('type' => 2, 'name' => '博客', 'url' => 'http://blog.links123.cn/', 'status' => 0),
+			array('type' => 3, 'name' => '文摘', 'url' => '', 'status' => 1),
+			array('type' => 4, 'name' => '社交', 'url' => '', 'status' => 1)
+		);
+		
+		switch ($newsType) {
+			
+			case 1 : 
+				
+				$newsData = $this->getHotNews();
+				break;
+				
+			case 2 :
+				$newsData = $this->getBlogNews();
+				break;
+				
+			default:
+				
+				$newsData = $this->getEnglishNews();
+				break;
+		}
+		
+		$data['pics'] = $newsData['imgNews'];
+		$data['texts'] = $newsData['news'];
+		
+		$this->ajaxReturn($data, '', $stauts);
 	}
 }
