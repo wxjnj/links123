@@ -48,7 +48,7 @@ class  Api {
     }
 
     public  static function translate($input){
-        $url="http://fanyi.youdao.com/openapi.do?keyfrom=links123cn&key=1695588868&type=data&doctype=json&version=1.1&q=".urlencode("测试");
+        $url="http://fanyi.youdao.com/openapi.do?keyfrom=links123cn&key=1695588868&type=data&doctype=json&version=1.1&q=".urlencode($input);
         $content=file_get_contents($url);
         $returnstr="";
         if($content){
