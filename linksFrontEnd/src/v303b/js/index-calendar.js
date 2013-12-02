@@ -94,6 +94,7 @@ $('#social-title-tabs').on('click', 'li', function(){
     $('.pic-news-tabs').find('a').removeClass('active');
     $('.pic-news-tabs').find('a:first').addClass('active');
 
+    $.cookies.set('news_type', tab);
     getNews(tab);
 
 });
