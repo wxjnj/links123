@@ -1,120 +1,155 @@
-$(function(){
+//接口地址是URL + '/getNews'，参数是type，type默认为0，如果cookie中有news_type值，那么type取cookie中的news_type
+var News = {};
 
-    function cutstr(str,len) {
-        var str_length = 0;
-        var str_len = 0;
-        str_cut = new String();
-        str_len = str.length;
-        for(var i = 0;i<str_len;i++) {
-            a = str.charAt(i);
+function cutstr(str,len) {
+    if(!str) return '';
+    var str_length = 0;
+    var str_len = 0;
+    str_cut = new String();
+    str_len = str.length;
+    for(var i = 0;i<str_len;i++) {
+        a = str.charAt(i);
+        str_length++;
+        if(escape(a).length > 4){
             str_length++;
-            if(escape(a).length > 4){
-                str_length++;
-            }
-            str_cut = str_cut.concat(a);
-            if(str_length>=len){
-                str_cut = str_cut.concat("...");
-                return str_cut;
-            }
         }
-        if(str_length<len){
-            return str;
+        str_cut = str_cut.concat(a);
+        if(str_length>=len){
+            str_cut = str_cut.concat("...");
+            return str_cut;
         }
     }
+    if(str_length<len){
+        return str;
+    }
+}
 
-    $('.text-news').find('a').each(function(){
-        var t = $(this).html();
-        $(this).html(cutstr(t, 35));
-    });
+getNews();
 
-    $.each(socialNews, function(k, v){
-        $.each(v, function(idx, val){
-            val.desc = cutstr(val.desc, 120);
+function getNews(type){
+    if(!type){
+        type = $.cookies.get('news_type');
+        type = type != null ? type : 0;
+    }
+    var url = URL + '/getNews';
+    $.get(url + '?type=' + type, function(data){
+        $('#social-title-tabs').find('ul').empty();
+        $.each(data.data.column, function(k, v){
+            var o = $('<li data-tab="' + v.type + '">' + v.name + '</li>')
+            o.attr('data-status', 0);
+            if(v.status == 1){
+                o.attr('data-status', 1);
+                o.append('<div class="mini-tip news-mini-tip"><div class="mini-tip-l"></div><div class="mini-tip-c">coming soon...</div><div class="mini-tip-r"></div></div>');
+            }
+            
+            if(v.type == type){
+                $('.social-box').find('.more-news a').attr('href', v.url).html('更多新闻');
+                if(v.name == '博客') {
+                    $('.social-box').find('.more-news a').html('更多博客')
+                }
+                o.addClass('active');
+            }
+            $('#social-title-tabs').find('ul').append(o);
         });
+
+        //$('.pics-box').empty();
+
+        News.pics = [];
+
+        $.each(data.data.pics, function(k, v){
+            v.descshort = cutstr(v.desc, 120);
+            News.pics.push(v);
+        });
+
+        $('.text-news-div').empty();
+        $.each(data.data.texts, function(k, v){
+            $('.text-news-div').append('<p><b></b><a href="' + 
+                v.url + '" target="_blank" rel="external nofollow" title="' + 
+                v.title + '">' + cutstr(v.title, 40) + '</a></p>');
+        });     
+
+        $('.text-news').find('p:gt(10)').each(function(){
+            if($(this).hasClass('more-news')) return;
+            $(this).addClass('wide-news');
+        }); 
+
+        changeNews();
+        autoChangeNews();               
+
     });
 
+}
+
+window.newsTimer = null;
+
+$('#social-title-tabs').on('click', 'li', function(){
+    var st = $(this).attr('data-status');
+    if(st == 1) return;
+    clearTimeout(window.newsTimer);
     window.newsTimer = null;
-    changeNews();
-    autoChangeNews();
 
-    $('#social-title-tabs').on('click', 'li', function(){
-        var tab = $(this).attr('data-tab');
-        if(tab == 'news' || tab == 'ennews' || tab == 'blognews'){
-            $('.social-box').hide();
-            $('.social-' + tab).show();
-            $('#social-title-tabs').find('li').removeClass('active');
-            $(this).addClass('active');
-            clearTimeout(window.newsTimer);
-            window.newsTimer = null;
-            $('.pic-news-tabs').find('a').removeClass('active');
-            $('.pic-news-tabs').find('a:first').addClass('active');
+    var tab = $(this).attr('data-tab');
+    $('#social-title-tabs').find('li').removeClass('active');
+    $(this).addClass('active');
+    $('.pic-news-tabs').find('a').removeClass('active');
+    $('.pic-news-tabs').find('a:first').addClass('active');
 
-            changeNews();
-            autoChangeNews();
-        }
-    });
+    $.cookies.set('news_type', tab);
+    getNews(tab);
 
-    $('.pic-news-tabs').on('click', 'a', function(){
-        clearTimeout(window.newsTimer);
-        window.newsTimer = null;
-        $('.pic-news-tabs').find('a').removeClass('active');
-        $(this).addClass('active');
-        changeNews();
-        //autoChangeNews();
-    }).on('mouseenter', 'a', function(){
-        var $this = $(this);
-        clearTimeout(window.newsTimer);
-        window.newsTimer = null;
-        $('.pic-news-tabs').find('a').removeClass('active');
-        $this.addClass('active');
-        changeNews();
-        //autoChangeNews();
-    }).on('mouseout', 'a', function(){
-        //autoChangeNews();
-    });
-
-    function autoChangeNews(){
-        clearTimeout(window.newsTimer);
-        window.newsTimer = null;
-        window.newsTimer = setTimeout(function(){
-            var o = $('.pic-news-tabs').find('.active').attr('data-tab') * 1;
-            if(o == 3){
-                o = 0;
-            }else{
-                o += 1;
-            }
-            $('.pic-news-tabs').find('a').removeClass('active');
-            $('.pic-news-tabs').find('a:eq(' + o + ')').addClass('active');
-
-            changeNews();
-            if(o != 0){
-                autoChangeNews()
-            }
-        }, 5000);
-    }
-
-    function changeNews(){
-        var tab = $('#social-title-tabs').find('.active').attr('data-tab');
-        var idx = $('.pic-news-tabs').find('.active').attr('data-tab');
-        var o;
-        //if(tab == 'blog'){
-        //    o = socialNews['news'][idx];
-        //}else{
-            o = socialNews[tab][idx];
-        //}
-        if(!o) return;
-        $('.pic-news').find('img').attr('src', o.img).parent('a').attr('href', o.url);
-        $('.pic-news')
-            .find('.pic-news-title').html('<a target="_blank" href="'+ o.url +'">' + o.title + '</a>').end()
-            .find('.pic-news-desc a').attr('href', o.url).html(o.desc);
-    }
-
-    $('.text-news').find('p:gt(9)').each(function(){
-        if($(this).hasClass('more-news')) return;
-        $(this).addClass('wide-news');
-    });
-    
 });
+
+$('.pic-news-tabs').on('click', 'a', function(){
+    clearTimeout(window.newsTimer);
+    window.newsTimer = null;
+    $('.pic-news-tabs').find('a').removeClass('active');
+    $(this).addClass('active');
+    changeNews();
+    //autoChangeNews();
+}).on('mouseenter', 'a', function(){
+    var $this = $(this);
+    clearTimeout(window.newsTimer);
+    window.newsTimer = null;
+    $('.pic-news-tabs').find('a').removeClass('active');
+    $this.addClass('active');
+    changeNews();
+    //autoChangeNews();
+}).on('mouseout', 'a', function(){
+    //autoChangeNews();
+});
+
+function autoChangeNews(){
+    clearTimeout(window.newsTimer);
+    window.newsTimer = null;
+    window.newsTimer = setTimeout(function(){
+        var o = $('.pic-news-tabs').find('.active').attr('data-tab') * 1;
+        if(o == 3){
+            o = 0;
+        }else{
+            o += 1;
+        }
+        $('.pic-news-tabs').find('a').removeClass('active');
+        $('.pic-news-tabs').find('a:eq(' + o + ')').addClass('active');
+
+        changeNews();
+        if(o != 0){
+            autoChangeNews()
+        }
+    }, 5000);
+}
+
+function changeNews(){
+    var idx = $('.pic-news-tabs').find('.active').attr('data-tab');
+    var o = News.pics[idx];
+    if(!o) return;
+    $('.pic-news').find('img').attr({
+        'src': o.img,
+        'alt': o.title
+    }).parent('a').attr('href', o.url);
+    $('.pic-news')
+        .find('.pic-news-title').html('<a target="_blank" href="'+ o.url +'">' + o.title + '</a>').end()
+        .find('.pic-news-desc a').attr('href', o.url).html(o.descshort);
+}
 /*
  *   Calendar
  */
