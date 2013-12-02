@@ -14,7 +14,6 @@ class  Api {
         $returnstr=$city."天气预报\n".$xml->Weather->status1."\t".$xml->Weather->direction1.$xml->Weather->power1
             ."级\n温度：".$xml->Weather->temperature2."~".$xml->Weather->temperature1."度，"
             ."\n紫外线：".$xml->Weather->zwx_l."\n洗车指数：".$xml->Weather->xcz_s."\n穿衣指数：".$xml->Weather->chy_shuoming;
-
         return  $returnstr;
     }
 
