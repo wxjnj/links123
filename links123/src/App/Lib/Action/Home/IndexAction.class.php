@@ -97,7 +97,8 @@ class IndexAction extends CommonAction {
         //links
         $friend_links = $this->getFriendLinks();
 
-        $this->assign('hotNewsData',  $hotNews);
+        $this->assign('hotNewsData',  $hotNews['news']);
+		$this->assign('imgNewsData',  $hotNews['imgNews']);
         
         //英文
         $this->assign('enNewsData',  $englishNews['news']);
@@ -1391,11 +1392,13 @@ class IndexAction extends CommonAction {
 			}else{
 				$i--;
 			}
-			$str = file_get_contents($url);
-			preg_match_all('/<span class="title">(.*?)<\/span>/is', $str, $match);
 			$baseURL = U('clickHotNews').'?redirectURL=%s&type=%s';
-			foreach ($match[1] as $k => $v) {
-				$hotNews[$type]['list'][] = array('url' => sprintf($baseURL,urlencode($this->tp_match('/href="(.*?)"/is', $v)),$type), 'title' => trim(str_replace("\n", '', strip_tags($v))), 'img' => '');
+
+			$str = file_get_contents($url);
+			$str = $this->tp_match('/<ul class="contents">(.*?)<\/ul>/is', $str);
+			preg_match_all('/<li(.*?)<\/li>/is', $str, $match);
+			foreach ($match[0] as $k => $v) {
+				$hotNews[$type]['list'][] = array('url' => sprintf($baseURL,urlencode(stripslashes($this->tp_match('/href="(.*?)"/is', $v))),$type), 'title' => str_replace('"', '“',trim(strip_tags($this->tp_match('/<span class="title">(.*?)<\/span>/is', $v)))), 'img' => $this->tp_match('/src="(.*?)"/is', $v));
 			}
 			$hotNews[$type]['cacheTime'] = $time + 14400;
 			$updateCache = true;
@@ -1433,8 +1436,10 @@ class IndexAction extends CommonAction {
 			}
 		}
 
-		//根据用户偏好，获取13条新闻
-		$num = 13;
+		//根据用户偏好，获取13条新闻，
+		$news_num = 13;
+		$img_num = 4;
+		$num = $news_num + $img_num;
 		$list = $other_list = array();
 		foreach($hotNews as $type=>$typelist){
 			if($num == 0) break;
@@ -1467,7 +1472,8 @@ class IndexAction extends CommonAction {
 			unset($hotNews[$i]['list'][$y]);
 			$num--;
 		}*/
-    	return $list;
+		//图片新闻为前几篇，正好符合偏好显示为主
+    	return array('news'=>array_slice($list,$img_num,$news_num),'imgNews'=>array_slice($list,0,$img_num));
     } 
     
     /**

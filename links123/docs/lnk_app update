@@ -6,3 +6,7 @@ INSERT INTO `lnk_app` VALUES ('13', '万能转换', '__STATIC__/v303b/imgs/app/a
 
 #update 2013-11-26
 ALTER TABLE lnk_app ADD `sort` TINYINT(4) DEFAULT 0 COMMENT '排序';
+
+#update 2013-12-1
+ALTER TABLE `lnk_member`
+ADD COLUMN `news_history` varchar(100) NOT NULL DEFAULT '' COMMENT '头条浏览历史' AFTER `app_sort`;
