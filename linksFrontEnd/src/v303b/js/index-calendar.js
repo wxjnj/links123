@@ -52,7 +52,7 @@ function getNews(type){
             $('#social-title-tabs').find('ul').append(o);
         });
 
-        $('.pics-box').empty();
+        //$('.pics-box').empty();
 
         News.pics = [];
 
