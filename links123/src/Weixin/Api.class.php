@@ -15,6 +15,7 @@ class  Api {
                     ."级";
         return  $returnstr;
     }
+
     public  static  function getReply($input){
         if($input=='另客网'){
             return "\t另客英语让你告别聋哑英文，另客桌面让你成为高效的懒人。\n\t我们是一支云团队，".
@@ -45,8 +46,9 @@ class  Api {
     }
 
     public  static function translate($input){
-        $url=" http://fanyi.youdao.com/openapi.do?keyfrom=links123cn&key=1695588868&type=data&doctype=json&version=1.1&q=$input";
+        $url="http://fanyi.youdao.com/openapi.do?keyfrom=links123cn&key=1695588868&type=data&doctype=json&version=1.1&q=$input";
         $content=file_get_contents($url);
-        return json_decode($content);
+        $jsonobj=json_decode($content);
+        return $jsonobj->translation;
     }
-} 
+}
