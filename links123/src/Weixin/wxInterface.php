@@ -21,9 +21,12 @@ switch($type) {
     case WXClass::MSGTYPE_TEXT:
         $userinput=$wxObj->getRevContent();
         $matches=array();
+        if($userinput=='视频'){
+            $wxObj->text("测试视频：http://spring.desk.links123.de/Weixin/demo.html")->reply();
+        }else
         if(preg_match("/翻译\@(\W+)/",$userinput,$matches)){
             $wxObj->text(Api::translate($matches[1]))->reply();
-        }else   if(preg_match("/天气\@(\W+)/",$userinput,$matches)){
+        }else if(preg_match("/天气\@(\W+)/",$userinput,$matches)){
             $wxObj->text(  Api::getWeather($matches[1]))->reply();
         }else if(Api::getReply($userinput)){
             $wxObj->text(  Api::getReply($userinput))->reply();
