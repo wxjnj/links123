@@ -22,7 +22,7 @@ switch($type) {
         $userinput=$wxObj->getRevContent();
         $matches=array();
         if($userinput=='视频'){
-            $wxObj->text("测试视频：http://spring.desk.links123.de/Weixin/demo.html")->reply();
+            $wxObj->text("测试视频：http://wap.qtw365.com/demo.html")->reply();
         }else
         if(preg_match("/翻译\@(\W+)/",$userinput,$matches)){
             $wxObj->text(Api::translate($matches[1]))->reply();
