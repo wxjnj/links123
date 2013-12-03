@@ -1499,8 +1499,12 @@ class IndexAction extends CommonAction {
     			$hotNews = S('EnglishNewsList_back');
     		}
     	}
-    	
     	shuffle($hotNews['news']);
+    	
+    	$news = array_chunk($hotNews['news'], 13, true);
+    	if ($news[0]) {
+    		$hotNews['news'] = $news[0];
+    	}
     	
     	return $hotNews;
     }
