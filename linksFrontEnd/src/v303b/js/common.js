@@ -673,6 +673,7 @@ var THL = {
 		});
 	},
 	go : function(url, tid, keyword) {
+
 		if (tid == '4' || tid == '26' || tid == '40' || tid == '58' || tid == '110' || tid == '117') {// 谷歌、美试、啪啪、PQuora
 			$.post(URL + "/thl_count", {
 				tid : tid
