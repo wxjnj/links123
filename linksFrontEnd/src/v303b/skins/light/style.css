@@ -79,13 +79,14 @@
 }
 
 
+
 .zld ul li {
     margin: 5px 3px 0 0;
 }
 
 .zld ul li .nm,
 .zld ul li .ctl {
-    border: 1px solid #a2a2a2;
+    border: 1px solid #c3c3c3;
     background-color: #f4f4f4;
     /*background: url(zld-btn-back.png) 0 0 repeat-x;*/
 }
@@ -382,7 +383,21 @@ body {
         text-decoration: underline;
     }
 
+.friend-links li a,
+.friend-links li a:active {
+    color: #999;
+    text-decoration: underline;
+}
+.site-info li a:hover,
+.friend-links li a:hover {
+    color: #cb322c;
+}
 
+.site-copyright {
+    color: #999;
+    margin-top: 10px;
+    margin-bottom: 50px;
+}
 
 .widescreen .extra-box {
     width: 569px;
@@ -473,6 +488,13 @@ only screen and (min-device-pixel-ratio: 2) {
         .logo {
             background: url(logo@2x.png) 0 0 no-repeat;
             background-size: 264px auto;
+        }
+
+        .thl .ctls .btn {
+            background-image: url(sprite@2x.png);
+            background-position: -65px -29px;
+            background-repeat: no-repeat;
+            background-size: 120px auto;
         }
 
         .weather-icon {

@@ -9,6 +9,7 @@ $(function() {
 	HelpMouse.init();
 	Calendar.Init()
 
+	$(".tip").tipTip({maxWidth: "auto", edgeOffset: 3, defaultPosition: "top"});
 	/*
 	var musicReady = function(list){
 		new jPlayerPlaylist({

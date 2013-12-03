@@ -27,6 +27,9 @@ input:focus{ outline: 0; }
 .footer-inner {
 	width: 960px;
 }
+.footer-inner h5{
+	margin-top: 20px;
+}
 
 .footer a,
 .footer a:hover{
@@ -333,6 +336,14 @@ input:focus{ outline: 0; }
 }
 .copyright{
 	float: right;
+}
+.site-copyright {
+    margin-top: 10px;
+    margin-bottom: 50px;
+}
+.site-copyright img {
+	position: relative;
+	top: 5px;
 }
 
 /*extra*/
@@ -836,9 +847,14 @@ input:focus{ outline: 0; }
 	overflow: hidden;
 }
 
-.site-info li,
+.site-info li {
+	float:left;
+	margin: 0 15px 0 0;
+}
+
 .friend-links li{
 	float:left;
+	margin: 10px 15px 0 0;
 }
 
 .site-info li a,
@@ -847,7 +863,6 @@ input:focus{ outline: 0; }
 .friend-links li a:active {
 	color: #3b76b3;
 	text-decoration: underline;
-	margin: 5px 15px 0 0;
 }
 .site-info li a:hover,
 .friend-links li a:hover {
