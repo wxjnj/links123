@@ -81,7 +81,7 @@ input:focus{ outline: 0; }
 }
 .zdl .ipt{
 	border: 0 none;
-	font-size: 13px;
+	font-size: 12px;
 	height: 17px;
 	line-height: 17px;
 	padding: 4px 10px;
@@ -898,6 +898,17 @@ input:focus{ outline: 0; }
     height: 29px;
     line-height: 29px;
 }
+
+    .site-info {
+        padding: 17px 0;
+    }
+    .footer .site-info a,
+    .footer .site-info a:active {
+        text-decoration: none;
+    }
+    .footer .site-info a:hover {
+        text-decoration: underline;
+    }
 
 
 

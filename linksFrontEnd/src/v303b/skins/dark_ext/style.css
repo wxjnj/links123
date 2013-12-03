@@ -307,8 +307,12 @@ body {
 .footer {
     width: 960px;
     margin: 50px auto 0;
-    border-top: 1px solid #919191;
 }
+
+    .site-info {
+        border-top: 1px solid #919191;
+        border-bottom: 1px solid #919191;
+    }
 
 .widescreen .footer,
 .widescreen .footer-inner  {
