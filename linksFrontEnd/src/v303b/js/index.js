@@ -94,6 +94,7 @@ $(function() {
 	});
 
 	// 搜索框
+	/**/
 	$("#search_text").autocomplete("/Index/searchSupplement", {
 		dataType : "json",
     	minChars: 1,
@@ -127,6 +128,49 @@ $(function() {
 			THL.go(url, tid, keyword);
 		}, 0);
 	});
+/**/
+/* TODO: 
+                            $( "#search_text" ).autocomplete({
+                                minLength: 1,
+                                source: function( request,response ){
+                                    $.ajax({
+										type: "POST",
+										url:"Index/searchSupplement/term/"+ encodeURIComponent($( "#search_text" ).val()),
+										dataType:"json",
+										data:request,
+										success: function( data ) {
+											response(data);
+											var dval = $("#search_text").val();
+											$.ajax({
+												type: "post",
+												url: "Index/getsession",
+												data: {"dval":dval},
+												success: function( e ){
+													if( e>0 ){
+														for(var i=0;i<e;i++){
+															$( "li" ).eq(i).css("color","#f00");
+														}
+													}
+												}
+											});
+										}
+                                    });
+                                }
+                            });
+                        function setcookie(){
+                            var name = $("#search_text").val();
+                            $.ajax({
+                                type:"POST",
+                                url:"Index/setcookie",
+                                data:{"name":name},
+                                async: false,
+                                success:function(){
+                                    return true;
+                                }
+                            });
+                        }
+*/
+
 
 	// 切换宽屏
 	$('.screen-change-btn').on('click', 'a', function() {
