@@ -540,7 +540,7 @@ input:focus{ outline: 0; }
 .app-icon-list ul li{
 	text-align: center;
 	width: 90px;
-	float: right;
+	float: left;
 	height: 110px;
 	cursor: pointer;
 }

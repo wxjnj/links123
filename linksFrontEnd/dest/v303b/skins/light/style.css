@@ -75,7 +75,7 @@
 .thl .subcate a:hover,
 .thl .cate a:hover,
 .thl .cate-in a:hover {
-    color: #fc2a06;
+    color: #cb322c;
 }
 
 
@@ -281,7 +281,7 @@ body {
     color: #333;
 }
 .text-news p a:hover {
-    color: #ff2b06;
+    color: #cb322c;
 }
 
 .text-news .more-news a, 
@@ -340,6 +340,7 @@ body {
     height: 16px;
     line-height: 16px;
     border: 1px solid #2971c7;
+    padding: 0 5px;
 }
 
 .cal-month table th, .cal-week table th {
@@ -357,15 +358,20 @@ body {
 
 .footer {
     margin-top: 50px;
-    color: #fff;
-    box-shadow: inset 0 5px 5px #777;
-    background: #8d8c8f;
+    background: #fff;
 }
+    .site-info {
+        padding: 17px 0;
+        border-top: 1px solid #e7e7e7;
+        border-bottom: 1px solid #e7e7e7;
+    }
+    .footer .site-info a,
+    .footer .site-info a:active,
+    .footer .site-info a:hover {
+        color: #2793e6;
+        text-decoration: none;
+    }
 
-
-.site-info li a, .site-info li a:active, .friend-links li a, .friend-links li a:active {
-    color: #fff;
-}
 
 .widescreen .extra-box {
     width: 569px;
@@ -433,9 +439,20 @@ body {
     top: 9px;
 }
 
-.cal-date-marks-table li .add-btn{
+.cal-date-marks-table li .add-btn,
+.cal-date-marks-table li .add-btn:hover{
     color: #333;
+    font-size: 12px;
+    height: 16px;
+    line-height: 16px;
+    padding: 0 5px;
+    border-radius: 5px;
+    margin-top: 4px;
+    background-image: url(add-btn.png);
+    background-repeat: no-repeat;
+    background-size: auto 100%;
 }
+
 
 
 @media only screen and (-webkit-min-device-pixel-ratio: 2),
@@ -448,7 +465,7 @@ only screen and (min-device-pixel-ratio: 2) {
         }
 
         .weather-icon {
-           background-image: url(weather-icon.png);
+           background-image: url(weather-icon@2x.png);
            background-size: 161px auto;
         }
 
