@@ -472,10 +472,15 @@
             if (!needsInit) return;
             element = $("<div/>").hide().addClass(options.resultsClass).css("position", "absolute").appendTo(document.body);
             list = $("<ul/>").appendTo(element).mouseover(function(event) {
+                //避免鼠标在下拉选项上时，点回车造成输入关键词被替换的问题
                 //if (target(event).nodeName && target(event).nodeName.toUpperCase() == 'LI') {
                 //    active = $("li", list).removeClass(CLASSES.ACTIVE).index(target(event));
                 //    $(target(event)).addClass(CLASSES.ACTIVE);
                 //}
+            }).mousemove(function(e){
+                //在直达栏时 鼠标移动会触发焦点切换 so 禁止冒泡 避免丢失焦点
+                e.preventDefault();
+                return false;
             }).click(function(event) {
                 $(target(event)).addClass(CLASSES.ACTIVE);
                 select();
