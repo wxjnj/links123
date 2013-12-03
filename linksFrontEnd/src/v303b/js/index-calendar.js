@@ -65,7 +65,7 @@ function getNews(type){
         $.each(data.data.texts, function(k, v){
             $('.text-news-div').append('<p><b></b><a href="' + 
                 v.url + '" target="_blank" rel="external nofollow" title="' + 
-                v.title + '">' + cutstr(v.title, 40) + '</a></p>');
+                v.title + '">' + cutstr(v.title, 35) + '</a></p>');
         });     
 
         $('.text-news').find('p:gt(10)').each(function(){
@@ -328,9 +328,10 @@ function changeNews(){
             self.DateView.Init();
             self.MonthView.Init();
             self.WeekView.Init();
-            self.DateView.miniMonthView.render();
-            self.DateView.mainPanel.show();
-            self.loadMarks();
+            self.changeType(self.type);
+            //self.DateView.miniMonthView.render();
+            //self.DateView.mainPanel.show();
+            //self.loadMarks();
         },
         /*
             格式化日程表顶部显示的日期（周视图有跨月和跨年的情况）
@@ -680,7 +681,7 @@ function changeNews(){
             }else{
                 short_desc = desc;
             }
-            self.element.find('.desc').html('<a class="desc-content ' + color + '" data-color="' + color + '" title="' + escape(short_desc) + '" href="javascript:;">' + short_desc + '</a>');
+            self.element.find('.desc').html('<a class="desc-content ' + color + '" data-color="' + color + '" title="' + desc + '" href="javascript:;">' + short_desc + '</a>');
             if(!self.element.find('.delete-btn').size()){
                 self.element.append('<a class="delete-btn" href="javascript:;">×</a>');
             }

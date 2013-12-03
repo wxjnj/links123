@@ -683,6 +683,7 @@ var THL = {
 		} else if (tid == '10' || tid == '20') {// 另客、维修
 			window.open(url);
 		} else {
+
 			url = APP + "Thl/index";
 			//window.open(url);
 			//因window.open会被浏览器阻止，所以才用表单提交

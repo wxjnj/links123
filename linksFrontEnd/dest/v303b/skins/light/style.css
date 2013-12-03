@@ -202,6 +202,11 @@ body {
 .app-icon-list .app-more .more:hover {
     box-shadow:inset 1px 1px 3px #ddd;  
 }
+.apps ul li:hover, .apps ul li:hover a, .apps ul li:hover a:hover {
+    color: #cb322c;
+}
+
+
 .box-apps .box-bd {
     padding-top: 0;
 }
@@ -297,6 +302,8 @@ body {
 .text-news .more-news a:hover {
     color: #2793e6;
 }
+
+
 
 .pic-news-tabs .active {
     background: #cb322c;
@@ -472,12 +479,17 @@ body {
     line-height: 16px;
     padding: 0 5px;
     border-radius: 5px;
-    margin-top: 4px;
+    margin-top: 5px;
     background-image: url(add-btn.png);
     background-repeat: no-repeat;
     background-size: auto 100%;
 }
 
+
+.widescreen .cal-date-marks-table li .add-btn,
+.widescreen .cal-date-marks-table li .add-btn:hover{
+    margin-top: 7px;
+}
 
 
 @media only screen and (-webkit-min-device-pixel-ratio: 2),

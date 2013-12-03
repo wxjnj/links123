@@ -179,8 +179,12 @@ a, a:hover{
     color: #fff;
 }
 
+.text-news .more-news {
+    margin-top: 0;
+}
+
 .more-news{
-    padding-top: 25px;
+    padding-top: 18px;
 }
 .widescreen .more-news{
     padding-top: 20px;

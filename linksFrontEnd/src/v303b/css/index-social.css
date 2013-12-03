@@ -153,6 +153,13 @@
 .text-news .more-news {
 	text-align: right;
 }
+.text-news .more-news {
+    margin-top: 18px;
+}
+.widescreen .text-news .more-news {
+    margin-top: 25px;
+}
+
 .text-news .more-news a,
 .text-news .more-news a:active {
 	margin-top: 15px;
