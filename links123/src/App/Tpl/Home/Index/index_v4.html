@@ -138,7 +138,7 @@
 								<dl>
 									<volist name="thl_list" id="vo" key="i">
 										<dd class="J_thlz" <neq name="vo['thl']" value="$thlNow">style="display:none;"</neq> >
-										<volist name="vo['thlz']" id="thlz" key="j"><a <if condition='$thlz["id"] eq $tidNow'>class="on"</if> href="#" title="{$thlz['tip']}" ndk="{$thlz['needkey']}" url="{$thlz['url']}" tid="{$thlz['id']}" tag_name="{$thlz['url_tag_name']}">{$thlz['name']}</a><neq name="vo['thlz_len']" value="$j">-</neq></volist>
+										<volist name="vo['thlz']" id="thlz" key="j"><a <if condition='$thlz["id"] eq $tidNow'>class="on"</if> href="#" title="{$thlz['tip']}" url="{$thlz['url']}" tid="{$thlz['id']}">{$thlz['name']}</a><neq name="vo['thlz_len']" value="$j">-</neq></volist>
 										</dd>
 									</volist>
 								</dl>
