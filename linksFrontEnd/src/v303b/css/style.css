@@ -337,8 +337,17 @@ input:focus{ outline: 0; }
 .copyright{
 	float: right;
 }
+
+.friend-links{
+	overflow: hidden;
+	float: left;
+}
 .site-copyright {
-    margin-top: 10px;
+	float: right;
+}
+
+.site-copyright {
+    margin-top: 0;
     margin-bottom: 50px;
 }
 .site-copyright img {
@@ -842,10 +851,10 @@ input:focus{ outline: 0; }
 	margin-top: 30px;
 }
 
-.site-info ul,
-.friend-links{
+.site-info ul {
 	overflow: hidden;
 }
+
 
 .site-info li {
 	float:left;

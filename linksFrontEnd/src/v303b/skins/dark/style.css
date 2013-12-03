@@ -82,6 +82,9 @@ a, a:hover{
     margin: 50px auto 0;
     border-top: 1px solid #ddd;
 }
+.footer-inner h5{
+    color: #fff;
+}
 
 .widescreen .footer,
 .widescreen .footer-inner  {
@@ -172,7 +175,7 @@ a, a:hover{
 }
 
 .more-news{
-    padding-top: 30px;
+    padding-top: 25px;
 }
 .widescreen .more-news{
     padding-top: 20px;
