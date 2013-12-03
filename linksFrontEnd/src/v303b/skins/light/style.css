@@ -166,10 +166,10 @@ body {
     background: #f4f4f4;    
 }
 .zld ul li .nm:hover {
-    box-shadow:inset 2px 2px 3px #d8d8d8;
+    box-shadow:inset 1px 1px 2px 1px #d1d1d1;
 }
 .zld ul li .ctl:hover {
-    box-shadow:inset 2px 2px 3px #d8d8d8;
+    box-shadow:inset 1px 1px 2px 1px #d1d1d1;
 }
 
 .box-apps {
@@ -262,6 +262,13 @@ body {
 .title-tabs span {
     color: #333;
 }
+
+.title-tabs li:hover{
+    color: #333;
+    background: none;
+    border-bottom: 3px solid #cb322c;
+}
+
 .title-tabs .active{
     color: #333;
     background: none;
@@ -366,11 +373,15 @@ body {
         border-bottom: 1px solid #e7e7e7;
     }
     .footer .site-info a,
-    .footer .site-info a:active,
-    .footer .site-info a:hover {
+    .footer .site-info a:active {
         color: #2793e6;
         text-decoration: none;
     }
+    .footer .site-info a:hover {
+        color: #cb322c;
+        text-decoration: underline;
+    }
+
 
 
 .widescreen .extra-box {

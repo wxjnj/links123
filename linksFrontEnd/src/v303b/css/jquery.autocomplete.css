@@ -25,6 +25,9 @@
     text-align: left;
     color: #000;
 }
+.ac_results li:hover {
+    background-color: #EEE;
+}
 .ac_loading {
     /*background: url("images/indicator.gif") no-repeat scroll right center #FFFFFF;*/
 }
@@ -60,6 +63,9 @@
     padding: 5px;
     text-align: left;
     color: #000;
+}
+.ac_results_search li:hover {
+    background-color: #EEE;
 }
 .ac_loading {
     /*background: url("images/indicator.gif") no-repeat scroll right center #FFFFFF;*/

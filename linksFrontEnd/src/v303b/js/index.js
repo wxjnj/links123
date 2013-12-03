@@ -116,7 +116,7 @@ $(function() {
 		}
 	}).result(function(e, item) {
 		$('#search_text').val(item);
-		setTimeout(function(){
+		//setTimeout(function(){
 			$("#search_text").select();
 			var keyword = $.trim($("#search_text").val());
 			$.cookies.set('keyword', keyword);
@@ -126,49 +126,49 @@ $(function() {
 			var url = $(".J_thlz a.on").attr("url").replace('keyword', keyword);
 			var tid = $(".J_thlz a.on").attr("tid");
 			THL.go(url, tid, keyword);
-		}, 0);
+		//}, 0);
 	});
 /**/
 /* TODO: 
-                            $( "#search_text" ).autocomplete({
-                                minLength: 1,
-                                source: function( request,response ){
-                                    $.ajax({
-										type: "POST",
-										url:"Index/searchSupplement/term/"+ encodeURIComponent($( "#search_text" ).val()),
-										dataType:"json",
-										data:request,
-										success: function( data ) {
-											response(data);
-											var dval = $("#search_text").val();
-											$.ajax({
-												type: "post",
-												url: "Index/getsession",
-												data: {"dval":dval},
-												success: function( e ){
-													if( e>0 ){
-														for(var i=0;i<e;i++){
-															$( "li" ).eq(i).css("color","#f00");
-														}
-													}
-												}
-											});
-										}
-                                    });
-                                }
-                            });
-                        function setcookie(){
-                            var name = $("#search_text").val();
-                            $.ajax({
-                                type:"POST",
-                                url:"Index/setcookie",
-                                data:{"name":name},
-                                async: false,
-                                success:function(){
-                                    return true;
-                                }
-                            });
-                        }
+        $( "#search_text" ).autocomplete({
+            minLength: 1,
+            source: function( request,response ){
+                $.ajax({
+					type: "POST",
+					url:"Index/searchSupplement/term/"+ encodeURIComponent($( "#search_text" ).val()),
+					dataType:"json",
+					data:request,
+					success: function( data ) {
+						response(data);
+						var dval = $("#search_text").val();
+						$.ajax({
+							type: "post",
+							url: "Index/getsession",
+							data: {"dval":dval},
+							success: function( e ){
+								if( e>0 ){
+									for(var i=0;i<e;i++){
+										$( "li" ).eq(i).css("color","#f00");
+									}
+								}
+							}
+						});
+					}
+                });
+            }
+        });
+    function setcookie(){
+        var name = $("#search_text").val();
+        $.ajax({
+            type:"POST",
+            url:"Index/setcookie",
+            data:{"name":name},
+            async: false,
+            success:function(){
+                return true;
+            }
+        });
+    }
 */
 
 
