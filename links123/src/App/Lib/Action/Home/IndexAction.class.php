@@ -1565,7 +1565,6 @@ class IndexAction extends CommonAction {
 	/**
      * 搜索框自动填充
      */
-
 	public function searchSupplement() {
 	
 		$q = $_GET["q"];

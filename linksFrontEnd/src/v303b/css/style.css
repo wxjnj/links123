@@ -24,6 +24,11 @@ input:focus{ outline: 0; }
 	z-index: 999;
 }
 
+.footer {
+    width: 960px;
+    margin: 45px auto 0;
+}
+
 .footer-inner {
 	width: 960px;
 }
@@ -863,7 +868,7 @@ input:focus{ outline: 0; }
 
 .friend-links li{
 	float:left;
-	margin: 10px 15px 0 0;
+	margin: 10px 20px 0 0;
 }
 
 .site-info li a,

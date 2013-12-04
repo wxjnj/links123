@@ -77,10 +77,7 @@ a, a:hover{
     border-top: 1px solid #ddd;
 }
 
-.footer {
-    width: 960px;
-    margin: 50px auto 0;
-}
+
 .footer .footer-inner h5{
     color: #fff;
 }
@@ -323,7 +320,7 @@ a, a:hover{
 
 .cal-date-marks-table li .delete-btn {
     color: #fff;
-    display: inline-block;
+    display: none;
     background: url(close.png) 0 0 no-repeat;
     height: 11px;
     line-height: 11px;
@@ -336,6 +333,11 @@ a, a:hover{
     text-decoration: none;
     text-align: center;
 }
+
+.cal-date-marks-table li:hover .delete-btn {
+    display: inline-block;
+}
+
 .cal-date-marks-table li .delete-btn:hover {
     background-position: 0 -11px;
 }

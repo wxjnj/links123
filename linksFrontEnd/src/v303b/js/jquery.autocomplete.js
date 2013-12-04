@@ -283,7 +283,8 @@
         };
         function request(term, success, failure) {
             if (!options.matchCase) term = term.toLowerCase();
-            var data = cache.load(term);
+            //强制关闭缓存
+            var data = null;//cache.load(term);
             if (data && data.length) {
                 success(term, data);
             } else if ((typeof options.url == "string") && (options.url.length > 0)) {

@@ -53,12 +53,6 @@
 							<li><a target="_blank" href="/Members/Comment"><i></i>我的说说</a></li>
 							<li><a href="/Members/Suggestion"><i></i>留言板</a></li>
 							<li class="logout"><a href="/Members/Logout"><i></i>退出登录</a></li>
-							<!-- 
-								<li class="person"><a target="_blank" href="#"><i class="person-icon"></i>个人信息</a></li>
-								<li><a target="_blank" href="#"><i class="private-icon"></i>隐私设置</a></li>
-								<li><a target="_blank" href="#"><i class="safe-icon"></i>安全信息设置</a></li>
-								<li class="logout"><a target="_blank" href="/Members/Logout"><i class="logout-icon"></i>退出登录</a></li>
-							 -->
 						</ul>
 					</div>
 				</div>
@@ -73,7 +67,6 @@
 				<div class="skin-list" style="display: none">
 					<span class="ang"></span>
 					<div class="skin-content">
-						<!--p style="color:#333!important;text-align:center;line-height:40px;margin-top:10px">coming soon ...</p-->
 						<div class="subpanel" id="J_skin_selection">
 							<div class="skin-types">
 								<a data-id="themes" class="J_link_skin_type">另&nbsp;客</a>
@@ -116,10 +109,7 @@
 </div><!--#header end-->
 
 <div class="container" id="container" <if condition="$skinId">style="background-image:url({$skin})"</if>>
-
 	<div class="container-inner">
-
-
 		<div class="under-header">
 			<div class="under-header-inner">
 				<div class="ci-hd J_thl_area">
@@ -194,7 +184,7 @@
 			<div class="box-hd">
 				<div class="app-icon-list">
 					<div class="app-more">
-						<a href="javascript:" class="more"></a><!--em>更多应用</em-->
+						<a href="javascript:" class="more"></a>
 						<div class="app-more-box" id="J_AppsMore">
 							<b class="ang ang-back"></b>
 							<b class="ang"></b>
@@ -229,16 +219,6 @@
 							</li>
 						</volist>
 					</ul>
-					<!--div class="app-add">
-						<a href="javascript:;">+</a>
-						<empty name="_SESSION[C('MEMBER_AUTH_KEY')]">
-						<div class="mini-tip zld-mini-tip">
-							<div class="mini-tip-l"></div>
-							<div class="mini-tip-c">请登陆后添加应用</div>
-							<div class="mini-tip-r"></div>
-						</div>
-						</empty>
-					</div-->
 				</div><!--.apps end-->
 			</div><!-- app-box-body end -->
 		</div><!-- app-box end -->
@@ -246,18 +226,8 @@
 			<div class="lft-box extra-box">
 				<div class="title-tabs" id="social-title-tabs">
 					<span>发现你最喜欢的内容</span>
-					<!--<a href="javascript:;">+</a>  -->
 					<ul></ul>
 				</div>
-				<!-- 标签 
-				<div class="like-tags">
-					<div class="a_tag">
-						<span>标签</span>
-						<a href="javascript:;">×</a>
-					</div>
-				</div>
-				-->
-				<!-- 头条 -->
 
 				<div class="social-box">
 					<div class="pic-news">

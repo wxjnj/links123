@@ -16,6 +16,45 @@
 		}
 }());
 
+// 关键词存取，优先使用localstorage，不支持的使用cookie
+var Keywords = {
+    set: function(value, type){
+    	type = type || 'keywords';
+		if(window.localStorage){
+			ks = window.localStorage.getItem(type);
+			ks = JSON.parse(ks);
+			if(!ks || $.type(ks) != 'array'){
+				ks = [];
+			}
+			ks.length > 100 && ks.pop();
+			var tem = [];
+			$.each(ks, function(k, v){
+				if(v != value) tem.push(v);
+			});
+			tem.unshift(value);
+			window.localStorage.setItem(type, JSON.stringify(tem));
+			return;
+		}
+        ks = $.cookies.get(type);
+        if(!ks || $.type(ks) != 'array') ks = [];
+        ks.length > 10 && ks.pop();
+        var tem = [];
+		$.each(ks, function(k, v){
+			if(v != value) tem.push(v);
+		});
+		tem.unshift(value);
+        $.cookies.set(type, tem, { expiresAt: (new Date).add_day(365) });
+    },
+    get: function(type){
+    	type = type || 'keywords';
+        if(window.localStorage){
+            return JSON.parse(window.localStorage.getItem(type));
+        }
+        return $.cookies.get(type);
+    }
+};
+
+
 // stop default link behavior
 $(document).on('click', '[href="#"],.disabled', function(e) {
 	e.preventDefault();
@@ -25,30 +64,7 @@ $(function() {
 	User.Init();
 	THL.Init();
 	Theme.Init();
-	$("#direct_text").autocomplete("/Home/Link/tag", {
-		dataType : "json",
-		minChars : 1,
-		selectFirst: false,	//默认不选择第一个
-		async: true,
-		width : 298,
-		scroll : false,
-		matchContains : true,
-		parse : function(data) {
-			return $.map(data, function(row) {
-				return {
-					data : row,
-					value : row.tag,
-					result : row.tag
-				};
-			});
-		},
-		formatItem : function(item) {
-			return item.tag;
-		}
-	}).result(function(e, item) {
-		$('#direct_text').val(item.tag);
-		$('#frm_drct').submit();
-	});
+
 });
 
 // 登录注册dialog弹出后，阻止mousemove事件冒泡，避免焦点丢失
@@ -674,6 +690,10 @@ var THL = {
 	},
 	go : function(url, tid, keyword) {
 
+		//var ks = $.cookies.get('keywords'); 
+		Keywords.set(keyword);
+		//$.cookies.set('keywords', ks, { expiresAt: (new Date).add_day(365) });
+
 		if (tid == '4' || tid == '26' || tid == '40' || tid == '58' || tid == '110' || tid == '117') {// 谷歌、美试、啪啪、PQuora
 			$.post(URL + "/thl_count", {
 				tid : tid
@@ -794,9 +814,9 @@ var Theme = {
 		});
 		//皮肤items容器
 		var $skinPicsWrap = $("#J_skin_pics");
-		//点击皮肤分类的链接显示对应的皮肤图片
 
-		$('#J_skin_selection').on('mouseover', '.J_link_skin_type', function() {
+		//点击皮肤分类的链接显示对应的皮肤图片
+		$('#J_skin_selection').on('click', '.J_link_skin_type', function() {
 			var $self = $(this);
 			if (!$self.hasClass('active')) {
 				$self.addClass('active').siblings().removeClass('active');

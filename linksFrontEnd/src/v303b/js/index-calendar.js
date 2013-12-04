@@ -65,7 +65,8 @@ function getNews(type){
         $.each(data.data.texts, function(k, v){
             $('.text-news-div').append('<p><b></b><a href="' + 
                 v.url + '" target="_blank" rel="external nofollow" title="' + 
-                v.title + '">' + cutstr(v.title, 35) + '</a></p>');
+                v.title + '">' + v.title + '</a></p>');
+                //v.title + '">' + cutstr(v.title, 35) + '</a></p>');
         });     
 
         $('.text-news').find('p:gt(10)').each(function(){

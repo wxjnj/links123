@@ -103,7 +103,19 @@ $(function() {
 		selectFirst: false,	//默认不选择第一个
 		async: true,
 		parse : function(data) {
-			//data -> ['', '']
+			//data -> ['', ''];
+			//var ks = $.cookies.get('keywords');
+			var ks = Keywords.get();
+			var cur = $.trim($('#search_text').val()).replace('http://', '');
+			var has = [];
+			if(!ks) ks = [];
+			$.each(ks, function(k, v){
+				v = decodeURIComponent(v);
+				if(v.indexOf(cur) >= 0){
+					has.push(v);
+				}
+			});
+			data = has.concat(data);
 			return $.map(data, function(row) {
 				return {
 					data : row,
@@ -120,7 +132,7 @@ $(function() {
 		//setTimeout(function(){
 			$("#search_text").select();
 			var keyword = $.trim($("#search_text").val());
-			$.cookies.set('keyword', keyword);
+			//$.cookies.set('keyword', keyword);
 			//保存keyword
 			keyword = keyword.replace('http://', '');
 			keyword = encodeURIComponent(keyword);
@@ -130,48 +142,45 @@ $(function() {
 		//}, 0);
 	});
 /**/
-/* TODO: 
-        $( "#search_text" ).autocomplete({
-            minLength: 1,
-            source: function( request,response ){
-                $.ajax({
-					type: "POST",
-					url:"Index/searchSupplement/term/"+ encodeURIComponent($( "#search_text" ).val()),
-					dataType:"json",
-					data:request,
-					success: function( data ) {
-						response(data);
-						var dval = $("#search_text").val();
-						$.ajax({
-							type: "post",
-							url: "Index/getsession",
-							data: {"dval":dval},
-							success: function( e ){
-								if( e>0 ){
-									for(var i=0;i<e;i++){
-										$( "li" ).eq(i).css("color","#f00");
-									}
-								}
-							}
-						});
-					}
-                });
-            }
-        });
-    function setcookie(){
-        var name = $("#search_text").val();
-        $.ajax({
-            type:"POST",
-            url:"Index/setcookie",
-            data:{"name":name},
-            async: false,
-            success:function(){
-                return true;
-            }
-        });
-    }
-*/
 
+	$("#direct_text").autocomplete("/Home/Link/tag", {
+		dataType : "json",
+		minChars : 1,
+		selectFirst: false,	//默认不选择第一个
+		async: true,
+		width : 298,
+		scroll : false,
+		matchContains : true,
+		parse : function(data) {
+			var ks = Keywords.get('tags');
+			var cur = $.trim($('#direct_text').val());
+			var has = [];
+			if(!ks) ks = [];
+			$.each(ks, function(k, v){
+				v = decodeURIComponent(v);
+				if(v.indexOf(cur) >= 0){
+					has.push({
+						tag: v
+					});
+				}
+			});
+			data = has.concat(data);
+
+			return $.map(data, function(row) {
+				return {
+					data : row,
+					value : row.tag,
+					result : row.tag
+				};
+			});
+		},
+		formatItem : function(item) {
+			return item.tag;
+		}
+	}).result(function(e, item) {
+		$('#direct_text').val(item.tag);
+		$('#frm_drct').submit();
+	});
 
 	// 切换宽屏
 	$('.screen-change-btn').on('click', 'a', function() {
@@ -287,6 +296,7 @@ var ZhiDaLan = { // 直达框
 			if (tag == '' || tag == $('#direct_text').attr('txt')) {
 				return false;
 			}
+			Keywords.set(tag, 'tags');
 			$('#direct_text').select();
 		});
 	}
