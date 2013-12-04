@@ -102,21 +102,31 @@ $(function() {
     	resultsClass: "ac_results_search",
 		selectFirst: false,	//默认不选择第一个
 		async: true,
+		scroll : false,
 		parse : function(data) {
 			//data -> ['', ''];
 			//var ks = $.cookies.get('keywords');
 			var ks = Keywords.get();
 			var cur = $.trim($('#search_text').val()).replace('http://', '');
 			var has = [];
+			var unique = {};
 			if(!ks) ks = [];
 			$.each(ks, function(k, v){
 				v = decodeURIComponent(v);
 				if(v.indexOf(cur) >= 0){
 					has.push(v);
+					unique[v] = true;
 				}
 			});
-			data = has.concat(data);
-			return $.map(data, function(row) {
+
+			this.hasLength = has.length;
+
+			$.each(data, function(k, v){
+				if(!unique[v]) has.push(v);
+			});
+
+			//data = has.concat(data);
+			return $.map(has, function(row) {
 				return {
 					data : row,
 					value : row,
@@ -148,13 +158,14 @@ $(function() {
 		minChars : 1,
 		selectFirst: false,	//默认不选择第一个
 		async: true,
-		width : 298,
+		width : 262,
 		scroll : false,
 		matchContains : true,
 		parse : function(data) {
 			var ks = Keywords.get('tags');
 			var cur = $.trim($('#direct_text').val());
 			var has = [];
+			var unique = {};
 			if(!ks) ks = [];
 			$.each(ks, function(k, v){
 				v = decodeURIComponent(v);
@@ -162,11 +173,16 @@ $(function() {
 					has.push({
 						tag: v
 					});
+					unique[v] = true;
 				}
 			});
-			data = has.concat(data);
+			this.hasLength = has.length;
+			$.each(data, function(k, v){
+				if(!unique[v.tag]) has.push(v);
+			});
+			//data = has.concat(data);
 
-			return $.map(data, function(row) {
+			return $.map(has, function(row) {
 				return {
 					data : row,
 					value : row.tag,

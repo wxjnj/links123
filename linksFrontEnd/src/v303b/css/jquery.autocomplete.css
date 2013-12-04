@@ -77,3 +77,8 @@
 .widescreen .ac_results_search {
     width: 460px!important;
 }
+
+.ac_results .userInput,
+.ac_results_search .userInput {
+    color: #cb322c;
+}
