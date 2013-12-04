@@ -1141,7 +1141,8 @@ class EnglishQuestionAction extends CommonAction {
                         foreach ($data['category'] as $key=>$value){
                             $cat_id = 0;//本次对应的分类id
                             //@ 检查二级分类是否存在，不存在则添加类目，并添加到category表
-                            if (intval($level_name_list[$value['level_two_name']]) == 0) {
+                            $level_name_key = preg_replace("/\s+/", '', $value['level_two_name']);
+                            if (intval($level_name_list[$level_name_key]) == 0) {
                                 $new_levelname_data = array(
                                     "name" => $value['level_two_name'], 
                                     "level" => 2,
@@ -1157,7 +1158,7 @@ class EnglishQuestionAction extends CommonAction {
                                     die(json_encode(array("info" => "导入失败，新增分类名称失败！","status" => false)));
                                 }
                                 Log::write("新增levelname:".$levelnameModel->getLastSql(), Log::INFO);
-                                $level_name_list[$value['level_two_name']] = $new_id;
+                                $level_name_list[$level_name_key] = $new_id;
                             }
                             //逐一添加二级分类下的三级分类
                             //默认三级分类列表为难度列表
@@ -1170,7 +1171,7 @@ class EnglishQuestionAction extends CommonAction {
                                 $cat_data = array();
                                 $cat_data['cat_attr_id'] = $data['cat_attr_id'];
                                 $cat_data['level_one'] = $value['level_one'];
-                                $cat_data['level_two'] = $level_name_list[$value['level_two_name']];
+                                $cat_data['level_two'] = $level_name_list[$level_name_key];
                                 $cat_data['level_thr'] = $level_thr;
                                 $this_cat_id = $categoryModel->where($cat_data)->getField("cat_id");
                                 Log::write("查询【".$value['level_two_name']."】的三级分类:".$categoryModel->getLastSql(), Log::INFO);
