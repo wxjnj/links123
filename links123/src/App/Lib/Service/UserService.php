@@ -65,13 +65,14 @@ class UserService{
 	 */
 	public function setVar($key,$value){
 		$this->user_data[$key] = $value;
+		$flag = '@var.'.$key;
 		if($this->isLogin()){
 			//实际存储
 		}else{
 			//设置更新标记
-			$this->setMark('@var.'.$key,self::MARK_UPDATE);
-			//传递到缓存中，并设定@var的命名空间
-			return $this->setCache('@var.'.$key,$value);
+			$this->setMark($flag,self::MARK_UPDATE);
+			//传递到会话中，并设定@var的命名空间
+			return $this->setSession($flag,$value);
 		}
 
 	}
@@ -82,29 +83,54 @@ class UserService{
 	 */
 	public function getVar($key){
 		if(isset($this->user_data[$key])) return $this->user_data[$key];
+		$flag = '@var.'.$key;
 		if($this->isLogin()){
-			if($this->getMark('@var.'.$key,self::MARK_UPDATE)){
-				$value = $this->getCache('@var'.$key);
+			if($this->getMark($flag,self::MARK_UPDATE)){
+				$value = $this->getSession($flag);
 				$this->setVar($key,$value);
 			}else{
 				//获取数据
 			}
 			return $value;
 		}else{
-			return $this->getCache('@var'.$key);
+			return $this->getSession($flag);
 		}
+	}
+
+	/**
+	 * @desc 存储用户会话数据
+	 * @param $key
+	 * @param $value
+	 * @return boolen
+	 */
+	public function setSession($key,$value){
+		return $this->_setCache($this->getSessionId().'@session.'.$key,$value,$this->time);
+	}
+	/**
+	 * @desc 获取用户会话数据
+	 * @param $key
+	 * @return string
+	 */
+	public function getSession($key){
+		return $this->_getCache($this->getSessionId().'@session.'.$key);
 	}
 	/**
 	 * @desc 存储缓存数据
 	 * @param $key
 	 * @param $value
-	 * @param int $time 不设置则为用户当前登录生命周期
+	 * @param $time 不设置则为用户当前登录生命周期
 	 * @return boolen
 	 */
-	public function setCache($key,$value,$time=0){
-		$userid = $this->getUserId();
+	public function setCache($key,$value,$time=false){
+		if($time===false) return $this->setSession($key,$value);
+		$flag = '@cache.'.$key;
+		$userId = $this->getUserId();
+		//设置更新标记
+		$this->setMark($flag,self::MARK_UPDATE);
+		//简单设定失效时间，用于同步缓存中
+		$value = ($time + time()).'|'.$value;
 		//设定逻辑
-		return $this->_setCache($key,$value,$time);
+		return $this->_setCache($userId.$flag,$value,$time);
 	}
 	/**
 	 * @desc 获取用户缓存
@@ -112,11 +138,19 @@ class UserService{
 	 * @return string
 	 */
 	public function getCache($key){
-		$userid = $this->getUserId();
-		//设定逻辑
-		return $this->_getCache($key);
+		$flag = '@cache.'.$key;
+		$userId = $this->getUserId();
+		if($this->getMark($flag,self::MARK_UPDATE)){
+			$value = $this->_getCache($this->getSessionId().$flag);
+			list($time,$value) = explode('|',$value);
+			//同步游客缓存到用户缓存，并同步同样的失效时间
+			$this->_setCache($userId.$flag,$value,$time - time());
+		}else{
+			$value = $this->_getCache($userId.$flag);
+			list($time,$value) = explode('|',$value);
+		}
+		return $value;
 	}
-
 	/**
 	 * @desc 设定数据状态，以供同步数据时使用
 	 * @param $key
@@ -126,9 +160,10 @@ class UserService{
 	public function setMark($key,$mark){
 		//对于登录用户，无须设置同步标记
 		if($this->isLogin()) return true;
-		$statusInt = $this->getCache('@mark.'.$key);
+		$flag = '@mark.'.$key;
+		$statusInt = $this->getSession($flag);
 		if(!$statusInt) $statusInt = 0;
-		return $this->setCache('@mark.'.$key,$statusInt | 1 << $mark-1);
+		return $this->setSession($flag,$statusInt | 1 << $mark-1);
 	}
 
 	/**
@@ -140,7 +175,8 @@ class UserService{
 	public function getMark($key,$mark=false){
 		//对于未登录用户，无须进行同步操作
 		if(!$this->isLogin()) return false;
-		$statusInt = $this->getCache('@mark.'.$key);
+		$flag = '@mark.'.$key;
+		$statusInt = $this->getSession($flag);
 		if($mark === false){
 			return $statusInt;
 		}else{
