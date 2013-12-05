@@ -37,8 +37,11 @@ class ThlModel extends CommonModel {
             $result = $this->order('sort,id')->select();
             foreach ($result as $k => $v) {
             	$key = $thl[$v['thl']];
+            	if (!$v['tip']) $v['tip'] = $v['name'];
+            	
             	$thl_list[$key]['thl']      = $v['thl'];
                 $thl_list[$key]['thlz'][]     = $v;
+               
                 if ( $v['sort'] > $thl_list[$key]['thlz_len']) {
                 	$thl_list[$key]['thlz_len'] = $v['sort'];
                 }

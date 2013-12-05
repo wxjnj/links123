@@ -1499,8 +1499,12 @@ class IndexAction extends CommonAction {
     			$hotNews = S('EnglishNewsList_back');
     		}
     	}
-    	
     	shuffle($hotNews['news']);
+    	
+    	$news = array_chunk($hotNews['news'], 13, true);
+    	if ($news[0]) {
+    		$hotNews['news'] = $news[0];
+    	}
     	
     	return $hotNews;
     }
@@ -1561,7 +1565,6 @@ class IndexAction extends CommonAction {
 	/**
      * 搜索框自动填充
      */
-
 	public function searchSupplement() {
 	
 		$q = $_GET["q"];
