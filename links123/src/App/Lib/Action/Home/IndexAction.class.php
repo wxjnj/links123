@@ -1480,7 +1480,10 @@ class IndexAction extends CommonAction {
 	    		foreach ($match[0] as $matchStr) {
 		    		preg_match_all('/<li>(.*?)<\/li>/is', $matchStr, $match);
 		    		foreach ($match[1] as $k => $v) {
-		    			$news[] = array('url' => $url . $this->tp_match('/href="(.*?)"/is', $v), 'title' => mb_substr(trim(str_replace("\n", '', strip_tags($v))), 0, 24, 'utf8'), 'img' => '');
+		    			$v = preg_replace(array('/<label>(.*?)<\/label>/is', '/<em>(.*?)<\/em>/is'), '', $v);
+		    			
+		    			$news[] = array('url' => $url . $this->tp_match('/href="(.*?)"/is', $v), 'title' => mb_substr(trim(str_replace(array("\n", '>'), '', strip_tags($v))), 0, 24, 'utf8'), 'img' => '');
+		    			
 		    		}
 	    		}
 	    		$imgNewsStr = $this->tp_match('/<ul class="slideshow">(.*?)<\/ul>/is', $str);
