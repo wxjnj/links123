@@ -12,7 +12,13 @@ class UserService{
 	 * 用户ID
 	 * @var null
 	 */
-	private $user_id = null;
+	private $user_id = 0;
+	/**
+	 * 游客ID，用来在未登录状态，同样能存储复杂数据的方式
+	 * 对无该需求的应用，应该取消游客ID的操作
+	 * @var null
+	 */
+	private $guest_id = 0;
 	/**
 	 * 当前sessionID
 	 * @var null
@@ -55,7 +61,39 @@ class UserService{
 	const MARK_DELETE = 3;
 	public function __construct(){
 		//自动获取当前用户信息
-		//初始化用户状态
+		//初始化用户状态：目前使用原本的状态判断，日后接入sso
+		session_start();
+		isset($_SESSION[C('MEMBER_AUTH_KEY')]) &&
+		$this->user_id = @ intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+		if (empty($this->user_id)) {
+			$user_str = $_COOKIE["USER_ID"];
+			//没有用户session且自动登录标示Cookie USER_ID 存在执行自动登录过程
+			if (!empty($user_str)) {
+				$ret = explode("|", $user_str);
+				$user_id = intval($ret[0]);
+				$user_info = D("Member")->find($user_id);
+
+				if (!empty($user_info) && md5($user_info['password'] . $user_info['nickname']) == $ret[1]) {
+					$_SESSION[C('MEMBER_AUTH_KEY')] = $user_info['id'];
+					$_SESSION['nickname'] = $user_info['nickname'];
+					$_SESSION['face'] = empty($user_info['face'])?'face.jpg':$user_info['face'];
+					$_SESSION['skinId'] = $user_info['skin'];
+					$_SESSION['themeId'] = $user_info['themeId'];
+
+					$this->user_id = $user_info['id'];
+
+					//使用cookie过期时间来控制前台登陆的过期时间
+					$home_session_expire = intval(D("Variable")->getVariable("home_session_expire"));
+					cookie(md5("home_session_expire"), time(), $home_session_expire);
+				}
+			}
+		}
+		//对于刚注册用户，还是获取之前的游客ID，来保证同步数据的正确性
+		$this->guest_id = cookie(md5('member_guest'));
+
+		if($this->user_id){
+			$this->is_login = true;
+		}
 	}
 	/**
 	 * @desc 存储用户变量
@@ -127,8 +165,6 @@ class UserService{
 		$userId = $this->getUserId();
 		//设置更新标记
 		$this->setMark($flag,self::MARK_UPDATE);
-		//简单设定失效时间，用于同步缓存中
-		$value = ($time + time()).'|'.$value;
 		//设定逻辑
 		return $this->_setCache($userId.$flag,$value,$time);
 	}
@@ -141,13 +177,11 @@ class UserService{
 		$flag = '@cache.'.$key;
 		$userId = $this->getUserId();
 		if($this->getMark($flag,self::MARK_UPDATE)){
-			$value = $this->_getCache($this->getSessionId().$flag);
-			list($time,$value) = explode('|',$value);
+			list($time,$value) = $this->_getCache($this->getSessionId().$flag);
 			//同步游客缓存到用户缓存，并同步同样的失效时间
 			$this->_setCache($userId.$flag,$value,$time - time());
 		}else{
-			$value = $this->_getCache($userId.$flag);
-			list($time,$value) = explode('|',$value);
+			list($time,$value) = $this->_getCache($userId.$flag);
 		}
 		return $value;
 	}
@@ -207,13 +241,29 @@ class UserService{
 	 */
 
 	/**
-	 * @desc 返回当前用户的userID
+	 * @desc 返回当前用户的userID,未登录返回游客ID
+	 * 		 为了实现未登录用户的复杂数据存储，对没有该功能需求的应用，因取消游客ID的使用
 	 * @return int
 	 */
+	public function getId(){
+		return $this->user_id ? $this->user_id : $this->getGuestId();
+	}
 	public function getUserId(){
 		return $this->user_id;
 	}
-
+	public function getGuestId(){
+		if(!$this->guest_id){
+			$guestModel = M('MemberGuest');
+			$guest_id = $guestModel->add(array('create_time' => time(), 'status' => 1));
+			if ($guest_id) {
+				$this->guest_id = - $guest_id;
+				if ($guestModel->where(array('id' => $guest_id))->save(array('mid' => $this->guest_id))) {
+					cookie(md5('member_guest'), $this->guest_id, 365*24*60*60);
+				}
+			}
+		}
+		return $this->guest_id;
+	}
 	/**
 	 * @desc 返回当前用户的登录状态
 	 * @return boolen
@@ -300,17 +350,42 @@ class UserService{
 
 	}
 
+	/**
+	 * @desc 验证当前登录状态
+	 */
+	public function token(){
+
+	}
+
 	/*
 	 * 以下为内置函数
 	 */
+	/**
+	 * @desc 内置实际的缓存操作,不处理逻辑，只处理存储
+	 * @param $key
+	 * @param $value
+	 * @param $time
+	 * @return boolen
+	 */
 	private function _setCache($key,$value,$time){
 		$this->user_cache[$key] = $value;
+		//简单设定失效时间，用于同步缓存中
+		$value = ($time + time()).'|'.$value;
 		//实际存储
 	}
+
+	/**
+	 * @desc 内置实际的缓存操作，不处理逻辑，只处理读取
+	 * @param $key
+	 * @return array
+	 */
 	private function _getCache($key){
 		if(isset($this->user_cache[$key])) return $this->user_cache[$key];
 		//获取数据
-		return $this->user_cache[$key];
+		$time = 0;
+		if($value) list($time,$value) = explode('|',$value);
+		$this->user_cache[$key] = $value;
+		return array($time,$this->user_cache[$key]);
 	}
 	private function get($url){
 	}

@@ -5,7 +5,7 @@ class MemberAction extends CommonAction {
 	
     // 检查登录
     protected function checkLog($ajax = 0) {
-        if (!isset($_SESSION[C('MEMBER_AUTH_KEY')]) || empty($_SESSION[C('MEMBER_AUTH_KEY')])) {
+        if (!$this->userService->isLogin()) {
             if ($ajax == 1) {
                 echo "请先登录！";
                 return false;
@@ -22,7 +22,7 @@ class MemberAction extends CommonAction {
         //
         $this->checkLog();
         //
-        $mbrNow = M("Member")->getById($_SESSION[C('MEMBER_AUTH_KEY')]);
+        $mbrNow = M("Member")->getById($this->userService->getUserId());
         if (empty($mbrNow['face'])) {
             $mbrNow['face'] = 'face.jpg';
         }
@@ -44,10 +44,10 @@ class MemberAction extends CommonAction {
         //
         $this->checkLog();
         //
-        $mbrNow = M("Member")->getById($_SESSION[C('MEMBER_AUTH_KEY')]);
+        $mbrNow = M("Member")->getById($this->userService->getUserId());
         $this->assign("mbrNow", $mbrNow);
         //
-        $condition['mid'] = $_SESSION[C('MEMBER_AUTH_KEY')];
+        $condition['mid'] = $this->userService->getUserId();
         //
         $rid = $_REQUEST['rid'];
         if (!empty($rid)) {
@@ -101,7 +101,7 @@ class MemberAction extends CommonAction {
         $collection = M("Collection");
         $data = array();
         $data['link'] = $link;
-        $data['mid'] = $_SESSION[C('MEMBER_AUTH_KEY')];
+        $data['mid'] = $this->userService->getUserId();
         //
         if ($collection->where($data)->find()) {
             echo "已经收藏过了！";
@@ -138,7 +138,7 @@ class MemberAction extends CommonAction {
         $collection = M("Collection");
         $condition = array();
         $condition['lnk_id'] = $lnk_id;
-        $condition['mid'] = $_SESSION[C('MEMBER_AUTH_KEY')];
+        $condition['mid'] = $this->userService->getUserId();
         //
         if (!$collection->where($condition)->find()) {
             echo "无此收藏！";
@@ -163,10 +163,10 @@ class MemberAction extends CommonAction {
         //
         $this->checkLog();
         //
-        $mbrNow = M("Member")->getById($_SESSION[C('MEMBER_AUTH_KEY')]);
+        $mbrNow = M("Member")->getById($this->userService->getUserId());
         $this->assign("mbrNow", $mbrNow);
         //
-        $condition['mid'] = $_SESSION[C('MEMBER_AUTH_KEY')];
+        $condition['mid'] = $this->userService->getUserId();
         //
         $rid = $_REQUEST['rid'];
         if (!empty($rid)) {
@@ -203,10 +203,10 @@ class MemberAction extends CommonAction {
         //
         $this->checkLog();
         //
-        $mbrNow = M("Member")->getById($_SESSION[C('MEMBER_AUTH_KEY')]);
+        $mbrNow = M("Member")->getById($this->userService->getUserId());
         $this->assign("mbrNow", $mbrNow);
         //
-        $condition['mid'] = $_SESSION[C('MEMBER_AUTH_KEY')];
+        $condition['mid'] = $this->userService->getUserId();
         //
         $rid = $_REQUEST['rid'];
         if (!empty($rid)) {
@@ -264,11 +264,11 @@ class MemberAction extends CommonAction {
         $this->checkLog();
         //$aryType = array('','留言板','申请取消链接','其他');
         //
-    	$mbrNow = M("Member")->getById($_SESSION[C('MEMBER_AUTH_KEY')]);
+    	$mbrNow = M("Member")->getById($this->userService->getUserId());
         $this->assign("mbrNow", $mbrNow);
         //
         $condition['pid'] = 0;
-        $condition['mid'] = $_SESSION[C('MEMBER_AUTH_KEY')];
+        $condition['mid'] = $this->userService->getUserId();
         //
         $listRows = 12;
         $pg = !empty($_REQUEST[C('VAR_PAGE')]) ? $_REQUEST[C('VAR_PAGE')] : 1;
@@ -316,7 +316,7 @@ class MemberAction extends CommonAction {
         $suggestion = M("Suggestion");
         //
         if (empty($_POST['id'])) {
-            $_POST['mid'] = $_SESSION[C('MEMBER_AUTH_KEY')];
+            $_POST['mid'] = $this->userService->getUserId();
             $_POST['type'] = 1;
             $_POST['create_time'] = time();
             //
@@ -504,12 +504,12 @@ class MemberAction extends CommonAction {
         }
         //
         $member = M("Member");
-        if ($member->where('id!=' . $_SESSION[C('MEMBER_AUTH_KEY')] . ' and email = \'' . $email . '\'')->find()) {
+        if ($member->where('id!=' . $this->userService->getUserId() . ' and email = \'' . $email . '\'')->find()) {
             echo "该email已被使用，请换一个！";
             return false;
         }
         //
-        if (false === $member->where('id=' . $_SESSION[C('MEMBER_AUTH_KEY')])->setField('email', $email)) {
+        if (false === $member->where('id=' . $this->userService->getUserId())->setField('email', $email)) {
             Log::write('保存email失败：' . $member->getLastSql(), Log::SQL);
             echo "保存email失败！";
         } else {
@@ -531,12 +531,12 @@ class MemberAction extends CommonAction {
         }
         //
         $member = M("Member");
-        if ($member->where('id!=' . $_SESSION[C('MEMBER_AUTH_KEY')] . ' and nickname = \'' . $nickname . '\'')->find()) {
+        if ($member->where('id!=' . $this->userService->getUserId() . ' and nickname = \'' . $nickname . '\'')->find()) {
             echo "该昵称已被使用，请换一个！";
             return false;
         }
         //
-        if (false === $member->where('id=' . $_SESSION[C('MEMBER_AUTH_KEY')])->setField('nickname', $nickname)) {
+        if (false === $member->where('id=' . $this->userService->getUserId())->setField('nickname', $nickname)) {
             Log::write('保存昵称失败：' . $member->getLastSql(), Log::SQL);
             echo "保存昵称失败！";
         } else {
@@ -559,9 +559,9 @@ class MemberAction extends CommonAction {
         }
         //
         $member = M("Member");
-        $salt = $member->where('id=' . $_SESSION[C('MEMBER_AUTH_KEY')])->getField('salt');
+        $salt = $member->where('id=' .$this->userService->getUserId())->getField('salt');
         $password = md5(md5($password) . $salt);
-        if (false === $member->where('id=' . $_SESSION[C('MEMBER_AUTH_KEY')])->setField('password', $password)) {
+        if (false === $member->where('id=' .$this->userService->getUserId())->setField('password', $password)) {
             Log::write('保存密码失败：' . $member->getLastSql(), Log::SQL);
             echo "保存密码失败！";
         } else {
@@ -583,7 +583,7 @@ class MemberAction extends CommonAction {
         }
         //
         $member = M("Member");
-        if (false === $member->where('id=' . $_SESSION[C('MEMBER_AUTH_KEY')])->setField('face', $face)) {
+        if (false === $member->where('id=' . $this->userService->getUserId())->setField('face', $face)) {
             Log::write('设定头像失败：' . $member->getLastSql(), Log::SQL);
             echo "设定头像失败！";
         } else {

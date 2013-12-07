@@ -20,22 +20,13 @@ class IndexAction extends CommonAction {
 		$myareaModel = M("Myarea");
 		$scheduleModel = M("Schedule");
 
-		$user_id = intval($this->_session(C('MEMBER_AUTH_KEY')));
-		if ($user_id) {
+		if ($this->userService->isLogin()) {
+			$user_id = $this->userService->getUserId();
 			$memberModel = M("Member");
 			$mbrNow = $memberModel->where(array('id' => $user_id))->find();
 			$_SESSION['myarea_sort'] = $mbrNow['myarea_sort'] ? explode(',', $mbrNow['myarea_sort']) : '';
 			$_SESSION['app_sort'] = $mbrNow['app_sort'];
 			$_SESSION['news_history'] = explode(',',$mbrNow['news_history']);
-		} else {
-			
-			$this->get_member_guest();
-
-			if (!$_SESSION['app_sort']) {
-
-				//$_SESSION['app_sort'] = cookie('app_sort');
-			}
-
 		}
 		
 		//取出皮肤ID和模板ID
@@ -120,11 +111,11 @@ class IndexAction extends CommonAction {
 
 		$skinId = intval($this->_param('skinId'));
 
-		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
 
 		$result = true;
 
-		if ($user_id) {
+		if ($this->userService->isLogin()) {
+			$user_id = $this->userService->getUserId();
 
 			$memberModel = M("member");
 
@@ -159,11 +150,11 @@ class IndexAction extends CommonAction {
 
 		$themeId = intval($this->_param('themeId'));
 
-		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
 
 		$result = true;
 
-		if ($user_id) {
+		if ($this->userService->isLogin()) {
+			$user_id = $this->userService->getUserId();
 
 			$memberModel = M("member");
 
@@ -191,11 +182,11 @@ class IndexAction extends CommonAction {
 
 		$themeId = $this->_param('themeId');
 
-		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
 
 		$result = true;
 
-		if ($user_id) {
+		if ($this->userService->isLogin()) {
+			$user_id = $this->userService->getUserId();
 
 			$memberModel = M("member");
 
@@ -249,12 +240,15 @@ class IndexAction extends CommonAction {
 		if (empty($sort)) {
 			$sort = "csort ASC,sort ASC";
 		}
-		
-		$mid = intval($this->_session(C('MEMBER_AUTH_KEY')));
+
 		$paiLie = $this->_session('pailie');
 		
 		if (empty($paiLie)) {
-			$paiLie = empty($mid) ? M("Variable")->where("vname='pailie'")->getField("value_int") : M("Member")->where("id = '%s'", $mid)->getField('pailie');
+			if($this->userService->isLogin()){
+				$paiLie = M("Member")->where("id = '%s'", $this->userService->getUserId())->getField('pailie');
+			}else{
+				$paiLie = M("Variable")->where("vname='pailie'")->getField("value_int");
+			}
 			session('pailie', $paiLie);
 		}
 		$listRows = $paiLie == 1 ? 20 : 11;
@@ -350,10 +344,10 @@ class IndexAction extends CommonAction {
 			return false;
 		}
 		$_SESSION['pailie'] = $val;
-		$mid = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
-		if ($mid) {
+		if ($this->userService->isLogin()) {
+			$user_id = $this->userService->getUserId();
 			$member = M("Member");
-			if (false === $member->where("id = '%d'", $mid)->setField('pailie', $val)) {
+			if (false === $member->where("id = '%d'", $user_id)->setField('pailie', $val)) {
 				Log::write('设置排列失败：' . $member->getLastSql(), Log::SQL);
 				echo "设置排列失败";
 				return false;
@@ -500,7 +494,7 @@ class IndexAction extends CommonAction {
 			}
 			
 			$data['lnk_id'] = $lnk_id;
-			$data['mid'] = $_SESSION[C('MEMBER_AUTH_KEY')];
+			$data['mid'] = $this->userService->getUserId();
 			$data['comment'] = $commentData;
 			$data['ip'] = getIP();
 			$data['create_time'] = time();
@@ -525,8 +519,8 @@ class IndexAction extends CommonAction {
 	 */
 	public function search() {
 		import("@.ORG.String");
-		
-		$mid = intval($this->_session(C('MEMBER_AUTH_KEY')));
+
+		$mid = $this->userService->getUserId();
 		$paiLie = $this->_session('pailie');
 		$lan = intval($this->_param('lan'));
 		$cid = intval($this->_param('cid'));
@@ -535,7 +529,12 @@ class IndexAction extends CommonAction {
 		
 		$condition['status'] = 1;
 		if (empty($paiLie)) {
-			$paiLie = empty($mid) ? M("Variable")->where("vname = 'pailie'")->getField("value_int") : M("Member")->where("id = '%s'", $mid)->getField('pailie');
+			if($this->userService->isLogin()){
+				$paiLie = M("Member")->where("id = '%s'",$mid)->getField('pailie');
+			}else{
+				$paiLie = M("Variable")->where("vname = 'pailie'")->getField("value_int");
+
+			}
 			session('pailie', $paiLie);
 		}
 		
@@ -628,7 +627,7 @@ class IndexAction extends CommonAction {
 	 */
 	public function count_myarea_open() {
 		if ($this->isAjax()) {
-			$mid = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+			$mid = $this->userService->getUserId();
 			$myareaModel = D("Myarea");
 			$myareaModel->where("mid='%d'", $mid)->setInc("myarea_button_click_num");
 			exit(0);
@@ -709,19 +708,14 @@ class IndexAction extends CommonAction {
 	public function getSchedule() {
 		$year = intval($this->_param('year'));
 		$month = intval($this->_param('month'));
-		
-		$user_id = intval(session(C('MEMBER_AUTH_KEY')));
-		
+
 		$stauts = 1;
 		$data  = array();
 		$nowTime = time();
 		$today = intval(date('d', $nowTime));
-		
-		if (!$user_id) {
-				
-			$user_id = $this->get_member_guest();
-		}
-		
+
+		$user_id = $this->userService->getId();
+
 		if ($user_id) {
 			$scheduleModel = M("Schedule");
 		
@@ -752,14 +746,9 @@ class IndexAction extends CommonAction {
 		$content = $this->_param('desc');
 		$datetime = intval($this->_param('time'));
 	
-		$user_id = intval(session(C('MEMBER_AUTH_KEY')));
-	
 		$result = 0;
 	
-		if (!$user_id) {
-			
-			$user_id = $this->get_member_guest();
-		}
+		$user_id = $this->userService->getId();
 		
 		if ($user_id && $content) {
 			
@@ -813,8 +802,6 @@ class IndexAction extends CommonAction {
 		$content = $this->_param('desc');
 		$datetime = $this->_param('time');
 	
-		$user_id = intval(session(C('MEMBER_AUTH_KEY')));
-	
 		$result = 0;
 	
 		if ($id) {
@@ -834,10 +821,7 @@ class IndexAction extends CommonAction {
 				
 			$result = 1;
 			
-			if (!$user_id) {
-			
-				$user_id = $this->get_member_guest();
-			}
+			$user_id = $this->userService->getId();
 			
 			if ($user_id) {
 				$scheduleModel = M("Schedule");
@@ -866,18 +850,13 @@ class IndexAction extends CommonAction {
 	
 		$id = $this->_param('id');
 	
-		$user_id = intval(session(C('MEMBER_AUTH_KEY')));
-	
 		$result = 0;
 	
 		if ($id) {
 				
 			$result = 1;
 			
-			if (!$user_id) {
-			
-				$user_id = $this->get_member_guest();
-			}
+			$user_id = $this->userService->getId();
 			
 			if ($user_id) {
 	
@@ -900,16 +879,11 @@ class IndexAction extends CommonAction {
 	
 	public function getNote() {
 	
-		$user_id = intval(session(C('MEMBER_AUTH_KEY')));
-	
 		$stauts = 1;
 		$nowTime = time();
 		$today = intval(date('d', $nowTime));
 	
-		if (!$user_id) {
-	
-			$user_id = $this->get_member_guest();
-		}
+		$user_id = $this->userService->getId();
 	
 		if ($user_id) {
 			$noteModel = new NoteModel();
@@ -942,8 +916,6 @@ class IndexAction extends CommonAction {
 		$background = $this->_param('background');
 		$content = $this->_param('content');
 	
-		$user_id = intval(session(C('MEMBER_AUTH_KEY')));
-	
 		$status = 0;
 	
 	
@@ -964,10 +936,7 @@ class IndexAction extends CommonAction {
 			$saveData['background'] = $background;
 		}
 
-		if (!$user_id) {
-				
-			$user_id = $this->get_member_guest();
-		}
+		$user_id = $this->userService->getId();
 			
 		if ($user_id) {
 			
@@ -1007,16 +976,11 @@ class IndexAction extends CommonAction {
 	
 		$id = $this->_param('id');
 	
-		$user_id = intval(session(C('MEMBER_AUTH_KEY')));
-	
 		$status = 0;
 	
 		if ($id) {
 	
-			if (!$user_id) {
-					
-				$user_id = $this->get_member_guest();
-			}
+			$user_id = $this->userService->getId();
 				
 			if ($user_id) {
 	
@@ -1047,7 +1011,7 @@ class IndexAction extends CommonAction {
 	
 		$id = $this->_param('web_id');
 	
-		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+		$user_id = $this->userService->getUserId();
 	
 		$result = 0;
 	
@@ -1108,7 +1072,7 @@ class IndexAction extends CommonAction {
 		$webname = $this->_param('web_name');
 		$id = $this->_param('web_id');
 	
-		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+		$user_id = $this->userService->getUserId();
 	
 		$result = 0;
         //判断session是否为空
@@ -1198,7 +1162,7 @@ class IndexAction extends CommonAction {
 			
 			$_SESSION['myarea_sort'] = $area_list;
 				
-			$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+			$user_id = $this->userService->getUserId();
 				
 			$memberModel = M("Member");
 				
@@ -1236,7 +1200,7 @@ class IndexAction extends CommonAction {
 				
 			$_SESSION['app_sort'] = $app_sort = implode(',', $appIds);
 	
-			$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+			$user_id = $this->userService->getUserId();
 	
 			$memberModel = M("Member");
 	
@@ -1398,7 +1362,7 @@ class IndexAction extends CommonAction {
 		if(count($_SESSION['news_history']) > $historyCount){
 			$_SESSION['news_history'] = array_slice($_SESSION['news_history'],-1 * $historyCount);
 			//重新更新用户浏览历史记录
-			$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+			$user_id = $this->userService->getUserId();
 			if($user_id){
 				$memberModel =  M("Member");
 				$memberModel->where(array('id' => $user_id))->save(array('news_history' => implode(',', $_SESSION['news_history'])));
@@ -1590,7 +1554,7 @@ class IndexAction extends CommonAction {
 		$type = $this->_param('type');
 		//记录用户操作
 		//重新更新用户浏览历史记录
-		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+		$user_id = $this->userService->getUserId();
 		if($user_id){
 			$memberModel = M("Member");
 			$mbrNow = $memberModel->where(array('id' => $user_id))->find();

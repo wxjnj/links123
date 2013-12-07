@@ -61,7 +61,7 @@ class SuggestionAction extends CommonAction {
 			$data['is_reply'] = 1;
 			$operate = "点评";
 		}
-		$data['mid'] = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+		$data['mid'] = $this->userService->getUserId();
 		$data['suggest'] = $suggest;
 		$data['create_time'] = time();
 		
@@ -90,7 +90,7 @@ class SuggestionAction extends CommonAction {
 			$id = intval($this->_param('id'));
 			$content = stripslashes($_POST['content']);
 			
-			$mid = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+			$mid = $this->userService->getUserId();
 			
 			$data['id'] = $id;
 			$data['create_time'] = time();

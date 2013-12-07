@@ -23,7 +23,7 @@ class CommentAction extends CommonAction
 	public function index()
 	{
 		$this->checkLog();
-		$mid = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+		$mid = $this->userService->getUserId();
 		
 		$rid = $this->_param('rid');
 		$pg = intval($this->_param(C('VAR_PAGE')));
@@ -76,7 +76,7 @@ class CommentAction extends CommonAction
 	 */
 	public function editComment() {
 		$this->checkLog();
-		$mid = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+		$mid = $this->userService->getUserId();
 		$id = intval($this->_param('id'));
 		$comment = htmlspecialchars(trim($this->_param('comment')));
 		if (empty($id)) {

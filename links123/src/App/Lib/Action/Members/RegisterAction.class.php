@@ -16,8 +16,7 @@ class RegisterAction extends CommonAction
 	 */
 	public function index()
 	{
-		$mid = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
-		if ($mid) {
+		if ($this->userService->isLogin()) {
 			header("Location: " . __APP__ . "/");
 			exit(0);
 		}

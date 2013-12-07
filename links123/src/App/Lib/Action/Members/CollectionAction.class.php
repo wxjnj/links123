@@ -27,7 +27,7 @@ class CollectionAction extends CommonAction
 			$this->assign('rid', $rid);
 		}
 		
-		$mid = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+		$mid = $this->userService->getUserId();
 		$mbrNow = M("Member")->getById($mid);
 		$condition['mid'] = $mid;
 		
@@ -74,7 +74,7 @@ class CollectionAction extends CommonAction
 		$collection = M("Collection");
 		$data = array();
 		$data['link'] = $link;
-		$data['mid'] = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+		$data['mid'] = $this->userService->getUserId();
 		
 		if ($collection->where($data)->find()) {
 			echo "已经收藏过了！";
@@ -112,7 +112,7 @@ class CollectionAction extends CommonAction
 		
 		$collection = M("Collection");
 		$condition['lnk_id'] = $lnkId;
-		$condition['mid'] = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+		$condition['mid'] = $this->userService->getUserId();
 	
 		if (!$collection->where($condition)->find()) {
 			echo "无此收藏！";
