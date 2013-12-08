@@ -439,52 +439,31 @@ class MemberAction extends CommonAction {
     // 用户登录
     public function checklogin() {
         //
-        $member = M("Member");
-        $mbrNow = $member->where('nickname = \'' . $_POST['username'] . '\' or email = \'' . $_POST['username'] . '\'')->find();
-        if (!$mbrNow) {
-            echo "无此用户！";
-            return false;
-        } else {
-            if ($mbrNow['status'] == -1) {
-                echo "已禁用！";
-                return false;
-            }
-        }
-        //
-        $password = md5(md5($_POST['password']) . $mbrNow['salt']);
-        if ($password != $mbrNow['password']) {
-            echo "密码错误！";
-            return false;
-        }
-        //
-        $_SESSION[C('MEMBER_AUTH_KEY')] = $mbrNow['id'];
-        $_SESSION['nickname'] = $mbrNow['nickname'];
-        $_SESSION['face'] = $mbrNow['face'];
-        if (empty($_SESSION['face'])) {
-            $_SESSION['face'] = "face.jpg";
-        }
-        //使用cookie过期时间来控制前台登陆的过期时间
-        $home_session_expire = D("Variable")->getVariable("home_session_expire");
-        cookie(md5("home_session_expire") , time() , $home_session_expire);
-        //如果选中下次自动登录，记录用户信息
-        if (intval($_POST['auto_login']) == 1) {
-            $str = $mbrNow['id'] . "|" . md5($mbrNow['password'] . $mbrNow['nickname']);
-            $auto_login_time = D("Variable")->getVariable("auto_login_time");
-            $auto_login_time = intval($auto_login_time) > 0 ? $auto_login_time : 60 * 60 * 24 * 7;
-            cookie("USER_ID", $str, $auto_login_time);
-        }
-
-        //
-        echo "loginOK";
+		$result = $this->userService->login($_POST['username'],$_POST['password'],$_POST['auto_login']);
+		switch($result){
+			case true:
+				echo "loginOK";
+				return true;
+			case -1:
+				echo '用户名有不法字符';
+				break;
+			case -2:
+				echo '无此用户！';
+				break;
+			case -3:
+				echo '已禁用！';
+				break;
+			case -4:
+				echo '密码错误';
+				break;
+		}
+		return false;
     }
 
     // 登出
     public function logout() {
         //
-        unset($_SESSION[C('MEMBER_AUTH_KEY')]);
-        unset($_SESSION['nickname']);
-        unset($_SESSION['face']);
-        cookie("USER_ID", null);//退出清除下次自动登录
+		$this->userService->logout();
         //
         header("Location: " . $_SERVER["HTTP_REFERER"]); //退出后刷新页面
 //        header("Location: " . __APP__ . "/");

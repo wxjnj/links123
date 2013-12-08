@@ -8,7 +8,7 @@
 	<meta name="Description" content="{$description}" />
 	<link rel="stylesheet" href="__STATIC__/min/?b=v303b/css&f=base.css,css.min.css" />
 	<link rel="stylesheet" href="__STATIC__/v303b/skins/{$theme}/style.css" id="J_Skins" />
-	<script>var $CONFIG = { 'STATIC': '__STATIC__','APP' : '__APP__/', 'URL' : '__URL__', 'PUBLIC' : '__PUBLIC__', 'IsLogin' : <empty name="_SESSION[C('MEMBER_AUTH_KEY')]">1<else />0</empty> };</script>
+	<script>var $CONFIG = { 'STATIC': '__STATIC__','APP' : '__APP__/', 'URL' : '__URL__', 'PUBLIC' : '__PUBLIC__', 'IsLogin' : <empty name="isLogin">1<else />0</empty> };</script>
 
 	<script>
 	//百度统计
@@ -38,7 +38,7 @@
 			<li><a href="{:U('/Suggestion')}" target="_blank">留言板</a></li>
 		</ul>
 		<div class="uc">
-			<empty name="_SESSION[C('MEMBER_AUTH_KEY')]">
+			<empty name="user_id">
 				<a class="login J_SignIn" href="javascript:;">登&nbsp;录</a>
 				<a class="join J_SignUp" href="javascript:;">注&nbsp;册</a>
 				<else />

@@ -53,7 +53,7 @@ class CommonAction extends Action {
 	 * @return boolean
 	 */
 	protected function checkLog($ajax = 0) {
-		if ($this->userService->isLogin()) {
+		if (!$this->userService->isLogin()) {
 			
 			echo $ajax ? "请先登录！" : header("Location: " . __APP__ . "/");
 			exit(0);

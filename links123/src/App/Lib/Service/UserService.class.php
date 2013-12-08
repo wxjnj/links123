@@ -324,7 +324,61 @@ class UserService{
 	 * @return boolen
 	 */
 	public function login($username,$password,$autologin){
+		if (checkEmail($username)) {
+			$param = 'email';
+		} else if (checkName($username)) {
+			$param = 'nickname';
+		} else {
+			//echo json_encode(array("code"=>501, "content" => "用户名有不法字符"));
+			//return false;
+			return -1;
+		}
+		$member = M("Member");
+		$mbrNow = $member->where("$param = '%s'", $username)->find();
 
+		if (empty($mbrNow)) {
+			//echo json_encode(array("code"=>502, "content" => "用户名不存在"));
+			//return false;
+			return -2;
+		}
+		if ($mbrNow['status'] == -1) {
+			//echo json_encode(array("code"=>403, "content" => "已禁用！"));
+			//return false;
+			return -3;
+		}
+
+		$password = md5(md5($password).$mbrNow['salt']);
+		if ($password != $mbrNow['password']) {
+			// 用户登录输入错误密码次数计数
+			//isset($_SESSION['userLoginCounterPaswd']) ? $_SESSION['userLoginCounterPaswd']++ : $_SESSION['userLoginCounterPaswd'] = 1;
+
+			//if ($_SESSION['userLoginCounterPaswd'] > 2){    // 输入错误密码次数超过2次给用户不同的提示信息
+			//	echo json_encode(array("code"=>504, "content" => "建议检查用户名是否正确"));
+			//}
+			//else {
+			//	echo json_encode(array("code"=>503, "content" => "密码与用户名不符"));
+			//}
+			return -4;
+		}
+		$_SESSION[C('MEMBER_AUTH_KEY')] = $mbrNow['id'];
+		$_SESSION['nickname'] = $mbrNow['nickname'];
+		$_SESSION['face'] = empty($mbrNow['face']) ? 'face.jpg' : $mbrNow['face'];
+		$_SESSION['skinId'] = $mbrNow['skin'];
+		$_SESSION['themeId'] = $mbrNow['theme'];
+		$_SESSION['myarea_sort'] = $mbrNow['myarea_sort'] ? explode(',', $mbrNow['myarea_sort']) : '';
+		$str = $mbrNow['id'] . "|" . md5($mbrNow['password'] . $mbrNow['nickname']);
+		cookie(md5(C('MEMBER_AUTH_KEY')), $str, intval(D("Variable")->getVariable("home_session_expire")));//设置cookie记录用户登录信息，提供给英语角同步登录 Adam 2013.09.27 @todo 安全性，下一步进行单点登录优化
+
+		//使用cookie过期时间来控制前台登陆的过期时间
+		cookie(md5('home_session_expire'), time(), intval(D("Variable")->getVariable("home_session_expire")));
+
+		//如果选中下次自动登录，记录用户信息
+		if (intval($autologin) == 1) {
+			$str = $mbrNow['id'] . "|" . md5($mbrNow['password'] . $mbrNow['nickname']);
+			$auto_login_time = intval(D("Variable")->getVariable("auto_login_time"));
+			cookie("USER_ID", $str, $auto_login_time ? : 60*60*24*7);
+		}
+		return 1;
 	}
 
 	/**
@@ -332,7 +386,13 @@ class UserService{
 	 * @return boolen
 	 */
 	public function logout(){
-
+		unset($_SESSION[C('MEMBER_AUTH_KEY')]);
+		unset($_SESSION['nickname']);
+		unset($_SESSION['face']);
+		session_destroy();
+		cookie(md5(C('MEMBER_AUTH_KEY')), null);//设置cookie记录用户登录信息，提供给英语角同步登录 Adam 2013.09.27 @todo 安全性，下一步进行单点登录优化
+		cookie("USER_ID", null);//退出清除下次自动登录
+		return true;
 	}
 
 	/**
@@ -344,6 +404,54 @@ class UserService{
 	 */
 	public function regist($username,$email,$password){
 
+		$member = M("Member");
+
+		if ($member->where("nickname = '%s'", $username)->select()) {
+			//echo '该昵称已注册过';
+			//return false;
+			return -1;
+		}
+
+		if ($member->where("email = '%s'", $email)->select()) {
+			//echo '该邮箱已注册过';
+			//return false;
+			return -2;
+		}
+
+		import("@.ORG.String");
+		$data['nickname'] = $username;
+		$data['email'] = $email;
+		$data['salt'] = String::randString();
+		$data['password'] = md5(md5($password) . $data['salt']);
+		$data['status'] = 1;
+		$data['create_time'] = time();
+
+		if (false !== $member->add($data)) {
+			$_SESSION[C('MEMBER_AUTH_KEY')] = $member->getLastInsID();
+			$_SESSION['nickname'] = $username;
+			$_SESSION['face'] = 'face.jpg';
+			//给新增用户添加默认自留地
+			$myareaModel = D("Myarea");
+			$default_myarea = $myareaModel->field("web_name, url, sort")->where("mid = 0")->Group("url")->order("sort ASC")->limit(30)->select();
+
+			foreach ($default_myarea as $value) {
+				$value['create_time'] = &$data['create_time'];
+				$value['mid'] = &$_SESSION[C('MEMBER_AUTH_KEY')];
+				$myareaModel->add($value);
+			}
+
+			$home_session_expire = intval(D("Variable")->getVariable("home_session_expire"));
+			cookie(md5("home_session_expire"), time(), $home_session_expire);
+
+			$str = $_SESSION[C('MEMBER_AUTH_KEY')] . "|" . md5($data['password'] . $data['nickname']);
+			cookie(md5(C('MEMBER_AUTH_KEY')), $str, intval(D("Variable")->getVariable("home_session_expire")));//设置cookie记录用户登录信息，提供给英语角同步登录 Adam 2013.09.27 @todo 安全性，下一步进行单点登录优化
+
+			//echo "regOK";
+			return 1;
+		} else {
+			Log::write('会员注册失败：' . $member->getLastSql(), Log::SQL);
+			return -3;
+		}
 	}
 
 	/**
@@ -412,5 +520,6 @@ class UserService{
 		return array($time,$this->user_cache[$key]);
 	}
 	private function get($url){
+
 	}
 }
