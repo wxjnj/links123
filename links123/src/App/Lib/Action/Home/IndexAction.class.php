@@ -20,8 +20,8 @@ class IndexAction extends CommonAction {
 		$myareaModel = M("Myarea");
 		$scheduleModel = M("Schedule");
 
-		if ($this->userService->isLogin()) {
-			$user_id = $this->userService->getUserId();
+		$user_id = $this->userService->getUserId();
+		if ($user_id) {
 			$memberModel = M("Member");
 			$mbrNow = $memberModel->where(array('id' => $user_id))->find();
 			$_SESSION['myarea_sort'] = $mbrNow['myarea_sort'] ? explode(',', $mbrNow['myarea_sort']) : '';
