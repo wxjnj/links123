@@ -1103,8 +1103,10 @@ $( function($) {
 					url: 'http://www.yinyuetai.com/baidu/hao123'
 				},{
 					id: 'st',
-					name: 'SongTaste',
-					url: 'http://www.songtaste.com/radio.php'
+					//name: 'SongTaste',
+					//url: 'http://www.songtaste.com/radio.php'
+					name: '酷狗FM',
+					url: 'http://topic.kugou.com/radio/'
 				}
 			];
 
