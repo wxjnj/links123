@@ -849,10 +849,17 @@ margin-left: 5px;}
 		margin: 0 auto;
 	}
 
+
 .widescreen .thl{
-		margin-left: 400px; 
-	 	width: 460px;
-	}
+		/*margin-left: 400px; */
+	 width: 460px;
+	left: 50%;
+	margin-left: -230px;
+}
+.normalscreen .thl {
+	margin-left: -300px;
+}
+
 .widescreen .thl .ctls .ipt{
     width: 415px;
   }
