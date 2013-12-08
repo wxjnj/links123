@@ -48,6 +48,10 @@ class UserService{
 	 * mark标记常量
 	 */
 	/**
+	 * 重置标记
+	 */
+	const MARK_CLEAN = 0;
+	/**
 	 * 新增标记
 	 */
 	const MARK_INSERT = 1;
@@ -126,6 +130,7 @@ class UserService{
 			if($this->getMark($flag,self::MARK_UPDATE)){
 				$value = $this->getSession($flag);
 				$this->setVar($key,$value);
+				$this->cleanMark($flag,self::MARK_CLEAN);
 			}else{
 				//获取数据
 			}
@@ -180,6 +185,7 @@ class UserService{
 			list($time,$value) = $this->_getCache($this->getSessionId().$flag);
 			//同步游客缓存到用户缓存，并同步同样的失效时间
 			$this->_setCache($userId.$flag,$value,$time - time());
+			$this->cleanMark($flag,self::MARK_CLEAN);
 		}else{
 			list($time,$value) = $this->_getCache($userId.$flag);
 		}
@@ -192,6 +198,7 @@ class UserService{
 	 * @return boolen
 	 */
 	public function setMark($key,$mark){
+		if($mark == self::MARK_CLEAN) return $this->cleanMark($key);
 		//对于登录用户，无须设置同步标记
 		if($this->isLogin()) return true;
 		$flag = '@mark.'.$key;
@@ -215,6 +222,23 @@ class UserService{
 			return $statusInt;
 		}else{
 			return $this->judgeMark($statusInt,$mark);
+		}
+	}
+
+	/**
+	 * @desc 清除设定的状态，在同步后需自行调用
+	 * @param $key
+	 * @param $mark
+	 * @return boolen
+	 */
+	public function cleanMark($key,$mark=self::MARK_CLEAN){
+		$flag = '@mark.'.$key;
+		if($mark == self::MARK_CLEAN){//清除全部状态
+			return $this->setSession($flag,self::MARK_CLEAN);
+		}else{
+			$statusInt = $this->getSession($flag);
+			if(!$statusInt) return true;
+			return $this->setSession($flag,$statusInt & 1 << $mark-1 ^ $statusInt);
 		}
 	}
 
