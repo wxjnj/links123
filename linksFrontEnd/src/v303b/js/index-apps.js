@@ -1103,7 +1103,7 @@ $( function($) {
 					url: 'http://www.yinyuetai.com/baidu/hao123'
 				},{
 					id: 'st',
-					name: 'SongTest',
+					name: 'SongTaste',
 					url: 'http://www.songtaste.com/radio.php'
 				}
 			];

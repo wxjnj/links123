@@ -118,9 +118,9 @@
     border-width: 13px
 }
 .app-icon-list .ang-back {
-    border-color: transparent transparent #bbb;
+    border-color: #bbb transparent transparent;
     right: 15px;
-    top: -27px;
+    top: 271px;
     border-width: 13px
 }
 

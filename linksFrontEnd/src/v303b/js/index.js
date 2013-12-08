@@ -167,7 +167,7 @@ $(function() {
 			var has = [];
 			var unique = {};
 			if(!ks) ks = [];
-			$.each(ks, function(k, v){
+			$.each(ks, function(k, v) {
 				v = decodeURIComponent(v);
 				if(v.indexOf(cur) >= 0){
 					has.push({
@@ -177,7 +177,7 @@ $(function() {
 				}
 			});
 			this.hasLength = has.length;
-			$.each(data, function(k, v){
+			$.each(data, function(k, v) {
 				if(!unique[v.tag]) has.push(v);
 			});
 			//data = has.concat(data);
@@ -213,7 +213,7 @@ $(function() {
 		Calendar.ReInit();
 	});
 
-	(function(){ //app图标相关
+	(function() { //app图标相关
 		var nmlLen = 9, wideLen = 10;
 		var appsList = $('#J_Apps>li');
 
@@ -245,13 +245,13 @@ $(function() {
 			});*/
 		}
 		appPkg(-1);
-		$('body').on('screenchange', function(){
+		$('body').on('screenchange', function() {
 			$('#J_Apps_more_list').find('li').appendTo('#J_Apps');
 			appPkg(-1);
 		});
-		$('.app-more').on('mouseenter', function(){
+		$('.app-more').on('mouseenter', function() {
 			$('.app-more-box').show();
-		}).on('mouseleave', function(){
+		}).on('mouseleave', function() {
 			$('.app-more-box').hide();
 		});
 	})();
