@@ -18,7 +18,7 @@ class RecommendAction extends CommonAction
 	public function index()
 	{
 		$this->checkLog();
-		$mid = $_SESSION[C('MEMBER_AUTH_KEY')];
+		$mid = $this->userService->getUserId();
 		$rid = intval($_REQUEST['rid']);
 		$pg = intval($_REQUEST[C('VAR_PAGE')]);
 		

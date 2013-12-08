@@ -25,9 +25,9 @@ class DemoAction extends CommonAction {
 		//自留地
 		$myareaModel = M("Myarea");
 		$scheduleModel = M("Schedule");
-		
-		$user_id = intval($this->_session(C('MEMBER_AUTH_KEY')));
-		if ($user_id) {
+
+		if ($this->userService->isLogin()) {
+			$user_id = $this->userService->getUserId();
 			$memberModel = M("Member");
 			$mbrNow = $memberModel->where(array('id' => $user_id))->find();
 			$_SESSION['myarea_sort'] = $mbrNow['myarea_sort'] ? explode(',', $mbrNow['myarea_sort']) : '';
@@ -134,12 +134,12 @@ class DemoAction extends CommonAction {
 	
 		$content = $this->_param('content');
 		$datetime = $this->_param('datetime');
-		
-		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
 	
 		$result = 0;
 	
-		if ($user_id) {
+		if ($this->userService->isLogin()) {
+
+			$user_id = $this->userService->getUserId();
 			$scheduleModel = M("Schedule");
 				
 			$now = time();
@@ -193,8 +193,6 @@ class DemoAction extends CommonAction {
 		$id = $this->_param('id');
 		$content = $this->_param('content');
 		$datetime = $this->_param('datetime');
-		
-		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
 	
 		$result = 0;
 	
@@ -219,7 +217,9 @@ class DemoAction extends CommonAction {
 			
 			$result = 1;
 			
-			if ($user_id) {
+			if ($this->userService->isLogin()) {
+
+				$user_id = $this->userService->getUserId();
 				$scheduleModel = M("Schedule");
 					
 				if (false === $scheduleModel->where(array('id' => $id, 'mid' => $user_id))->save($saveData)) {
@@ -247,15 +247,15 @@ class DemoAction extends CommonAction {
 
 		$id = $this->_param('id');
 		
-		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
-		
 		$result = 0;
 		
 		if ($id) {
 			
 			$result = 1;
 			
-			if ($user_id) {
+			if ($this->userServcie->isLogin()) {
+
+				$user_id = $this->userService->getUserId();
 				
 				$scheduleModel = M("Schedule");
 				
@@ -286,12 +286,12 @@ class DemoAction extends CommonAction {
 
 		$id = $this->_param('web_id');
 		
-		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
-		
 		$result = 0;
 		
 		if ($id) {
-			if ($user_id) {
+			if ($this->userService->isLogin()) {
+
+				$user_id = $this->userService->getUserId();
 				
 				$memberModel = M("Member");
 				
@@ -329,11 +329,11 @@ class DemoAction extends CommonAction {
 		$webname = $this->_param('web_name');
 		$id = $this->_param('web_id');
 	
-		$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
-	
 		$result = 0;
 	
-		if ($user_id) {
+		if ($this->userService->isLogin()) {
+
+			$user_id = $this->userService->getUserId();
 			$myarea = M("Myarea");
 			$memberModel =  M("Member");
 				
@@ -397,11 +397,11 @@ class DemoAction extends CommonAction {
 			
 			$_SESSION['myarea_sort'] = $area_list;
 			
-			$user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
-			
 			$memberModel = M("Member");
 			
-			if ($user_id) {
+			if ($this->userService->isLogin()) {
+
+				$user_id = $this->userService->getUserId();
 	
 				$memberModel->where(array('id' => $user_id))->save(array('myarea_sort' => implode(',', $area_list)));
 			

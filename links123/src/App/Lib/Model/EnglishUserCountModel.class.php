@@ -53,13 +53,13 @@ class EnglishUserCountModel extends CommonModel {
         }
         //
         //游客对应游客信息统计表english_tourist_count
-        if (!isset($_SESSION[C('MEMBER_AUTH_KEY')]) || intval($_SESSION[C('MEMBER_AUTH_KEY')]) <= 0) {
-            $map['user_id'] = intval(cookie('english_tourist_id')); //从cookie获取游客id
+        if (!$this->userService->isLogin()) {
+            $map['user_id'] = $this->userService->getGuestId();//intval(cookie('english_tourist_id')); //从cookie获取游客id
             if ($map['user_id'] > 0) {
                 $user_count_info = D("EnglishTouristCount")->where($map)->find();
             }
         } else {
-            $map['user_id'] = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+            $map['user_id'] = $this->userService->getUserId();
             if ($map['user_id'] > 0) {
                 $user_count_info = $this->where($map)->find();
             }
@@ -132,13 +132,13 @@ class EnglishUserCountModel extends CommonModel {
         }
         //
         //游客对应游客信息统计表english_tourist_count
-        if (!isset($_SESSION[C('MEMBER_AUTH_KEY')]) || intval($_SESSION[C('MEMBER_AUTH_KEY')]) <= 0) {
-            $map['user_id'] = intval(cookie('english_tourist_id')); //从cookie获取游客id
+        if (!$this->userService->isLogin()) {
+            $map['user_id'] = $this->userService->getGuestId();//intval(cookie('english_tourist_id')); //从cookie获取游客id
             if ($map['user_id'] > 0) {
                 $user_count_info = D("EnglishTouristCount")->where($map)->find();
             }
         } else {
-            $map['user_id'] = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+            $map['user_id'] = $this->userService->getUserId();
             if ($map['user_id'] > 0) {
                 $user_count_info = $this->where($map)->find();
             }
@@ -213,8 +213,8 @@ class EnglishUserCountModel extends CommonModel {
         $map['difficulty'] = intval($user_count_info['difficulty']);
         //
         //游客对应游客信息统计表english_tourist_count
-        if (intval($_SESSION[C('MEMBER_AUTH_KEY')]) <= 0) {
-            $map['user_id'] = intval(cookie('english_tourist_id')); //从cookie获取游客id
+        if (!$this->userService->isLogin()) {
+            $map['user_id'] = $this->userService->getGuestId();//intval(cookie('english_tourist_id')); //从cookie获取游客id
             if ($map['user_id'] > 0) {
                 $englishTouristCountModel = D("EnglishTouristCount");
                 $ret = $englishTouristCountModel->where($map)->save($user_count_info); //如果存在修改记录
@@ -226,7 +226,7 @@ class EnglishUserCountModel extends CommonModel {
                 }
             }
         } else {
-            $map['user_id'] = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+            $map['user_id'] = $this->userService->getUserId();
             if ($map['user_id'] > 0) {
                 $ret = $this->where($map)->save($user_count_info); //如果存在修改记录
                 //
@@ -287,10 +287,10 @@ class EnglishUserCountModel extends CommonModel {
                 ->order("rice_sum DESC")
                 ->limit($limit)
                 ->select();
-        if (intval($_SESSION[C('MEMBER_AUTH_KEY')]) == 0) {
+        if (!$this->userService->isLogin()) {
             $list[] = $this->getNowUserCountToTop($params);
         } else {
-            $user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+            $user_id = $this->userService->getUserId();
             $user_is_in_top = false;
             foreach ($list as $value) {
                 if ($value['user_id'] == $user_id) {
@@ -326,8 +326,8 @@ class EnglishUserCountModel extends CommonModel {
         $data['updated'] = time();
         //
         //游客对应游客信息统计表english_tourist_count
-        if (!isset($_SESSION[C('MEMBER_AUTH_KEY')]) || empty($_SESSION[C('MEMBER_AUTH_KEY')])) {
-            $map['user_id'] = intval(cookie('english_tourist_id')); //从cookie获取游客id
+        if (!$this->userService->isLogin()) {
+            $map['user_id'] = $this->userService->getGuestId();//intval(cookie('english_tourist_id')); //从cookie获取游客id
             if ($map['user_id'] > 0) {
                 $englishTouristCountModel = D("EnglishTouristCount");
                 if (false === $englishTouristCountModel->where($map)->save($data)) {
@@ -335,7 +335,7 @@ class EnglishUserCountModel extends CommonModel {
                 }
             }
         } else {
-            $map['user_id'] = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+            $map['user_id'] = $this->userService->getUserId();
             if ($map['user_id'] > 0) {
                 if (false === $this->where($map)->save($data)) {
                     Log::write('重置英语角等级失败：' . $this->getLastSql(), Log::SQL);
@@ -349,9 +349,9 @@ class EnglishUserCountModel extends CommonModel {
      * 
      */
     public function getNowUserCountToTop($params) {
-        if (intval($_SESSION[C('MEMBER_AUTH_KEY')]) == 0) {
+        if (!$this->userService->isLogin()) {
             $model = D("EnglishTouristCount");
-            $params['user_id'] = intval(cookie('english_tourist_id'));
+            $params['user_id'] = $this->userService->getGuestId();//intval(cookie('english_tourist_id'));
             $ret = $model->field("SUM(rice) as rice_sum")->where($params)->find();
             $user_info = D("EnglishUserInfo")->getEnglishUserInfo();
             $ret['nickname'] = "我";
@@ -359,7 +359,7 @@ class EnglishUserCountModel extends CommonModel {
             $ret['best_level_name'] = $user_info['best_level_name'];
         } else {
             $condition = array();
-            $condition['user_count_info.user_id'] = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+            $condition['user_count_info.user_id'] = $this->userService->getUserId();
             if (intval($params['voice']) > 0) {
                 $condition['user_count_info.voice'] = $params['voice'];
             }

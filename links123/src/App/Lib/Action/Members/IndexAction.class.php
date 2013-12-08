@@ -18,7 +18,7 @@ class IndexAction extends CommonAction
 	public function index()
 	{
 		$this->checkLog();
-		$mid = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+		$mid = $this->userService->getUserId();
 		$mbrNow = M("Member")->getById($mid);
 		$mbrNow['face'] =  $mbrNow['face'] ? $mbrNow['face'] : 'face.jpg';
 		
@@ -44,7 +44,7 @@ class IndexAction extends CommonAction
 		$this->checkLog(1);
 		
 		$email = $this->_param('email');
-		$mid = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+		$mid = $this->userService->getUserId();
 		if (empty($email)) {
 			echo "email丢失！";
 			return false;
@@ -119,7 +119,7 @@ class IndexAction extends CommonAction
 		}
 		
 		$member = M("Member");
-		$mid = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+		$mid = $this->userService->getUserId();
 		if ($member->where("id <> '%d' and nickname = '%s'", $mid, $nickname)->find()) {
 			echo "该昵称已被使用，请换一个！";
 			return false;
@@ -144,7 +144,7 @@ class IndexAction extends CommonAction
 	public function savePassword() {
 		$this->checkLog(1);
 		$password = $this->_param('password');
-		$mid = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+		$mid = $this->userService->getUserId();
 		
 		if (empty($password)) {
 			echo "密码丢失！";
@@ -179,7 +179,7 @@ class IndexAction extends CommonAction
 		
 		$collection = M("Collection");
 		$data['link'] = $link;
-		$data['mid'] = $_SESSION[C('MEMBER_AUTH_KEY')];
+		$data['mid'] = $this->userService->getUserId();
 		
 		if ($collection->where($data)->find()) {
 			echo "已经收藏过了！";
@@ -217,7 +217,7 @@ class IndexAction extends CommonAction
 		
 		$collection = M("Collection");
 		$condition['lnk_id'] = $lnkId;
-		$condition['mid'] = $_SESSION[C('MEMBER_AUTH_KEY')];
+		$condition['mid'] = $this->userService->getUserId();
 		
 		if (!$collection->where($condition)->find()) {
 			echo "无此收藏！";
@@ -252,7 +252,7 @@ class IndexAction extends CommonAction
 			echo "头像丢失！";
 			return false;
 		}
-		$mid = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+		$mid = $this->userService->getUserId();
 		$member = M("Member");
 		if (false === $member->where("id = '%d'", $mid)->setField('face', $face)) {
 			Log::write('设定头像失败：' . $member->getLastSql(), Log::SQL);

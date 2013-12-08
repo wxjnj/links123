@@ -21,7 +21,7 @@ class SuggestionAction extends CommonAction
 	public function index()
 	{
 		$this->checkLog();
-		$mid = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+		$mid = $this->userService->getUserId();
 		$pg = $this->_param(C('VAR_PAGE'));
 		$mbrNow = M("Member")->getById($mid);
 		
@@ -67,7 +67,7 @@ class SuggestionAction extends CommonAction
 		$suggestion = M("Suggestion");
 		
 		if (empty($_POST['id'])) {
-			$_POST['mid'] = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+			$_POST['mid'] = $this->userService->getUserId();
 			$_POST['type'] = 1;
 			$_POST['create_time'] = time();
 			

@@ -54,8 +54,8 @@ class CategoryModel extends CommonModel {
         $dftPailie = $_SESSION['pailie'];
         
         if (empty($dftPailie)) {
-            if (isset($_SESSION[C('MEMBER_AUTH_KEY')])) {
-            	$dftPailie = M("Member")->where('id=' . $_SESSION[C('MEMBER_AUTH_KEY')])->getField('pailie');
+            if ($this->getMemberId()) {
+            	$dftPailie = M("Member")->where('id=' . $this->getMemberId())->getField('pailie');
             } else {
             	$dftPailie = M("Variable")->where("vname='pailie'")->getField("value_int");
             }

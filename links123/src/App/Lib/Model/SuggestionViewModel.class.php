@@ -26,6 +26,7 @@ class SuggestionViewModel extends ViewModel {
     	
     	$list = $this->where($condition)->order('create_time DESC')->limit($rst . ',' . $listRows)->select();
     	$total = count($list);
+		$userService = D('User','Service');
     	foreach ($list as $key => &$value) {
     		$list[$key]['number'] = $total - $key;
     		$reply = $this->getSuggestionReplyList($value['id']);
@@ -37,7 +38,7 @@ class SuggestionViewModel extends ViewModel {
     			$list[$key]['nickname'] = "另客";
     		} else if ($value['mid'] == 0 || empty($value['nickname'])) {
     			$list[$key]['nickname'] = "游客";
-    		} else if ($value['mid'] == $_SESSION[C('MEMBER_AUTH_KEY')]) {
+    		} else if ($value['mid'] == $userService->getUserId()) {
     			$value['editable'] = "1";
     		}
     		empty($value['face']) && $value['face'] = "face.jpg";

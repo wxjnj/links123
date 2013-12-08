@@ -1,10 +1,14 @@
 <?php
 
 class CommonModel extends Model {
+	protected $userService = null;
 
+	protected function _initialize() {
+		$this->userService = D('User','Service');
+	}
     // 获取当前用户的ID
     public function getMemberId() {
-        return isset($_SESSION[C('USER_AUTH_KEY')]) ? $_SESSION[C('USER_AUTH_KEY')] : 0;
+        return $this->userService->getUserId();
     }
 
     /**
