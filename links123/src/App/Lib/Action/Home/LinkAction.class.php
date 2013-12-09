@@ -24,7 +24,7 @@ class LinkAction extends CommonAction {
 		}
 		$flag = 0;
 		if ($mod == "myarea") {
-			$mid = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+			$mid = $this->userService->getUserId();
 			$myarea = D("Myarea");
 			$flag = $myarea->where("mid = '%d' and url = '%s'", $mid, $url)->setInc("click_num");
 		} else {

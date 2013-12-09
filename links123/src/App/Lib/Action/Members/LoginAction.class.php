@@ -16,8 +16,7 @@ class LoginAction extends CommonAction
 	 */
 	public function index()
 	{
-		$mid = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
-		if ($mid) {
+		if ($this->userService->isLogin()) {
 			header("Location: " . __APP__ . "/");
 			exit(0);
 		}
@@ -40,77 +39,49 @@ class LoginAction extends CommonAction
 	{
         $username = trim($this->_param('username'));
         $password = $this->_param('password');
-        $auto_login = $this->_param('auto_login');
+		$autologin = $this->_param('auto_login');
         $verify = trim($this->_param('verify'));
-        
-		if (checkEmail($username)) {
-			$param = 'email';
-		} else if (checkName($username)) {
-			$param = 'nickname';
-		} else {
-			echo json_encode(array("code"=>501, "content" => "用户名有不法字符"));
-			return false;
+
+		// 尝试登录超过5次，用户需要输入验证码
+		if (isset($_SESSION['userLoginCounterPaswd']) && $_SESSION['userLoginCounterPaswd'] > 5) {
+			if (empty($verify)) {
+				echo json_encode(array("code"=>505, "content" => "请输入验证码"));
+				return false;
+			}else {
+				if ($_SESSION['verify'] != md5(strtoupper($verify))) {
+					echo json_encode(array("code"=>506, "content" => "验证码错误"));
+					return false;
+				}
+			}
 		}
-		
-		$member = M("Member");
-		$mbrNow = $member->where("$param = '%s'", $username)->find();
-		
-		if (empty($mbrNow)) {
-			echo json_encode(array("code"=>502, "content" => "用户名不存在"));
-			return false;
+
+        $status = $this->userService->login($username,$password,$autologin);
+		switch($status){
+			case -1:
+				echo json_encode(array("code"=>501, "content" => "用户名有不法字符"));
+				return false;
+			case -2:
+				echo json_encode(array("code"=>502, "content" => "用户名不存在"));
+				return false;
+			case -3:
+				echo json_encode(array("code"=>403, "content" => "已禁用！"));
+				return false;
+			case -4:
+				isset($_SESSION['userLoginCounterPaswd']) ? $_SESSION['userLoginCounterPaswd']++ : $_SESSION['userLoginCounterPaswd'] = 1;
+
+				if ($_SESSION['userLoginCounterPaswd'] > 2){    // 输入错误密码次数超过2次给用户不同的提示信息
+					echo json_encode(array("code"=>504, "content" => "建议检查用户名是否正确"));
+				}
+				else {
+					echo json_encode(array("code"=>503, "content" => "密码与用户名不符"));
+				}
+				return false;
+			case 1:
+				echo json_encode(array("code"=>200, "content" => "loginOK"));
+				return true;
 		}
-        if ($mbrNow['status'] == -1) {
-			echo json_encode(array("code"=>403, "content" => "已禁用！"));
-			return false;
-		}
-		
-		$password = md5(md5($password).$mbrNow['salt']);
-		if ($password != $mbrNow['password']) {
-            // 用户登录输入错误密码次数计数
-            isset($_SESSION['userLoginCounterPaswd']) ? $_SESSION['userLoginCounterPaswd']++ : $_SESSION['userLoginCounterPaswd'] = 1;
-            
-            if ($_SESSION['userLoginCounterPaswd'] > 2){    // 输入错误密码次数超过2次给用户不同的提示信息
-                echo json_encode(array("code"=>504, "content" => "建议检查用户名是否正确"));
-            }
-            else {
-                echo json_encode(array("code"=>503, "content" => "密码与用户名不符"));
-            }
-			return false;
-		}
-        
-        // 尝试登录超过5次，用户需要输入验证码
-        if (isset($_SESSION['userLoginCounterPaswd']) && $_SESSION['userLoginCounterPaswd'] > 5) {
-            if (empty($verify)) {
-                echo json_encode(array("code"=>505, "content" => "请输入验证码"));
-                return false;
-            }
-            else {
-                if ($_SESSION['verify'] != md5(strtoupper($verify))) {
-                    echo json_encode(array("code"=>506, "content" => "验证码错误"));
-                    return false;
-                }
-            }
-            
-        }
-		
-		$_SESSION[C('MEMBER_AUTH_KEY')] = $mbrNow['id'];
-		$_SESSION['nickname'] = $mbrNow['nickname'];
-		$_SESSION['face'] = empty($mbrNow['face']) ? 'face.jpg' : $mbrNow['face'];
-		$_SESSION['skinId'] = $mbrNow['skin'];
-		$_SESSION['themeId'] = $mbrNow['theme'];
-		$_SESSION['myarea_sort'] = $mbrNow['myarea_sort'] ? explode(',', $mbrNow['myarea_sort']) : '';
-        $str = $mbrNow['id'] . "|" . md5($mbrNow['password'] . $mbrNow['nickname']);
-        cookie(md5(C('MEMBER_AUTH_KEY')), $str, intval(D("Variable")->getVariable("home_session_expire")));//设置cookie记录用户登录信息，提供给英语角同步登录 Adam 2013.09.27 @todo 安全性，下一步进行单点登录优化 
-		
-		//使用cookie过期时间来控制前台登陆的过期时间
-		cookie(md5('home_session_expire'), time(), intval(D("Variable")->getVariable("home_session_expire")));
-		
-		//如果选中下次自动登录，记录用户信息
-		if (intval($auto_login) == 1) {
-			$str = $mbrNow['id'] . "|" . md5($mbrNow['password'] . $mbrNow['nickname']);
-			$auto_login_time = intval(D("Variable")->getVariable("auto_login_time"));
-			cookie("USER_ID", $str, $auto_login_time ? : 60*60*24*7);
-		}
+		return false;
+
 		
 		//同步游客数据到用户
 // 		$member_guest_id = $this->get_member_guest();
@@ -118,7 +89,7 @@ class LoginAction extends CommonAction
 // 			$this->synchronize_schedule($mbrNow['id'], $member_guest_id);
 // 		}
 		
-		echo json_encode(array("code"=>200, "content" => "loginOK"));
+
 	}
 	
 	/**

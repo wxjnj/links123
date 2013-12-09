@@ -47,8 +47,8 @@ class EnglishRecordModel extends CommonModel {
         //游客记录的更新保存
         $map = array();
         $map['question_id'] = $question_info['id'];
-        if (!isset($_SESSION[C('MEMBER_AUTH_KEY')]) || empty($_SESSION[C('MEMBER_AUTH_KEY')])) {
-            $map['user_id'] = intval(cookie('english_tourist_id')); //从cookie获取游客id
+        if (!$this->userService->isLogin()) {
+            $map['user_id'] = $this->userService->getGuestId();//intval(cookie('english_tourist_id')); //从cookie获取游客id
             $englishTouristRecordModel = D("EnglishTouristRecord");
             $ret = $englishTouristRecordModel->where($map)->save($data); //保存游客记录
             //记录不存在的情况
@@ -63,7 +63,7 @@ class EnglishRecordModel extends CommonModel {
             }
             cookie('english_tourist_id', $map['user_id'], 60 * 60 * 24 * 30); //更新游客id到cookie
         } else {
-            $map['user_id'] = intval($_SESSION[C('MEMBER_AUTH_KEY')]); //用户id
+            $map['user_id'] = $this->getMemberId(); //用户id
             $ret = $this->where($map)->save($data); //更新记录
             //不存在记录，添加记录
             if (false !== $ret && $ret < 1) {
@@ -83,8 +83,8 @@ class EnglishRecordModel extends CommonModel {
         $record = array();
         $question_id = intval($question_id);
         $map['question_id'] = $question_id;
-        if (!isset($_SESSION[C('MEMBER_AUTH_KEY')]) || empty($_SESSION[C('MEMBER_AUTH_KEY')])) {
-            $tourist_id = intval(cookie("english_tourist_id"));
+        if (!$this->userService->isLogin()) {
+            $tourist_id = $this->userService->getGuestId();//intval(cookie("english_tourist_id"));
             $map['user_id'] = $tourist_id;
             $englishTourishRecordModel = D("EnglishTouristRecord");
             $ret = $englishTourishRecordModel->where($map)->find();
@@ -92,7 +92,7 @@ class EnglishRecordModel extends CommonModel {
                 $record = $ret;
             }
         } else {
-            $map['user_id'] = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+            $map['user_id'] = $this->userService->getUserId();
             $ret = $this->where($map)->find();
             if (false !== $ret) {
                 $record = $ret;
@@ -157,8 +157,8 @@ class EnglishRecordModel extends CommonModel {
         if (!empty($extend_condition)) {
             $map['_string'] .= $extend_condition;
         }
-        if (isset($_SESSION[C('MEMBER_AUTH_KEY')]) && intval($_SESSION[C('MEMBER_AUTH_KEY')]) > 0) {
-            $map['user_id'] = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+        if ($this->userService->isLogin()) {
+            $map['user_id'] = $this->userService->getUserId();
             $ret = $this->where($map)->select();
             if (!empty($ret) && false !== $ret) {
                 foreach ($ret as $value) {
@@ -166,7 +166,7 @@ class EnglishRecordModel extends CommonModel {
                 }
             }
         } else {
-            $map['user_id'] = intval(cookie("english_tourist_id"));
+            $map['user_id'] = $this->userService->getGuestId();//intval(cookie("english_tourist_id"));
             $englishTourishRecordModel = D("EnglishTouristRecord");
             $ret = $englishTourishRecordModel->where($map)->select();
             if (!empty($ret) && false !== $ret) {
@@ -236,8 +236,8 @@ class EnglishRecordModel extends CommonModel {
         if (!empty($extend_condition)) {
             $map['_string'] .= $extend_condition;
         }
-        if (isset($_SESSION[C('MEMBER_AUTH_KEY')]) && intval($_SESSION[C('MEMBER_AUTH_KEY')]) > 0) {
-            $map['user_id'] = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+        if ($this->userService->isLogin()) {
+            $map['user_id'] = $this->userService->getUserId();
             $ret = $this->where($map)->select();
             if (!empty($ret) && false !== $ret) {
                 foreach ($ret as $value) {
@@ -245,7 +245,7 @@ class EnglishRecordModel extends CommonModel {
                 }
             }
         } else {
-            $map['user_id'] = intval(cookie("english_tourist_id"));
+            $map['user_id'] = $this->userService->getGuestId();//intval(cookie("english_tourist_id"));
             $englishTourishRecordModel = D("EnglishTouristRecord");
             $ret = $englishTourishRecordModel->where($map)->select();
             if (!empty($ret) && false !== $ret) {
@@ -264,15 +264,15 @@ class EnglishRecordModel extends CommonModel {
      * @author Adam $date2013.6.27$
      */
     public function isUserTestQuestion($question_id) {
-        if (isset($_SESSION[C('MEMBER_AUTH_KEY')]) && !empty($_SESSION[C('MEMBER_AUTH_KEY')])) {
-            $ret = $this->where("`user_id`=" . intval($_SESSION[C('MEMBER_AUTH_KEY')]) . " AND `question_id`={$question_id}")->find();
+        if ($this->userService->isLogin()) {
+            $ret = $this->where("`user_id`=" . $this->userService->getUserId() . " AND `question_id`={$question_id}")->find();
             if (false !== $ret && !empty($ret)) {
                 $ret = true;
             } else {
                 $ret = false;
             }
         } else {
-            $ret = D("EnglishTouristRecord")->where("`user_id`=" . intval(cookie("english_tourist_id")) . " AND `question_id`={$question_id}")->find();
+            $ret = D("EnglishTouristRecord")->where("`user_id`=" . $this->userService->getGuestId() . " AND `question_id`={$question_id}")->find();
             if (false !== $ret && !empty($ret)) {
                 $ret = true;
             } else {
@@ -403,13 +403,13 @@ class EnglishRecordModel extends CommonModel {
                 $map['pattern'] = intval($pattern);
             }
         }
-        if (isset($_SESSION[C('MEMBER_AUTH_KEY')]) && !empty($_SESSION[C('MEMBER_AUTH_KEY')])) {
-            $map['user_id'] = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+        if ($this->userService->isLogin()) {
+            $map['user_id'] = $this->userService->getUserId();
             if ($map['user_id'] > 0) {
                 $ret = $this->where($map)->delete();
             }
         } else {
-            $map['user_id'] = intval(cookie("english_tourist_id"));
+            $map['user_id'] = $this->userService->getUserId();//intval(cookie("english_tourist_id"));
             if ($map['user_id'] > 0) {
                 $englishTouristRecordModel = D("EnglishTouristRecord");
                 $ret = $englishTouristRecordModel->where($map)->delete();

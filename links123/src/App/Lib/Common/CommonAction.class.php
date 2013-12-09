@@ -4,6 +4,7 @@
  * @author heyanlong 2013-07-30
  */
 class CommonAction extends Action {
+	protected $userService = null;
 
 	protected function _initialize() {
 		$this->_init();
@@ -18,8 +19,12 @@ class CommonAction extends Action {
 		//网站升级
 		//$this->updating();
 		//自动登录
-		$this->autoLogin();
-		
+		//$this->autoLogin();
+		//统一用户接口
+		$this->userService = D('User','Service');
+		$this->assign('isLogin',$this->userService->isLogin());
+		$this->assign('user_id',$this->userService->getUserId());
+
 		$variable = $this->_getVariable();
 		
 		//获取用户留言
@@ -48,9 +53,7 @@ class CommonAction extends Action {
 	 * @return boolean
 	 */
 	protected function checkLog($ajax = 0) {
-		$mid = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
-		
-		if (empty($mid)) {
+		if (!$this->userService->isLogin()) {
 			
 			echo $ajax ? "请先登录！" : header("Location: " . __APP__ . "/");
 			exit(0);
@@ -516,7 +519,7 @@ class CommonAction extends Action {
     
     	$theme = $themeList[$themeId];
     	
-    	return $theme ? $theme : 'dark';
+    	return $theme ? $theme : 'light';
     }
     
     /**

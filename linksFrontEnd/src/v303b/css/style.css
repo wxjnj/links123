@@ -520,7 +520,7 @@ input:focus{ outline: 0; }
 }
 .app-icon-list .app-more-box{
 	display: none;
-	top: 30px;
+	top: -285px;
 	width: 320px;
 	position: absolute;
 	z-index: 2;
@@ -542,15 +542,15 @@ input:focus{ outline: 0; }
 	overflow: hidden;
 	position: absolute;
 	border-width: 15px;
-	border-style: dashed dashed solid;
-	border-color: transparent transparent #fff;
+	border-style: solid dashed dashed;
+	border-color: #fff transparent transparent;
 	/*filter: alpha(opacity=90);
 	-moz-opacity: .9;
 	-khtml-opacity: .9;
 	opacity: .9;*/
 	right: 15px;
 	margin-left: -15px;
-	top: -25px;
+	top: 270px;
 }
 .app-icon-list ul{
 	padding: 25px;
