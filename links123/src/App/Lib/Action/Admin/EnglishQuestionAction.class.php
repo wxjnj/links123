@@ -1034,6 +1034,9 @@ class EnglishQuestionAction extends CommonAction {
             $time = time();
             Log::write("导入听力试题，时间戳：".$time, Log::INFO);
             $is_standard_excel = true;
+            $total = 0;
+            $skip_repeat = 0;
+            $success = 0;
             /**数据准备 结束$*/
             //
             //循环读取所有表,表迭代器
@@ -1135,6 +1138,7 @@ class EnglishQuestionAction extends CommonAction {
                         }
                         continue;
                     }
+                    $total++;
                     $data['cat_id'] = array();
                     //处理分类信息
                     if(!empty($data['category'])){
@@ -1205,9 +1209,11 @@ class EnglishQuestionAction extends CommonAction {
                     }
 
                     //根据问题内容、视频、科目、等级以及答案内容查询是否有重复
-                    $condition['question.content'] = array("like", $data['content']);
                     $condition['media.media_source_url'] = array("like", $media_data['media_source_url']);
-                    $condition['english_options.content'] = array("like", $data['option'][$data['answer'] - 1]);
+                    if(intval($data['answer']) > 0){
+                        $condition['english_options.content'] = array("like", $data['option'][$data['answer'] - 1]);
+                        $condition['question.content'] = array("like", $data['content']);
+                    }
                     $repeat_ret = $model->alias("question")
                             ->join(C("DB_PREFIX") . "english_media media on media.id=question.media_id")
                             ->join(C("DB_PREFIX") . "english_options english_options on question.answer=english_options.id")
@@ -1216,6 +1222,7 @@ class EnglishQuestionAction extends CommonAction {
                     //重复则跳过
                     if (false != $repeat_ret && $repeat_ret > 0) {
                         Log::write("导入听力试题，跳过重复的记录：".$data['name'], Log::INFO);
+                        $skip_repeat++;
                         continue;
                     }
                     //如果题目状态非停用，则进行视频来源是否可以解析检测 @author: slate
@@ -1422,7 +1429,7 @@ class EnglishQuestionAction extends CommonAction {
                                 Log::write("更新试题综合分类题目数量:".$categoryModel->getLastSql(), Log::INFO);
                             }
                         }
-
+                        $success++;
                     } else {
                         $model->rollback();
                         //失败提示
@@ -1433,7 +1440,7 @@ class EnglishQuestionAction extends CommonAction {
             }
 //            exit;
             $model->commit();
-            Log::write("导入成功", Log::INFO);
+            Log::write("导入成功,共".$total."个，成功".$success."个，跳过重复".$skip_repeat."个。", Log::INFO);
             die(json_encode(array("info" => "导入成功", "status" => true)));
         }
     }
