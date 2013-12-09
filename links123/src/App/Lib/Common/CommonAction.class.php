@@ -24,6 +24,9 @@ class CommonAction extends Action {
 		$this->userService = D('User','Service');
 		$this->assign('isLogin',$this->userService->isLogin());
 		$this->assign('user_id',$this->userService->getUserId());
+		$user = $this->userService->getUserInfo();
+		$this->assign('user',$user);
+
 
 		$variable = $this->_getVariable();
 		

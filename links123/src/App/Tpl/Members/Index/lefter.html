@@ -1,9 +1,9 @@
 <div class="grzx_left">
 	<div class="grzx_pic">
-		<img src="__PUBLIC__/Uploads/Faces/{$Think.session.face}" />
+		<img src="{$user.avatar}" />
 	</div>
 	<div class="clr"></div>
-	<div class="grzx_leftname">{$Think.session.nickname}</div>
+	<div class="grzx_leftname">{$user.nickname}</div>
 	<ul class="grzx_nav" id="grzx_nav">
 		<li <eq name="funcNow" value="index">class="on"</eq> ><span class="grzx_nav01"></span><a href="__APP__/Members/Index">个人中心首页</a></li>
 		<li <eq name="funcNow" value="myCollection">class="on"</eq> ><span class="grzx_nav02"></span><a href="__APP__/Members/Collection">我的收藏</a></li>

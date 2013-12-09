@@ -301,16 +301,16 @@ class UserService{
 	 * @return array
 	 */
 	public function getUserInfo(){
+		$filePath = '/Public/Uploads/Faces/';
 		if($this->isLogin()){
-			$user = array();
 			return array(
-				'user_name'=>$user['user_name'],
-				'user_avatar'=>$user['user_avatar']
+				'nickname'=>$_SESSION['nickname'],
+				'avatar'=>$filePath.$_SESSION['face']
 			);
 		}else{
 			return array(
-				'user_name'=>'游客',
-				'user_avatar'=>'face.jpg'
+				'nickname'=>'游客',
+				'avatar'=>$filePath.'face.jpg'
 			);
 		}
 

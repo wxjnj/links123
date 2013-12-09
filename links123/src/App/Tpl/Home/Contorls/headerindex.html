@@ -19,7 +19,7 @@
 							<li><a href="__APP__/Members/Login">登陆</a></li>
 							<li><a href="__APP__/Members/Register">注册</a></li>
 						<else />
-							<li><a href="__APP__/Members/Index">{$Think.session.nickname}</a></li>
+							<li><a href="__APP__/Members/Index">{$user.nickname}</a></li>
 							<li><a href="__APP__/Members/Index">个人中心</a></li>
 							<li><a href="__APP__/Members/Logout">退出</a></li>
 						</empty>
