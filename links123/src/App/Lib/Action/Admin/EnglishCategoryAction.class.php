@@ -14,7 +14,13 @@ class EnglishCategoryAction extends CommonAction{
             $map['levelname.name'] = $_REQUEST['name'];
             $param['name'] = $_REQUEST['name'];
             $this->assign("name", $_REQUEST['name']);
+        	$_SESSION['english_category_search_key'] = $_REQUEST['name'];
         }
+        $search_key = '';//搜索栏保留上次的关键字
+        if(isset($_SESSION['english_category_search_key'])){
+        	$search_key = $_SESSION['english_category_search_key'];
+        }
+        $this->assign('search_key', $search_key);
     }
     
     

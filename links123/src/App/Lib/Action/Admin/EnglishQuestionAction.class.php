@@ -32,7 +32,14 @@ class EnglishQuestionAction extends CommonAction {
     public function _filter(&$map, &$param) {
         if (isset($_REQUEST['name'])) {
             $name = ftrim($_REQUEST['name']);
+       	    $_SESSION['english_question_search_key'] = $name;
         }
+        $search_key = '';//搜索栏保留上次的关键字
+        if(isset($_SESSION['english_question_search_key'])){
+        	$search_key = $_SESSION['english_question_search_key'];
+        }
+        $this->assign('search_key', $search_key);
+        
         $attr_one = -1;
         $attr_two = 1;
         $attr_thr = -1;
