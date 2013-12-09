@@ -44,24 +44,27 @@ class IndexAction extends CommonAction
 		$this->checkLog(1);
 		
 		$email = $this->_param('email');
-		$mid = $this->userService->getUserId();
 		if (empty($email)) {
 			echo "email丢失！";
 			return false;
 		}
-		
-		$member = M("Member");
-		if ($member->where("id <> '%d' and email = '%s'", $mid, $email)->find()) {
-			echo "该email已被使用，请换一个！";
-			return false;
+		$status = $this->userService->changeEmail($email);
+		switch($status){
+			case 209:
+				echo '邮箱格式有误';
+				return false;
+			case 213:
+				echo '该email已被使用，请换一个！';
+				return false;
+			case 212:
+				echo '保存email失败！';
+				return false;
+			case 200:
+				echo 'saveOK';
+				return true;
 		}
 		
-		if (false === $member->where("id = '%d'", $mid)->setField('email', $email)) {
-			Log::write('保存email失败：' . $member->getLastSql(), Log::SQL);
-			echo "保存email失败！";
-		} else {
-			echo "saveOK";
-		}
+
 	}
 	
 	/**
@@ -117,20 +120,20 @@ class IndexAction extends CommonAction
 			echo "昵称丢失！";
 			return false;
 		}
-		
-		$member = M("Member");
-		$mid = $this->userService->getUserId();
-		if ($member->where("id <> '%d' and nickname = '%s'", $mid, $nickname)->find()) {
-			echo "该昵称已被使用，请换一个！";
-			return false;
-		}
-		
-		if (false === $member->where("id = '%d'", $mid)->setField('nickname', $nickname)) {
-			Log::write('保存昵称失败：' . $member->getLastSql(), Log::SQL);
-			echo "保存昵称失败！";
-		} else {
-			$_SESSION['nickname'] = $nickname;
-			echo "saveOK";
+		$status = $this->userService->changeNickname($nickname);echo $status;
+		switch($status){
+			case 207:
+				echo '昵称只能包含2-20个字符、数字、下划线和汉字';
+				return false;
+			case 210:
+				echo '该昵称已被使用，请换一个！';
+				return false;
+			case 212:
+				echo '保存昵称失败！';
+				return false;
+			case 200 :
+				echo 'saveOK';
+				return true;
 		}
 	}
 	
@@ -150,14 +153,17 @@ class IndexAction extends CommonAction
 			echo "密码丢失！";
 			return false;
 		}
-		$member = M("Member");
-		$salt = $member->where("id = '%d'", $mid)->getField('salt');
-		$password = md5(md5($password) . $salt);
-		if (false === $member->where("id = '%d'", $mid)->setField('password', $password)) {
-			Log::write('保存密码失败：' . $member->getLastSql(), Log::SQL);
-			echo "保存密码失败！";
-		} else {
-			echo "saveOK";
+		$status = $this->userService->changePassword($password);
+		switch($status){
+			case 208:
+				echo '密码应为6到20位数字或字母';
+				return false;
+			case 212:
+				echo '保存密码失败！';
+				return false;
+			case 200:
+				echo 'saveOK';
+				return false;
 		}
 	}
 	

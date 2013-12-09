@@ -57,16 +57,16 @@ class LoginAction extends CommonAction
 
         $status = $this->userService->login($username,$password,$autologin);
 		switch($status){
-			case -1:
+			case 202:
 				echo json_encode(array("code"=>501, "content" => "用户名有不法字符"));
 				return false;
-			case -2:
+			case 203:
 				echo json_encode(array("code"=>502, "content" => "用户名不存在"));
 				return false;
-			case -3:
+			case 204:
 				echo json_encode(array("code"=>403, "content" => "已禁用！"));
 				return false;
-			case -4:
+			case 205:
 				isset($_SESSION['userLoginCounterPaswd']) ? $_SESSION['userLoginCounterPaswd']++ : $_SESSION['userLoginCounterPaswd'] = 1;
 
 				if ($_SESSION['userLoginCounterPaswd'] > 2){    // 输入错误密码次数超过2次给用户不同的提示信息
@@ -76,7 +76,10 @@ class LoginAction extends CommonAction
 					echo json_encode(array("code"=>503, "content" => "密码与用户名不符"));
 				}
 				return false;
-			case 1:
+			case 205:
+				echo json_encode(array("code"=>502, "content" => "登录失败！"));
+				return false;
+			case 200:
 				echo json_encode(array("code"=>200, "content" => "loginOK"));
 				return true;
 		}

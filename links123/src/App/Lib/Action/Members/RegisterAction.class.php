@@ -63,16 +63,25 @@ class RegisterAction extends CommonAction
 
 		$status = $this->userService->regist($nickname,$email,$password);
 		switch($status){
-			case -1:
+			case 207:
+				echo '昵称只能包含2-20个字符、数字、下划线和汉字';
+				return false;
+			case 208:
+				echo '密码应为6到20位数字或字母';
+				return false;
+			case 209:
+				echo '请填写正确格式的Email';
+				return false;
+			case 210:
 				echo '该昵称已注册过';
 				return false;
-			case -2:
+			case 213:
 				echo '该邮箱已注册过';
 				return false;
-			case -3:
+			case 211:
 				echo "会员注册失败！";
 				return false;
-			case 1:
+			case 200:
 				echo "regOK";
 				return true;
 		}

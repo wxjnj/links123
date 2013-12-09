@@ -318,33 +318,33 @@ class UserService{
 
 	/**
 	 * @desc 登录操作接口
-	 * @param $username
+	 * @param $nickname
 	 * @param $password
 	 * @param $autologin
 	 * @return boolen
 	 */
-	public function login($username,$password,$autologin){
-		if (checkEmail($username)) {
+	public function login($nickname,$password,$autologin){
+		if (checkEmail($nickname)) {
 			$param = 'email';
-		} else if (checkName($username)) {
+		} else if (checkName($nickname)) {
 			$param = 'nickname';
 		} else {
 			//echo json_encode(array("code"=>501, "content" => "用户名有不法字符"));
 			//return false;
-			return -1;
+			return 202;
 		}
 		$member = M("Member");
-		$mbrNow = $member->where("$param = '%s'", $username)->find();
+		$mbrNow = $member->where("$param = '%s'", $nickname)->find();
 
 		if (empty($mbrNow)) {
 			//echo json_encode(array("code"=>502, "content" => "用户名不存在"));
 			//return false;
-			return -2;
+			return 203;
 		}
 		if ($mbrNow['status'] == -1) {
 			//echo json_encode(array("code"=>403, "content" => "已禁用！"));
 			//return false;
-			return -3;
+			return 204;
 		}
 
 		$password = md5(md5($password).$mbrNow['salt']);
@@ -358,7 +358,7 @@ class UserService{
 			//else {
 			//	echo json_encode(array("code"=>503, "content" => "密码与用户名不符"));
 			//}
-			return -4;
+			return 205;
 		}
 		$_SESSION[C('MEMBER_AUTH_KEY')] = $mbrNow['id'];
 		$_SESSION['nickname'] = $mbrNow['nickname'];
@@ -378,7 +378,7 @@ class UserService{
 			$auto_login_time = intval(D("Variable")->getVariable("auto_login_time"));
 			cookie("USER_ID", $str, $auto_login_time ? : 60*60*24*7);
 		}
-		return 1;
+		return 200;
 	}
 
 	/**
@@ -397,29 +397,29 @@ class UserService{
 
 	/**
 	 * @desc 注册操作接口
-	 * @param $username
+	 * @param $nickname
 	 * @param $email
 	 * @param $password
 	 * @return boolen
 	 */
-	public function regist($username,$email,$password){
+	public function regist($nickname,$email,$password){
 
 		$member = M("Member");
 
-		if ($member->where("nickname = '%s'", $username)->select()) {
+		if ($member->where("nickname = '%s'", $nickname)->select()) {
 			//echo '该昵称已注册过';
 			//return false;
-			return -1;
+			return 210;
 		}
 
 		if ($member->where("email = '%s'", $email)->select()) {
 			//echo '该邮箱已注册过';
 			//return false;
-			return -2;
+			return 213;
 		}
 
 		import("@.ORG.String");
-		$data['nickname'] = $username;
+		$data['nickname'] = $nickname;
 		$data['email'] = $email;
 		$data['salt'] = String::randString();
 		$data['password'] = md5(md5($password) . $data['salt']);
@@ -428,7 +428,7 @@ class UserService{
 
 		if (false !== $member->add($data)) {
 			$_SESSION[C('MEMBER_AUTH_KEY')] = $member->getLastInsID();
-			$_SESSION['nickname'] = $username;
+			$_SESSION['nickname'] = $nickname;
 			$_SESSION['face'] = 'face.jpg';
 			//给新增用户添加默认自留地
 			$myareaModel = D("Myarea");
@@ -447,21 +447,87 @@ class UserService{
 			cookie(md5(C('MEMBER_AUTH_KEY')), $str, intval(D("Variable")->getVariable("home_session_expire")));//设置cookie记录用户登录信息，提供给英语角同步登录 Adam 2013.09.27 @todo 安全性，下一步进行单点登录优化
 
 			//echo "regOK";
-			return 1;
+			return 200;
 		} else {
 			Log::write('会员注册失败：' . $member->getLastSql(), Log::SQL);
-			return -3;
+			return 211;
 		}
 	}
 
 	/**
+	 * 修改用户信息
+	 * @param $nickname
+	 * @param $email
+	 * @param $password
+	 */
+	public function updateUser($nickname,$email,$password){
+
+	}
+
+	/**
+	 * @desc 修改昵称接口
+	 * @param $nickname
+	 * @return mixed
+	 */
+	public function changeNickname($nickname){
+		$member = M("Member");
+		if ($member->where("id <> '%d' and nickname = '%s'", $this->user_id, $nickname)->find()) {
+			//echo "该昵称已被使用，请换一个！";
+			//return false;
+			return 210;
+		}
+
+		if (false === $member->where("id = '%d'", $this->user_id)->setField('nickname', $nickname)) {
+			Log::write('保存昵称失败：' . $member->getLastSql(), Log::SQL);
+			//echo "保存昵称失败！";
+			return 212;
+		} else {
+			$_SESSION['nickname'] = $nickname;
+			//echo "saveOK";
+			return 200;
+		}
+	}
+
+	/**
+	 * @desc 修改邮箱接口
+	 * @param $email
+	 * @return mixed
+	 */
+	public function changeEmail($email){
+		$member = M("Member");
+		if ($member->where("id <> '%d' and email = '%s'", $this->user_id, $email)->find()) {
+			//echo "该email已被使用，请换一个！";
+			//return false;
+			return 213;
+		}
+
+		if (false === $member->where("id = '%d'", $this->user_id)->setField('email', $email)) {
+			Log::write('保存email失败：' . $member->getLastSql(), Log::SQL);
+			//echo "保存email失败！";
+			return 212;
+		} else {
+			//echo "saveOK";
+			return 200;
+		}
+	}
+	/**
 	 * @desc 修改密码接口
-	 * @param $oldpassword
-	 * @param $newpassword
+	 * @param $password
 	 * @return boolen
 	 */
-	public function changePassword($oldpassword,$newpassword){
+	public function changePassword($password){
 
+		$member = M("Member");
+		$salt = $member->where("id = '%d'", $this->user_id)->getField('salt');
+		$password = md5(md5($password) . $salt);
+		if (false === $member->where("id = '%d'", $this->user_id)->setField('password', $password)) {
+			Log::write('保存密码失败：' . $member->getLastSql(), Log::SQL);
+			//echo "保存密码失败！";
+			return 212;
+		} else {
+			//echo "saveOK";
+			return 200;
+		}
 	}
 
 	/**

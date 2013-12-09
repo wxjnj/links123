@@ -441,20 +441,23 @@ class MemberAction extends CommonAction {
         //
 		$result = $this->userService->login($_POST['username'],$_POST['password'],$_POST['auto_login']);
 		switch($result){
-			case true:
+			case 200:
 				echo "loginOK";
 				return true;
-			case -1:
+			case 202:
 				echo '用户名有不法字符';
 				break;
-			case -2:
+			case 203:
 				echo '无此用户！';
 				break;
-			case -3:
+			case 204:
 				echo '已禁用！';
 				break;
-			case -4:
+			case 205:
 				echo '密码错误';
+				break;
+			case 206:
+				echo '登录失败';
 				break;
 		}
 		return false;
@@ -481,19 +484,21 @@ class MemberAction extends CommonAction {
             echo "email丢失！";
             return false;
         }
-        //
-        $member = M("Member");
-        if ($member->where('id!=' . $this->userService->getUserId() . ' and email = \'' . $email . '\'')->find()) {
-            echo "该email已被使用，请换一个！";
-            return false;
-        }
-        //
-        if (false === $member->where('id=' . $this->userService->getUserId())->setField('email', $email)) {
-            Log::write('保存email失败：' . $member->getLastSql(), Log::SQL);
-            echo "保存email失败！";
-        } else {
-            echo "saveOK";
-        }
+		$status = $this->userService->changeEmail($email);
+		switch($status){
+			case 209:
+				echo '邮箱格式有误';
+				return false;
+			case 213:
+				echo '该email已被使用，请换一个！';
+				return false;
+			case 212:
+				echo '保存email失败！';
+				return false;
+			case 200:
+				echo 'saveOK';
+				return true;
+		}
     }
 
     // 保存昵称
@@ -508,20 +513,21 @@ class MemberAction extends CommonAction {
             echo "昵称丢失！";
             return false;
         }
-        //
-        $member = M("Member");
-        if ($member->where('id!=' . $this->userService->getUserId() . ' and nickname = \'' . $nickname . '\'')->find()) {
-            echo "该昵称已被使用，请换一个！";
-            return false;
-        }
-        //
-        if (false === $member->where('id=' . $this->userService->getUserId())->setField('nickname', $nickname)) {
-            Log::write('保存昵称失败：' . $member->getLastSql(), Log::SQL);
-            echo "保存昵称失败！";
-        } else {
-            $_SESSION['nickname'] = $nickname;
-            echo "saveOK";
-        }
+		$status = $this->userService->changeNickname($nickname);echo $status;
+		switch($status){
+			case 207:
+				echo '昵称只能包含2-20个字符、数字、下划线和汉字';
+				return false;
+			case 210:
+				echo '该昵称已被使用，请换一个！';
+				return false;
+			case 212:
+				echo '保存昵称失败！';
+				return false;
+			case 200 :
+				echo 'saveOK';
+				return true;
+		}
     }
 
     // 保存密码
@@ -536,16 +542,18 @@ class MemberAction extends CommonAction {
             echo "密码丢失！";
             return false;
         }
-        //
-        $member = M("Member");
-        $salt = $member->where('id=' .$this->userService->getUserId())->getField('salt');
-        $password = md5(md5($password) . $salt);
-        if (false === $member->where('id=' .$this->userService->getUserId())->setField('password', $password)) {
-            Log::write('保存密码失败：' . $member->getLastSql(), Log::SQL);
-            echo "保存密码失败！";
-        } else {
-            echo "saveOK";
-        }
+		$status = $this->userService->changePassword($password);
+		switch($status){
+			case 208:
+				echo '密码应为6到20位数字或字母';
+				return false;
+			case 212:
+				echo '保存密码失败！';
+				return false;
+			case 200:
+				echo 'saveOK';
+				return false;
+		}
     }
 
     // 设定头像
