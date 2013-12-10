@@ -20,7 +20,7 @@ class EnglishUserRightModel extends CommonModel {
         $return['status'] = true;
         $return['right_num'] = 0;
         //更改用户做对题目的数量
-        if (!isset($_SESSION[C('MEMBER_AUTH_KEY')]) || empty($_SESSION[C('MEMBER_AUTH_KEY')])) {
+        if (!$this->userService->isLogin()) {
             $user_right_list = unserialize(cookie('english_user_right_list')); //所有答题正确数组
             $key = $question_info['voice'] . "-" . $question_info['target'] . "-" . $question_info['pattern'] . "-" . $question_info['object'] . "-" . $question_info['level']; //根据条件为键值
             //获取当前存储的值，防止为空
@@ -60,9 +60,9 @@ class EnglishUserRightModel extends CommonModel {
         } else {
             //用户是否曾经做过此题
             $englishReocrdModel = D("EnglishRecord");
-            $record = $englishReocrdModel->where("`user_id`=" . $_SESSION[C('MEMBER_AUTH_KEY')] . " AND `question_id`={$question_info['id']}")->find();
+            $record = $englishReocrdModel->where("`user_id`=" . $this->userService->getUserId() . " AND `question_id`={$question_info['id']}")->find();
             $map = array();
-            $map['user_id'] = $_SESSION[C('MEMBER_AUTH_KEY')];
+            $map['user_id'] = $this->userService->getUserId();
             $map['voice'] = $question_info['voice'];
             $map['target'] = $question_info['target'];
             $map['pattern'] = $question_info['pattern'];
@@ -138,7 +138,7 @@ class EnglishUserRightModel extends CommonModel {
      * @return int 
      */
     public function getNowUserRightNum($voice, $target, $pattern, $object, $level) {
-        if (!isset($_SESSION[C('MEMBER_AUTH_KEY')]) || empty($_SESSION[C('MEMBER_AUTH_KEY')])) {
+        if (!$this->userService->isLogin()) {
             $user_righr_list = unserialize(cookie('english_user_right_list'));
             $key = $voice . "-" . $target . "-" . $pattern . "-" . $object . "-" . $level; //根据条件为键值
             return intval($user_righr_list[$key]["right_num"]);
@@ -149,7 +149,7 @@ class EnglishUserRightModel extends CommonModel {
             $map['pattern'] = $pattern;
             $map['object'] = $object;
             $map['level'] = $level;
-            $map['user_id'] = $_SESSION[C('MEMBER_AUTH_KEY')];
+            $map['user_id'] = $this->userService->getUserId();
             $ret = $this->where($map)->getField("right_num");
             return intval($ret);
         }

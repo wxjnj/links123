@@ -25,7 +25,7 @@ class EnglishUserInfoModel extends CommonModel {
 //        exit;
         /* 初始化获取到的数据，防止数据为空 */
         //未登录游客的数据获取
-        if (!isset($_SESSION[C('MEMBER_AUTH_KEY')]) || empty($_SESSION[C('MEMBER_AUTH_KEY')])) {
+        if (!$this->userService->isLogin()) {
             $this_key = $question_info['voice'] . "-" . $question_info['target'] . "-" . $question_info['object'] . "-" . $question_info['level']; //根据条件为键值
             $data["continue_error_num"] = intval($english_user_info['right_list'][$this_key]['continue_error_num']);
             $data["continue_right_num"] = intval($english_user_info['right_list'][$this_key]['continue_right_num']);
@@ -80,7 +80,7 @@ class EnglishUserInfoModel extends CommonModel {
             $data['right_num'] = 0;
         }
         $return = $data;
-        if (!isset($_SESSION[C('MEMBER_AUTH_KEY')]) || empty($_SESSION[C('MEMBER_AUTH_KEY')])) {
+        if (!$this->userService->isLogin()) {
             $data['right_list'][$this_key]['continue_error_num'] = $data["continue_error_num"];
             $data['right_list'][$this_key]['continue_right_num'] = $data["continue_right_num"];
             $data['right_list'][$this_key]['continue_error_num'] = $data["continue_error_num"];
@@ -95,7 +95,7 @@ class EnglishUserInfoModel extends CommonModel {
         } else {
             $data['update'] = time();
             $map = array();
-            $map['user_id'] = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+            $map['user_id'] = $this->userService->getUserId();
             $map['voice'] = $question_info['voice'];
             $map['target'] = $question_info['target'];
             $map['object'] = $question_info['object'];
@@ -126,10 +126,10 @@ class EnglishUserInfoModel extends CommonModel {
      */
     public function getEnglishUserInfo() {
         //游客从cookie中获取
-        if (!isset($_SESSION[C('MEMBER_AUTH_KEY')]) || intval($_SESSION[C('MEMBER_AUTH_KEY')]) <= 0) {
+        if (!$this->userService->isLogin()) {
             $english_user_info = unserialize(cookie("english_user_info"));
         } else {
-            $map['user_id'] = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+            $map['user_id'] = $this->userService->getUserId();
             $english_user_info = $this->where($map)->find(); //获取最新的用户信息
             $user_info = D("Member")->field("nickname,face")->find($map['user_id']);
             $english_user_info['nickname'] = $user_info['nickname']?$user_info['nickname']:"";
@@ -174,10 +174,10 @@ class EnglishUserInfoModel extends CommonModel {
      */
     public function saveEnglishUserInfo($english_user_info) {
         //游客保存到cookie中
-        if (intval($_SESSION[C('MEMBER_AUTH_KEY')]) <= 0) {
+        if (!$this->userService->isLogin()) {
             cookie("english_user_info", serialize($english_user_info), 60 * 60 * 24 * 30);
         } else {
-            $english_user_info['user_id'] = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+            $english_user_info['user_id'] = $this->userService->getUserId();
             $english_user_info['updated'] = time();
             $ret = $this->where("user_id={$english_user_info['user_id']}")->save($english_user_info);
             if (false !== $ret && $ret < 1) {
@@ -193,7 +193,7 @@ class EnglishUserInfoModel extends CommonModel {
     public function getEnglishUserBest() {
         $englishObjectModel = D("EnglishObject");
         $englishLevelModel = D("EnglishLevel");
-        if (!isset($_SESSION[C('MEMBER_AUTH_KEY')]) || empty($_SESSION[C('MEMBER_AUTH_KEY')])) {
+        if (!$this->userService->isLogin()) {
 //            $english_user_info = unserialize(cookie("english_user_info"));
             $english_user_right_list = unserialize(cookie("user_count_info_list")); //获取用户做题正确数记录
             //科目列表，获取科目的排序，为优先获取靠前的科目准备
@@ -254,7 +254,7 @@ class EnglishUserInfoModel extends CommonModel {
                 $low_level = $englishLevelModel->where("status=1")->order("sort asc")->find();
                 $best_level['level_id'] = $low_level['id'];
             }
-//            $user_id = $_SESSION[C('MEMBER_AUTH_KEY')];
+//            $user_id = $this->userService->getUserId();
 //            $ret = $this->where("`user_id`={$user_id}")->save(array('best_object' => $best_level['object_id'], 'best_level' => $best_level['level_id']));
 //            if (false === $ret) {
 //                Log::write("更新用户英语角最佳等级失败，SEL:" . $this->getLastSql(), Log::SQL);
@@ -285,14 +285,14 @@ class EnglishUserInfoModel extends CommonModel {
                     ->order("total_rice DESC")
                     ->limit($limit)
                     ->select();
-            if (intval($_SESSION[C('MEMBER_AUTH_KEY')]) == 0) {
+            if (!$this->userService->isLogin()) {
                 $user_count = $this->getEnglishUserInfo();
                 $user_count['rice_sum'] = $user_count['total_rice'];
                 $user_count['nickname'] = "我";
                 $user_count['face'] = "face.jpg";
                 $ret[0][] = $user_count;
             } else {
-                $user_id = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+                $user_id = $this->userService->getUserId();
                 $user_is_in_top = false;
                 foreach ($ret[0] as $value) {
                     if ($value['user_id'] == $user_id) {

@@ -130,9 +130,18 @@
 	width: 280px;
 }
 .text-news p {
-	line-height: 100%;
-	margin-bottom: 12px;
+	height: 15px;
+	line-height: 15px;
+	overflow: hidden;
+	margin-bottom: 9px;
+	word-wrap: break-word; 
+	word-break: break-all; 
 }
+
+.widescreen .text-news p {
+	margin-bottom: 10px;
+}
+
 .text-news p b {
 	display: inline-block;
 	position: relative;
@@ -153,6 +162,13 @@
 .text-news .more-news {
 	text-align: right;
 }
+.text-news .more-news {
+    margin-top: 18px;
+}
+.widescreen .text-news .more-news {
+    margin-top: 25px;
+}
+
 .text-news .more-news a,
 .text-news .more-news a:active {
 	margin-top: 15px;

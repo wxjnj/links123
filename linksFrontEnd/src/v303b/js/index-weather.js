@@ -12,12 +12,14 @@ $(function(){
                     return;
                 }
                 $('.weather-find-region-box').show();
+                $('.header-weather').find('.region').addClass('region-active');
                 self.renderRegion();
             });
 
             $('.header-weather').find('.region').mouseleave(function(){
                 self.timer = setTimeout(function(){
                     $('.weather-find-region-box').hide();
+                    $('.header-weather').find('.region').removeClass('region-active');
                 }, 200);
             });
 
@@ -27,6 +29,7 @@ $(function(){
             }).mouseleave(function(){
                 self.timer = setTimeout(function(){
                     $('.weather-find-region-box').hide();
+                    $('.header-weather').find('.region').removeClass('region-active');
                 }, 200);
             });
 
@@ -56,7 +59,7 @@ $(function(){
             self.show(c, '', 'loading', 'loading');
 
             $.ajax({
-                url: '/Home/Weather/city?city=' + c,
+                url: '/Home/Weather/city?city=' + encodeURIComponent(c),
                 type: 'get',
                 dataType: 'json'
             }).fail(function(){

@@ -9,8 +9,7 @@
 			<volist name="vo['thlz']" id="thlz" key="j">
 				<dl>
 					<a <if condition='$thlz["id"] eq $tidNow'>class="tip light"<else />class="tip"</if> 
-						title="{$thlz['tip']}" ndk="{$thlz['needkey']}" url="{$thlz['url']}" tid="{$thlz['id']}" 
-						tag_name="{$thlz['url_tag_name']}">
+						title="{$thlz['tip']}" url="{$thlz['url']}" tid="{$thlz['id']}" >
 						{$thlz['name']}
 					</a>
 				</dl>

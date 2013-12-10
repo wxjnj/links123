@@ -118,9 +118,9 @@
     border-width: 13px
 }
 .app-icon-list .ang-back {
-    border-color: transparent transparent #bbb;
+    border-color: #bbb transparent transparent;
     right: 15px;
-    top: -27px;
+    top: 271px;
     border-width: 13px
 }
 
@@ -304,11 +304,11 @@ body {
     width: 465px;
 }
 
-.footer {
-    width: 960px;
-    margin: 50px auto 0;
-    border-top: 1px solid #919191;
-}
+
+    .site-info {
+        border-top: 1px solid #919191;
+        border-bottom: 1px solid #919191;
+    }
 
 .widescreen .footer,
 .widescreen .footer-inner  {
@@ -370,7 +370,7 @@ body {
 
 .cal-date-marks-table li .delete-btn {
     color: #fff;
-    display: inline-block;
+    display: none;
     background: url(close.png) 0 0 no-repeat;
     height: 12px;
     line-height: 12px;
@@ -383,6 +383,11 @@ body {
     text-decoration: none;
     text-align: center;
 }
+
+.cal-date-marks-table li:hover .delete-btn {
+    display: inline-block;
+}
+
 .cal-date-marks-table li .delete-btn:hover {
     background-position: 0 -12px;
 }

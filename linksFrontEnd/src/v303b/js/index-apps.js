@@ -1103,8 +1103,10 @@ $( function($) {
 					url: 'http://www.yinyuetai.com/baidu/hao123'
 				},{
 					id: 'st',
-					name: 'SongTest',
-					url: 'http://www.songtaste.com/radio.php'
+					//name: 'SongTaste',
+					//url: 'http://www.songtaste.com/radio.php'
+					name: '酷狗FM',
+					url: 'http://topic.kugou.com/radio/'
 				}
 			];
 
@@ -1113,12 +1115,12 @@ $( function($) {
 			var lis = '';
 			var divs = '';
 			$.each(self.music_channel_list, function(k, v){
-				lis += '<li><a class="normal_music_channel_btn normal_music_channel_' + v.id + '" href="javascript:;" data-url="' + v.url + '" data-channel="' + v.id + '"></a></li>'
+				lis += '<li><a class="normal_music_channel_btn normal_music_channel_' + v.id + '" title="' + v.name + '" href="javascript:;" data-url="' + v.url + '" data-channel="' + v.id + '"></a></li>'
 				divs += '<div class="mini_music_channel_btn mini_music_channel_' + v.id + '" data-url="' + v.url + '" data-channel="' + v.id + '"><b></b><span>' + v.name + '</span></div>';
 			});
 			$('.normal_music_channel_list').find('ul').html(lis);
 			$('.mini_channel_list').html(divs);
-
+			$(".normal_music_channel_btn").tipTip({maxWidth: "auto", edgeOffset: 3, defaultPosition: "right"});
 			$('#J_box_music').show();
 
 			//默认播放第一个频道

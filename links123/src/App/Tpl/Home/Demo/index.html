@@ -15,7 +15,7 @@
 			'APP' : '__APP__/',
 			'URL' : '__URL__',
 			'PUBLIC' : '__PUBLIC__',
-			'IsLogin' : <empty name="_SESSION[C('MEMBER_AUTH_KEY')]">1<else />0</empty>
+			'IsLogin' : <empty name="isLogin">1<else />0</empty>
 		};
 	</script>
 </head>
@@ -36,11 +36,11 @@
 				<li><a href="#">寻觅好友</a></li>
 			</ul>
 			<div class="uc">
-				<empty name="_SESSION[C('MEMBER_AUTH_KEY')]">
+				<empty name="user_id">
 					<a class="join J_SignUp" href="javascript:;">加入另客</a><a class="login J_SignIn" href="javascript:;">登录</a>
 				<else />
 					<div class="uc-menu">
-						<p>Hello，{$Think.session.nickname}</p>
+						<p>Hello，{$user.nickname}</p>
 						<ul>
 							<li><a target="_blank" href="/Members/Index">个人中心</a></li>
 							<li><a target="_blank" href="/Members/Collection">我的收藏</a></li>

@@ -32,7 +32,14 @@ class EnglishQuestionAction extends CommonAction {
     public function _filter(&$map, &$param) {
         if (isset($_REQUEST['name'])) {
             $name = ftrim($_REQUEST['name']);
+       	    $_SESSION['english_question_search_key'] = $name;
         }
+        $search_key = '';//搜索栏保留上次的关键字
+        if(isset($_SESSION['english_question_search_key'])){
+        	$search_key = $_SESSION['english_question_search_key'];
+        }
+        $this->assign('search_key', $search_key);
+        
         $attr_one = -1;
         $attr_two = 1;
         $attr_thr = -1;
@@ -1034,6 +1041,9 @@ class EnglishQuestionAction extends CommonAction {
             $time = time();
             Log::write("导入听力试题，时间戳：".$time, Log::INFO);
             $is_standard_excel = true;
+            $total = 0;
+            $skip_repeat = 0;
+            $success = 0;
             /**数据准备 结束$*/
             //
             //循环读取所有表,表迭代器
@@ -1135,13 +1145,15 @@ class EnglishQuestionAction extends CommonAction {
                         }
                         continue;
                     }
+                    $total++;
                     $data['cat_id'] = array();
                     //处理分类信息
                     if(!empty($data['category'])){
                         foreach ($data['category'] as $key=>$value){
                             $cat_id = 0;//本次对应的分类id
                             //@ 检查二级分类是否存在，不存在则添加类目，并添加到category表
-                            if (intval($level_name_list[$value['level_two_name']]) == 0) {
+                            $level_name_key = preg_replace("/\s+/", '', $value['level_two_name']);
+                            if (intval($level_name_list[$level_name_key]) == 0) {
                                 $new_levelname_data = array(
                                     "name" => $value['level_two_name'], 
                                     "level" => 2,
@@ -1157,7 +1169,7 @@ class EnglishQuestionAction extends CommonAction {
                                     die(json_encode(array("info" => "导入失败，新增分类名称失败！","status" => false)));
                                 }
                                 Log::write("新增levelname:".$levelnameModel->getLastSql(), Log::INFO);
-                                $level_name_list[$value['level_two_name']] = $new_id;
+                                $level_name_list[$level_name_key] = $new_id;
                             }
                             //逐一添加二级分类下的三级分类
                             //默认三级分类列表为难度列表
@@ -1170,7 +1182,7 @@ class EnglishQuestionAction extends CommonAction {
                                 $cat_data = array();
                                 $cat_data['cat_attr_id'] = $data['cat_attr_id'];
                                 $cat_data['level_one'] = $value['level_one'];
-                                $cat_data['level_two'] = $level_name_list[$value['level_two_name']];
+                                $cat_data['level_two'] = $level_name_list[$level_name_key];
                                 $cat_data['level_thr'] = $level_thr;
                                 $this_cat_id = $categoryModel->where($cat_data)->getField("cat_id");
                                 Log::write("查询【".$value['level_two_name']."】的三级分类:".$categoryModel->getLastSql(), Log::INFO);
@@ -1204,9 +1216,11 @@ class EnglishQuestionAction extends CommonAction {
                     }
 
                     //根据问题内容、视频、科目、等级以及答案内容查询是否有重复
-                    $condition['question.content'] = array("like", $data['content']);
                     $condition['media.media_source_url'] = array("like", $media_data['media_source_url']);
-                    $condition['english_options.content'] = array("like", $data['option'][$data['answer'] - 1]);
+                    if(intval($data['answer']) > 0){
+                        $condition['english_options.content'] = array("like", $data['option'][$data['answer'] - 1]);
+                        $condition['question.content'] = array("like", $data['content']);
+                    }
                     $repeat_ret = $model->alias("question")
                             ->join(C("DB_PREFIX") . "english_media media on media.id=question.media_id")
                             ->join(C("DB_PREFIX") . "english_options english_options on question.answer=english_options.id")
@@ -1215,6 +1229,7 @@ class EnglishQuestionAction extends CommonAction {
                     //重复则跳过
                     if (false != $repeat_ret && $repeat_ret > 0) {
                         Log::write("导入听力试题，跳过重复的记录：".$data['name'], Log::INFO);
+                        $skip_repeat++;
                         continue;
                     }
                     //如果题目状态非停用，则进行视频来源是否可以解析检测 @author: slate
@@ -1421,7 +1436,7 @@ class EnglishQuestionAction extends CommonAction {
                                 Log::write("更新试题综合分类题目数量:".$categoryModel->getLastSql(), Log::INFO);
                             }
                         }
-
+                        $success++;
                     } else {
                         $model->rollback();
                         //失败提示
@@ -1432,7 +1447,7 @@ class EnglishQuestionAction extends CommonAction {
             }
 //            exit;
             $model->commit();
-            Log::write("导入成功", Log::INFO);
+            Log::write("导入成功,共".$total."个，成功".$success."个，跳过重复".$skip_repeat."个。", Log::INFO);
             die(json_encode(array("info" => "导入成功", "status" => true)));
         }
     }

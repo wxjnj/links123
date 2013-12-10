@@ -77,11 +77,16 @@ a, a:hover{
     border-top: 1px solid #ddd;
 }
 
-.footer {
-    width: 960px;
-    margin: 50px auto 0;
-    border-top: 1px solid #ddd;
+
+.footer .footer-inner h5{
+    color: #fff;
 }
+
+    .site-info {
+        padding: 17px 0;
+        border-top: 1px solid #ddd;
+        border-bottom: 1px solid #ddd;
+    }
 
 .widescreen .footer,
 .widescreen .footer-inner  {
@@ -167,13 +172,25 @@ a, a:hover{
     color: #f00;
 }
 
+.footer .footer-inner .site-copyright {
+    color: #fff;
+}
+
+.text-news .more-news {
+    margin-top: 0;
+}
 
 .more-news{
-    padding-top: 30px;
+    padding-top: 18px;
 }
 .widescreen .more-news{
     padding-top: 20px;
 }
+
+.widescreen .text-news .more-news {
+    margin-top: 18px;
+}
+
 .header-weather .weather-find-region-box{ color: #000; }
 .header-weather .weather-find-region-box a{ color: #000; }
 /* 先放这吧，后期再根据调整来整理吧  */
@@ -303,7 +320,7 @@ a, a:hover{
 
 .cal-date-marks-table li .delete-btn {
     color: #fff;
-    display: inline-block;
+    display: none;
     background: url(close.png) 0 0 no-repeat;
     height: 11px;
     line-height: 11px;
@@ -316,6 +333,11 @@ a, a:hover{
     text-decoration: none;
     text-align: center;
 }
+
+.cal-date-marks-table li:hover .delete-btn {
+    display: inline-block;
+}
+
 .cal-date-marks-table li .delete-btn:hover {
     background-position: 0 -11px;
 }

@@ -9,6 +9,7 @@ $(function() {
 	HelpMouse.init();
 	Calendar.Init()
 
+	$(".tip").tipTip({maxWidth: "auto", edgeOffset: 3, defaultPosition: "top"});
 	/*
 	var musicReady = function(list){
 		new jPlayerPlaylist({
@@ -101,9 +102,31 @@ $(function() {
     	resultsClass: "ac_results_search",
 		selectFirst: false,	//默认不选择第一个
 		async: true,
+		scroll : false,
 		parse : function(data) {
-			//data -> ['', '']
-			return $.map(data, function(row) {
+			//data -> ['', ''];
+			//var ks = $.cookies.get('keywords');
+			var ks = Keywords.get();
+			var cur = $.trim($('#search_text').val()).replace('http://', '');
+			var has = [];
+			var unique = {};
+			if(!ks) ks = [];
+			$.each(ks, function(k, v){
+				v = decodeURIComponent(v);
+				if(v.indexOf(cur) >= 0){
+					has.push(v);
+					unique[v] = true;
+				}
+			});
+
+			this.hasLength = has.length;
+
+			$.each(data, function(k, v){
+				if(!unique[v]) has.push(v);
+			});
+
+			//data = has.concat(data);
+			return $.map(has, function(row) {
 				return {
 					data : row,
 					value : row,
@@ -116,61 +139,64 @@ $(function() {
 		}
 	}).result(function(e, item) {
 		$('#search_text').val(item);
-		setTimeout(function(){
+		//setTimeout(function(){
 			$("#search_text").select();
 			var keyword = $.trim($("#search_text").val());
-			$.cookies.set('keyword', keyword);
+			//$.cookies.set('keyword', keyword);
 			//保存keyword
 			keyword = keyword.replace('http://', '');
 			keyword = encodeURIComponent(keyword);
 			var url = $(".J_thlz a.on").attr("url").replace('keyword', keyword);
 			var tid = $(".J_thlz a.on").attr("tid");
 			THL.go(url, tid, keyword);
-		}, 0);
+		//}, 0);
 	});
 /**/
-/* TODO: 
-                            $( "#search_text" ).autocomplete({
-                                minLength: 1,
-                                source: function( request,response ){
-                                    $.ajax({
-										type: "POST",
-										url:"Index/searchSupplement/term/"+ encodeURIComponent($( "#search_text" ).val()),
-										dataType:"json",
-										data:request,
-										success: function( data ) {
-											response(data);
-											var dval = $("#search_text").val();
-											$.ajax({
-												type: "post",
-												url: "Index/getsession",
-												data: {"dval":dval},
-												success: function( e ){
-													if( e>0 ){
-														for(var i=0;i<e;i++){
-															$( "li" ).eq(i).css("color","#f00");
-														}
-													}
-												}
-											});
-										}
-                                    });
-                                }
-                            });
-                        function setcookie(){
-                            var name = $("#search_text").val();
-                            $.ajax({
-                                type:"POST",
-                                url:"Index/setcookie",
-                                data:{"name":name},
-                                async: false,
-                                success:function(){
-                                    return true;
-                                }
-                            });
-                        }
-*/
 
+	$("#direct_text").autocomplete("/Home/Link/tag", {
+		dataType : "json",
+		minChars : 1,
+		selectFirst: false,	//默认不选择第一个
+		async: true,
+		width : 262,
+		scroll : false,
+		matchContains : true,
+		parse : function(data) {
+			var ks = Keywords.get('tags');
+			var cur = $.trim($('#direct_text').val());
+			var has = [];
+			var unique = {};
+			if(!ks) ks = [];
+			$.each(ks, function(k, v) {
+				v = decodeURIComponent(v);
+				if(v.indexOf(cur) >= 0){
+					has.push({
+						tag: v
+					});
+					unique[v] = true;
+				}
+			});
+			this.hasLength = has.length;
+			$.each(data, function(k, v) {
+				if(!unique[v.tag]) has.push(v);
+			});
+			//data = has.concat(data);
+
+			return $.map(has, function(row) {
+				return {
+					data : row,
+					value : row.tag,
+					result : row.tag
+				};
+			});
+		},
+		formatItem : function(item) {
+			return item.tag;
+		}
+	}).result(function(e, item) {
+		$('#direct_text').val(item.tag);
+		$('#frm_drct').submit();
+	});
 
 	// 切换宽屏
 	$('.screen-change-btn').on('click', 'a', function() {
@@ -187,7 +213,7 @@ $(function() {
 		Calendar.ReInit();
 	});
 
-	(function(){ //app图标相关
+	(function() { //app图标相关
 		var nmlLen = 9, wideLen = 10;
 		var appsList = $('#J_Apps>li');
 
@@ -219,13 +245,13 @@ $(function() {
 			});*/
 		}
 		appPkg(-1);
-		$('body').on('screenchange', function(){
+		$('body').on('screenchange', function() {
 			$('#J_Apps_more_list').find('li').appendTo('#J_Apps');
 			appPkg(-1);
 		});
-		$('.app-more').on('mouseenter', function(){
+		$('.app-more').on('mouseenter', function() {
 			$('.app-more-box').show();
-		}).on('mouseleave', function(){
+		}).on('mouseleave', function() {
 			$('.app-more-box').hide();
 		});
 	})();
@@ -286,6 +312,7 @@ var ZhiDaLan = { // 直达框
 			if (tag == '' || tag == $('#direct_text').attr('txt')) {
 				return false;
 			}
+			Keywords.set(tag, 'tags');
 			$('#direct_text').select();
 		});
 	}

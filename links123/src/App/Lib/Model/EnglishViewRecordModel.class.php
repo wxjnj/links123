@@ -23,8 +23,8 @@ class EnglishViewRecordModel extends CommonModel {
     public function addRecord($question_id, $level, $object, $subject, $recommend, $difficulty = 1, $voice = 1, $target = 1, $pattern = 1, $view_type = 1) {
         $map = array();
         //游客
-        if (!isset($_SESSION[C('MEMBER_AUTH_KEY')]) || empty($_SESSION[C('MEMBER_AUTH_KEY')])) {
-            $map['user_id'] = intval(cookie('english_tourist_id')); //从cookie获取游客id
+        if (!$this->userService->isLogin()) {
+            $map['user_id'] = $this->userService->getGuestId();//intval(cookie('english_tourist_id')); //从cookie获取游客id
             //如果不存在游客id，获取最大游客id加1为新游客id
             if ($map['user_id'] == 0) {
                 $map['user_id'] = $this->getNewTouristId();
@@ -32,7 +32,7 @@ class EnglishViewRecordModel extends CommonModel {
             cookie('english_tourist_id', $map['user_id'], 24 * 60 * 60 * 30); //更新游客id到cookie
             $map['user_id'] = -$map['user_id']; //游客id在数据库表中记录为负数
         } else {
-            $map['user_id'] = intval($_SESSION[C("MEMBER_AUTH_KEY")]); //用户id为登录用户的对应用户id
+            $map['user_id'] = $this->userService->getUserId(); //用户id为登录用户的对应用户id
         }
         $map['voice'] = intval($voice);
         $map['target'] = intval($target);
@@ -77,8 +77,8 @@ class EnglishViewRecordModel extends CommonModel {
     public function addViewRecord($view_type = 1, $params) {
         $map = array();
         //游客
-        if (!isset($_SESSION[C('MEMBER_AUTH_KEY')]) || empty($_SESSION[C('MEMBER_AUTH_KEY')])) {
-            $map['user_id'] = intval(cookie('english_tourist_id')); //从cookie获取游客id
+        if (!$this->userService->isLogin()) {
+            $map['user_id'] = $this->userService->getGusetId();// intval(cookie('english_tourist_id')); //从cookie获取游客id
             //如果不存在游客id，获取最大游客id加1为新游客id
             if ($map['user_id'] == 0) {
                 $map['user_id'] = $this->getNewTouristId();
@@ -86,7 +86,7 @@ class EnglishViewRecordModel extends CommonModel {
             cookie('english_tourist_id', $map['user_id'], 24 * 60 * 60 * 30); //更新游客id到cookie
             $map['user_id'] = -$map['user_id']; //游客id在数据库表中记录为负数
         } else {
-            $map['user_id'] = intval($_SESSION[C("MEMBER_AUTH_KEY")]); //用户id为登录用户的对应用户id
+            $map['user_id'] = $this->userService->getUserId(); //用户id为登录用户的对应用户id
         }
         $map['voice'] = intval($params['voice']);
         $map['target'] = intval($params['target']);
@@ -143,15 +143,15 @@ class EnglishViewRecordModel extends CommonModel {
         //
         //获取用户id
         $user_id = 0;
-        if (!isset($_SESSION[C('MEMBER_AUTH_KEY')]) || empty($_SESSION[C('MEMBER_AUTH_KEY')])) {
-            $user_id = intval(cookie('english_tourist_id')); //从cookie获取游客id
+        if (!$this->userService->isLogin()) {
+            $user_id = $this->userService->getGuestId();//intval(cookie('english_tourist_id')); //从cookie获取游客id
             //如果不存在游客id，返回空
             if ($user_id == 0) {
                 return array();
             }
             $user_id = -$user_id;
         } else {
-            $user_id = intval($_SESSION[C("MEMBER_AUTH_KEY")]); //用户id为登录用户的对应用户id
+            $user_id = $this->userService->getUserId(); //用户id为登录用户的对应用户id
         }
         //如果不存在用户id，返回空
         if ($user_id == 0) {
@@ -265,10 +265,10 @@ class EnglishViewRecordModel extends CommonModel {
         if (!empty($extend_condition)) {
             $map['_string'] .= $extend_condition;
         }
-        if (isset($_SESSION[C('MEMBER_AUTH_KEY')]) && intval($_SESSION[C('MEMBER_AUTH_KEY')]) > 0) {
-            $map['record.user_id'] = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+        if ($this->userService->isLogin()) {
+            $map['record.user_id'] = $this->userService->getUserId();
         } else {
-            $map['record.user_id'] = intval(cookie("english_tourist_id")) > 0 ? -intval(cookie("english_tourist_id")) : 0;
+            $map['record.user_id'] = $this->userService->getGuestId();//intval(cookie("english_tourist_id")) > 0 ? -intval(cookie("english_tourist_id")) : 0;
         }
         $ret = $this->alias("record")
                 ->field("record.question_id")
@@ -347,10 +347,10 @@ class EnglishViewRecordModel extends CommonModel {
         if (!empty($extend_condition)) {
             $map['_string'] .= $extend_condition;
         }
-        if (isset($_SESSION[C('MEMBER_AUTH_KEY')]) && intval($_SESSION[C('MEMBER_AUTH_KEY')]) > 0) {
-            $map['record.user_id'] = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+        if ($this->userService->isLogin()) {
+            $map['record.user_id'] = $this->userService->getUserId();
         } else {
-            $map['record.user_id'] = intval(cookie("english_tourist_id")) > 0 ? -intval(cookie("english_tourist_id")) : 0;
+            $map['record.user_id'] = $this->userService->getGusetId();// intval(cookie("english_tourist_id")) > 0 ? -intval(cookie("english_tourist_id")) : 0;
         }
         $ret = $this->alias("record")
                 ->field("record.question_id")
@@ -431,10 +431,10 @@ class EnglishViewRecordModel extends CommonModel {
         if (!empty($extend_condition)) {
             $map['_string'] .= $extend_condition;
         }
-        if (isset($_SESSION[C('MEMBER_AUTH_KEY')]) && intval($_SESSION[C('MEMBER_AUTH_KEY')]) > 0) {
-            $map['record.user_id'] = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+        if ($this->userService->isLogin()) {
+            $map['record.user_id'] = $this->userService->getUserId();
         } else {
-            $map['record.user_id'] = intval(cookie("english_tourist_id")) > 0 ? -intval(cookie("english_tourist_id")) : 0;
+            $map['record.user_id'] = $this->userService->getGuestId();//intval(cookie("english_tourist_id")) > 0 ? -intval(cookie("english_tourist_id")) : 0;
         }
         $ret = $this->alias("record")
                 ->field("record.question_id")
@@ -471,10 +471,10 @@ class EnglishViewRecordModel extends CommonModel {
         if (intval($pattern) > 0) {
             $map['media.pattern'] = intval($pattern);
         }
-        if (isset($_SESSION[C('MEMBER_AUTH_KEY')]) && intval($_SESSION[C('MEMBER_AUTH_KEY')]) > 0) {
-            $map['record.user_id'] = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+        if ($this->userService->isLogin()) {
+            $map['record.user_id'] = $this->userService->getUserId();
         } else {
-            $map['record.user_id'] = intval(cookie("english_tourist_id")) > 0 ? -intval(cookie("english_tourist_id")) : 0;
+            $map['record.user_id'] = $this->userService->getGuestId();//intval(cookie("english_tourist_id")) > 0 ? -intval(cookie("english_tourist_id")) : 0;
         }
         $ret = $this->alias("record")
                 ->field("record.question_id")

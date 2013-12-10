@@ -25,6 +25,9 @@
     text-align: left;
     color: #000;
 }
+.ac_results li:hover {
+    background-color: #EEE;
+}
 .ac_loading {
     /*background: url("images/indicator.gif") no-repeat scroll right center #FFFFFF;*/
 }
@@ -61,6 +64,9 @@
     text-align: left;
     color: #000;
 }
+.ac_results_search li:hover {
+    background-color: #EEE;
+}
 .ac_loading {
     /*background: url("images/indicator.gif") no-repeat scroll right center #FFFFFF;*/
 }
@@ -70,4 +76,9 @@
 
 .widescreen .ac_results_search {
     width: 460px!important;
+}
+
+.ac_results .userInput,
+.ac_results_search .userInput {
+    color: #cb322c;
 }

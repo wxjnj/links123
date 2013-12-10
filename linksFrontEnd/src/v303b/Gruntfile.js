@@ -20,6 +20,7 @@ module.exports = function(grunt) {
 						'css/g-theme.css',
 						'css/g-dialog.css',
 						'css/g-uc.css',
+						'css/tipTip.css',
 						//'css/slide.css',
 						'css/index-banner.css',
 						'css/index-weather.css',
@@ -37,6 +38,7 @@ module.exports = function(grunt) {
 						//'js/jquery-ui.min.js',
 						'js/jquery-ui-1.9.2.custom.min.js',
 						'js/json2.js',
+						'js/jquery.tipTip.js',
 						//'js/jquery.dropdown.js',
 						//'js/jquery.slides.js',
 						'js/jquery.autocomplete.js'

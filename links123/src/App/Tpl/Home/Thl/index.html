@@ -14,7 +14,7 @@
 			'APP' : '__APP__/',
 			'URL' : '__URL__',
 			'PUBLIC' : '__PUBLIC__',
-			'IsLogin' : <empty name="_SESSION[C('MEMBER_AUTH_KEY')]">1<else />0</empty>
+			'IsLogin' : <empty name="isLogin">1<else />0</empty>
 		};
 	</script>
   <style>
@@ -45,7 +45,7 @@
               <dl>
                 <volist name="thl_list" id="vo" key="i">
                   <dd class="J_thlz" <neq name="vo['thl']" value="$thlNow">style="display:none;"</neq> >
-                    <volist name="vo['thlz']" id="thlz" key="j"><a <if condition='$thlz["id"] eq $tidNow'>class="on"</if> href="#" title="{$thlz['tip']}" ndk="{$thlz['needkey']}" url="{$thlz['url']}" tid="{$thlz['id']}" tag_name="{$thlz['url_tag_name']}">{$thlz['name']}</a><neq name="vo['thlz_len']" value="$j">&nbsp;-&nbsp;</neq></volist>
+                    <volist name="vo['thlz']" id="thlz" key="j"><a <if condition='$thlz["id"] eq $tidNow'>class="on"</if> href="#" title="{$thlz['tip']}" url="{$thlz['url']}" tid="{$thlz['id']}">{$thlz['name']}</a><neq name="vo['thlz_len']" value="$j">&nbsp;-&nbsp;</neq></volist>
                   </dd>
                 </volist>
               </dl>

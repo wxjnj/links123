@@ -8,7 +8,7 @@
 	<meta name="Description" content="{$description}" />
 	<link rel="stylesheet" href="__STATIC__/min/?b=v303b/css&f=base.css,css.min.css" />
 	<link rel="stylesheet" href="__STATIC__/v303b/skins/{$theme}/style.css" id="J_Skins" />
-	<script>var $CONFIG = { 'STATIC': '__STATIC__','APP' : '__APP__/', 'URL' : '__URL__', 'PUBLIC' : '__PUBLIC__', 'IsLogin' : <empty name="_SESSION[C('MEMBER_AUTH_KEY')]">1<else />0</empty> };</script>
+	<script>var $CONFIG = { 'STATIC': '__STATIC__','APP' : '__APP__/', 'URL' : '__URL__', 'PUBLIC' : '__PUBLIC__', 'IsLogin' : <empty name="isLogin">1<else />0</empty> };</script>
 
 	<script>
 	//百度统计
@@ -33,18 +33,19 @@
 		</div>
 		<ul class="nav">
 			<li><a href="http://en.links123.cn/" target="_blank">另客英语</a></li>
+			<li><a href="http://classroom.links123.cn/" target="_blank">另客教室</a></li>
 			<li><a href="{:U('Home/Index/nav')}" target="_blank">另客导航</a></li>
 			<li><a href="{:U('/Suggestion')}" target="_blank">留言板</a></li>
 		</ul>
 		<div class="uc">
-			<empty name="_SESSION[C('MEMBER_AUTH_KEY')]">
+			<empty name="user_id">
 				<a class="login J_SignIn" href="javascript:;">登&nbsp;录</a>
 				<a class="join J_SignUp" href="javascript:;">注&nbsp;册</a>
 				<else />
-				<img class="uc-avatar" src="__PUBLIC__/Uploads/Faces/{$Think.session.face}" />
+				<img class="uc-avatar" src="{$user.avatar}" />
 				<div class="uc-menu">
 					<div class="nm">
-						<p>Hi，{$Think.session.nickname} <em></em></p>
+						<p>Hi，{$user.nickname} <em></em></p>
 						<span class="ang"></span>
 						<ul>
 							<li><a target="_blank" href="/Members/Index"><i></i>个人中心</a></li>
@@ -53,12 +54,6 @@
 							<li><a target="_blank" href="/Members/Comment"><i></i>我的说说</a></li>
 							<li><a href="/Members/Suggestion"><i></i>留言板</a></li>
 							<li class="logout"><a href="/Members/Logout"><i></i>退出登录</a></li>
-							<!-- 
-								<li class="person"><a target="_blank" href="#"><i class="person-icon"></i>个人信息</a></li>
-								<li><a target="_blank" href="#"><i class="private-icon"></i>隐私设置</a></li>
-								<li><a target="_blank" href="#"><i class="safe-icon"></i>安全信息设置</a></li>
-								<li class="logout"><a target="_blank" href="/Members/Logout"><i class="logout-icon"></i>退出登录</a></li>
-							 -->
 						</ul>
 					</div>
 				</div>
@@ -73,7 +68,6 @@
 				<div class="skin-list" style="display: none">
 					<span class="ang"></span>
 					<div class="skin-content">
-						<!--p style="color:#333!important;text-align:center;line-height:40px;margin-top:10px">coming soon ...</p-->
 						<div class="subpanel" id="J_skin_selection">
 							<div class="skin-types">
 								<a data-id="themes" class="J_link_skin_type">另&nbsp;客</a>
@@ -116,10 +110,7 @@
 </div><!--#header end-->
 
 <div class="container" id="container" <if condition="$skinId">style="background-image:url({$skin})"</if>>
-
 	<div class="container-inner">
-
-
 		<div class="under-header">
 			<div class="under-header-inner">
 				<div class="ci-hd J_thl_area">
@@ -138,7 +129,7 @@
 								<dl>
 									<volist name="thl_list" id="vo" key="i">
 										<dd class="J_thlz" <neq name="vo['thl']" value="$thlNow">style="display:none;"</neq> >
-										<volist name="vo['thlz']" id="thlz" key="j"><a <if condition='$thlz["id"] eq $tidNow'>class="on"</if> href="#" title="{$thlz['tip']}" ndk="{$thlz['needkey']}" url="{$thlz['url']}" tid="{$thlz['id']}" tag_name="{$thlz['url_tag_name']}">{$thlz['name']}</a><neq name="vo['thlz_len']" value="$j">-</neq></volist>
+										<volist name="vo['thlz']" id="thlz" key="j"><a class="tip <if condition='$thlz["id"] eq $tidNow'> on</if>" href="#" title="{$thlz['tip']}" url="{$thlz['url']}" tid="{$thlz['id']}">{$thlz['name']}</a><neq name="vo['thlz_len']" value="$j">-</neq></volist>
 										</dd>
 									</volist>
 								</dl>
@@ -194,7 +185,7 @@
 			<div class="box-hd">
 				<div class="app-icon-list">
 					<div class="app-more">
-						<a href="javascript:" class="more"></a><!--em>更多应用</em-->
+						<a href="javascript:" class="more"></a>
 						<div class="app-more-box" id="J_AppsMore">
 							<b class="ang ang-back"></b>
 							<b class="ang"></b>
@@ -229,16 +220,6 @@
 							</li>
 						</volist>
 					</ul>
-					<!--div class="app-add">
-						<a href="javascript:;">+</a>
-						<empty name="_SESSION[C('MEMBER_AUTH_KEY')]">
-						<div class="mini-tip zld-mini-tip">
-							<div class="mini-tip-l"></div>
-							<div class="mini-tip-c">请登陆后添加应用</div>
-							<div class="mini-tip-r"></div>
-						</div>
-						</empty>
-					</div-->
 				</div><!--.apps end-->
 			</div><!-- app-box-body end -->
 		</div><!-- app-box end -->
@@ -246,18 +227,8 @@
 			<div class="lft-box extra-box">
 				<div class="title-tabs" id="social-title-tabs">
 					<span>发现你最喜欢的内容</span>
-					<!--<a href="javascript:;">+</a>  -->
 					<ul></ul>
 				</div>
-				<!-- 标签 
-				<div class="like-tags">
-					<div class="a_tag">
-						<span>标签</span>
-						<a href="javascript:;">×</a>
-					</div>
-				</div>
-				-->
-				<!-- 头条 -->
 
 				<div class="social-box">
 					<div class="pic-news">
@@ -287,13 +258,14 @@
 	</div>
 	<div class="footer">
 		<div class="footer-inner">
-		<div class="site-info">
-			<ul>
-				<li><a target="_blank" href="{:U('/About')}">关于我们</a></li>
-				<li><a target="_blank" href="{:U('/Suggestion')}">留言板</a></li>
-				<li><a target="_blank" href="{:U('/Blogroll')}">申请友链</a></li>
-				<li><a target="_blank" href="{:U('/Recommend')}">推荐链接</a></li>
-			</ul>
+			<div class="site-info">
+				<ul>
+					<li><a target="_blank" href="{:U('/About')}">关于我们</a></li>
+					<li><a target="_blank" href="{:U('/Suggestion')}">留言板</a></li>
+					<li><a target="_blank" href="{:U('/Blogroll')}">申请友链</a></li>
+					<li><a target="_blank" href="{:U('/Recommend')}">推荐链接</a></li>
+				</ul>
+			</div>
 			<if condition="$friend_links neq ''">
 			<h5>友情链接</h5>
 			<ul class="friend-links">
@@ -301,10 +273,8 @@
 				<li><a href="{$link.url}" title="{$link.web_name}" target="_blank" >{$link.web_name}</a></li>
 				</volist>
 			</ul>
-			</if>
-
-			<p>沪ICP备12036721号 &copy; 另客 2013 <script src="http://s96.cnzz.com/stat.php?id=4907803&web_id=4907803&show=pic1" type="text/javascript"></script></p>
-		</div>
+			</if>	
+			<p class="site-copyright">沪ICP备12036721号 &copy; 另客 2013 <script src="http://s96.cnzz.com/stat.php?id=4907803&web_id=4907803&show=pic1" type="text/javascript"></script></p>
 		</div>
 	</div>
 </div><!--#container end-->

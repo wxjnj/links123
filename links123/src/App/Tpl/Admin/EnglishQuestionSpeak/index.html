@@ -33,7 +33,7 @@
         </div>
         <form method='post' action="__URL__">
             <div class="rSearch">
-                <div class="fLeft">试题查询：<span id="key"><input autocomplete="off" type="text" name="name" value="{$name}" class="medium" /></span></div>
+                <div class="fLeft">试题查询：<span id="key"><input autocomplete="off" type="text" name="name" value="{$search_key}" class="medium" /></span></div>
                 <html:imageBtn type="submit" name="search" style="hMargin fLeft" />
             </div>
             <div class="search cBoth" style="height: 60px;">
@@ -331,7 +331,7 @@
         }
         //location.href =  URL+"/edit/id/"+keyValue;
         var url = URL+"/edit/id/"+keyValue;
-        window.open (url,'newwindow','height=600,width=1013,top=130,left=260,toolbar=no,menubar=no,scrollbars=no, resizable=no,location=no, status=no') 
+        window.open (url,'newwindow','height=600,width=1013,top=130,left=260,toolbar=no,menubar=no,scrollbars=yes, resizable=no,location=no, status=no') 
 
     }
     $(function(){

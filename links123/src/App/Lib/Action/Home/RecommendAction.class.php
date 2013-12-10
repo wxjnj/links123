@@ -21,7 +21,7 @@ class RecommendAction extends CommonAction {
 		$links = M("Links");
 		$id = intval($this->_param('id'));
 		$lan = intval($this->_param('lan'));
-		$mid = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+		$mid = $this->userService->getUserId();
 		
 		//会员中心的推荐链接编辑
 		if ($id) {
@@ -78,7 +78,7 @@ class RecommendAction extends CommonAction {
 		$_POST['intro'] = cleanParam($this->_param('intro'));
 		//编辑的linkid
 		$id = intval($this->_param('id'));
-		$mid = intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+		$mid = $this->userService->getUserId();
 		$links = M("Links");
 		
 		if ($id) {

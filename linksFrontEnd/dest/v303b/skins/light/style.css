@@ -15,7 +15,9 @@
 }
 
 
-
+.container .header-weather .region-active {
+    color: #cb322c;
+}
 
 #container{
     /*background: url(bg.jpg) 0 0 repeat;*/
@@ -48,7 +50,7 @@
 
 }
 .screen-theme li {
-    margin: 0 4px;
+    /*margin: 0 4px;*/
 }
 
 #K_change_skin_btn, .screen-change-btn a {
@@ -79,13 +81,14 @@
 }
 
 
+
 .zld ul li {
     margin: 5px 3px 0 0;
 }
 
 .zld ul li .nm,
 .zld ul li .ctl {
-    border: 1px solid #a2a2a2;
+    border: 1px solid #c3c3c3;
     background-color: #f4f4f4;
     /*background: url(zld-btn-back.png) 0 0 repeat-x;*/
 }
@@ -135,15 +138,14 @@
     border-width: 13px
 }
 .app-icon-list .ang-back {
-    border-color: transparent transparent #bbb;
+    border-color: #bbb transparent transparent;
     right: 15px;
-    top: -27px;
+    top: 271px;
     border-width: 13px
 }
 
-.cal-date-marks-table .blue {
-    background: url(mark-back.png) 0 0 repeat-x;
-}
+
+
 
 .extra-calendar .cal-header .cal-header-date-prev,
 .extra-calendar .cal-header .cal-header-date-next {
@@ -166,10 +168,10 @@ body {
     background: #f4f4f4;    
 }
 .zld ul li .nm:hover {
-    box-shadow:inset 2px 2px 3px #d8d8d8;
+    box-shadow:inset 1px 1px 2px 1px #d1d1d1;
 }
 .zld ul li .ctl:hover {
-    box-shadow:inset 2px 2px 3px #d8d8d8;
+    box-shadow:inset 1px 1px 2px 1px #d1d1d1;
 }
 
 .box-apps {
@@ -201,6 +203,11 @@ body {
 .app-icon-list .app-more .more:hover {
     box-shadow:inset 1px 1px 3px #ddd;  
 }
+.apps ul li:hover, .apps ul li:hover a, .apps ul li:hover a:hover {
+    color: #cb322c;
+}
+
+
 .box-apps .box-bd {
     padding-top: 0;
 }
@@ -262,6 +269,13 @@ body {
 .title-tabs span {
     color: #333;
 }
+
+.title-tabs li:hover{
+    color: #333;
+    background: none;
+    border-bottom: 3px solid #cb322c;
+}
+
 .title-tabs .active{
     color: #333;
     background: none;
@@ -284,11 +298,19 @@ body {
     color: #cb322c;
 }
 
+.pic-news-title a:hover {
+    color: #cb322c;
+}
+
 .text-news .more-news a, 
-.text-news .more-news a:active,
-.text-news .more-news a:hover {
+.text-news .more-news a:active {
     color: #2793e6;
 }
+
+.text-news .more-news a:hover {
+    color: #cb322c;
+}
+
 
 .pic-news-tabs .active {
     background: #cb322c;
@@ -328,20 +350,34 @@ body {
 .extra-calendar .cal-day .cal-mini-month-panel th a,
 .extra-calendar .cal-header button,
 .extra-calendar .cal-header .cal-header-date {
-    color: #333;
+    color: #666;
 }
+
+
+.extra-calendar .cal-day .cal-mini-month-panel td a:hover, 
+.extra-calendar .cal-day .cal-mini-month-panel th a:hover {
+    color: #cb322c;
+}
+
 
 .cal-date-marks-table li {
     border-bottom: 1px dashed #dcdcdc;
 }
 
-.cal-date-marks-table .blue {
+.cal-date-marks-table .blue,
+.cal-date-marks-table .blue:hover {
     font-size: 12px;
-    height: 16px;
-    line-height: 16px;
-    border: 1px solid #2971c7;
+    height: 18px;
+    line-height: 18px;
     padding: 0 5px;
+    background-color: #4b99e4;
+    border-radius: 3px;
 }
+
+.cal-date-marks-table .blue:hover {
+    font-size: 13px;
+}
+
 
 .cal-month table th, .cal-week table th {
     border-right: 1px solid #e7e7e7;
@@ -357,21 +393,40 @@ body {
 }
 
 .footer {
-    margin-top: 50px;
     background: #fff;
 }
+
+
+
     .site-info {
-        padding: 17px 0;
+        padding: 15px 0;
         border-top: 1px solid #e7e7e7;
         border-bottom: 1px solid #e7e7e7;
     }
     .footer .site-info a,
-    .footer .site-info a:active,
-    .footer .site-info a:hover {
+    .footer .site-info a:active {
         color: #2793e6;
         text-decoration: none;
     }
+    .footer .site-info a:hover {
+        color: #cb322c;
+        text-decoration: underline;
+    }
 
+.friend-links li a,
+.friend-links li a:active {
+    color: #999;
+    text-decoration: underline;
+}
+.site-info li a:hover,
+.friend-links li a:hover {
+    color: #cb322c;
+}
+
+.site-copyright {
+    color: #999;
+    margin-bottom: 50px;
+}
 
 .widescreen .extra-box {
     width: 569px;
@@ -418,41 +473,55 @@ body {
 
 .cal-date-marks-table li .delete-btn {
     color: #fff;
-    display: inline-block;
+    /*display: inline-block;*/
     background: url(close.png) 0 0 no-repeat;
-    height: 13px;
-    line-height: 13px;
-    width: 13px;
+    height: 16px;
+    line-height: 16px;
+    width: 16px;
     position: absolute;
     overflow: hidden;
-    top: 7px;
-    right: 9px;
+    top: 3px;
+    right: 5px;
     color: transparent;
     text-decoration: none;
     text-align: center;
 }
+
+.cal-date-marks-table li:hover .delete-btn {
+    display: inline-block;
+}
+
 .cal-date-marks-table li .delete-btn:hover {
-    background-position: 0 -13px;
+    top: 4px;
+    background-position: 0 -16px;
 }
 
 .widescreen .cal-date-marks-table li .delete-btn{
-    top: 9px;
+    top: 5px;
+}
+.widescreen .cal-date-marks-table li .delete-btn:hover{
+    top: 7px;
 }
 
 .cal-date-marks-table li .add-btn,
 .cal-date-marks-table li .add-btn:hover{
     color: #333;
-    font-size: 12px;
+    font-size: 10px;
     height: 16px;
     line-height: 16px;
     padding: 0 5px;
     border-radius: 5px;
-    margin-top: 4px;
+    margin-top: 5px;
     background-image: url(add-btn.png);
     background-repeat: no-repeat;
     background-size: auto 100%;
 }
 
+
+.widescreen .cal-date-marks-table li .add-btn,
+.widescreen .cal-date-marks-table li .add-btn:hover{
+    margin-top: 7px;
+}
 
 
 @media only screen and (-webkit-min-device-pixel-ratio: 2),
@@ -464,9 +533,21 @@ only screen and (min-device-pixel-ratio: 2) {
             background-size: 264px auto;
         }
 
+        .thl .ctls .btn {
+            background-image: url(sprite@2x.png);
+            background-position: -65px -29px;
+            background-repeat: no-repeat;
+            background-size: 120px auto;
+        }
+
         .weather-icon {
            background-image: url(weather-icon@2x.png);
            background-size: 161px auto;
+        }
+
+        .cal-date-marks-table li .delete-btn {
+            background-image: url(close@2x.png);
+            background-size: 16px auto;
         }
 
         .zld ul li .ctl i,
