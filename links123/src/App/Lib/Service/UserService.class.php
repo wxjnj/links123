@@ -8,42 +8,7 @@
  * 接口说明：https://app.yinxiang.com/shard/s7/sh/1844768d-bc70-49fe-8231-318ce4b554c1/57011c48debfbe8950e97ac593a5033f
  */
 class UserService{
-	/**
-	 * 用户ID
-	 * @var null
-	 */
-	private $user_id = 0;
-	/**
-	 * 游客ID，用来在未登录状态，同样能存储复杂数据的方式
-	 * 对无该需求的应用，应该取消游客ID的操作
-	 * @var null
-	 */
-	private $guest_id = 0;
-	/**
-	 * 当前sessionID
-	 * @var null
-	 */
-	private $session_id = null;
-	/**
-	 * 当前登录状态
-	 * @var bool
-	 */
-	private $is_login = false;
-	/**
-	 * 临时存储用户变量
-	 * @var array
-	 */
-	private $user_data = array();
-	/**
-	 * 临时存储用户缓存
-	 * @var array
-	 */
-	private $user_cache = array();
-	/*
-	 * SSO接口地址
-	 */
-	const SSO_INTERNAL_HOST = '';
-	const SSO_OPEN_HOST = '';
+	private $service =null;
 	/*
 	 * mark标记常量
 	 */
@@ -63,6 +28,47 @@ class UserService{
 	 * 删除标记
 	 */
 	const MARK_DELETE = 3;
+	public function __construct(){
+		//根据配置参数，确定是否开启sso接口
+		$class = C('MEMBER_SSO') ? 'UserServiceSSO':'UserServiceDefault';
+		$this->service = new $class();
+	}
+	public function __call($fname,$param){
+		return call_user_func_array(array($this->service,$fname),$param);
+	}
+}
+class UserServiceDefault{
+	/**
+	 * 用户ID
+	 * @var null
+	 */
+	protected $user_id = 0;
+	/**
+	 * 游客ID，用来在未登录状态，同样能存储复杂数据的方式
+	 * 对无该需求的应用，应该取消游客ID的操作
+	 * @var null
+	 */
+	protected $guest_id = 0;
+	/**
+	 * 当前sessionID
+	 * @var null
+	 */
+	protected $session_id = null;
+	/**
+	 * 当前登录状态
+	 * @var bool
+	 */
+	protected $is_login = false;
+	/**
+	 * 临时存储用户变量
+	 * @var array
+	 */
+	protected $user_data = array();
+	/**
+	 * 临时存储用户缓存
+	 * @var array
+	 */
+	protected $user_cache = array();
 	public function __construct(){
 		//自动获取当前用户信息
 		//初始化用户状态：目前使用原本的状态判断，日后接入sso
@@ -112,7 +118,7 @@ class UserService{
 			//实际存储
 		}else{
 			//设置更新标记
-			$this->setMark($flag,self::MARK_UPDATE);
+			$this->setMark($flag,UserService::MARK_UPDATE);
 			//传递到会话中，并设定@var的命名空间
 			return $this->setSession($flag,$value);
 		}
@@ -127,10 +133,10 @@ class UserService{
 		if(isset($this->user_data[$key])) return $this->user_data[$key];
 		$flag = '@var.'.$key;
 		if($this->isLogin()){
-			if($this->getMark($flag,self::MARK_UPDATE)){
+			if($this->getMark($flag,UserService::MARK_UPDATE)){
 				$value = $this->getSession($flag);
 				$this->setVar($key,$value);
-				$this->cleanMark($flag,self::MARK_CLEAN);
+				$this->cleanMark($flag,UserService::MARK_CLEAN);
 			}else{
 				//获取数据
 			}
@@ -169,7 +175,7 @@ class UserService{
 		$flag = '@cache.'.$key;
 		$userId = $this->getUserId();
 		//设置更新标记
-		$this->setMark($flag,self::MARK_UPDATE);
+		$this->setMark($flag,UserService::MARK_UPDATE);
 		//设定逻辑
 		return $this->_setCache($userId.$flag,$value,$time);
 	}
@@ -181,11 +187,11 @@ class UserService{
 	public function getCache($key){
 		$flag = '@cache.'.$key;
 		$userId = $this->getUserId();
-		if($this->getMark($flag,self::MARK_UPDATE)){
+		if($this->getMark($flag,UserService::MARK_UPDATE)){
 			list($time,$value) = $this->_getCache($this->getSessionId().$flag);
 			//同步游客缓存到用户缓存，并同步同样的失效时间
 			$this->_setCache($userId.$flag,$value,$time - time());
-			$this->cleanMark($flag,self::MARK_CLEAN);
+			$this->cleanMark($flag,UserService::MARK_CLEAN);
 		}else{
 			list($time,$value) = $this->_getCache($userId.$flag);
 		}
@@ -198,7 +204,7 @@ class UserService{
 	 * @return boolen
 	 */
 	public function setMark($key,$mark){
-		if($mark == self::MARK_CLEAN) return $this->cleanMark($key);
+		if($mark == UserService::MARK_CLEAN) return $this->cleanMark($key);
 		//对于登录用户，无须设置同步标记
 		if($this->isLogin()) return true;
 		$flag = '@mark.'.$key;
@@ -231,10 +237,10 @@ class UserService{
 	 * @param $mark
 	 * @return boolen
 	 */
-	public function cleanMark($key,$mark=self::MARK_CLEAN){
+	public function cleanMark($key,$mark=UserService::MARK_CLEAN){
 		$flag = '@mark.'.$key;
-		if($mark == self::MARK_CLEAN){//清除全部状态
-			return $this->setSession($flag,self::MARK_CLEAN);
+		if($mark == UserService::MARK_CLEAN){//清除全部状态
+			return $this->setSession($flag,UserService::MARK_CLEAN);
 		}else{
 			$statusInt = $this->getSession($flag);
 			if(!$statusInt) return true;
@@ -259,10 +265,6 @@ class UserService{
 	public function getSessionId(){
 		return $this->session_id;
 	}
-
-	/*
-	 * 以下为SSO接口
-	 */
 
 	/**
 	 * @desc 返回当前用户的userID,未登录返回游客ID
@@ -295,6 +297,10 @@ class UserService{
 	public function isLogin(){
 		return $this->is_login;
 	}
+
+	/*
+	 * 以下为SSO接口所需扩展
+	 */
 
 	/**
 	 * @desc 返回当前用户的用户信息
@@ -516,7 +522,6 @@ class UserService{
 	 * @return boolen
 	 */
 	public function changePassword($password){
-
 		$member = M("Member");
 		$salt = $member->where("id = '%d'", $this->user_id)->getField('salt');
 		$password = md5(md5($password) . $salt);
@@ -548,13 +553,6 @@ class UserService{
 
 	}
 
-	/**
-	 * @desc 验证当前登录状态
-	 */
-	public function token(){
-
-	}
-
 	/*
 	 * 以下为内置函数
 	 */
@@ -565,7 +563,7 @@ class UserService{
 	 * @param $time
 	 * @return boolen
 	 */
-	private function _setCache($key,$value,$time){
+	protected function _setCache($key,$value,$time){
 		$this->user_cache[$key] = $value;
 		//简单设定失效时间，用于同步缓存中
 		$value = ($time + time()).'|'.$value;
@@ -577,7 +575,7 @@ class UserService{
 	 * @param $key
 	 * @return array
 	 */
-	private function _getCache($key){
+	protected function _getCache($key){
 		if(isset($this->user_cache[$key])) return $this->user_cache[$key];
 		//获取数据
 		$time = 0;
@@ -585,7 +583,187 @@ class UserService{
 		$this->user_cache[$key] = $value;
 		return array($time,$this->user_cache[$key]);
 	}
-	private function get($url){
+}
 
+class UserServiceSSO extends UserServiceDefault{
+	private $request_headers = array();
+	/*
+	 * SSO接口地址
+	 */
+	const SSO_INTERNAL_HOST = 'http://sso.links123.cn/';
+	const SSO_OPEN_HOST = 'http://avatar.links123.cn/';
+	/**
+	 * @desc 返回当前用户的用户信息
+	 * @return array
+	 */
+	public function getUserInfo(){
+		$default_face = '/Public/Uploads/Faces/face.jpg';
+		if($this->isLogin()){
+			return array(
+				'nickname'=>$_SESSION['nickname'],
+				'avatar'=>empty($_SESSION['face']) ? $default_face : self::SSO_OPEN_HOST.$_SESSION['face']
+			);
+		}else{
+			return array(
+				'nickname'=>'游客',
+				'avatar'=>$default_face
+			);
+		}
+
+	}
+
+	/**
+	 * @desc 登录操作接口
+	 * @param $nickname
+	 * @param $password
+	 * @param $autologin
+	 * @return boolen
+	 */
+	public function login($nickname,$password,$autologin){
+
+	}
+
+	/**
+	 * @desc 登出操作接口
+	 * @return boolen
+	 */
+	public function logout(){
+
+	}
+
+	/**
+	 * @desc 注册操作接口
+	 * @param $nickname
+	 * @param $email
+	 * @param $password
+	 * @return boolen
+	 */
+	public function regist($nickname,$email,$password){
+
+	}
+
+	/**
+	 * 修改用户信息
+	 * @param $nickname
+	 * @param $email
+	 * @param $password
+	 */
+	public function updateUser($nickname,$email,$password){
+
+	}
+
+	/**
+	 * @desc 修改昵称接口
+	 * @param $nickname
+	 * @return mixed
+	 */
+	public function changeNickname($nickname){
+
+	}
+
+	/**
+	 * @desc 修改邮箱接口
+	 * @param $email
+	 * @return mixed
+	 */
+	public function changeEmail($email){
+
+	}
+	/**
+	 * @desc 修改密码接口
+	 * @param $password
+	 * @return boolen
+	 */
+	public function changePassword($password){
+
+	}
+
+	/**
+	 * @desc 重置密码接口
+	 * @param $email
+	 * @return boolen
+	 */
+	public function resetPassword($email){
+
+	}
+
+	/**
+	 * @desc 上传头像接口
+	 * @param $file
+	 * @return boolen
+	 */
+	public function uploadAvatar($file){
+
+	}
+	/**
+	 * @desc 验证当前登录状态
+	 */
+	public function token(){
+
+	}
+	private function request($method,$url,$param){
+		$url = self::SSO_INTERNAL_HOST.$url;
+		$method = strtoupper($method);
+		$this->request_headers['Content-Type'] = 'application/x-www-form-urlencoded';
+		if($method!='POST'){
+			$url = $this->combineURL($url,$param);
+		}
+		$curl_handle = curl_init();
+		// Set default options.
+		curl_setopt ( $curl_handle, CURLOPT_URL, $url );
+		curl_setopt ( $curl_handle, CURLOPT_HEADER, true );
+		curl_setopt ( $curl_handle, CURLOPT_RETURNTRANSFER, true );
+		if($this->request_headers){
+			$temp_headers = array ();
+			foreach ( $this->request_headers as $k => $v ) {
+				$temp_headers [] = $k . ': ' . $v;
+			}
+			curl_setopt ( $curl_handle, CURLOPT_HTTPHEADER, $temp_headers );
+		}
+		switch ($method) {
+			case 'POST':
+				curl_setopt ( $curl_handle, CURLOPT_POST, true );
+				curl_setopt ( $curl_handle, CURLOPT_POSTFIELDS, $param );
+				break;
+			case 'HEAD':
+				curl_setopt ( $curl_handle, CURLOPT_CUSTOMREQUEST,'HEAD');
+				curl_setopt ( $curl_handle, CURLOPT_NOBODY, 1 );
+				break;
+			default : // Assumed GET
+				curl_setopt ( $curl_handle, CURLOPT_CUSTOMREQUEST, $method );
+				break;
+		}
+		$response = curl_exec( $curl_handle );
+		$response_info = curl_getinfo ( $curl_handle );
+		curl_close($curl_handle);
+		$this->request_headers = array();
+		return json_decode($response_info,true);
+	}
+	/**
+	 * combineURL
+	 * 拼接url
+	 * @param string $baseURL   基于的url
+	 * @param array  $keysArr   参数列表数组
+	 * @return string           返回拼接的url
+	 */
+	public function combineURL($baseURL,$keysArr){
+		return $baseURL."?".$this->combineParams($keysArr);
+	}
+	/**
+	 * combineParams
+	 * 拼接params
+	 * @param array  $keysArr   参数列表数组
+	 * @return string           返回拼接的string
+	 */
+	public function combineParams($keysArr){
+		$keyStr = '';
+		foreach ($keysArr as $k => $v )
+		{
+			if ( is_string ( $v ) ){
+				$v = urlencode ( $v );
+			}
+			$keyStr .= $k . '=' . $v . '&';
+		}
+		return substr ( $keyStr, 0, strlen ( $keyStr ) - 1 );
 	}
 }
