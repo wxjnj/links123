@@ -11,7 +11,14 @@ class EnglishMediaAction extends CommonAction {
     public function _filter(&$map, &$param) {
         if (isset($_REQUEST['name'])) {
             $name = ftrim($_REQUEST['name']);
+        	$_SESSION['english_media_search_key'] = $name;
         }
+        $search_key = '';//搜索栏保留上次的关键字
+        if(isset($_SESSION['english_media_search_key'])){
+        	$search_key = $_SESSION['english_media_search_key'];
+        }
+        $this->assign('search_key', $search_key);
+        
         //视频类型
         if (intval($_REQUEST['pattern']) > 0) {
             $map['englishMedia.pattern'] = intval($_REQUEST['pattern']);
