@@ -929,8 +929,6 @@ class UserServiceSSO extends UserServiceDefault{
 		$header_size = curl_getinfo ( $curl_handle, CURLINFO_HEADER_SIZE );
 		$response_body = substr ( $response, $header_size );
 		$response_code = curl_getinfo ( $curl_handle, CURLINFO_HTTP_CODE );
-		echo $response_code;
-		print_r($response_body);
 		curl_close($curl_handle);
 		return array($response_code,json_decode($response_body,true));
 	}
