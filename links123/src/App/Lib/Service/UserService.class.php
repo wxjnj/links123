@@ -687,11 +687,11 @@ class UserServiceSSO extends UserServiceDefault{
 	 */
 	protected function updateUsered(){
 		$member = M("Member");
-		list($status,$info) = $this->request('get','users/'.$this->user_id);
-		if($status == 200){
+		$return = $this->getUser();
+		if(is_array($return)){
 			$_SESSION[C('MEMBER_AUTH_KEY')] = $this->user_id;
-			$_SESSION['nickname'] = $info['nickname'];
-			$_SESSION['face'] = $info['avatar'];
+			$_SESSION['nickname'] = $return['nickname'];
+			$_SESSION['face'] = $return['avatar'];
 			$mbrNow = $member->where("id = '%s'",  $this->user_id)->find();
 			$_SESSION['skinId'] = $mbrNow['skin'];
 			$_SESSION['themeId'] = $mbrNow['theme'];
@@ -722,6 +722,25 @@ class UserServiceSSO extends UserServiceDefault{
 	/*
 	 * 以下为接口操作
 	 */
+
+	/**
+	 * @desc 验证当前登录状态
+	 */
+	public function token(){
+		if(empty($_COOKIE[$this->token_cookie])) return false;
+		$this->token = $_COOKIE[$this->token_cookie];
+		list($status,$info) = $this->request('get','auth/'.$this->token);
+		if($status == 200){
+			$this->user_id = $info['user_id'];
+			$this->logined();
+			cookie($this->token_cookie,$this->token,$info['expiry_time']);
+			return $status;
+		}else{
+			$this->logouted();
+			cookie($this->token_cookie,null,time() - 86400);//token过期
+		}
+		return $info['code'];
+	}
 	/**
 	 * @desc 登录操作接口
 	 * @param $nickname
@@ -739,7 +758,7 @@ class UserServiceSSO extends UserServiceDefault{
 		if($status == 201){
 			$this->token = $info['token'];
 			$this->user_id = $info['user_id'];
-			cookie('_lnk_token',$info['token'],$info['expiry_time']);
+			cookie($this->token_cookie,$info['token'],$info['expiry_time']);
 			$this->logined();
 
 			$this->is_login = true;
@@ -775,9 +794,9 @@ class UserServiceSSO extends UserServiceDefault{
 			'email'=>$email,
 			'password'=>$password
 		);
-		list($status,$info) = $this->request('post','user',$param);
+		list($status,$info) = $this->request('post','users',$param);
 		if($status == 201){
-			$this->user_id = $info['user_id'];
+			$this->user_id = $info['id'];
 			$this->registed($nickname,$email,$password);
 			$this->login($nickname,$password,false);
 			return 200;
@@ -846,33 +865,30 @@ class UserServiceSSO extends UserServiceDefault{
 	}
 
 	/**
+	 * @desc 获取当前用户信息，或传入参数USERID
+	 * @param $user_id 可选，为空则查询当前用户信息
+	 * @return mixed
+	 */
+	public function getUser($user_id=false){
+		list($status,$info) = $this->request('get','users/'.($user_id ? $user_id : $this->user_id));
+		if($status == 200){
+			return $info;
+		}else{
+			return $info['code'];
+		}
+	}
+
+	/**
 	 * @desc 上传头像接口
 	 * @param $file
 	 * @return boolen
 	 */
 	public function uploadAvatar($file){
 		$param = file_get_contents($file);
-		list($status,$info) = $this->request('post','users/'.$this->user_id.'/avatar?token'.$this->token,$param);
+		list($status,$info) = $this->request('post','users/'.$this->user_id.'/avatar?token='.$this->token,$param);
 		if($status == 201){
 			$this->updateUsered();
-		}
-		return $info['code'];
-	}
-	/**
-	 * @desc 验证当前登录状态
-	 */
-	public function token(){
-		if(empty($_COOKIE['token'])) return false;
-		$this->token = $_COOKIE['token'];
-		list($status,$info) = $this->request('get','auth/'.$this->token);
-		if($status == 200){
-			$this->user_id = $info['user_id'];
-			$this->logined();
-			cookie($this->token_cookie,$this->token,$info['expiry_time']);
-			return $status;
-		}else{
-			$this->logouted();
-			cookie($this->token_cookie,null,time() - 86400);//token过期
+			return 200;
 		}
 		return $info['code'];
 	}
@@ -910,11 +926,12 @@ class UserServiceSSO extends UserServiceDefault{
 		curl_setopt ( $curl_handle, CURLOPT_POSTFIELDS, $body );
 
 		$response = curl_exec( $curl_handle );
-
+		$header_size = curl_getinfo ( $curl_handle, CURLINFO_HEADER_SIZE );
+		$response_body = substr ( $response, $header_size );
 		$response_code = curl_getinfo ( $curl_handle, CURLINFO_HTTP_CODE );
-		$response_info = curl_getinfo ( $curl_handle );
-
+		echo $response_code;
+		print_r($response_body);
 		curl_close($curl_handle);
-		return array($response_code,json_decode($response_info,true));
+		return array($response_code,json_decode($response_body,true));
 	}
 }
