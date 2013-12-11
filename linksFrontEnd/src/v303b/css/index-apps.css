@@ -899,13 +899,13 @@ div.gt-baf-translations {
 .normal_music_channel_beiwa {
     background-position: 0 -27px;
 }
-.normal_music_channel_kugou {
+.normal_music_channel_kuwo {
     background-position: -27px -27px;
 }
 .normal_music_channel_duomi {
     background-position: -54px -27px;
 }
-.normal_music_channel_kuwo {
+.normal_music_channel_kugou {
     background-position: 0 -54px;
 }
 .normal_music_channel_duole {
@@ -1072,13 +1072,13 @@ div.gt-baf-translations {
 .mini_music_channel_beiwa b {
     background-position: -42px -110px;
 }
-.mini_music_channel_kugou b {
+.mini_music_channel_kuwo b {
     background-position: -56px -110px;
 }
 .mini_music_channel_duomi b {
     background-position: 0 -124px;
 }
-.mini_music_channel_kuwo b {
+.mini_music_channel_kugou b {
     background-position: -14px -124px;
 }
 .mini_music_channel_duole b {

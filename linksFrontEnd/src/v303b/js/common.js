@@ -692,6 +692,7 @@ var THL = {
 
 		//var ks = $.cookies.get('keywords'); 
 		Keywords.set(keyword);
+		$.cookies.set('keyword', keyword);
 		//$.cookies.set('keywords', ks, { expiresAt: (new Date).add_day(365) });
 
 		if (tid == '4' || tid == '26' || tid == '40' || tid == '58' || tid == '110' || tid == '117') {// 谷歌、美试、啪啪、PQuora
@@ -712,7 +713,6 @@ var THL = {
 			$('#J_thl').val($("#J_thl_div a.on").text());
 			$('#J_tid').val(tid);
 			$('#J_q').val(keyword);
-
 			searchFormObj.attr('action', url);
 			searchFormObj.attr('target', '_blank');
 			searchFormObj.submit();
