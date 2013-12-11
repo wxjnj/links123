@@ -451,9 +451,41 @@ class UserServiceDefault{
 	 * @param $nickname
 	 * @param $email
 	 * @param $password
+	 * @return int
 	 */
 	public function updateUser($nickname,$email,$password){
-
+		$member = M("Member");
+		if (!empty($nickname) && $member->where("id <> '%d' and nickname = '%s'", $this->user_id, $nickname)->find()) {
+			//echo "该昵称已被使用，请换一个！";
+			//return false;
+			return 210;
+		}
+		if (!empty($email) && $member->where("id <> '%d' and email = '%s'", $this->user_id, $email)->find()) {
+			//echo "该email已被使用，请换一个！";
+			//return false;
+			return 213;
+		}
+		$mem = $member->where("id = '%d'", $this->user_id)->find();
+		$data = array();
+		if(!empty($nickname) && $nickname != $mem['nickname']){
+			$data['nickname'] = $nickname;
+		}
+		if(!empty($email) && $email != $mem['email']){
+			$data['email'] = $email;
+		}
+		if(!empty($password)){
+			$password = md5(md5($password) . $mem['slat']);
+			$data['password'] = $password;
+		}
+		if (false === $member->where("id = '%d'", $this->user_id)->save($data)) {
+			Log::write('保存失败：' . $member->getLastSql(), Log::SQL);
+			//echo "保存昵称失败！";
+			return 212;
+		} else {
+			if(!empty($nickname)) $_SESSION['nickname'] = $nickname;
+			//echo "saveOK";
+			return 200;
+		}
 	}
 
 	/**
@@ -462,22 +494,7 @@ class UserServiceDefault{
 	 * @return mixed
 	 */
 	public function changeNickname($nickname){
-		$member = M("Member");
-		if ($member->where("id <> '%d' and nickname = '%s'", $this->user_id, $nickname)->find()) {
-			//echo "该昵称已被使用，请换一个！";
-			//return false;
-			return 210;
-		}
-
-		if (false === $member->where("id = '%d'", $this->user_id)->setField('nickname', $nickname)) {
-			Log::write('保存昵称失败：' . $member->getLastSql(), Log::SQL);
-			//echo "保存昵称失败！";
-			return 212;
-		} else {
-			$_SESSION['nickname'] = $nickname;
-			//echo "saveOK";
-			return 200;
-		}
+		return $this->updateUser($nickname,'','');
 	}
 
 	/**
@@ -486,21 +503,7 @@ class UserServiceDefault{
 	 * @return mixed
 	 */
 	public function changeEmail($email){
-		$member = M("Member");
-		if ($member->where("id <> '%d' and email = '%s'", $this->user_id, $email)->find()) {
-			//echo "该email已被使用，请换一个！";
-			//return false;
-			return 213;
-		}
-
-		if (false === $member->where("id = '%d'", $this->user_id)->setField('email', $email)) {
-			Log::write('保存email失败：' . $member->getLastSql(), Log::SQL);
-			//echo "保存email失败！";
-			return 212;
-		} else {
-			//echo "saveOK";
-			return 200;
-		}
+		return $this->updateUser('',$email,'');
 	}
 	/**
 	 * @desc 修改密码接口
@@ -508,17 +511,7 @@ class UserServiceDefault{
 	 * @return boolen
 	 */
 	public function changePassword($password){
-		$member = M("Member");
-		$salt = $member->where("id = '%d'", $this->user_id)->getField('salt');
-		$password = md5(md5($password) . $salt);
-		if (false === $member->where("id = '%d'", $this->user_id)->setField('password', $password)) {
-			Log::write('保存密码失败：' . $member->getLastSql(), Log::SQL);
-			//echo "保存密码失败！";
-			return 212;
-		} else {
-			//echo "saveOK";
-			return 200;
-		}
+		return $this->updateUser('','',$password);
 	}
 
 	/**
@@ -653,10 +646,46 @@ class UserServiceSSO extends UserServiceDefault{
 	/*
 	 * 接口调用后的回调函数，各应用的实际逻辑处理代码
 	 */
+	/**
+	 * 登录后，及每次验证后调用
+	 * @return bool
+	 */
 	protected function logined(){
 		//已经登录
 		if(!empty($_SESSION[C('MEMBER_AUTH_KEY')])) return true;
 		if(empty($this->user_id)) return false;
+		$this->updateUsered();
+	}
+
+	/**
+	 * 退出删除验证后调用
+	 */
+	protected function logouted(){
+		unset($_SESSION[C('MEMBER_AUTH_KEY')]);
+		unset($_SESSION['nickname']);
+		unset($_SESSION['face']);
+		session_destroy();
+	}
+
+	/**
+	 * 注册后调用，并随后自动登录
+	 */
+	protected function registed(){
+		//给新增用户添加默认自留地
+		$myareaModel = D("Myarea");
+		$default_myarea = $myareaModel->field("web_name, url, sort")->where("mid = 0")->Group("url")->order("sort ASC")->limit(30)->select();
+
+		foreach ($default_myarea as $value) {
+			$value['create_time'] = &$data['create_time'];
+			$value['mid'] = $this->user_id;
+			$myareaModel->add($value);
+		}
+	}
+
+	/**
+	 * 更新用户信息后调用：昵称，邮箱，密码，头像
+	 */
+	protected function updateUsered(){
 		$member = M("Member");
 		list($status,$info) = $this->request('get','users/'.$this->user_id);
 		if($status == 200){
@@ -667,26 +696,6 @@ class UserServiceSSO extends UserServiceDefault{
 			$_SESSION['skinId'] = $mbrNow['skin'];
 			$_SESSION['themeId'] = $mbrNow['theme'];
 			$_SESSION['myarea_sort'] = $mbrNow['myarea_sort'] ? explode(',', $mbrNow['myarea_sort']) : '';
-		}
-	}
-	protected function logouted(){
-		unset($_SESSION[C('MEMBER_AUTH_KEY')]);
-		unset($_SESSION['nickname']);
-		unset($_SESSION['face']);
-		session_destroy();
-	}
-	protected function registed($nickname,$email,$password){
-		$member = M("Member");
-		$_SESSION[C('MEMBER_AUTH_KEY')] = $this->user_id;
-		$_SESSION['nickname'] = $nickname;
-		//给新增用户添加默认自留地
-		$myareaModel = D("Myarea");
-		$default_myarea = $myareaModel->field("web_name, url, sort")->where("mid = 0")->Group("url")->order("sort ASC")->limit(30)->select();
-
-		foreach ($default_myarea as $value) {
-			$value['create_time'] = &$data['create_time'];
-			$value['mid'] = &$_SESSION[C('MEMBER_AUTH_KEY')];
-			$myareaModel->add($value);
 		}
 	}
 	/**
@@ -791,6 +800,7 @@ class UserServiceSSO extends UserServiceDefault{
 		);
 		list($status,$info) = $this->request('put','users/'.$this->user_id.'?token='.$this->token,$param);
 		if($status == 204){
+			$this->updateUsered();
 			return 200;
 		}
 		return $info['code'];
@@ -844,7 +854,7 @@ class UserServiceSSO extends UserServiceDefault{
 		$param = file_get_contents($file);
 		list($status,$info) = $this->request('post','users/'.$this->user_id.'/avatar?token'.$this->token,$param);
 		if($status == 201){
-			$_SESSION['face'] = $info['avatar'];
+			$this->updateUsered();
 		}
 		return $info['code'];
 	}
