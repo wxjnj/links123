@@ -113,31 +113,25 @@ class LoginAction extends CommonAction
 			echo "验证码错误";
 			return false;
 		}
-		
-		$mbr = M("Member");
-		$mbrNow = $mbr->getByEmail($email);
-		
-		if ($mbrNow) {
-			import("@.ORG.String");
-			$password = String::randString();
-			if (false !== $mbr->where("id = '%d'", $mbrNow['id'])->setField('password', md5(md5($password) . $mbrNow['salt']))) {
-				$mail = array();
-				$mail['mailto'] = $email;
-				$mail['title'] = "[另客网]忘记密码";
-				$mail['content'] = "您好，您的新密码是：" . $password . "<br /><br />为了您的账户安全，请登录后尽快修改您的密码，谢谢！<br /><br />--------------------<br /><br />（这是一封自动发送的邮件，请不要直接回复）";
-				if (sendMail($mail)) {
-					$mailserver = 'mail.' . substr($email, strpos($email, '@') + 1);
-					$mailserver = strtolower($mailserver);
-					$mailserver = str_replace('gmail', 'google', $mailserver);
-					$mailserver = str_replace('mail.hotmail.com', 'www.hotmail.com', $mailserver);
-					echo "sendOK|" . $mailserver;
-				} else {
-					echo "发送新密码失败！";
-				}
-			}
-		} else {
-			echo "未发现您输入的邮箱！";
+		$status = $this->userService->resetPassword($email);
+		switch($status){
+			case 203:
+				echo "未发现您输入的邮箱！";
+				return false;
+			case 204:
+				echo "已禁用！";
+				return false;
+			case 209:
+				echo "邮箱格式错误";
+				return false;
+			case 219:
+				echo "发送新密码失败！";
+				return false;
+			case 200:
+				echo "sendOK";
+				return true;
 		}
+		return false;
 	}
 	
 }

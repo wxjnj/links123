@@ -69,35 +69,13 @@ class UserServiceDefault{
 	 * @var array
 	 */
 	protected $user_cache = array();
+
 	public function __construct(){
-		//自动获取当前用户信息
-		//初始化用户状态：目前使用原本的状态判断，日后接入sso
-		session_start();
-		isset($_SESSION[C('MEMBER_AUTH_KEY')]) &&
-		$this->user_id = @ intval($_SESSION[C('MEMBER_AUTH_KEY')]);
-		if (empty($this->user_id)) {
-			$user_str = $_COOKIE["USER_ID"];
-			//没有用户session且自动登录标示Cookie USER_ID 存在执行自动登录过程
-			if (!empty($user_str)) {
-				$ret = explode("|", $user_str);
-				$user_id = intval($ret[0]);
-				$user_info = D("Member")->find($user_id);
+		$this->token();
+		$this->init();
+	}
+	protected function init(){
 
-				if (!empty($user_info) && md5($user_info['password'] . $user_info['nickname']) == $ret[1]) {
-					$_SESSION[C('MEMBER_AUTH_KEY')] = $user_info['id'];
-					$_SESSION['nickname'] = $user_info['nickname'];
-					$_SESSION['face'] = empty($user_info['face'])?'face.jpg':$user_info['face'];
-					$_SESSION['skinId'] = $user_info['skin'];
-					$_SESSION['themeId'] = $user_info['themeId'];
-
-					$this->user_id = $user_info['id'];
-
-					//使用cookie过期时间来控制前台登陆的过期时间
-					$home_session_expire = intval(D("Variable")->getVariable("home_session_expire"));
-					cookie(md5("home_session_expire"), time(), $home_session_expire);
-				}
-			}
-		}
 		//对于刚注册用户，还是获取之前的游客ID，来保证同步数据的正确性
 		$this->guest_id = cookie(md5('member_guest'));
 
@@ -274,6 +252,11 @@ class UserServiceDefault{
 	public function getId(){
 		return $this->user_id ? $this->user_id : $this->getGuestId();
 	}
+
+	/**
+	 * 对于没有同步要求的数据，或者明确要userid的数据，因直接使用该接口
+	 * @return null
+	 */
 	public function getUserId(){
 		return $this->user_id;
 	}
@@ -384,6 +367,7 @@ class UserServiceDefault{
 			$auto_login_time = intval(D("Variable")->getVariable("auto_login_time"));
 			cookie("USER_ID", $str, $auto_login_time ? : 60*60*24*7);
 		}
+		$this->is_login = true;
 		return 200;
 	}
 
@@ -398,6 +382,7 @@ class UserServiceDefault{
 		session_destroy();
 		cookie(md5(C('MEMBER_AUTH_KEY')), null);//设置cookie记录用户登录信息，提供给英语角同步登录 Adam 2013.09.27 @todo 安全性，下一步进行单点登录优化
 		cookie("USER_ID", null);//退出清除下次自动登录
+		$this->is_login = false;
 		return true;
 	}
 
@@ -452,6 +437,7 @@ class UserServiceDefault{
 			$str = $_SESSION[C('MEMBER_AUTH_KEY')] . "|" . md5($data['password'] . $data['nickname']);
 			cookie(md5(C('MEMBER_AUTH_KEY')), $str, intval(D("Variable")->getVariable("home_session_expire")));//设置cookie记录用户登录信息，提供给英语角同步登录 Adam 2013.09.27 @todo 安全性，下一步进行单点登录优化
 
+			$this->is_login = true;
 			//echo "regOK";
 			return 200;
 		} else {
@@ -542,6 +528,33 @@ class UserServiceDefault{
 	 */
 	public function resetPassword($email){
 
+		$mbr = M("Member");
+		$mbrNow = $mbr->getByEmail($email);
+
+		if ($mbrNow) {
+			import("@.ORG.String");
+			$password = String::randString();
+			if (false !== $mbr->where("id = '%d'", $mbrNow['id'])->setField('password', md5(md5($password) . $mbrNow['salt']))) {
+				$mail = array();
+				$mail['mailto'] = $email;
+				$mail['title'] = "[另客网]忘记密码";
+				$mail['content'] = "您好，您的新密码是：" . $password . "<br /><br />为了您的账户安全，请登录后尽快修改您的密码，谢谢！<br /><br />--------------------<br /><br />（这是一封自动发送的邮件，请不要直接回复）";
+				if (sendMail($mail)) {
+					$mailserver = 'mail.' . substr($email, strpos($email, '@') + 1);
+					$mailserver = strtolower($mailserver);
+					$mailserver = str_replace('gmail', 'google', $mailserver);
+					$mailserver = str_replace('mail.hotmail.com', 'www.hotmail.com', $mailserver);
+					//echo "sendOK|" . $mailserver;
+					return 200;
+				} else {
+					//echo "发送新密码失败！";
+					return 219;
+				}
+			}
+		} else {
+			//echo "未发现您输入的邮箱！";
+			return 203;
+		}
 	}
 
 	/**
@@ -551,6 +564,39 @@ class UserServiceDefault{
 	 */
 	public function uploadAvatar($file){
 
+	}
+	/**
+	 * @desc 验证当前登录状态
+	 */
+	public function token(){
+		//自动获取当前用户信息
+		//初始化用户状态：目前使用原本的状态判断，日后接入sso
+		session_start();
+		isset($_SESSION[C('MEMBER_AUTH_KEY')]) &&
+		$this->user_id = @ intval($_SESSION[C('MEMBER_AUTH_KEY')]);
+		if (empty($this->user_id)) {
+			$user_str = $_COOKIE["USER_ID"];
+			//没有用户session且自动登录标示Cookie USER_ID 存在执行自动登录过程
+			if (!empty($user_str)) {
+				$ret = explode("|", $user_str);
+				$user_id = intval($ret[0]);
+				$user_info = D("Member")->find($user_id);
+
+				if (!empty($user_info) && md5($user_info['password'] . $user_info['nickname']) == $ret[1]) {
+					$_SESSION[C('MEMBER_AUTH_KEY')] = $user_info['id'];
+					$_SESSION['nickname'] = $user_info['nickname'];
+					$_SESSION['face'] = empty($user_info['face'])?'face.jpg':$user_info['face'];
+					$_SESSION['skinId'] = $user_info['skin'];
+					$_SESSION['themeId'] = $user_info['themeId'];
+
+					$this->user_id = $user_info['id'];
+
+					//使用cookie过期时间来控制前台登陆的过期时间
+					$home_session_expire = intval(D("Variable")->getVariable("home_session_expire"));
+					cookie(md5("home_session_expire"), time(), $home_session_expire);
+				}
+			}
+		}
 	}
 
 	/*
@@ -586,12 +632,53 @@ class UserServiceDefault{
 }
 
 class UserServiceSSO extends UserServiceDefault{
-	private $request_headers = array();
+	private $token = false;
+	private $token_cookie = '_lnk_token';
 	/*
 	 * SSO接口地址
 	 */
 	const SSO_INTERNAL_HOST = 'http://sso.links123.cn/';
 	const SSO_OPEN_HOST = 'http://avatar.links123.cn/';
+
+	/*
+	 * 接口调用后的回调函数，各应用的实际逻辑处理代码
+	 */
+	protected function logined(){
+		//已经登录
+		if(!empty($_SESSION[C('MEMBER_AUTH_KEY')])) return true;
+		if(empty($this->user_id)) return false;
+		$member = M("Member");
+		list($status,$info) = $this->request('get','users/'.$this->user_id);
+		if($status == 200){
+			$_SESSION[C('MEMBER_AUTH_KEY')] = $this->user_id;
+			$_SESSION['nickname'] = $info['nickname'];
+			$_SESSION['face'] = $info['avatar'];
+			$mbrNow = $member->where("id = '%s'",  $this->user_id)->find();
+			$_SESSION['skinId'] = $mbrNow['skin'];
+			$_SESSION['themeId'] = $mbrNow['theme'];
+			$_SESSION['myarea_sort'] = $mbrNow['myarea_sort'] ? explode(',', $mbrNow['myarea_sort']) : '';
+		}
+	}
+	protected function logouted(){
+		unset($_SESSION[C('MEMBER_AUTH_KEY')]);
+		unset($_SESSION['nickname']);
+		unset($_SESSION['face']);
+		session_destroy();
+	}
+	protected function registed($nickname,$email,$password){
+		$member = M("Member");
+		$_SESSION[C('MEMBER_AUTH_KEY')] = $this->user_id;
+		$_SESSION['nickname'] = $nickname;
+		//给新增用户添加默认自留地
+		$myareaModel = D("Myarea");
+		$default_myarea = $myareaModel->field("web_name, url, sort")->where("mid = 0")->Group("url")->order("sort ASC")->limit(30)->select();
+
+		foreach ($default_myarea as $value) {
+			$value['create_time'] = &$data['create_time'];
+			$value['mid'] = &$_SESSION[C('MEMBER_AUTH_KEY')];
+			$myareaModel->add($value);
+		}
+	}
 	/**
 	 * @desc 返回当前用户的用户信息
 	 * @return array
@@ -609,37 +696,74 @@ class UserServiceSSO extends UserServiceDefault{
 				'avatar'=>$default_face
 			);
 		}
-
 	}
-
+	/*
+	 * 自定义代码结束，下面是接口代码，保持一致
+	 */
+	/*
+	 * 以下为接口操作
+	 */
 	/**
 	 * @desc 登录操作接口
 	 * @param $nickname
 	 * @param $password
 	 * @param $autologin
-	 * @return boolen
+	 * @return int
 	 */
 	public function login($nickname,$password,$autologin){
+		$param = array(
+			'username'=>$nickname,
+			'password'=>$password,
+			'autologin'=>$autologin
+		);
+		list($status,$info) = $this->request('post','auth',$param);
+		if($status == 201){
+			$this->token = $info['token'];
+			$this->user_id = $info['user_id'];
+			cookie('_lnk_token',$info['token'],$info['expiry_time']);
+			$this->logined();
 
+			$this->is_login = true;
+			return 200;
+		}
+		return $info['code'];
 	}
-
 	/**
 	 * @desc 登出操作接口
-	 * @return boolen
+	 * @return int
 	 */
 	public function logout(){
+		list($status,$info) = $this->request('delete','auth/'.$this->token);
+		if($status == 200){
+			cookie($this->token_cookie,null,time()-86400);
+			$this->logouted();
 
+			$this->is_login = false;
+			return $status;
+		}
+		return $info['code'];
 	}
-
 	/**
 	 * @desc 注册操作接口
 	 * @param $nickname
 	 * @param $email
 	 * @param $password
-	 * @return boolen
+	 * @return int
 	 */
 	public function regist($nickname,$email,$password){
-
+		$param = array(
+			'nickname'=>$nickname,
+			'email'=>$email,
+			'password'=>$password
+		);
+		list($status,$info) = $this->request('post','user',$param);
+		if($status == 201){
+			$this->user_id = $info['user_id'];
+			$this->registed($nickname,$email,$password);
+			$this->login($nickname,$password,false);
+			return 200;
+		}
+		return $info['code'];
 	}
 
 	/**
@@ -647,9 +771,19 @@ class UserServiceSSO extends UserServiceDefault{
 	 * @param $nickname
 	 * @param $email
 	 * @param $password
+	 * @return int
 	 */
 	public function updateUser($nickname,$email,$password){
-
+		$param = array(
+			'nickname'=>$nickname,
+			'email'=>$email,
+			'password'=>$password
+		);
+		list($status,$info) = $this->request('put','users/'.$this->user_id.'?token='.$this->token,$param);
+		if($status == 204){
+			return 200;
+		}
+		return $info['code'];
 	}
 
 	/**
@@ -658,7 +792,7 @@ class UserServiceSSO extends UserServiceDefault{
 	 * @return mixed
 	 */
 	public function changeNickname($nickname){
-
+		return $this->updateUser($nickname,'','');
 	}
 
 	/**
@@ -667,7 +801,7 @@ class UserServiceSSO extends UserServiceDefault{
 	 * @return mixed
 	 */
 	public function changeEmail($email){
-
+		return $this->updateUser('',$email,'');
 	}
 	/**
 	 * @desc 修改密码接口
@@ -675,7 +809,7 @@ class UserServiceSSO extends UserServiceDefault{
 	 * @return boolen
 	 */
 	public function changePassword($password){
-
+		return $this->updateUser('','',$password);
 	}
 
 	/**
@@ -684,7 +818,11 @@ class UserServiceSSO extends UserServiceDefault{
 	 * @return boolen
 	 */
 	public function resetPassword($email){
-
+		list($status,$info) = $this->request('post','users/'.urlencode($email).'/password_reset');
+		if($status == 204){
+			return 200;
+		}
+		return $info['code'];
 	}
 
 	/**
@@ -693,29 +831,46 @@ class UserServiceSSO extends UserServiceDefault{
 	 * @return boolen
 	 */
 	public function uploadAvatar($file){
-
+		$param = file_get_contents($file);
+		list($status,$info) = $this->request('post','users/'.$this->user_id.'/avatar?token'.$this->token,$param);
+		if($status == 201){
+			$_SESSION['face'] = $info['avatar'];
+		}
+		return $info['code'];
 	}
 	/**
 	 * @desc 验证当前登录状态
 	 */
 	public function token(){
-
-	}
-	private function request($method,$url,$param){
-		$url = self::SSO_INTERNAL_HOST.$url;
-		$method = strtoupper($method);
-		$this->request_headers['Content-Type'] = 'application/x-www-form-urlencoded';
-		if($method!='POST'){
-			$url = $this->combineURL($url,$param);
+		if(empty($_COOKIE['token'])) return false;
+		$this->token = $_COOKIE['token'];
+		list($status,$info) = $this->request('get','auth/'.$this->token);
+		if($status == 200){
+			$this->user_id = $info['user_id'];
+			$this->logined();
+			cookie($this->token_cookie,$this->token,$info['expiry_time']);
+			return $status;
+		}else{
+			$this->logouted();
+			cookie($this->token_cookie,null,time() - 86400);//token过期
 		}
+		return $info['code'];
+	}
+	private function request($method,$url,$param=array()){
+		$url = self::SSO_INTERNAL_HOST.$url;
+
+		$method = strtoupper($method);
+		$request_headers['Content-Type'] = 'application/x-www-form-urlencoded';
+		//上传头像的数据不用json
+		$body = is_array($param) ?  json_encode($param) : $param;
 		$curl_handle = curl_init();
 		// Set default options.
 		curl_setopt ( $curl_handle, CURLOPT_URL, $url );
 		curl_setopt ( $curl_handle, CURLOPT_HEADER, true );
 		curl_setopt ( $curl_handle, CURLOPT_RETURNTRANSFER, true );
-		if($this->request_headers){
+		if($request_headers){
 			$temp_headers = array ();
-			foreach ( $this->request_headers as $k => $v ) {
+			foreach ( $request_headers as $k => $v ) {
 				$temp_headers [] = $k . ': ' . $v;
 			}
 			curl_setopt ( $curl_handle, CURLOPT_HTTPHEADER, $temp_headers );
@@ -723,7 +878,6 @@ class UserServiceSSO extends UserServiceDefault{
 		switch ($method) {
 			case 'POST':
 				curl_setopt ( $curl_handle, CURLOPT_POST, true );
-				curl_setopt ( $curl_handle, CURLOPT_POSTFIELDS, $param );
 				break;
 			case 'HEAD':
 				curl_setopt ( $curl_handle, CURLOPT_CUSTOMREQUEST,'HEAD');
@@ -733,37 +887,14 @@ class UserServiceSSO extends UserServiceDefault{
 				curl_setopt ( $curl_handle, CURLOPT_CUSTOMREQUEST, $method );
 				break;
 		}
+		curl_setopt ( $curl_handle, CURLOPT_POSTFIELDS, $body );
+
 		$response = curl_exec( $curl_handle );
+
+		$response_code = curl_getinfo ( $curl_handle, CURLINFO_HTTP_CODE );
 		$response_info = curl_getinfo ( $curl_handle );
+
 		curl_close($curl_handle);
-		$this->request_headers = array();
-		return json_decode($response_info,true);
-	}
-	/**
-	 * combineURL
-	 * 拼接url
-	 * @param string $baseURL   基于的url
-	 * @param array  $keysArr   参数列表数组
-	 * @return string           返回拼接的url
-	 */
-	public function combineURL($baseURL,$keysArr){
-		return $baseURL."?".$this->combineParams($keysArr);
-	}
-	/**
-	 * combineParams
-	 * 拼接params
-	 * @param array  $keysArr   参数列表数组
-	 * @return string           返回拼接的string
-	 */
-	public function combineParams($keysArr){
-		$keyStr = '';
-		foreach ($keysArr as $k => $v )
-		{
-			if ( is_string ( $v ) ){
-				$v = urlencode ( $v );
-			}
-			$keyStr .= $k . '=' . $v . '&';
-		}
-		return substr ( $keyStr, 0, strlen ( $keyStr ) - 1 );
+		return array($response_code,json_decode($response_info,true));
 	}
 }
