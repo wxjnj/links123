@@ -559,11 +559,21 @@ class UserServiceDefault{
 
 	/**
 	 * @desc 上传头像接口
-	 * @param $file
+	 * @param $file 传递真实的文件路径
 	 * @return boolen
 	 */
 	public function uploadAvatar($file){
-
+		$face = basename($file);
+		$member = M("Member");
+		if (false === $member->where("id = '%d'", $this->getUserId())->setField('face', $face)) {
+			Log::write('设定头像失败：' . $member->getLastSql(), Log::SQL);
+			//echo "设定头像失败！";
+			return 303;
+		} else {
+			$_SESSION['face'] = $face;
+			//echo "saveOK";
+			return 200;
+		}
 	}
 	/**
 	 * @desc 验证当前登录状态

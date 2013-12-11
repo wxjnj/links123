@@ -78,7 +78,7 @@ class IndexAction extends CommonAction
 	 * @author Frank UPDATE 2013-08-21
 	 */
 	public function uploadPic() {
-		$folder = $this->_param('folder');
+		$folder = 'Faces';
 		$width = $this->_param('width');
 		$height = $this->_param('height');
 		$id = $this->_param('id');
@@ -258,14 +258,17 @@ class IndexAction extends CommonAction
 			echo "头像丢失！";
 			return false;
 		}
-		$mid = $this->userService->getUserId();
-		$member = M("Member");
-		if (false === $member->where("id = '%d'", $mid)->setField('face', $face)) {
-			Log::write('设定头像失败：' . $member->getLastSql(), Log::SQL);
-			echo "设定头像失败！";
-		} else {
-			$_SESSION['face'] = $face;
-			echo "saveOK";
+		$folder = 'Faces';
+		$path = realpath('./Public/Uploads/uploads.txt');
+		$file = str_replace('uploads.txt', $folder, $path) . '/'.$face;
+		$status = $this->userService->uploadAvatar($file);
+		switch($status){
+			case 200:
+				echo 'saveOK';
+				return true;
+			case 303:
+				echo '设定头像失败！';
+				return false;
 		}
 	}
 }
