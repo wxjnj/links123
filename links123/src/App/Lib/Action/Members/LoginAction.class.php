@@ -57,16 +57,16 @@ class LoginAction extends CommonAction
 
         $status = $this->userService->login($username,$password,$autologin);
 		switch($status){
-			case -1:
+			case 202:
 				echo json_encode(array("code"=>501, "content" => "用户名有不法字符"));
 				return false;
-			case -2:
+			case 203:
 				echo json_encode(array("code"=>502, "content" => "用户名不存在"));
 				return false;
-			case -3:
+			case 204:
 				echo json_encode(array("code"=>403, "content" => "已禁用！"));
 				return false;
-			case -4:
+			case 205:
 				isset($_SESSION['userLoginCounterPaswd']) ? $_SESSION['userLoginCounterPaswd']++ : $_SESSION['userLoginCounterPaswd'] = 1;
 
 				if ($_SESSION['userLoginCounterPaswd'] > 2){    // 输入错误密码次数超过2次给用户不同的提示信息
@@ -76,7 +76,10 @@ class LoginAction extends CommonAction
 					echo json_encode(array("code"=>503, "content" => "密码与用户名不符"));
 				}
 				return false;
-			case 1:
+			case 205:
+				echo json_encode(array("code"=>502, "content" => "登录失败！"));
+				return false;
+			case 200:
 				echo json_encode(array("code"=>200, "content" => "loginOK"));
 				return true;
 		}
@@ -110,31 +113,25 @@ class LoginAction extends CommonAction
 			echo "验证码错误";
 			return false;
 		}
-		
-		$mbr = M("Member");
-		$mbrNow = $mbr->getByEmail($email);
-		
-		if ($mbrNow) {
-			import("@.ORG.String");
-			$password = String::randString();
-			if (false !== $mbr->where("id = '%d'", $mbrNow['id'])->setField('password', md5(md5($password) . $mbrNow['salt']))) {
-				$mail = array();
-				$mail['mailto'] = $email;
-				$mail['title'] = "[另客网]忘记密码";
-				$mail['content'] = "您好，您的新密码是：" . $password . "<br /><br />为了您的账户安全，请登录后尽快修改您的密码，谢谢！<br /><br />--------------------<br /><br />（这是一封自动发送的邮件，请不要直接回复）";
-				if (sendMail($mail)) {
-					$mailserver = 'mail.' . substr($email, strpos($email, '@') + 1);
-					$mailserver = strtolower($mailserver);
-					$mailserver = str_replace('gmail', 'google', $mailserver);
-					$mailserver = str_replace('mail.hotmail.com', 'www.hotmail.com', $mailserver);
-					echo "sendOK|" . $mailserver;
-				} else {
-					echo "发送新密码失败！";
-				}
-			}
-		} else {
-			echo "未发现您输入的邮箱！";
+		$status = $this->userService->resetPassword($email);
+		switch($status){
+			case 203:
+				echo "未发现您输入的邮箱！";
+				return false;
+			case 204:
+				echo "已禁用！";
+				return false;
+			case 209:
+				echo "邮箱格式错误";
+				return false;
+			case 219:
+				echo "发送新密码失败！";
+				return false;
+			case 200:
+				echo "sendOK";
+				return true;
 		}
+		return false;
 	}
 	
 }
