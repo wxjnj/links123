@@ -16,7 +16,15 @@ var User = {
 		$(document).on('click', '.J_VerifyImg', function(){
 			$(this).attr("src", APP+'Verify?'+(+new Date()));
 		});
+        if($CONFIG.needSyn == 1){
+            User.SynLogin();
+        }
 	},
+    SynLogin : function(){
+        $.get($CONFIG.app+"/SSO/synLogin", function(ret){
+            $("body").append(ret);
+        });
+    },
 	CheckLogin: function(){
 		var self = this;
 		if($CONFIG.IsLogin){
