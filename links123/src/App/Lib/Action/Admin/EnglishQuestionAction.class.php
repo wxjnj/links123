@@ -71,6 +71,7 @@ class EnglishQuestionAction extends CommonAction {
                 bindec('0'.$attr_two.'0'),
                 bindec('1'.$attr_two.'0'),
                 bindec('0'.$attr_two.'1'),
+                array("EXP","IS NULL"),
                 "or") ;
         }
         
@@ -1310,10 +1311,9 @@ class EnglishQuestionAction extends CommonAction {
                         $data['status'] = 0;
                         Log::write("导入听力试题，未找到对应的媒体：".$media_data['media_source_url'], Log::INFO);
                     }
-
+                    //插入答案
+                    $option_id = array();
                     if($data['answer'] != -1){
-                        //插入答案
-                        $option_id = array();
                         //判断题目是否是判断题
                         $is_double_true = false; //是否为True文字选项
                         $is_double_false = false; //是否为False文字选项
@@ -1385,6 +1385,7 @@ class EnglishQuestionAction extends CommonAction {
                                 Log::write("导入失败，更新选项和试题关联失败:".$optionModel->getLastSql(), Log::ERR);
                                 die(json_encode(array("info" => "导入失败，更新选项和试题关联失败！", "status" => false)));
                             }
+                            Log::write("关联选项:".$optionModel->getLastSql(), Log::INFO);
                         }
                         //@ 添加类目id和题目id到对应表
                         if(!empty($data['cat_id'])){
