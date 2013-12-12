@@ -60,6 +60,11 @@ class UserServiceDefault{
 	 */
 	protected $is_login = false;
 	/**
+	 * 当前登录有效期
+	 * @var int
+	 */
+	protected $expire_time = 0;
+	/**
 	 * 临时存储用户变量
 	 * @var array
 	 */
@@ -136,7 +141,7 @@ class UserServiceDefault{
 	 * @return boolen
 	 */
 	public function setSession($key,$value){
-		return $this->_setCache($this->getSessionId().'@session.'.$key,$value,$this->time);
+		return $this->_setCache($this->getSessionId().'@session.'.$key,$value,$this->expire_time - time());
 	}
 	/**
 	 * @desc 获取用户会话数据
@@ -828,16 +833,17 @@ class UserServiceSSO extends UserServiceDefault{
 		list($status,$info) = $this->request('get','auth/'.$this->token);
 		if($status == 200){
 			$this->user_id = $info['user_id'];
+			$this->expire_time = $info['expiry_time'];
 			$this->logined();
 			cookie($this->token_cookie,$this->token,$info['expiry_time']);
-			cookie("_lnk_syned", null, time() - 3600);
-			cookie("_lnk_apps", null, time() - 3600);
-			cookie("_lnk_token_expire", null, time() - 3600);
 			return $status;
 		}else{
 			$this->error = $info['message'];
 			$this->logouted();
 			cookie($this->token_cookie,null,time() - 86400);//token过期
+			cookie("_lnk_syned", null, time() - 3600);
+			cookie("_lnk_apps", null, time() - 3600);
+			cookie("_lnk_token_expire", null, time() - 3600);
 		}
 		return $info['code'];
 	}
@@ -858,6 +864,7 @@ class UserServiceSSO extends UserServiceDefault{
 		if($status == 201){
 			$this->token = $info['token'];
 			$this->user_id = $info['user_id'];
+			$this->expire_time = $info['expiry_time'];
 			cookie($this->token_cookie,$info['token'],$info['expiry_time']);
 			cookie("_lnk_token_expire", $info['expiry_time'], $info['expiry_time']);//保存token本地cookie过期时间
 			cookie("_lnk_apps", json_encode($info['apps']), $info['expiry_time']);//保存sso站点列表
