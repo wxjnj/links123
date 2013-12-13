@@ -145,6 +145,7 @@ $(function() {
 			//$.cookies.set('keyword', keyword);
 			//保存keyword
 			keyword = keyword.replace('http://', '');
+			$.cookies.set('keyword', keyword);
 			keyword = encodeURIComponent(keyword);
 			var url = $(".J_thlz a.on").attr("url").replace('keyword', keyword);
 			var tid = $(".J_thlz a.on").attr("tid");

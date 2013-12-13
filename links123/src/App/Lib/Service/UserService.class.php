@@ -60,6 +60,11 @@ class UserServiceDefault{
 	 */
 	protected $is_login = false;
 	/**
+	 * 当前登录有效期
+	 * @var int
+	 */
+	protected $expire_time = 0;
+	/**
 	 * 临时存储用户变量
 	 * @var array
 	 */
@@ -69,6 +74,11 @@ class UserServiceDefault{
 	 * @var array
 	 */
 	protected $user_cache = array();
+	/**
+	 *错误信息
+	 * @var string
+	 */
+	protected $error = "";
 
 	public function __construct(){
 		$this->token();
@@ -131,7 +141,7 @@ class UserServiceDefault{
 	 * @return boolen
 	 */
 	public function setSession($key,$value){
-		return $this->_setCache($this->getSessionId().'@session.'.$key,$value,$this->time);
+		return $this->_setCache($this->getSessionId().'@session.'.$key,$value,$this->expire_time - time());
 	}
 	/**
 	 * @desc 获取用户会话数据
@@ -235,6 +245,13 @@ class UserServiceDefault{
 	public function judgeMark($value,$mark){
 		return $value & 1 << $mark-1;
 	}
+	/**
+	 * 获取错误信息
+	 * @return string
+	 */
+	public function getError(){
+		return $this->error;
+	}
 
 	/**
 	 * @desc 返回当前用户的sessionID
@@ -318,6 +335,7 @@ class UserServiceDefault{
 		} else if (checkName($nickname)) {
 			$param = 'nickname';
 		} else {
+			$this->error = "用户名有不法字符";
 			//echo json_encode(array("code"=>501, "content" => "用户名有不法字符"));
 			//return false;
 			return 202;
@@ -326,11 +344,13 @@ class UserServiceDefault{
 		$mbrNow = $member->where("$param = '%s'", $nickname)->find();
 
 		if (empty($mbrNow)) {
+			$this->error = "用户名不存在";
 			//echo json_encode(array("code"=>502, "content" => "用户名不存在"));
 			//return false;
 			return 203;
 		}
 		if ($mbrNow['status'] == -1) {
+			$this->error = "已禁用！";
 			//echo json_encode(array("code"=>403, "content" => "已禁用！"));
 			//return false;
 			return 204;
@@ -347,6 +367,7 @@ class UserServiceDefault{
 			//else {
 			//	echo json_encode(array("code"=>503, "content" => "密码与用户名不符"));
 			//}
+			$this->error = "密码与用户名不符";
 			return 205;
 		}
 		$_SESSION[C('MEMBER_AUTH_KEY')] = $mbrNow['id'];
@@ -398,12 +419,14 @@ class UserServiceDefault{
 		$member = M("Member");
 
 		if ($member->where("nickname = '%s'", $nickname)->select()) {
+			$this->error = "该昵称已注册过";
 			//echo '该昵称已注册过';
 			//return false;
 			return 210;
 		}
 
 		if ($member->where("email = '%s'", $email)->select()) {
+			$this->error = "该邮箱已注册过";
 			//echo '该邮箱已注册过';
 			//return false;
 			return 213;
@@ -441,6 +464,7 @@ class UserServiceDefault{
 			//echo "regOK";
 			return 200;
 		} else {
+			$this->error = "会员注册失败";
 			Log::write('会员注册失败：' . $member->getLastSql(), Log::SQL);
 			return 211;
 		}
@@ -456,11 +480,13 @@ class UserServiceDefault{
 	public function updateUser($nickname,$email,$password){
 		$member = M("Member");
 		if (!empty($nickname) && $member->where("id <> '%d' and nickname = '%s'", $this->user_id, $nickname)->find()) {
+			$this->error = "该昵称已被使用，请换一个！";
 			//echo "该昵称已被使用，请换一个！";
 			//return false;
 			return 210;
 		}
 		if (!empty($email) && $member->where("id <> '%d' and email = '%s'", $this->user_id, $email)->find()) {
+			$this->error = "该email已被使用，请换一个！";
 			//echo "该email已被使用，请换一个！";
 			//return false;
 			return 213;
@@ -480,6 +506,7 @@ class UserServiceDefault{
 		if (false === $member->where("id = '%d'", $this->user_id)->save($data)) {
 			Log::write('保存失败：' . $member->getLastSql(), Log::SQL);
 			//echo "保存昵称失败！";
+			$this->error = "保存昵称失败！";
 			return 212;
 		} else {
 			if(!empty($nickname)) $_SESSION['nickname'] = $nickname;
@@ -540,11 +567,13 @@ class UserServiceDefault{
 					//echo "sendOK|" . $mailserver;
 					return 200;
 				} else {
+					$this->error = "发送新密码失败！";
 					//echo "发送新密码失败！";
 					return 219;
 				}
 			}
 		} else {
+			$this->error = "未发现您输入的邮箱！";
 			//echo "未发现您输入的邮箱！";
 			return 203;
 		}
@@ -559,6 +588,7 @@ class UserServiceDefault{
 		$face = basename($file);
 		$member = M("Member");
 		if (false === $member->where("id = '%d'", $this->getUserId())->setField('face', $face)) {
+			$this->error = "设定头像失败";
 			Log::write('设定头像失败：' . $member->getLastSql(), Log::SQL);
 			//echo "设定头像失败！";
 			return 303;
@@ -600,6 +630,30 @@ class UserServiceDefault{
 				}
 			}
 		}
+	}
+	/*
+	 * 异步登录操作
+	 */
+	/**
+	 * 异步登录操作，对于其他域名应用的登录做出登录响应
+	 */
+	public function onsynlogin(){
+		return true;
+	}
+	/**
+	 * 输出符合异步登录的代码到客户端执行，其他应用需要执行onsynlogin操作相应该请求
+	 * @return bool|string
+	 */
+	public function synlogin(){
+		return false;
+	}
+
+	/**
+	 * 异步操作是否执行，如果需要执行，则调用synlogin
+	 * @return bool
+	 */
+	public function needSyn(){
+		return false;
 	}
 
 	/*
@@ -720,6 +774,53 @@ class UserServiceSSO extends UserServiceDefault{
 	 * 自定义代码结束，下面是接口代码，保持一致
 	 */
 	/*
+	 * sso支持异步登录功能
+	 */
+	/**
+	 * 异步登录操作，对于其他域名应用的登录做出登录响应
+	 */
+	public function onsynlogin(){
+		$token = $_GET['token'];
+		$expire = $_GET['expire'];
+		header('P3P: CP="CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR"');//设置P3P
+		if ($expire == 0) {
+			$expire = time();
+		}
+		cookie($this->token_cookie,$token,$expire);
+		//设定已同步标识
+		cookie("_lnk_syned", "1", $expire);
+	}
+
+	/**
+	 * 输出符合异步登录的代码到客户端执行，其他应用需要执行onsynlogin操作相应该请求
+	 * @return bool|string
+	 */
+	public function sysnlogin(){
+		$syned = empty($_COOKIE['_lnk_syned']) ? 0 : 1;
+		$token = $_COOKIE[$this->token_cookie];
+		$token_expire = $_COOKIE['_lnk_token_expire'];
+		if(!$syned && $_COOKIE['_lnk_apps']){
+			$apps = json_decode($_COOKIE['_lnk_apps']);
+			$synstr = '';
+			foreach($apps as $value){
+				if($value != $_SERVER['HTTP_HOST']){
+					$synstr.="<script type='text/javascript' src='http://".$value."/SSO?token=".$token."&expire=".$token_expire."'></script>";
+				}
+			}
+			cookie("_lnk_needsyn",null,time() - 86400);//去除同步token标识
+			return $synstr;
+		}
+		return false;
+	}
+
+	/**
+	 * 异步操作是否执行，如果需要执行，则调用synlogin
+	 * @return bool
+	 */
+	public function needSyn(){
+		return empty($_COOKIE['_lnk_needsyn']) ? false : true;
+	}
+	/*
 	 * 以下为接口操作
 	 */
 
@@ -732,12 +833,17 @@ class UserServiceSSO extends UserServiceDefault{
 		list($status,$info) = $this->request('get','auth/'.$this->token);
 		if($status == 200){
 			$this->user_id = $info['user_id'];
+			$this->expire_time = $info['expiry_time'];
 			$this->logined();
 			cookie($this->token_cookie,$this->token,$info['expiry_time']);
 			return $status;
 		}else{
+			$this->error = $info['message'];
 			$this->logouted();
 			cookie($this->token_cookie,null,time() - 86400);//token过期
+			cookie("_lnk_syned", null, time() - 3600);
+			cookie("_lnk_apps", null, time() - 3600);
+			cookie("_lnk_token_expire", null, time() - 3600);
 		}
 		return $info['code'];
 	}
@@ -758,12 +864,17 @@ class UserServiceSSO extends UserServiceDefault{
 		if($status == 201){
 			$this->token = $info['token'];
 			$this->user_id = $info['user_id'];
+			$this->expire_time = $info['expiry_time'];
 			cookie($this->token_cookie,$info['token'],$info['expiry_time']);
+			cookie("_lnk_token_expire", $info['expiry_time'], $info['expiry_time']);//保存token本地cookie过期时间
+			cookie("_lnk_apps", json_encode($info['apps']), $info['expiry_time']);//保存sso站点列表
+			cookie("_lnk_needsyn", "1", $info['expiry_time']);//需要同步token标识
 			$this->logined();
 
 			$this->is_login = true;
 			return 200;
 		}
+		$this->error = $info['message'];
 		return $info['code'];
 	}
 	/**
@@ -774,11 +885,15 @@ class UserServiceSSO extends UserServiceDefault{
 		list($status,$info) = $this->request('delete','auth/'.$this->token);
 		if($status == 200){
 			cookie($this->token_cookie,null,time()-86400);
+			cookie("_lnk_needsyn", null, time() - 3600);
+			cookie("_lnk_apps", null, time() - 3600);
+			cookie("_lnk_token_expire", null, time() - 3600);
 			$this->logouted();
 
 			$this->is_login = false;
 			return $status;
 		}
+		$this->error = $info['message'];
 		return $info['code'];
 	}
 	/**
@@ -801,6 +916,7 @@ class UserServiceSSO extends UserServiceDefault{
 			$this->login($nickname,$password,false);
 			return 200;
 		}
+		$this->error = $info['message'];
 		return $info['code'];
 	}
 
@@ -822,6 +938,7 @@ class UserServiceSSO extends UserServiceDefault{
 			$this->updateUsered();
 			return 200;
 		}
+		$this->error = $info['message'];
 		return $info['code'];
 	}
 
@@ -861,6 +978,7 @@ class UserServiceSSO extends UserServiceDefault{
 		if($status == 204){
 			return 200;
 		}
+		$this->error = $info['message'];
 		return $info['code'];
 	}
 
@@ -874,6 +992,7 @@ class UserServiceSSO extends UserServiceDefault{
 		if($status == 200){
 			return $info;
 		}else{
+			$this->error = $info['message'];
 			return $info['code'];
 		}
 	}
@@ -890,6 +1009,7 @@ class UserServiceSSO extends UserServiceDefault{
 			$this->updateUsered();
 			return 200;
 		}
+		$this->error = $info['message'];
 		return $info['code'];
 	}
 	private function request($method,$url,$param=array()){
@@ -929,8 +1049,6 @@ class UserServiceSSO extends UserServiceDefault{
 		$header_size = curl_getinfo ( $curl_handle, CURLINFO_HEADER_SIZE );
 		$response_body = substr ( $response, $header_size );
 		$response_code = curl_getinfo ( $curl_handle, CURLINFO_HTTP_CODE );
-		echo $response_code;
-		print_r($response_body);
 		curl_close($curl_handle);
 		return array($response_code,json_decode($response_body,true));
 	}
