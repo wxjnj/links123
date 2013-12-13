@@ -1334,6 +1334,7 @@ class EnglishQuestionAction extends CommonAction {
                         //依次存入选项，不知道问题id
                         $option_data['created'] = $time;
                         $index = array(1, 2, 3, 4); //选择序号数组
+                        $hasBandCspecialOption = false;//Both B and C或者either B or C选项
                         foreach ($data['option'] as $key => $value) {
                             if (!empty($value)) {
                                 $d_1 = preg_match("/all(\s)+of(\s)+the(\s+)above.?/i", $value);
@@ -1342,8 +1343,19 @@ class EnglishQuestionAction extends CommonAction {
                                 $d_4 = preg_match("/(both(\s)+)?B(\s)+and(\s)+C.?/i", $value);
                                 $c_1 = preg_match("/(both(\s)+A)?(\s)+and(\s)+B.?/i", $value);
                                 $c_2 = preg_match("/either(\s)+A(\s)+or(\s)+B.?/i", $value);
+                                if($d_3 || $d_4){
+                                    $hasBandCspecialOption = true;
+                                }
                                 $option_data['content'] = $value;
                                 $option_data['sort'] = current($index); //选项排序等于当前最前面序号
+                                if($hasBandCspecialOption && $key == 3){
+                                    $option_data['sort'] = 1;
+                                }else if($hasBandCspecialOption && $key == 1){
+                                    $option_data['sort'] = 2;
+                                }else if($hasBandCspecialOption && $key == 2){
+                                    $option_data['sort'] = 3;
+                                }
+                                
                                 if ($d_1 || $d_2 || $d_3 || $d_4) {
                                     $option_data['sort'] = 4; //D
                                 } else if ($c_1 || $c_2) {
@@ -1357,6 +1369,7 @@ class EnglishQuestionAction extends CommonAction {
                                     Log::write("导入失败，添加试题选项失败：".$optionModel->getLastSql(), Log::ERR);
                                     die(json_encode(array("info" => "导入失败，添加试题选项失败！", "status" => false)));
                                 }
+                                Log::write("添加试题选项：".$optionModel->getLastSql(), Log::INFO);
                                 array_push($option_id, $ret); //保存增加的id数组，用于更新选项对应的问题id
                             }
                         }
