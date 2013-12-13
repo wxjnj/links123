@@ -27,6 +27,18 @@ switch($type) {
         }else if($userinput=='国内新闻'){
             $wxObj->text(Api::getGNNews(5))->reply();
         }
+        else if($userinput=='即时消息'){
+            $wxObj->text(Api::getNowNews(5))->reply();
+        }
+        else if($userinput=='国际新闻'){
+            $wxObj->text(Api::getGJNews(5))->reply();
+        } else if($userinput=='社会新闻'){
+            $wxObj->text(Api::getSHNews(5))->reply();
+        }else if($userinput=='网络游戏'){
+            $wxObj->text(Api::getGameNews(5))->reply();
+        }else if($userinput=='手机游戏'){
+            $wxObj->text(Api::getMobileNews(5))->reply();
+        }
         else if($userinput=='视频'){
             $wxObj->text("测试视频：http://wap.qtw365.com/demo.html")->reply();
         }else
