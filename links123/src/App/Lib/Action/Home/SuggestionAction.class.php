@@ -61,7 +61,9 @@ class SuggestionAction extends CommonAction {
 			$data['is_reply'] = 1;
 			$operate = "点评";
 		}
+		$userinfo = $this->userService->getUserInfo();
 		$data['mid'] = $this->userService->getUserId();
+		$data['nickname'] = $userinfo['nickname'];
 		$data['suggest'] = $suggest;
 		$data['create_time'] = time();
 		
@@ -91,10 +93,12 @@ class SuggestionAction extends CommonAction {
 			$content = stripslashes($_POST['content']);
 			
 			$mid = $this->userService->getUserId();
+			$userinfo = $this->userService->getUserInfo();
 			
 			$data['id'] = $id;
 			$data['create_time'] = time();
 			$data['suggest'] = $content;
+			$data['nickname'] = $userinfo['nickname'];
 			
 			$mod = M("Suggestion");
 			$suggestion_info = $mod->find($data['id']);
