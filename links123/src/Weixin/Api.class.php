@@ -59,4 +59,17 @@ class  Api {
         }
         return rtrim($returnstr,';');
     }
+
+    public  static function getGNNews($count=0){
+        if($count<=0){
+          $count=10;
+        }
+        $content=file_get_contents("http://news.qq.com/newsgn/rss_newsgn.xml");
+        $data=simplexml_load_string($content);
+        $content="";
+        for($i=0;$i<$count;$i++){
+            $content.="<a href='".$data->channel->item[0]->link."'>".$data->channel->item[0]->title."</a><\n>";
+        }
+       return $content;
+    }
 }
