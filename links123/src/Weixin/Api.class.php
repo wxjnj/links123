@@ -72,4 +72,64 @@ class  Api {
         }
        return $content;
     }
+    public static  function  getNowNews($count=0){
+        if($count<=0){
+            $count=10;
+        }
+        $content=file_get_contents("http://news.qq.com/zmdnew/rss_now.xml");
+        $data=simplexml_load_string($content);
+        $content="";
+        for($i=0;$i<$count;$i++){
+            $content.=($i+1).".<a href='".$data->channel->item[$i]->link."'>".$data->channel->item[$i]->title."</a>\n";
+        }
+        return $content;
+    }
+    public static  function  getGJNews($count=0){
+        if($count<=0){
+            $count=10;
+        }
+        $content=file_get_contents("http://news.qq.com/newsgj/rss_newswj.xml");
+        $data=simplexml_load_string($content);
+        $content="";
+        for($i=0;$i<$count;$i++){
+            $content.=($i+1).".<a href='".$data->channel->item[$i]->link."'>".$data->channel->item[$i]->title."</a>\n";
+        }
+        return $content;
+    }
+    public static  function  getSHNews($count=0){
+        if($count<=0){
+            $count=10;
+        }
+        $content=file_get_contents("http://news.qq.com/newssh/rss_newssh.xml");
+        $data=simplexml_load_string($content);
+        $content="";
+        for($i=0;$i<$count;$i++){
+            $content.=($i+1).".<a href='".$data->channel->item[$i]->link."'>".$data->channel->item[$i]->title."</a>\n";
+        }
+        return $content;
+    }
+    public static  function  getGameNews($count=0){
+        if($count<=0){
+            $count=10;
+        }
+        $content=file_get_contents("http://games.qq.com/ntgame/rss_ntgame.xml");
+        $data=simplexml_load_string($content);
+        $content="";
+        for($i=0;$i<$count;$i++){
+            $content.=($i+1).".<a href='".$data->channel->item[$i]->link."'>".$data->channel->item[$i]->title."</a>\n";
+        }
+        return $content;
+    }
+    public static  function  getMobileNews($count=0){
+        if($count<=0){
+            $count=10;
+        }
+        $content=file_get_contents("http://games.qq.com/mobile/rss_mobile.xml");
+        $data=simplexml_load_string($content);
+        $content="";
+        for($i=0;$i<$count;$i++){
+            $content.=($i+1).".<a href='".$data->channel->item[$i]->link."'>".$data->channel->item[$i]->title."</a>\n";
+        }
+        return $content;
+    }
 }
