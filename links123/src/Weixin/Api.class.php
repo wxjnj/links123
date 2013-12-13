@@ -68,7 +68,7 @@ class  Api {
         $data=simplexml_load_string($content);
         $content="";
         for($i=0;$i<$count;$i++){
-            $content.="$i.<a href='".$data->channel->item[$i]->link."'>".$data->channel->item[$i]->title."</a>\n";
+            $content.=($i+1).".<a href='".$data->channel->item[$i]->link."'>".$data->channel->item[$i]->title."</a>\n";
         }
        return $content;
     }
