@@ -9,8 +9,8 @@
 class ImageAltAction  extends  CommonAction{
         public function index(){
             $arr=$this->getImages($_SERVER["DOCUMENT_ROOT"].DIRECTORY_SEPARATOR."Public");
-            print_r($arr);
-            $this->show("Test");
+            $this->assign("list",$arr);
+            $this->display();
         }
         private function getImages($dir){
             $image_type=array("jpg",'jpeg','gif','png');
@@ -28,7 +28,7 @@ class ImageAltAction  extends  CommonAction{
                    else{
                        $file_ext=  end(explode('.', $file));
                        if(in_array(strtolower($file_ext),$image_type)){
-                           $arr[]=$file;
+                           $arr[]=str_replace($_SERVER["DOCUMENT_ROOT"],'',$file);
                        }
                    }
                }
