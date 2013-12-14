@@ -873,7 +873,7 @@ class UserServiceSSO extends UserServiceDefault{
 	 * 输出符合异步登录的代码到客户端执行，其他应用需要执行onsynlogin操作相应该请求
 	 * @return bool|string
 	 */
-	public function sysnlogin(){
+	public function synlogin(){
 		$syned = empty($_COOKIE['_lnk_syned']) ? 0 : 1;
 		$token = $_COOKIE[$this->token_cookie];
 		$token_expire = $_COOKIE['_lnk_token_expire'];
