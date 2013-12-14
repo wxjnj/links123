@@ -23,12 +23,12 @@ class ImageAltAction  extends  CommonAction{
             $pagestr ="<div class=\"page\"> $allrecords 条记录&#12288;<span style=\"color:#C00\">".($page+1)."</span>/".$pages." 页&#12288;&#12288;";
             if($page>5)
                 $pagestr.="<a href='/Admin/ImageAlt?page=".($page-5)."'>上5页</a>";
-            if($page%5==0&&$pages>$pages+5)
+            if($page%5==0&&$pages>$page+5)
                 $temppages=$page+5;
             for($i=$page;$i<=$temppages;$i++){
                     $pagestr.="&nbsp;&nbsp;<a href='/Admin/ImageAlt?page=".$i."'>$page</a>";
             }
-            $pagestr.="<a href='/Admin/ImageAlt?page=".($page+6)."'>上5页</a></div>";
+            $pagestr.="<a href='/Admin/ImageAlt?page=".($page+6)."'>下5页</a></div>";
             $this->assign("pagestr",$pagestr);
             $this->assign("list",$arr[$page]);
             $this->display();
