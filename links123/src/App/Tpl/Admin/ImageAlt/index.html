@@ -1,0 +1,28 @@
+<tagLib name="html" />
+<include file="Public:header" />
+
+<load href="__PUBLIC__/Js/jquery.js" />
+<script language="javascript">
+    $(function(){
+        /* 直达 */
+        $(".page input").keydown(function(event){
+            if (event.keyCode == 13) {	// 回车
+                if ( $(this).val()!='' && !isNaN($(this).val()) ) {
+                    window.location.href = $(this).attr("url") + "&p=" + $(this).val();
+                }
+            }
+        });
+    });
+</script>
+
+<div id="main" class="main" >
+    <div class="content" >
+        <div class="title">图片列表</div>
+        <volist name="list" id="">
+            <img src="{$vo}"><br>
+        </volist>
+    </div>
+
+</div>
+
+
