@@ -8,8 +8,29 @@
 
 class ImageAltAction  extends  CommonAction{
         public function index(){
+            $page=$_REQUEST["page"];
+            $type=$_REQUEST["type"];
+            $page=intval($page);
+            if($page<0)
+                $page=0;
             $arr=$this->getImages($_SERVER["DOCUMENT_ROOT"].DIRECTORY_SEPARATOR."Public");
-            $this->assign("list",$arr);
+            $allrecords=count($arr);
+            $arr=array_chunk($arr,25);
+            $pages=count($arr);
+            if($page>=$pages){
+                $page=$pages-1;
+            }
+            $pagestr="<div class=\"page\"> $allrecords 条记录&#12288;<span style=\"color:#C00\">"+($page+1)+"</span>/"+$pages+" 页&#12288;&#12288;";
+            if($page>5)
+                $pagestr.="<a href='/Admin/ImageAlt?page=".($page-5)."'>上5页</a>";
+            if($page%5==0&&$pages>$pages+5)
+                $temppages=$page+5;
+            for($i=$page;$i<=$temppages;$i++){
+                    $pagestr.="&nbsp;&nbsp;<a href='/Admin/ImageAlt?page=".$i."'>$page</a>";
+            }
+            $pagestr.="<a href='/Admin/ImageAlt?page=".($page+6)."'>上5页</a></div>";
+            $this->assign("pagestr",$pagestr);
+            $this->assign("list",$arr[$page]);
             $this->display();
         }
         private function getImages($dir){
