@@ -437,7 +437,7 @@ class UserServiceDefault{
 		unset($_SESSION[C('MEMBER_AUTH_KEY')]);
 		unset($_SESSION['nickname']);
 		unset($_SESSION['face']);
-		session_destroy();
+//		session_destroy();
 		cookie(md5(C('MEMBER_AUTH_KEY')), null);//设置cookie记录用户登录信息，提供给英语角同步登录 Adam 2013.09.27 @todo 安全性，下一步进行单点登录优化
 		cookie("USER_ID", null);//退出清除下次自动登录
 		$this->is_login = false;
