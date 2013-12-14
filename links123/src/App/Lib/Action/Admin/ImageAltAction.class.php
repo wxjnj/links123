@@ -19,7 +19,7 @@ class ImageAltAction  extends  CommonAction{
            }
             $arr=array();
            while(false!==($file=readdir($handle))){
-               if($file!=='.'||$file!=='..'){
+               if($file!=='.'&&$file!=='..'){
                    $file=$dir.DIRECTORY_SEPARATOR.$file;
                    if(is_dir($file)){
                        $temparr=$this->getImages($file);
@@ -32,9 +32,8 @@ class ImageAltAction  extends  CommonAction{
                        }
                    }
                }
-               return $arr;
-
            }
+           return $arr;
 
         }
 } 
