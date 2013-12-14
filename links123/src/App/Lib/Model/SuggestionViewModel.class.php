@@ -9,8 +9,7 @@
 class SuggestionViewModel extends ViewModel {
 
     public $viewFields = array(
-    	'suggestion' => array('id', 'suggest', 'type', 'mid', 'pid', 'create_time', 'is_reply', 'status', '_type' => 'LEFT'),
-        'member' => array('nickname', 'face', '_on' => 'suggestion.mid=member.id'),
+    	'suggestion' => array('id', 'suggest', 'type', 'mid','nickname', 'pid', 'create_time', 'is_reply', 'status')
     );
 
     /**
@@ -27,6 +26,8 @@ class SuggestionViewModel extends ViewModel {
     	$list = $this->where($condition)->order('create_time DESC')->limit($rst . ',' . $listRows)->select();
     	$total = count($list);
 		$userService = D('User','Service');
+		$guest_info = $userService->getUserInfo(0);
+		$user_id = array();
     	foreach ($list as $key => &$value) {
     		$list[$key]['number'] = $total - $key;
     		$reply = $this->getSuggestionReplyList($value['id']);
@@ -36,13 +37,29 @@ class SuggestionViewModel extends ViewModel {
     			
     		if ($value['mid'] == -1) {
     			$list[$key]['nickname'] = "另客";
-    		} else if ($value['mid'] == 0 || empty($value['nickname'])) {
-    			$list[$key]['nickname'] = "游客";
-    		} else if ($value['mid'] == $userService->getUserId()) {
+				$value['avatar'] = $guest_info['avatar'];
+    		}else if ($value['mid'] == $userService->getUserId()) {
+				$userinfo = $userService->getUserInfo();
+				$value['nickname'] = $userinfo['nickname'];
+				$value['avatar'] = $userinfo['avatar'];
     			$value['editable'] = "1";
-    		}
-    		empty($value['face']) && $value['face'] = "face.jpg";
+    		}else{
+				$value['nickname'] = $guest_info['nickname'];
+				$value['avatar'] = $guest_info['avatar'];
+				if($value['mid']>0){
+					$user_id[] = $value['mid'];
+				}
+			}
     	}
+		if($user_id){
+			$user_list = $userService->getUserInfo($user_id);
+			foreach($list as $key=> &$value){
+				if($value['mid']>0 && $user_list[$value['mid']]){
+					$value['nickname'] = $user_list[$value['mid']]['nickname'];
+					$value['avatar'] = $user_list[$value['mid']]['avatar'];
+				}
+			}
+		}
     	return $list;
     }
     /**
@@ -55,12 +72,36 @@ class SuggestionViewModel extends ViewModel {
     public function getSuggestionReplyList($id) {
     	$list = $this->where("is_reply = 1 and pid = '%d'", $id)->order('create_time DESC')->select();
         if (!empty($list)) {
-        	foreach ($list as $key => $value) {
+			$userService = D('User','Service');
+			$guest_info = $userService->getUserInfo(0);
+			$user_id = array();
+        	foreach ($list as $key => &$value) {
         		$list[$key]['suggest'] = preg_replace("/<br\s\/>$/", "", $value['suggest']);
-        		empty($value['face']) && $list[$key]['face'] = 'face.jpg';
-        		$value['mid'] == -1 && $list[$key]['nickname'] = '另客';
-	            ($value['mid'] == 0 || empty($value['nickname'])) && $list[$key]['nickname'] = '游客';
+				if ($value['mid'] == -1) {
+					$list[$key]['nickname'] = "另客";
+					$value['avatar'] = $guest_info['avatar'];
+				}else if ($value['mid'] == $userService->getUserId()) {
+					$userinfo = $userService->getUserInfo();
+					$value['nickname'] = $userinfo['nickname'];
+					$value['avatar'] = $userinfo['avatar'];
+					$value['editable'] = "1";
+				}else{
+					$value['nickname'] = $guest_info['nickname'];
+					$value['avatar'] = $guest_info['avatar'];
+					if($value['mid']>0){
+						$user_id[] = $value['mid'];
+					}
+				}
         	}
+			if($user_id){
+				$user_list = $userService->getUserInfo($user_id);
+				foreach($list as $key=> &$value){
+					if($value['mid']>0 && $user_list[$value['mid']]){
+						$value['nickname'] = $user_list[$value['mid']]['nickname'];
+						$value['avatar'] = $user_list[$value['mid']]['avatar'];
+					}
+				}
+			}
         }
         return $list;
     }

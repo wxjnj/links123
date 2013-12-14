@@ -77,7 +77,7 @@ class IndexAction extends CommonAction {
 		//APP应用
 		$app_list = $this->getApps($_SESSION['app_sort']);
 		$this->assign('app_list', $app_list);
-
+        $this->assign("astro",$this->getAstro());
         //气象数据
         $this->assign('weatherData', $this->getWeatherData());
         
@@ -1610,4 +1610,49 @@ class IndexAction extends CommonAction {
 		
 		$this->ajaxReturn($data, '', $stauts);
 	}
+
+   private  function  getAstro($birthday=false){
+       if($birthday){
+           $star=$this->getStar($birthday);
+           $starid=explode('=',$star)[1];
+           $url="http://api.uihoo.com/astro/astro.http.php?fun=day&id=$starid&format=json";
+
+       }else{
+            $star=$this->getStar();
+            $starid=explode('=',$star)[1];
+           $url="http://api.uihoo.com/astro/astro.http.php?fun=year&id=$starid&format=json";
+       }
+       $content=file_get_contents($url);
+       $astro= json_decode($content);
+       if($birthday){
+         return $astro[9]->value;
+       }else{
+           return $astro[0]->value;
+       }
+
+   }
+    private function getStar($astrodate=false){
+        if(!$astrodate){
+            $curtime= getdate(time());
+        }else{
+            $curtime= getdate(strtotime($astrodate));
+        }
+        $m=$curtime["mon"];
+        $d=$curtime["mday"];
+        $xzdict = array ('摩羯=9', '水瓶=10', '双鱼=11', '白羊=0', '金牛=1', '双子=2', '巨蟹=3', '狮子=4', '处女=5', '天秤=6', '天蝎=7', '射手=8' );
+        $zone = array (1222, 122, 222, 321, 421, 522, 622, 722, 822, 922, 1022, 1122, 1222 );
+        if ((100 * $m + $d) >= $zone [0] || (100 * $m + $d) < $zone [1])
+        {
+            $i = 0;
+        }
+        else
+        {
+            for($i = 1; $i < 12; $i ++)
+            {
+                if ((100 * $m + $d) >= $zone [$i] && (100 * $m + $d) < $zone [$i + 1])
+                    break;
+            }
+        }
+        return $xzdict[$i];
+    }
 }

@@ -35,7 +35,7 @@
 			<ul class="jyts_ul">
 				<volist name="suglist" id="vo" key="k">
 					<li>
-						<div class="cont_pl_tx"><img src="__PUBLIC__/Uploads/Faces/{$vo.face}" alt="face" /></div>
+						<div class="cont_pl_tx"><img src="{$vo.avatar}" alt="face" /></div>
 						<div class="jyts_ulfont">
 							<p class="jyts_name"><a class="nickname">{$vo.nickname}</a>&nbsp;<span style="margin:0 5px">{$vo.create_time}</span>
 								<input type="hidden" value="{$vo.id}" />
@@ -59,7 +59,7 @@
 									<volist name="vo.reply" id="val">
 										<div class="reply_div" style="margin-bottom: 24px;">
 											<div style="float:left">
-												<img src="__PUBLIC__/Uploads/Faces/{$val.face}" height="24" width="24" alt="face" />
+												<img src="{$val.avatar}" height="24" width="24" alt="face" />
 											</div>
 											<div style="margin-left: 30px;">
 												<a>{$val.nickname}</a>&nbsp;

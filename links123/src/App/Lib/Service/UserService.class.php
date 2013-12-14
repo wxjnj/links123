@@ -304,22 +304,59 @@ class UserServiceDefault{
 
 	/**
 	 * @desc 返回当前用户的用户信息
+	 * @param mixed $user_id
 	 * @return array
 	 */
-	public function getUserInfo(){
+	public function getUserInfo($user_id=false){
 		$filePath = '/Public/Uploads/Faces/';
-		if($this->isLogin()){
-			return array(
-				'nickname'=>$_SESSION['nickname'],
-				'avatar'=>$filePath.$_SESSION['face']
-			);
-		}else{
+		if($user_id === false) {
+			//获取当前用户的信息
+			if($this->isLogin()){
+				return array(
+					'nickname'=>$_SESSION['nickname'],
+					'avatar'=>$filePath.$_SESSION['face']
+				);
+			}else{
+				return array(
+					'nickname'=>'游客',
+					'avatar'=>$filePath.'face.jpg'
+				);
+			}
+		}elseif($user_id==0){
+			//返回游客信息
 			return array(
 				'nickname'=>'游客',
 				'avatar'=>$filePath.'face.jpg'
 			);
+		}else{
+			$isSingle = false;
+			if(!is_array($user_id)){
+				$user_id = array($user_id);
+				$isSingle = true;
+			}
+			$member = M("Member");
+			$list = $member->where("id in ('".implode("','",$user_id)."')")->select();
+			if(!$list) return array();
+			if($isSingle){
+				$row = $list[0];
+				if(!$row['face']){
+					$row['avatar'] = $filePath.'face.jpg';
+				}else{
+					$row['avatar'] = $filePath.$row['face'];
+				}
+				return $row;
+			}
+			$list_tmp = array();
+			foreach($list as $row){
+				if(!$row['face']){
+					$row['avatar'] = $filePath.'face.jpg';
+				}else{
+					$row['avatar'] = $filePath.$row['face'];
+				}
+				$list_tmp[$row['id']] = $row;
+			}
+			return $list_tmp;
 		}
-
 	}
 
 	/**
@@ -598,6 +635,7 @@ class UserServiceDefault{
 			return 200;
 		}
 	}
+
 	/**
 	 * @desc 验证当前登录状态
 	 */
@@ -754,20 +792,60 @@ class UserServiceSSO extends UserServiceDefault{
 	}
 	/**
 	 * @desc 返回当前用户的用户信息
+	 * @param mixed $user_id
 	 * @return array
 	 */
-	public function getUserInfo(){
+	public function getUserInfo($user_id=false){
 		$default_face = '/Public/Uploads/Faces/face.jpg';
-		if($this->isLogin()){
+		if($user_id === false){
+			if($this->isLogin()){
+				return array(
+					'nickname'=>$_SESSION['nickname'],
+					'avatar'=>empty($_SESSION['face']) ? $default_face : self::SSO_OPEN_HOST.$_SESSION['face']
+				);
+			}else{
+				return array(
+					'nickname'=>'游客',
+					'avatar'=>$default_face
+				);
+			}
+		}elseif($user_id==0){
+			//返回游客信息
 			return array(
-				'nickname'=>$_SESSION['nickname'],
-				'avatar'=>empty($_SESSION['face']) ? $default_face : self::SSO_OPEN_HOST.$_SESSION['face']
+			'nickname'=>'游客',
+			'avatar'=>$default_face
 			);
 		}else{
-			return array(
-				'nickname'=>'游客',
-				'avatar'=>$default_face
-			);
+			$isSingle = false;
+			if(!is_array($user_id)){
+				$user_id = array($user_id);
+				$isSingle = true;
+			}
+			$list = array();
+			//此处需优化
+			foreach($user_id as $uid){
+				$list[] = $this->getUser($uid);
+			}
+			if(!$list) return array();
+			if($isSingle){
+				$row = $list[0];
+				if(!$row['face']){
+					$row['avatar'] = $default_face;
+				}else{
+					$row['avatar'] = self::SSO_OPEN_HOST.$row['avatar'];
+				}
+				return $row;
+			}
+			$list_tmp = array();
+			foreach($list as $row){
+				if(!$row['avatar']){
+					$row['avatar'] = $default_face;
+				}else{
+					$row['avatar'] = self::SSO_OPEN_HOST.$row['avatar'];
+				}
+				$list_tmp[$row['id']] = $row;
+			}
+			return $list_tmp;
 		}
 	}
 	/*
@@ -795,7 +873,7 @@ class UserServiceSSO extends UserServiceDefault{
 	 * 输出符合异步登录的代码到客户端执行，其他应用需要执行onsynlogin操作相应该请求
 	 * @return bool|string
 	 */
-	public function sysnlogin(){
+	public function synlogin(){
 		$syned = empty($_COOKIE['_lnk_syned']) ? 0 : 1;
 		$token = $_COOKIE[$this->token_cookie];
 		$token_expire = $_COOKIE['_lnk_token_expire'];

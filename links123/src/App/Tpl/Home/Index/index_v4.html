@@ -8,7 +8,7 @@
 	<meta name="Description" content="{$description}" />
 	<link rel="stylesheet" href="__STATIC__/min/?b=v303b/css&f=base.css,css.min.css" />
 	<link rel="stylesheet" href="__STATIC__/v303b/skins/{$theme}/style.css" id="J_Skins" />
-	<script>var $CONFIG = { 'STATIC': '__STATIC__','APP' : '__APP__/', 'URL' : '__URL__', 'PUBLIC' : '__PUBLIC__', 'IsLogin' : <empty name="isLogin">1<else />0</empty> ,'needSyn' : <empty name="needSyn">1<else />0</empty>};</script>
+	<script>var $CONFIG = { 'STATIC': '__STATIC__','APP' : '__APP__/', 'URL' : '__URL__', 'PUBLIC' : '__PUBLIC__', 'IsLogin' : <empty name="isLogin">1<else />0</empty> };</script>
 
 	<script>
 	//百度统计
@@ -126,11 +126,13 @@
 								<volist name="thl_list" id="vo" key="m"><a <eq name="thlNow" value="$vo['thl']">class="on"</eq> href="#">{$vo['thl']}</a><if condition='$m neq 12'>-</if></volist>
 							</div>
 							<div class="subcate">
+								<!-- XXX: 这里不要用之前的dl结构，移动端会出样式bug -->
 								<volist name="thl_list" id="vo" key="i">
 									<div class="J_thlz" <neq name="vo['thl']" value="$thlNow">style="display:none;"</neq> >
 									<volist name="vo['thlz']" id="thlz" key="j"><a class="tip <if condition='$thlz["id"] eq $tidNow'>on</if>" href="#" title="{$thlz['tip']}" url="{$thlz['url']}" tid="{$thlz['id']}">{$thlz['name']}</a><neq name="vo['thlz_len']" value="$j">-</neq></volist>
 									</div>
 								</volist>
+
 							</div>
 							<div class="ctls">
 								<input type="text" id="search_text" class="ipt" x-webkit-speech lang="zh-CN" value="{$_COOKIE['keyword']}" autocomplete="off" />
