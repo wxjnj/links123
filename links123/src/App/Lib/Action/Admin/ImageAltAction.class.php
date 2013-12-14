@@ -26,7 +26,7 @@ class ImageAltAction  extends  CommonAction{
             if($page%5==0&&$pages>$page+5)
                 $temppages=$page+5;
             for($i=$page;$i<=$temppages;$i++){
-                    $pagestr.="&nbsp;&nbsp;<a href='/Admin/ImageAlt?page=".$i."'>$page</a>";
+                    $pagestr.="&nbsp;&nbsp;<a href='/Admin/ImageAlt?page=".$i."'>".($i+1)."</a>";
             }
             $pagestr.="<a href='/Admin/ImageAlt?page=".($page+6)."'>下5页</a></div>";
             $this->assign("pagestr",$pagestr);
