@@ -21,7 +21,7 @@ class ImageAltAction  extends  CommonAction{
                 $page=$pages-1;
             }
             $pagestr ="<div class=\"page\"> $allrecords 条记录&#12288;<span style=\"color:#C00\">".($page+1)."</span>/".$pages." 页&#12288;&#12288;";
-            if($page>5)
+            if($page>=5)
                 $pagestr.="<a href='/Admin/ImageAlt?page=".($page-5)."'>上5页</a>";
             if($page%5==0&&$pages>$page+5)
                 $temppages=$page+5;
