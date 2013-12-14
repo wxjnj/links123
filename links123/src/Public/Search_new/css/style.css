@@ -311,8 +311,8 @@ input:focus{ outline: 0; }
 
 #search-result-page-header{margin: 0 auto;width: 960px; height:84px; background-color:#f3f3f3; border-bottom:1px solid #fff;}
 #search-result-page-header-after{margin: 0 auto;width: 960px; height:1px; background-color:#f3f3f3; border-bottom:1px solid #fff;}
-.widescreen #search-result-page-header{width: 1175px;}
-.widescreen #search-result-page-header-after{width: 1175px;}
+.widescreen #search-result-page-header{width: 1000px;}
+.widescreen #search-result-page-header-after{width: 1000px;}
 
 a{color:#727171}
 .logo {
@@ -835,17 +835,17 @@ margin-left: 5px;}
 		width: 130px;
 	}
 
-.widescreen #main-wrap{width:1175px; margin:0 auto;}
+.widescreen #main-wrap{width:1000px; margin:0 auto;}
 .widescreen #header,
 .widescreen	#container,
 .widescreen	#footer{
-		min-width: 1175px;
+		min-width: 1000px;
 		width: 100%;
 	}
 .widescreen	.header-inner,
 .widescreen	.container-inner,
 .widescreen	.footer-inner{
-		width: 1175px;
+		width: 1000px;
 		margin: 0 auto;
 	}
 
