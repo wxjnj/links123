@@ -6,7 +6,7 @@
  * Time: 下午4:09
  */
 
-class ImageAltAction  extends  CommentAction{
+class ImageAltAction  extends  CommonAction{
         public function index(){
             $arr=$this->getImages($_SERVER["DOCUMENT_ROOT"].DIRECTORY_SEPARATOR."Public");
             print_r($arr);
