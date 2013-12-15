@@ -12,9 +12,10 @@ class SitemapAction extends CommonAction {
 	 * @desc index
 	 */
 	public function index() {
-		$this->xml();
+		$this->build_xml();
+		$this->build_html();
 	}
-	public function xml(){
+	private function build_xml(){
 		set_time_limit(0);
 		$cat = M("Category");
 		$links = M("Links");
@@ -75,7 +76,7 @@ class SitemapAction extends CommonAction {
 			echo "error";
 		}
 	}
-	public function html(){
+	private function build_html(){
 		set_time_limit(0);
 		$this->getHeaderInfo();
 		$cat = M("Category");
