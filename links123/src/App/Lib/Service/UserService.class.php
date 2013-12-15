@@ -437,10 +437,11 @@ class UserServiceDefault{
 		unset($_SESSION[C('MEMBER_AUTH_KEY')]);
 		unset($_SESSION['nickname']);
 		unset($_SESSION['face']);
-		session_destroy();
+//		session_destroy();
 		cookie(md5(C('MEMBER_AUTH_KEY')), null);//设置cookie记录用户登录信息，提供给英语角同步登录 Adam 2013.09.27 @todo 安全性，下一步进行单点登录优化
 		cookie("USER_ID", null);//退出清除下次自动登录
 		$this->is_login = false;
+        $this->user_id = 0;
 		return true;
 	}
 
@@ -641,33 +642,40 @@ class UserServiceDefault{
 	 */
 	public function token(){
 		//自动获取当前用户信息
-		//初始化用户状态：目前使用原本的状态判断，日后接入sso
+        //初始化用户状态：目前使用原本的状态判断，日后接入sso
 		session_start();
 		isset($_SESSION[C('MEMBER_AUTH_KEY')]) &&
 		$this->user_id = @ intval($_SESSION[C('MEMBER_AUTH_KEY')]);
-		if (empty($this->user_id)) {
-			$user_str = $_COOKIE["USER_ID"];
-			//没有用户session且自动登录标示Cookie USER_ID 存在执行自动登录过程
-			if (!empty($user_str)) {
-				$ret = explode("|", $user_str);
-				$user_id = intval($ret[0]);
-				$user_info = D("Member")->find($user_id);
+        $user_str = $_COOKIE[md5(C('MEMBER_AUTH_KEY'))];
+		$auto_user_str = $_COOKIE['USER_ID'];
+        //无登陆标识、无自动登录标识
+        if(empty($user_str) && empty($auto_user_str)){
+            $this->logout();
+            $this->getGuestId();
+        }else{
+            if(empty($this->user_id)){
+                if(empty($user_str)){
+                    $user_str = $auto_user_str;
+                }
+                //主站已登录则英语角自动登录
+                $ret = explode("|", $user_str);
+                $user_id = intval($ret[0]);
+                $user_info = D("Member")->find($user_id);
 
-				if (!empty($user_info) && md5($user_info['password'] . $user_info['nickname']) == $ret[1]) {
-					$_SESSION[C('MEMBER_AUTH_KEY')] = $user_info['id'];
-					$_SESSION['nickname'] = $user_info['nickname'];
-					$_SESSION['face'] = empty($user_info['face'])?'face.jpg':$user_info['face'];
-					$_SESSION['skinId'] = $user_info['skin'];
-					$_SESSION['themeId'] = $user_info['themeId'];
+                if (!empty($user_info) && md5($user_info['password'] . $user_info['nickname']) == $ret[1]) {
+                    $_SESSION[C('MEMBER_AUTH_KEY')] = $user_info['id'];
+                    $_SESSION['nickname'] = $user_info['nickname'];
+                    $_SESSION['face'] = empty($user_info['face']) ? 'face.jpg' : $user_info['face'];
+                    $_SESSION['skinId'] = $user_info['skin'];
 
-					$this->user_id = $user_info['id'];
+                    $this->user_id = $user_info['id'];
 
-					//使用cookie过期时间来控制前台登陆的过期时间
-					$home_session_expire = intval(D("Variable")->getVariable("home_session_expire"));
-					cookie(md5("home_session_expire"), time(), $home_session_expire);
-				}
-			}
-		}
+                    //使用cookie过期时间来控制前台登陆的过期时间
+                    $home_session_expire = intval(D("Variable")->getVariable("home_session_expire"));
+                    cookie(md5("home_session_expire"), time(), $home_session_expire);
+                }
+            }
+        }
 	}
 	/*
 	 * 异步登录操作
@@ -969,6 +977,7 @@ class UserServiceSSO extends UserServiceDefault{
 			$this->logouted();
 
 			$this->is_login = false;
+            $this->user_id = 0;
 			return $status;
 		}
 		$this->error = $info['message'];
