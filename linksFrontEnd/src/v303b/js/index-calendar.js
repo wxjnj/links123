@@ -1,3 +1,4 @@
+
 //接口地址是URL + '/getNews'，参数是type，type默认为0，如果cookie中有news_type值，那么type取cookie中的news_type
 var News = {};
 window.newsTimer = null;
@@ -129,7 +130,7 @@ function changeNews(){
         $('.pic-news-tabs').find('a:first').addClass('active');
     }
     $('.extra-box').find('.pic-news').hide();
-    $('.extra-box').find('.pic-news:eq(' + (idx-1) + ')').show();
+    $('.social-box:visible').find('.pic-news:eq(' + (idx-1) + ')').show();
     /*
     $('.extra-box').find('.pic-news').find('.pic-news-title').hide();
     $('.extra-box').find('.pic-news').find('.pic-news-title:eq('+(idx-1)+')').show();
