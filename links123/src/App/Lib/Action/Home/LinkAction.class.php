@@ -33,7 +33,7 @@ class LinkAction extends CommonAction {
 			$flag = $linkModel->where("link = '%s'", $url)->setInc("click_num");
             $linkdata= $linkModel->where("link like '%".str_replace("http://","",$url)."%'")->find();
 		}
-		if($linkdata){
+		if($linkdata||$mod){
 		$url = str_replace('&amp;', '&', $url);
 		
 		echo '<style type="text/css">a{display:none}</style>
