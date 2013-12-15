@@ -31,7 +31,7 @@ class LinkAction extends CommonAction {
 		} else {
 			$linkModel = D("Links");
 			$flag = $linkModel->where("link = '%s'", $url)->setInc("click_num");
-            $linkdata= $linkModel->where("link='%".str_replace("http://","",$url)."%'")->find();
+            $linkdata= $linkModel->where("link like '%".str_replace("http://","",$url)."%'")->find();
             print("Test".str_replace("http://","",$url));
             print_r($linkdata);
 		}
@@ -89,7 +89,7 @@ class LinkAction extends CommonAction {
 			
 		} else {
             $linkModel = D("Links");
-            $linkdata= $linkModel->where("link='%".str_replace("http://","",$tag)."%'")->find();
+            $linkdata= $linkModel->where("link like '%".str_replace("http://","",$tag)."%'")->find();
             if($linkdata){
                 //如果用户输入的是网址，则自动跳转
                 if (preg_match('/\.\w+/is', $tag)) {
