@@ -41,7 +41,8 @@ class LinkAction extends CommonAction {
 				<script type="text/javascript">window.location.href="' . (strpos ($url, 'http://')===FALSE && strpos ($url, 'https://')===FALSE ? 'http://' . $url : $url) . '";</script>';
 		exit(0);
         }else{
-            $this->direct();
+          $showstr="<script>alert('该网址没有收录')</script>";
+           $this->show($showstr);
         }
 		
 	}
