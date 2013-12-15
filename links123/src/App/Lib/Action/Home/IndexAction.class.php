@@ -86,6 +86,7 @@ class IndexAction extends CommonAction {
         $this->assign('newsData', $this->getNews());
         $this->assign('userNewsType', intval(cookie('news_type')));
         
+        
 		$this->getHeaderInfo();
 		$this->display('index_v4');
 	}
@@ -1392,9 +1393,9 @@ class IndexAction extends CommonAction {
      * 抓取英闻
      */
     protected function getEnglishNews() {
-    	$hotNews = S('EnglishNewsList');
+    	//$hotNews = S('EnglishNewsList');
     	
-    	if (!$hotNews) {
+    //	if (!$hotNews) {
     	
     		$url = 'http://www.en84.com/';
     		$str = file_get_contents($url);
@@ -1425,11 +1426,11 @@ class IndexAction extends CommonAction {
 	    		if ($news && $imgNew) {
 	    			S('EnglishNewsList_back', $hotNews);
 	    		}
-    		}
+    		//}
     		
-    		if (!$hotNews) {
-    			$hotNews = S('EnglishNewsList_back');
-    		}
+//     		if (!$hotNews) {
+//     			$hotNews = S('EnglishNewsList_back');
+//     		}
     	}
     	shuffle($hotNews['news']);
     	
