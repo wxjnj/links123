@@ -32,8 +32,6 @@ class LinkAction extends CommonAction {
 			$linkModel = D("Links");
 			$flag = $linkModel->where("link = '%s'", $url)->setInc("click_num");
             $linkdata= $linkModel->where("link like '%".str_replace("http://","",$url)."%'")->find();
-            print("Test".str_replace("http://","",$url));
-            print_r($linkdata);
 		}
 		if($linkdata){
 		$url = str_replace('&amp;', '&', $url);
