@@ -225,6 +225,7 @@
 			</div><!-- app-box-body end -->
 		</div><!-- app-box end -->
 		<div class="extra-wrap">
+			
 			<div class="lft-box extra-box">
 				<div class="title-tabs" id="social-title-tabs1">
 					<span>发现你最喜欢的内容</span>
@@ -243,9 +244,12 @@
 								<a href="javascript:;" data-tab="{$k}"></a>
 							</volist>
 						</div>
-						<!-- title和desc要可以遍历，请修改 -->
-						<h3 class="pic-news-title"></h3>
-						<span class="pic-news-desc"><a href="#" target="_blank"></a></span>
+						<div class="pic-new-title-list">
+							<h3 class="pic-news-title"></h3>
+						</div>
+						<div class="pic-new-desc-list">
+							<span class="pic-news-desc"><a href="#" target="_blank"></a></span>
+						</div>
 					</div>
 					<div class="text-news">
 						<div class="text-news-div">
@@ -258,6 +262,7 @@
 				</div>
 				</volist>
 			</div>
+
 			<div class="rgt-box extra-box extra-calendar">
 				<include file="Contorls:calendar" />
 			</div>
