@@ -77,6 +77,7 @@ class IndexAction extends CommonAction {
 		//APP应用
 		$app_list = $this->getApps($_SESSION['app_sort']);
 		$this->assign('app_list', $app_list);
+       // print_r($this->getAstro());
         $this->assign("astro",$this->getAstro());
         //气象数据
         $this->assign('weatherData', $this->getWeatherData());
@@ -1592,27 +1593,34 @@ class IndexAction extends CommonAction {
 		return $data;
 	}
 
-	private function getAstro($birthday = false){
-
+    /**
+     * 获取星座的运势信息
+     * @param bool $birthday
+     * @return mixed
+     */
+    private function getAstro($birthday = false){
 		$star=$this->getStar($birthday);
 		$starArr = explode('=',$star);
 		$starid=$starArr[1];
-
 		if($birthday){
 			$url="http://api.uihoo.com/astro/astro.http.php?fun=day&id=$starid&format=json";
 		}else{
-			$url="http://api.uihoo.com/astro/astro.http.php?fun=year&id=$starid&format=json";
+			$url="http://api.uihoo.com/astro/astro.http.php?fun=day&id=$starid&format=json";
 		}
 		$content=file_get_contents($url);
 		$astro= json_decode($content, true);
 		if($birthday){
-			return $astro[9]['value'];
+			return $astro;
 		}else{
-			return $astro[0]['value'];
+			return $astro;
 		}
-
 	}
-	
+
+    /**
+     * 获取星座
+     * @param bool $astrodate
+     * @return mixed
+     */
     private function getStar($astrodate=false){
         if(!$astrodate){
             $curtime= getdate(time());
