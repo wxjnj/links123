@@ -27,6 +27,8 @@ class IndexAction extends CommonAction {
 			$_SESSION['myarea_sort'] = $mbrNow['myarea_sort'] ? explode(',', $mbrNow['myarea_sort']) : '';
 			$_SESSION['app_sort'] = $mbrNow['app_sort'];
 			$_SESSION['news_history'] = explode(',',$mbrNow['news_history']);
+		} else {
+			$this->userService->getGuestId();
 		}
 		
 		//取出皮肤ID和模板ID
@@ -681,7 +683,7 @@ class IndexAction extends CommonAction {
 		$today = intval(date('d', $nowTime));
 
 		$user_id = $this->userService->getId();
-
+		
 		if ($user_id) {
 			$scheduleModel = M("Schedule");
 		
@@ -850,7 +852,7 @@ class IndexAction extends CommonAction {
 		$today = intval(date('d', $nowTime));
 	
 		$user_id = $this->userService->getId();
-	
+		
 		if ($user_id) {
 			$noteModel = new NoteModel();
 	
@@ -903,7 +905,7 @@ class IndexAction extends CommonAction {
 		}
 
 		$user_id = $this->userService->getId();
-			
+		
 		if ($user_id) {
 			
 			$noteModel = new NoteModel();
@@ -947,7 +949,7 @@ class IndexAction extends CommonAction {
 		if ($id) {
 	
 			$user_id = $this->userService->getId();
-				
+			
 			if ($user_id) {
 	
 				$noteModel = new NoteModel();
@@ -978,7 +980,6 @@ class IndexAction extends CommonAction {
 		$id = $this->_param('web_id');
 	
 		$user_id = $this->userService->getUserId();
-	
 		$result = 0;
 	
 		if ($id) {

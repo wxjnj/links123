@@ -142,6 +142,7 @@
 						</form>
 					</div>
 					<div class="header-weather">
+						<em class="weather-tip">暂无xxx的天气数据</em>
 						<span class="region">{$weatherData['city']}</span>
 						<span class="degree">{$weatherData['temp']}°</span>
 						<span class="info"><b class="weather-icon"></b><b class="weather-desc">{$weatherData['sun']}</b>，空气{$weatherData['air']}</span>			
@@ -153,7 +154,6 @@
 								<div class="region-ul"></div>
 							</div>
 						</div>
-						<em class="weather-tip">暂无xxx的天气数据</em>
 					</div><!-- // .header-weather -->
 				</div>
 			</div>
@@ -235,7 +235,7 @@
 				<div class="social-box" <if condition="$vo.type neq $userNewsType">style="display:none;"</if>>
 						
 					<volist name="vo['pics']" id="newImgs" key="k">
-					<div class="pic-news" <if condition="$newImgs.type neq $userNewsType">style="display:none;"</if>>
+					<div class="pic-news" <if condition="$k neq 1">style="display:none;"</if>>
 						<div class="pics-box">
 							<a href="{$newImgs.url}" target="_blank"><img src="{$newImgs.img}" alt="{$newImgs.title}" /></a>
 						</div>
@@ -245,7 +245,7 @@
 							<a href="javascript:;" data-tab="3"></a>
 							<a href="javascript:;" data-tab="4"></a>
 						</div>
-						<h3 class="pic-news-title">{$newImgs.title}</h3>
+						<h3 class="pic-news-title"><a href="{$newImgs.url}" target="_blank">{$newImgs.title}</a></h3>
 						<span class="pic-news-desc"><a href="{$newImgs.url}" target="_blank">{$newImgs.desc}</a></span>
 					</div>						
 					</volist>

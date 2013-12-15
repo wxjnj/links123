@@ -37,9 +37,9 @@ $('.text-news').find('p:gt(10)').each(function(){
     $(this).addClass('wide-news');
 }); 
 
-$('.social-box').find('.pic-news-title').each(function(k, v){
+$('.social-box').find('.pic-news-title a').each(function(k, v){
     var s = $(v).html();
-    $(v).attr('title', s).html(cutstr(s, 38));
+    $(v).attr('title', s).html(cutstr(s, 35));
 });
 $('.social-box').find('.pic-news-desc a').each(function(k, v){
     var s = $(v).html();

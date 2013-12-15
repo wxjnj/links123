@@ -564,6 +564,11 @@ class CommonAction extends Action {
     			$apps[$appId] = $appList[$appId];
     		}
     		
+    		//如果APP更新，那么新添加的数据自动累加到后面
+    		if (count($apps) < count($appList)) {
+    			 
+    			$apps = $apps + $appList;
+    		}
     	} else {
     		
     		$apps = $appList;

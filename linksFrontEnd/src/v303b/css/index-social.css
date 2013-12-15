@@ -109,6 +109,8 @@
 	font-weight: 100;
 	margin-top: 10px;
 	overflow: hidden;
+	word-wrap: break-word; 
+	word-break: break-all;	
 }
 .pic-news-title a {
 	color: #000000;

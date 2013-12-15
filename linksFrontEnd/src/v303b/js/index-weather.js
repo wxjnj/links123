@@ -71,7 +71,7 @@ $(function(){
                 }
                 if(d.n == '北京') {
                     c = c.toLowerCase();
-                    if(!(c == 'bj' || c =='beijing' || c == '北京' || c)){
+                    if(!(c == 'bj' || c =='beijing' || c == '北京')){
               //          self.load(self.oldcity);
                         $('.weather-tip')
                             .html('暂无' + c + '的天气数据')
