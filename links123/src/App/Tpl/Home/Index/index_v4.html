@@ -235,7 +235,7 @@
 				<div class="social-box" <if condition="$vo.type neq $userNewsType">style="display:none;"</if>>
 						
 					<volist name="vo['pics']" id="newImgs" key="k">
-					<div class="pic-news" <if condition="$newImgs.type neq $userNewsType">style="display:none;"</if>>
+					<div class="pic-news" <if condition="$k neq 0">style="display:none;"</if>>
 						<div class="pics-box">
 							<a href="{$newImgs.url}" target="_blank"><img src="{$newImgs.img}" alt="{$newImgs.title}" /></a>
 						</div>
