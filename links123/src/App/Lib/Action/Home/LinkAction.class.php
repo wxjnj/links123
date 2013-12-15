@@ -23,6 +23,7 @@ class LinkAction extends CommonAction {
 			$this->error("对不起，链接不存在！");
 		}
 		$flag = 0;
+        $linkdata=false;
 		if ($mod == "myarea") {
 			$mid = $this->userService->getUserId();
 			$myarea = D("Myarea");
@@ -30,14 +31,18 @@ class LinkAction extends CommonAction {
 		} else {
 			$linkModel = D("Links");
 			$flag = $linkModel->where("link = '%s'", $url)->setInc("click_num");
+            $linkdata= $ $linkModel->where("link='%s",str_replace("http://","",$url))->find();
 		}
-		
+		if($linkdata){
 		$url = str_replace('&amp;', '&', $url);
 		
 		echo '<style type="text/css">a{display:none}</style>
 				<script src="http://s96.cnzz.com/stat.php?id=4907803&web_id=4907803" language="JavaScript"></script>
 				<script type="text/javascript">window.location.href="' . (strpos ($url, 'http://')===FALSE && strpos ($url, 'https://')===FALSE ? 'http://' . $url : $url) . '";</script>';
 		exit(0);
+        }else{
+            $this->direct();
+        }
 		
 	}
 	
@@ -80,25 +85,28 @@ class LinkAction extends CommonAction {
 			$model->where("id={$linkNow['id']}")->setInc("click_num");
 			
 		} else {
-			
-			//如果用户输入的是网址，则自动跳转
-			if (preg_match('/\.\w+/is', $tag)) {
-				
-				if (!preg_match('/^http[s]?:\/\/(.*)/is', $tag)) {
-					
-					$directUrl = 'http://' . $tag;
-				} else {
+            $linkModel = D("Links");
+            $linkdata= $ $linkModel->where("link='%s",str_replace("http://","",$tag))->find();
+            if($linkdata){
+                //如果用户输入的是网址，则自动跳转
+                if (preg_match('/\.\w+/is', $tag)) {
 
-					$directUrl = $tag;
-				}
-				
-// 				$headerInfo = get_headers($directUrl, 1);
-// 				if(!preg_match('/200|301|302/', $headerInfo[0])){
-					
-// 					$directUrl = '';
-// 				}
-				
-			}
+                    if (!preg_match('/^http[s]?:\/\/(.*)/is', $tag)) {
+
+                        $directUrl = 'http://' . $tag;
+                    } else {
+
+                        $directUrl = $tag;
+                    }
+
+    // 				$headerInfo = get_headers($directUrl, 1);
+    // 				if(!preg_match('/200|301|302/', $headerInfo[0])){
+
+    // 					$directUrl = '';
+    // 				}
+
+                }
+            }
 			
 		}
 		
