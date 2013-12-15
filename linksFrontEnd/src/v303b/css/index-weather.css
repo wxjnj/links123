@@ -190,4 +190,14 @@
     line-height: 25px;
 }
 
+.weather-tip {
+    position: absolute;
+    top: 25px;
+    padding: 2px 5px;
+    background-color: #333;
+    color: #fff;
+    line-height: 20px;
+    border-radius: 3px;
+    display: none;
+}
 
