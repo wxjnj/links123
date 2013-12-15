@@ -228,29 +228,35 @@
 			<div class="lft-box extra-box">
 				<div class="title-tabs" id="social-title-tabs">
 					<span>发现你最喜欢的内容</span>
-					<ul></ul>
+					<ul><volist name="newsData['column']" id="vo"><li data-tab="{$vo.type}" data-status="{$vo.status}" <if condition="$vo.type eq $userNewsType">class="active"</if>>{$vo.name}</li></volist></ul>
 				</div>
-
-				<div class="social-box">
+				<volist name="newsData['news']" id="vo">
+				<div class="social-box" <if condition="$vo.type neq $userNewsType">style="display:none;"</if>>
 					<div class="pic-news">
 						<div class="pics-box">
-							<a href="#" target="_blank"><img /></a>
+							<volist name="vo['pics']" id="newImgs" key="k">
+								<a href="#" target="_blank"><img src="{$newImgs.img}" alt="{$newImgs.title}" /></a>
+							</volist>
 						</div>
 						<div class="pic-news-tabs">
-							<a class="active" href="javascript:;" data-tab="0"></a>
-							<a href="javascript:;" data-tab="1"></a>
-							<a href="javascript:;" data-tab="2"></a>
-							<a href="javascript:;" data-tab="3"></a>
+							<volist name="vo['pics']" id="newImgs" key="k">
+								<a href="javascript:;" data-tab="{$k}"></a>
+							</volist>
 						</div>
+						<!-- title和desc要可以遍历，请修改 -->
 						<h3 class="pic-news-title"></h3>
 						<span class="pic-news-desc"><a href="#" target="_blank"></a></span>
 					</div>
 					<div class="text-news">
-						<div class="text-news-div"></div>
+						<div class="text-news-div">
+							<volist name="vo['texts']" id="news" key="k">
+								<p><b></b><a title="{$news.title}" rel="external nofollow" target="_blank" href="{$news.url}">{$news.title}</a></p>
+							</volist>
+						</div>
 						<p class="more-news"><a href="#" target="_blank" rel="external nofollow" title="更多新闻">更多新闻</a></p>
 					</div>
 				</div>
-
+				</volist>
 			</div>
 			<div class="rgt-box extra-box extra-calendar">
 				<include file="Contorls:calendar" />

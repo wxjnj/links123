@@ -83,6 +83,9 @@ class IndexAction extends CommonAction {
         
         $this->assign('friend_links', $friend_links);
         
+        $this->assign('newsData', $this->getNews());
+        $this->assign('userNewsType', intval(cookie('news_type')));
+        
 		$this->getHeaderInfo();
 		$this->display('index_v4');
 	}
@@ -294,40 +297,6 @@ class IndexAction extends CommonAction {
 		
 		$this->getHeaderInfo();
 		$this->display('index');
-	}
-	
-	/**
-	 * @name getArealistDefault
-	 * @desc 获取默认我的底盘
-	 * @author Frank UPDATE 2013-08-20
-	 */
-	public function getArealistDefault() {
-		$_SESSION['arealist'] = $_SESSION['arealist_default'];
-		$arealist_default1 = $arealist_default2 = '';
-		foreach ($_SESSION['arealist_default'] as $value) {
-			$arealist_default1 .= "<li title='拖动排序' url='" . $value['url'] . "' id='area_" . $value['id'] . "' mid='" . $value['id'] . "'>" . $value['web_name'] . "</li>";
-			$arealist_default2 .= "<li><a href='http://" . $value['url'] . "' target='_blank' myid='" . $value['id'] . "'>" . $value['web_name'] . "</a></li>";
-		}
-		echo "getOK|" . $arealist_default1 . "|" . $arealist_default2;
-	}
-
-	/**
-	 * @name ann_detail
-	 * @desc 公告明细
-	 * @param id
-	 * @author Frank UPDATE 2013-08-20
-	 */
-	public function ann_detail() {
-		$id = intval($this->_param('id'));
-		$announce = M("Announcement");
-		$annNow = $announce->getById($id);
-		$announce->where("id = '%d'", $id)->setInc("click_num");
-		$annNow['create_time'] = date('Y-m-d H:i', $annNow['create_time']);
-		$annNow['content'] = nl2br($annNow['content']);
-		$annNow["content"] = checkLinkUrl($annNow["content"]);
-		$this->assign("annNow", $annNow);
-		
-		$this->display();
 	}
 
 	/**
@@ -1577,8 +1546,8 @@ class IndexAction extends CommonAction {
 	 */
 	public function getNews() {
 		
-		$newsType = intval($this->_param('type'));
-		$data = $newsData =  array();
+		//$newsType = intval($this->_param('type'));
+		$data = $newsData = array();
 
 		$data['column'] = array(
 			array('type' => 0, 'name' => '英闻', 'url' => 'http://www.en84.com/', 'status' => 0),
@@ -1588,49 +1557,59 @@ class IndexAction extends CommonAction {
 			array('type' => 4, 'name' => '社交', 'url' => '', 'status' => 1)
 		);
 		
-		switch ($newsType) {
-			
-			case 1 : 
+		foreach ($data['column'] as $k => $v) {
+		
+			if ($v['status'] == 0) {
+				switch ($newsType) {
+					
+					case 1 : 
+						
+						$newsData = $this->getHotNews();
+						break;
+						
+					case 2 :
+						$newsData = $this->getBlogNews();
+						break;
+						
+					default:
+						
+						$newsData = $this->getEnglishNews();
+						break;
+				}
 				
-				$newsData = $this->getHotNews();
-				break;
-				
-			case 2 :
-				$newsData = $this->getBlogNews();
-				break;
-				
-			default:
-				
-				$newsData = $this->getEnglishNews();
-				break;
+				//$data['news'][$k] = $v;
+				$data['news'][$k]['pics'] = $newsData['imgNews'];
+				$data['news'][$k]['texts'] = $newsData['news'];
+				$data['news'][$k]['type'] = $k;
+				//TODO 添加排序
+			}
 		}
+		//$this->ajaxReturn($data, '', $stauts);
 		
-		$data['pics'] = $newsData['imgNews'];
-		$data['texts'] = $newsData['news'];
-		
-		$this->ajaxReturn($data, '', $stauts);
+		return $data;
 	}
 
-   private  function  getAstro($birthday=false){
-       if($birthday){
-           $star=$this->getStar($birthday);
-           $starid=explode('=',$star)[1];
-           $url="http://api.uihoo.com/astro/astro.http.php?fun=day&id=$starid&format=json";
+	private function getAstro($birthday = false){
 
-       }else{
-            $star=$this->getStar();
-            $starid=explode('=',$star)[1];
-           $url="http://api.uihoo.com/astro/astro.http.php?fun=year&id=$starid&format=json";
-       }
-       $content=file_get_contents($url);
-       $astro= json_decode($content);
-       if($birthday){
-         return $astro[9]->value;
-       }else{
-           return $astro[0]->value;
-       }
+		$star=$this->getStar($birthday);
+		$starArr = explode('=',$star);
+		$starid=$starArr[1];
 
-   }
+		if($birthday){
+			$url="http://api.uihoo.com/astro/astro.http.php?fun=day&id=$starid&format=json";
+		}else{
+			$url="http://api.uihoo.com/astro/astro.http.php?fun=year&id=$starid&format=json";
+		}
+		$content=file_get_contents($url);
+		$astro= json_decode($content, true);
+		if($birthday){
+			return $astro[9]['value'];
+		}else{
+			return $astro[0]['value'];
+		}
+
+	}
+	
     private function getStar($astrodate=false){
         if(!$astrodate){
             $curtime= getdate(time());
