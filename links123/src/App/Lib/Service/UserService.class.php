@@ -837,7 +837,7 @@ class UserServiceSSO extends UserServiceDefault{
 			if(!$list) return array();
 			if($isSingle){
 				$row = $list[0];
-				if(!$row['face']){
+				if(!$row['avatar']){
 					$row['avatar'] = $default_face;
 				}else{
 					$row['avatar'] = self::SSO_OPEN_HOST.$row['avatar'];
