@@ -84,8 +84,7 @@ class IndexAction extends CommonAction {
         $this->assign('friend_links', $friend_links);
         
         $this->assign('newsData', $this->getNews());
-        $this->assign('userNewsType', intval(cookie('news_type')));
-        
+        $this->assign('userNewsType', intval($_COOKIE['news_type']));
         
 		$this->getHeaderInfo();
 		$this->display('index_v4');
@@ -1584,6 +1583,7 @@ class IndexAction extends CommonAction {
 				$data['news'][$k]['pics'] = $newsData['imgNews'];
 				$data['news'][$k]['texts'] = $newsData['news'];
 				$data['news'][$k]['type'] = $k;
+				$data['news'][$k]['more_url'] = $v['url'];
 				//TODO 添加排序
 			}
 		}

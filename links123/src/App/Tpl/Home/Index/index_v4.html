@@ -237,7 +237,7 @@
 					<volist name="vo['pics']" id="newImgs" key="k">
 					<div class="pic-news" <if condition="$newImgs.type neq $userNewsType">style="display:none;"</if>>
 						<div class="pics-box">
-							<a href="#" target="_blank"><img src="{$newImgs.img}" alt="{$newImgs.title}" /></a>
+							<a href="{$newImgs.url}" target="_blank"><img src="{$newImgs.img}" alt="{$newImgs.title}" /></a>
 						</div>
 						<div class="pic-news-tabs">
 							<a href="javascript:;" data-tab="1"></a>
@@ -246,7 +246,7 @@
 							<a href="javascript:;" data-tab="4"></a>
 						</div>
 						<h3 class="pic-news-title">{$newImgs.title}</h3>
-						<span class="pic-news-desc"><a href="#" target="_blank">{$newImgs.desc}</a></span>
+						<span class="pic-news-desc"><a href="{$newImgs.url}" target="_blank">{$newImgs.desc}</a></span>
 					</div>						
 					</volist>
 
@@ -256,7 +256,7 @@
 								<p><b></b><a title="{$news.title}" rel="external nofollow" target="_blank" href="{$news.url}">{$news.title}</a></p>
 							</volist>
 						</div>
-						<p class="more-news"><a href="#" target="_blank" rel="external nofollow" title="更多新闻">更多新闻</a></p>
+						<p class="more-news"><a href="{$vo.more_url}" target="_blank" rel="external nofollow" title="更多新闻">更多新闻</a></p>
 					</div>
 				</div>
 				</volist>
