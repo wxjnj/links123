@@ -117,11 +117,13 @@
 	color: #999;
 	margin-top: 10px;
 	display: block;
-	width: 110%;
+	width: 100%;
 }
 .pic-news-desc a,
 .pic-news-desc a:active,
 .pic-news-desc a:hover{
+	word-wrap: break-word; 
+	word-break: break-all;
 	color: #999;
 }
 
