@@ -16,9 +16,11 @@ class LinkAction extends CommonAction {
 	 * @author Frank UPDATE 2013-08-17
 	 */
 	public function index() {
-		$url = $this->_param('url');
-		$mod = $this->_param('mod');
-		
+		//$url = $this->_param('url');
+		//$mod = $this->_param('mod');
+		$url=$_REQUEST["url"];
+        $mod=$_REQUEST["mod"];
+        //print_r($_REQUEST);
 		if (empty($url)) {
 			$this->error("对不起，链接不存在！");
 		}
@@ -33,7 +35,9 @@ class LinkAction extends CommonAction {
 			$flag = $linkModel->where("link = '%s'", $url)->setInc("click_num");
             $linkdata= $linkModel->where("link like '%".str_replace("http://","",$url)."%'")->find();
 		}
-		if($linkdata||$mod){
+       // print $mod."<br>";
+        //print $url."<br>";
+		if(($mod== "myarea")||$linkdata){
 		$url = str_replace('&amp;', '&', $url);
 		
 		echo '<style type="text/css">a{display:none}</style>
@@ -41,10 +45,10 @@ class LinkAction extends CommonAction {
 				<script type="text/javascript">window.location.href="' . (strpos ($url, 'http://')===FALSE && strpos ($url, 'https://')===FALSE ? 'http://' . $url : $url) . '";</script>';
 		exit(0);
         }else{
-          $showstr="<script>alert('该网址没有收录')</script>";
+         $showstr="<script>alert('该网址没有收录')</script>";
            $this->show($showstr);
         }
-		
+
 	}
 	
 	public function tag() {
