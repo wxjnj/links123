@@ -13,5 +13,5 @@ var screenStyle = 'widescreen';
 var windowWidth=window.innerWidth
 || document.documentElement.clientWidth
 || document.body.clientWidth;
-if(windowWidth < 1170){ screenStyle = 'widescreen normalscreen'; }
+//if(windowWidth < 1170){ screenStyle = 'widescreen normalscreen'; }
 document.getElementsByTagName('body')[0].className = screenStyle;
