@@ -225,32 +225,31 @@
 			</div><!-- app-box-body end -->
 		</div><!-- app-box end -->
 		<div class="extra-wrap">
-			
+
 			<div class="lft-box extra-box">
-				<div class="title-tabs" id="social-title-tabs1">
+				<div class="title-tabs" id="social-title-tabs">
 					<span>发现你最喜欢的内容</span>
 					<ul><volist name="newsData['column']" id="vo"><li data-tab="{$vo.type}" data-status="{$vo.status}" <if condition="$vo.type eq $userNewsType">class="active"</if>>{$vo.name}</li></volist></ul>
 				</div>
 				<volist name="newsData['news']" id="vo">
 				<div class="social-box" <if condition="$vo.type neq $userNewsType">style="display:none;"</if>>
+						
+					<volist name="vo['pics']" id="newImgs" key="k">
 					<div class="pic-news">
 						<div class="pics-box">
-							<volist name="vo['pics']" id="newImgs" key="k">
-								<a href="#" target="_blank"><img src="{$newImgs.img}" alt="{$newImgs.title}" /></a>
-							</volist>
+							<a href="#" target="_blank"><img src="{$newImgs.img}" alt="{$newImgs.title}" /></a>
 						</div>
 						<div class="pic-news-tabs">
-							<volist name="vo['pics']" id="newImgs" key="k">
-								<a href="javascript:;" data-tab="{$k}"></a>
-							</volist>
+							<a href="javascript:;" data-tab="1"></a>
+							<a href="javascript:;" data-tab="2"></a>
+							<a href="javascript:;" data-tab="3"></a>
+							<a href="javascript:;" data-tab="4"></a>
 						</div>
-						<div class="pic-new-title-list">
-							<h3 class="pic-news-title"></h3>
-						</div>
-						<div class="pic-new-desc-list">
-							<span class="pic-news-desc"><a href="#" target="_blank"></a></span>
-						</div>
-					</div>
+						<h3 class="pic-news-title">{$newImgs.img}</h3>
+						<span class="pic-news-desc"><a href="#" target="_blank">{$newImgs.img}</a></span>
+					</div>						
+					</volist>
+
 					<div class="text-news">
 						<div class="text-news-div">
 							<volist name="vo['texts']" id="news" key="k">
