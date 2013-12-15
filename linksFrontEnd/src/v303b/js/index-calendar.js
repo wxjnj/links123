@@ -57,15 +57,20 @@ function getNews(type){
         News.pics = [];
 
         $.each(data.data.pics, function(k, v){
-            v.descshort = cutstr(v.desc, 120);
+            v.descshort = cutstr($.trim(v.desc), 120);
+            v.titleshort = cutstr(v.title, 38);
             News.pics.push(v);
         });
 
         $('.text-news-div').empty();
+        var stringLength = 38;
+        if($('body').hasClass('widescreen')) {
+            stringLength = 42;
+        }
         $.each(data.data.texts, function(k, v){
             $('.text-news-div').append('<p><b></b><a href="' + 
                 v.url + '" target="_blank" rel="external nofollow" title="' + 
-                v.title + '">' + v.title + '</a></p>');
+                v.title + '">' + cutstr(v.title, stringLength) + '</a></p>');
                 //v.title + '">' + cutstr(v.title, 35) + '</a></p>');
         });     
 
@@ -148,7 +153,7 @@ function changeNews(){
         'alt': o.title
     }).parent('a').attr('href', o.url);
     $('.pic-news')
-        .find('.pic-news-title').html('<a target="_blank" href="'+ o.url +'">' + o.title + '</a>').end()
+        .find('.pic-news-title').html('<a target="_blank" href="'+ o.url +'" title="' + o.title + '">' + o.titleshort + '</a>').end()
         .find('.pic-news-desc a').attr('href', o.url).html(o.descshort);
 }
 /*
