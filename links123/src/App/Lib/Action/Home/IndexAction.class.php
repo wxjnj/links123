@@ -1393,9 +1393,9 @@ class IndexAction extends CommonAction {
      * 抓取英闻
      */
     protected function getEnglishNews() {
-    	//$hotNews = S('EnglishNewsList');
+    	$hotNews = S('EnglishNewsList');
     	
-    //	if (!$hotNews) {
+    	if (!$hotNews) {
     	
     		$url = 'http://www.en84.com/';
     		$str = file_get_contents($url);
@@ -1426,11 +1426,11 @@ class IndexAction extends CommonAction {
 	    		if ($news && $imgNew) {
 	    			S('EnglishNewsList_back', $hotNews);
 	    		}
-    		//}
+    		}
     		
-//     		if (!$hotNews) {
-//     			$hotNews = S('EnglishNewsList_back');
-//     		}
+    		if (!$hotNews) {
+    			$hotNews = S('EnglishNewsList_back');
+    		}
     	}
     	shuffle($hotNews['news']);
     	
@@ -1548,7 +1548,7 @@ class IndexAction extends CommonAction {
 	public function getNews() {
 		
 		//$newsType = intval($this->_param('type'));
-		$data = $newsData = array();
+		$data = array();
 
 		$data['column'] = array(
 			array('type' => 0, 'name' => '英闻', 'url' => 'http://www.en84.com/', 'status' => 0),
@@ -1559,10 +1559,14 @@ class IndexAction extends CommonAction {
 		);
 		
 		foreach ($data['column'] as $k => $v) {
-		
+			$newsData = array();
 			if ($v['status'] == 0) {
-				switch ($newsType) {
-					
+				switch ($k) {
+					case 0 :
+						
+						$newsData = $this->getEnglishNews();
+						
+						break;
 					case 1 : 
 						
 						$newsData = $this->getHotNews();
@@ -1573,8 +1577,6 @@ class IndexAction extends CommonAction {
 						break;
 						
 					default:
-						
-						$newsData = $this->getEnglishNews();
 						break;
 				}
 				
