@@ -21,6 +21,8 @@ class CategoryAction extends CommonAction {
 		$language = $this->_param('lan');
 		$rid = $this->_param('rid');
 		
+		$this->getHeaderInfo(array('title' => '搜索链接'));
+		
 		$this->assign('language', $language);
 		$this->getMyCats($language);
 		$this->assign('rid', $rid);

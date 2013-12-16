@@ -164,7 +164,7 @@
 				<a href="javascript:;" class="zld-tip-close">×</a>
 				<div class="content">标签可以拖动排序！</div>
 			</div>
-			<form action="{:U('Link/index')}?mod=myarea" id="J_MyAreaForm" target="_blank" method="post"><input type="hidden" name="url" value="" /></form>
+			<form action="{:U('Link/index?mod=myarea')}" id="J_MyAreaForm" target="_blank" method="post"><input type="hidden" name="url" value="" /></form>
 			<ul id="J_sortable">
 				<volist name="_SESSION['myarea_sort']" id="areaid">
 					<if condition="$_SESSION['arealist'][$areaid]['id'] neq ''">
