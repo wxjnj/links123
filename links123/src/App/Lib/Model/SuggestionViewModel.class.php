@@ -80,11 +80,10 @@ class SuggestionViewModel extends ViewModel {
 				if ($value['mid'] == -1) {
 					$list[$key]['nickname'] = "另客";
 					$value['avatar'] = $guest_info['avatar'];
-				}else if ($value['mid'] == $userService->getUserId()) {
+				}else if ($value['mid'] > 0 && $value['mid'] == $userService->getUserId()) {
 					$userinfo = $userService->getUserInfo();
 					$value['nickname'] = $userinfo['nickname'];
 					$value['avatar'] = $userinfo['avatar'];
-					$value['editable'] = "1";
 				}else{
 					$value['nickname'] = $guest_info['nickname'];
 					$value['avatar'] = $guest_info['avatar'];
