@@ -40,7 +40,7 @@ class LinkAction extends CommonAction {
 				<script type="text/javascript">window.location.href="' . (strpos ($url, 'http://')===FALSE && strpos ($url, 'https://')===FALSE ? 'http://' . $url : $url) . '";</script>';
 		exit(0);
         }else{
-         $showstr="<script>alert('该网址没有收录');location.href='../../'</script>";
+         $showstr="<script>alert('该网址没有收录,2秒后返回首页');location.href='../../'</script>";
            $this->show($showstr);
         }
 
@@ -120,7 +120,9 @@ class LinkAction extends CommonAction {
 			$data['tag'] = $condition['tag'];
 			$data['update_time'] = time();
 			$model->add($data);
-			$this->display();
+			//$this->display();
+            $showstr="<script>alert('该Tag没有收录,2秒后返回首页');location.href='../../'</script>";
+            $this->show($showstr);
 		}
 	}
 }
