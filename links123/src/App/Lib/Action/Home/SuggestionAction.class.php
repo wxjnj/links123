@@ -105,7 +105,7 @@ class SuggestionAction extends CommonAction {
 			if (false === $suggestion_info || empty($suggestion_info)) {
 				$this->ajaxReturn("", "留言不存在", false);
 			}
-			if ($mid != $suggestion_info['mid']) {
+			if ($mid < 0 || $mid != $suggestion_info['mid']) {
 				$this->ajaxReturn("", "对不起，你不能编辑他人的留言", false);
 			}
 			if (empty($data['suggest'])) {
