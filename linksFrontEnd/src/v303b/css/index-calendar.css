@@ -651,3 +651,12 @@
 		}
 	*/
 }
+
+.ast-box {
+	padding: 5px 5px;
+	line-height: 20px;
+}
+
+.widescreen .ast-box {
+	padding: 10px 15px;
+}
