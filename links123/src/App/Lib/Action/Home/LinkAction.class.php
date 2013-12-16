@@ -17,13 +17,7 @@ class LinkAction extends CommonAction {
 	 */
 	public function index() {
 		$url = $this->_param('url');
-       // $url =$_REQUEST["url"];
-		//$mod = $this->_param('mod');
-		//$url=$this->_get("url");
         $mod=$this->_get("mod");
-       // print_r($_REQUEST);
-        //print $url;
-      // exit;
 		if (empty($url)) {
 			$this->error("对不起，链接不存在！");
 		}
@@ -38,8 +32,6 @@ class LinkAction extends CommonAction {
 			$flag = $linkModel->where("link = '%s'", $url)->setInc("click_num");
             $linkdata= $linkModel->where("link like '%".str_replace("http://","",$url)."%'")->find();
 		}
-        //print $mod."<br>";
-        //print $url."<br>";
 		if(($mod== "myarea")||$linkdata){
 		$url = str_replace('&amp;', '&', $url);
 		
@@ -48,7 +40,7 @@ class LinkAction extends CommonAction {
 				<script type="text/javascript">window.location.href="' . (strpos ($url, 'http://')===FALSE && strpos ($url, 'https://')===FALSE ? 'http://' . $url : $url) . '";</script>';
 		exit(0);
         }else{
-         $showstr="<script>alert('该网址没有收录')</script>";
+         $showstr="<script>alert('该网址没有收录,2秒后返回首页');location.href='../../'</script>";
            $this->show($showstr);
         }
 
@@ -128,7 +120,9 @@ class LinkAction extends CommonAction {
 			$data['tag'] = $condition['tag'];
 			$data['update_time'] = time();
 			$model->add($data);
-			$this->display();
+			//$this->display();
+            $showstr="<script>alert('该Tag没有收录,2秒后返回首页');location.href='../../'</script>";
+            $this->show($showstr);
 		}
 	}
 }
