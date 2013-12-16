@@ -42,7 +42,7 @@
 				<a class="login J_SignIn" href="javascript:;">登&nbsp;录</a>
 				<a class="join J_SignUp" href="javascript:;">注&nbsp;册</a>
 				<else />
-				<img class="uc-avatar" src="{$user.avatar}" />
+				<img class="uc-avatar" src="{$user.avatar}" alt="avatar"/>
 				<div class="uc-menu">
 					<div class="nm">
 						<p>Hi，{$user.nickname} <em></em></p>
@@ -79,19 +79,19 @@
 							<div id="J_skin_pics" class="skin-pics">
 								<div id="link_skin_themes" class="item">
 									<a data-id="2" data-theme="light" data-bg="__STATIC__/v303b/skins/light/bg.png">
-										<img class="m" data-src="__STATIC__/v303b/skins/light/bg_s.jpg" src="" alt="" />
+										<img class="m" data-src="__STATIC__/v303b/skins/light/bg_s.jpg" src="" alt="bg" />
 									</a>
 									<a data-id="1" data-theme="dark" data-bg="__STATIC__/v303b/skins/dark/bg.jpg">
-										<img class="m" data-src="__STATIC__/v303b/skins/dark/bg_s.jpg" src="" alt="" />
+										<img class="m" data-src="__STATIC__/v303b/skins/dark/bg_s.jpg" src="" alt="bg" />
 									</a>
 									<a data-id="3" data-theme="dark_ext" data-bg="__STATIC__/v303b/skins/dark_ext/bg.png">
-										<img class="m" data-src="__STATIC__/v303b/skins/dark_ext/bg_s.png" src="" alt="" />
+										<img class="m" data-src="__STATIC__/v303b/skins/dark_ext/bg_s.png" src="" alt="bg" />
 									</a>
 								</div>
 								<volist name="skinList" id="vo">
 									<div id="link_skin_{$key}" class='item <if condition="$i eq 1">active</if>'>
 										<volist name="vo" id="skins">
-											<a class="skin-link-btn" data-bg="{$skins.skin}" data-theme="{$skins.theme}" data-id="{$skins.skinId}" class='<if condition="$skins.skinId eq $skinId">active</if>'><img data-src="{$skins.middleSkin}" src=""  alt="" /></a>
+											<a class="skin-link-btn" data-bg="{$skins.skin}" data-theme="{$skins.theme}" data-id="{$skins.skinId}" class='<if condition="$skins.skinId eq $skinId">active</if>'><img data-src="{$skins.middleSkin}" src=""  alt="bg" /></a>
 										</volist>
 									</div>
 								</volist>
@@ -209,12 +209,12 @@
 							<a data-href="{$vo.appLink}" <if condition="$vo.isTarget eq '1'">target="_blank"</if> class="{$vo.linkClass}">
 							<if condition="$vo.appName eq '日&nbsp;历'">
 								<p class="ct" id="index-today-bar">
-									<img src="{$vo.appIcon}" />
+									<img src="{$vo.appIcon}" alt="日历" />
 									<b>{:date('D')}</b>
 									<i>{:date('d')}</i>
 								</p>
 								<else />
-								<p class="av"><img src="{$vo.appIcon}" /></p>
+								<p class="av"><img src="{$vo.appIcon}" alt="{$vo.appName}"/></p>
 							</if>
 							<p class="nm">{$vo.appName}</p>
 							</a>
